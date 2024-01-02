@@ -64,7 +64,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getName()
     {
-        return $this->trans('SQL Manager', [], 'Admin.Navigation.Menu');
+        return $this->trans('SQL queries', [], 'Admin.Navigation.Menu');
     }
 
     /**

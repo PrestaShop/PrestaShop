@@ -73,6 +73,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             'paymentPreferencesForm' => $paymentPreferencesForm,
             'isSingleShopContext' => $isSingleShopContext,
             'paymentModulesCount' => $paymentModulesCount,
+            'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
         ]);
     }
 

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerLogoImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler\DeleteManufacturerLogoImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
@@ -38,6 +39,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Handles command which deletes manufacturer cover image using legacy object model
  */
+#[AsCommandHandler]
 class DeleteManufacturerLogoImageHandler extends AbstractManufacturerCommandHandler implements DeleteManufacturerLogoImageHandlerInterface
 {
     /**

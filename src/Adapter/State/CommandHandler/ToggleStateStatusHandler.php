@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\State\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\CommandHandler\ToggleStateStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotToggleStateStatusException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
 use PrestaShopException;
 use State;
 
+#[AsCommandHandler]
 class ToggleStateStatusHandler implements ToggleStateStatusHandlerInterface
 {
     /**

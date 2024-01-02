@@ -57,14 +57,14 @@ describe('BO - Design - Image Settings : Bulk delete image types', async () => {
     await imageSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await imageSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
   });
 
   it('should reset all filters and get number of image types in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfImageTypes = await imageSettingsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfImageTypes).to.be.above(0);
+    expect(numberOfImageTypes).to.be.above(0);
   });
 
   describe('Create 2 image types in BO', async () => {
@@ -75,17 +75,17 @@ describe('BO - Design - Image Settings : Bulk delete image types', async () => {
         await imageSettingsPage.goToNewImageTypePage(page);
 
         const pageTitle = await addImageTypePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addImageTypePage.pageTitleCreate);
+        expect(pageTitle).to.contains(addImageTypePage.pageTitleCreate);
       });
 
       it(`should create image type n° ${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createImageType${index + 1}`, baseContext);
 
         const textResult = await addImageTypePage.createEditImageType(page, ImageTypeToCreate);
-        await expect(textResult).to.contains(imageSettingsPage.successfulCreationMessage);
+        expect(textResult).to.contains(imageSettingsPage.successfulCreationMessage);
 
         const numberOfImageTypesAfterCreation = await imageSettingsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfImageTypesAfterCreation).to.be.equal(numberOfImageTypes + index + 1);
+        expect(numberOfImageTypesAfterCreation).to.be.equal(numberOfImageTypes + index + 1);
       });
     });
   });
@@ -97,11 +97,11 @@ describe('BO - Design - Image Settings : Bulk delete image types', async () => {
       await imageSettingsPage.filterTable(page, 'input', 'name', 'todelete');
 
       const numberOfImageTypesAfterFilter = await imageSettingsPage.getNumberOfElementInGrid(page);
-      await expect(numberOfImageTypesAfterFilter).to.be.at.most(numberOfImageTypes);
+      expect(numberOfImageTypesAfterFilter).to.be.at.most(numberOfImageTypes);
 
       for (let i = 1; i <= numberOfImageTypesAfterFilter; i++) {
         const textColumn = await imageSettingsPage.getTextColumn(page, i, 'name');
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -109,14 +109,14 @@ describe('BO - Design - Image Settings : Bulk delete image types', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteImageTypes', baseContext);
 
       const deleteTextResult = await imageSettingsPage.bulkDeleteImageTypes(page);
-      await expect(deleteTextResult).to.be.contains(imageSettingsPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(imageSettingsPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfImageTypesAfterReset = await imageSettingsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfImageTypesAfterReset).to.be.equal(numberOfImageTypes);
+      expect(numberOfImageTypesAfterReset).to.be.equal(numberOfImageTypes);
     });
   });
 });

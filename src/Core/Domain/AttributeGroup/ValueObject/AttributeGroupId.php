@@ -24,14 +24,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
 
 /**
- * Provides attribute group identification data
+ * Defines Attribute group ID with its constraints.
  */
-final class AttributeGroupId
+class AttributeGroupId
 {
     /**
      * @var int
@@ -40,45 +42,34 @@ final class AttributeGroupId
 
     /**
      * @param int $attributeGroupId
-     *
-     * @throws AttributeGroupConstraintException
      */
-    public function __construct($attributeGroupId)
+    public function __construct(int $attributeGroupId)
     {
-        $this->assertIsIntegerGreaterThanZero($attributeGroupId);
+        $this->assertIntegerIsGreaterThanZero($attributeGroupId);
+
         $this->attributeGroupId = $attributeGroupId;
     }
 
     /**
-     * @deprecated
-     * @see getValue()
-     *
      * @return int
      */
-    public function getAttributeGroupId()
+    public function getValue(): int
     {
         return $this->attributeGroupId;
     }
 
     /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->attributeGroupId;
-    }
-
-    /**
-     * Validates that the value is integer and is greater than zero
-     *
-     * @param int $value
+     * @param int $attributeGroupId
      *
      * @throws AttributeGroupConstraintException
      */
-    private function assertIsIntegerGreaterThanZero($value)
+    private function assertIntegerIsGreaterThanZero(int $attributeGroupId): void
     {
-        if (!is_int($value) || 0 >= $value) {
-            throw new AttributeGroupConstraintException(sprintf('Invalid attribute group id "%s".', var_export($value, true)), AttributeGroupConstraintException::INVALID_ID);
+        if (0 >= $attributeGroupId) {
+            throw new AttributeGroupConstraintException(
+                sprintf('Invalid attributeGroup id %s supplied. Attribute group ID must be a positive integer.', $attributeGroupId),
+                AttributeGroupConstraintException::INVALID_ID
+            );
         }
     }
 }

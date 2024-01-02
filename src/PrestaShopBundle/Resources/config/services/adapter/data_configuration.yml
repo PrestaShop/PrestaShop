@@ -134,17 +134,18 @@ services:
       - '@prestashop.adapter.multistore_feature'
       - '@prestashop.core.form.choice_provider.invoice_model_by_name'
 
+  PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider:
+    public: false
+
   prestashop.adapter.data_provider.language:
-    class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
+    alias: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
 
   prestashop.adapter.language.activator:
     class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageActivator'
 
   prestashop.adapter.language.language_pack_installer:
     class: 'PrestaShop\PrestaShop\Adapter\Language\LanguagePackInstaller'
-    arguments:
-      - '@translator'
-      - '@prestashop.core.foundation.version'
+    autowire: true
 
   prestashop.adapter.language.validator:
     class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageValidator'

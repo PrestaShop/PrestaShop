@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableReposit
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -76,6 +77,7 @@ use Tag;
 /**
  * Handles the query @see GetProductForEditing using legacy ObjectModel
  */
+#[AsQueryHandler]
 class GetProductForEditingHandler implements GetProductForEditingHandlerInterface
 {
     /**

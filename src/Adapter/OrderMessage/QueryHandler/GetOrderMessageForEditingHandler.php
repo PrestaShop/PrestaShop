@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\OrderMessage\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\OrderMessage\AbstractOrderMessageHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query\GetOrderMessageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryHandler\GetOrderMessageForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMessage;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMess
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetOrderMessageForEditingHandler extends AbstractOrderMessageHandler implements GetOrderMessageForEditingHandlerInterface
 {
     /**

@@ -51,17 +51,15 @@
  */
 export default class GeneratableInput {
   /**
-   * Attaches event listener on button than can generate value
+   * Attaches click event listeners on buttons than can generate random values
    *
-   * @param {String} generatorBtnSelector
-   *
-   * @private
+   * @param {String} generatorButtonsSelector
    */
-  private attachOn(generatorBtnSelector: string): void {
-    const generatorBtn = document.querySelector(generatorBtnSelector);
+  public attachOn(generatorButtonsSelector: string): void {
+    const generatorButtons = document.querySelectorAll(generatorButtonsSelector);
 
-    if (generatorBtn !== null) {
-      generatorBtn.addEventListener('click', (event: Event): void => {
+    generatorButtons.forEach((btn: Element): void => {
+      btn.addEventListener('click', (event: Event): void => {
         const {attributes} = <HTMLButtonElement>event.currentTarget;
 
         const targetInputId = attributes.getNamedItem('data-target-input-id')
@@ -75,8 +73,9 @@ export default class GeneratableInput {
           document.querySelector(`#${targetInputId}`)
         );
         targetInput.value = this.generateValue(generatedValueLength);
+        targetInput.dispatchEvent(new CustomEvent('change', {bubbles: true}));
       });
-    }
+    });
   }
 
   /**

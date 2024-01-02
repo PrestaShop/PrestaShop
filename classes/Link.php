@@ -27,7 +27,6 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
-use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -760,44 +759,6 @@ class LinkCore
 
         $routeName = '';
         switch ($controller) {
-            case 'AdminProducts':
-                // New architecture modification: temporary behavior to switch between old and new controllers.
-                /** @var AdminPagePreferenceInterface $pagePreference */
-                $pagePreference = $sfContainer->get('prestashop.core.admin.page_preference_interface');
-                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
-                if (!$redirectLegacy) {
-                    if (array_key_exists('id_product', $sfRouteParams)) {
-                        if (array_key_exists('deleteproduct', $sfRouteParams)) {
-                            return $sfRouter->generate(
-                                'admin_product_unit_action',
-                                ['action' => 'delete', 'id' => $sfRouteParams['id_product']]
-                            );
-                        }
-                        //default: if (array_key_exists('updateproduct', $sfRouteParams))
-                        return $sfRouter->generate(
-                            'admin_product_form',
-                            ['id' => $sfRouteParams['id_product']]
-                        );
-                    }
-                    if (array_key_exists('submitFilterproduct', $sfRouteParams)) {
-                        $routeParams = [];
-                        if (array_key_exists('filter_column_sav_quantity', $sfRouteParams)) {
-                            $routeParams['quantity'] = $sfRouteParams['filter_column_sav_quantity'];
-                        }
-                        if (array_key_exists('filter_column_active', $sfRouteParams)) {
-                            $routeParams['active'] = $sfRouteParams['filter_column_active'];
-                        }
-
-                        return $sfRouter->generate('admin_product_catalog_filters', $routeParams);
-                    }
-
-                    return $sfRouter->generate('admin_product_catalog', $sfRouteParams);
-                } else {
-                    $params = array_merge($params, $sfRouteParams);
-                }
-
-                break;
-
             case 'AdminTranslations':
                 // In case of email body translations we want to get a link to legacy controller,
                 // in other cases - it's the migrated controller
@@ -882,7 +843,7 @@ class LinkCore
 
     /**
      * Used when you explicitly want to create a LEGACY admin link, this should be deprecated
-     * in 1.8.0.
+     * in 9.x
      *
      * @param string $controller
      * @param bool $withToken
@@ -978,39 +939,46 @@ class LinkCore
 
     /**
      * Returns a link to a product image for display
-     * Note: the new image filesystem stores product images in subdirectories of img/p/.
+     * Note: image filesystem stores product images in subdirectories of img/p/.
      *
-     * @param string $name rewrite link of the image
-     * @param string $ids id part of the image filename - can be "id_product-id_image" (legacy support, recommended) or "id_image" (new)
+     * @param string $name Rewrite link of the image
+     * @param string|int $idImage numeric ID of product image or a name of default image like "fr-default"
      * @param string|null $type Image thumbnail name (small_default, medium_default, large_default, etc.)
      * @param string $extension What image extension should the link point to
      *
      * @return string
      */
-    public function getImageLink($name, $ids, $type = null, string $extension = 'jpg')
+    public function getImageLink($name, $idImage, $type = null, string $extension = 'jpg')
     {
-        $notDefault = false;
-        $psLegacyImages = Configuration::get('PS_LEGACY_IMAGES');
+        $type = ($type ? '-' . $type : '');
+        $idImage = (string) $idImage;
 
-        // legacy mode or default image
-        $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . '-' . Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
-        if (($psLegacyImages
-                && (file_exists(_PS_PRODUCT_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.' . $extension)))
-            || ($notDefault = strpos($ids, 'default') !== false)) {
-            if ($this->allow && !$notDefault) {
-                $uriPath = __PS_BASE_URI__ . $ids . ($type ? '-' . $type : '') . $theme . '/' . $name . '.' . $extension;
-            } else {
-                $uriPath = _THEME_PROD_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.' . $extension;
-            }
+        // Default image like "fr-default"
+        if (strpos($idImage, 'default') !== false) {
+            $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . $idImage . $type . '-' . Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
+            $uriPath = _THEME_PROD_DIR_ . $idImage . $type . $theme . '.' . $extension;
+
+        // Regular image with numeric ID
         } else {
-            // if ids if of the form id_product-id_image, we want to extract the id_image part
-            $splitIds = explode('-', $ids);
-            $idImage = (isset($splitIds[1]) ? $splitIds[1] : $splitIds[0]);
-            $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . '-' . (int) Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
+            // We will still process the old way of requesting images in a form of productID-imageID, but notify developers
+            if (strpos($idImage, '-')) {
+                $idImage = explode('-', $idImage)[1];
+                if (_PS_MODE_DEV_) {
+                    trigger_error(
+                        'Passing image identifier in the old format is deprecated, use only image ID. This fallback will be removed in next major.',
+                        E_USER_DEPRECATED
+                    );
+                }
+            }
+
+            $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . $type . '-' . (int) Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
+
+            // If friendly URLs are enabled
             if ($this->allow) {
-                $uriPath = __PS_BASE_URI__ . $idImage . ($type ? '-' . $type : '') . $theme . '/' . $name . '.' . $extension;
+                $uriPath = __PS_BASE_URI__ . $idImage . $type . $theme . '/' . $name . '.' . $extension;
+            // If friendly URLs are disabled
             } else {
-                $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . $theme . '.' . $extension;
+                $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . $type . $theme . '.' . $extension;
             }
         }
 

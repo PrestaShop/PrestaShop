@@ -22,119 +22,48 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
-{% set validOrdersCount = customerInformation.ordersInformation.validOrders|length %}
-{% set invalidOrdersCount = customerInformation.ordersInformation.invalidOrders|length %}
-{% set ordersCount = validOrdersCount + invalidOrdersCount %}
-
 <div class="card customer-orders-card">
   <h3 class="card-header">
     <i class="material-icons">shopping_basket</i>
     {{ 'Orders'|trans({}, 'Admin.Global') }}
-    <span class="badge badge-primary rounded">{{ ordersCount }}</span>
+    <span class="badge badge-primary rounded">{{ customerOrderGrid.data.records_total }}</span>
+
+    <a href="{{ path('admin_orders_create') }}" class="tooltip-link float-right" 
+    data-toggle="pstooltip" title="" data-placement="top" data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}">
+      <i class="material-icons">add_circle</i>
+    </a>
   </h3>
   <div class="card-body">
-    {% if ordersCount > 0 %}
+    {% if customerOrderGrid.data.records_total > 0 %}
       <div class="card">
         <div class="card-body">
           <div class="row">
             <div class="col">
               {{ 'Valid orders:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              <span class="badge badge-success rounded">{{ validOrdersCount }}</span>
+              <span class="badge badge-success rounded">{{ customerInformation.ordersInformation.validOrders|length }}</span>
               {% set totalAmount = '<span id="total-order-amount">'~customerInformation.ordersInformation.totalSpent~'</span>' %}
               {{ 'for a total amount of %s'|trans({}, 'Admin.Orderscustomers.Feature')|format(totalAmount)|raw }}
             </div>
             <div class="col">
               {{ 'Invalid orders:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              <span class="badge badge-danger rounded">{{ invalidOrdersCount }}</span>
+              <span class="badge badge-danger rounded">{{ customerInformation.ordersInformation.invalidOrders|length }}</span>
             </div>
           </div>
         </div>
       </div>
-
-      {% if validOrdersCount %}
-        <table class="table">
-          <thead>
-            <tr>
-              <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
-              <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-              <th>{{ 'Payment'|trans({}, 'Admin.Global') }}</th>
-              <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
-              <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
-              <th>{{ 'Total spent'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-              <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for order in customerInformation.ordersInformation.validOrders %}
-              {% set orderViewUrl = getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'vieworder': 1}) %}
-
-              <tr class="customer-valid-order">
-                <td class="customer-valid-order-id js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderId }}</td>
-                <td class="customer-valid-order-date js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderPlacedDate }}</td>
-                <td class="customer-valid-order-payment js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.paymentMethodName }}</td>
-                <td class="customer-valid-order-status js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderStatus }}</td>
-                <td class="customer-valid-order-products js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderProductsCount }}</td>
-                <td class="customer-valid-order-total js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.totalPaid }}</td>
-                <td class="customer-valid-order-actions text-right">
-                  <div class="btn-group-action">
-                    <div class="btn-group">
-                      <a href="{{ orderViewUrl }}" class="btn tooltip-link dropdown-item view-link" data-toggle="pstooltip" data-placement="top" data-original-title="{{ 'View'|trans({}, 'Admin.Actions') }}">
-                        <i class="material-icons">zoom_in</i>
-                      </a>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% endif %}
-
-
-      {% if invalidOrdersCount %}
-        <table class="table">
-          <thead>
-            <tr>
-              <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
-              <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-              <th>{{ 'Payment'|trans({}, 'Admin.Global') }}</th>
-              <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
-              <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
-              <th>{{ 'Total spent'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-              <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for order in customerInformation.ordersInformation.invalidOrders %}
-              {% set orderViewUrl = getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'vieworder': 1}) %}
-
-              <tr class="customer-invalid-order">
-                <td class="customer-invalid-order-id js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderId }}</td>
-                <td class="customer-invalid-order-date js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderPlacedDate }}</td>
-                <td class="customer-invalid-order-payment js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.paymentMethodName }}</td>
-                <td class="customer-invalid-order-status js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderStatus }}</td>
-                <td class="customer-invalid-order-products js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderProductsCount }}</td>
-                <td class="customer-invalid-order-total js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.totalPaid }}</td>
-                <td class="text-right customer-invalid-order-actions">
-                  <div class="btn-group-action">
-                    <div class="btn-group">
-                      <a href="{{ orderViewUrl }}" class="btn tooltip-link dropdown-item grid-view-row-link" data-toggle="pstooltip" data-placement="top" data-original-title="{{ 'View'|trans({}, 'Admin.Actions') }}">
-                        <i class="material-icons">zoom_in</i>
-                      </a>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% endif %}
-
+    {% endif %}
+    {% if customerOrderGrid.data.records_total > 0 %}
+      {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerOrderGrid} %}
     {% else %}
-      <p class="text-muted text-center">
-        {{ '%firstname% %lastname% has not placed any orders yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
-      </p>
+      <div class="text-center">
+        <p class="text-muted mb-2">
+          {{ '%firstname% %lastname% has not placed any orders yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
+        </p> 
+        <a class="btn btn-primary" href="{{ path('admin_orders_create') }}">
+          <i class="material-icons">add_circle</i>
+          {{ 'Create manual order'|trans({}, 'Admin.Global') }}
+        </a>
+      </div>
     {% endif %}
   </div>
 </div>

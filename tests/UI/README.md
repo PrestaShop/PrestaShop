@@ -14,7 +14,38 @@ Before begin working on tests, make sure you have installed
 git clone https://github.com/PrestaShop/PrestaShop/
 # Install dependencies in UI folder
 cd tests/UI/
-npm install
+npm ci
+```
+
+## How to run tests locally (linux distribution)
+
+We must first install the dependencies necessary for the execution of the tests.
+
+```bash
+# Install dependencies in UI folder
+cd tests/UI/
+npm ci
+npx playwright install --with-deps
+```
+Subsequently, we can use the envFile to define the test environment variables,
+to do this we copy the .env.ci file renaming it .env, and we edit the values we want.
+Another option is to pass the variables directly via command line.
+The list of parameters is visible in the section [Available command line parameters](#available-command-line-parameters)
+
+```bash
+cp .env.ci .env
+```
+
+We can then launch our tests.
+
+```bash
+npm run test:all
+```
+
+We can launch a particular scenario, for this we can see the list in the script part of the package.json.
+
+```bash
+npm run test:functional:BO:orders
 ```
 
 ## Available command line parameters
@@ -119,7 +150,7 @@ To specify which test to run, you can add the **`TEST_PATH`** parameter in the b
 ```bash
 # To run the **Filter Products** test from sanity campaign
 TEST_PATH="sanity/03_productsBO/01_filterProducts" URL_FO="Your_Shop_URL_FO" npm run test:specific
-# To run all **Products BO** tests 
+# To run all **Products BO** tests
 TEST_PATH="sanity/03_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run test:specific
 ```
 
@@ -137,7 +168,7 @@ You **must** disable the Security Token before running this script ! Add this li
 
 ```bash
 SetEnv _TOKEN_ disabled
-``` 
+```
 
 #### With default values
 
@@ -163,7 +194,7 @@ To install `jsdoc-to-markdown` :
 
 ```shell
 cd tests/UI
-npm install
+npm ci
 ```
 
 ### Generate documentation

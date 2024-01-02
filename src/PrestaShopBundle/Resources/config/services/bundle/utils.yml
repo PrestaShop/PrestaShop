@@ -7,7 +7,3 @@ services:
 
   PrestaShopBundle\Utils\FloatParser:
     autowire: true
-
-  prestashop.utils.float_parser:
-    alias: PrestaShopBundle\Utils\FloatParser
-    deprecated: ~

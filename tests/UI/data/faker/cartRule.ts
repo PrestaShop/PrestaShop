@@ -166,7 +166,7 @@ export default class CartRuleData {
     this.discountAmount = null;
 
     if (this.discountType === 'Percent') {
-      this.discountPercent = cartRuleToCreate.discountPercent || faker.datatype.number({min: 10, max: 80});
+      this.discountPercent = cartRuleToCreate.discountPercent || faker.number.int({min: 10, max: 80});
     } else if (this.discountType === 'Amount') {
       this.discountAmount = cartRuleToCreate.discountAmount || {
         value: 0,

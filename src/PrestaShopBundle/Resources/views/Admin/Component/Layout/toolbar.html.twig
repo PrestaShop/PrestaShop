@@ -1,0 +1,214 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<div class="header-toolbar d-print-none">
+  {{ component('MultistoreHeader') }}
+  <div class="container-fluid">
+
+    {% block pageBreadcrumb %}
+      {% if breadcrumbs.container is defined or breadcrumbs.tab is defined %}
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumb">
+            {% if breadcrumbs.container is defined and breadcrumbs.container.name != '' %}
+              <li class="breadcrumb-item">{{ breadcrumbs.container.name|escape }}</li>
+            {% endif %}
+
+            {% if breadcrumbs.container is defined and breadcrumbs.tab is defined and breadcrumbs.tab.name != '' and breadcrumbs.container.name != breadcrumbs.tab.name and breadcrumbs.tab.href != '' %}
+              <li class="breadcrumb-item active">
+                <a href="{{ breadcrumbs.tab.href|escape }}" aria-current="page">{{ breadcrumbs.tab.name|escape }}</a>
+              </li>
+            {% endif %}
+          </ol>
+        </nav>
+      {% endif %}
+    {% endblock %}
+
+    {% set persistent_help_btn = help_link is defined and help_link is not same as (false) and layoutHeaderToolbarBtn is empty %}
+    <div class="title-row {% if persistent_help_btn %}flex-nowrap flex-md-wrap{% endif %}">
+      {% block pageTitle %}
+          <h1 class="title">
+            {{ title|e }}
+          </h1>
+      {% endblock %}
+      {% block toolbarBox %}
+        <div class="toolbar-icons{% if persistent_help_btn %} toolbar-icons--persistent{% endif %}">
+          <div class="wrapper">
+            {{ renderhook('displayDashboardToolbarTopMenu') }}
+            {% for k, btn in layoutHeaderToolbarBtn %}
+              {% if k != 'back' and k != 'modules-list' %}
+                {#TODO: REFACTOR ALL THIS THINGS#}
+                <a
+                  class="btn {% if btn.class is defined and btn.class %}{{ btn.class|escape }}{% else %}btn-primary{% endif %}{% if btn.target is defined and btn.target %} _blank{% endif %}{% if btn.disabled is defined and btn.disabled %} disabled auto-pointer-events{% endif %} pointer"{% if btn.href is defined %}
+                  id="page-header-desc-{{ table|default('configuration') }}-{% if btn.imgclass is defined %}{{ btn.imgclass|escape }}{% else %}{{ k }}{% endif %}"
+                href="{{ btn.href|escape }}"{% endif %}
+                  title="{% if btn.help is defined %}{{ btn.help }}{% else %}{{ btn.desc|escape }}{% endif %}"{% if btn.js is defined and btn.js %}
+                  onclick="{{ btn.js }}" {% endif %}{% if btn.modal_target is defined and btn.modal_target %}
+                  data-target="{{ btn.modal_target }}"
+                  data-toggle="modal"{% endif %}{% if btn.help is defined %}
+                  data-toggle="pstooltip"
+                  data-placement="bottom"{% endif %}
+                  {% if btn.data_attributes is defined and btn.data_attributes %}
+                    {% for attribute_name, attribute_value in btn.data_attributes %}
+                      data-{{ attribute_name }}="{{ attribute_value }}"
+                    {% endfor %}
+                  {% endif %}
+                >
+                  {% if btn.icon is not empty %}<i class="material-icons">{{ btn.icon }}</i>{% endif %}
+                  {{ btn.desc|escape }}
+                </a>
+              {% endif %}
+            {% endfor %}
+            {% if layoutHeaderToolbarBtn['modules-list'] is defined %}
+              {#TODO: REFACTOR ALL THIS THINGS#}
+              <a
+                class="btn btn-outline-secondary {% if layoutHeaderToolbarBtn['modules-list'].target is defined and layoutHeaderToolbarBtn['modules-list'].target %} _blank{% endif %}"
+                id="page-header-desc-{{ table|default('configuration') }}-{% if layoutHeaderToolbarBtn['modules-list'].imgclass is defined %}{{ layoutHeaderToolbarBtn['modules-list'].imgclass }}{% else %}modules-list{% endif %}"
+                {% if layoutHeaderToolbarBtn['modules-list'].href is defined %}href="{{ layoutHeaderToolbarBtn['modules-list'].href }}"{% endif %}
+                title="{{ layoutHeaderToolbarBtn['modules-list'].desc }}"
+                {% if layoutHeaderToolbarBtn['modules-list'].js is defined and layoutHeaderToolbarBtn['modules-list'].js %}onclick="{{ layoutHeaderToolbarBtn['modules-list'].js }}"{% endif %}
+              >
+                {{ layoutHeaderToolbarBtn['modules-list'].desc }}
+              </a>
+            {% endif %}
+
+            {% if helpLink is defined and helpLink is not same as false %}
+
+              {% if enableSidebar %}
+
+                <a class="toolbar-button btn-sidebar d-inline-block d-md-none" href="#"
+                   title="{{ 'Help'|trans({}, 'Admin.Global') }}"
+                   data-toggle="sidebar"
+                   data-target="#right-sidebar"
+                   data-url="{{ helpLink|escape }}"
+                   id="product_form_open_help_mobile"
+                >
+                  <i class="material-icons">help_outline</i>
+                </a>
+                <a class="btn btn-outline-secondary btn-help btn-sidebar d-none d-md-inline-block" href="#"
+                   title="{{ 'Help'|trans({}, 'Admin.Global') }}"
+                   data-toggle="sidebar"
+                   data-target="#right-sidebar"
+                   data-url="{{ helpLink|escape }}"
+                   id="product_form_open_help"
+                >
+                  {{ 'Help'|trans({}, 'Admin.Global') }}
+                </a>
+              {% else %}
+                <a class="toolbar-button d-inline-block d-md-none" href="{{ helpLink|escape }}"
+                   title="{{ 'Help'|trans({}, 'Admin.Global') }}">
+                  <i class="material-icons">help_outline</i>
+                </a>
+                <a class="btn btn-outline-secondary btn-help d-none d-md-inline-block" href="{{ helpLink|escape }}"
+                   title="{{ 'Help'|trans({}, 'Admin.Global') }}">{{ 'Help'|trans({}, 'Admin.Global') }}
+                </a>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      {% endblock %}
+    </div>
+  </div>
+
+  {% if headerTabContent is defined and headerTabContent %}
+    <div class="page-head-tabs" id="head_tabs">
+      {% for tabContent in headerTabContent %}
+        {{ tabContent }}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if currentTabLevel >= 3 %}
+    <div class="page-head-tabs" id="head_tabs">
+      <ul class="nav nav-pills">
+        {% for tab in navigationTabs %}
+          {% if tab.attributes.active %}
+            <li class="nav-item">
+              <a href="{{ tab.href }}" id="subtab-{{ tab.attributes.class_name }}"
+                 class="nav-link tab {% if tab.attributes.current %}active current{% endif %}"
+                 data-submenu="{{ tab.attributes.id_tab }}">
+                {{ tab.name }}
+                <span class="notification-container">
+                <span class="notification-counter"></span>
+              </span>
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if layoutHeaderToolbarBtn is not empty %}
+    <div class="btn-floating">
+      <button class="btn btn-primary collapsed" data-toggle="collapse" data-target=".btn-floating-container"
+              aria-expanded="false">
+        <i class="material-icons">add</i>
+      </button>
+      <div class="btn-floating-container collapse">
+        <div class="btn-floating-menu">
+          {{ renderhook('displayDashboardToolbarTopMenu') }}
+
+          {% for k, btn in layoutHeaderToolbarBtn %}
+            {% if k != 'back' and k != 'modules-list' %}
+              <a
+                class="btn btn-floating-item {% if btn.floating_class is defined and btn.floating_class %}{{ btn.floating_class|escape }}{% endif %} {% if btn.target is defined and btn.target %} _blank{% endif %} pointer"{% if btn.href is defined %}
+                id="page-header-desc-floating-{{ table|default('configuration') }}-{% if btn.imgclass is defined %}{{ btn.imgclass|escape }}{% else %}{{ k }}{% endif %}"
+              href="{{ btn.href|escape }}"{% endif %}
+                title="{% if btn.help is defined %}{{ btn.help }}{% else %}{{ btn.desc|escape }}{% endif %}"{% if btn.js is defined and btn.js %}
+              onclick="{{ btn.js }}"{% endif %}{% if btn.modal_target is defined and btn.modal_target %}
+                data-target="{{ btn.modal_target }}"
+                data-toggle="modal"{% endif %}{% if btn.help is defined %}
+                data-toggle="pstooltip"
+                data-placement="bottom"{% endif %}
+              >
+                {{ btn.desc|escape }}
+                {% if btn.icon is not empty %}<i class="material-icons">{{ btn.icon }}</i>{% endif %}
+              </a>
+            {% endif %}
+          {% endfor %}
+
+          {% if helpLink is defined and helpLink != false %}
+            {% if enableSidebar %}
+              <a class="btn btn-floating-item btn-help btn-sidebar" href="#"
+                 title="{{ 'Help'|trans({}, 'Admin.Global') }}"
+                 data-toggle="sidebar"
+                 data-target="#right-sidebar"
+                 data-url="{{ helpLink|escape }}"
+              >
+                {{ 'Help'|trans({}, 'Admin.Global') }}
+              </a>
+            {% else %}
+              <a class="btn btn-floating-item btn-help" href="{{ helpLink|escape }}"
+                 title="{{ 'Help'|trans({}, 'Admin.Global') }}">
+                {{ 'Help'|trans({}, 'Admin.Global') }}
+              </a>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {{ renderhook('displayDashboardTop') }}
+</div>
+

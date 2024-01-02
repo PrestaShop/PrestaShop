@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\DeleteStoreHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 /**
  * Handles command that deletes store
  */
+#[AsCommandHandler]
 class DeleteStoreHandler implements DeleteStoreHandlerInterface
 {
     /**

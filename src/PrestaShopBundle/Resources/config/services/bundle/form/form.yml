@@ -1,16 +1,13 @@
+# This file will be removed in next version, do not add any service here
 services:
-  _defaults:
-    public: false
-    autowire: true
-    autoconfigure: true
-
-  PrestaShopBundle\Form\FormCloner: ~
-
-  form.form_cloner:
-    alias: PrestaShopBundle\Form\FormCloner
-    public: true
-    deprecated: ~
-
+  # Deprecated in 9.0.0
   form.form_builder_modifier:
-    class: PrestaShopBundle\Form\FormBuilderModifier
+    alias: PrestaShopBundle\Form\FormBuilderModifier
+    deprecated: ~
+    public: true
+
+  # Deprecated in 9.0.0
+  prestashop.multistore_checkbox_enabler:
+    alias: 'PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler'
+    deprecated: ~
     public: true

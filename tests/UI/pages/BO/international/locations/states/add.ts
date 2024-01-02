@@ -22,7 +22,7 @@ class AddState extends BOBasePage {
 
   private readonly zoneSelect: string;
 
-  private readonly statusToggle: (toggle: string) => string;
+  private readonly statusToggle: (toggle: number) => string;
 
   private readonly saveStateButton: string;
 
@@ -33,16 +33,16 @@ class AddState extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'States > Add new •';
-    this.pageTitleEdit = 'Edit: ';
+    this.pageTitleCreate = `New state • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing state';
 
     // Selectors
-    this.nameInput = '#name';
-    this.isoCodeInput = '#iso_code';
-    this.countrySelect = '#id_country';
-    this.zoneSelect = '#id_zone';
-    this.statusToggle = (toggle: string) => `#active_${toggle}`;
-    this.saveStateButton = '#state_form_submit_btn';
+    this.nameInput = '#state_name';
+    this.isoCodeInput = '#state_iso_code';
+    this.countrySelect = '#state_id_country';
+    this.zoneSelect = '#state_id_zone';
+    this.statusToggle = (toggle: number) => `#state_active_${toggle}`;
+    this.saveStateButton = '#save-button';
   }
 
   /*
@@ -60,13 +60,13 @@ class AddState extends BOBasePage {
     await this.setValue(page, this.isoCodeInput, stateData.isoCode);
     await this.selectByVisibleText(page, this.countrySelect, stateData.country);
     await this.selectByVisibleText(page, this.zoneSelect, stateData.zone);
-    await this.setChecked(page, this.statusToggle(stateData.status ? 'on' : 'off'));
+    await this.setChecked(page, this.statusToggle(stateData.status ? 1 : 0));
 
     // Save zone
     await this.clickAndWaitForURL(page, this.saveStateButton);
 
     // Return successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

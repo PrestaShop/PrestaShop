@@ -11,7 +11,7 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
 import foProductPage from '@pages/FO/product';
@@ -77,7 +77,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
     it('should go to new cart rule page', async function () {
@@ -86,14 +86,14 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await cartRulesPage.goToAddNewCartRulesPage(page);
 
       const pageTitle = await addCartRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      expect(pageTitle).to.contains(addCartRulePage.pageTitle);
     });
 
     it('should create cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
       const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleCode);
-      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
 
     it('should view my shop', async function () {
@@ -103,7 +103,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
   });
 
@@ -114,7 +114,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await foHomePage.goToLoginPage(page);
 
       const pageTitle = await loginPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(loginPage.pageTitle);
+      expect(pageTitle).to.equal(loginPage.pageTitle);
     });
 
     it('should sign in by default customer', async function () {
@@ -123,10 +123,10 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await loginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to the first product page', async function () {
@@ -135,7 +135,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await foHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
     });
 
     it('should add product to cart', async function () {
@@ -144,7 +144,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await foProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
+      expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should add the promo code and check the error message', async function () {
@@ -153,7 +153,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await cartPage.addPromoCode(page, cartRuleCode.code);
 
       const alertMessage = await cartPage.getCartRuleErrorMessage(page);
-      await expect(alertMessage).to.equal(cartPage.cartRuleAlertMessageText);
+      expect(alertMessage).to.equal(cartPage.cartRuleAlertMessageText);
     });
 
     it('should logout by the link in the header', async function () {
@@ -162,7 +162,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await foHomePage.logout(page);
 
       const isCustomerConnected = await foHomePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
     it('should go to home page', async function () {
@@ -171,7 +171,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await foHomePage.clickOnHeaderLink(page, 'Logo');
 
       const pageTitle = await foHomePage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foHomePage.pageTitle);
+      expect(pageTitle).to.equal(foHomePage.pageTitle);
     });
 
     it('should go to the first product page', async function () {
@@ -180,7 +180,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await foHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
     });
 
     it('should add product to cart', async function () {
@@ -189,7 +189,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await foProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
+      expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should add the promo code and verify the total after discount', async function () {
@@ -198,7 +198,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await cartPage.addPromoCode(page, cartRuleCode.code);
 
       const totalAfterDiscount = await cartPage.getATIPrice(page);
-      await expect(totalAfterDiscount).to.equal(0);
+      expect(totalAfterDiscount).to.equal(0);
     });
 
     it('should go to Home page', async function () {
@@ -207,7 +207,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await foHomePage.clickOnHeaderLink(page, 'Logo');
 
       const pageTitle = await foHomePage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foHomePage.pageTitle);
+      expect(pageTitle).to.equal(foHomePage.pageTitle);
     });
 
     it('should go to cart page and delete the product', async function () {
@@ -218,7 +218,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await cartPage.deleteProduct(page, 1);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationNumber).to.be.equal(0);
+      expect(notificationNumber).to.be.equal(0);
     });
   });
 

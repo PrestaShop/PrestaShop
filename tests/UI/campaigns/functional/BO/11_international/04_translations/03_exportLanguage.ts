@@ -12,6 +12,7 @@ import translationsPage from '@pages/BO/international/translations';
 
 // Import data
 import Languages from '@data/demo/languages';
+import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -46,42 +47,58 @@ describe('BO - International - Translation : Export languages', async () => {
     );
 
     const pageTitle = await translationsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(translationsPage.pageTitle);
+    expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
   const tests = [
     {
       args:
         {
-          language: Languages.english,
-          types: ['Front office'],
+          language: Languages.english.name,
+          types: ['Back office'],
         },
     },
     {
       args:
         {
-          language: Languages.french,
-          types: ['Front office'],
+          language: Languages.french.name,
+          types: ['Front office', 'Other'],
+        },
+    },
+    {
+      args:
+        {
+          language: Languages.english.name,
+          module: Modules.psFacetedSearch.name,
         },
     },
   ];
 
-  tests.forEach((test) => {
-    it(`Export language '${test.args.language.name}'`, async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `exportLanguage${test.args.language.name}Theme`,
-        baseContext,
-      );
+  tests.forEach((test, index) => {
+    if (index !== 2) {
+      it(`should export language '${test.args.language}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `exportLanguage${index}`, baseContext);
 
-      const filePath = await translationsPage.exportPrestashopTranslations(
-        page,
-        test.args.language.name,
-        test.args.types,
-      );
-      const doesFileExist = await files.doesFileExist(filePath);
-      await expect(doesFileExist, `File '${filePath}' was not downloaded`).to.be.true;
-    });
+        const filePath = await translationsPage.exportPrestashopTranslations(page, test.args.language, test.args.types);
+
+        const doesFileExist = await files.doesFileExist(filePath);
+        expect(doesFileExist, `File '${filePath}' was not downloaded`).to.eq(true);
+      });
+
+      it('should uncheck options in PrestaShop translations section', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `uncheckOptions${index}`, baseContext);
+
+        await translationsPage.uncheckSelectedOptions(page, test.args.types);
+      });
+    } else {
+      it(`should export language '${test.args.language}' with installed module '${Modules.psFacetedSearch}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `exportLanguage${index}`, baseContext);
+
+        const filePath = await translationsPage.exportInstalledModuleTranslations(page, test.args.language, test.args.module!);
+
+        const doesFileExist = await files.doesFileExist(filePath);
+        expect(doesFileExist, `File '${filePath}' was not downloaded`).to.eq(true);
+      });
+    }
   });
 });

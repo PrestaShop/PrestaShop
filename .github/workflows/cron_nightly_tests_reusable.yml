@@ -1,0 +1,347 @@
+# This workflow aim to run all UI tests on active branches
+# and upload the report on Google cloud platform storage
+name: Nightly tests and report
+
+on:
+  workflow_call:
+    inputs:
+      BRANCH:
+        required: true
+        type: string
+      NODE_VERSION:
+        description: 'Node Version'
+        required: false
+        type: string
+        default: '14'
+      API_NIGHTLY_IMPORT_HOOK:
+        description: 'Nightly hook to import report'
+        required: false
+        type: string
+        default: 'https://api-nightly.prestashop-project.org/hook/reports/import'
+      TESTS_DIR:
+        description: 'Where UI tests are'
+        required: false
+        type: string
+        default: 'tests/UI'
+    secrets:
+      ## GCP Project ID
+      GC_PROJECT_ID:
+        required: true
+      ## GCP Service Key
+      GC_SERVICE_KEY:
+        required: true
+      ## Nightly token to validate the import
+      API_NIGHTLY_IMPORT_TOKEN:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+
+  # First job: Run tests in parallel
+  test:
+    name: Nightly tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH:
+          - ${{ inputs.BRANCH }}
+        CAMPAIGN:
+          - 'cldr'
+          - 'sanity'
+          - 'sanity:productV2'
+          - 'functional:BO:login'
+          - 'functional:BO:dashboard'
+          - 'functional:BO:orders:01:0-1'
+          - 'functional:BO:orders:01-create-orders'
+          - 'functional:BO:orders:01-view-and-edit-order'
+          - 'functional:BO:orders:02'
+          - 'functional:BO:orders:03-05'
+          - 'functional:BO:catalog:01-02'
+          - 'functional:BO:catalog:03-04'
+          - 'functional:BO:catalog:05-06'
+          - 'functional:BO:catalog:07-08'
+          - 'functional:BO:customer:01'
+          - 'functional:BO:customer:02-03'
+          - 'functional:BO:customer-service'
+          - 'functional:BO:modules'
+          - 'functional:BO:design'
+          - 'functional:BO:shipping'
+          - 'functional:BO:payment'
+          - 'functional:BO:international:01'
+          - 'functional:BO:international:02'
+          - 'functional:BO:international:03-04'
+          - 'functional:BO:shop-parameters:01-02'
+          - 'functional:BO:shop-parameters:03-04'
+          - 'functional:BO:shop-parameters:05-07'
+          - 'functional:BO:advanced-parameters:01-06'
+          - 'functional:BO:advanced-parameters:07-10'
+          - 'functional:BO:advanced-parameters:11-12'
+          - 'functional:BO:header'
+          - 'functional:FO:01-03'
+          - 'functional:FO:04-07'
+          - 'functional:FO:08-12'
+          - 'functional:FO:classic:01-03'
+          - 'functional:FO:classic:04-07'
+          - 'functional:FO:classic:08-12'
+          - 'functional:FO:hummingbird:01-03'
+          - 'functional:productV2'
+          - 'functional:API'
+          - 'functional:WS'
+          - 'modules'
+          - 'regression'
+        exclude:
+          ## 1.7.8.x
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'cldr'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:BO:dashboard'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:productV2'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:API'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:classic:01-03'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:classic:04-07'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:classic:08-12'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:hummingbird:01-03'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:WS'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'modules'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'sanity:productV2'
+          ## 8.0.x
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'cldr'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:BO:dashboard'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:productV2'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:API'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:classic:01-03'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:classic:04-07'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:classic:08-12'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:hummingbird:01-03'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:WS'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'modules'
+          ## 8.1.x
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:FO:01-03'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:FO:04-07'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:FO:08-12'
+          ## develop
+          - BRANCH: develop
+            CAMPAIGN: 'functional:FO:01-03'
+          - BRANCH: develop
+            CAMPAIGN: 'functional:FO:04-07'
+          - BRANCH: develop
+            CAMPAIGN: 'functional:FO:08-12'
+          - BRANCH: develop
+            CAMPAIGN: 'sanity:productV2'
+          - BRANCH: develop
+            CAMPAIGN: 'functional:productV2'
+
+    env:
+      GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test
+      REPORTS_DIR: 'reports_${{ matrix.BRANCH }}'  # Where to move test's reports
+      TEST_CAMPAIGN: 'test:${{ matrix.CAMPAIGN }}'  # Command to execute from the matrix
+      PS_LANGUAGE: 'en'
+      PS_INSTALL_AUTO: ${{ (matrix.CAMPAIGN == 'sanity') && '0' || '1' }}
+      PS_DEV_MODE: 0
+      PS_ENABLE_SSL: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && '0' || '1' }}
+      PS_DOMAIN: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && 'localhost:8001' || 'localhost:8002' }}
+      DB_SERVER: 'mysql'
+      DB_NAME: 'prestashop'
+      DB_PREFIX: 'tst_'
+      DB_USER: 'root'
+      DB_PASSWD: 'prestashop'
+      ADMIN_PASSWD: ${{ (matrix.BRANCH == '1.7.8.x') && 'prestashop_demo' || 'Correct Horse Battery Staple' }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ env.GH_BRANCH }}
+
+      # Workaround until https://github.com/PrestaShop/PrestaShop/issues/29813 is fixed
+      - name: PrestaShop Configuration (Copy of Config API)
+        if: (env.GH_BRANCH == '8.1.x') || (env.GH_BRANCH == 'develop')
+        run: cp ./app/config/security_test.yml ./app/config/security_prod.yml
+
+      # Certificate
+      - name: Generate a certificate
+        if: (env.GH_BRANCH == '8.1.x') || (env.GH_BRANCH == 'develop')
+        run: |
+          ## Install MkCert
+          sudo apt install libnss3-tools
+          curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+          chmod +x mkcert-v*-linux-amd64
+          sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
+          ## Generate certificate
+          mkcert -key-file ./${{ env.PS_DIR }}/.docker/ssl.key -cert-file ./${{ env.PS_DIR }}/.docker/ssl.crt localhost
+          ## Link certificate to Chrome Trust Store
+          mkdir -p $HOME/.pki/nssdb
+          certutil -d $HOME/.pki/nssdb -N
+          certutil -d sql:$HOME/.pki/nssdb -n localhost -A -t "TCu,Cu,Tu" -i ./${{ env.PS_DIR }}/.docker/ssl.crt
+          ## Add self-signed certificate to Chrome Trust Store
+          mkcert -install
+
+      # Use docker to create shop
+      - name: Build and run shop with docker
+        timeout-minutes: 15
+        env:
+          URL_FO: ${{ ((env.GH_BRANCH == '8.0.x') || (env.GH_BRANCH == '1.7.8.x')) && 'http://localhost:8001/' || 'https://localhost:8002/' }}
+          URL_PING: ${{ matrix.CAMPAIGN == 'sanity' && 'install-dev/' || 'en/' }}
+        run: |
+          USER_ID=$(id -u) GROUP_ID=$(id -g) \
+          docker-compose -f docker-compose.yml up -d --build
+          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }})" != "200" ]]; do sleep 5; done'
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: ${{ inputs.TESTS_DIR }}
+        run: npm ci
+
+      - name: Install browsers
+        working-directory: ${{ inputs.TESTS_DIR }}
+        if: env.GH_BRANCH != '1.7.8.x'
+        run: npx playwright install --with-deps
+
+      # Run tests (if error, we continue for uploading report)
+      - name: Run tests
+        continue-on-error: true
+        working-directory: ${{ inputs.TESTS_DIR }}
+        env:
+          URL_FO: ${{ ((env.GH_BRANCH == '8.0.x') || (env.GH_BRANCH == '1.7.8.x')) && 'http://localhost:8001/' || 'https://localhost:8002/' }}
+          ENABLE_SSL: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && false || true }}
+          SMTP_SERVER: '172.17.0.1'
+        run: npm run ${{ env.TEST_CAMPAIGN }}
+
+      # Rename and upload report as artifact
+      - name: Rename file reports
+        working-directory: ${{ inputs.TESTS_DIR }}
+        env:
+          REPORTS_DIR_PATH: ${{ github.workspace }}/${{ env.REPORTS_DIR }}
+        run: |
+          mkdir -p ${{ env.REPORTS_DIR_PATH }}
+          FILENAME="$( echo -e '${{ env.TEST_CAMPAIGN }}' | tr  ':' '-'  )"
+          mv ./mochawesome-report/mochawesome.json ${{ env.REPORTS_DIR_PATH }}/${FILENAME}.json
+
+      - uses: actions/upload-artifact@v3
+        name: Upload report
+        with:
+          name: reports_${{ env.GH_BRANCH }}
+          path: ${{ env.REPORTS_DIR }}
+
+  # Second job: Merge Mochawesome reports and upload them on GCP
+  ## Always executed even if tests are in error
+  merge-upload-reports:
+    name: Combine all reports and upload them
+    if: ${{ always() }}
+    needs:
+      - test
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH:
+          - ${{ inputs.BRANCH }}
+
+    env:
+      GH_BRANCH: ${{ matrix.branch }}  # Branch to test
+      REPORTS_DIR: 'reports_${{ matrix.BRANCH }}'  # Where to move test's reports
+      COMBINED_REPORT_DIR: 'combined_reports'  # Where to store the combined report
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ env.GH_BRANCH }}
+
+      - uses: actions/download-artifact@v3
+        name: Download reports
+        with:
+          name: reports_${{ env.GH_BRANCH }}
+          path: ${{ env.REPORTS_DIR }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: ${{ inputs.TESTS_DIR }}
+        run: npm ci
+
+      - name: Combine reports
+        working-directory: ${{ inputs.TESTS_DIR }}
+        env:
+          REPORTS_DIR_PATH: ${{ github.workspace }}/${{ env.REPORTS_DIR }}
+          COMBINED_REPORT_DIR_PATH: ${{ github.workspace }}/${{ env.COMBINED_REPORT_DIR }}
+        run: |
+          mkdir -p ${{ env.COMBINED_REPORT_DIR_PATH }}
+          REPORT_NAME="$(date +%Y-%m-%d)-${{ env.GH_BRANCH }}"
+          npx mochawesome-merge "${{ env.REPORTS_DIR_PATH }}/*.json" -o "${{ env.COMBINED_REPORT_DIR_PATH }}/${REPORT_NAME}.json"
+
+      - name: Auth Cloud Sdk
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GC_SERVICE_KEY }}
+          project_id: ${{ secrets.GC_PROJECT_ID }}
+
+      - name: Setup Cloud Sdk
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Upload to Google Cloud Storage (GCS)
+        run: gsutil cp -r "${{ env.COMBINED_REPORT_DIR }}/**" gs://prestashop-core-nightly/reports
+
+  # Add pushed reports to GCP on nightly
+  push-nightly-reports:
+    permissions:
+      contents: none
+    name: Push reports to nightly.prestashop-project.org
+    if: ${{ always() }}
+    needs:
+      - merge-upload-reports
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH:
+          - ${{ inputs.BRANCH }}
+
+    env:
+      GH_BRANCH: ${{ matrix.branch }}
+
+    steps:
+      - name: Push reports
+        run: |
+          REPORT_NAME="$(date +%Y-%m-%d)-${{ env.GH_BRANCH }}"
+          curl -v "${{ inputs.API_NIGHTLY_IMPORT_HOOK }}?token=${{ secrets.API_NIGHTLY_IMPORT_TOKEN }}&filename=${REPORT_NAME}.json"

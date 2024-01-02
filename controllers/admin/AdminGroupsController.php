@@ -241,6 +241,7 @@ class AdminGroupsControllerCore extends AdminController
         $this->tpl_view_vars = [
             'group' => $group,
             'language' => $this->context->language,
+            // @phpstan-ignore-next-line
             'customerList' => $this->renderCustomersList($group),
             'categorieReductions' => $this->formatCategoryDiscountList($group->id),
         ];
@@ -248,7 +249,7 @@ class AdminGroupsControllerCore extends AdminController
         return parent::renderView();
     }
 
-    protected function renderCustomersList($group)
+    protected function renderCustomersList(Group $group)
     {
         $genders = [0 => '?'];
         $genders_icon = ['default' => 'unknown.gif'];
@@ -449,7 +450,7 @@ class AdminGroupsControllerCore extends AdminController
         return parent::renderForm();
     }
 
-    protected function formatCategoryDiscountList($id_group)
+    protected function formatCategoryDiscountList(int $id_group)
     {
         $group_reductions = GroupReduction::getGroupReductions((int) $id_group, $this->context->language->id);
         $category_reductions = [];
@@ -657,9 +658,9 @@ class AdminGroupsControllerCore extends AdminController
         $guest = new Group((int) Configuration::get('PS_GUEST_GROUP'));
         $default = new Group((int) Configuration::get('PS_CUSTOMER_GROUP'));
 
-        $unidentified_group_information = $this->trans('%group_name% - All persons without a customer account or customers that are not logged in.', ['_raw' => true, '%group_name%' => '<b>' . $unidentified->name[$this->context->language->id] . '</b>'], 'Admin.Shopparameters.Help');
-        $guest_group_information = $this->trans('%group_name% - All persons who placed an order through Guest Checkout.', ['_raw' => true, '%group_name%' => '<b>' . $guest->name[$this->context->language->id] . '</b>'], 'Admin.Shopparameters.Help');
-        $default_group_information = $this->trans('%group_name% - All persons who created an account on this site.', ['_raw' => true, '%group_name%' => '<b>' . $default->name[$this->context->language->id] . '</b>'], 'Admin.Shopparameters.Help');
+        $unidentified_group_information = $this->trans('%group_name% - All persons without a customer account or customers that are not logged in.', ['%group_name%' => '<b>' . $unidentified->name[$this->context->language->id] . '</b>'], 'Admin.Shopparameters.Help');
+        $guest_group_information = $this->trans('%group_name% - All persons who placed an order through Guest Checkout.', ['%group_name%' => '<b>' . $guest->name[$this->context->language->id] . '</b>'], 'Admin.Shopparameters.Help');
+        $default_group_information = $this->trans('%group_name% - All persons who created an account on this site.', ['%group_name%' => '<b>' . $default->name[$this->context->language->id] . '</b>'], 'Admin.Shopparameters.Help');
 
         $this->displayInformation($this->trans('PrestaShop has three default customer groups:', [], 'Admin.Shopparameters.Help'));
         $this->displayInformation($unidentified_group_information);

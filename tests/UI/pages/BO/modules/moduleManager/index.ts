@@ -14,11 +14,7 @@ class ModuleManager extends BOBasePage {
 
   public readonly disableModuleSuccessMessage: (moduleTag: string) => string;
 
-  public readonly disableMobileSuccessMessage: (moduleTag: string) => string;
-
   public readonly enableModuleSuccessMessage: (moduleTag: string) => string;
-
-  public readonly enableMobileSuccessMessage: (moduleTag: string) => string;
 
   public readonly resetModuleSuccessMessage: (moduleTag: string) => string;
 
@@ -115,9 +111,7 @@ class ModuleManager extends BOBasePage {
 
     this.pageTitle = 'Module manager •';
     this.disableModuleSuccessMessage = (moduleTag: string) => `Disable action on module ${moduleTag} succeeded.`;
-    this.disableMobileSuccessMessage = (moduleTag: string) => `Disable mobile action on module ${moduleTag} succeeded.`;
     this.enableModuleSuccessMessage = (moduleTag: string) => `Enable action on module ${moduleTag} succeeded.`;
-    this.enableMobileSuccessMessage = (moduleTag: string) => `Enable mobile action on module ${moduleTag} succeeded.`;
     this.resetModuleSuccessMessage = (moduleTag: string) => `Reset action on module ${moduleTag} succeeded.`;
     this.installModuleSuccessMessage = (moduleTag: string) => `Install action on module ${moduleTag} succeeded.`;
     this.uninstallModuleSuccessMessage = (moduleTag: string) => `Uninstall action on module ${moduleTag} succeeded.`;
@@ -200,7 +194,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAlertsTab(page: Page): Promise<void> {
-    await page.click(this.alertsTab);
+    await page.locator(this.alertsTab).click();
   }
 
   /**
@@ -236,8 +230,8 @@ class ModuleManager extends BOBasePage {
    */
   async searchModule(page: Page, module: ModuleData): Promise<boolean> {
     await this.reloadPage(page);
-    await page.type(this.searchModuleTagInput, module.tag);
-    await page.click(this.searchModuleButton);
+    await page.locator(this.searchModuleTagInput).fill(module.tag);
+    await page.locator(this.searchModuleButton).click();
 
     return this.isModuleVisible(page, module);
   }
@@ -250,6 +244,16 @@ class ModuleManager extends BOBasePage {
    */
   async isModuleVisible(page: Page, module: ModuleData): Promise<boolean> {
     return this.elementVisible(page, this.moduleBlock(module.tag), 10000);
+  }
+
+  /**
+   * Get module name
+   * @param page {Page} Browser tab
+   * @param module {ModuleData} Tag of the Module
+   * @return {Promise<string>}
+   */
+  async getModuleName(page: Page, module: ModuleData): Promise<string> {
+    return this.getAttributeContent(page, `${this.moduleBlock(module.tag)} [data-original-title]`, 'data-original-title');
   }
 
   /**
@@ -268,7 +272,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<void>}
    */
   async selectModule(page: Page, moduleTag: string): Promise<void> {
-    await page.$eval(this.moduleCheckboxButton(moduleTag), (el: HTMLElement) => el.click());
+    await page.locator(this.moduleCheckboxButton(moduleTag)).evaluate((el: HTMLElement) => el.click());
   }
 
   /**
@@ -280,7 +284,7 @@ class ModuleManager extends BOBasePage {
   async bulkActions(page: Page, action: string): Promise<string | null> {
     await this.closeGrowlMessage(page);
 
-    await page.click(this.bulkActionsDropDownButton);
+    await page.locator(this.bulkActionsDropDownButton).click();
     await this.waitForSelectorAndClick(page, this.bulkActionName(action));
 
     await this.waitForVisibleSelector(page, this.bulkActionsModal);
@@ -297,11 +301,11 @@ class ModuleManager extends BOBasePage {
   async goToConfigurationPage(page: Page, moduleTag: string): Promise<void> {
     if (await this.elementNotVisible(page, this.configureModuleButton(moduleTag), 1000)) {
       await Promise.all([
-        page.click(this.actionsDropdownButton(moduleTag)),
+        page.locator(this.actionsDropdownButton(moduleTag)).click(),
         this.waitForVisibleSelector(page, `${this.actionsDropdownButton(moduleTag)}[aria-expanded='true']`),
       ]);
     }
-    await page.click(this.configureModuleButton(moduleTag));
+    await page.locator(this.configureModuleButton(moduleTag)).click();
   }
 
   /**
@@ -312,7 +316,7 @@ class ModuleManager extends BOBasePage {
    */
   async filterByStatus(page: Page, status: string): Promise<void> {
     // Open dropdown
-    await page.click(this.statusDropdownDiv);
+    await page.locator(this.statusDropdownDiv).click();
     await this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='true']`);
 
     // Select dropdown item
@@ -343,7 +347,7 @@ class ModuleManager extends BOBasePage {
         throw new Error(`Status ${status} was not exist!`);
     }
 
-    await page.click(statusSelector);
+    await page.locator(statusSelector).click();
     await this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='false']`);
   }
 
@@ -353,7 +357,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<number>}
    */
   async getNumberOfBlocks(page: Page): Promise<number> {
-    return (await page.$$(this.moduleBlocks)).length;
+    return page.locator(this.moduleBlocks).count();
   }
 
   /**
@@ -395,10 +399,11 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<Array<string>>}
    */
   async getAllModulesTechNames(page: Page): Promise<(string | null)[]> {
-    return page.$$eval(
-      this.allModulesBlock,
-      (all) => all.map((el) => el.getAttribute('data-tech-name')),
-    );
+    return page
+      .locator(this.allModulesBlock)
+      .evaluateAll(
+        (all) => all.map((el) => el.getAttribute('data-tech-name')),
+      );
   }
 
   /**
@@ -425,7 +430,7 @@ class ModuleManager extends BOBasePage {
         await this.waitForSelectorAndClick(page, this.modalConfirmButton(module.tag, action));
       }
     } else {
-      await page.click(this.actionsDropdownButton(module.tag));
+      await page.locator(this.actionsDropdownButton(module.tag)).click();
       await this.waitForVisibleSelector(page, `${this.actionsDropdownButton(module.tag)}[aria-expanded='true']`);
       await this.waitForSelectorAndClick(page, this.actionModuleButtonInDropdownList(action));
 
@@ -435,7 +440,7 @@ class ModuleManager extends BOBasePage {
         return '';
       }
       if (action === 'uninstall' && forceDeletion) {
-        await page.click(this.modalConfirmUninstallForceDeletion(module.tag));
+        await page.locator(this.modalConfirmUninstallForceDeletion(module.tag)).click();
       }
       if (action === 'disable' || action === 'uninstall' || action === 'reset') {
         await this.waitForSelectorAndClick(page, this.modalConfirmButton(module.tag, action));
@@ -488,11 +493,11 @@ class ModuleManager extends BOBasePage {
    */
   async filterByCategory(page: Page, category: string): Promise<void> {
     await Promise.all([
-      page.click(this.categoriesSelectDiv),
+      page.locator(this.categoriesSelectDiv).click(),
       this.waitForVisibleSelector(page, `${this.categoriesSelectDiv}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      page.click(this.categoryDropdownItem(category)),
+      page.locator(this.categoryDropdownItem(category)).click(),
       this.waitForVisibleSelector(page, `${this.categoriesSelectDiv}[aria-expanded='false']`),
     ]);
   }
@@ -504,7 +509,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<string|null>}
    */
   async getBlockModuleTitle(page: Page, position: number): Promise<string | null> {
-    const modulesBlocks = await page.$$eval(this.modulesListBlockTitle, (all) => all.map((el) => el.textContent));
+    const modulesBlocks = await page.locator(this.modulesListBlockTitle).allTextContents();
 
     return modulesBlocks[position - 1];
   }
@@ -540,7 +545,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<number>}
    */
   async getNumberOfModulesInBlock(page: Page, blockName: string): Promise<number> {
-    return (await page.$$(this.moduleListBlock(blockName))).length;
+    return page.locator(this.moduleListBlock(blockName)).count();
   }
 }
 

@@ -1,12 +1,13 @@
+import fs from 'fs';
+import path from 'path';
+import https from 'https';
+
 import ImportData from '@data/faker/import';
 
 import {createObjectCsvWriter} from 'csv-writer';
-import fs from 'fs';
 import imgGen from 'js-image-generator';
-import path from 'path';
 import {getDocument, OPS, PDFDocumentProxy} from 'pdfjs-dist/legacy/build/pdf.js';
 import {TextItem, TextMarkedContent} from 'pdfjs-dist/types/src/display/api';
-import https from 'https';
 import {RawImageData} from 'jpeg-js';
 
 /**
@@ -271,11 +272,11 @@ export default {
   },
 
   /**
-   * Returns the image type of a file
+   * Returns the filetype of a file based on the magic header
    * @param path {string} Path of the file
    * @return {Promise<string>}
    */
-  async getImageType(path: string): Promise<string> {
+  async getFileType(path: string): Promise<string> {
     const buffer: Buffer = fs.readFileSync(path);
 
     // Jpeg
@@ -292,6 +293,11 @@ export default {
     // WebP
     if (buffer.length >= 12 && buffer[8] === 87 && buffer[9] === 69 && buffer[10] === 66 && buffer[11] === 80) {
       return 'webp';
+    }
+
+    // ZIP
+    if (buffer.length >= 4 && buffer[0] === 0x50 && buffer[1] === 0x4B && buffer[2] === 0x03 && buffer[3] === 0x04) {
+      return 'zip';
     }
 
     return '';

@@ -120,7 +120,7 @@ export default class FeatureValuesManager {
   private watchFeatureSelectors(): void {
     $(this.$collectionContainer).on('change', ProductMap.featureValues.featureSelect, (event) => {
       const $selector = $(event.target);
-      const idFeature = Number($selector.val());
+      const featureId = Number($selector.val());
       const $collectionRow = $selector.closest(ProductMap.featureValues.collectionRow);
       const $featureValueSelector = $(ProductMap.featureValues.featureValueSelect, $collectionRow).first();
       const $customValueInputs = $(ProductMap.featureValues.customValueInput, $collectionRow);
@@ -131,18 +131,18 @@ export default class FeatureValuesManager {
       $featureValueSelector.val('0');
       $customFeatureIdInput.val('');
 
-      this.renderFeatureValueChoices($featureValueSelector, idFeature);
+      this.renderFeatureValueChoices($featureValueSelector, featureId);
     });
   }
 
-  private renderFeatureValueChoices($featureValueSelector: JQuery, idFeature: number): void {
-    if (!idFeature) {
+  private renderFeatureValueChoices($featureValueSelector: JQuery, featureId: number): void {
+    if (!featureId) {
       $featureValueSelector.prop('disabled', true);
 
       return;
     }
 
-    $.get(this.router.generate('admin_feature_get_feature_values', {idFeature}))
+    $.get(this.router.generate('admin_feature_get_feature_values', {featureId}))
       .then((featureValuesData) => {
         $featureValueSelector.prop('disabled', featureValuesData.length === 0);
         $featureValueSelector.empty();

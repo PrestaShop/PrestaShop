@@ -55,14 +55,14 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
     );
 
     const pageTitle = await searchPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(searchPage.pageTitle);
+    expect(pageTitle).to.contains(searchPage.pageTitle);
   });
 
   it('should reset all filters and get number of alias in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfSearch = await searchPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfSearch).to.be.above(0);
+    expect(numberOfSearch).to.be.above(0);
   });
 
   // 1 - Create alias
@@ -73,17 +73,17 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
       await searchPage.goToAddNewAliasPage(page);
 
       const pageTitle = await addSearchPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addSearchPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addSearchPage.pageTitleCreate);
     });
 
     it('should create alias and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAlias', baseContext);
 
       const textResult = await addSearchPage.setAlias(page, createAliasData);
-      await expect(textResult).to.contains(searchPage.successfulCreationMessage);
+      expect(textResult).to.contains(searchPage.successfulCreationMessage);
 
       const numberOfElementAfterCreation = await searchPage.getNumberOfElementInGrid(page);
-      await expect(numberOfElementAfterCreation).to.be.equal(numberOfSearch + 1);
+      expect(numberOfElementAfterCreation).to.be.equal(numberOfSearch + 1);
     });
   });
 
@@ -96,7 +96,7 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
       await searchPage.filterTable(page, 'input', 'alias', createAliasData.alias);
 
       const textEmail = await searchPage.getTextColumn(page, 1, 'alias');
-      await expect(textEmail).to.contains(createAliasData.alias);
+      expect(textEmail).to.contains(createAliasData.alias);
     });
 
     it('should go to edit alias page', async function () {
@@ -105,17 +105,17 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
       await searchPage.gotoEditAliasPage(page, 1);
 
       const pageTitle = await addSearchPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addSearchPage.pageTitleEdit);
+      expect(pageTitle).to.contains(addSearchPage.pageTitleEdit);
     });
 
     it('should update alias', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateAlias', baseContext);
 
       const textResult = await addSearchPage.setAlias(page, editSearchData);
-      await expect(textResult).to.contains(searchPage.successfulUpdateMessage);
+      expect(textResult).to.contains(searchPage.successfulUpdateMessage);
 
       const numberOfSearchAfterUpdate = await searchPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfSearchAfterUpdate).to.be.equal(numberOfSearch + 1);
+      expect(numberOfSearchAfterUpdate).to.be.equal(numberOfSearch + 1);
     });
   });
 
@@ -128,17 +128,17 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
       await searchPage.filterTable(page, 'input', 'alias', createAliasData.alias);
 
       const textEmail = await searchPage.getTextColumn(page, 1, 'alias');
-      await expect(textEmail).to.contains(createAliasData.alias);
+      expect(textEmail).to.contains(createAliasData.alias);
     });
 
     it('should delete alias', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAlias', baseContext);
 
       const textResult = await searchPage.deleteAlias(page, 1);
-      await expect(textResult).to.contains(searchPage.successfulDeleteMessage);
+      expect(textResult).to.contains(searchPage.successfulDeleteMessage);
 
       const numberOfSearchAfterDelete = await searchPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfSearchAfterDelete).to.be.equal(numberOfSearch);
+      expect(numberOfSearchAfterDelete).to.be.equal(numberOfSearch);
     });
   });
 });

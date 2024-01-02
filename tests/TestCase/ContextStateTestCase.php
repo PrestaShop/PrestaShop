@@ -35,8 +35,10 @@ use Language;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use Shop;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Utility\ContextMockerTrait;
 
 abstract class ContextStateTestCase extends TestCase
@@ -76,6 +78,14 @@ abstract class ContextStateTestCase extends TestCase
             if ($fieldName === 'language' && $contextValue instanceof Language) {
                 $contextMock->getTranslator()->setLocale('test' . $contextValue->id);
             }
+            if ($fieldName === 'currentLocale') {
+                $contextMock
+                    ->method('getCurrentLocale')
+                    ->willReturnCallback(static function () use ($contextMock) {
+                        return $contextMock->currentLocale;
+                    })
+                ;
+            }
         }
         LegacyContext::setInstanceForTesting($contextMock);
 
@@ -102,5 +112,28 @@ abstract class ContextStateTestCase extends TestCase
         }
 
         return $contextField;
+    }
+
+    protected function createLegacyControllerContextMock(string $controllerName): LegacyControllerContext|MockObject
+    {
+        $legacyControllerContextBuilder = $this->getMockBuilder(LegacyControllerContext::class)
+            // Since most fields ar readonly and set via the constructor we must specify them this way
+            ->setConstructorArgs([
+                $this->createMock(ContainerInterface::class),
+                $controllerName,
+                'admin',
+                7,
+                null,
+                42,
+                'token',
+                '',
+                'index.php',
+            ])
+        ;
+
+        /** @var LegacyControllerContext $legacyControllerContext */
+        $legacyControllerContext = $legacyControllerContextBuilder->getMock();
+
+        return $legacyControllerContext;
     }
 }

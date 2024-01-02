@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use Cart;
 use Configuration;
-use Context;
 use Currency;
 use Customer;
 use Customization;
@@ -38,7 +37,6 @@ use Db;
 use Order;
 use OrderDetail;
 use OrderInvoice;
-use Pack;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -49,9 +47,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use Product;
 use Shop;
 use StockAvailable;
-use StockManagerFactory;
-use StockMvt;
-use Warehouse;
 
 /**
  * Increase or decrease quantity of an order's product.
@@ -155,7 +150,9 @@ class OrderProductQuantityUpdater
         if (0 === $newQuantity) {
             // Product deletion
             $cartComparator = $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $updateCart);
-            $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
+            if ((int) $orderDetail->id_customization) {
+                $this->deleteProductCustomization((int) $orderDetail->id_customization);
+            }
             $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $cartComparator->getUpdatedProducts());
             $this->applyOtherProductCreation($order, $cart, $orderInvoice, $cartComparator->getAdditionalProducts());
         } else {
@@ -174,10 +171,6 @@ class OrderProductQuantityUpdater
                 $cartComparator = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
                 $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $cartComparator->getUpdatedProducts());
                 $this->applyOtherProductCreation($order, $cart, $orderInvoice, $cartComparator->getAdditionalProducts());
-            } elseif ($orderDetail->id_customization > 0) {
-                $customization = new Customization($orderDetail->id_customization);
-                $customization->quantity = $newQuantity;
-                $customization->save();
             }
         }
 
@@ -391,137 +384,42 @@ class OrderProductQuantityUpdater
         $reinjectableQuantity = $oldQuantity - $newQuantity;
         $quantityToReinject = $oldQuantity > $reinjectableQuantity ? $reinjectableQuantity : $oldQuantity;
 
-        $product = new Product(
+        StockAvailable::updateQuantity(
             $orderDetail->product_id,
-            false,
-            (int) Context::getContext()->language->id,
-            (int) $orderDetail->id_shop
+            $orderDetail->product_attribute_id,
+            $quantityToReinject,
+            $orderDetail->id_shop,
+            true,
+            [
+                'id_order' => $orderDetail->id_order,
+                'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_RETURN_REASON'),
+            ]
         );
 
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-            && $product->advanced_stock_management
-            && $orderDetail->id_warehouse != 0
-        ) {
-            $manager = StockManagerFactory::getManager();
-            $movements = StockMvt::getNegativeStockMvts(
-                $orderDetail->id_order,
-                $orderDetail->product_id,
-                $orderDetail->product_attribute_id,
-                $quantityToReinject
-            );
+        // sync all stock
+        (new StockManager())->updatePhysicalProductQuantity(
+            (int) $orderDetail->id_shop,
+            (int) Configuration::get('PS_OS_ERROR'),
+            (int) Configuration::get('PS_OS_CANCELED'),
+            null,
+            (int) $orderDetail->id_order
+        );
 
-            foreach ($movements as $movement) {
-                if ($quantityToReinject > $movement['physical_quantity']) {
-                    $quantityToReinject = $movement['physical_quantity'];
-                }
-
-                if (Pack::isPack((int) $product->id)) {
-                    // Gets items
-                    if ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
-                        || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
-                        || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
-                            && Configuration::get('PS_PACK_STOCK_TYPE') > 0)
-                    ) {
-                        $products_pack = Pack::getItems((int) $product->id, (int) Configuration::get('PS_LANG_DEFAULT'));
-                        // Foreach item
-                        foreach ($products_pack as $product_pack) {
-                            if ($product_pack->advanced_stock_management == 1) {
-                                $manager->addProduct(
-                                    $product_pack->id,
-                                    $product_pack->id_pack_product_attribute,
-                                    new Warehouse($movement['id_warehouse']),
-                                    $product_pack->pack_quantity * $quantityToReinject,
-                                    null,
-                                    $movement['price_te']
-                                );
-                            }
-                        }
-                    }
-
-                    if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
-                        || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
-                        || (
-                            $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
-                            && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
-                                || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
-                        )
-                    ) {
-                        $manager->addProduct(
-                            $orderDetail->product_id,
-                            $orderDetail->product_attribute_id,
-                            new Warehouse($movement['id_warehouse']),
-                            $quantityToReinject,
-                            null,
-                            $movement['price_te']
-                        );
-                    }
-                } else {
-                    $manager->addProduct(
-                        $orderDetail->product_id,
-                        $orderDetail->product_attribute_id,
-                        new Warehouse($movement['id_warehouse']),
-                        $quantityToReinject,
-                        null,
-                        $movement['price_te']
-                    );
-                }
-            }
-
-            $productId = $orderDetail->product_id;
-
-            if ($delete) {
-                $orderDetail->delete();
-            }
-
-            StockAvailable::synchronize($productId);
-        } elseif ($orderDetail->id_warehouse == 0) {
-            StockAvailable::updateQuantity(
-                $orderDetail->product_id,
-                $orderDetail->product_attribute_id,
-                $quantityToReinject,
-                $orderDetail->id_shop,
-                true,
-                [
-                    'id_order' => $orderDetail->id_order,
-                    'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_RETURN_REASON'),
-                ]
-            );
-
-            // sync all stock
-            (new StockManager())->updatePhysicalProductQuantity(
-                (int) $orderDetail->id_shop,
-                (int) Configuration::get('PS_OS_ERROR'),
-                (int) Configuration::get('PS_OS_CANCELED'),
-                null,
-                (int) $orderDetail->id_order
-            );
-
-            if ($delete) {
-                $orderDetail->delete();
-            }
-        } else {
-            throw new OrderException('This product cannot be re-stocked.');
+        if ($delete) {
+            $orderDetail->delete();
         }
     }
 
     /**
-     * @param Order $order
-     * @param OrderDetail $orderDetail
-     * @param int $oldQuantity
+     * @param int $id_customization
      *
      * @throws OrderException
      */
-    private function updateCustomizationOnProductDelete(Order $order, OrderDetail $orderDetail, int $oldQuantity): void
+    private function deleteProductCustomization(int $id_customization): void
     {
-        if (!(int) $order->getCurrentState()) {
-            throw new OrderException('Could not get a valid Order state before deletion');
-        }
-
-        if ($order->hasBeenPaid()) {
-            Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity_refunded` = `quantity_refunded` + ' . (int) $oldQuantity . ' WHERE `id_customization` = ' . (int) $orderDetail->id_customization . ' AND `id_cart` = ' . (int) $order->id_cart . ' AND `id_product` = ' . (int) $orderDetail->product_id);
-        }
-
-        if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization` WHERE `quantity` = 0')) {
+        if (!Db::getInstance()->execute(
+            'DELETE FROM `' . _DB_PREFIX_ . 'customization` 
+            WHERE `id_customization` = ' . (int) $id_customization)) {
             throw new OrderException('Could not delete customization from database.');
         }
     }

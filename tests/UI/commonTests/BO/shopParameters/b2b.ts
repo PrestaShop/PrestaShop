@@ -47,7 +47,7 @@ function enableB2BTest(baseContext: string = 'commonTests-enableB2BTest'): void 
       await customerSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await customerSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
     });
 
     it('should enable B2B mode', async function () {
@@ -58,7 +58,7 @@ function enableB2BTest(baseContext: string = 'commonTests-enableB2BTest'): void 
         CustomerSettingsOptions.OPTION_B2B,
         true,
       );
-      await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
   });
 }
@@ -94,7 +94,7 @@ function disableB2BTest(baseContext: string = 'commonTests-disableB2BTest'): voi
       await customerSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await customerSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
     });
 
     it('should disable B2B mode', async function () {
@@ -105,7 +105,7 @@ function disableB2BTest(baseContext: string = 'commonTests-disableB2BTest'): voi
         CustomerSettingsOptions.OPTION_B2B,
         false,
       );
-      await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
   });
 }

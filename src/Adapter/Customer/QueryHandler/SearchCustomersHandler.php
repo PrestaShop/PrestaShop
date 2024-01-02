@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 use Customer;
 use Group;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\SearchCustomersHandlerInterface;
 
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\SearchCustomersHandl
  *
  * @internal
  */
+#[AsQueryHandler]
 final class SearchCustomersHandler implements SearchCustomersHandlerInterface
 {
     /**

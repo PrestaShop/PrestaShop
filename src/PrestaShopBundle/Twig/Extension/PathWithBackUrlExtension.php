@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Twig\Extension;
 
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -37,40 +37,17 @@ use Twig\TwigFunction;
  */
 class PathWithBackUrlExtension extends AbstractExtension
 {
-    /**
-     * @var RoutingExtension
-     */
-    private $routingExtension;
-
-    /**
-     * @var BackUrlProvider
-     */
-    private $backUrlProvider;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @param RoutingExtension $routingExtension
-     * @param BackUrlProvider $backUrlProvider
-     * @param RequestStack|null $requestStack
-     */
     public function __construct(
-        RoutingExtension $routingExtension,
-        BackUrlProvider $backUrlProvider,
-        $requestStack
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly BackUrlProvider $backUrlProvider,
+        private readonly RequestStack $requestStack
     ) {
-        $this->routingExtension = $routingExtension;
-        $this->backUrlProvider = $backUrlProvider;
-        $this->requestStack = $requestStack;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction(
@@ -89,13 +66,9 @@ class PathWithBackUrlExtension extends AbstractExtension
      *
      * @return string
      */
-    public function getPathWithBackUrl($name, $parameters = [], $relative = false)
+    public function getPathWithBackUrl(string $name, array $parameters = [], bool $relative = false): string
     {
-        $fallbackPath = $this->routingExtension->getPath($name, $parameters, $relative);
-
-        if (null === $this->requestStack) {
-            return $fallbackPath;
-        }
+        $fallbackPath = $this->urlGenerator->generate($name, $parameters, $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH);
 
         $request = $this->requestStack->getCurrentRequest();
 

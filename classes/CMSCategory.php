@@ -239,11 +239,8 @@ class CMSCategoryCore extends ObjectModel
      * @param array $to_delete Array reference where categories ID will be saved
      * @param array|int $id_cms_category Parent CMSCategory ID
      */
-    protected function recursiveDelete(&$to_delete, $id_cms_category)
+    protected function recursiveDelete(array &$to_delete, $id_cms_category)
     {
-        if (!is_array($to_delete)) {
-            die(Tools::displayError('Parameter "to_delete" is invalid.'));
-        }
         if (!$id_cms_category) {
             die(Tools::displayError('Parameter "id_cms_category" is invalid.'));
         }
@@ -310,7 +307,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * return boolean Deletion result
      */
-    public function deleteSelection($categories)
+    public function deleteSelection(array $categories)
     {
         $return = true;
         foreach ($categories as $id_category_cms) {
@@ -341,12 +338,8 @@ class CMSCategoryCore extends ObjectModel
      *
      * @return array Categories
      */
-    public static function getCategories($id_lang, $active = true, $order = true)
+    public static function getCategories($id_lang, bool $active = true, $order = true)
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
-        }
-
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `' . _DB_PREFIX_ . 'cms_category` c
@@ -385,12 +378,8 @@ class CMSCategoryCore extends ObjectModel
      *
      * @return array Categories
      */
-    public function getSubCategories($id_lang, $active = true)
+    public function getSubCategories(int $id_lang, bool $active = true)
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
-        }
-
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_keywords, cl.meta_description
 		FROM `' . _DB_PREFIX_ . 'cms_category` c
@@ -433,12 +422,8 @@ class CMSCategoryCore extends ObjectModel
         return CMSCategory::getChildren(1, $id_lang, $active);
     }
 
-    public static function getChildren($id_parent, $id_lang, $active = true)
+    public static function getChildren($id_parent, $id_lang, bool $active = true)
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
-        }
-
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.`id_cms_category`, cl.`name`, cl.`link_rewrite`
 		FROM `' . _DB_PREFIX_ . 'cms_category` c
@@ -676,18 +661,5 @@ class CMSCategoryCore extends ObjectModel
     public static function getLastPosition($id_category_parent)
     {
         return Db::getInstance()->getValue('SELECT MAX(position)+1 FROM `' . _DB_PREFIX_ . 'cms_category` WHERE `id_parent` = ' . (int) $id_category_parent);
-    }
-
-    public static function getUrlRewriteInformations($id_category)
-    {
-        $sql = '
-		SELECT l.`id_lang`, c.`link_rewrite`
-		FROM `' . _DB_PREFIX_ . 'cms_category_lang` AS c
-		LEFT JOIN  `' . _DB_PREFIX_ . 'lang` AS l ON c.`id_lang` = l.`id_lang`
-		WHERE c.`id_cms_category` = ' . (int) $id_category . '
-		AND l.`active` = 1';
-        $arr_return = Db::getInstance()->executeS($sql);
-
-        return $arr_return;
     }
 }

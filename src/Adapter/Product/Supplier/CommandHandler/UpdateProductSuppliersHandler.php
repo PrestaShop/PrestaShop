@@ -31,12 +31,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSuppliersHandlerInterface;
 
 /**
  * Handles @see UpdateProductSuppliersCommand using legacy object model
  */
+#[AsCommandHandler]
 final class UpdateProductSuppliersHandler extends AbstractProductSupplierHandler implements UpdateProductSuppliersHandlerInterface
 {
     /**

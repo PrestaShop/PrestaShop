@@ -174,7 +174,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
     {
         $this->fields_form = [
             'legend' => [
-                'title' => $this->trans('Tax Rules', [], 'Admin.International.Feature'),
+                'title' => $this->trans('Tax rules', [], 'Admin.International.Feature'),
                 'icon' => 'icon-money',
             ],
             'input' => [
@@ -568,7 +568,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
      *
      * @return TaxRulesGroup
      */
-    protected function updateTaxRulesGroup($object)
+    protected function updateTaxRulesGroup(TaxRulesGroup $object)
     {
         static $tax_rules_group = null;
         if ($tax_rules_group === null) {

@@ -67,7 +67,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName(): string
     {
-        return $this->trans('Country', [], 'Admin.Global');
+        return $this->trans('Countries', [], 'Admin.Global');
     }
 
     /**
@@ -228,6 +228,13 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_field' => 'id_country',
                         'clickable_row' => true,
                     ])
+            )
+            ->add(
+                $this->buildDeleteAction(
+                    'admin_countries_delete',
+                    'countryId',
+                    'id_country'
+                )
             );
 
         return $rowActionCollection;

@@ -1,0 +1,46 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+    bind:
+      $controllersLockedToAllShopContext: '%prestashop.controllers_all_shop_context%'
+      $container: "@service_container"
+  _instanceof:
+    PrestaShop\PrestaShop\Core\Context\LegacyContextBuilderInterface:
+      tags: [ 'core.legacy_context_builder' ]
+
+  PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\EmployeeContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder', 'build' ]
+
+  PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\LanguageContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder', 'build' ]
+
+  prestashop.default.language.context:
+    class: PrestaShop\PrestaShop\Core\Context\LanguageContext
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder', 'buildDefault' ]
+
+  PrestaShop\PrestaShop\Core\Context\ShopContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\ShopContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\ShopContextBuilder', 'build' ]
+
+  PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\CurrencyContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder', 'build' ]
+
+  PrestaShop\PrestaShop\Core\Context\CountryContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\CountryContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\CountryContextBuilder', 'build' ]
+
+  PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\LegacyControllerContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder', 'build' ]

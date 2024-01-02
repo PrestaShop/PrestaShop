@@ -254,7 +254,7 @@ class WebService extends BOBasePage {
    */
   async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
-      await page.click(this.webserviceListTableStatusColumn(row));
+      await page.locator(this.webserviceListTableStatusColumn(row)).click();
 
       return true;
     }
@@ -271,7 +271,7 @@ class WebService extends BOBasePage {
   async deleteWebserviceKey(page: Page, row: number): Promise<string> {
     // Click on dropDown
     await Promise.all([
-      page.click(this.webserviceListTableToggleDropDown(row)),
+      page.locator(this.webserviceListTableToggleDropDown(row)).click(),
       this.waitForVisibleSelector(
         page,
         `${this.webserviceListTableToggleDropDown(row)}[aria-expanded='true']`,
@@ -279,7 +279,7 @@ class WebService extends BOBasePage {
     ]);
     // Click on delete
     await Promise.all([
-      page.click(this.webserviceListTableDeleteLink(row)),
+      page.locator(this.webserviceListTableDeleteLink(row)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteWebService(page);
@@ -293,7 +293,7 @@ class WebService extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteWebService(page: Page): Promise<void> {
-    await page.click(this.confirmDeleteButton);
+    await page.locator(this.confirmDeleteButton).click();
     await this.elementNotVisible(page, this.confirmDeleteModal, 2000);
   }
 
@@ -314,19 +314,19 @@ class WebService extends BOBasePage {
   async deleteWithBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsDiv).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.bulkActionsDeleteButton),
+      page.locator(this.bulkActionsDeleteButton).click(),
       this.waitForVisibleSelector(page, this.deleteModal),
     ]);
     await this.confirmDeleteWebService(page);
@@ -343,18 +343,18 @@ class WebService extends BOBasePage {
   async bulkSetStatus(page: Page, enable: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsDiv).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
     // Click on enable/Disable and wait for modal
-    await page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await page.locator(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton).click();
     await this.elementNotVisible(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton, 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);

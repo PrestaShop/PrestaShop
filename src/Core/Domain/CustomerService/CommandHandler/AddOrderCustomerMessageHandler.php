@@ -32,6 +32,7 @@ use CustomerMessage;
 use CustomerThread;
 use Mail;
 use Order;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\CommandHandler\AddOrderCustomerMessageHandlerInterface;
@@ -43,6 +44,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 
+#[AsCommandHandler]
 class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHandlerInterface
 {
     /**

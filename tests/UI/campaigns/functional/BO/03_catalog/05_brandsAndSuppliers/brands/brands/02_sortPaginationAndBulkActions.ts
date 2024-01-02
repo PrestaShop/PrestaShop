@@ -72,14 +72,14 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
       await dashboardPage.closeSfToolBar(page);
 
       const pageTitle = await brandsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(brandsPage.pageTitle);
+      expect(pageTitle).to.contains(brandsPage.pageTitle);
     });
 
     it('should reset all filters and get number of brands in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterBrandsTable', baseContext);
 
       numberOfBrands = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfBrands).to.be.above(0);
+      expect(numberOfBrands).to.be.above(0);
     });
 
     it('should change the items number to 10 per page', async function () {
@@ -147,17 +147,17 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
             const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
             if (test.args.sortDirection === 'asc') {
-              await expect(sortedTableFloat).to.deep.equal(expectedResult);
+              expect(sortedTableFloat).to.deep.equal(expectedResult);
             } else {
-              await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+              expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
             }
           } else {
             const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
             if (test.args.sortDirection === 'asc') {
-              await expect(sortedTable).to.deep.equal(expectedResult);
+              expect(sortedTable).to.deep.equal(expectedResult);
             } else {
-              await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+              expect(sortedTable).to.deep.equal(expectedResult.reverse());
             }
           }
         },
@@ -173,7 +173,7 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
       await brandsPage.filterBrands(page, 'input', 'name', 'todelete');
 
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
-      await expect(textColumn).to.contains('todelete');
+      expect(textColumn).to.contains('todelete');
     });
 
     [
@@ -184,14 +184,14 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Brand`, baseContext);
 
         const textResult = await brandsPage.bulkSetBrandsStatus(page, test.args.enabledValue);
-        await expect(textResult).to.be.equal(brandsPage.successfulUpdateStatusMessage);
+        expect(textResult).to.be.equal(brandsPage.successfulUpdateStatusMessage);
 
         const numberOfBrandsInGrid = await brandsPage.getNumberOfElementInGrid(page, tableName);
-        await expect(numberOfBrandsInGrid).to.be.equal(numberOfImportedBrands);
+        expect(numberOfBrandsInGrid).to.be.equal(numberOfImportedBrands);
 
         for (let i = 1; i <= numberOfBrandsInGrid; i++) {
           const brandStatus = await brandsPage.getBrandStatus(page, i);
-          await expect(brandStatus).to.equal(test.args.enabledValue);
+          expect(brandStatus).to.equal(test.args.enabledValue);
         }
       });
     });
@@ -200,7 +200,7 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkEdit', baseContext);
 
       const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands);
+      expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands);
     });
   });
 
@@ -212,21 +212,21 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
       await brandsPage.filterBrands(page, 'input', 'name', 'todelete');
 
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
-      await expect(textColumn).to.contains('todelete');
+      expect(textColumn).to.contains('todelete');
     });
 
     it('should delete with bulk actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteBrands', baseContext);
 
       const deleteTextResult = await brandsPage.deleteWithBulkActions(page, tableName);
-      await expect(deleteTextResult).to.be.equal(brandsPage.successfulDeleteMessage);
+      expect(deleteTextResult).to.be.equal(brandsPage.successfulDeleteMessage);
     });
 
     it('should reset filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteBrands', baseContext);
 
       const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands - numberOfImportedBrands);
+      expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands - numberOfImportedBrands);
     });
   });
 });

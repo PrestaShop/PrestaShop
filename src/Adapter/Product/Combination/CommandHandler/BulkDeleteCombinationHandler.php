@@ -28,12 +28,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\BulkDeleteCombinationHandlerInterface;
 
 /**
  * Deletes multiple combinations using legacy object model
  */
+#[AsCommandHandler]
 class BulkDeleteCombinationHandler implements BulkDeleteCombinationHandlerInterface
 {
     /**

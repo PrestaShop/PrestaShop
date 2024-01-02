@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -38,9 +41,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ShopChoiceTreeType extends AbstractType
 {
     /**
-     * @var array
+     * @var FormChoiceProviderInterface
      */
-    private $shopTreeChoices;
+    private $shopTreeChoiceProvider;
 
     /**
      * @var DataTransformerInterface
@@ -48,15 +51,31 @@ class ShopChoiceTreeType extends AbstractType
     private $stringArrayToIntegerArrayDataTransformer;
 
     /**
-     * @param array $shopTreeChoices
+     * @var ShopContextInterface
+     */
+    private $shopContext;
+
+    /**
+     * @var FeatureInterface
+     */
+    private $multiStoreFeature;
+
+    /**
+     * @param FormChoiceProviderInterface $shopTreeChoiceProvider
      * @param DataTransformerInterface $stringArrayToIntegerArrayDataTransformer
+     * @param ShopContextInterface $shopContext
+     * @param FeatureInterface $multiStoreFeature
      */
     public function __construct(
-        array $shopTreeChoices,
-        DataTransformerInterface $stringArrayToIntegerArrayDataTransformer
+        FormChoiceProviderInterface $shopTreeChoiceProvider,
+        DataTransformerInterface $stringArrayToIntegerArrayDataTransformer,
+        ShopContextInterface $shopContext,
+        FeatureInterface $multiStoreFeature
     ) {
-        $this->shopTreeChoices = $shopTreeChoices;
+        $this->shopTreeChoiceProvider = $shopTreeChoiceProvider;
         $this->stringArrayToIntegerArrayDataTransformer = $stringArrayToIntegerArrayDataTransformer;
+        $this->shopContext = $shopContext;
+        $this->multiStoreFeature = $multiStoreFeature;
     }
 
     /**
@@ -74,11 +93,18 @@ class ShopChoiceTreeType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
-            'choices_tree' => $this->shopTreeChoices,
+            'choices_tree' => $this->shopTreeChoiceProvider->getChoices(),
             'multiple' => true,
             'choice_label' => 'name',
             'choice_value' => 'id_shop',
+            'default_empty_data' => $this->shopContext->getContextShopIds(),
+            'form_theme' => '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig',
+            'row_attr' => [
+                'class' => $this->multiStoreFeature->isUsed() ? '' : 'd-none',
+            ],
         ]);
     }
 

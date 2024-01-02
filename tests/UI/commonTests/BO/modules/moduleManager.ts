@@ -39,7 +39,7 @@ function installModule(module: ModuleData, baseContext: string = 'commonTests-in
       await files.downloadFile(module.releaseZip, 'module.zip');
 
       const found = await files.doesFileExist('module.zip');
-      await expect(found).to.be.true;
+      expect(found).to.eq(true);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
@@ -53,28 +53,28 @@ function installModule(module: ModuleData, baseContext: string = 'commonTests-in
       await moduleManagerPage.closeSfToolBar(page);
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
     it(`should upload the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uploadModule', baseContext);
 
       const successMessage = await moduleManagerPage.uploadModule(page, 'module.zip');
-      await expect(successMessage).to.eq(moduleManagerPage.uploadModuleSuccessMessage);
+      expect(successMessage).to.eq(moduleManagerPage.uploadModuleSuccessMessage);
     });
 
     it('should close upload module modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
       const isModalVisible = await moduleManagerPage.closeUploadModuleModal(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.eq(true);
     });
 
     it(`should search the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
       const isModuleVisible = await moduleManagerPage.searchModule(page, module);
-      await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+      expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
   });
 }
@@ -109,21 +109,21 @@ function uninstallModule(module: ModuleData, baseContext: string = 'commonTests-
       await moduleManagerPage.closeSfToolBar(page);
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
     it(`should search the module '${Modules.keycloak.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
       const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.keycloak);
-      await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+      expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
 
     it(`should uninstall the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
       const successMessage = await moduleManagerPage.setActionInModule(page, module, 'uninstall');
-      await expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(module.tag));
+      expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(module.tag));
     });
   });
 }

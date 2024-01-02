@@ -27,9 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Voter\PageVoter;
 
 abstract class ModuleAbstractController extends FrameworkBundleAdminController
 {
@@ -49,7 +50,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         return [
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-            'layoutTitle' => $this->trans('Module notifications', 'Admin.Modules.Feature'),
+            'layoutTitle' => $this->trans('Module notifications', 'Admin.Navigation.Menu'),
             'help_link' => $this->generateSidebarLink('AdminModules'),
             'modules' => $modulePresenter->presentCollection($moduleCollection),
             'requireBulkActions' => false,
@@ -61,7 +62,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
 
     protected function getModuleRepository(): ModuleRepositoryInterface
     {
-        return $this->get('prestashop.core.admin.module.repository');
+        return $this->get(ModuleRepository::class);
     }
 
     /**
@@ -77,8 +78,8 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
+                Permission::LEVEL_READ,
+                Permission::LEVEL_UPDATE,
             ]
         )) {
             $toolbarButtons['add_module'] = [

@@ -293,17 +293,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
-        if (isset($parameters['_raw'])) {
-            @trigger_error(
-                'The _raw parameter is deprecated and will be removed in the next major version.',
-                E_USER_DEPRECATED
-            );
-            unset($parameters['_raw']);
-
-            return $this->translator->trans($id, $parameters, $domain, $locale);
-        }
-
-        return htmlspecialchars($this->translator->trans($id, $parameters, $domain, $locale), ENT_NOQUOTES);
+        return $this->translator->trans($id, $parameters, $domain, $locale);
     }
 
     /**
@@ -952,7 +942,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @return bool
      */
-    public function deleteSelection($ids)
+    public function deleteSelection(array $ids)
     {
         $result = true;
         foreach ($ids as $id) {
@@ -1197,9 +1187,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             if (!in_array('required', $skip) && (!empty($data['required']) || in_array($field, $required_fields))) {
                 if (Tools::isEmpty($value)) {
                     if ($human_errors) {
-                        return $this->trans('The %s field is required.', [$this->displayFieldName($field, get_class($this))], 'Admin.Notifications.Error');
+                        return $this->trans('The %s field is required.', [htmlspecialchars($this->displayFieldName($field, get_class($this)))], 'Admin.Notifications.Error');
                     } else {
-                        return $this->trans('Property %s is empty.', [get_class($this) . '->' . $field], 'Admin.Notifications.Error');
+                        return $this->trans('Property %s is empty.', [get_class($this) . '->' . htmlspecialchars($field)], 'Admin.Notifications.Error');
                     }
                 }
             }
@@ -1213,7 +1203,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // Check field values
         if (!in_array('values', $skip) && !empty($data['values']) && is_array($data['values']) && !in_array($value, $data['values'])) {
-            return $this->trans('Property %1$s has a bad value (allowed values are: %2$s).', [get_class($this) . '->' . $field, implode(', ', $data['values'])], 'Admin.Notifications.Error');
+            return $this->trans('Property %1$s has a bad value (allowed values are: %2$s).', [get_class($this) . '->' . htmlspecialchars($field), implode(', ', $data['values'])], 'Admin.Notifications.Error');
         }
 
         // Check field size
@@ -1238,7 +1228,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     return $this->trans(
                         'The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.',
                         [
-                            get_class($this) . '->' . $field,
+                            get_class($this) . '->' . htmlspecialchars($field),
                             $length,
                             $size['min'],
                             $size['max'],
@@ -1256,8 +1246,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 return $this->trans(
                     'The range of property %1$s is currently %2$d. It must be between %3$d and %4$d.',
                     [
-                        get_class($this) . '->' . $field,
-                        $value,
+                        get_class($this) . '->' . htmlspecialchars($field),
+                        htmlspecialchars($value),
                         $range['min'],
                         $range['max'],
                     ],
@@ -1287,7 +1277,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     if ($human_errors) {
                         return $this->trans('The %s field is invalid.', [$this->displayFieldName($field, get_class($this))], 'Admin.Notifications.Error');
                     } else {
-                        return $this->trans('Property %s is not valid', [get_class($this) . '->' . $field], 'Admin.Notifications.Error');
+                        return $this->trans('Property %s is not valid', [get_class($this) . '->' . htmlspecialchars($field)], 'Admin.Notifications.Error');
                     }
                 }
             }

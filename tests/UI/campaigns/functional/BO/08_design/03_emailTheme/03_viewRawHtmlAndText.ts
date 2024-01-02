@@ -53,7 +53,7 @@ describe('BO - Design - Email Theme : View raw html and text', async () => {
     await emailThemesPage.closeSfToolBar(page);
 
     const pageTitle = await emailThemesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(emailThemesPage.pageTitle);
+    expect(pageTitle).to.contains(emailThemesPage.pageTitle);
   });
 
   it('should preview classic email theme', async function () {
@@ -62,7 +62,7 @@ describe('BO - Design - Email Theme : View raw html and text', async () => {
     await emailThemesPage.previewEmailTheme(page, emailThemeName);
 
     const pageTitle = await previewEmailThemesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(
+    expect(pageTitle).to.contains(
       `${previewEmailThemesPage.pageTitle} ${emailThemeName}`,
     );
   });
@@ -72,7 +72,7 @@ describe('BO - Design - Email Theme : View raw html and text', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewRawHtml', baseContext);
 
       newPage = await previewEmailThemesPage.viewRawHtml(page, 1);
-      await expect(newPage.url())
+      expect(newPage.url())
         .to.contain(emailThemeName)
         .and.to.contain('raw')
         .and.to.contain('.html');
@@ -82,7 +82,7 @@ describe('BO - Design - Email Theme : View raw html and text', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkRawHtmlText', baseContext);
 
       const pageText = await previewEmailThemesPage.getTextFromViewLayoutPage(newPage);
-      await expect(pageText)
+      expect(pageText)
         .to.contain(global.FO.URL)
         .and.to.contain('<html')
         .and.to.contain('<body')
@@ -98,7 +98,7 @@ describe('BO - Design - Email Theme : View raw html and text', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewRawText', baseContext);
 
       newPage = await previewEmailThemesPage.viewRawText(page, 1);
-      await expect(newPage.url())
+      expect(newPage.url())
         .to.contain(emailThemeName)
         .and.to.contain('raw')
         .and.to.contain('.txt');
@@ -108,7 +108,7 @@ describe('BO - Design - Email Theme : View raw html and text', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkRawTextPage', baseContext);
 
       const pageText = await previewEmailThemesPage.getTextFromViewLayoutPage(newPage);
-      await expect(pageText)
+      expect(pageText)
         .to.contain(global.FO.URL)
         .and.to.contain('Hi');
     });

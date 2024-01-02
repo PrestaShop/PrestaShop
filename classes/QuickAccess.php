@@ -24,9 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-
 /**
  * Class QuickAccessCore.
  */
@@ -49,7 +46,7 @@ class QuickAccessCore extends ObjectModel
     /**
      * link to new product creation form for product v2
      */
-    private const NEW_PRODUCT_V2_LINK = 'index.php/sell/catalog/products-v2/create';
+    private const NEW_PRODUCT_V2_LINK = 'index.php/sell/catalog/products/create';
 
     /**
      * @see ObjectModel::$definition
@@ -126,11 +123,9 @@ class QuickAccessCore extends ObjectModel
                         unset($quickAccess[$index]);
                         continue;
                     }
-                    // if new product page feature is enabled we create new product v2 modal popup
-                    if (self::productPageV2Enabled()) {
-                        $quickAccess[$index]['link'] = $context->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . self::NEW_PRODUCT_V2_LINK;
-                        $quickAccess[$index]['class'] = 'new-product-button';
-                    }
+                    // We create new product v2 modal popup link
+                    $quickAccess[$index]['link'] = $context->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . self::NEW_PRODUCT_V2_LINK;
+                    $quickAccess[$index]['class'] = 'new-product-button';
                 }
             }
 
@@ -161,13 +156,5 @@ class QuickAccessCore extends ObjectModel
         $this->new_window = !(int) $this->new_window;
 
         return $this->update(false);
-    }
-
-    /**
-     * @return bool
-     */
-    private static function productPageV2Enabled(): bool
-    {
-        return SymfonyContainer::getInstance()->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
     }
 }

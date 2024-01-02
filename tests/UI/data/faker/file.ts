@@ -35,6 +35,6 @@ export default class FileData {
     this.frDescription = fileToCreate.frDescription || this.description;
 
     /** @type {string} Name of the file for the filepath */
-    this.filename = `${this.name}.txt`;
+    this.filename = fileToCreate.filename || `${this.name}.txt`;
   }
 }

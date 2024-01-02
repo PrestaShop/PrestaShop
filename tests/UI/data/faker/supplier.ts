@@ -2,7 +2,7 @@ import Countries from '@data/demo/countries';
 import type CountryData from '@data/faker/country';
 import SupplierCreator from '@data/types/supplier';
 
-import {faker} from '@faker-js/faker';
+import {fakerFR as faker} from '@faker-js/faker';
 
 const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
 
@@ -69,22 +69,22 @@ export default class SupplierData {
     this.descriptionFr = supplierToCreate.descriptionFr || this.description;
 
     /** @type {string} Home phone number of the supplier (default format 01########) */
-    this.homePhone = supplierToCreate.homePhone || faker.phone.number('01########');
+    this.homePhone = supplierToCreate.homePhone || faker.phone.number();
 
     /** @type {string} Mobile phone number of the supplier (default format 01########) */
-    this.mobilePhone = supplierToCreate.mobilePhone || faker.phone.number('06########');
+    this.mobilePhone = supplierToCreate.mobilePhone || faker.phone.number();
 
     /** @type {string} First line address of the supplier */
-    this.address = supplierToCreate.address || faker.address.streetAddress();
+    this.address = supplierToCreate.address || faker.location.streetAddress();
 
     /** @type {string} Second line address of the supplier */
-    this.secondaryAddress = supplierToCreate.secondaryAddress || faker.address.secondaryAddress();
+    this.secondaryAddress = supplierToCreate.secondaryAddress || faker.location.secondaryAddress();
 
     /** @type {string} Postal code of the supplier */
-    this.postalCode = supplierToCreate.postalCode || faker.address.zipCode().replace('.', '-');
+    this.postalCode = supplierToCreate.postalCode || faker.location.zipCode().replace('.', '-');
 
     /** @type {string} City for the address of the supplier */
-    this.city = supplierToCreate.city || faker.address.city();
+    this.city = supplierToCreate.city || faker.location.city();
 
     /** @type {string} Country for the address of the supplier */
     this.country = supplierToCreate.country || faker.helpers.arrayElement(countriesNames);

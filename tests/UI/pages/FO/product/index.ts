@@ -13,9 +13,19 @@ import type {Page} from 'playwright';
  * @extends FOBasePage
  */
 class Product extends FOBasePage {
+  public readonly messageNotVisibleToCustomers: string;
+
+  public readonly messageAlertNotificationSaved: string;
+
+  public readonly messageAlertNotificationEmailInvalid: string;
+
+  public readonly messageAlertNotificationAlreadyRegistered: string;
+
+  private readonly warningMessage: string;
+
   private readonly productFlags: string;
 
-  private readonly productFlag: string;
+  private readonly productFlag: (flag: string) => string;
 
   private readonly productName: string;
 
@@ -45,11 +55,13 @@ class Product extends FOBasePage {
 
   private readonly productDetail: string;
 
+  private readonly productFeaturesList: string;
+
   private readonly continueShoppingButton: string;
 
-  private readonly productAvailabilityIcon: string;
-
   private readonly productAvailability: string;
+
+  private readonly productAvailabilityIcon: string;
 
   private readonly productSizeSelect: string;
 
@@ -77,11 +89,23 @@ class Product extends FOBasePage {
 
   private readonly regularPrice: string;
 
+  private readonly packProductsPrice: string;
+
   private readonly productPrice: string;
 
   private readonly taxShippingDeliveryBlock: string;
 
   private readonly deliveryInformationSpan: string;
+
+  private readonly productInformationBlock: string;
+
+  private readonly productMailAlertsBlock: string;
+
+  private readonly productMailAlertsEmailInput: string;
+
+  private readonly productMailAlertsNotifyButton: string;
+
+  private readonly productMailAlertsNotification: string;
 
   private readonly discountTable: string;
 
@@ -90,6 +114,8 @@ class Product extends FOBasePage {
   private readonly unitDiscountColumn: string;
 
   private readonly unitDiscountValue: string;
+
+  private readonly productUnitPrice: string;
 
   private readonly commentCount: string;
 
@@ -146,9 +172,16 @@ class Product extends FOBasePage {
   constructor() {
     super();
 
+    // Messages
+    this.messageNotVisibleToCustomers = 'This product is not visible to your customers.';
+    this.messageAlertNotificationSaved = 'Request notification registered';
+    this.messageAlertNotificationEmailInvalid = 'Your email address is invalid.';
+    this.messageAlertNotificationAlreadyRegistered = 'You will be notified when this product is available.';
+
     // Selectors for product page
+    this.warningMessage = 'main div.alert-warning p.alert-text';
     this.productFlags = '#content ul.product-flags';
-    this.productFlag = '#content li.product-flag';
+    this.productFlag = (flag: string) => `#content li.product-flag${flag.length === 0 ? '' : `.${flag}`}`;
     this.productName = '#main h1';
     this.productCoverImg = '#content .product-cover img';
     this.thumbFirstImg = '#content li:nth-child(1) img.js-thumb';
@@ -163,9 +196,10 @@ class Product extends FOBasePage {
     this.proceedToCheckoutButton = `${this.blockCartModal} div.cart-content-btn a`;
     this.productQuantitySpan = '#product-details div.product-quantities label';
     this.productDetail = 'div.product-information a[href=\'#product-details\']';
+    this.productFeaturesList = '#product-details section.product-features';
     this.continueShoppingButton = `${this.blockCartModal} div.cart-content-btn button`;
-    this.productAvailabilityIcon = '#product-availability i';
     this.productAvailability = '#product-availability';
+    this.productAvailabilityIcon = `${this.productAvailability} i`;
     this.productSizeSelect = '#group_1';
     this.productSizeOption = (size: string) => `${this.productSizeSelect} option[title=${size}]`;
     this.productColorUl = '#group_2';
@@ -178,12 +212,21 @@ class Product extends FOBasePage {
 
     // Product prices block
     this.productPricesBlock = 'div.product-prices';
+    this.productUnitPrice = `${this.productPricesBlock} p.product-unit-price`;
     this.discountAmountSpan = `${this.productPricesBlock} .discount.discount-amount`;
     this.discountPercentageSpan = `${this.productPricesBlock} .discount.discount-percentage`;
     this.regularPrice = `${this.productPricesBlock} .regular-price`;
+    this.packProductsPrice = `${this.productPricesBlock} .product-pack-price span`;
     this.productPrice = `${this.productPricesBlock} .current-price span`;
     this.taxShippingDeliveryBlock = `${this.productPricesBlock} div.tax-shipping-delivery-label`;
     this.deliveryInformationSpan = `${this.taxShippingDeliveryBlock} span.delivery-information`;
+
+    // Product information block
+    this.productInformationBlock = 'div.product-information';
+    this.productMailAlertsBlock = `${this.productInformationBlock} div.js-mailalert`;
+    this.productMailAlertsEmailInput = `${this.productMailAlertsBlock} input[type="email"]`;
+    this.productMailAlertsNotifyButton = `${this.productMailAlertsBlock} button`;
+    this.productMailAlertsNotification = `${this.productMailAlertsBlock} article`;
 
     // Volume discounts table
     this.discountTable = '.table-product-discounts';
@@ -228,7 +271,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getProductPageURL(page: Page): Promise<string> {
+  async getProductPageURL(page: Page): Promise<string> {
     return this.getAttributeContent(page, this.metaLink, 'content');
   }
 
@@ -237,7 +280,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getProductTag(page: Page): Promise<string> {
+  async getProductTag(page: Page): Promise<string> {
     return this.getTextContent(page, this.productFlags);
   }
 
@@ -246,8 +289,59 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isProductTagVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.productFlag);
+  async isProductTagVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.productFlag(''));
+  }
+
+  /**
+   * Is a specific product flag visible
+   * @param page {Page} Browser tab
+   * @param name {string}
+   * @return {Promise<boolean>}
+   */
+  async hasProductFlag(page: Page, name: string): Promise<boolean> {
+    return this.elementVisible(page, this.productFlag(name), 2000);
+  }
+
+  /**
+   * Is the Block Mail Alert visible ?
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async hasBlockMailAlert(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.productMailAlertsBlock, 2000);
+  }
+
+  /**
+   * Returns notifications block in block Mail Alert
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getBlockMailAlertNotification(page: Page): Promise<string> {
+    return this.getTextContent(page, this.productMailAlertsNotification);
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param email {string|null} Email if needed
+   */
+  async notifyEmailAlert(page: Page, email: string|null = null) {
+    if (email) {
+      await this.setValue(page, this.productMailAlertsEmailInput, email);
+    }
+    await page.locator(this.productMailAlertsNotifyButton).click();
+
+    return this.getBlockMailAlertNotification(page);
+  }
+
+  /**
+   * Get product price
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getProductPrice(page: Page): Promise<string> {
+    return this.getTextContent(page, this.productPrice);
   }
 
   /**
@@ -260,8 +354,28 @@ class Product extends FOBasePage {
       name: await this.getTextContent(page, this.productName),
       price: await this.getPriceFromText(page, this.productPrice),
       summary: await this.getTextContent(page, this.shortDescription, false),
-      description: await this.getTextContent(page, this.productDescription),
+      description: (await page.locator(`${this.productDescription}:visible`).count())
+        ? await this.getTextContent(page, this.productDescription)
+        : '',
     };
+  }
+
+  /**
+   * Is iframe visible in product d
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isIframeVisibleInProductDescription(page: Page): Promise<boolean> {
+    return this.elementVisible(page, `${this.productDescription} iframe`, 1000);
+  }
+
+  /**
+   * Get URL in product description
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getURLInProductDescription(page: Page): Promise<string> {
+    return this.getAttributeContent(page, `${this.productDescription} iframe`, 'src');
   }
 
   /**
@@ -274,11 +388,14 @@ class Product extends FOBasePage {
     image: string | null, quantity: number,
     price: string, name: string
   }> {
+    // Add +1 due to span before the article
+    const productIdentifier: number = productInList + 1;
+
     return {
-      image: await this.getAttributeContent(page, this.productInPackImage(productInList), 'src'),
-      name: await this.getTextContent(page, this.productInPackName(productInList)),
-      price: await this.getTextContent(page, this.productInPackPrice(productInList)),
-      quantity: await this.getNumberFromText(page, this.productInPackQuantity(productInList)),
+      image: await this.getAttributeContent(page, this.productInPackImage(productIdentifier), 'src'),
+      name: await this.getTextContent(page, this.productInPackName(productIdentifier)),
+      price: await this.getTextContent(page, this.productInPackPrice(productIdentifier)),
+      quantity: await this.getNumberFromText(page, this.productInPackQuantity(productIdentifier)),
     };
   }
 
@@ -287,8 +404,17 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getRegularPrice(page: Page): Promise<number> {
+  async getRegularPrice(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.regularPrice);
+  }
+
+  /**
+   * Get the price of products in pack
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getPackProductsPrice(page: Page): Promise<number> {
+    return this.getPriceFromText(page, this.packProductsPrice);
   }
 
   /**
@@ -297,8 +423,8 @@ class Product extends FOBasePage {
    * @param ulSelector {string} Selector to locate the element
    * @returns {Promise<Array<string>>}
    */
-  getProductsAttributesFromUl(page: Page, ulSelector: string): Promise<Array<string | null>> {
-    return page.$$eval(`${ulSelector} li .attribute-name`, (all) => all.map((el) => el.textContent));
+  async getProductsAttributesFromUl(page: Page, ulSelector: string): Promise<Array<string | null>> {
+    return page.locator(`${ulSelector} li .attribute-name`).allTextContents();
   }
 
   /**
@@ -350,11 +476,20 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Get product unit price
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getProductUnitPrice(page: Page): Promise<string> {
+    return this.getTextContent(page, this.productUnitPrice);
+  }
+
+  /**
    * Get discount column title
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountColumnTitle(page: Page): Promise<string> {
+  async getDiscountColumnTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.unitDiscountColumn);
   }
 
@@ -363,7 +498,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getQuantityDiscountValue(page: Page): Promise<number> {
+  async getQuantityDiscountValue(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.quantityDiscountValue);
   }
 
@@ -372,7 +507,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountValue(page: Page): Promise<string> {
+  async getDiscountValue(page: Page): Promise<string> {
     return this.getTextContent(page, this.unitDiscountValue);
   }
 
@@ -381,7 +516,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountAmount(page: Page): Promise<string> {
+  async getDiscountAmount(page: Page): Promise<string> {
     return this.getTextContent(page, this.discountAmountSpan);
   }
 
@@ -390,7 +525,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountPercentage(page: Page): Promise<string> {
+  async getDiscountPercentage(page: Page): Promise<string> {
     return this.getTextContent(page, this.discountPercentageSpan);
   }
 
@@ -399,7 +534,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {promise<string>}
    */
-  getProductAvailabilityLabel(page: Page): Promise<string> {
+  async getProductAvailabilityLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.productAvailability, false);
   }
 
@@ -408,8 +543,16 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getDeliveryInformationText(page: Page): Promise<string> {
+  async getDeliveryInformationText(page: Page): Promise<string> {
     return this.getTextContent(page, this.deliveryInformationSpan);
+  }
+
+  /**
+   * Is delivery time displayed
+   * @param page
+   */
+  async isDeliveryTimeDisplayed(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.deliveryInformationSpan);
   }
 
   /**
@@ -445,7 +588,7 @@ class Product extends FOBasePage {
         case 'color':
           await Promise.all([
             this.waitForVisibleSelector(page, `${this.productColorInput(attributes[i].value)}[checked]`),
-            page.click(this.productColorInput(attributes[i].value)),
+            page.locator(this.productColorInput(attributes[i].value)).click(),
           ]);
           break;
         case 'size':
@@ -549,6 +692,48 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Get product features list
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getProductFeaturesList(page: Page): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.productDetail);
+
+    return this.getTextContent(page, this.productFeaturesList);
+  }
+
+  /**
+   * Is features block visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isFeaturesBlockVisible(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.productDetail);
+
+    return this.elementVisible(page, this.productFeaturesList);
+  }
+
+  /**
+   * Get product condition
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getProductCondition(page: Page): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.productDetail);
+
+    return this.getTextContent(page, '#product-details div.product-condition');
+  }
+
+  /**
+   * Is customization block visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isCustomizationBlockVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, 'div.product-container div.product-information section.product-customization', 1000);
+  }
+
+  /**
    * Is availability product displayed
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
@@ -583,7 +768,7 @@ class Product extends FOBasePage {
    */
   async isUnavailableProductSizeDisplayed(page: Page, size: string): Promise<boolean> {
     await page.waitForTimeout(2000);
-    return await page.$(this.productSizeOption(size)) !== null;
+    return (await page.locator(this.productSizeOption(size)).count()) !== 0;
   }
 
   /**
@@ -622,16 +807,16 @@ class Product extends FOBasePage {
    */
   async addProductReview(page: Page, productReviewData: ProductReviewData): Promise<boolean> {
     if (await this.getNumberOfComments(page) !== 0) {
-      await page.click(this.notEmptyReviewAddReviewButton);
+      await page.locator(this.notEmptyReviewAddReviewButton).click();
     } else {
-      await page.click(this.emptyReviewAddReviewButton);
+      await page.locator(this.emptyReviewAddReviewButton).click();
     }
     await this.waitForVisibleSelector(page, this.productReviewModal);
     await this.setValue(page, this.reviewTitle, productReviewData.reviewTitle);
     await this.setValue(page, this.reviewTextContent, productReviewData.reviewContent);
-    await page.click(this.reviewRating(productReviewData.reviewRating));
-    await page.click(this.reviewSubmitButton);
-    await page.click(this.closeReviewSentConfirmationModalButton);
+    await page.locator(this.reviewRating(productReviewData.reviewRating)).click();
+    await page.locator(this.reviewSubmitButton).click();
+    await page.locator(this.closeReviewSentConfirmationModalButton).click();
     return this.elementNotVisible(page, this.reviewSentConfirmationModal, 3000);
   }
 
@@ -641,7 +826,7 @@ class Product extends FOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfComments(page: Page): Promise<number> {
-    return page.$$eval(this.productReviewRows, (rows) => rows.length);
+    return page.locator(this.productReviewRows).count();
   }
 
   /**
@@ -671,7 +856,16 @@ class Product extends FOBasePage {
    * @returns {Promise<number>}
    */
   async getReviewRating(page: Page, row: number = 1): Promise<number> {
-    return page.$$eval(this.productRatingStar(row), (divs) => divs.length);
+    return page.locator(this.productRatingStar(row)).count();
+  }
+
+  /**
+   * Get the warning message
+   * @param page {Page} browser tab
+   * @returns {Promise<string>}
+   */
+  async getWarningMessage(page: Page): Promise<string> {
+    return this.getTextContent(page, this.warningMessage);
   }
 }
 

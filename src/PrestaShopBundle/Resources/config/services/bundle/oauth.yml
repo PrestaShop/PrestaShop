@@ -1,0 +1,66 @@
+services:
+  _defaults:
+    public: false
+
+  PrestaShopBundle\Security\OAuth2\Repository\ClientRepository:
+    arguments:
+      - '@prestashop.security.api-access.provider'
+      - '@security.user_password_hasher'
+
+  PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository:
+
+  PrestaShopBundle\Security\OAuth2\GrantType\CustomClientCredentialsGrant:
+
+  PrestaShopBundle\Security\OAuth2\Repository\ScopeRepository:
+    arguments:
+      - '@PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface'
+      - '@prestashop.security.api-access.provider'
+
+  League\OAuth2\Server\Grant\ClientCredentialsGrant:
+
+  prestashop.api.private_key:
+    class: League\OAuth2\Server\CryptKey
+    arguments: [ '%api_private_key%' ]
+
+  prestashop.api.public_key:
+    class: League\OAuth2\Server\CryptKey
+    arguments: [ '%api_public_key%' ]
+
+  League\OAuth2\Server\AuthorizationServer:
+    arguments:
+      - '@PrestaShopBundle\Security\OAuth2\Repository\ClientRepository'
+      - '@PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository'
+      - '@PrestaShopBundle\Security\OAuth2\Repository\ScopeRepository'
+      - '@prestashop.api.private_key'
+      - '%new_cookie_key%'
+    calls:
+      - [ 'enableGrantType', [ '@PrestaShopBundle\Security\OAuth2\GrantType\CustomClientCredentialsGrant' ] ]
+
+  League\OAuth2\Server\ResourceServer:
+    arguments:
+      - '@PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository'
+      - '@prestashop.api.public_key'
+
+  Nyholm\Psr7\Factory\Psr17Factory:
+
+  Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory:
+    arguments:
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+
+  Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory:
+
+  PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShopBundle\ApiPlatform\Normalizer\:
+    resource: "../../../../ApiPlatform/Normalizer/*"
+    tags: [ 'prestashop.api.normalizers' ]
+
+  PrestaShopBundle\ApiPlatform\DomainSerializer:
+    class: PrestaShopBundle\ApiPlatform\DomainSerializer
+    arguments:
+      - !tagged_iterator { tag: prestashop.api.normalizers, default_priority_method: getNormalizerPriority }

@@ -3,11 +3,11 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import productPage from '@pages/FO/product';
-import searchResultsPage from '@pages/FO/searchResults';
+import {searchResultsPage} from '@pages/FO/searchResults';
 
 import OrderData from '@data/faker/order';
 
@@ -42,7 +42,7 @@ function createShoppingCart(orderData: OrderData, baseContext: string = 'commonT
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -51,7 +51,7 @@ function createShoppingCart(orderData: OrderData, baseContext: string = 'commonT
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with customer', async function () {
@@ -60,7 +60,7 @@ function createShoppingCart(orderData: OrderData, baseContext: string = 'commonT
       await foLoginPage.customerLogin(page, orderData.customer);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it(`should search for the product ${orderData.products[0].product.name}`, async function () {
@@ -69,7 +69,7 @@ function createShoppingCart(orderData: OrderData, baseContext: string = 'commonT
       await homePage.searchProduct(page, orderData.products[0].product.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
     });
 
     it('should add product to cart', async function () {
@@ -80,7 +80,7 @@ function createShoppingCart(orderData: OrderData, baseContext: string = 'commonT
       await productPage.addProductToTheCart(page, orderData.products[0].quantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
+      expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
     });
 
     it('should sign out from FO', async function () {
@@ -89,10 +89,10 @@ function createShoppingCart(orderData: OrderData, baseContext: string = 'commonT
       await homePage.logout(page);
 
       const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
 
       const notificationNumber = await homePage.getCartNotificationsNumber(page);
-      await expect(notificationNumber).to.be.equal(0);
+      expect(notificationNumber).to.be.equal(0);
     });
   });
 }

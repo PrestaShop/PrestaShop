@@ -41,7 +41,7 @@ admin_order_returns_update:
   path: /{orderReturnId}/update
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:edit
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\MerchandiseReturn::editAction
     _legacy_controller: AdminReturn
     #    _legacy_link: AdminReturn:updateorder_return
     _legacy_parameters:

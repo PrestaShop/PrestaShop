@@ -5,19 +5,21 @@ import FOBasePage from '@pages/FO/FObasePage';
  * @class
  * @extends FOBasePage
  */
-class GuestOrderTracking extends FOBasePage {
+class GuestOrderTrackingPage extends FOBasePage {
   public readonly pageTitle: string;
 
   /**
    * @constructs
    * Setting up texts and selectors to use on Guest order tracking page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
+
     this.pageTitle = 'Guest tracking';
 
     // Selectors for the page
   }
 }
 
-export default new GuestOrderTracking();
+const guestOrderTrackingPage = new GuestOrderTrackingPage();
+export {guestOrderTrackingPage, GuestOrderTrackingPage};

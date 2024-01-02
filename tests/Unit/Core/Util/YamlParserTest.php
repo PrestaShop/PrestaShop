@@ -95,6 +95,23 @@ class YamlParserTest extends TestCase
         $this->assertArrayHasKey('parameters', $config);
         $this->assertFileExists($cacheFile);
         $this->assertEquals($cacheTime, filemtime($cacheFile));
+    }
+
+    /**
+     * @dataProvider getYamlFilesProvider
+     */
+    public function testParserCacheRefreshedAfterChangingSourceFile(string $yamlFiles): void
+    {
+        $cacheFile = $this->clearCacheFile($yamlFiles);
+
+        // create the cache file
+        $yamlParser = new YamlParser($this->getCacheDir(), true);
+        $config = $yamlParser->parse($yamlFiles);
+        $this->assertArrayHasKey('parameters', $config);
+        $this->assertFileExists($cacheFile);
+        $cacheTime = filemtime($cacheFile);
+
+        sleep(1);
 
         // if source yaml change, the cache should be refreshed
         touch($yamlFiles, time() + 1);
@@ -102,7 +119,6 @@ class YamlParserTest extends TestCase
         $this->assertArrayHasKey('parameters', $config);
         $this->assertFileExists($cacheFile);
         $this->assertNotEquals($cacheTime, filemtime($cacheFile));
-        $cacheTime = filemtime($cacheFile);
     }
 
     /**

@@ -31,8 +31,6 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 use Cache;
 use DOMElement;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
@@ -43,11 +41,6 @@ use Tests\Resources\Resetter\ProductResetter;
 
 class CombinationControllerTest extends FormGridControllerTestCase
 {
-    /**
-     * @var bool
-     */
-    private $changedProductFeatureFlag = false;
-
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -59,27 +52,6 @@ class CombinationControllerTest extends FormGridControllerTestCase
     {
         parent::tearDownAfterClass();
         ProductResetter::resetProducts();
-    }
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $featureFlagRepository = $this->client->getContainer()->get(FeatureFlagRepository::class);
-        if (!$featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2)) {
-            $featureFlagRepository->enable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-            $this->changedProductFeatureFlag = true;
-        }
-    }
-
-    public function tearDown(): void
-    {
-        if ($this->changedProductFeatureFlag) {
-            $featureFlagRepository = $this->client->getContainer()->get(FeatureFlagRepository::class);
-            $featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-        }
-
-        // Call parent tear down later or the kernel will be shut down
-        parent::tearDown();
     }
 
     /**

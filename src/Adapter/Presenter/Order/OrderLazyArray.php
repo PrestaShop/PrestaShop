@@ -179,11 +179,7 @@ class OrderLazyArray extends AbstractLazyArray
             $orderProduct['id_product_attribute'] = $orderProduct['product_attribute_id'];
 
             $productPrice = $includeTaxes ? 'product_price_wt' : 'product_price';
-            if (is_array($orderProduct['customizedDatas']) && count($orderProduct['customizedDatas'])) {
-                $totalPrice = $includeTaxes ? 'total_customization_wt' : 'total_customization';
-            } else {
-                $totalPrice = $includeTaxes ? 'total_wt' : 'total_price';
-            }
+            $totalPrice = $includeTaxes ? 'total_wt' : 'total_price';
 
             $orderProduct['price'] = $this->priceFormatter->format(
                 $orderProduct[$productPrice],
@@ -199,7 +195,7 @@ class OrderLazyArray extends AbstractLazyArray
                 $product_download = new ProductDownload($id_product_download);
                 if ($product_download->display_filename != '') {
                     $orderProduct['download_link'] =
-                        $product_download->getTextLink(false, $orderProduct['download_hash'])
+                        $product_download->getTextLink($orderProduct['download_hash'])
                         . '&id_order=' . (int) $order->id
                         . '&secure_key=' . $order->secure_key;
                 }

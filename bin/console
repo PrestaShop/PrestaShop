@@ -3,6 +3,7 @@
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 
 // if you don't want to setup permissions the proper way, just uncomment the following PHP line
@@ -19,9 +20,19 @@ $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev
 $debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(['--no-debug', '']) && $env !== 'prod';
 
 if ($debug) {
-  Debug::enable();
+    Debug::enable();
 }
 
-$kernel = new AppKernel($env, $debug);
+require_once __DIR__ . '/../app/AdminKernel.php';
+
+// Loads .env file from the root of project
+$dotEnvFile = dirname(__FILE__, 2) . '/.env';
+  (new Dotenv())
+  // DO NOT use putEnv
+      ->usePutenv(false)
+      ->loadEnv($dotEnvFile)
+;
+
+$kernel = new AdminKernel($env, $debug);
 $application = new Application($kernel);
 $application->run($input);

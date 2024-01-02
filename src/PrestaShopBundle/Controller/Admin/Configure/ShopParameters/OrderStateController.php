@@ -81,6 +81,7 @@ class OrderStateController extends FrameworkBundleAdminController
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'enableSidebar' => true,
         ]);
     }
 
@@ -142,6 +143,7 @@ class OrderStateController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'contextLangId' => $this->getContextLangId(),
             'templatesPreviewUrl' => _MAIL_DIR_,
+            'enableSidebar' => true,
             'languages' => array_map(
                 function (array $language) {
                     return [
@@ -153,6 +155,7 @@ class OrderStateController extends FrameworkBundleAdminController
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'layoutTitle' => $this->trans('New order status', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -186,18 +189,28 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
+        $editableOrderState = $this->getQueryBus()->handle(new GetOrderStateForEditing((int) $orderStateId));
+
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/OrderStates/edit.html.twig', [
             'orderStateForm' => $orderStateForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'editableOrderState' => $this->getQueryBus()->handle(new GetOrderStateForEditing((int) $orderStateId)),
+            'editableOrderState' => $editableOrderState,
             'contextLangId' => $this->getContextLangId(),
             'templatesPreviewUrl' => _MAIL_DIR_,
+            'enableSidebar' => true,
             'languages' => array_map(
                 function (array $language) {
                     return [
                         'id' => $language['iso_code'],
                         'value' => sprintf('%s - %s', $language['iso_code'], $language['name']), ];
                 }, $this->get('prestashop.adapter.legacy.context')->getLanguages()),
+            'layoutTitle' => $this->trans(
+                'Editing order status %name%',
+                'Admin.Navigation.Menu',
+                [
+                    '%name%' => $editableOrderState->getLocalizedNames()[$this->getContextLangId()],
+                ]
+            ),
         ]);
     }
 
@@ -235,6 +248,8 @@ class OrderStateController extends FrameworkBundleAdminController
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New return status', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -268,11 +283,21 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
+        $editableOrderReturnState = $this->getQueryBus()->handle(new GetOrderReturnStateForEditing((int) $orderReturnStateId));
+
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/OrderReturnStates/edit.html.twig', [
             'orderReturnStateForm' => $orderReturnStateForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'editableOrderReturnState' => $this->getQueryBus()->handle(new GetOrderReturnStateForEditing((int) $orderReturnStateId)),
+            'editableOrderReturnState' => $editableOrderReturnState,
             'contextLangId' => $this->getContextLangId(),
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans(
+                'Editing return status %name%',
+                'Admin.Navigation.Menu',
+                [
+                    '%name%' => $editableOrderReturnState->getLocalizedNames()[$this->getContextLangId()],
+                ]
+            ),
         ]);
     }
 
@@ -500,7 +525,7 @@ class OrderStateController extends FrameworkBundleAdminController
      */
     private function getBulkOrderStatesFromRequest(Request $request): array
     {
-        $orderStateIds = $request->request->get('order_states_order_states_bulk');
+        $orderStateIds = $request->request->all('order_states_order_states_bulk');
 
         if (!is_array($orderStateIds)) {
             return [];
@@ -518,11 +543,7 @@ class OrderStateController extends FrameworkBundleAdminController
      */
     private function getBulkOrderReturnStatesFromRequest(Request $request): array
     {
-        $orderReturnStateIds = $request->request->get('order_return_states_order_return_states_bulk');
-
-        if (!is_array($orderReturnStateIds)) {
-            return [];
-        }
+        $orderReturnStateIds = $request->request->all('order_return_states_order_return_states_bulk');
 
         return array_map(static function (string $orderReturnStateId) {
             return (int) $orderReturnStateId;

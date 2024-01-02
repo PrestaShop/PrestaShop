@@ -62,7 +62,7 @@
          }|json_encode }}"
     ></div>
 
-    {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
+    {{ render(controller('PrestaShopBundle\\Controller\\Admin\\Sell\\Catalog\\Product\\CombinationController:paginatedListAction', {
       'productId': productId,
     })) }}
   </div>

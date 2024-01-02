@@ -25,7 +25,6 @@
  */
 use PrestaShop\PrestaShop\Adapter\Routing\AdminLinkBuilder;
 use PrestaShop\PrestaShop\Adapter\Routing\LegacyHelperLinkBuilder;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderFactory;
 use PrestaShop\PrestaShop\Core\Routing\Exception\BuilderNotFoundException;
 
@@ -34,6 +33,11 @@ use PrestaShop\PrestaShop\Core\Routing\Exception\BuilderNotFoundException;
  */
 class HelperListCore extends Helper
 {
+    /**
+     * @var int|null
+     */
+    public $id;
+
     /** @var int size which is used for lists image thumbnail generation. */
     public const LIST_THUMBNAIL_SIZE = 45;
 
@@ -74,6 +78,11 @@ class HelperListCore extends Helper
     public $is_cms = false;
 
     public $position_identifier;
+
+    /**
+     * @var string|null
+     */
+    public $position_group_identifier;
 
     public $table_id;
 
@@ -378,7 +387,7 @@ class HelperListCore extends Helper
                 } elseif (isset($params['image'])) {
                     // item_id is the product id in a product image context, else it is the image id.
                     $item_id = isset($params['image_id']) ? $tr[$params['image_id']] : $id;
-                    if ($params['image'] != 'p' || Configuration::get('PS_LEGACY_IMAGES')) {
+                    if ($params['image'] != 'p') {
                         $path_to_image = _PS_IMG_DIR_ . $params['image'] . '/' . $item_id . (isset($tr['id_image']) ? '-' . (int) $tr['id_image'] : '') . '.' . $this->imageType;
                     } else {
                         $path_to_image = _PS_IMG_DIR_ . $params['image'] . '/' . Image::getImgFolderStatic($tr['id_image']) . (int) $tr['id_image'] . '.' . $this->imageType;
@@ -602,10 +611,7 @@ class HelperListCore extends Helper
         switch ($this->currentIndex) {
             case 'index.php?controller=AdminProducts':
             case 'index.php?tab=AdminProducts':
-                // New architecture modification: temporary behavior to switch between old and new controllers.
-                $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
-                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
-                if (!$redirectLegacy && $this->identifier == 'id_product') {
+                if ($this->identifier == 'id_product') {
                     $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);
                 }
 

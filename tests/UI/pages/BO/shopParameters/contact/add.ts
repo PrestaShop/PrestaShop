@@ -37,8 +37,8 @@ class AddContact extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Contacts •';
-    this.pageTitleEdit = 'Contacts •';
+    this.pageTitleCreate = `New contact • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing';
 
     // Selectors
     this.pageTitleLangButton = '#contact_title_dropdown';
@@ -65,11 +65,11 @@ class AddContact extends BOBasePage {
    */
   async changeLanguageForSelectors(page: Page, lang: string = 'en'): Promise<void> {
     await Promise.all([
-      page.click(this.pageTitleLangButton),
+      page.locator(this.pageTitleLangButton).click(),
       this.waitForVisibleSelector(page, `${this.pageTitleLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      page.click(this.pageTitleLangSpan(lang)),
+      page.locator(this.pageTitleLangSpan(lang)).click(),
       this.waitForVisibleSelector(page, `${this.pageTitleLangButton}[aria-expanded='false']`),
     ]);
   }

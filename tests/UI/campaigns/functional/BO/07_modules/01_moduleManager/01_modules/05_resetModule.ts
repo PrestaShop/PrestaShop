@@ -46,21 +46,21 @@ describe('BO - Modules - Module Manager : Reset module', async () => {
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   it(`should search the module ${Modules.contactForm.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
-    await expect(isModuleVisible).to.be.true;
+    expect(isModuleVisible).to.eq(true);
   });
 
   it('should reset the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
     const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, 'reset');
-    await expect(successMessage).to.eq(moduleManagerPage.resetModuleSuccessMessage(Modules.contactForm.tag));
+    expect(successMessage).to.eq(moduleManagerPage.resetModuleSuccessMessage(Modules.contactForm.tag));
   });
 
   it('should show all modules', async function () {
@@ -69,6 +69,6 @@ describe('BO - Modules - Module Manager : Reset module', async () => {
     await moduleManagerPage.filterByStatus(page, 'all-Modules');
 
     const blocksNumber = await moduleManagerPage.getNumberOfBlocks(page);
-    await expect(blocksNumber).greaterThan(2);
+    expect(blocksNumber).greaterThan(2);
   });
 });

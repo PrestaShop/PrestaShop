@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -149,7 +150,7 @@ class RetailPriceType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
                 'attr' => [
-                    'data-display-price-precision' => self::PRESTASHOP_DECIMALS,
+                    'data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION,
                     'data-price-specification' => json_encode($this->contextLocale->getPriceSpecification($this->defaultCurrency->iso_code)->toArray()),
                 ],
                 'row_attr' => [
@@ -171,9 +172,8 @@ class RetailPriceType extends TranslatorAwareType
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
                 'choice_attr' => $this->taxRuleGroupChoicesProvider->getChoicesAttributes(),
+                'autocomplete' => true,
                 'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
                     'data-tax-enabled' => $this->isTaxEnabled,
                 ],
                 'row_attr' => [
@@ -216,7 +216,7 @@ class RetailPriceType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Retail price (tax incl.)', 'Admin.Catalog.Feature'),
                 'attr' => [
-                    'data-display-price-precision' => self::PRESTASHOP_DECIMALS,
+                    'data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION,
                 ],
                 'row_attr' => [
                     'class' => 'retail-price-tax-included',

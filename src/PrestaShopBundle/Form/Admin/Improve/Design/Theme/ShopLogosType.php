@@ -60,16 +60,16 @@ class ShopLogosType extends AbstractType
     private $contextShopIds;
 
     /**
-     * @param bool $isShopFeatureUsed
+     * @param bool $isMultiShopEnabled
      * @param bool $isSingleShopContext
      * @param array $contextShopIds
      */
     public function __construct(
-        $isShopFeatureUsed,
+        $isMultiShopEnabled,
         $isSingleShopContext,
         array $contextShopIds
     ) {
-        $this->isShopFeatureUsed = $isShopFeatureUsed;
+        $this->isShopFeatureUsed = $isMultiShopEnabled;
         $this->isSingleShopContext = $isSingleShopContext;
         $this->contextShopIds = $contextShopIds;
     }
@@ -228,7 +228,7 @@ class ShopLogosType extends AbstractType
                 $formType = $formField->getConfig()->getType()->getInnerType();
                 $options = $formField->getConfig()->getOptions();
                 $options['attr']['disabled'] = true;
-                $form->add($originalFieldName, get_class($formType), $options);
+                $form->add($originalFieldName, $formType::class, $options);
             }
         });
     }
@@ -258,7 +258,7 @@ class ShopLogosType extends AbstractType
                 $options = $formField->getConfig()->getOptions();
                 $options['attr']['data-shop-restriction-source'] = $fieldName;
 
-                $form->add($fieldName, get_class($formType), $options);
+                $form->add($fieldName, $formType::class, $options);
             }
         });
     }
@@ -296,7 +296,7 @@ class ShopLogosType extends AbstractType
     {
         $diff = \strlen($haystack) - \strlen($needle);
 
-        return $diff >= 0 && strpos($haystack, $needle, $diff) !== false;
+        return $diff >= 0 && str_contains($haystack, $needle);
     }
 
     /**

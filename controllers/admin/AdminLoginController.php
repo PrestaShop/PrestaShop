@@ -53,7 +53,7 @@ class AdminLoginControllerCore extends AdminController
 
     public function setMedia($isNewTheme = false)
     {
-        $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.4.1.min.js');
+        $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.7.1.min.js');
         $this->addjqueryPlugin('validate');
         $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js');
         if ($this->context->language->is_rtl) {
@@ -79,6 +79,11 @@ class AdminLoginControllerCore extends AdminController
         $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/overrides.css', 'all', PHP_INT_MAX);
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if (!Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) {
@@ -94,7 +99,7 @@ class AdminLoginControllerCore extends AdminController
                 $url = 'https://' . Tools::safeOutput(Tools::getServerName()) . Tools::safeOutput($_SERVER['REQUEST_URI']);
                 $warningSslMessage = $this->trans(
                     'SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]',
-                    ['_raw' => true, '[1]' => '<a href="' . $url . '">', '[/1]' => '</a>'],
+                    ['[1]' => '<a href="' . $url . '">', '[/1]' => '</a>'],
                     'Admin.Login.Notification'
                 );
             }
@@ -235,7 +240,7 @@ class AdminLoginControllerCore extends AdminController
 
         if (empty($passwd)) {
             $this->errors[] = $this->trans('The password field is blank.', [], 'Admin.Notifications.Error');
-        } elseif (!Validate::isPlaintextPassword($passwd)) {
+        } elseif (!Validate::isAcceptablePasswordLength($passwd)) {
             $this->errors[] = $this->trans('Invalid password.', [], 'Admin.Notifications.Error');
         }
 
@@ -284,7 +289,7 @@ class AdminLoginControllerCore extends AdminController
                     [
                         'controller' => $this,
                         'employee' => $this->context->employee,
-                        'redirect' => $url,
+                        'redirect' => &$url,
                     ]
                 );
 
@@ -423,7 +428,7 @@ class AdminLoginControllerCore extends AdminController
         } elseif (!$reset_password) {
             // password (twice)
             $this->errors[] = $this->trans('The password is missing: please enter your new password.', [], 'Admin.Login.Notification');
-        } elseif (!Validate::isPlaintextPassword($reset_password)) {
+        } elseif (!Validate::isAcceptablePasswordLength($reset_password)) {
             $this->errors[] = $this->trans('The password is not in a valid format.', [], 'Admin.Login.Notification');
         } elseif (!$reset_confirm) {
             $this->errors[] = $this->trans('The confirmation is empty: please fill in the password confirmation as well.', [], 'Admin.Login.Notification');

@@ -36,6 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Builds form for Profile
@@ -43,6 +44,11 @@ use Symfony\Component\Validator\Constraints\Length;
 class ProfileType extends AbstractType
 {
     use TranslatorAwareTrait;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
 
     /**
      * {@inheritdoc}

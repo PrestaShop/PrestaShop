@@ -22,13 +22,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% set use_regular_h1_structure = false %}
-{% set layoutTitle %}
+{# The pageTitle block is used in Symfony layout to partially override the Toolbar component, #}
+{# but in legacy layout this override passes through the layoutTitle variable, for both layouts #}
+{# to work we still need those two but once Symfony layout is the only one the variable will become removable #}
+{% block pageTitle %}
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/header.html.twig' %}
+{% endblock %}
+{% set layoutTitle %}
+  {{ block('pageTitle') }}
 {% endset %}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block stylesheets %}
   {{ parent() }}

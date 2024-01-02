@@ -44,13 +44,13 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
     await emailThemesPage.closeSfToolBar(page);
 
     const pageTitle = await emailThemesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(emailThemesPage.pageTitle);
+    expect(pageTitle).to.contains(emailThemesPage.pageTitle);
   });
 
   describe('Preview email theme', async () => {
     [
-      {args: {emailThemeName: 'classic', numberOfLayouts: 50}},
-      {args: {emailThemeName: 'modern', numberOfLayouts: 54}},
+      {args: {emailThemeName: 'classic', numberOfLayouts: 43}},
+      {args: {emailThemeName: 'modern', numberOfLayouts: 43}},
     ].forEach((test) => {
       it(`should preview email theme '${test.args.emailThemeName}'`, async function () {
         await testContext.addContextItem(
@@ -62,8 +62,8 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
 
         await emailThemesPage.previewEmailTheme(page, test.args.emailThemeName);
 
-        const pageTitle = await emailThemesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(
+        const pageTitle = await previewEmailThemesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(
           `${previewEmailThemesPage.pageTitle} ${test.args.emailThemeName}`,
         );
       });
@@ -77,7 +77,7 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
         );
 
         const numberOfLayouts = await previewEmailThemesPage.getNumberOfLayoutInGrid(page);
-        await expect(numberOfLayouts).to.equal(test.args.numberOfLayouts);
+        expect(numberOfLayouts).to.equal(test.args.numberOfLayouts);
       });
 
       it('should go back to email themes page', async function () {
@@ -91,7 +91,7 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
         await previewEmailThemesPage.goBackToEmailThemesPage(page);
 
         const pageTitle = await emailThemesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(emailThemesPage.pageTitle);
+        expect(pageTitle).to.contains(emailThemesPage.pageTitle);
       });
     });
   });

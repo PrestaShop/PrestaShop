@@ -53,7 +53,7 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
         $form = $this->get('prestashop.admin.customer_preferences.form_handler')->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/customer_preferences.html.twig', [
-            'layoutTitle' => $this->trans('Customers', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Customer settings', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'generalForm' => $form->createView(),
@@ -67,12 +67,12 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.", redirectRoute="admin_customer_preferences"
      * )
-     * @DemoRestricted(redirectRoute="admin_customer_preferences")
      *
      * @param Request $request
      *
      * @return Response
      */
+    #[DemoRestricted(redirectRoute: 'admin_customer_preferences')]
     public function processAction(Request $request)
     {
         $formHandler = $this->get('prestashop.admin.customer_preferences.form_handler');

@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddRootCategoryHandlerInterface;
@@ -38,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 /**
  * Class AddRootCategoryHandler.
  */
+#[AsCommandHandler]
 final class AddRootCategoryHandler extends AbstractObjectModelHandler implements AddRootCategoryHandlerInterface
 {
     /**
@@ -46,11 +49,19 @@ final class AddRootCategoryHandler extends AbstractObjectModelHandler implements
     private $configuration;
 
     /**
+     * @var CategoryImageUploader
+     */
+    private $categoryImageUploader;
+
+    /**
      * @param ConfigurationInterface $configuration
      */
-    public function __construct(ConfigurationInterface $configuration)
-    {
+    public function __construct(
+        ConfigurationInterface $configuration,
+        CategoryImageUploader $categoryImageUploader
+    ) {
         $this->configuration = $configuration;
+        $this->categoryImageUploader = $categoryImageUploader;
     }
 
     /**
@@ -61,7 +72,15 @@ final class AddRootCategoryHandler extends AbstractObjectModelHandler implements
         /** @var Category $category */
         $category = $this->createRootCategoryFromCommand($command);
 
-        return new CategoryId((int) $category->id);
+        $categoryId = new CategoryId((int) $category->id);
+
+        $this->categoryImageUploader->uploadImages(
+            $categoryId,
+            $command->getCoverImage(),
+            $command->getThumbnailImage()
+        );
+
+        return $categoryId;
     }
 
     /**

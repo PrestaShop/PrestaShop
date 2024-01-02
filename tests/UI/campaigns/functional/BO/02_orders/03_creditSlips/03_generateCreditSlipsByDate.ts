@@ -79,7 +79,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
@@ -88,14 +88,14 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
 
       const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should add a partial refund', async function () {
@@ -104,14 +104,14 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await orderPageTabListBlock.clickOnPartialRefund(page);
 
       const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
-      await expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
+      expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
     });
 
     it('should check the existence of the Credit slip document', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocumentName', baseContext);
 
       const documentType = await orderPageTabListBlock.getDocumentType(page, 4);
-      await expect(documentType).to.be.equal(creditSlipDocumentName);
+      expect(documentType).to.be.equal(creditSlipDocumentName);
     });
   });
 
@@ -127,7 +127,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await creditSlipsPage.closeSfToolBar(page);
 
       const pageTitle = await creditSlipsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
+      expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
     });
 
     it('should generate PDF file by date and check the file existence', async function () {
@@ -137,7 +137,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       const filePath = await creditSlipsPage.generatePDFByDateAndDownload(page);
 
       const exist = await files.doesFileExist(filePath);
-      await expect(exist).to.be.true;
+      expect(exist).to.eq(true);
     });
 
     it('should check the error message when there is no credit slip in the entered date', async function () {
@@ -145,7 +145,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
       // Generate credit slip and get error message
       const textMessage = await creditSlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
-      await expect(textMessage).to.equal(creditSlipsPage.errorMessageWhenGenerateFileByDate);
+      expect(textMessage).to.equal(creditSlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });
 });

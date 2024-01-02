@@ -152,7 +152,7 @@ class GuestTrackingControllerCore extends FrontController
         }
 
         // Kept for backwards compatibility (is_customer), inline it in later versions
-        $registered_customer_exists = Customer::customerExists(Tools::getValue('email'), false, true);
+        $registered_customer_exists = Customer::customerExists(Tools::getValue('email'));
 
         $this->context->smarty->assign([
             'order' => (new OrderPresenter())->present($this->order),

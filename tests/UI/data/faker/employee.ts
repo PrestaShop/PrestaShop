@@ -1,13 +1,13 @@
 import Languages from '@data/demo/languages';
 import Pages from '@data/demo/pages';
-import Profiles from '@data/demo/profiles';
+import Roles from '@data/demo/roles';
 import LanguageData from '@data/faker/language';
-import ProfileData from '@data/faker/profile';
+import RoleData from '@data/faker/role';
 import {EmployeeCreator} from '@data/types/employee';
 
 import {faker} from '@faker-js/faker';
 
-const profileNames: string[] = Object.values(Profiles).map((profile: ProfileData) => profile.name);
+const profileNames: string[] = Object.values(Roles).map((profile: RoleData) => profile.name);
 const languagesNames: string[] = Object.values(Languages).map((lang: LanguageData) => lang.name);
 
 /**
@@ -45,14 +45,20 @@ export default class EmployeeData {
     /** @type {number} Employee ID */
     this.id = employeeToCreate.id || 0;
 
-    /** @type {string} Employee fistname */
-    this.firstName = employeeToCreate.firstName || faker.name.firstName();
+    /** @type {string} Employee firstname */
+    this.firstName = employeeToCreate.firstName || faker.person.firstName();
 
     /** @type {string} Employee lastname */
-    this.lastName = employeeToCreate.lastName || faker.name.lastName();
+    this.lastName = employeeToCreate.lastName || faker.person.lastName().replace('\'', '');
 
     /** @type {string} Email of the employee */
-    this.email = employeeToCreate.email || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
+    this.email = employeeToCreate.email || faker.internet.email(
+      {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        provider: 'prestashop.com',
+      },
+    );
 
     /** @type {string} Password for the employee account */
     this.password = employeeToCreate.password || 'prestashop_demo';

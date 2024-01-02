@@ -52,7 +52,7 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
     await sqlManagerPage.closeSfToolBar(page);
 
     const pageTitle = await sqlManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+    expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
   });
 
   it('should go to \'DB Backup\' page', async function () {
@@ -61,14 +61,14 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
     await sqlManagerPage.goToDbBackupPage(page);
 
     const pageTitle = await dbBackupPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(dbBackupPage.pageTitle);
+    expect(pageTitle).to.contains(dbBackupPage.pageTitle);
   });
 
   it('should get number of db backups', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfDbBackups', baseContext);
 
     numberOfBackups = await dbBackupPage.getNumberOfElementInGrid(page);
-    await expect(numberOfBackups).to.equal(0);
+    expect(numberOfBackups).to.equal(0);
   });
 
   // 1 - Create 11 DB backup
@@ -80,10 +80,10 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
         await testContext.addContextItem(this, 'testIdentifier', `generateNewDbBackup${index}`, baseContext);
 
         const result = await dbBackupPage.createDbDbBackup(page);
-        await expect(result).to.equal(dbBackupPage.successfulBackupCreationMessage);
+        expect(result).to.equal(dbBackupPage.successfulBackupCreationMessage);
 
         const numberOfBackupsAfterCreation = await dbBackupPage.getNumberOfElementInGrid(page);
-        await expect(numberOfBackupsAfterCreation).to.equal(numberOfBackups + 1 + index);
+        expect(numberOfBackupsAfterCreation).to.equal(numberOfBackups + 1 + index);
       });
     });
   });
@@ -124,10 +124,10 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteDbBackups', baseContext);
 
       const result = await dbBackupPage.deleteWithBulkActions(page);
-      await expect(result).to.be.equal(dbBackupPage.successfulMultiDeleteMessage);
+      expect(result).to.be.equal(dbBackupPage.successfulMultiDeleteMessage);
 
       const numberOfBackupsAfterDelete = await dbBackupPage.getNumberOfElementInGrid(page);
-      await expect(numberOfBackupsAfterDelete).to.equal(numberOfBackups);
+      expect(numberOfBackupsAfterDelete).to.equal(numberOfBackups);
     });
   });
 });

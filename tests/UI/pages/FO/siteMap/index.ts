@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class SiteMap extends FOBasePage {
+class SiteMapPage extends FOBasePage {
   public readonly pageTitle: string;
 
   private readonly categoryNameSelect: (id: number) => string;
@@ -15,6 +15,8 @@ class SiteMap extends FOBasePage {
   private readonly categoryPageNameSelect: (id: number) => string;
 
   private readonly suppliersPageLink: string;
+
+  private readonly bestSellersPageLink: string;
 
   private readonly brandsPageLink: string;
 
@@ -24,8 +26,8 @@ class SiteMap extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on site map page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Sitemap';
 
@@ -33,6 +35,7 @@ class SiteMap extends FOBasePage {
     this.categoryNameSelect = (id: number) => `#category-page-${id}`;
     this.categoryPageNameSelect = (id: number) => `#cms-category-${id}`;
     this.suppliersPageLink = '#supplier-page';
+    this.bestSellersPageLink = '#best-sales-page';
     this.brandsPageLink = '#manufacturer-page';
     this.categoryPageLink = (categoryID: number) => `#category-page-${categoryID}`;
   }
@@ -75,8 +78,17 @@ class SiteMap extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isSuppliersLinkVisible(page: Page): Promise<boolean> {
+  async isSuppliersLinkVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.suppliersPageLink, 2000);
+  }
+
+  /**
+   * Is best sellers link visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isBestSellersLinkVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.bestSellersPageLink, 2000);
   }
 
   /**
@@ -84,7 +96,7 @@ class SiteMap extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isBrandsLinkVisible(page: Page): Promise<boolean> {
+  async isBrandsLinkVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.brandsPageLink, 2000);
   }
 
@@ -99,4 +111,5 @@ class SiteMap extends FOBasePage {
   }
 }
 
-export default new SiteMap();
+const siteMapPage = new SiteMapPage();
+export {siteMapPage, SiteMapPage};

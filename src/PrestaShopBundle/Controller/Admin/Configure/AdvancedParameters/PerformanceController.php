@@ -95,12 +95,12 @@ class PerformanceController extends FrameworkBundleAdminController
      *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_performance')]
     public function processSmartyFormAction(Request $request)
     {
         return $this->processForm(
@@ -117,12 +117,12 @@ class PerformanceController extends FrameworkBundleAdminController
      *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_performance')]
     public function processDebugModeFormAction(Request $request)
     {
         return $this->processForm(
@@ -139,12 +139,12 @@ class PerformanceController extends FrameworkBundleAdminController
      *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_performance')]
     public function processOptionalFeaturesFormAction(Request $request)
     {
         return $this->processForm(
@@ -161,12 +161,12 @@ class PerformanceController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_performance')]
     public function processCombineCompressCacheFormAction(Request $request)
     {
         return $this->processForm(
@@ -183,12 +183,12 @@ class PerformanceController extends FrameworkBundleAdminController
      *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_performance')]
     public function processMediaServersFormAction(Request $request)
     {
         return $this->processForm(
@@ -205,12 +205,12 @@ class PerformanceController extends FrameworkBundleAdminController
      *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_performance')]
     public function processCachingFormAction(Request $request)
     {
         return $this->processForm(
@@ -257,10 +257,10 @@ class PerformanceController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_performance')]
     public function disableNonBuiltInAction(): RedirectResponse
     {
         try {

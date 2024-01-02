@@ -46,14 +46,14 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', a
     await seoAndUrlsPage.closeSfToolBar(page);
 
     const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
   });
 
   it('should disable friendly URL', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableFriendlyUrl', baseContext);
 
     const result = await seoAndUrlsPage.enableDisableFriendlyURL(page, false);
-    await expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
+    expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
   });
 
   it('should go to FO and check the URL', async function () {
@@ -63,7 +63,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', a
     page = await seoAndUrlsPage.viewMyShop(page);
 
     const url = await foHomePage.getCurrentURL(page);
-    await expect(url).to.contains('index.php');
+    expect(url).to.contains('index.php');
   });
 
   it('should go back to BO', async function () {
@@ -73,14 +73,14 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', a
     page = await foHomePage.closePage(browserContext, page, 0);
 
     const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
   });
 
   it('should enable friendly URL', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableFriendlyUrl', baseContext);
 
     const result = await seoAndUrlsPage.enableDisableFriendlyURL(page, true);
-    await expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
+    expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
   });
 
   it('should go to FO and check the URL', async function () {
@@ -91,6 +91,6 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', a
     await foHomePage.changeLanguage(page, 'en');
 
     const url = await foHomePage.getCurrentURL(page);
-    await expect(url).to.contains('/en/');
+    expect(url).to.contains('/en/');
   });
 });

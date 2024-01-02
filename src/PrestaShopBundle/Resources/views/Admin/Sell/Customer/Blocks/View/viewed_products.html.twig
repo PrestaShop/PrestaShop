@@ -23,34 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% if customerInformation.productsInformation.viewedProductsInformation is not empty %}
+{% if customerViewedProductGrid.data.records_total > 0 %}
   <div class="card customer-viewed-products-card">
     <h3 class="card-header">
       <i class="material-icons">remove_red_eye</i>
-      {{ 'Viewed products'|trans({}, 'Admin.Orderscustomers.Feature') }}
-      <span class="badge badge-primary rounded">{{ customerInformation.productsInformation.viewedProductsInformation|length }}</span>
+      {{ 'Products in carts'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      <span class="badge badge-primary rounded">{{ customerViewedProductGrid.data.records_total }}</span>
     </h3>
     <div class="card-body">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for product in customerInformation.productsInformation.viewedProductsInformation %}
-            <tr class="customer-viewed-product">
-              <td class="customer-viewed-product-id">{{ product.productId }}</td>
-              <td class="customer-viewed-product-name">
-                <a class="customer-viewed-product-link" href="{{ product.productUrl }}">
-                  {{ product.productName }}
-                </a>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerViewedProductGrid} %}
     </div>
   </div>
 {% endif %}

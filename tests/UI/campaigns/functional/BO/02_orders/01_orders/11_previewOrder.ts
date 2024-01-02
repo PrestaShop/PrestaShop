@@ -14,12 +14,12 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
-import searchResultsPage from '@pages/FO/searchResults';
+import {searchResultsPage} from '@pages/FO/searchResults';
 
 // Import data
 import Carriers from '@data/demo/carriers';
@@ -79,7 +79,7 @@ describe('BO - Orders : Preview order', async () => {
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     [
@@ -101,7 +101,7 @@ describe('BO - Orders : Preview order', async () => {
         await homePage.searchProduct(page, test.args.productName);
 
         const pageTitle = await searchResultsPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+        expect(pageTitle).to.equal(searchResultsPage.pageTitle);
       });
 
       it('should add the product to cart', async function () {
@@ -112,7 +112,7 @@ describe('BO - Orders : Preview order', async () => {
         await productPage.addProductToTheCart(page, 1, [], false);
 
         const notificationsNumber = await productPage.getCartNotificationsNumber(page);
-        await expect(notificationsNumber).to.be.equal(index + 1);
+        expect(notificationsNumber).to.be.equal(index + 1);
       });
     });
 
@@ -122,7 +122,7 @@ describe('BO - Orders : Preview order', async () => {
       await productPage.goToCartPage(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartPage.pageTitle);
+      expect(pageTitle).to.contains(cartPage.pageTitle);
     });
 
     it('should proceed to checkout', async function () {
@@ -133,21 +133,21 @@ describe('BO - Orders : Preview order', async () => {
 
       // Go to checkout page
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage).to.be.true;
+      expect(isCheckoutPage).to.eq(true);
     });
 
     it('should fill guest personal information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
 
       const isStepPersonalInfoCompleted = await checkoutPage.setGuestPersonalInformation(page, customerData);
-      await expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.be.true;
+      expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.eq(true);
     });
 
     it('should fill address form and go to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
       const isStepAddressComplete = await checkoutPage.setAddress(page, addressData);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should validate the order', async function () {
@@ -155,14 +155,14 @@ describe('BO - Orders : Preview order', async () => {
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
       // Payment step - Choose payment step
       await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -179,14 +179,14 @@ describe('BO - Orders : Preview order', async () => {
         await ordersPage.closeSfToolBar(page);
 
         const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
         const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfOrders).to.be.above(0);
+        expect(numberOfOrders).to.be.above(0);
       });
 
       it(`should filter order by customer last name ${customerData.lastName}`, async function () {
@@ -195,21 +195,21 @@ describe('BO - Orders : Preview order', async () => {
         await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
 
         const numberOfOrders = await ordersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfOrders).to.be.at.least(1);
+        expect(numberOfOrders).to.be.at.least(1);
       });
 
       it('should click on expand button to preview the order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'previewOrder', baseContext);
 
         const isPreviewBlockVisible = await ordersPage.previewOrder(page);
-        await expect(isPreviewBlockVisible, 'Preview block is not visible').to.be.true;
+        expect(isPreviewBlockVisible, 'Preview block is not visible').to.eq(true);
       });
 
       it('should check the shipping details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkShippingDetails', baseContext);
 
         const shippingDetails = await ordersPage.getShippingDetails(page);
-        await expect(shippingDetails, 'Shipping details are not correct!')
+        expect(shippingDetails, 'Shipping details are not correct!')
           .to.equal(`Carrier: ${Carriers.default.name} Tracking number: - Shipping details: `
             + `${customerData.firstName} ${customerData.lastName} ${addressData.company} ${addressData.address} `
             + `${addressData.postalCode} ${addressData.city} ${addressData.country} ${addressData.phone}`);
@@ -219,14 +219,14 @@ describe('BO - Orders : Preview order', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkEmailAddress', baseContext);
 
         const emailAddress = await ordersPage.getCustomerEmail(page);
-        await expect(emailAddress, 'Email address is not correct!').to.equal(`Email: ${customerData.email}`);
+        expect(emailAddress, 'Email address is not correct!').to.equal(`Email: ${customerData.email}`);
       });
 
       it('should check the invoice address details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceDetails', baseContext);
 
         const invoiceAddress = await ordersPage.getCustomerInvoiceAddressDetails(page);
-        await expect(invoiceAddress, 'Invoice details are not correct!')
+        expect(invoiceAddress, 'Invoice details are not correct!')
           .to.equal(`Invoice details: ${customerData.firstName} ${customerData.lastName} `
             + `${addressData.company} ${addressData.address} ${addressData.postalCode} ${addressData.city} `
             + `${addressData.country} ${addressData.phone}`);
@@ -236,7 +236,7 @@ describe('BO - Orders : Preview order', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNumber', baseContext);
 
         const productsNumber = await ordersPage.getProductsNumberFromTable(page);
-        await expect(productsNumber, 'Products number is not correct!').to.equal(11);
+        expect(productsNumber, 'Products number is not correct!').to.equal(11);
       });
 
       [
@@ -255,7 +255,7 @@ describe('BO - Orders : Preview order', async () => {
           await testContext.addContextItem(this, 'testIdentifier', `checkProduct${index}`, baseContext);
 
           const productInformation = await ordersPage.getProductDetailsFromTable(page, index + 1);
-          await expect(productInformation).to.contains(test.args.product.name)
+          expect(productInformation).to.contains(test.args.product.name)
             .and.to.contains(test.args.product.reference)
             .and.to.contains(1)
             .and.to.contains(test.args.productPrice);
@@ -266,7 +266,7 @@ describe('BO - Orders : Preview order', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'check1MoreText', baseContext);
 
         const lastProductsTableLine = await ordersPage.getProductDetailsFromTable(page, 12);
-        await expect(lastProductsTableLine).to.equal('more_horiz (1 more)');
+        expect(lastProductsTableLine).to.equal('more_horiz (1 more)');
       });
 
       it('should click on \'(1 more)\' link and check the last product in the list', async function () {
@@ -275,7 +275,7 @@ describe('BO - Orders : Preview order', async () => {
         await ordersPage.clickOnMoreLink(page);
 
         const productInformation = await ordersPage.getProductDetailsFromTable(page, 11);
-        await expect(productInformation).to.contains(Products.demo_18.name)
+        expect(productInformation).to.contains(Products.demo_18.name)
           .and.to.contains(Products.demo_18.reference)
           .and.to.contains(1)
           .and.to.contains(Products.demo_18.finalPrice);
@@ -289,7 +289,7 @@ describe('BO - Orders : Preview order', async () => {
         await ordersPage.openOrderDetails(page);
 
         const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
+        expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
       });
 
       it('should add another product to the list', async function () {
@@ -298,35 +298,35 @@ describe('BO - Orders : Preview order', async () => {
         await orderPageProductsBlock.searchProduct(page, Products.demo_19.name);
 
         const textResult = await orderPageProductsBlock.addProductToCart(page);
-        await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
       });
 
       it('should click on \'Carriers\' tab', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
 
         const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
-        await expect(isTabOpened).to.be.true;
+        expect(isTabOpened).to.eq(true);
       });
 
       it('should click on \'Edit\' link and check the modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditLink', baseContext);
 
         const isModalVisible = await orderPageTabListBlock.clickOnEditLink(page);
-        await expect(isModalVisible, 'Edit shipping modal is not visible!').to.be.true;
+        expect(isModalVisible, 'Edit shipping modal is not visible!').to.eq(true);
       });
 
       it('should edit the carrier', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editCarrier', baseContext);
 
         const textResult = await orderPageTabListBlock.setShippingDetails(page, shippingDetailsData);
-        await expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
+        expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
       });
 
       it('should edit the shipping address', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editShippingAddress', baseContext);
 
         const shippingAddress = await orderPageCustomerBlock.editExistingShippingAddress(page, editShippingAddressData);
-        await expect(shippingAddress, 'Shipping address is not correct!')
+        expect(shippingAddress, 'Shipping address is not correct!')
           .to.contain(editShippingAddressData.firstName)
           .and.to.contain(editShippingAddressData.lastName)
           .and.to.contain(editShippingAddressData.address)
@@ -339,7 +339,7 @@ describe('BO - Orders : Preview order', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'editDeliveryAddress', baseContext);
 
         const invoiceAddress = await orderPageCustomerBlock.editExistingInvoiceAddress(page, editInvoiceAddressData);
-        await expect(invoiceAddress, 'Invoice address is not correct!')
+        expect(invoiceAddress, 'Invoice address is not correct!')
           .to.contain(editInvoiceAddressData.firstName)
           .and.to.contain(editInvoiceAddressData.lastName)
           .and.to.contain(editInvoiceAddressData.address)
@@ -354,21 +354,21 @@ describe('BO - Orders : Preview order', async () => {
         await dashboardPage.goToSubMenu(page, dashboardPage.ordersParentLink, dashboardPage.ordersLink);
 
         const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it('should click on expand button to preview the order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'previewOrder2', baseContext);
 
         const isPreviewBlockVisible = await ordersPage.previewOrder(page);
-        await expect(isPreviewBlockVisible, 'Preview block is not visible').to.be.true;
+        expect(isPreviewBlockVisible, 'Preview block is not visible').to.eq(true);
       });
 
       it('should check the shipping details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkEditedShippingAddress', baseContext);
 
         const shippingDetails = await ordersPage.getShippingDetails(page);
-        await expect(shippingDetails, 'Shipping address is not correct!')
+        expect(shippingDetails, 'Shipping address is not correct!')
           .to.equal(`Carrier: ${shippingDetailsData.carrier} Tracking number: ${shippingDetailsData.trackingNumber}`
             + ` Shipping details: ${editShippingAddressData.firstName} ${editShippingAddressData.lastName}`
             + ` ${editShippingAddressData.company} ${editShippingAddressData.address}`
@@ -381,7 +381,7 @@ describe('BO - Orders : Preview order', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkEditedInvoiceAddress', baseContext);
 
         const invoiceAddress = await ordersPage.getCustomerInvoiceAddressDetails(page);
-        await expect(invoiceAddress, 'Invoice address is not correct!')
+        expect(invoiceAddress, 'Invoice address is not correct!')
           .to.equal(`Invoice details: ${editInvoiceAddressData.firstName} ${editInvoiceAddressData.lastName} `
             + `${editInvoiceAddressData.company} ${editInvoiceAddressData.address}`
             + ` ${editInvoiceAddressData.secondAddress} ${editInvoiceAddressData.postalCode}`
@@ -392,7 +392,7 @@ describe('BO - Orders : Preview order', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNumber1', baseContext);
 
         const productsNumber = await ordersPage.getProductsNumberFromTable(page);
-        await expect(productsNumber, 'Products number is not correct!').to.equal(12);
+        expect(productsNumber, 'Products number is not correct!').to.equal(12);
       });
 
       describe('Check the products list', async () => {
@@ -412,7 +412,7 @@ describe('BO - Orders : Preview order', async () => {
             await testContext.addContextItem(this, 'testIdentifier', `checkProduct${index}1`, baseContext);
 
             const productInformation = await ordersPage.getProductDetailsFromTable(page, index + 1);
-            await expect(productInformation).to.contains(test.args.product.name)
+            expect(productInformation).to.contains(test.args.product.name)
               .and.to.contains(test.args.product.reference)
               .and.to.contains(1)
               .and.to.contains(test.args.productPrice);
@@ -423,7 +423,7 @@ describe('BO - Orders : Preview order', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'check2MoreText', baseContext);
 
           const lastProductsTableLine = await ordersPage.getProductDetailsFromTable(page, 13);
-          await expect(lastProductsTableLine).to.equal('more_horiz (2 more)');
+          expect(lastProductsTableLine).to.equal('more_horiz (2 more)');
         });
 
         it('should click on \'(2 more)\' link and check the last product in the list', async function () {
@@ -432,12 +432,12 @@ describe('BO - Orders : Preview order', async () => {
           await ordersPage.clickOnMoreLink(page, 13);
 
           let productInformation = await ordersPage.getProductDetailsFromTable(page, 11);
-          await expect(productInformation).to.contains(Products.demo_18.name)
+          expect(productInformation).to.contains(Products.demo_18.name)
             .and.to.contains(Products.demo_18.reference)
             .and.to.contains(1)
             .and.to.contains(Products.demo_18.finalPrice);
           productInformation = await ordersPage.getProductDetailsFromTable(page, 12);
-          await expect(productInformation).to.contains(Products.demo_19.name)
+          expect(productInformation).to.contains(Products.demo_19.name)
             .and.to.contains(Products.demo_19.reference)
             .and.to.contains(1)
             .and.to.contains(Products.demo_19.finalPrice);

@@ -107,7 +107,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
                 ->addGroupBy('product.id_product')
                 ->addGroupBy('attribute.id_product_attribute')
             ;
-            $packedProducts = $qb->execute()->fetchAll();
+            $packedProducts = $qb->executeQuery()->fetchAll();
         } catch (Throwable $exception) {
             throw new CoreException(
                 sprintf(
@@ -199,7 +199,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
             ->setParameter('productId', $productId->getValue())
         ;
 
-        $packs = $qb->execute()->fetchAllAssociative();
+        $packs = $qb->executeQuery()->fetchAllAssociative();
 
         return array_map(function (array $packData) {
             return new PackId((int) $packData['id_product_pack']);

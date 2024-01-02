@@ -98,6 +98,9 @@ class WebserviceController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/create.html.twig',
             [
                 'webserviceKeyForm' => $form->createView(),
+                'layoutTitle' => $this->trans('New webservice key', 'Admin.Navigation.Menu'),
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink('AdminWebservice'),
             ]
         );
     }
@@ -136,6 +139,13 @@ class WebserviceController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/edit.html.twig',
             [
                 'webserviceKeyForm' => $form->createView(),
+                'layoutTitle' => $this->trans(
+                    'Editing webservice key %key%',
+                    'Admin.Navigation.Menu',
+                    [
+                        '%key%' => $form->getData()['key'],
+                    ]
+                ),
             ]
         );
     }
@@ -172,13 +182,13 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Deletes single record.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param int $webserviceKeyId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_webservice_keys_index')]
     public function deleteAction($webserviceKeyId)
     {
         $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_key_eraser');
@@ -199,16 +209,16 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Deletes selected records.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_webservice_keys_index')]
     public function bulkDeleteAction(Request $request)
     {
-        $webserviceToDelete = $request->request->get('webservice_key_bulk_action');
+        $webserviceToDelete = $request->request->all('webservice_key_bulk_action');
 
         $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_key_eraser');
         $errors = $webserviceEraser->erase($webserviceToDelete);
@@ -228,16 +238,16 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Enables status for selected rows.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_webservice_keys_index')]
     public function bulkEnableAction(Request $request)
     {
-        $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
+        $webserviceToEnable = $request->request->all('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
         if ($statusModifier->setStatus($webserviceToEnable, true)) {
@@ -253,16 +263,16 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Disables status for selected rows.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_webservice_keys_index')]
     public function bulkDisableAction(Request $request)
     {
-        $webserviceToDisable = $request->request->get('webservice_key_bulk_action');
+        $webserviceToDisable = $request->request->all('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
         if ($statusModifier->setStatus($webserviceToDisable, false)) {
@@ -278,13 +288,13 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Toggles webservice account status.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param int $webserviceKeyId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_webservice_keys_index')]
     public function toggleStatusAction($webserviceKeyId)
     {
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
@@ -305,7 +315,6 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Process the Webservice configuration form.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity(
      *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
@@ -316,6 +325,7 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @return Response|RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_webservice_keys_index')]
     public function saveSettingsAction(Request $request, WebserviceKeyFilters $filters)
     {
         $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', ['controller' => $this]);
@@ -357,6 +367,7 @@ class WebserviceController extends FrameworkBundleAdminController
                 'grid' => $this->presentGrid($grid),
                 'configurationWarnings' => $this->lookForWarnings(),
                 'webserviceStatus' => $this->getWebServiceStatus($request),
+                'enableSidebar' => true,
             ]
         );
     }

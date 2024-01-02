@@ -47,47 +47,47 @@
   </h3>
   <div class="card-body">
     <div class="row mb-1">
-      <div class="col-4 text-right">
+      <div class="col-sm-4 text-sm-right font-weight-bold">
         {{ 'Social Title'|trans({}, 'Admin.Global') }}
       </div>
-      <div class="customer-social-title col-8">
+      <div class="customer-social-title col-sm-8">
         {{ customerInformation.personalInformation.socialTitle }}
       </div>
     </div>
 
     <div class="row mb-1">
-      <div class="col-4 text-right">
+      <div class="col-sm-4 text-sm-right font-weight-bold">
         {{ 'Age'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </div>
-      <div class="col-8 customer-birthday">
+      <div class="col-sm-8 customer-birthday">
         {{ customerInformation.personalInformation.birthday }}
       </div>
     </div>
 
     <div class="row mb-1">
-      <div class="col-4 text-right">
+      <div class="col-sm-4 text-sm-right font-weight-bold">
         {{ 'Registration Date'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </div>
-      <div class="col-8 customer-registration-date">
+      <div class="col-sm-8 customer-registration-date">
         {{ customerInformation.personalInformation.registrationDate }}
       </div>
     </div>
 
     <div class="row mb-1">
-      <div class="col-4 text-right">
+      <div class="col-sm-4 text-sm-right font-weight-bold">
         {{ 'Last Visit'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </div>
-      <div class="col-8 customer-last-visit-date">
+      <div class="col-sm-8 customer-last-visit-date">
         {{ customerInformation.personalInformation.lastVisitDate }}
       </div>
     </div>
 
     {% if customerInformation.personalInformation.rankBySales %}
       <div class="row mb-1">
-        <div class="col-4 text-right">
+        <div class="col-sm-4 text-sm-right font-weight-bold">
           {{ 'Best Customer Rank'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </div>
-        <div class="col-8 customer-sales-rank">
+        <div class="col-sm-8 customer-sales-rank">
           {{ customerInformation.personalInformation.rankBySales }}
         </div>
       </div>
@@ -95,29 +95,29 @@
 
     {% if isMultistoreEnabled %}
       <div class="row mb-1">
-        <div class="col-4 text-right">
+        <div class="col-sm-4 text-sm-right font-weight-bold">
           {{ 'Store'|trans({}, 'Admin.Global') }}
         </div>
-        <div class="customer-shop-name col-8">
+        <div class="customer-shop-name col-sm-8">
           {{ customerInformation.personalInformation.shopName }}
         </div>
       </div>
     {% endif %}
 
     <div class="row mb-1">
-      <div class="col-4 text-right">
+      <div class="col-sm-4 text-sm-right font-weight-bold">
         {{ 'Language'|trans({}, 'Admin.Global') }}
       </div>
-      <div class="col-8 customer-language-name">
+      <div class="col-sm-8 customer-language-name">
         {{ customerInformation.personalInformation.languageName }}
       </div>
     </div>
 
     <div class="row mb-1">
-      <div class="col-4 text-right">
+      <div class="col-sm-4 text-sm-right font-weight-bold">
         {{ 'Registrations'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </div>
-      <div class="col-8">
+      <div class="col-sm-8">
         {% set isNewsletterSubscribed = customerInformation.personalInformation.subscriptions.newsletterSubscribed %}
         {% set isPartnerOffersSubscribed = customerInformation.personalInformation.subscriptions.partnerOffersSubscribed %}
 
@@ -134,19 +134,19 @@
     </div>
 
     <div class="row mb-1">
-      <div class="col-4 text-right">
+      <div class="col-sm-4 text-sm-right font-weight-bold">
         {{ 'Latest Update'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </div>
-      <div class="customer-latest-update col-8">
+      <div class="customer-latest-update col-sm-8">
         {{ customerInformation.personalInformation.lastUpdateDate }}
       </div>
     </div>
 
     <div class="row mb-1">
-      <div class="col-4 text-right">
+      <div class="col-sm-4 text-sm-right font-weight-bold">
         {{ 'Status'|trans({}, 'Admin.Global') }}
       </div>
-      <div class="col-8">
+      <div class="col-sm-8">
         {% set isCustomerActive = customerInformation.personalInformation.active %}
 
         <span class="customer-status badge badge-{% if isCustomerActive %}success{% else %}danger{% endif %} rounded">
@@ -161,27 +161,27 @@
       </div>
     </div>
 
-    {% if customerInformation.personalInformation.guest %}
-      {% form_theme transferGuestAccountForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
-
-      <div class="customer-guest-status row mb-1">
-        <div class="col-4 text-right">
-          {{ 'This customer is registered as a Guest.'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </div>
-        <div class="col-8">
-          {% if customerInformation.generalInformation.customerBySameEmailExists %}
-            <p>{{ 'A registered customer account using the defined email address already exists. '|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
-          {% else %}
-            {{ form_start(transferGuestAccountForm, {'action': path('admin_customers_transform_guest_to_customer', {'customerId': customerInformation.customerId.value})}) }}
-            {{ form_widget(transferGuestAccountForm.transfer_guest_account) }}
-
-            <p class="small-text">
-              {{ 'This feature generates a random password before sending an email to your customer.'|trans({}, 'Admin.Orderscustomers.Help') }}
-            </p>
-            {{ form_end(transferGuestAccountForm) }}
-          {% endif %}
-        </div>
+    <div class="customer-guest-status row mb-1">
+      <div class="col-sm-4 text-sm-right font-weight-bold">
+          {{ 'Customer type'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </div>
-    {% endif %}
+      <div class="col-sm-8">
+        {% if customerInformation.personalInformation.guest %}
+            <p class="mb-0">{{ 'Guest customer'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+            {% if customerInformation.generalInformation.customerBySameEmailExists %}
+              <p class="text-muted">{{ 'You can\'t transform this guest to a registered customer, because a registered customer with this email address already exists. '|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+            {% else %}
+              <p class="text-muted">{{ 'You can transform this guest to a registered customer. The customer will receive an email with a link to set a password.'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+
+              {% form_theme transferGuestAccountForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+              {{ form_start(transferGuestAccountForm, {'action': path('admin_customers_transform_guest_to_customer', {'customerId': customerInformation.customerId.value})}) }}
+                {{ form_widget(transferGuestAccountForm.transfer_guest_account) }}
+              {{ form_end(transferGuestAccountForm) }}
+            {% endif %}
+        {% else %}
+            <p>{{ 'Registered customer'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+        {% endif %}
+      </div>
+    </div>
   </div>
 </div>

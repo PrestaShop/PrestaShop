@@ -12,6 +12,8 @@ import type {Page} from 'playwright';
 class AddPageCategory extends BOBasePage {
   public readonly pageTitleCreate: string;
 
+  public readonly pageTitleEdit: string;
+
   private readonly nameInput: string;
 
   private readonly displayedToggleInput: (toggle: number) => string;
@@ -33,7 +35,8 @@ class AddPageCategory extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Pages';
+    this.pageTitleCreate = `New category • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing category';
 
     // Selectors
     this.nameInput = '#cms_page_category_name_1';

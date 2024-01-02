@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ProductImageType;
-use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+use PrestaShopBundle\Form\Admin\Type\ProductSearchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -64,6 +64,7 @@ class DescriptionType extends TranslatorAwareType
      * @param array $locales
      * @param RouterInterface $router
      * @param string $employeeIsoCode
+     * @param int $shortDescriptionMaxLength
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -139,10 +140,10 @@ class DescriptionType extends TranslatorAwareType
                 'product_id' => $productId,
             ])
             ->add('manufacturer', ManufacturerType::class)
-            ->add('related_products', EntitySearchInputType::class, [
+            ->add('related_products', ProductSearchType::class, [
+                'include_combinations' => false,
                 'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
-                'entry_type' => RelatedProductType::class,
                 'entry_options' => [
                     'block_prefix' => 'related_product',
                 ],
@@ -151,8 +152,8 @@ class DescriptionType extends TranslatorAwareType
                     'query' => '__QUERY__',
                 ]),
                 'min_length' => 3,
+                'limit' => 0,
                 'filtered_identities' => $productId > 0 ? [$productId] : [],
-                'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
             ])
         ;
     }

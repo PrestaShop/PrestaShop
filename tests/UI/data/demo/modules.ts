@@ -1,6 +1,14 @@
 import ModuleData from '@data/faker/module';
 
 export default {
+  blockwishlist: new ModuleData({
+    tag: 'blockwishlist',
+    name: 'Wishlist',
+  }),
+  psApiResources: new ModuleData({
+    tag: 'ps_apiresources',
+    name: 'PrestaShop API Resources',
+  }),
   psCashOnDelivery: new ModuleData({
     tag: 'ps_cashondelivery',
     name: 'Cash on delivery (COD)',
@@ -9,6 +17,11 @@ export default {
     tag: 'ps_checkpayment',
     name: 'Payments by check',
   }),
+  psEmailAlerts: new ModuleData({
+    tag: 'ps_emailalerts',
+    name: 'Mail alerts',
+    releaseZip: 'https://github.com/PrestaShop/ps_emailalerts/releases/download/v2.4.2/ps_emailalerts.zip',
+  }),
   psEmailSubscription: new ModuleData({
     tag: 'ps_emailsubscription',
     name: 'Newsletter subscription',
@@ -16,7 +29,11 @@ export default {
   psFacetedSearch: new ModuleData({
     tag: 'ps_facetedsearch',
     name: 'Faceted search',
-    releaseZip: 'https://github.com/PrestaShop/ps_facetedsearch/releases/download/v3.12.1/ps_facetedsearch.zip',
+    releaseZip: 'https://github.com/PrestaShop/ps_facetedsearch/releases/download/v3.14.1/ps_facetedsearch.zip',
+  }),
+  psThemeCusto: new ModuleData({
+    tag: 'ps_themecusto',
+    name: 'Theme Customization',
   }),
   contactForm: new ModuleData({
     tag: 'contactform',
@@ -37,6 +54,6 @@ export default {
   keycloak: new ModuleData({
     tag: 'keycloak_connector_demo',
     name: 'Keycloak OAuth2 connector demo',
-    releaseZip: 'https://github.com/PrestaShop/keycloak_connector_demo/releases/download/v1.0.2/keycloak_connector_demo.zip',
+    releaseZip: 'https://github.com/PrestaShop/keycloak_connector_demo/releases/download/v1.0.4/keycloak_connector_demo.zip',
   }),
 };

@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 
 ob_start();
 
@@ -91,10 +91,11 @@ require_once _PS_CORE_DIR_ . '/config/autoload.php';
 
 if (file_exists(_PS_CORE_DIR_ . '/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_ . '/config/bootstrap.php';
+    require_once _PS_CORE_DIR_ . '/app/AdminKernel.php';
 
     global $kernel;
     try {
-        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+        $kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
         $kernel->boot();
     } catch (DBALException $e) {
         /*
@@ -121,7 +122,7 @@ if (!defined('_THEME_NAME_')) {
         define('_THEME_NAME_', getenv('PS_THEME_NAME'));
     } else {
         /**
-         * @deprecated since 1.7.5.x to be removed in 1.8.x
+         * @deprecated since 1.7.5.x to be removed in 9.x
          * Rely on "PS_THEME_NAME" environment variable value
          */
         $dirThemes = dirname(__DIR__) . '/themes/';

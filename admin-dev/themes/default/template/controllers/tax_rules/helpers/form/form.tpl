@@ -35,8 +35,8 @@
 {/block}
 
 {block name="script"}
-	$(document).ready(function() {
-		$('#country').change(function() {
+	$(function() {
+		$('#country').on('change', function() {
 			populateStates($(this).val(), '');
 		});
 
@@ -52,7 +52,7 @@
 		else
 		{
 			$('#tax_rule_form').hide();
-			$('#page-header-desc-tax_rule-new').click(function() {
+			$('#page-header-desc-tax_rule-new').on('click', function() {
 				initForm();
 				$('#tax_rule_form').slideToggle();
 				return false;
@@ -62,7 +62,7 @@
 
 	function populateStates(id_country, id_state)
 	{
-		if ($("#country option:selected").size() > 1)
+		if ($("#country option:selected").length > 1)
 		{
 			$("#zipcode-label").hide();
 			$("#zipcode").hide();

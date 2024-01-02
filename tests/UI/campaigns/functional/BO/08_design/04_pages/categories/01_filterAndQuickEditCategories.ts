@@ -58,7 +58,7 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
     await pagesPage.closeSfToolBar(page);
 
     const pageTitle = await pagesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(pagesPage.pageTitle);
+    expect(pageTitle).to.contains(pagesPage.pageTitle);
   });
 
   // 1 : Create two categories and filter with all inputs and selects in grid table
@@ -70,14 +70,14 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
         await pagesPage.goToAddNewPageCategory(page);
 
         const pageTitle = await addPageCategoryPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
       });
 
       it(`should create category n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCategory${index + 1}`, baseContext);
 
         const textResult = await addPageCategoryPage.createEditPageCategory(page, categoryToCreate);
-        await expect(textResult).to.equal(pagesPage.successfulCreationMessage);
+        expect(textResult).to.equal(pagesPage.successfulCreationMessage);
       });
 
       it('should go back to categories list', async function () {
@@ -86,7 +86,7 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
         await pagesPage.backToList(page);
 
         const pageTitle = await pagesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(pagesPage.pageTitle);
+        expect(pageTitle).to.contains(pagesPage.pageTitle);
       });
     });
   });
@@ -97,7 +97,7 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
       await testContext.addContextItem(this, 'testIdentifier', 'resetBeforeFilter', baseContext);
 
       numberOfCategories = await pagesPage.resetAndGetNumberOfLines(page, categoriesTableName);
-      await expect(numberOfCategories).to.be.above(0);
+      expect(numberOfCategories).to.be.above(0);
     });
 
     const tests = [
@@ -155,19 +155,19 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
           page,
           categoriesTableName,
         );
-        await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
+        expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
 
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
             const categoryStatus = await pagesPage.getStatus(page, categoriesTableName, i);
-            await expect(categoryStatus).to.equal(test.args.filterValue === '1');
+            expect(categoryStatus).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(
               page,
               i,
               test.args.filterBy,
             );
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -179,7 +179,7 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
           page,
           categoriesTableName,
         );
-        await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
+        expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
     });
   });
@@ -192,10 +192,10 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
       await pagesPage.filterTable(page, categoriesTableName, 'input', 'name', firstCategoryData.name);
 
       const numberOfCategoriesAfterFilter = await pagesPage.getNumberOfElementInGrid(page, categoriesTableName);
-      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
+      expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
 
       const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
-      await expect(textColumn).to.contains(firstCategoryData.name);
+      expect(textColumn).to.contains(firstCategoryData.name);
     });
 
     [
@@ -209,11 +209,11 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
 
         if (isActionPerformed) {
           const resultMessage = await pagesPage.getAlertSuccessBlockParagraphContent(page);
-          await expect(resultMessage).to.contains(pagesPage.successfulUpdateStatusMessage);
+          expect(resultMessage).to.contains(pagesPage.successfulUpdateStatusMessage);
         }
 
         const currentStatus = await pagesPage.getStatus(page, categoriesTableName, 1);
-        await expect(currentStatus).to.be.equal(categoryStatus.args.enable);
+        expect(currentStatus).to.be.equal(categoryStatus.args.enable);
       });
 
       it('should reset all filters', async function () {
@@ -225,7 +225,7 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
         );
 
         const numberOfCategoriesAfterFilter = await pagesPage.resetAndGetNumberOfLines(page, categoriesTableName);
-        await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
+        expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
     });
 
@@ -233,7 +233,7 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCategories', baseContext);
 
       const deleteTextResult = await pagesPage.deleteWithBulkActions(page, categoriesTableName);
-      await expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
     });
   });
 });

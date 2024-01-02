@@ -33,7 +33,7 @@ class Groups extends BOBasePage {
 
   private readonly tableBodyRow: (row: number) => string;
 
-  private readonly tableBodyColumns: (row: number) => string;
+  private readonly tableBodyColumns: (row: number, column: string) => string;
 
   private readonly tableColumnActions: (row: number) => string;
 
@@ -56,6 +56,34 @@ class Groups extends BOBasePage {
   private readonly selectAllLink: string;
 
   private readonly bulkDeleteLink: string;
+
+  private readonly paginationDiv: string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationListOpen: string;
+
+  private readonly paginationNumber: (number: number) => string;
+
+  private readonly paginationRightBlock: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string, direction: string) => string;
+
+  private readonly visitorsGroupSelect: string;
+
+  private readonly guestsGroupSelect: string;
+
+  private readonly customersGroupSelect: string;
+
+  private readonly saveButton: string;
 
   /**
    * @constructs
@@ -89,10 +117,10 @@ class Groups extends BOBasePage {
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
     this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumns = (row: number) => `${this.tableBodyRow(row)} td`;
+    this.tableBodyColumns = (row: number, column: string) => `${this.tableBodyRow(row)} td.column-${column}`;
 
     // Row actions selectors
-    this.tableColumnActions = (row: number) => `${this.tableBodyColumns(row)} .btn-group-action`;
+    this.tableColumnActions = (row: number) => `${this.tableBodyRow(row)} .btn-group-action`;
     this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} a.edit`;
     this.tableColumnActionsToggleButton = (row: number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
     this.tableColumnActionsDropdownMenu = (row: number) => `${this.tableColumnActions(row)} .dropdown-menu`;
@@ -107,6 +135,26 @@ class Groups extends BOBasePage {
     this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
     this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+
+    // Pagination selectors
+    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationLimitSelect = `${this.paginationDiv}  button.dropdown-toggle`;
+    this.paginationListOpen = `${this.paginationDiv}.open`;
+    this.paginationNumber = (number: number) => `${this.gridForm} div.row li a[data-items='${number}']`;
+    this.paginationRightBlock = `${this.paginationDiv}.pull-right`;
+    this.paginationLabel = `${this.paginationRightBlock} li.active a`;
+    this.paginationNextLink = `${this.paginationRightBlock} i.icon-angle-right`;
+    this.paginationPreviousLink = `${this.paginationRightBlock} i.icon-angle-left`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = (column: string, direction: string) => `${this.tableHead} a.${direction}-sort-column-${column}-link`;
+
+    // Default groups options selectors
+    this.visitorsGroupSelect = '#PS_UNIDENTIFIED_GROUP';
+    this.guestsGroupSelect = '#PS_GUEST_GROUP';
+    this.customersGroupSelect = '#PS_CUSTOMER_GROUP';
+    this.saveButton = '#group_fieldset_general div.panel-footer button[type="submit"]';
   }
 
   /* Header methods */
@@ -157,15 +205,15 @@ class Groups extends BOBasePage {
    * @param page {Page} Browser tab
    * @param filterType {string} Type of filter field( input/select)
    * @param filterBy {string} Column to filter with
-   * @param value {string} Value to filter
+   * @param value {string |number} Value to filter
    * @return {Promise<void>}
    */
-  async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
+  async filterTable(page: Page, filterType: string, filterBy: string, value: string | number): Promise<void> {
     const currentUrl: string = page.url();
 
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value);
         await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
@@ -191,31 +239,29 @@ class Groups extends BOBasePage {
    * @return {Promise<string>}
    */
   async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
-    // Get all text columns
-    const textColumns = await page.$$eval(
-      `${this.tableBodyColumns(row)}:not(.row-selector)`,
-      (els: HTMLElement[]) => els.map((el: HTMLElement) => (el.textContent ?? '').trim()),
-    );
-
-    switch (columnName) {
-      case 'id_group':
-        return textColumns[0];
-
-      case 'b!name':
-        return textColumns[1];
-
-      case 'reduction':
-        return textColumns[2];
-
-      case 'nb':
-        return textColumns[3];
-
-      case 'show_prices':
-        return textColumns[4];
-
-      default:
-        throw new Error(`Column ${columnName} was not found`);
+    if (columnName === 'b!name') {
+      // eslint-disable-next-line no-param-reassign
+      columnName = 'name';
     }
+    return this.getTextContent(page, this.tableBodyColumns(row, columnName));
+  }
+
+  /**
+   * Get content from all rows
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name to get all text content
+   * @return {Promise<Array<string>>}
+   */
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable: string[] = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName);
+      allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
   }
 
   /**
@@ -236,11 +282,11 @@ class Groups extends BOBasePage {
    */
   async deleteGroup(page: Page, row: number): Promise<string> {
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
+      page.locator(this.tableColumnActionsToggleButton(row)).click(),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.locator(this.tableColumnActionsDeleteLink(row)).click();
 
     // Confirm delete action
     await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
@@ -262,18 +308,18 @@ class Groups extends BOBasePage {
 
     // Select all rows
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.selectAllLink),
     ]);
 
     await Promise.all([
-      page.click(this.selectAllLink),
+      page.locator(this.selectAllLink).click(),
       this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
 
     // Perform delete
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.bulkDeleteLink),
     ]);
 
@@ -281,6 +327,103 @@ class Groups extends BOBasePage {
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getPaginationLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    await page.locator(this.paginationLimitSelect).click();
+    await this.waitForVisibleSelector(page, this.paginationListOpen);
+    await this.clickAndWaitForURL(page, this.paginationNumber(number));
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
+    await this.clickAndWaitForURL(page, `${this.sortColumnDiv(sortBy, sortDirection)} i`);
+  }
+
+  /* Default groups options selectors */
+  /**
+   * Get group selected option
+   * @param page {Page} Browser tab
+   * @param group {string} Group to get selected value
+   * @return {Promise<string>}
+   */
+  async getGroupSelectedValue(page: Page, group: string): Promise<string> {
+    switch (group) {
+      case 'visitors':
+        return this.getTextContent(page, `${this.visitorsGroupSelect} option[selected]`, false);
+      case 'guests':
+        return this.getTextContent(page, `${this.guestsGroupSelect} option[selected]`, false);
+      case 'customers':
+        return this.getTextContent(page, `${this.customersGroupSelect} option[selected]`, false);
+      default:
+        throw new Error(`Group ${group} was not found`);
+    }
+  }
+
+  /**
+   * Get group dropdown list
+   * @param page {Page} Browser tab
+   * @param group {string} Group to get dropdown list
+   * @return {Promise<string>}
+   */
+  async getGroupDropDownList(page: Page, group: string): Promise<string> {
+    switch (group) {
+      case 'visitors':
+        return this.getTextContent(page, this.visitorsGroupSelect);
+      case 'guests':
+        return this.getTextContent(page, this.guestsGroupSelect);
+      case 'customers':
+        return this.getTextContent(page, this.customersGroupSelect);
+      default:
+        throw new Error(`Group ${group} was not found`);
+    }
   }
 }
 

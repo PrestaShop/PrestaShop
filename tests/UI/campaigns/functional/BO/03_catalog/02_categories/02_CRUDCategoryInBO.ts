@@ -14,7 +14,7 @@ import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import categoryPage from '@pages/FO/category';
 import {homePage as foHomePage} from '@pages/FO/home';
-import siteMapPage from '@pages/FO/siteMap';
+import {siteMapPage} from '@pages/FO/siteMap';
 
 // Import data
 import CategoryData from '@data/faker/category';
@@ -75,14 +75,14 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
     await categoriesPage.closeSfToolBar(page);
 
     const pageTitle = await categoriesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+    expect(pageTitle).to.contains(categoriesPage.pageTitle);
   });
 
   it('should reset all filters and get number of categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
     numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCategories).to.be.above(0);
+    expect(numberOfCategories).to.be.above(0);
   });
 
   // 1 : Create category and subcategory then go to FO to check the existence of the new categories
@@ -94,17 +94,17 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         await categoriesPage.goToAddNewCategoryPage(page);
 
         const pageTitle = await addCategoryPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
       });
 
       it('should create category and check the categories number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createCategory', baseContext);
 
         const textResult = await addCategoryPage.createEditCategory(page, createCategoryData);
-        await expect(textResult).to.equal(categoriesPage.successfulCreationMessage);
+        expect(textResult).to.equal(categoriesPage.successfulCreationMessage);
 
         const numberOfCategoriesAfterCreation = await categoriesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
+        expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
       });
 
       it('should search for the new category and check result', async function () {
@@ -119,11 +119,11 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         );
 
         const numberOfCategoriesAfterFilter = await categoriesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
+        expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
 
         for (let i: number = 1; i <= numberOfCategoriesAfterFilter; i++) {
           const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, i, 'name');
-          await expect(textColumn).to.contains(createCategoryData.name);
+          expect(textColumn).to.contains(createCategoryData.name);
         }
       });
 
@@ -137,7 +137,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         await foHomePage.changeLanguage(page, 'en');
 
         const isHomePage = await foHomePage.isHomePage(page);
-        await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should check the created category', async function () {
@@ -147,11 +147,11 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         await foHomePage.goToFooterLink(page, 'Sitemap');
 
         const pageTitle = await siteMapPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(siteMapPage.pageTitle);
+        expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
         // Check category name
         const categoryName = await siteMapPage.getCategoryName(page, categoryID);
-        await expect(categoryName).to.contains(createCategoryData.name);
+        expect(categoryName).to.contains(createCategoryData.name);
       });
 
       it('should view the created category', async function () {
@@ -161,11 +161,11 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
 
         // Check category name
         const pageTitle = await categoryPage.getHeaderPageName(page);
-        await expect(pageTitle).to.contains(createCategoryData.name.toUpperCase());
+        expect(pageTitle).to.contains(createCategoryData.name.toUpperCase());
 
         // Check category description
         const categoryDescription = await categoryPage.getCategoryDescription(page);
-        await expect(categoryDescription).to.equal(createCategoryData.description);
+        expect(categoryDescription).to.equal(createCategoryData.description);
       });
 
       it('should go back to BO', async function () {
@@ -175,7 +175,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         page = await categoryPage.closePage(browserContext, page, 0);
 
         const pageTitle = await categoriesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+        expect(pageTitle).to.contains(categoriesPage.pageTitle);
       });
     });
 
@@ -186,7 +186,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         await categoriesPage.goToViewSubCategoriesPage(page, 1);
 
         const pageTitle = await categoriesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(createCategoryData.name);
+        expect(pageTitle).to.contains(createCategoryData.name);
       });
 
       it('should go to add new category page', async function () {
@@ -195,14 +195,14 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         await categoriesPage.goToAddNewCategoryPage(page);
 
         const pageTitle = await addCategoryPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
       });
 
       it('should create a subcategory', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createSubcategory', baseContext);
 
         const textResult = await addCategoryPage.createEditCategory(page, createSubCategoryData);
-        await expect(textResult).to.equal(categoriesPage.successfulCreationMessage);
+        expect(textResult).to.equal(categoriesPage.successfulCreationMessage);
       });
 
       it('should search for the subcategory and check result', async function () {
@@ -217,7 +217,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         );
 
         const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
-        await expect(textColumn).to.contains(createSubCategoryData.name);
+        expect(textColumn).to.contains(createSubCategoryData.name);
       });
 
       it('should go to FO and check the created Subcategory', async function () {
@@ -232,11 +232,11 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         await foHomePage.goToFooterLink(page, 'Sitemap');
 
         const pageTitle = await siteMapPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(siteMapPage.pageTitle);
+        expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
         // Check category
         const categoryName = await siteMapPage.getCategoryName(page, subcategoryID);
-        await expect(categoryName).to.contains(createSubCategoryData.name);
+        expect(categoryName).to.contains(createSubCategoryData.name);
       });
 
       it('should view the created subcategory', async function () {
@@ -246,11 +246,11 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
 
         // Check subcategory name
         const pageTitle = await categoryPage.getHeaderPageName(page);
-        await expect(pageTitle).to.contains(createSubCategoryData.name.toUpperCase());
+        expect(pageTitle).to.contains(createSubCategoryData.name.toUpperCase());
 
         // Check subcategory description
         const subcategoryDescription = await categoryPage.getCategoryDescription(page);
-        await expect(subcategoryDescription).to.equal(createSubCategoryData.description);
+        expect(subcategoryDescription).to.equal(createSubCategoryData.description);
       });
 
       it('should go back to BO', async function () {
@@ -260,7 +260,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         page = await categoryPage.closePage(browserContext, page, 0);
 
         const pageTitle = await categoriesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(createCategoryData.name);
+        expect(pageTitle).to.contains(createCategoryData.name);
       });
     });
   });
@@ -277,7 +277,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       );
 
       const pageTitle = await categoriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
 
     it(`should filter list by Name '${createCategoryData.name}'`, async function () {
@@ -292,7 +292,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       );
 
       const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
-      await expect(textColumn).to.contains(createCategoryData.name);
+      expect(textColumn).to.contains(createCategoryData.name);
     });
 
     it('should click on view category', async function () {
@@ -301,7 +301,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       await categoriesPage.goToViewSubCategoriesPage(page, 1);
 
       const pageTitle = await categoriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createCategoryData.name);
+      expect(pageTitle).to.contains(createCategoryData.name);
     });
 
     it('should check subcategories list', async function () {
@@ -316,7 +316,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       );
 
       const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
-      await expect(textColumn).to.contains(createSubCategoryData.name);
+      expect(textColumn).to.contains(createSubCategoryData.name);
     });
   });
 
@@ -332,7 +332,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       );
 
       const pageTitle = await categoriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
 
     it(`should filter list by Name '${createCategoryData.name}'`, async function () {
@@ -347,7 +347,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       );
 
       const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
-      await expect(textColumn).to.contains(createCategoryData.name);
+      expect(textColumn).to.contains(createCategoryData.name);
     });
 
     it('should go to edit category page', async function () {
@@ -356,17 +356,17 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       await categoriesPage.goToEditCategoryPage(page, 1);
 
       const pageTitle = await addCategoryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCategoryPage.pageTitleEdit + createCategoryData.name);
+      expect(pageTitle).to.contains(addCategoryPage.pageTitleEdit + createCategoryData.name);
     });
 
     it('should update the category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCategory', baseContext);
 
       const textResult = await addCategoryPage.createEditCategory(page, editCategoryData);
-      await expect(textResult).to.equal(categoriesPage.successfulUpdateMessage);
+      expect(textResult).to.equal(categoriesPage.successfulUpdateMessage);
 
       const numberOfCategoriesAfterUpdate = await categoriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCategoriesAfterUpdate).to.be.equal(numberOfCategories + 1);
+      expect(numberOfCategoriesAfterUpdate).to.be.equal(numberOfCategories + 1);
     });
 
     it('should search for the new category and check result', async function () {
@@ -381,7 +381,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       );
 
       const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
-      await expect(textColumn).to.contains(editCategoryData.name);
+      expect(textColumn).to.contains(editCategoryData.name);
     });
 
     it('should go to FO and check that the category does not exist', async function () {
@@ -395,11 +395,11 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       await foHomePage.goToFooterLink(page, 'Sitemap');
 
       const pageTitle = await siteMapPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(siteMapPage.pageTitle);
+      expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
       // Check category name
       const categoryName = await siteMapPage.isVisibleCategory(page, categoryID);
-      await expect(categoryName).to.be.false;
+      expect(categoryName).to.eq(false);
     });
 
     it('should go back to BO', async function () {
@@ -409,7 +409,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       page = await siteMapPage.closePage(browserContext, page, 0);
 
       const pageTitle = await categoriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
   });
 
@@ -425,7 +425,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       );
 
       const pageTitle = await categoriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
 
     it(`should filter list by Name '${editCategoryData.name}'`, async function () {
@@ -441,17 +441,17 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       categoryID = parseInt(await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category'), 10);
 
       const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
-      await expect(textColumn).to.contains(editCategoryData.name);
+      expect(textColumn).to.contains(editCategoryData.name);
     });
 
     it('should delete category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCategory', baseContext);
 
       const textResult = await categoriesPage.deleteCategory(page, 1);
-      await expect(textResult).to.equal(categoriesPage.successfulDeleteMessage);
+      expect(textResult).to.equal(categoriesPage.successfulDeleteMessage);
 
       const numberOfCategoriesAfterDeletion = await categoriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCategoriesAfterDeletion).to.be.equal(numberOfCategories);
+      expect(numberOfCategoriesAfterDeletion).to.be.equal(numberOfCategories);
     });
 
     it('should go to FO', async function () {
@@ -463,7 +463,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should check that the deleted category does not exist', async function () {
@@ -473,10 +473,10 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       await foHomePage.goToFooterLink(page, 'Sitemap');
 
       const pageTitle = await siteMapPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(siteMapPage.pageTitle);
+      expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
       const categoryName = await siteMapPage.isVisibleCategory(page, categoryID);
-      await expect(categoryName, 'Category is visible in FO!').to.be.false;
+      expect(categoryName, 'Category is visible in FO!').to.eq(false);
     });
   });
 });

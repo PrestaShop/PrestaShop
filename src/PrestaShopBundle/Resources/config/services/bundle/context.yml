@@ -1,0 +1,37 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  # Employee context must have a higher priority because Shop and Language depend on it
+  PrestaShopBundle\EventListener\Context\Admin\EmployeeContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
+
+  # Language depends on Employee so its priority is lower, however it has higher priority than Currency and Country because they depend on Language
+  PrestaShopBundle\EventListener\Context\Admin\LanguageContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 15 }
+
+  PrestaShopBundle\EventListener\Context\Admin\ShopContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\Context\Admin\CurrencyContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\Context\Admin\CountryContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\Context\Admin\LegacyContextListener:
+    arguments:
+      $legacyBuilders: !tagged_iterator core.legacy_context_builder
+    tags:
+      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+  PrestaShopBundle\EventListener\Context\Admin\LegacyControllerContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

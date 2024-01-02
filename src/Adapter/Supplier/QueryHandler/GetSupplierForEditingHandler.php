@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Supplier\AbstractSupplierHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryHandler\GetSupplierForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 /**
  * Handles query which gets supplier for editing
  */
+#[AsQueryHandler]
 final class GetSupplierForEditingHandler extends AbstractSupplierHandler implements GetSupplierForEditingHandlerInterface
 {
     /**

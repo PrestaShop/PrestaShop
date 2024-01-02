@@ -95,14 +95,14 @@ describe('BO - Orders : Bulk open on new tab', async () => {
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
+      expect(numberOfOrders).to.be.above(0);
     });
 
     it('should click on \'Open in new tabs\' with bulk actions', async function () {
@@ -111,7 +111,7 @@ describe('BO - Orders : Bulk open on new tab', async () => {
       page = await ordersPage.bulkOpenInNewTabs(page, false, [1, 2]);
 
       const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
     });
 
     it('should check the first opened order page', async function () {
@@ -119,9 +119,9 @@ describe('BO - Orders : Bulk open on new tab', async () => {
 
       // Check second customer information
       const customerInfo = await orderPageCustomerBlock.getCustomerInfoBlock(page);
-      await expect(customerInfo).to.contains(secondCustomerData.socialTitle);
-      await expect(customerInfo).to.contains(secondCustomerData.firstName);
-      await expect(customerInfo).to.contains(secondCustomerData.lastName);
+      expect(customerInfo).to.contains(secondCustomerData.socialTitle);
+      expect(customerInfo).to.contains(secondCustomerData.firstName);
+      expect(customerInfo).to.contains(secondCustomerData.lastName);
     });
 
     it('should close the tab and check that the second order page is opened', async function () {
@@ -130,7 +130,7 @@ describe('BO - Orders : Bulk open on new tab', async () => {
       page = await orderPageCustomerBlock.closePage(browserContext, page, 1);
 
       const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
     });
 
     it('should check the second order page', async function () {
@@ -138,9 +138,9 @@ describe('BO - Orders : Bulk open on new tab', async () => {
 
       // Check second customer information
       const customerInfo = await orderPageCustomerBlock.getCustomerInfoBlock(page);
-      await expect(customerInfo).to.contains(firstCustomerData.socialTitle);
-      await expect(customerInfo).to.contains(firstCustomerData.firstName);
-      await expect(customerInfo).to.contains(firstCustomerData.lastName);
+      expect(customerInfo).to.contains(firstCustomerData.socialTitle);
+      expect(customerInfo).to.contains(firstCustomerData.firstName);
+      expect(customerInfo).to.contains(firstCustomerData.lastName);
     });
   });
 

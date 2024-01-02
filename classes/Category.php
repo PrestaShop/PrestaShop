@@ -24,6 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
+use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
+
 /**
  * Class CategoryCore.
  */
@@ -115,13 +118,13 @@ class CategoryCore extends ObjectModel
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             /* Lang fields */
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128],
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => CategorySettings::MAX_TITLE_LENGTH],
             'link_rewrite' => [
                 'type' => self::TYPE_STRING,
                 'lang' => true,
                 'validate' => 'isLinkRewrite',
                 'required' => true,
-                'size' => 128,
+                'size' => SeoSettings::MAX_LINK_REWRITE_LENGTH,
                 'ws_modifier' => [
                     'http_method' => WebserviceRequest::HTTP_POST,
                     'modifier' => 'modifierWsLinkRewrite',
@@ -129,9 +132,9 @@ class CategoryCore extends ObjectModel
             ],
             'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
             'additional_description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
-            'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
-            'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
-            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
+            'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => SeoSettings::MAX_TITLE_LENGTH],
+            'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => SeoSettings::MAX_DESCRIPTION_LENGTH],
+            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => SeoSettings::MAX_KEYWORDS_LENGTH],
         ],
     ];
 
@@ -345,11 +348,8 @@ class CategoryCore extends ObjectModel
      * @param array $toDelete Array reference where categories ID will be saved
      * @param int $idCategory Parent category ID
      */
-    protected function recursiveDelete(&$toDelete, $idCategory)
+    protected function recursiveDelete(array &$toDelete, $idCategory)
     {
-        if (!is_array($toDelete)) {
-            die(Tools::displayError('Parameter "toDelete" is invalid.'));
-        }
         if (!$idCategory) {
             die(Tools::displayError('Parameter "idCategory" is invalid.'));
         }
@@ -431,7 +431,7 @@ class CategoryCore extends ObjectModel
      *
      * @return bool Deletion result
      */
-    public function deleteSelection($idCategories)
+    public function deleteSelection(array $idCategories)
     {
         $return = 1;
         foreach ($idCategories as $idCategory) {
@@ -611,11 +611,8 @@ class CategoryCore extends ObjectModel
      *
      * @return array Categories
      */
-    public static function getCategories($idLang = false, $active = true, $order = true, $sqlFilter = '', $orderBy = '', $limit = '')
+    public static function getCategories($idLang = false, bool $active = true, $order = true, $sqlFilter = '', $orderBy = '', $limit = '')
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
-        }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
 			SELECT *
@@ -676,7 +673,7 @@ class CategoryCore extends ObjectModel
     public static function getAllCategoriesName(
         $idRootCategory = null,
         $idLang = false,
-        $active = true,
+        bool $active = true,
         $groups = null,
         $useShopRestriction = true,
         $sqlFilter = '',
@@ -685,10 +682,6 @@ class CategoryCore extends ObjectModel
     ) {
         if (isset($idRootCategory) && !Validate::isInt($idRootCategory)) {
             die(Tools::displayError('Parameter "idRootCategory" was provided, but it\'s not a valid integer.'));
-        }
-
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
         }
 
         if (isset($groups) && Group::isFeatureActive() && !is_array($groups)) {
@@ -751,7 +744,7 @@ class CategoryCore extends ObjectModel
     public static function getNestedCategories(
         $idRootCategory = null,
         $idLang = false,
-        $active = true,
+        bool $active = true,
         $groups = null,
         $useShopRestriction = true,
         $sqlFilter = '',
@@ -760,10 +753,6 @@ class CategoryCore extends ObjectModel
     ) {
         if (isset($idRootCategory) && !Validate::isInt($idRootCategory)) {
             die(Tools::displayError('Parameter "idRootCategory" was provided, but it\'s not a valid integer.'));
-        }
-
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
         }
 
         if (isset($groups) && Group::isFeatureActive() && !is_array($groups)) {
@@ -1070,8 +1059,7 @@ class CategoryCore extends ObjectModel
             $result = array_slice($result, (int) (($pageNumber - 1) * $productPerPage), (int) $productPerPage);
         }
 
-        // Modify SQL result
-        return Product::getProductsProperties($idLang, $result);
+        return $result;
     }
 
     /**
@@ -1131,12 +1119,8 @@ class CategoryCore extends ObjectModel
      *
      * @return array Children of given Category
      */
-    public static function getChildren($idParent, $idLang, $active = true, $idShop = false)
+    public static function getChildren($idParent, $idLang, bool $active = true, $idShop = false)
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
-        }
-
         $cacheId = 'Category::getChildren_' . (int) $idParent . '-' . (int) $idLang . '-' . (bool) $active . '-' . (int) $idShop;
         if (!Cache::isStored($cacheId)) {
             $query = 'SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, category_shop.`id_shop`
@@ -1167,12 +1151,8 @@ class CategoryCore extends ObjectModel
      *
      * @return bool Indicates whether the given Category has children
      */
-    public static function hasChildren($idParent, $idLang, $active = true, $idShop = false)
+    public static function hasChildren($idParent, $idLang, bool $active = true, $idShop = false)
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError('Parameter "active" is invalid.'));
-        }
-
         $cacheId = 'Category::hasChildren_' . (int) $idParent . '-' . (int) $idLang . '-' . (bool) $active . '-' . (int) $idShop;
         if (!Cache::isStored($cacheId)) {
             $query = 'SELECT c.id_category, "" as name
@@ -1931,27 +1911,6 @@ class CategoryCore extends ObjectModel
 
             return 1 + $maxPosition;
         }
-    }
-
-    /**
-     * Get URL Rewrite information.
-     *
-     * @param int $idCategory
-     *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
-     *
-     * @since 1.7.0
-     */
-    public static function getUrlRewriteInformation($idCategory)
-    {
-        $sql = new DbQuery();
-        $sql->select('l.`id_lang`, cl.`link_rewrite`');
-        $sql->from('category_link', 'cl');
-        $sql->leftJoin('lang', 'l', 'cl.`id_lang` = l.`id_lang`');
-        $sql->where('cl.`id_category` = ' . (int) $idCategory);
-        $sql->where('l.`active` = 1');
-
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
     /**

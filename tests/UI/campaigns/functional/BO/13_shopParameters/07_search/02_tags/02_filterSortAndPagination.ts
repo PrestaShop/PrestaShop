@@ -57,7 +57,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
     );
 
     const pageTitle = await searchPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(searchPage.pageTitle);
+    expect(pageTitle).to.contains(searchPage.pageTitle);
   });
 
   it('should go to \'Tags\' page', async function () {
@@ -67,7 +67,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
     numberOfTags = await tagsPage.getNumberOfElementInGrid(page);
 
     const pageTitle = await tagsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(tagsPage.pageTitle);
+    expect(pageTitle).to.contains(tagsPage.pageTitle);
   });
 
   // 1 - Create tag
@@ -83,17 +83,17 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
         await tagsPage.goToAddNewTagPage(page);
 
         const pageTitle = await addTagPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addTagPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addTagPage.pageTitleCreate);
       });
 
       it(`should create tag n° ${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createTag${index}`, baseContext);
 
         const textResult = await addTagPage.setTag(page, tagData);
-        await expect(textResult).to.contains(tagsPage.successfulCreationMessage);
+        expect(textResult).to.contains(tagsPage.successfulCreationMessage);
 
         const numberOfElementAfterCreation = await tagsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfElementAfterCreation).to.be.equal(numberOfTags + 1 + index);
+        expect(numberOfElementAfterCreation).to.be.equal(numberOfTags + 1 + index);
       });
     });
   });
@@ -114,11 +114,11 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
         await tagsPage.filterTable(page, test.args.filterBy, test.args.filterValue);
 
         const numberOfLinesAfterFilter = await tagsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfTags + 21);
+        expect(numberOfLinesAfterFilter).to.be.at.most(numberOfTags + 21);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
           const textColumn = await tagsPage.getTextColumn(page, row, test.args.filterBy);
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -126,7 +126,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfLinesAfterReset = await tagsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfLinesAfterReset).to.equal(numberOfTags + 21);
+        expect(numberOfLinesAfterReset).to.equal(numberOfTags + 21);
       });
     });
   });
@@ -193,17 +193,17 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -252,7 +252,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
 
       for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
         const textColumn = await tagsPage.getTextColumn(page, i, 'a!name');
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -260,7 +260,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteTags', baseContext);
 
       const deleteTextResult = await tagsPage.bulkDelete(page);
-      await expect(deleteTextResult).to.be.contains(tagsPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(tagsPage.successfulMultiDeleteMessage);
     });
   });
 });

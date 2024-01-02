@@ -140,6 +140,11 @@ class AdminShopControllerCore extends AdminController
         }
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         parent::initContent();
@@ -406,7 +411,6 @@ class AdminShopControllerCore extends AdminController
                     'desc' => [
                         $this->trans('This field does not refer to the shop name visible in the front office.', [], 'Admin.Shopparameters.Help'),
                         $this->trans('Follow [1]this link[/1] to edit the shop name used on the front office.', [
-                            '_raw' => true,
                             '[1]' => '<a href="' . $this->context->link->getAdminLink('AdminStores') . '#store_fieldset_general">',
                             '[/1]' => '</a>',
                         ], 'Admin.Shopparameters.Help'), ],
@@ -581,7 +585,6 @@ class AdminShopControllerCore extends AdminController
             'product_attribute' => $this->trans('Product combinations', [], 'Admin.Advparameters.Feature'),
             'stock_available' => $this->trans('Available quantities for sale', [], 'Admin.Advparameters.Feature'),
             'store' => $this->trans('Stores', [], 'Admin.Global'),
-            'warehouse' => $this->trans('Warehouses', [], 'Admin.Advparameters.Feature'),
             'webservice_account' => $this->trans('Webservice accounts', [], 'Admin.Advparameters.Feature'),
             'attribute_group' => $this->trans('Attribute groups', [], 'Admin.Advparameters.Feature'),
             'feature' => $this->trans('Features', [], 'Admin.Global'),

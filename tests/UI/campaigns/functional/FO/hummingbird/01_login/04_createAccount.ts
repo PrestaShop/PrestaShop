@@ -45,7 +45,7 @@ describe('FO - Login : Create account', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -54,7 +54,7 @@ describe('FO - Login : Create account', async () => {
       await homePage.goToLoginPage(page);
 
       const pageTitle = await loginPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(loginPage.pageTitle);
+      expect(pageTitle).to.equal(loginPage.pageTitle);
     });
 
     it('should go to create account page', async function () {
@@ -63,7 +63,7 @@ describe('FO - Login : Create account', async () => {
       await loginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await createAccountPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(createAccountPage.formTitle);
+      expect(pageHeaderTitle).to.equal(createAccountPage.formTitle);
     });
 
     it('should create new account', async function () {
@@ -72,14 +72,14 @@ describe('FO - Login : Create account', async () => {
       await createAccountPage.createAccount(page, customerData);
 
       const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Created customer is not connected!').to.be.true;
+      expect(isCustomerConnected, 'Created customer is not connected!').to.eq(true);
     });
 
     it('should check if the page is redirected to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isHomePage', baseContext);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to redirect to FO home page!').to.be.true;
+      expect(isHomePage, 'Fail to redirect to FO home page!').to.eq(true);
     });
 
     it('should sign out from FO', async function () {
@@ -88,7 +88,7 @@ describe('FO - Login : Create account', async () => {
       await homePage.logout(page);
 
       const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
   });
 

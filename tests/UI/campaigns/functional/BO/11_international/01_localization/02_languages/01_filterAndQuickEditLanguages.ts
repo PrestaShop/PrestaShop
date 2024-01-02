@@ -53,7 +53,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
     await localizationPage.closeSfToolBar(page);
 
     const pageTitle = await localizationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(localizationPage.pageTitle);
+    expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   it('should go to \'Languages\' page', async function () {
@@ -62,14 +62,14 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
     await localizationPage.goToSubTabLanguages(page);
 
     const pageTitle = await languagesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(languagesPage.pageTitle);
+    expect(pageTitle).to.contains(languagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of languages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfLanguages).to.be.above(0);
+    expect(numberOfLanguages).to.be.above(0);
   });
 
   describe('Filter languages', async () => {
@@ -152,20 +152,20 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
 
         // Check number of languages
         const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfLanguagesAfterFilter).to.be.at.most(numberOfLanguages);
-        await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+        expect(numberOfLanguagesAfterFilter).to.be.at.most(numberOfLanguages);
+        expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
         for (let i = 1; i <= numberOfLanguagesAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
             const languageStatus = await languagesPage.getStatus(page, i);
-            await expect(languageStatus).to.equal(test.args.filterValue === '1');
+            expect(languageStatus).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await languagesPage.getTextColumnFromTable(
               page,
               i,
               test.args.filterBy,
             );
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -174,7 +174,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
+        expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
       });
     });
   });
@@ -187,10 +187,10 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
 
       // Check number of languages
       const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+      expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
       const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
-      await expect(textColumn).to.contains(Languages.english.isoCode);
+      expect(textColumn).to.contains(Languages.english.isoCode);
     });
 
     it('should disable \'en\' language and check error message', async function () {
@@ -199,14 +199,14 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
       await languagesPage.setStatus(page, 1, false);
 
       const textError = await languagesPage.getAlertDangerBlockParagraphContent(page);
-      await expect(textError).to.equal(languagesPage.unSuccessfulUpdateDefaultLanguageStatusMessage);
+      expect(textError).to.equal(languagesPage.unSuccessfulUpdateDefaultLanguageStatusMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableDefaultLanguageReset', baseContext);
 
       const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
+      expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
     });
   });
 
@@ -219,10 +219,10 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
 
       // Check number od languages
       const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+      expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
       const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
-      await expect(textColumn).to.contains(Languages.french.isoCode);
+      expect(textColumn).to.contains(Languages.french.isoCode);
     });
 
     const tests = [
@@ -238,10 +238,10 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
 
         if (isActionPerformed) {
           const resultMessage = await languagesPage.getAlertSuccessBlockParagraphContent(page);
-          await expect(resultMessage).to.contains(languagesPage.successfulUpdateStatusMessage);
+          expect(resultMessage).to.contains(languagesPage.successfulUpdateStatusMessage);
         }
         const languageStatus = await languagesPage.getStatus(page, 1);
-        await expect(languageStatus).to.be.equal(test.args.enabledValue);
+        expect(languageStatus).to.be.equal(test.args.enabledValue);
       });
     });
 
@@ -249,7 +249,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
       await testContext.addContextItem(this, 'testIdentifier', 'quickEditReset', baseContext);
 
       const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
+      expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
     });
   });
 });

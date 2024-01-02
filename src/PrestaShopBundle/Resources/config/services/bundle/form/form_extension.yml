@@ -1,141 +1,102 @@
+# This file will be removed in next version, do not add any service here
 services:
-  _defaults:
-    public: true
-
+  # Deprecated in 9.0.0
   form.extension.comma_transformer:
-    class: 'PrestaShopBundle\Form\Admin\Extension\CommaTransformerExtension'
-    tags:
-      - { name: form.type_extension }
-
+    alias: 'PrestaShopBundle\Form\Extension\CommaTransformerExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.type.extension.money:
-    class: 'PrestaShopBundle\Form\Admin\Type\CustomMoneyType'
-    arguments:
-      - '@prestashop.core.localization.locale.context_locale'
-      - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
-      - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
-      - '@PrestaShop\PrestaShop\Core\Localization\Number\LocaleNumberTransformer'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\MoneyType }
-
-  PrestaShopBundle\Form\Extension\NumberTypeExtension:
-    public: false
-    autowire: true
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\NumberType }
-
-  PrestaShopBundle\Form\Extension\IntegerTypeExtension:
-    public: false
-    autowire: true
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\IntegerType }
-
+    alias: 'PrestaShopBundle\Form\Extension\CustomMoneyTypeExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.type.extension.resizable_text:
-    class: 'PrestaShopBundle\Form\Admin\Type\ResizableTextType'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextType }
-
+    alias: 'PrestaShopBundle\Form\Extension\ResizableTextTypeExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.help_text:
-    class: 'PrestaShopBundle\Form\Admin\Extension\HelpTextExtension'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
-
+    alias: 'PrestaShopBundle\Form\Extension\HelpTextExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.hint_text:
-    class: 'PrestaShopBundle\Form\Admin\Extension\HintTextExtension'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
-
+    alias: 'PrestaShopBundle\Form\Extension\HintTextExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.default_empty_data:
-    class: 'PrestaShopBundle\Form\Admin\Extension\DefaultEmptyDataExtension'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
-
+    alias: 'PrestaShopBundle\Form\Extension\DefaultEmptyDataExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.data_list:
-    class: 'PrestaShopBundle\Form\Extension\DataListExtension'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextType }
-
+    alias: 'PrestaShopBundle\Form\Extension\DataListExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.row_attributes:
-    class: 'PrestaShopBundle\Form\Admin\Extension\RowAttributesExtension'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
-
+    alias: 'PrestaShopBundle\Form\Extension\RowAttributesExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.external_link:
-    class: 'PrestaShopBundle\Form\Admin\Extension\ExternalLinkExtension'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
-
+    alias: 'PrestaShopBundle\Form\Extension\ExternalLinkExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.alert:
-    class: 'PrestaShopBundle\Form\Admin\Extension\AlertExtension'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
-
+    alias: 'PrestaShopBundle\Form\Extension\AlertExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.label_options:
-    class: 'PrestaShopBundle\Form\Admin\Extension\LabelOptionsExtension'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
-
+    alias: 'PrestaShopBundle\Form\Extension\LabelOptionsExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.form_theme:
-    class: 'PrestaShopBundle\Form\Admin\Extension\FormThemeExtension'
-    arguments:
-      - '@twig.form.renderer'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
-
+    alias: 'PrestaShopBundle\Form\Extension\FormThemeExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.columns_number:
-    class: 'PrestaShopBundle\Form\Admin\Extension\ColumnsNumberExtension'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
-
+    alias: 'PrestaShopBundle\Form\Extension\ColumnsNumberExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.multistore_configuration:
-    class: 'PrestaShopBundle\Form\Admin\Extension\MultistoreConfigurationTypeExtension'
-    arguments:
-      - '@prestashop.multistore_checkbox_enabler'
-    tags:
-      - { name: form.type_extension, extended_type: PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType }
-
+    alias: 'PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.unit:
-    class: 'PrestaShopBundle\Form\Admin\Extension\UnitTypeExtension'
-    tags:
-      - { name: form.type_extension }
-
+    alias: 'PrestaShopBundle\Form\Extension\UnitTypeExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.multistore_dropdown:
-    class: 'PrestaShopBundle\Form\Admin\Extension\MultistoreExtension'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
-
-  prestashop.multistore_checkbox_enabler:
-    class: PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler
-    arguments:
-      - '@prestashop.adapter.feature.multistore'
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.shop.context'
-      - '@prestashop.core.admin.multistore'
-      - '@PrestaShopBundle\Form\FormCloner'
-
+    alias: 'PrestaShopBundle\Form\Extension\MultistoreExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.downloadable_file:
-    class: 'PrestaShopBundle\Form\Admin\Extension\DownloadFileExtension'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FileType }
-
+    alias: 'PrestaShopBundle\Form\Extension\DownloadFileExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.alerts_tracking_extension:
-    class: 'PrestaShopBundle\Form\Admin\Extension\AlertsTrackingExtension'
-    arguments:
-      - '@session.flash_bag'
-    tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
-
+    alias: 'PrestaShopBundle\Form\Extension\AlertsTrackingExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.modify_all_shops_extension:
-    class: 'PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension'
-    arguments:
-      - '@prestashop.adapter.feature.multistore'
-      - '@prestashop.adapter.shop.context'
-      - '@translator'
-    tags:
-      - { name: form.type_extension }
-
+    alias: 'PrestaShopBundle\Form\Extension\ModifyAllShopsExtension'
+    deprecated: ~
+    public: true
+  # Deprecated in 9.0.0
   form.extension.disabling_switch_extension:
-    class: 'PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension'
-    arguments:
-      - '@form.event_listener.add_disabling_switch_listener'
-    tags:
-      - { name: form.type_extension }
+    alias: 'PrestaShopBundle\Form\Extension\DisablingSwitchExtension'
+    deprecated: ~
+    public: true

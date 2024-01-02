@@ -82,14 +82,14 @@ describe('BO - Orders : View guest from orders page', async () => {
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
+      expect(numberOfOrders).to.be.above(0);
     });
 
     it('should filter order by customer name', async function () {
@@ -103,7 +103,7 @@ describe('BO - Orders : View guest from orders page', async () => {
       );
 
       const numberOfOrders = await ordersPage.getNumberOfElementInGrid(page);
-      await expect(numberOfOrders).to.be.at.least(1);
+      expect(numberOfOrders).to.be.at.least(1);
     });
 
     it('should check guest link', async function () {
@@ -113,8 +113,8 @@ describe('BO - Orders : View guest from orders page', async () => {
       page = await ordersPage.viewCustomer(page, 1);
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to
-        .contains(`${viewCustomerPage.pageTitle} ${customerData.firstName[0]}. ${customerData.lastName}`);
+      expect(pageTitle).to
+        .contains(viewCustomerPage.pageTitle(`${customerData.firstName[0]}. ${customerData.lastName}`));
     });
   });
 

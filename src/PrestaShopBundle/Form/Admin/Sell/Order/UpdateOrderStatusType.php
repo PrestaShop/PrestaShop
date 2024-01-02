@@ -68,10 +68,7 @@ class UpdateOrderStatusType extends AbstractType
                 'choices' => $this->statusChoiceProvider->getChoices($choiceProviderParams),
                 'choice_attr' => $this->statusChoiceAttributes,
                 'translation_domain' => false,
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
+                'autocomplete' => true,
             ])
         ;
     }

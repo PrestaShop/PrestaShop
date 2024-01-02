@@ -22,14 +22,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
   <div class="card" data-role="messages-thread">
     <h3 class="card-header">
-      {{ 'Thread'|trans({}, 'Admin.Orderscustomers.Feature') }}
-      <strong>#{{ customerThreadView.customerThreadId.value }}</strong>
+      {{ 'Customer thread #%id%'|trans({'%id%': customerThreadView.customerThreadId.value}, 'Admin.Orderscustomers.Feature') }}
     </h3>
     <div class="card-body">
       {% block customer_thread_actions %}

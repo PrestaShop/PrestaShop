@@ -95,26 +95,4 @@ abstract class ModuleAdminControllerCore extends AdminController
             $templatePath,
         ];
     }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @deprecated Use $this->trans instead
-     */
-    protected function l($string, $class = null, $addslashes = false, $htmlentities = true)
-    {
-        $translated = parent::l($string, $class, $addslashes, $htmlentities);
-
-        if ($translated === $string) {
-            // legacy fallback
-
-            if ($class === null || $class == 'AdminTab') {
-                $class = get_class($this);
-            }
-
-            $translated = Translate::getModuleTranslation($this->module->name, $string, $class, null, $addslashes, null, true, $htmlentities);
-        }
-
-        return $translated;
-    }
 }

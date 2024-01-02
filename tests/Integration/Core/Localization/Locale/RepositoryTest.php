@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -127,7 +126,7 @@ class RepositoryTest extends KernelTestCase
         $xmlContent = $localizationWarmer->warmUp($cacheDir);
 
         // Install each language associated to the country
-        $xml = @simplexml_load_string($xmlContent);
+        $xml = @simplexml_load_string($xmlContent[0]);
         foreach ($xml->languages->language as $data) {
             /** @var \SimpleXMLElement $data */
             $attributes = $data->attributes();

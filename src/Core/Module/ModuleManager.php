@@ -39,6 +39,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Responsible for handling all actions with modules.
+ *
+ * If you want to refactor this in the future and searching for usage of some methods,
+ * beware that they are called magically from ModuleController::moduleAction method.
+ */
 class ModuleManager implements ModuleManagerInterface
 {
     /** @var ModuleRepository */
@@ -186,7 +192,7 @@ class ModuleManager implements ModuleManagerInterface
     {
         if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception($this->translator->trans(
-                'You are not allowed to upgrade the module %module%.',
+                'You are not allowed to update the module %module%.',
                 ['%module%' => $name],
                 'Admin.Modules.Notification'
             ));
@@ -249,48 +255,6 @@ class ModuleManager implements ModuleManagerInterface
         $module = $this->moduleRepository->getModule($name);
         $disabled = $module->onDisable();
         $this->dispatch(ModuleManagementEvent::DISABLE, $module);
-
-        return $disabled;
-    }
-
-    public function enableMobile(string $name): bool
-    {
-        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
-            throw new Exception($this->translator->trans(
-                'You are not allowed to enable the module %module% on mobile.',
-                ['%module%' => $name],
-                'Admin.Modules.Notification'
-            ));
-        }
-
-        $this->assertIsInstalled($name);
-
-        $this->hookManager->exec('actionBeforeEnableMobileModule', ['moduleName' => $name]);
-
-        $module = $this->moduleRepository->getModule($name);
-        $enabled = $module->onMobileEnable();
-        $this->dispatch(ModuleManagementEvent::ENABLE_MOBILE, $module);
-
-        return $enabled;
-    }
-
-    public function disableMobile(string $name): bool
-    {
-        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
-            throw new Exception($this->translator->trans(
-                'You are not allowed to disable the module %module% on mobile.',
-                ['%module%' => $name],
-                'Admin.Modules.Notification'
-            ));
-        }
-
-        $this->assertIsInstalled($name);
-
-        $this->hookManager->exec('actionBeforeDisableMobileModule', ['moduleName' => $name]);
-
-        $module = $this->moduleRepository->getModule($name);
-        $disabled = $module->onMobileDisable();
-        $this->dispatch(ModuleManagementEvent::DISABLE_MOBILE, $module);
 
         return $disabled;
     }

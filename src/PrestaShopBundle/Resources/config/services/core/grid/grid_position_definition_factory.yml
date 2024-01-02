@@ -57,3 +57,10 @@ services:
       $positionField: 'position'
       $parentIdField: 'id_category'
       $firstPosition: 1
+
+  prestashop.core.grid.feature.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'feature'
+      $idField: 'id_feature'
+      $positionField: 'position'

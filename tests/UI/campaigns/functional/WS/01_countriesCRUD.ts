@@ -1,9 +1,10 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import countryXml from '@webservices/country/countryXml';
+import xml from '@utils/xml';
 
 // Import webservices
+import countryXml from '@webservices/country/countryXml';
 import CountryWS from '@webservices/country/countryWs';
 
 // Import commonTests
@@ -64,7 +65,7 @@ describe('WS - Countries : CRUD', async () => {
   addWebserviceKey(wsKeyDescription, wsKeyPermissions, `${baseContext}_preTest_2`);
 
   describe('Countries : CRUD', () => {
-    let countryNodeID: string = '';
+    let countryNodeID: string|null = '';
     describe('Fetch the Webservice Key', () => {
       it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
@@ -81,7 +82,7 @@ describe('WS - Countries : CRUD', async () => {
         await webservicePage.closeSfToolBar(page);
 
         const pageTitle = await webservicePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(webservicePage.pageTitle);
+        expect(pageTitle).to.contains(webservicePage.pageTitle);
       });
 
       it('should filter list by key description', async function () {
@@ -96,11 +97,128 @@ describe('WS - Countries : CRUD', async () => {
         );
 
         const description = await webservicePage.getTextColumnFromTable(page, 1, 'description');
-        await expect(description).to.contains(wsKeyDescription);
+        expect(description).to.contains(wsKeyDescription);
 
         wsKey = await webservicePage.getTextColumnFromTable(page, 1, 'key');
         authorization = `Basic ${Buffer.from(`${wsKey}:`).toString('base64')}`;
-        await expect(wsKey).to.be.not.empty;
+        expect(wsKey).to.not.have.lengthOf(0);
+      });
+    });
+
+    describe(`Endpoint : ${CountryWS.endpoint} - Schema : Blank `, () => {
+      let apiResponse: APIResponse;
+      let xmlResponse : string;
+
+      it('should check response status', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestBlankStatus', baseContext);
+
+        apiResponse = await CountryWS.getBlank(
+          apiContext,
+          authorization,
+        );
+        expect(apiResponse.status()).to.eq(200);
+      });
+
+      it('should check that the blank XML can be parsed', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestBlankValid', baseContext);
+
+        xmlResponse = await apiResponse.text();
+
+        const isValidXML = xml.isValid(xmlResponse);
+        expect(isValidXML).to.eq(true);
+      });
+
+      it('should check response root node', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestBlankRootNode', baseContext);
+
+        expect(countryXml.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
+      });
+
+      it('should check number of node under prestashop', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestBlankChildNode', baseContext);
+
+        const rootNodes = countryXml.getPrestaShopNodes(xmlResponse);
+        expect(rootNodes.length).to.be.eq(1);
+        expect(rootNodes[0].nodeName).to.be.eq('country');
+      });
+
+      it('should check each node name, attributes and has empty values', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestBlankChildNodes', baseContext);
+
+        const nodes = countryXml.getCountryNodes(xmlResponse);
+        expect(nodes.length).to.be.gt(0);
+
+        for (let c: number = 0; c < nodes.length; c++) {
+          const node: Element = nodes[c];
+
+          // Attributes
+          const nodeAttributes: NamedNodeMap = node.attributes;
+          expect(nodeAttributes.length).to.be.eq(0);
+
+          // Empty value
+          const isEmptyNode: boolean = xml.isEmpty(node);
+          expect(isEmptyNode, `The node ${node.nodeName} is not empty`).to.eq(true);
+        }
+      });
+    });
+
+    describe(`Endpoint : ${CountryWS.endpoint} - Schema : Synopsis `, () => {
+      let apiResponse: APIResponse;
+      let xmlResponse : string;
+
+      it('should check response status', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestSynopsisStatus', baseContext);
+
+        apiResponse = await CountryWS.getSynopsis(
+          apiContext,
+          authorization,
+        );
+        expect(apiResponse.status()).to.eq(200);
+      });
+
+      it('should check that the synopsis XML can be parsed', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestSynopsisValid', baseContext);
+
+        xmlResponse = await apiResponse.text();
+
+        const isValidXML = xml.isValid(xmlResponse);
+        expect(isValidXML).to.eq(true);
+      });
+
+      it('should check response root node', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestSynopsisRootNode', baseContext);
+
+        expect(countryXml.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
+      });
+
+      it('should check number of node under prestashop', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestSynopsisChildNode', baseContext);
+
+        const rootNodes = countryXml.getPrestaShopNodes(xmlResponse);
+        expect(rootNodes.length).to.be.eq(1);
+        expect(rootNodes[0].nodeName).to.be.eq('country');
+      });
+
+      it('should check each node name, attributes and has empty values', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'requestSynopsisChildNodes', baseContext);
+
+        const nodes = countryXml.getCountryNodes(xmlResponse);
+        expect(nodes.length).to.be.gt(0);
+
+        for (let c: number = 0; c < nodes.length; c++) {
+          const node: Element = nodes[c];
+
+          // Attributes
+          const nodeAttributes: NamedNodeMap = node.attributes;
+          expect(nodeAttributes.length).to.be.gte(1);
+
+          // Attribute : format
+          expect(nodeAttributes[nodeAttributes.length - 1].nodeName).to.be.eq('format');
+
+          // Empty value
+          const isEmptyNode = xml.isEmpty(node);
+          expect(isEmptyNode, `The node ${node.nodeName} is not empty`).to.eq(true);
+        }
       });
     });
 
@@ -117,7 +235,7 @@ describe('WS - Countries : CRUD', async () => {
           authorization,
         );
 
-        await expect(apiResponse.status()).to.eq(200);
+        expect(apiResponse.status()).to.eq(200);
       });
 
       it('should check response root node', async function () {
@@ -178,8 +296,7 @@ describe('WS - Countries : CRUD', async () => {
             authorization,
             xmlCreate,
           );
-
-          await expect(apiResponse.status()).to.eq(201);
+          expect(apiResponse.status()).to.eq(201);
         });
 
         it('should check response root node', async function () {
@@ -202,7 +319,8 @@ describe('WS - Countries : CRUD', async () => {
 
           // Attribute : id
           countryNodeID = countryXml.getAttributeValue(xmlResponse, 'id');
-          expect(countryNodeID).to.be.eq(parseInt(countryNodeID, 10).toString());
+          expect(countryNodeID).to.be.a('string');
+          expect(countryNodeID).to.be.eq(parseInt(countryNodeID as string, 10).toString());
         });
       });
 
@@ -217,10 +335,10 @@ describe('WS - Countries : CRUD', async () => {
           apiResponse = await CountryWS.getById(
             apiContext,
             authorization,
-            countryNodeID,
+            countryNodeID as string,
           );
 
-          await expect(apiResponse.status()).to.eq(200);
+          expect(apiResponse.status()).to.eq(200);
         });
 
         it('should check response root node', async function () {
@@ -253,7 +371,7 @@ describe('WS - Countries : CRUD', async () => {
             const oNode: Element = countriesNodes[o];
 
             if (oNode.nodeName === 'id') {
-              expect(oNode.textContent).to.be.eq(countryNodeID);
+              expect(oNode.textContent).to.be.eq(countryNodeID as string);
             } else if (oNode.nodeName === 'name') {
               const objectNodeValueEN = countryXml.getAttributeLangValue(
                 xmlResponse,
@@ -280,10 +398,11 @@ describe('WS - Countries : CRUD', async () => {
               );
               expect(objectNodeValueFR).to.be.eq(createNodeValueFR);
             } else {
-              const objectNodeValue: string = countryXml.getAttributeValue(
+              const objectNodeValue = countryXml.getAttributeValue(
                 xmlCreate,
                 oNode.nodeName,
               );
+              expect(objectNodeValue).to.be.a('string');
               expect(oNode.textContent).to.be.eq(objectNodeValue);
             }
           }
@@ -302,7 +421,7 @@ describe('WS - Countries : CRUD', async () => {
           await zonesPage.closeSfToolBar(page);
 
           const pageTitle = await zonesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(zonesPage.pageTitle);
+          expect(pageTitle).to.contains(zonesPage.pageTitle);
         });
 
         it('should go to \'Countries\' page', async function () {
@@ -311,7 +430,7 @@ describe('WS - Countries : CRUD', async () => {
           await zonesPage.goToSubTabCountries(page);
 
           const pageTitle = await countriesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(countriesPage.pageTitle);
+          expect(pageTitle).to.contains(countriesPage.pageTitle);
         });
 
         it('should filter country by ID', async function () {
@@ -319,14 +438,14 @@ describe('WS - Countries : CRUD', async () => {
 
           // Filter
           await countriesPage.resetFilter(page);
-          await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID);
+          await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID as string);
 
           // Check number of countries
           const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
-          await expect(numberOfCountriesAfterFilter).to.be.eq(1);
+          expect(numberOfCountriesAfterFilter).to.be.eq(1);
 
           const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'id_country');
-          await expect(textColumn).to.contains(countryNodeID);
+          expect(textColumn).to.contains(countryNodeID as string);
         });
 
         it('should go to edit country page', async function () {
@@ -335,7 +454,7 @@ describe('WS - Countries : CRUD', async () => {
           await countriesPage.goToEditCountryPage(page, 1);
 
           const pageTitle = await addCountryPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addCountryPage.pageTitleEdit);
+          expect(pageTitle).to.contains(addCountryPage.pageTitleEdit);
         });
 
         it('should check country\'s zone', async function () {
@@ -432,14 +551,14 @@ describe('WS - Countries : CRUD', async () => {
           await zonesPage.goToSubTabCountries(page);
 
           const pageTitle = await countriesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(countriesPage.pageTitle);
+          expect(pageTitle).to.contains(countriesPage.pageTitle);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPost', baseContext);
 
           const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
-          await expect(numberOfCountries).to.be.above(0);
+          expect(numberOfCountries).to.be.above(0);
         });
       });
     });
@@ -452,15 +571,15 @@ describe('WS - Countries : CRUD', async () => {
         it(`should check response status of ${CountryWS.endpoint}/{id}`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'requestPutStatus1', baseContext);
 
-          xmlUpdate = getCountryXml(countryNodeID);
+          xmlUpdate = getCountryXml(countryNodeID as string);
           apiResponse = await CountryWS.update(
             apiContext,
             authorization,
-            countryNodeID,
+            countryNodeID as string,
             xmlUpdate,
           );
 
-          await expect(apiResponse.status()).to.eq(200);
+          expect(apiResponse.status()).to.eq(200);
         });
 
         it('should check response root node', async function () {
@@ -483,7 +602,8 @@ describe('WS - Countries : CRUD', async () => {
 
           // Attribute : id
           countryNodeID = countryXml.getAttributeValue(xmlResponse, 'id');
-          expect(countryNodeID).to.be.eq(parseInt(countryNodeID, 10).toString());
+          expect(countryNodeID).to.be.a('string');
+          expect(countryNodeID).to.be.eq(parseInt(countryNodeID as string, 10).toString());
         });
       });
 
@@ -498,10 +618,10 @@ describe('WS - Countries : CRUD', async () => {
           apiResponse = await CountryWS.getById(
             apiContext,
             authorization,
-            countryNodeID,
+            countryNodeID as string,
           );
 
-          await expect(apiResponse.status()).to.eq(200);
+          expect(apiResponse.status()).to.eq(200);
         });
 
         it('should check response root node', async function () {
@@ -534,7 +654,7 @@ describe('WS - Countries : CRUD', async () => {
             const oNode: Element = countriesNodes[o];
 
             if (oNode.nodeName === 'id') {
-              expect(oNode.textContent).to.be.eq(countryNodeID);
+              expect(oNode.textContent).to.be.eq(countryNodeID as string);
             } else if (oNode.nodeName === 'name') {
               const objectNodeValueEN = countryXml.getAttributeLangValue(
                 xmlResponse,
@@ -578,14 +698,14 @@ describe('WS - Countries : CRUD', async () => {
 
           // Filter
           await countriesPage.resetFilter(page);
-          await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID);
+          await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID as string);
 
           // Check number of countries
           const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
-          await expect(numberOfCountriesAfterFilter).to.be.eq(1);
+          expect(numberOfCountriesAfterFilter).to.be.eq(1);
 
           const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'id_country');
-          await expect(textColumn).to.contains(countryNodeID);
+          expect(textColumn).to.contains(countryNodeID as string);
         });
 
         it('should go to edit country page', async function () {
@@ -594,7 +714,7 @@ describe('WS - Countries : CRUD', async () => {
           await countriesPage.goToEditCountryPage(page, 1);
 
           const pageTitle = await addCountryPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addCountryPage.pageTitleEdit);
+          expect(pageTitle).to.contains(addCountryPage.pageTitleEdit);
         });
 
         it('should check country\'s zone', async function () {
@@ -691,14 +811,14 @@ describe('WS - Countries : CRUD', async () => {
           await zonesPage.goToSubTabCountries(page);
 
           const pageTitle = await countriesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(countriesPage.pageTitle);
+          expect(pageTitle).to.contains(countriesPage.pageTitle);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPut', baseContext);
 
           const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
-          await expect(numberOfCountries).to.be.above(0);
+          expect(numberOfCountries).to.be.above(0);
         });
       });
     });
@@ -710,10 +830,10 @@ describe('WS - Countries : CRUD', async () => {
         const apiResponse = await CountryWS.delete(
           apiContext,
           authorization,
-          countryNodeID,
+          countryNodeID as string,
         );
 
-        await expect(apiResponse.status()).to.eq(200);
+        expect(apiResponse.status()).to.eq(200);
       });
 
       it(`should request the endpoint ${CountryWS.endpoint}/{id} with method GET`, async function () {
@@ -722,10 +842,10 @@ describe('WS - Countries : CRUD', async () => {
         const apiResponse = await CountryWS.getById(
           apiContext,
           authorization,
-          countryNodeID,
+          countryNodeID as string,
         );
 
-        await expect(apiResponse.status()).to.eq(404);
+        expect(apiResponse.status()).to.eq(404);
       });
 
       it('should filter country by ID', async function () {
@@ -733,18 +853,18 @@ describe('WS - Countries : CRUD', async () => {
 
         // Filter
         await countriesPage.resetFilter(page);
-        await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID);
+        await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID as string);
 
         // Check number of countries
         const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCountriesAfterFilter).to.be.eq(0);
+        expect(numberOfCountriesAfterFilter).to.be.eq(0);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
         const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCountries).to.be.above(0);
+        expect(numberOfCountries).to.be.above(0);
       });
     });
   });

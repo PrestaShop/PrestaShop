@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% set layoutHeaderToolbarBtn = {
   'add' : {
     'href': path('admin_languages_create'),
@@ -30,10 +30,6 @@
     'icon': 'add_circle_outline'
   }
 } %}
-{% set layoutTitle = 'Languages'|trans({}, 'Admin.Global') %}
-{% set enableSidebar = true %}
-
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
   {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}

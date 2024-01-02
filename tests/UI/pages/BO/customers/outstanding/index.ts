@@ -26,6 +26,8 @@ class Outstanding extends BOBasePage {
 
   private readonly tableBody: string;
 
+  private readonly tableRows: string;
+
   private readonly tableRow: (row: number) => string;
 
   private readonly tableColumn: (row: number, column: string) => string;
@@ -64,7 +66,8 @@ class Outstanding extends BOBasePage {
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = (row: number) => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRows = `${this.tableBody} tr`;
+    this.tableRow = (row: number) => `${this.tableRows}:nth-child(${row})`;
     this.tableColumn = (row: number, column: string) => `${this.tableRow(row)} td.column-${column}`;
     this.tableColumnActionType = (row: number, column: string) => `${this.tableColumn(row, column)} a`;
 
@@ -209,7 +212,7 @@ class Outstanding extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfOutstandingInPage(page: Page): Promise<number> {
-    return (await page.$$(`${this.tableBody} tr`)).length;
+    return page.locator(this.tableRows).count();
   }
 
   /**
@@ -282,8 +285,8 @@ class Outstanding extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterOutstandingByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
-    await page.type(this.outstandingFilterColumnInput('date_add_from'), dateFrom);
-    await page.type(this.outstandingFilterColumnInput('date_add_to'), dateTo);
+    await page.locator(this.outstandingFilterColumnInput('date_add_from')).fill(dateFrom);
+    await page.locator(this.outstandingFilterColumnInput('date_add_to')).fill(dateTo);
     // click on search
     await this.clickAndWaitForURL(page, this.filterSearchButton);
   }

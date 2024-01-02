@@ -3,7 +3,11 @@ services:
     public: true
 
   prestashop.adapter.data_provider.country:
-    class: PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider
+    alias: PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider
+
+  PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider:
+    public: false
+    autowire: true
 
   PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider:
     arguments:

@@ -5,8 +5,6 @@ import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import AddressData from '@data/faker/address';
 
 import type {Frame, Page} from 'playwright';
-import {expect} from 'chai';
-
 /**
  * Customer block, contains functions that can be used on view/edit customer block
  * @class
@@ -14,6 +12,8 @@ import {expect} from 'chai';
  */
 class CustomerBlock extends ViewOrderBasePage {
   private readonly customerInfoBlock: string;
+
+  private readonly customerIDStrong: string;
 
   private readonly ViewAllDetailsLink: string;
 
@@ -60,6 +60,7 @@ class CustomerBlock extends ViewOrderBasePage {
 
     // Customer block
     this.customerInfoBlock = '#customerInfo';
+    this.customerIDStrong = `${this.customerInfoBlock} .row h2 strong.text-muted`;
     this.ViewAllDetailsLink = '#viewFullDetails a';
     this.customerEmailLink = '#customerEmail a';
     this.validatedOrders = '#validatedOrders span.badge';
@@ -83,13 +84,41 @@ class CustomerBlock extends ViewOrderBasePage {
   /*
   Methods
    */
+
+  /**
+   * Get Address frame
+   * @param page {Page} Browser tab
+   * @returns {Promise<Frame>}
+   */
+  async getAddressFrame(page: Page): Promise<Frame> {
+    const addressFrame: Frame|null = await page.frame({url: /sell\/addresses\/order/gmi});
+
+    if (addressFrame === null) {
+      throw new Error('Create product frame was not found');
+    }
+
+    return addressFrame;
+  }
+
   /**
    * Get customer information
    * @param page {Frame|Page} Browser tab
    * @returns {Promise<string>}
    */
-  getCustomerInfoBlock(page: Frame|Page): Promise<string> {
+  async getCustomerInfoBlock(page: Frame|Page): Promise<string> {
     return this.getTextContent(page, this.customerInfoBlock);
+  }
+
+  /**
+   * Get customer ID
+   * @param page {Frame|Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getCustomerID(page: Page): Promise<number> {
+    return parseInt(
+      (await this.getTextContent(page, this.customerIDStrong)).replace('#', ''),
+      10,
+    );
   }
 
   /**
@@ -149,10 +178,9 @@ class CustomerBlock extends ViewOrderBasePage {
 
     await this.waitForVisibleSelector(page, this.editAddressIframe);
 
-    const addressFrame: Frame|null = await page.frame({url: /sell\/addresses\/order/gmi});
-    await expect(addressFrame).to.be.not.null;
+    const addressFrame = await this.getAddressFrame(page);
 
-    await addAddressPage.createEditAddress(addressFrame!, addressData, true, false);
+    await addAddressPage.createEditAddress(addressFrame, addressData, true, false);
 
     await this.waitForHiddenSelector(page, this.editAddressIframe);
 
@@ -187,8 +215,7 @@ class CustomerBlock extends ViewOrderBasePage {
 
     await this.waitForVisibleSelector(page, this.editAddressIframe);
 
-    const addressFrame: Frame|null = await page.frame({url: /sell\/addresses\/order/gmi});
-    await expect(addressFrame).to.be.not.null;
+    const addressFrame = await this.getAddressFrame(page);
 
     await addAddressPage.createEditAddress(addressFrame!, addressData, true, false);
 
@@ -228,7 +255,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @returns {Promise<void>}
    */
   async clickAddNewPrivateNote(page: Page): Promise<void> {
-    await page.click(this.addNewPrivateNoteLink);
+    await page.locator(this.addNewPrivateNoteLink).click();
     await this.waitForVisibleSelector(page, this.privateNoteTextarea);
   }
 
@@ -240,7 +267,7 @@ class CustomerBlock extends ViewOrderBasePage {
    */
   async setPrivateNote(page: Page, note: string): Promise<string> {
     await this.setValue(page, this.privateNoteTextarea, note);
-    await page.click(this.privateNoteSaveButton);
+    await page.locator(this.privateNoteSaveButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

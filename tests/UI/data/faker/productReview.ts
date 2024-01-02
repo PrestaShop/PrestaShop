@@ -20,13 +20,13 @@ export default class ProductReviewData {
   constructor(productReviewToCreate: ProductReviewCreator = {}) {
     /** @type {string} Title of the review */
     this.reviewTitle = productReviewToCreate.reviewTitle
-      || faker.lorem.sentence(faker.datatype.number({min: 3, max: 7}));
+      || faker.lorem.sentence(faker.number.int({min: 3, max: 7}));
 
     /** @type {string} Content of the review */
     this.reviewContent = productReviewToCreate.reviewContent
-      || faker.lorem.sentences(faker.datatype.number({min: 3, max: 10}));
+      || faker.lorem.sentences(faker.number.int({min: 3, max: 10}));
 
     /** @type {number} Rating of the review */
-    this.reviewRating = productReviewToCreate.reviewRating || faker.datatype.number({min: 1, max: 5});
+    this.reviewRating = productReviewToCreate.reviewRating || faker.number.int({min: 1, max: 5});
   }
 }

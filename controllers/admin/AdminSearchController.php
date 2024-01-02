@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Search\SearchPanel;
 use PrestaShop\PrestaShop\Core\Search\SearchPanelInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 
 class AdminSearchControllerCore extends AdminController
 {
@@ -208,6 +209,7 @@ class AdminSearchControllerCore extends AdminController
             if (!$searchType || $searchType == 7) {
                 /* Handle module name */
                 if ($searchType == 7 && Validate::isModuleName($this->query) && ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module)) {
+                    // @todo redirect directly to module manager with search prefilled, because this won't work anymore
                     Tools::redirectAdmin('index.php?tab=AdminModules&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . '&token=' . Tools::getAdminTokenLite('AdminModules'));
                 }
 
@@ -277,7 +279,6 @@ class AdminSearchControllerCore extends AdminController
         );
         $result = Db::getInstance()->executeS($sql);
         $mainControllers = Dispatcher::getControllers([
-            _PS_ADMIN_DIR_ . '/tabs/',
             _PS_ADMIN_CONTROLLER_DIR_,
             _PS_OVERRIDE_DIR_ . 'controllers/admin/',
         ]);
@@ -288,7 +289,7 @@ class AdminSearchControllerCore extends AdminController
                 continue;
             }
             // Remove pages without access
-            if (!Access::isGranted('ROLE_MOD_TAB_' . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
+            if (!Access::isGranted(Permission::PREFIX_TAB . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
                 continue;
             }
             $tab = Tab::getInstanceFromClassName($row['class_name']);
@@ -541,7 +542,7 @@ class AdminSearchControllerCore extends AdminController
      *
      * @return bool
      */
-    protected function isCountableAndNotEmpty(array $array, $key)
+    protected function isCountableAndNotEmpty(array $array, string $key)
     {
         return isset($array[$key]) &&
             is_countable($array[$key]) &&

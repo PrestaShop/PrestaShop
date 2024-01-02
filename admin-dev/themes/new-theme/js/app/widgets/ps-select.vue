@@ -23,7 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div class="ps-select">
+  <div
+    class="ps-select"
+    :id="itemId"
+  >
     <select
       class="form-control"
       v-model="selected"

@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Controller responsible of "Improve > Shipping > Preferences" page.
+ * Controller responsible for "Improve > Shipping > Preferences" page.
  */
 class PreferencesController extends FrameworkBundleAdminController
 {
@@ -144,22 +144,6 @@ class PreferencesController extends FrameworkBundleAdminController
     protected function getCarrierOptionsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.shipping_preferences.carrier_options.form_handler');
-    }
-
-    /**
-     * @deprecated since 8.1.0 and will be removed in next major version.
-     */
-    protected function renderForm($handlingForm, $carrierOptionsForm, $request)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0 and will be removed in the next major version. Use doRenderForm() instead.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return $this->doRenderForm($handlingForm, $carrierOptionsForm, $request);
     }
 
     /**

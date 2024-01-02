@@ -50,16 +50,16 @@ class ThemeTest extends TestCase
             ''
         );
 
-        $this->assertEquals('preston', $theme->get('bar'));
-        $this->assertEquals('foo', $theme->get('name'));
-        $this->assertEquals('a/', $theme->get('directory'));
+        $this->assertSame('preston', $theme->get('bar'));
+        $this->assertSame('foo', $theme->get('name'));
+        $this->assertSame('a/', $theme->get('directory'));
 
         $this->assertTrue($theme->has('bar'));
         $this->assertTrue($theme->has('name'));
         $this->assertTrue($theme->has('directory'));
 
-        $this->assertEquals('foo', $theme->getName());
-        $this->assertEquals('a/', $theme->getDirectory());
+        $this->assertSame('foo', $theme->getName());
+        $this->assertSame('a/', $theme->getDirectory());
     }
 
     public function testGetAttributesFromThemeParent(): void
@@ -74,7 +74,7 @@ class ThemeTest extends TestCase
             dirname(__DIR__, 4) . '/Resources/themes/'
         );
 
-        $this->assertEquals('For testing purposes', $theme->get('display_name'));
+        $this->assertSame('For testing purposes', $theme->get('display_name'));
     }
 
     public function testGetPageLayouts(): void
@@ -89,7 +89,7 @@ class ThemeTest extends TestCase
             ''
         );
 
-        $this->assertEquals('z', $theme->getPageLayouts());
+        $this->assertSame('z', $theme->getPageLayouts());
     }
 
     public function testGetAvailableLayouts(): void
@@ -104,7 +104,7 @@ class ThemeTest extends TestCase
             ''
         );
 
-        $this->assertEquals('z', $theme->getAvailableLayouts());
+        $this->assertSame('z', $theme->getAvailableLayouts());
     }
 
     public function testGetLayoutNameForPage(): void
@@ -121,9 +121,9 @@ class ThemeTest extends TestCase
             ''
         );
 
-        $this->assertEquals('o', $theme->getLayoutNameForPage('homepage'));
-        $this->assertEquals('p', $theme->getLayoutNameForPage('checkout_page'));
-        $this->assertEquals('m', $theme->getLayoutNameForPage('not_exist'));
+        $this->assertSame('o', $theme->getLayoutNameForPage('homepage'));
+        $this->assertSame('p', $theme->getLayoutNameForPage('checkout_page'));
+        $this->assertSame('m', $theme->getLayoutNameForPage('not_exist'));
     }
 
     public function testGetPageSpecificCss(): void
@@ -150,7 +150,7 @@ class ThemeTest extends TestCase
             ''
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'css' => [
                     [

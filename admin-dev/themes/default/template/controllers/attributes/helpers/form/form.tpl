@@ -72,7 +72,7 @@
 
 	displayColorFieldsOption();
 
-	$('#id_attribute_group').change(displayColorFieldsOption);
+	$('#id_attribute_group').on('change', displayColorFieldsOption);
 
 	var shop_associations = {$fields[0]['form']['shop_associations']};
 	var changeAssociationGroup = function()
@@ -90,6 +90,6 @@
 			}
 		});
 	};
-	$('#id_attribute_group').change(changeAssociationGroup);
+	$('#id_attribute_group').on('change', changeAssociationGroup);
 	changeAssociationGroup();
 {/block}

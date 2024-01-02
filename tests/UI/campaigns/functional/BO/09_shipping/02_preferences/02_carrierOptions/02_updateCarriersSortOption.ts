@@ -12,7 +12,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import carriersPage from '@pages/BO/shipping/carriers';
 import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
-import foCartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import foCheckoutPage from '@pages/FO/checkout';
 import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
@@ -66,7 +66,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
     );
 
     const pageTitle = await carriersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(carriersPage.pageTitle);
+    expect(pageTitle).to.contains(carriersPage.pageTitle);
   });
 
   const carriersNames: string[] = [
@@ -79,7 +79,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
       numberOfCarriers = await carriersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCarriers).to.be.above(0);
+      expect(numberOfCarriers).to.be.above(0);
     });
 
     carriersNames.forEach((carrierName: string, index: number) => {
@@ -89,7 +89,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         await carriersPage.filterTable(page, 'input', 'name', carrierName);
 
         const textColumn = await carriersPage.getTextColumn(page, 1, 'name');
-        await expect(textColumn).to.contains(carrierName);
+        expect(textColumn).to.contains(carrierName);
       });
 
       it('should enable the carrier', async function () {
@@ -99,18 +99,18 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
 
         if (isActionPerformed) {
           const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
-          await expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
+          expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
         }
 
         const carrierStatus = await carriersPage.getStatus(page, 1);
-        await expect(carrierStatus).to.be.true;
+        expect(carrierStatus).to.eq(true);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterEnable${index}`, baseContext);
 
         const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
+        expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
       });
     });
   });
@@ -127,7 +127,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
       await preferencesPage.closeSfToolBar(page);
 
       const pageTitle = await preferencesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+      expect(pageTitle).to.contains(preferencesPage.pageTitle);
     });
 
     const sortByPosition: string[] = [
@@ -146,7 +146,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);
 
         const textResult = await preferencesPage.setCarrierSortOrderBy(page, test.args.sortBy, test.args.orderBy);
-        await expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
+        expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
@@ -158,7 +158,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         await foHomePage.changeLanguage(page, 'en');
 
         const isHomePage = await foHomePage.isHomePage(page);
-        await expect(isHomePage, 'Home page is not displayed').to.be.true;
+        expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
       it('should go to shipping step in checkout', async function () {
@@ -169,7 +169,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         // Add the product to the cart
         await foProductPage.addProductToTheCart(page);
         // Proceed to checkout the shopping cart
-        await foCartPage.clickOnProceedToCheckout(page);
+        await cartPage.clickOnProceedToCheckout(page);
         // Checkout the order
         if (index === 0) {
           // Personal information step - Login
@@ -179,7 +179,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await foCheckoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should verify the sort of carriers', async function () {
@@ -190,17 +190,17 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
           const expectedResult = await basicHelper.sortArray(sortedCarriers);
 
           if (test.args.orderBy === 'Ascending') {
-            await expect(sortedCarriers).to.deep.equal(expectedResult);
+            expect(sortedCarriers).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedCarriers).to.deep.equal(expectedResult.reverse());
+            expect(sortedCarriers).to.deep.equal(expectedResult.reverse());
           }
         } else if (test.args.sortBy === 'Position') {
           const sortedCarriers = await foCheckoutPage.getAllCarriersNames(page);
 
           if (test.args.orderBy === 'Ascending') {
-            await expect(sortedCarriers).to.deep.equal(sortByPosition);
+            expect(sortedCarriers).to.deep.equal(sortByPosition);
           } else {
-            await expect(sortedCarriers).to.deep.equal(sortByPosition.reverse());
+            expect(sortedCarriers).to.deep.equal(sortByPosition.reverse());
           }
         }
       });
@@ -211,7 +211,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         page = await foCheckoutPage.closePage(browserContext, page, 0);
 
         const pageTitle = await preferencesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+        expect(pageTitle).to.contains(preferencesPage.pageTitle);
       });
     });
   });
@@ -227,7 +227,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
       );
 
       const pageTitle = await carriersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(carriersPage.pageTitle);
+      expect(pageTitle).to.contains(carriersPage.pageTitle);
     });
 
     carriersNames.forEach((carrierName: string, index: number) => {
@@ -237,7 +237,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         await carriersPage.filterTable(page, 'input', 'name', carrierName);
 
         const textColumn = await carriersPage.getTextColumn(page, 1, 'name');
-        await expect(textColumn).to.contains(carrierName);
+        expect(textColumn).to.contains(carrierName);
       });
 
       it('should disable the carrier', async function () {
@@ -247,18 +247,18 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
 
         if (isActionPerformed) {
           const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
-          await expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
+          expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
         }
 
         const carrierStatus = await carriersPage.getStatus(page, 1);
-        await expect(carrierStatus).to.be.false;
+        expect(carrierStatus).to.eq(false);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterDisable${index}`, baseContext);
 
         const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
+        expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
       });
     });
   });

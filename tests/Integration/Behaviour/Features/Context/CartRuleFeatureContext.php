@@ -31,16 +31,19 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
 use CartRule;
-use Configuration;
 use Context;
-use DateInterval;
-use DateTime;
 use Db;
-use Order;
+use PHPUnit\Framework\Assert;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
+use RuntimeException;
+use Validate;
 
 class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
+    use SharedStorageTrait;
+    use LastExceptionTrait;
 
     /**
      * @var CartRule[]
@@ -72,19 +75,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     protected $categoryFeatureContext;
 
-    /**
-     * This hook can be used to perform a database cleaning of added objects
-     *
-     * @AfterScenario
-     */
-    public function cleanCartRuleFixtures()
-    {
-        foreach ($this->cartRules as $cartRule) {
-            $cartRule->delete();
-        }
-        $this->cartRules = [];
-    }
-
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
@@ -109,69 +99,17 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a cart rule named "(.+)" that applies a percent discount of (\d+\.\d+)% with priority (\d+), quantity of (\d+) and quantity per user (\d+)$/
-     */
-    public function thereIsACartRuleWithNameAndPercentDiscountOf50AndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $percent, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
-    {
-        $this->createCartRule($cartRuleName, $percent, 0, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
-    }
-
-    /**
-     * @Given /^there is a cart rule named "(.+)" that applies no discount with priority (\d+), quantity of (\d+) and quantity per user (\d+)$/
-     */
-    public function thereIsACartRuleWithNameAndNoDiscountAndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
-    {
-        $this->createCartRule($cartRuleName, 0, 0, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
-    }
-
-    /**
-     * @Given /^there is a cart rule named "(.+)" that applies an amount discount of (\d+\.\d+) with priority (\d+), quantity of (\d+) and quantity per user (\d+)$/
-     */
-    public function thereIsACartRuleWithNameAndAmountDiscountOfAndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
-    {
-        $this->createCartRule($cartRuleName, 0, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
-    }
-
-    protected function createCartRule(
-        $cartRuleName,
-        $percent,
-        $amount,
-        $priority,
-        $cartRuleQuantity,
-        $cartRuleQuantityPerUser
-    ) {
-        $cartRule = new CartRule();
-        $cartRule->reduction_percent = $percent;
-        $cartRule->reduction_amount = $amount;
-        $cartRule->name = [Configuration::get('PS_LANG_DEFAULT') => $cartRuleName];
-        $cartRule->description = $cartRuleName;
-        $cartRule->priority = $priority;
-        $cartRule->quantity = $cartRuleQuantity;
-        $cartRule->quantity_per_user = $cartRuleQuantityPerUser;
-        $now = new DateTime();
-        // sub 1s to avoid bad comparisons with strictly greater than
-        $now->sub(new DateInterval('P2D'));
-        $cartRule->date_from = $now->format('Y-m-d H:i:s');
-        $now->add(new DateInterval('P1Y'));
-        $cartRule->date_to = $now->format('Y-m-d H:i:s');
-        $cartRule->active = true;
-        $cartRule->add();
-        $this->cartRules[$cartRuleName] = $cartRule;
-        SharedStorage::getStorage()->set($cartRuleName, $cartRule->id);
-    }
-
-    /**
      * @Given /^cart rule "(.+?)" is restricted to the category "(.+?)" with a quantity of (\d+)$/
      */
     public function cartRuleWithProductRuleRestriction(string $cartRuleName, string $categoryName, int $quantity)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
+        $cartRuleId = $this->getCartRuleId($cartRuleName);
         $this->categoryFeatureContext->checkCategoryWithNameExists($categoryName);
         $category = $this->categoryFeatureContext->getCategoryWithName($categoryName);
 
         Db::getInstance()->execute(
             'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`) ' .
-            'VALUES (' . (int) $this->cartRules[$cartRuleName]->id . ', ' . $quantity . ')'
+            'VALUES (' . (int) $cartRuleId . ', ' . $quantity . ')'
         );
         $idProductRuleGroup = Db::getInstance()->Insert_ID();
 
@@ -179,33 +117,11 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
             'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule` (`id_product_rule_group`, `type`) ' .
             'VALUES (' . (int) $idProductRuleGroup . ', "categories")'
         );
-        $idProductRule = Db::getInstance()->Insert_ID();
 
         Db::getInstance()->execute(
             'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) ' .
             'VALUES (' . (int) $idProductRuleGroup . ', ' . $category->id . ')'
         );
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" has a discount code "(.+)"$/
-     */
-    public function cartRuleNamedHasACode($cartRuleName, $cartRuleCode)
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->code = $cartRuleCode;
-        $this->cartRules[$cartRuleName]->save();
-        SharedStorage::getStorage()->set($cartRuleCode, $this->cartRules[$cartRuleName]->id);
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" has no discount code$/
-     */
-    public function cartRuleNamedHasNoCode($cartRuleName)
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->code = '';
-        $this->cartRules[$cartRuleName]->save();
     }
 
     /**
@@ -217,18 +133,20 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         string $productName,
         int $quantity = 1
     ): void {
-        $this->checkCartRuleWithNameExists($cartRuleName);
+        $cartRuleId = $this->getCartRuleId($cartRuleName);
         $this->productFeatureContext->checkProductWithNameExists($productName);
-
         $restrictedProduct = $this->productFeatureContext->getProductWithName($productName);
-        $this->cartRules[$cartRuleName]->product_restriction = true;
-        $this->cartRules[$cartRuleName]->reduction_product = $restrictedProduct->id;
-        $this->cartRules[$cartRuleName]->save();
+        $cartRule = new CartRule($cartRuleId);
+        $cartRule->product_restriction = true;
+        //@todo: product restriction and reduction_product are 2 different features. Should they really be mixed in here to one?
+        $cartRule->reduction_product = $restrictedProduct->id;
+        $cartRule->save();
+        $this->cartRules[$cartRuleName] = $cartRule;
 
         // The reduction_product is not enough, we need to define product rules for condition (this is done by the controller usually)
         Db::getInstance()->insert(
             'cart_rule_product_rule_group',
-            ['id_cart_rule' => $this->cartRules[$cartRuleName]->id, 'quantity' => $quantity]
+            ['id_cart_rule' => $cartRuleId, 'quantity' => $quantity]
         );
         $productRuleGroupId = Db::getInstance()->Insert_ID();
         Db::getInstance()->insert(
@@ -243,144 +161,13 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^cart rule "(.+)" is restricted to carrier "(.+)"$/
-     */
-    public function cartRuleNamedIsRestrictedToCarrierNamed($cartRuleName, $carrierName)
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->carrierFeatureContext->checkCarrierWithNameExists($carrierName);
-        $this->cartRules[$cartRuleName]->carrier_restriction = true;
-        $this->cartRules[$cartRuleName]->save();
-        Db::getInstance()->execute('
-          INSERT INTO ' . _DB_PREFIX_ . "cart_rule_carrier(`id_cart_rule`, `id_carrier`)
-          VALUES('" . (int) $this->cartRules[$cartRuleName]->id . "',
-          '" . (int) $this->carrierFeatureContext->getCarrierWithName($carrierName)->id . "')
-        ");
-        Cache::clear();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" is restricted to country "(.+)"$/
-     */
-    public function cartRuleNamedIsRestrictedToCountryNamed(string $cartRuleName, string $country)
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->countryFeatureContext->checkCountryWithIsoCodeExists($country);
-        $this->cartRules[$cartRuleName]->country_restriction = true;
-        $this->cartRules[$cartRuleName]->save();
-
-        $idCartRule = (int) $this->cartRules[$cartRuleName]->id;
-        $idCountry = (int) $this->countryFeatureContext->getCountryWithIsoCode($country);
-        Db::getInstance()->execute(
-            'INSERT INTO ' . _DB_PREFIX_ . 'cart_rule_country(`id_cart_rule`, `id_country`) ' .
-            'VALUES(' . $idCartRule . ', ' . $idCountry . ')'
-        );
-        Cache::clear();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" is restricted to cheapest product$/
-     */
-    public function cartRuleIsRestrictedToCheapestProduct($cartRuleName)
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->product_restriction = true;
-        $this->cartRules[$cartRuleName]->reduction_product = -1;
-        $this->cartRules[$cartRuleName]->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" is restricted on the selection of products$/
-     */
-    public function cartRuleIsRestrictedToSelectionProducts(string $cartRuleName): void
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->reduction_product = -2;
-        $this->cartRules[$cartRuleName]->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" is applied on every order$/
-     */
-    public function cartRuleIsRestrictedToEveryOrder($cartRuleName)
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->product_restriction = false;
-        $this->cartRules[$cartRuleName]->reduction_product = 0;
-        $this->cartRules[$cartRuleName]->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" is disabled$/
-     */
-    public function cartRuleIsDisabled($cartRuleName)
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->active = false;
-        $this->cartRules[$cartRuleName]->save();
-    }
-
-    /**
      * @When /^I enable cart rule "(.+)"$/
      */
     public function enableCartRule($cartRuleName)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->active = true;
-        $this->cartRules[$cartRuleName]->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" does not apply to already discounted products$/
-     */
-    public function cartRuleDoesNotApplyToDiscountedProduct($cartRuleName)
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->reduction_exclude_special = true;
-        $this->cartRules[$cartRuleName]->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" offers a gift product "(.+)"$/
-     */
-    public function cartRuleNamedHasAGiftProductNamed($cartRuleName, $productName)
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->productFeatureContext->checkProductWithNameExists($productName);
-        $this->cartRules[$cartRuleName]->gift_product = $this->productFeatureContext->getProductWithName($productName)->id;
-        $this->cartRules[$cartRuleName]->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" offers free shipping$/
-     */
-    public function cartRuleOffersFreeShipping($cartRuleName)
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->free_shipping = true;
-        $this->cartRules[$cartRuleName]->save();
-    }
-
-    /**
-     * @Given /^cart rule "(.+)" applies discount only when cart total is above (\d+\.\d+)$/
-     */
-    public function cartRuleAppliesBetween($cartRuleName, $min)
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->minimum_amount = $min;
-        $this->cartRules[$cartRuleName]->save();
-    }
-
-    /**
-     * @Then /^cart rule "(.+)" cannot be applied to my cart$/
-     */
-    public function cartRuleNamedCannotBeAppliedToMyCart($cartRuleName)
-    {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $result = $this->cartRules[$cartRuleName]->checkValidity(\Context::getContext(), false, false);
-        if ($result) {
-            throw new \RuntimeException(sprintf('Expects false, got %s instead', $result));
-        }
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $cartRule->active = true;
+        $cartRule->save();
     }
 
     /**
@@ -388,8 +175,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleNamedCanBeAppliedToMyCart($cartRuleName)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $result = $this->cartRules[$cartRuleName]->checkValidity(\Context::getContext(), false, false);
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
+
         if (!$result) {
             throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
@@ -402,19 +190,94 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function iAddCartRuleNamedToMyCart(string $cartRuleName): void
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->getCurrentCart()->addCartRule($this->cartRules[$cartRuleName]->id);
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $this->getCurrentCart()->addCartRule($cartRule->id);
     }
 
     /**
-     * @When /^at least one cart rule applies today for customer with id (\d+)$/
+     * @When /^I apply the voucher code "(.+)"$/
+     *
+     * @param string $code
+     *
+     * @return void
      */
-    public function someCartRulesExistTodayForCustomerWithId($customerId)
+    public function applyCartRuleByCode(string $code): void
     {
-        $result = CartRule::haveCartRuleToday($customerId);
-        if (!$result) {
-            throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
+        $cartRule = $this->loadCartRule($code);
+
+        if (!Validate::isLoadedObject($cartRule)) {
+            throw new RuntimeException(sprintf('Failed to load cart rule %d', $cartRule->id));
         }
+
+        if ($errorMessage = $cartRule->checkValidity(Context::getContext())) {
+            // checkValidity method doesn't throw exception, but returns string
+            // so we map it to error code and reuse the LastExceptionTrait to be able to assert the exception on next step
+            $this->setLastException(
+                new CartRuleValidityException($errorMessage, $this->getCartRuleValidityCodeByMessage($errorMessage))
+            );
+
+            return;
+        }
+
+        $this->getCurrentCart()->addCartRule((int) $cartRule->id);
+    }
+
+    /**
+     * @Then I should get cart rule validation error saying :expectedMessage
+     *
+     * @param string $expectedMessage
+     *
+     * @return void
+     */
+    public function assertCartRuleValidationError(string $expectedMessage): void
+    {
+        $this->assertLastErrorIs(
+            CartRuleValidityException::class,
+            $this->getCartRuleValidityCodeByMessage($expectedMessage)
+        );
+    }
+
+    /**
+     * @Given discount code :cartRuleReference is not applied to my cart
+     *
+     * @param string $code
+     *
+     * @return void
+     */
+    public function assertDiscountCodeIsNotAppliedToCurrentCart(string $code): void
+    {
+        $cartRuleId = $this->getSharedStorage()->get($code);
+
+        /** @var array<string, mixed> $cartRule */
+        foreach ($this->getCurrentCart()->getCartRules() as $cartRule) {
+            if ((int) $cartRule['id_cart_rule'] === $cartRuleId) {
+                throw new RuntimeException(sprintf('Cart rule with code "%s" is applied to current cart', $code));
+            }
+        }
+    }
+
+    /**
+     * @Given cart rule :referenceOrCode is applied to my cart
+     * @Given discount :referenceOrCode is applied to my cart
+     *
+     * @param string $referenceOrCode
+     *
+     * @return void
+     */
+    public function assertCartRuleIsAppliedToCurrentCart(string $referenceOrCode): void
+    {
+        $cartRuleId = $this->getSharedStorage()->get($referenceOrCode);
+
+        Cache::clean('Cart::getCartRules_*');
+        $cartRules = $this->getCurrentCart()->getCartRules();
+        /** @var array<string, mixed> $cartRule */
+        foreach ($cartRules as $cartRule) {
+            if ((int) $cartRule['id_cart_rule'] === $cartRuleId) {
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf('Cart rule with code or reference "%s" is not applied to current cart', $referenceOrCode));
     }
 
     /**
@@ -473,29 +336,32 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function checkCartRuleContextualValue(TableNode $table)
     {
-        $contextualReductionValues = $table->getRowsHash();
-        $cartRules = $this->getCurrentCart()->getCartRules();
+        $expectedCartRules = $table->getColumnsHash();
+        $cartRuleRows = $this->getCurrentCart()->getCartRules();
 
-        foreach ($cartRules as $currentCartRule) {
-            if (!isset($contextualReductionValues[$currentCartRule['description']])) {
-                throw new \RuntimeException(sprintf('Cart rule %s was not expected.', $currentCartRule['description']));
-            }
+        Assert::assertCount(count($expectedCartRules), $cartRuleRows, 'Unexpected cart rules count in cart');
 
-            // float numbers are compared as string because float numbers seemingly equals can still be unequals.
-            if ((string) $currentCartRule['value_real'] !== (string) $contextualReductionValues[$currentCartRule['description']]) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'Expects %s, got %s instead',
-                        $contextualReductionValues[$currentCartRule['description']],
-                        $currentCartRule['value_real']
-                    )
-                );
-            }
-            unset($contextualReductionValues[$currentCartRule['description']]);
-        }
+        foreach ($cartRuleRows as $key => $cartRuleRow) {
+            $cartRuleReference = $expectedCartRules[$key]['reference'];
 
-        if (!empty($contextualReductionValues)) {
-            throw new \RuntimeException(sprintf('The cart rule "%s" was not found', reset($contextualReductionValues)));
+            Assert::assertTrue(
+                $this->getSharedStorage()->exists($cartRuleReference),
+                sprintf('cart rule by reference "%s" doesnt exist', $cartRuleReference)
+            );
+
+            Assert::assertSame(
+                (int) $cartRuleRow['id_cart_rule'],
+                $this->getSharedStorage()->get($cartRuleReference),
+                sprintf('Cart rule %s was not expected in cart (or the sequence is unexpected).', $cartRuleReference)
+            );
+
+            $expectedReduction = new DecimalNumber($expectedCartRules[$key]['reduction']);
+            $actualReduction = new DecimalNumber((string) $cartRuleRow['value_real']);
+
+            Assert::assertTrue(
+                $actualReduction->equals($expectedReduction),
+                sprintf('Unexpected contextual reduction. Expected %s, got %s', $expectedReduction, $actualReduction)
+            );
         }
     }
 
@@ -516,5 +382,76 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         if ($result != $expectedErrorMessage) {
             throw new \RuntimeException(sprintf('Expects "usage limit reached" error message, got %s instead', $result));
         }
+    }
+
+    /**
+     * Legacy cart rule validation returns errors as strings (CartRule::checkVBalidity()),
+     * so to identify lastError in steps we will use this custom map,
+     * which will eventually allow us to reuse LastExceptionTrait and assert exceptions by codes
+     *
+     * @return int
+     */
+    private function getCartRuleValidityCodeByMessage(string $message): int
+    {
+        $map = [
+            'Cart is empty' => 100,
+            'This voucher is disabled' => 101,
+            'This voucher has already been used' => 102,
+            'This voucher is not valid yet' => 103,
+            'This voucher has expired' => 104,
+            'You must choose a delivery address before applying this voucher to your order' => 105,
+            'You must choose a carrier before applying this voucher to your order' => 106,
+            'The minimum amount to benefit from this promo code is' => 107,
+            'This voucher is already in your cart' => 108,
+            'This voucher is not combinable with an other voucher already in your cart:' => 109,
+            'You cannot use this voucher with these products' => 110,
+            'You cannot use this voucher on products on sale' => 111,
+            'You cannot use this voucher with this carrier' => 112,
+            'You cannot use this voucher in your country of delivery' => 113,
+            'You cannot use this voucher in an empty cart' => 114,
+            'You cannot use this voucher anymore (usage limit reached)' => 115,
+            'You cannot use this voucher' => 116,
+        ];
+
+        foreach ($map as $errorPart => $code) {
+            // @todo:
+            //     some of these errors have %s placeholders (luckily at the end of the string),
+            //      so we just match the start of the error message,
+            //     it should be convenient enough for now, but might need improvement later
+            if (str_starts_with($message, $errorPart)) {
+                return $code;
+            }
+        }
+
+        throw new RuntimeException(sprintf(
+            'Invalid error-code mapping in test. Couldn\'t find the code for message "%s"',
+            $message
+        ));
+    }
+
+    /**
+     * This method is temporary. We will get rid of it once all old cart rule creation/edition steps are cleaned up
+     *
+     * @param string $reference
+     *
+     * @return CartRule
+     */
+    private function loadCartRule(string $reference): CartRule
+    {
+        return new CartRule($this->getCartRuleId($reference));
+    }
+
+    private function getCartRuleId(string $cartRuleReference): int
+    {
+        if ($this->getSharedStorage()->exists($cartRuleReference)) {
+            // @todo: This allows applying this step to cart rule which was created with a step using CQRS command and saved to shared storage
+            // it is not ideal, but for now it should work, until restrictions are migrated.
+            $cartRuleId = $this->getSharedStorage()->get($cartRuleReference);
+        } else {
+            $this->checkCartRuleWithNameExists($cartRuleReference);
+            $cartRuleId = $this->cartRules[$cartRuleReference]->id;
+        }
+
+        return $cartRuleId;
     }
 }

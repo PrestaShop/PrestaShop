@@ -48,7 +48,7 @@ describe('BO - Orders : Sort orders', async () => {
     await ordersPage.closeSfToolBar(page);
 
     const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
 
   const tests = [
@@ -112,17 +112,17 @@ describe('BO - Orders : Sort orders', async () => {
         const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
         if (test.args.sortDirection === 'asc') {
-          await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          expect(sortedTableFloat).to.deep.equal(expectedResult);
         } else {
-          await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+          expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
         }
       } else {
         const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
         if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          expect(sortedTable).to.deep.equal(expectedResult);
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       }
     });

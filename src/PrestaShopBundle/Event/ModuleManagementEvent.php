@@ -36,8 +36,6 @@ class ModuleManagementEvent extends Event
     public const UNINSTALL = 'module.uninstall';
     public const DISABLE = 'module.disable';
     public const ENABLE = 'module.enable';
-    public const ENABLE_MOBILE = 'module.enable.mobile';
-    public const DISABLE_MOBILE = 'module.disable.mobile';
     public const UPGRADE = 'module.upgrade';
     public const RESET = 'module.reset';
     public const DELETE = 'module.delete';

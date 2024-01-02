@@ -69,8 +69,8 @@
   <attribute id="Plain">
     <name>Plain</name>
   </attribute>
-  <attribute id="Squarred">
-    <name>Squarred</name>
+  <attribute id="Squared">
+    <name>Squared</name>
   </attribute>
   <attribute id="Doted">
     <name>Doted</name>

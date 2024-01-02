@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -150,7 +149,7 @@ class TranslationFinder
         $basename = $file->getBasename('.xlf');
 
         $domain = $basename;
-        if (strpos($basename, $locale) === false) {
+        if (!str_contains($basename, $locale)) {
             $domain .= '.' . $locale;
         }
 

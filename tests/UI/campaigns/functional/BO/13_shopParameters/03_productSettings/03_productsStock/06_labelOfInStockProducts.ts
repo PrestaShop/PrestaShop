@@ -13,6 +13,9 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
+// Import data
+import Products from '@data/demo/products';
+
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
@@ -47,7 +50,7 @@ describe('BO - Shop Parameters - Product Settings : Update label of in-stock pro
     await dashboardPage.closeSfToolBar(page);
 
     const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(productSettingsPage.pageTitle);
   });
   const tests = [
     {args: {label: 'Product is available', labelToCheck: 'Product is available', exist: true}},
@@ -59,26 +62,35 @@ describe('BO - Shop Parameters - Product Settings : Update label of in-stock pro
       await testContext.addContextItem(this, 'testIdentifier', `updateLabelOfInStockProducts_${index}`, baseContext);
 
       const result = await productSettingsPage.setLabelOfInStockProducts(page, test.args.label);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
-    it('should check the label of in-stock product in FO product page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkLabelInStock_${index}`,
-        baseContext,
-      );
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `viewMySHop_${index}`, baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
 
+      const isHomePage = await homePage.isHomePage(page);
+      expect(isHomePage, 'Home page was not opened').to.eq(true);
+    });
+
+    it('should go to the first product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage_${index}`, baseContext);
+
       await homePage.goToProductPage(page, 1);
 
+      const pageTitle = await productPage.getPageTitle(page);
+      expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+    });
+
+    it('should check the label of in-stock product in FO product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkLabelInStock_${index}`, baseContext);
+
       const isVisible = await productPage.isAvailabilityQuantityDisplayed(page);
-      await expect(isVisible).to.be.equal(test.args.exist);
+      expect(isVisible).to.be.equal(test.args.exist);
 
       const availabilityLabel = await productPage.getProductAvailabilityLabel(page);
-      await expect(availabilityLabel).to.contains(test.args.labelToCheck);
+      expect(availabilityLabel).to.contains(test.args.labelToCheck);
     });
 
     it('should go back to BO', async function () {
@@ -87,7 +99,7 @@ describe('BO - Shop Parameters - Product Settings : Update label of in-stock pro
       page = await productPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
   });
 });

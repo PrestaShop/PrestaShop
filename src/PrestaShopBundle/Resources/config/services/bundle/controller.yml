@@ -2,30 +2,22 @@ services:
   _defaults:
     public: true
 
+  # Legacy controllers don't extend the base controller, so we need to inject the container manually.
   PrestaShopBundle\Controller\Api\ApiController:
-    abstract: true
     class: PrestaShopBundle\Controller\Api\ApiController
     calls:
       - [ setLogger, [ '@logger' ] ]
       - [ setContainer, [ '@service_container' ] ]
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
 
+  # Every single controller should be loaded here, except the legacy ones, and some misplaced files are also excluded.
   PrestaShopBundle\Controller\:
-    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/*"
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Controller/*"
     exclude:
-      - "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Api"
-      - "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product"
-    public: true
-    tags:
-      - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
-
-  PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\:
-    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/*"
+      - "%kernel.project_dir%/src/PrestaShopBundle/Controller/Api"
+      - "%kernel.project_dir%/src/PrestaShopBundle/Controller/ArgumentResolver"
+      - "%kernel.project_dir%/src/PrestaShopBundle/Controller/Exception"
     autoconfigure: true
     autowire: true
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
 
   prestashop.core.api.controller:
     alias: PrestaShopBundle\Controller\Api\ApiController
@@ -38,11 +30,6 @@ services:
       movements: "@prestashop.core.api.stock.movements_collection"
       stockRepository: "@prestashop.core.api.stock.repository"
       queryParams: "@prestashop.core.api.query_stock_params_collection"
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
-
-  prestashop.core.api.stock.controller:
-    alias: PrestaShopBundle\Controller\Api\StockController
 
   PrestaShopBundle\Controller\Api\StockMovementController:
     class: PrestaShopBundle\Controller\Api\StockMovementController
@@ -51,8 +38,6 @@ services:
     properties:
       stockMovementRepository: "@prestashop.core.api.stock_movement.repository"
       queryParams: "@prestashop.core.api.query_stock_movement_params_collection"
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
 
   prestashop.core.api.stock_movement.controller:
     alias: PrestaShopBundle\Controller\Api\StockMovementController
@@ -63,11 +48,6 @@ services:
     public: true
     properties:
       supplierRepository: "@prestashop.core.api.supplier.repository"
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
-
-  prestashop.core.api.supplier.controller:
-    alias: PrestaShopBundle\Controller\Api\SupplierController
 
   PrestaShopBundle\Controller\Api\ManufacturerController:
     class: PrestaShopBundle\Controller\Api\ManufacturerController
@@ -75,11 +55,6 @@ services:
     public: true
     properties:
       manufacturerRepository: "@prestashop.core.api.manufacturer.repository"
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
-
-  prestashop.core.api.manufacturer.controller:
-    alias: PrestaShopBundle\Controller\Api\ManufacturerController
 
   PrestaShopBundle\Controller\Api\CategoryController:
     class: PrestaShopBundle\Controller\Api\CategoryController
@@ -87,11 +62,6 @@ services:
     public: true
     properties:
       categoryRepository: "@prestashop.core.api.category.repository"
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
-
-  prestashop.core.api.category.controller:
-    alias: PrestaShopBundle\Controller\Api\CategoryController
 
   PrestaShopBundle\Controller\Api\AttributeController:
     class: PrestaShopBundle\Controller\Api\AttributeController
@@ -99,11 +69,6 @@ services:
     public: true
     properties:
       featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
-
-  prestashop.core.api.attribute.controller:
-    alias: PrestaShopBundle\Controller\Api\AttributeController
 
   PrestaShopBundle\Controller\Api\FeatureController:
     class: PrestaShopBundle\Controller\Api\FeatureController
@@ -111,21 +76,11 @@ services:
     public: true
     properties:
       featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
-
-  prestashop.core.api.feature.controller:
-    alias: PrestaShopBundle\Controller\Api\FeatureController
 
   PrestaShopBundle\Controller\Api\I18nController:
     class: PrestaShopBundle\Controller\Api\I18nController
     parent: PrestaShopBundle\Controller\Api\ApiController
     public: true
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
-
-  prestashop.core.api.i18n.controller:
-    alias: PrestaShopBundle\Controller\Api\I18nController
 
   PrestaShopBundle\Controller\Api\TranslationController:
     class: PrestaShopBundle\Controller\Api\TranslationController
@@ -134,30 +89,20 @@ services:
     properties:
       translationService: "@prestashop.service.translation"
       queryParams: "@prestashop.core.api.query_translation_params_collection"
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
-
-  prestashop.core.api.translation.controller:
-    alias: PrestaShopBundle\Controller\Api\TranslationController
 
   PrestaShopBundle\Controller\Api\Improve\Design\PositionsController:
     class: PrestaShopBundle\Controller\Api\Improve\Design\PositionsController
     parent: PrestaShopBundle\Controller\Api\ApiController
     public: true
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
-
-  prestashop.core.api.improve.design.postions.controller:
-    alias: PrestaShopBundle\Controller\Api\Improve\Design\PositionsController
 
   prestashop.core.admin.multistore:
     class: PrestaShopBundle\Controller\Admin\MultistoreController
     parent: PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController
     public: true
     properties:
-      multistoreFeature: "@prestashop.adapter.multistore_feature"
-      multistoreContext: "@prestashop.adapter.shop.context"
+      multiStoreFeature: "@prestashop.adapter.multistore_feature"
+      multiStoreContext: "@prestashop.adapter.shop.context"
       entityManager: "@doctrine.orm.entity_manager"
       productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-    tags:
-      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
+    calls:
+      - [ setContainer, [ '@service_container' ] ]

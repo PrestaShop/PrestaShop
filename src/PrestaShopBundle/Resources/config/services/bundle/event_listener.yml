@@ -19,11 +19,7 @@ services:
 
   prestashop.tokenized_url_listener:
     class: PrestaShopBundle\EventListener\TokenizedUrlsListener
-    arguments:
-      - "@security.csrf.token_manager"
-      - "@router"
-      - "@=service('prestashop.user_provider').getUsername()"
-      - "@prestashop.adapter.legacy.context"
+    autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
@@ -60,16 +56,11 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
-  prestashop.demo_mode_enabled.listener:
-    class: PrestaShopBundle\EventListener\DemoModeEnabledListener
+  PrestaShopBundle\EventListener\DemoModeEnabledListener:
+    autowire: true
+    autoconfigure: true
     arguments:
-      - "@router"
-      - "@translator"
-      - "@session"
-      - "@annotation_reader"
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('_PS_MODE_DEMO_')"
-    tags:
-      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+      $session: "@session"
 
   prestashop.module_activated.listener:
     class: PrestaShopBundle\EventListener\ModuleActivatedListener
@@ -78,7 +69,7 @@ services:
       - "@translator"
       - "@session"
       - "@annotation_reader"
-      - "@prestashop.core.admin.module.repository"
+      - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
     tags:
       - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
@@ -112,16 +103,3 @@ services:
       - '@logger'
     tags:
       - { name: kernel.event_subscriber }
-
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\EventListener\FeatureFlagTypeListener:
-    class: PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\EventListener\FeatureFlagTypeListener
-    autowire: true
-    tags:
-      - { name: core.legacy.hook.subscriber }
-
-  PrestaShopBundle\EventListener\ShopConstraintListener:
-    public: false
-    arguments:
-      - "@prestashop.adapter.shop.context"
-    tags:
-      - { name: kernel.event_listener, method: onKernelRequest }

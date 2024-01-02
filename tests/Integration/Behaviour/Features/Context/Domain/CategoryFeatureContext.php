@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesComma
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkUpdateCategoriesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
@@ -60,7 +59,6 @@ use Tests\Resources\DummyFileUploader;
 class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
     public const JPG_IMAGE_TYPE = '.jpg';
-    private const MENU_THUMB_SUFFIX = '0_thumb';
 
     private const CATEGORY_POSITION_WAYS_MAP = [
         'up' => 0,
@@ -489,46 +487,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given category :categoryReference has menu thumbnail image
-     *
-     * @param string $categoryReference
-     */
-    public function categoryHasMenuThumbnailImage(string $categoryReference)
-    {
-        $editableCategory = $this->getEditableCategory($categoryReference);
-        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-        Assert::assertCount(1, $menuThumbnailImages);
-    }
-
-    /**
-     * @When I delete category :categoryReference menu thumbnail image
-     *
-     * @param string $categoryReference
-     */
-    public function deleteCategoryMenuThumbnailImage(string $categoryReference)
-    {
-        $categoryId = SharedStorage::getStorage()->get($categoryReference);
-        $editableCategory = $this->getEditableCategory($categoryReference);
-
-        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-        $menuThumbnailImageId = $menuThumbnailImages[0]['id'];
-
-        $this->getCommandBus()->handle(new DeleteCategoryMenuThumbnailImageCommand($categoryId, $menuThumbnailImageId));
-    }
-
-    /**
-     * @Then category :categoryReference does not have menu thumbnail image
-     *
-     * @param string $categoryReference
-     */
-    public function categoryDoesNotHaveMenuThumbnailImage(string $categoryReference)
-    {
-        $editableCategory = $this->getEditableCategory($categoryReference);
-        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-        Assert::assertCount(0, $menuThumbnailImages);
-    }
-
-    /**
      * @Given /^category "(.*)" is (enabled|disabled)$/
      *
      * Status type "enabled|disabled" should be converted by transform context. @see StringToBoolTransformContext
@@ -796,22 +754,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $imageReference,
             $fileName,
             $this->psCatImgDir . $categoryId . '-small_default' . self::JPG_IMAGE_TYPE
-        );
-    }
-
-    /**
-     * @When I upload menu thumbnail image ":imageReference" named ":fileName" to category ":categoryReference"
-     *
-     * @return string
-     */
-    public function uploadMenuThumbnailImage(string $imageReference, string $fileName, string $categoryReference): string
-    {
-        $categoryId = $this->getSharedStorage()->get($categoryReference);
-
-        return $this->uploadImage(
-            $imageReference,
-            $fileName,
-            $this->psCatImgDir . $categoryId . '-' . self::MENU_THUMB_SUFFIX . self::JPG_IMAGE_TYPE
         );
     }
 

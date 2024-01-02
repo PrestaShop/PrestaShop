@@ -38,6 +38,8 @@ class ShopURLSettings extends BOBasePage {
 
   private readonly tableColumnActionsEditLink: (row: number) => string;
 
+  private readonly tableColumnActionsEditButton: (row: number) => string;
+
   private readonly tableColumnActionsToggleButton: (row: number) => string;
 
   private readonly tableColumnActionsDropdownMenu: (row: number) => string;
@@ -117,6 +119,7 @@ class ShopURLSettings extends BOBasePage {
     // Row actions selectors
     this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
     this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsEditButton = (row: number) => `${this.tableBodyColumn(row)} a.edit`;
     this.tableColumnActionsToggleButton = (row: number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
     this.tableColumnActionsDropdownMenu = (row: number) => `${this.tableColumnActions(row)} .dropdown-menu`;
     this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
@@ -161,6 +164,16 @@ class ShopURLSettings extends BOBasePage {
    */
   async goToAddNewUrl(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.addNewUrlButton);
+  }
+
+  /**
+   * Go to edit shop url
+   * @param page {Page} Browser tab
+   * @param row {number} Row number to edit
+   * @returns {Promise<void>}
+   */
+  async goToEditShopURLPage(page: Page, row: number): Promise<void> {
+    await this.clickAndWaitForURL(page, this.tableColumnActionsEditButton(row));
   }
 
   /* Filter methods */
@@ -336,11 +349,11 @@ class ShopURLSettings extends BOBasePage {
    */
   async deleteShopURL(page: Page, row: number): Promise<string> {
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
+      page.locator(this.tableColumnActionsToggleButton(row)).click(),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.locator(this.tableColumnActionsDeleteLink(row)).click();
 
     // Confirm delete action
     await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
@@ -404,7 +417,7 @@ class ShopURLSettings extends BOBasePage {
   async setStatus(page: Page, row: number, column: string, valueWanted: boolean = true): Promise<boolean> {
     await this.waitForVisibleSelector(page, this.tableColumn(row, column), 2000);
     if (await this.getStatus(page, row, column) !== valueWanted) {
-      await page.click(this.tableColumn(row, column));
+      await page.locator(this.tableColumn(row, column)).click();
       await this.waitForVisibleSelector(
         page,
         (valueWanted ? this.columnValidIcon : this.columnNotValidIcon)(row, column),
@@ -422,10 +435,10 @@ class ShopURLSettings extends BOBasePage {
    * @returns {Promise<void>}
    */
   async bulkSelectRows(page: Page): Promise<void> {
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
 
     await Promise.all([
-      page.click(this.selectAllLink),
+      page.locator(this.selectAllLink).click(),
       this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
   }
@@ -442,7 +455,7 @@ class ShopURLSettings extends BOBasePage {
 
     // Set status
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.bulkEnableLink),
     ]);
 

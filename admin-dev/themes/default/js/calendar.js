@@ -310,7 +310,7 @@ function setPreviousYear() {
 let datepickerStart;
 let datepickerEnd;
 
-$(document).ready(() => {
+$(() => {
   // Instanciate datepickers
   datepickerStart = $('.datepicker1').daterangepicker({
     dates: window.translated_dates,
@@ -346,21 +346,21 @@ $(document).ready(() => {
   }
 
   // Events binding
-  $('#date-start').focus(function () {
+  $('#date-start').on('focus', function () {
     datepickerStart.setCompare(false);
     datepickerEnd.setCompare(false);
     $('.date-input').removeClass('input-selected');
     $(this).addClass('input-selected');
   });
 
-  $('#date-end').focus(function () {
+  $('#date-end').on('focus', function () {
     datepickerStart.setCompare(false);
     datepickerEnd.setCompare(false);
     $('.date-input').removeClass('input-selected');
     $(this).addClass('input-selected');
   });
 
-  $('#date-start-compare').focus(function () {
+  $('#date-start-compare').on('focus', function () {
     datepickerStart.setCompare(true);
     datepickerEnd.setCompare(true);
     $('#compare-options').val(3);
@@ -368,7 +368,7 @@ $(document).ready(() => {
     $(this).addClass('input-selected');
   });
 
-  $('#date-end-compare').focus(function () {
+  $('#date-end-compare').on('focus', function () {
     datepickerStart.setCompare(true);
     datepickerEnd.setCompare(true);
     $('#compare-options').val(3);
@@ -376,16 +376,16 @@ $(document).ready(() => {
     $(this).addClass('input-selected');
   });
 
-  $('#datepicker-cancel').click(() => {
+  $('#datepicker-cancel').on('click', () => {
     $('#datepicker').addClass('hide');
   });
 
-  $('#datepicker').show(() => {
+  $('#datepicker').on('show', () => {
     $('#date-start').focus();
     $('#date-start').trigger('change');
   });
 
-  $('#datepicker-compare').click(function () {
+  $('#datepicker-compare').on('click', function () {
     if ($(this).prop('checked')) {
       $('#compare-options').trigger('change');
       $('#form-date-body-compare').show();
@@ -401,7 +401,7 @@ $(document).ready(() => {
     }
   });
 
-  $('#compare-options').change(function () {
+  $('#compare-options').on('change', function () {
     if (this.value === '1') setPreviousPeriod();
 
     if (this.value === '2') setPreviousYear();

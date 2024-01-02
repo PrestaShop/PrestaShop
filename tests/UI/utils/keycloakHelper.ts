@@ -50,6 +50,21 @@ export default {
       standardFlowEnabled: true,
       directAccessGrantsEnabled: true,
       serviceAccountsEnabled: true,
+      protocolMappers: [
+        {
+          name: 'nbf',
+          protocol: 'openid-connect',
+          protocolMapper: 'oidc-hardcoded-claim-mapper',
+          config: {
+            'access.token.claim': 'true',
+            'access.tokenResponse.claim': 'false',
+            'claim.name': 'nbf',
+            'claim.value': '0',
+            'id.token.claim': 'true',
+            'userinfo.token.claim': 'true',
+          },
+        },
+      ],
     });
 
     const client: ClientRepresentation|undefined = await kcAdminClient.clients.findOne(idClient);
@@ -57,6 +72,7 @@ export default {
     if (!client) {
       return '';
     }
+
     return client.secret ?? '';
   },
 

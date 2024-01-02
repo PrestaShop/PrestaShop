@@ -64,7 +64,7 @@ class WebserviceRequestCore
      *
      * @var string
      */
-    protected $_docUrl = 'https://devdocs.prestashop.com/8/webservice';
+    protected $_docUrl = 'https://devdocs.prestashop-project.org/8/webservice';
 
     /**
      * Set if the authentication key was checked.
@@ -222,11 +222,9 @@ class WebserviceRequestCore
         return $this->_outputEnabled;
     }
 
-    public function setOutputEnabled($bool)
+    public function setOutputEnabled(bool $bool)
     {
-        if (Validate::isBool($bool)) {
-            $this->_outputEnabled = $bool;
-        }
+        $this->_outputEnabled = $bool;
 
         return $this;
     }
@@ -312,6 +310,7 @@ class WebserviceRequestCore
             'order_invoices' => ['description' => 'The Order invoices', 'class' => 'OrderInvoice'],
             'orders' => ['description' => 'The Customers orders', 'class' => 'Order'],
             'order_payments' => ['description' => 'The Order payments', 'class' => 'OrderPayment'],
+            'order_returns' => ['description' => 'The Customers orders returns', 'class' => 'OrderReturn'],
             'order_states' => ['description' => 'The Order statuses', 'class' => 'OrderState'],
             'order_slip' => ['description' => 'The Order slips', 'class' => 'OrderSlip'],
             'price_ranges' => ['description' => 'Price ranges', 'class' => 'RangePrice'],
@@ -338,12 +337,6 @@ class WebserviceRequestCore
             'warehouses' => ['description' => 'Warehouses', 'class' => 'Warehouse', 'forbidden_method' => ['DELETE']],
             'stocks' => ['description' => 'Stocks', 'class' => 'Stock', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
             'stock_availables' => ['description' => 'Available quantities', 'class' => 'StockAvailable', 'forbidden_method' => ['POST', 'DELETE']],
-            'warehouse_product_locations' => ['description' => 'Location of products in warehouses', 'class' => 'WarehouseProductLocation', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
-            'supply_orders' => ['description' => 'Supply Orders', 'class' => 'SupplyOrder', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
-            'supply_order_details' => ['description' => 'Supply Order Details', 'class' => 'SupplyOrderDetail', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
-            'supply_order_states' => ['description' => 'Supply Order Statuses', 'class' => 'SupplyOrderState', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
-            'supply_order_histories' => ['description' => 'Supply Order Histories', 'class' => 'SupplyOrderHistory', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
-            'supply_order_receipt_histories' => ['description' => 'Supply Order Receipt Histories', 'class' => 'SupplyOrderReceiptHistory', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
             'product_suppliers' => ['description' => 'Product Suppliers', 'class' => 'ProductSupplier'],
             'tax_rules' => ['description' => 'Tax rules entity', 'class' => 'TaxRule'],
             'tax_rule_groups' => ['description' => 'Tax rule groups', 'class' => 'TaxRulesGroup'],

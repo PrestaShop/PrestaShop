@@ -46,12 +46,6 @@
 </ul>
 {/block}
 {block name=toolbarBox}
-<script type="text/javascript">
-	var header_confirm_reset = '{l s='Confirm reset' d='Admin.Modules.Notification'}';
-	var body_confirm_reset = '{l s='Would you like to delete the content related to this module ?' d='Admin.Modules.Notification'}';
-	var left_button_confirm_reset = '{l s='No - reset only the parameters' d='Admin.Modules.Notification'}';
-	var right_button_confirm_reset = '{l s='Yes - reset everything' d='Admin.Modules.Notification'}';
-</script>
 <div class="page-bar toolbarBox">
 	<div class="btn-toolbar">
 		<ul class="nav nav-pills pull-right">
@@ -61,24 +55,6 @@
 					<div>{l s='Back' d='Admin.Global'}</div>
 				</a>
 			</li>
-			<!-- <li>
-				<a id="desc-module-disable" class="toolbar_btn" href="{$module_disable_link}" title="{l s='Disable' d='Admin.Actions'}">
-					<i class="process-icon-off"></i>
-					<div>{l s='Disable' d='Admin.Actions'}</div>
-				</a>
-			</li>
-			<li>
-				<a id="desc-module-uninstall" class="toolbar_btn" href="{$module_uninstall_link}" title="{l s='Uninstall'}">
-					<i class="process-icon-uninstall"></i>
-					<div>{l s='Uninstall'}</div>
-				</a>
-			</li>
-			<li>
-				<a id="desc-module-reset" class="toolbar_btn {if $is_reset_ready}reset_ready{/if}" href="{$module_reset_link}" title="{l s='Reset'}">
-					<i class="process-icon-reset"></i>
-					<div>{l s='Reset'}</div>
-				</a>
-			</li> -->
 			{if isset($trad_link)}
 			<li>
 				<a id="desc-module-translate" data-toggle="modal" data-target="#moduleTradLangSelect" class="toolbar_btn" href="#" title="{l s='Translate'}">

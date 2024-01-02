@@ -4,8 +4,8 @@ import testContext from '@utils/testContext';
 
 // Import pages
 import {homePage} from '@pages/FO/home';
-import cartPage from '@pages/FO/cart';
-import searchResultsPage from '@pages/FO/searchResults';
+import {cartPage} from '@pages/FO/cart';
+import {searchResultsPage} from '@pages/FO/searchResults';
 
 // Import data
 import Products from '@data/demo/products';
@@ -66,14 +66,14 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
     await homePage.goToFo(page);
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    expect(isHomePage).to.eq(true);
   });
 
   it('should add first product to cart by quick view', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addToCartByQuickView', baseContext);
 
     const successMessage = await homePage.addProductToCartByQuickView(page, 1, 1);
-    await expect(successMessage).to.contains(homePage.successAddToCartMessage);
+    expect(successMessage).to.contains(homePage.successAddToCartMessage);
   });
 
   it('should check product details from cart modal', async function () {
@@ -106,7 +106,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
     await homePage.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(cartPage.pageTitle);
+    expect(pageTitle).to.equal(cartPage.pageTitle);
   });
 
   it('should check product details', async function () {
@@ -139,7 +139,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
     await homePage.goToHomePage(page);
 
     const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage, 'Home page is not displayed').to.be.true;
+    expect(isHomePage, 'Home page is not displayed').to.eq(true);
   });
 
   it(`should search for the product ${Products.demo_14.name}`, async function () {
@@ -148,7 +148,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
     await homePage.searchProduct(page, Products.demo_14.name);
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
   });
 
   it('should quick view the product and check that Add to cart button is disabled', async function () {
@@ -157,6 +157,6 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
     await searchResultsPage.quickViewProduct(page, 1);
 
     const isDisabled = await homePage.isAddToCartButtonDisabled(page);
-    await expect(isDisabled).to.be.true;
+    expect(isDisabled).to.eq(true);
   });
 });

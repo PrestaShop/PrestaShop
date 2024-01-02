@@ -10,11 +10,11 @@
         },
         {
             "name": "PrestaShop Community",
-            "homepage": "https://contributors.prestashop.com/"
+            "homepage": "https://contributors.prestashop-project.org/"
         }
     ],
     "require": {
-        "php": ">=7.2.5",
+        "php": ">=8.1",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-fileinfo": "*",
@@ -30,39 +30,36 @@
         "beberlei/doctrineextensions": "^1.0",
         "bjeavons/zxcvbn-php": "^1.3",
         "composer/ca-bundle": "^1.0",
-        "composer/installers": "^1.0.21",
+        "composer/installers": "^2.2.0",
         "cssjanus/cssjanus": "^2.0",
         "curl/curl": "^2.3.2",
         "defuse/php-encryption": "^2.3.1",
         "doctrine/cache": "^2.0",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/orm": "^2.7",
-        "ezyang/htmlpurifier": "dev-master as v4.14.0",
-        "friendsofsymfony/jsrouting-bundle": "^2.4",
+        "ezyang/htmlpurifier": "^v4.16",
+        "friendsofsymfony/jsrouting-bundle": "^3.2.1",
         "geoip2/geoip2": "~2.4.2",
         "greenlion/php-sql-parser": "^4.3",
-        "guzzlehttp/guzzle": "^7.5",
         "incenteev/composer-parameter-handler": "~2.0",
         "ircmaxell/password-compat": "^1.0.4",
         "ircmaxell/random-lib": "^1.2.0",
         "jakeasmith/http_build_url": "^1",
-        "lcobucci/jwt": "dev-3.4.6-patch as 3.4.6",
+        "lcobucci/jwt": "^5.0.0",
         "league/oauth2-server": "^8.3",
-        "league/tactician-bundle": "^1.4",
         "martinlindhe/php-mb-helpers": "^0.1.6",
         "matthiasmullie/minify": "~1.3.0",
-        "mobiledetect/mobiledetectlib": "~2.8.34",
+        "mobiledetect/mobiledetectlib": "^3.74.0",
         "mrclay/minify": "^3.0.11",
         "nikic/php-parser": "^4.0",
         "nyholm/psr7": "^1.5",
-        "pear/archive_tar": "^1.4.12",
-        "pelago/emogrifier": "^v5.0.1",
+        "pelago/emogrifier": "^v7.0.0",
         "phpoffice/phpspreadsheet": "^1.19",
         "prestashop/autoload": "^1.0",
         "prestashop/blockreassurance": "^5.1",
         "prestashop/blockwishlist": "^3.0",
         "prestashop/circuit-breaker": "^4.0",
-        "prestashop/classic": "^2.1",
+        "prestashop/classic": "develop-dev",
         "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
         "prestashop/dashgoals": "^2",
@@ -72,9 +69,9 @@
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
         "prestashop/gsitemap": "^4",
-        "prestashop/laminas-code-lts": "dev-4.5-lts",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^6.0",
+        "prestashop/ps_apiresources": "dev-dev",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
         "prestashop/ps_brandlist": "^1.0",
@@ -129,32 +126,81 @@
         "prestashop/statssales": "^2",
         "prestashop/statssearch": "^2",
         "prestashop/statsstock": "^2",
-        "prestashop/translationtools-bundle": "^5.0",
+        "prestashop/translationtools-bundle": "^6",
         "sensio/framework-extra-bundle": "^5.1",
         "smarty/smarty": "^4.3.1",
-        "soundasleep/html2text": "^0.5.0",
-        "swiftmailer/swiftmailer": "~6.2",
+        "soundasleep/html2text": "^2.1.0",
+        "symfony/asset": "5.4.*",
+        "symfony/cache": "5.4.*",
+        "symfony/config": "5.4.*",
+        "symfony/console": "5.4.*",
+        "symfony/dependency-injection": "5.4.*",
+        "symfony/doctrine-messenger": "5.4.*",
+        "symfony/dom-crawler": "5.4.*",
+        "symfony/dotenv": "5.4.*",
+        "symfony/error-handler": "5.4.*",
+        "symfony/event-dispatcher": "5.4.*",
+        "symfony/expression-language": "5.4.*",
+        "symfony/filesystem": "5.4.*",
+        "symfony/finder": "5.4.*",
+        "symfony/form": "5.4.*",
+        "symfony/http-client": "5.4.*",
+        "symfony/http-foundation": "5.4.*",
+        "symfony/http-kernel": "5.4.*",
+        "symfony/intl": "5.4.*",
+        "symfony/lock": "5.4.*",
+        "symfony/mailer": "5.4.*",
+        "symfony/messenger": "5.4.*",
+        "symfony/mime": "5.4.*",
         "symfony/monolog-bundle": "^3.7.0",
+        "symfony/options-resolver": "5.4.*",
+        "symfony/password-hasher": "5.4.*",
         "symfony/polyfill-php73": "^1.10",
-        "symfony/property-access": "^4",
+        "symfony/process": "5.4.*",
+        "symfony/property-access": "5.4.*",
+        "symfony/property-info": "5.4.*",
+        "symfony/proxy-manager-bridge": "5.4.*",
         "symfony/psr-http-message-bridge": "^2.1",
-        "symfony/swiftmailer-bundle": "^3.1",
-        "symfony/symfony": "4.4.*",
+        "symfony/routing": "5.4.*",
+        "symfony/security-bundle": "5.4.*",
+        "symfony/security-core": "5.4.*",
+        "symfony/security-csrf": "5.4.*",
+        "symfony/security-guard": "5.4.*",
+        "symfony/security-http": "5.4.*",
+        "symfony/serializer": "5.4.*",
+        "symfony/string": "5.4.*",
+        "symfony/templating": "5.4.*",
+        "symfony/translation": "5.4.*",
+        "symfony/twig-bundle": "5.4.*",
+        "symfony/ux-twig-component": "^2.9",
+        "symfony/validator": "5.4.*",
+        "symfony/var-dumper": "5.4.*",
+        "symfony/var-exporter": "5.4.*",
+        "symfony/web-link": "5.4.*",
+        "symfony/yaml": "5.4.*",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
+        "twig/extra-bundle": "^3.6",
+        "twig/string-extra": "^3.6",
         "twig/twig": "^3.0"
     },
     "require-dev": {
         "behat/behat": "^3.5",
         "ergebnis/composer-normalize": "^2.8",
         "friendsofphp/php-cs-fixer": "^v3.2.0",
-        "johnkary/phpunit-speedtrap": "^3",
+        "johnkary/phpunit-speedtrap": "^v4.0.1",
         "mikey179/vfsstream": "^1.6",
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^1.9.3",
-        "phpunit/phpunit": "~8.5.16 || ~9.5.10",
+        "phpunit/phpunit": "~9.6.7",
+        "rector/rector": "^0.15.17",
         "spaze/phpstan-disallowed-calls": "^2.10",
-        "symfony/phpunit-bridge": "^3.4"
+        "symfony/browser-kit": "5.4.*",
+        "symfony/css-selector": "5.4.*",
+        "symfony/debug-bundle": "5.4.*",
+        "symfony/phpunit-bridge": "6.2.7",
+        "symfony/stopwatch": "5.4.*",
+        "symfony/web-profiler-bundle": "5.4.*"
     },
     "config": {
         "allow-plugins": {
@@ -167,7 +213,7 @@
             "symfony/phpunit-bridge": true
         },
         "platform": {
-            "php": "7.2.5"
+            "php": "8.1.0"
         },
         "sort-packages": true
     },
@@ -176,7 +222,7 @@
             "file": "app/config/parameters.yml"
         },
         "symfony": {
-            "require": "~4.4"
+            "require": "~5.4"
         },
         "symfony-app-dir": "app",
         "symfony-assets-install": "relative",
@@ -192,23 +238,18 @@
         },
         "classmap": [
             "app/AppKernel.php",
+            "app/AdminKernel.php",
+            "app/FrontKernel.php",
             "app/AppCache.php"
         ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
-        },
-        "files": [
-            "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
-        ]
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/PrestaShop/jwt"
+            "Tests\\": "tests/",
+            "Tests\\Unit\\Resources\\": "tests/Unit/Resources/api_platform/fake_core_resources/src",
+            "FakeModule\\": "tests/Unit/Resources/api_platform/fake_module_resources/fake_module/src"
         }
-    ],
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {

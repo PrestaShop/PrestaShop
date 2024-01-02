@@ -30,10 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Cart;
 use Context;
+use Controller;
 use Country;
 use Currency;
 use Customer;
 use Language;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use Shop;
 
 /**
@@ -44,13 +47,15 @@ use Shop;
  *  Legacy requires Context properties (currency, country etc.) instead of using cart properties
  *  so some context props must be changed for a while and then restored to previous state.
  */
-final class ContextStateManager
+class ContextStateManager
 {
     private const MANAGED_FIELDS = [
         'cart',
+        'controller',
         'country',
         'currency',
         'language',
+        'currentLocale',
         'customer',
         'shop',
         'shopContext',
@@ -93,6 +98,19 @@ final class ContextStateManager
     {
         $this->saveContextField('cart');
         $this->getContext()->cart = $cart;
+
+        return $this;
+    }
+
+    /**
+     * Sets context controller and saves previous value
+     *
+     * @return $this
+     */
+    public function setController(LegacyControllerContext|Controller|null $legacyController): self
+    {
+        $this->saveContextField('controller');
+        $this->getContext()->controller = $legacyController;
 
         return $this;
     }
@@ -141,6 +159,21 @@ final class ContextStateManager
         if ($language) {
             $this->getContext()->getTranslator()->setLocale($language->locale);
         }
+
+        return $this;
+    }
+
+    /**
+     * Sets context localization locale and saves previous value
+     *
+     * @param LocaleInterface|null $locale
+     *
+     * @return $this
+     */
+    public function setCurrentLocale(?LocaleInterface $locale): self
+    {
+        $this->saveContextField('currentLocale');
+        $this->getContext()->currentLocale = $locale;
 
         return $this;
     }

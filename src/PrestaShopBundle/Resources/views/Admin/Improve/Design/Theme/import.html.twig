@@ -22,23 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% form_theme importThemeForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
-
-{% set layoutTitle = 'Theme & Logo'|trans({}, 'Admin.Navigation.Menu') ~ ' > ' ~ 'Theme'|trans({}, 'Admin.Design.Feature') %}
-{% set layoutHeaderToolbarBtn = {
-  'add': {
-    'href': path('admin_themes_import'),
-    'desc': 'Add new theme'|trans({}, 'Admin.Design.Feature'),
-    'icon': 'add'
-  },
-  'export': {
-    'href': path('admin_themes_export_current'),
-    'desc': 'Export current theme'|trans({}, 'Admin.Design.Feature'),
-    'icon': 'cloud_download'
-  }
-} %}
 
 {% block content %}
 
@@ -58,7 +43,7 @@
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-end">
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" data-role="computer-import-button">
               <i class="material-icons">cloud_upload</i>
               {{ 'Save'|trans({}, 'Admin.Actions') }}
             </button>
@@ -80,7 +65,7 @@
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-end">
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" data-role="web-import-button">
               <i class="material-icons">cloud_upload</i>
               {{ 'Save'|trans({}, 'Admin.Actions') }}
             </button>
@@ -102,7 +87,7 @@
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-end">
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" data-role="ftp-import-button">
               <i class="material-icons">cloud_upload</i>
               {{ 'Save'|trans({}, 'Admin.Actions') }}
             </button>

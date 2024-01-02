@@ -28,7 +28,7 @@ class LoginPage extends FOBasePage {
 
   protected displayRegisterFormLink: string;
 
-  private readonly passwordReminderLink: string;
+  protected passwordReminderLink: string;
 
   private readonly showPasswordButton: string;
 
@@ -38,8 +38,8 @@ class LoginPage extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on login page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Login';
     this.loginErrorText = 'Authentication failed.';
@@ -74,7 +74,7 @@ class LoginPage extends FOBasePage {
       await this.clickAndWaitForLoadState(page, this.signInButton);
       await this.elementNotVisible(page, this.signInButton, 2000);
     } else {
-      await page.click(this.signInButton);
+      await page.locator(this.signInButton).click();
     }
   }
 

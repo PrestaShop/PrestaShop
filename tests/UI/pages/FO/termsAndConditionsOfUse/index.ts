@@ -5,18 +5,19 @@ import FOBasePage from '@pages/FO/FObasePage';
  * @class
  * @extends FOBasePage
  */
-class TermsAndConditionsOfUse extends FOBasePage {
+class TermsAndConditionsOfUsePage extends FOBasePage {
   public readonly pageTitle: string;
 
   /**
    * @constructs
    * Setting up texts and selectors to use on terms and conditions of use page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Terms and conditions of use';
   }
 }
 
-export default new TermsAndConditionsOfUse();
+const termsAndConditionsOfUsePage = new TermsAndConditionsOfUsePage();
+export {termsAndConditionsOfUsePage, TermsAndConditionsOfUsePage};

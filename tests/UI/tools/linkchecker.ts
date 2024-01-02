@@ -147,7 +147,7 @@ describe('Crawl every page for defects and issues', async () => {
           }
 
           // Print all errors
-          await expect(somethingFailed, `List of errors : \n${errors}`).to.be.false;
+          expect(somethingFailed, `List of errors : \n${errors}`).to.eq(false);
         });
       });
     });

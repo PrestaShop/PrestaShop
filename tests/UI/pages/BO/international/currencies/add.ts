@@ -13,6 +13,10 @@ import type {Page} from 'playwright';
 class AddCurrency extends LocalizationBasePage {
   public readonly pageTitle: string;
 
+  public readonly pageTitleEdit: (currency: string) => string;
+
+  public readonly editCurrencyPage: string;
+
   public readonly resetCurrencyFormatMessage: string;
 
   private readonly currencySelect: string;
@@ -66,7 +70,9 @@ class AddCurrency extends LocalizationBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Currencies • ';
+    this.pageTitle = `New currency • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = (currency: string) => `Editing currency ${currency} • ${global.INSTALL.SHOP_NAME}`;
+    this.editCurrencyPage = 'Editing currency';
     this.resetCurrencyFormatMessage = 'Your symbol and format customizations have been successfully reset for this language.';
 
     // Selectors
@@ -116,7 +122,7 @@ class AddCurrency extends LocalizationBasePage {
    */
   async addOfficialCurrency(page: Page, currencyData: CurrencyData): Promise<string> {
     // Select currency
-    await page.selectOption(this.currencySelect, currencyData.isoCode);
+    await this.selectByValue(page, this.currencySelect, currencyData.isoCode);
     await this.waitForVisibleSelector(page, `${this.currencyLoadingModal}.show`);
     // Waiting for currency to be loaded : 10 sec max
     // To check if modal still exist
@@ -222,7 +228,7 @@ class AddCurrency extends LocalizationBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page: Page): Promise<number> {
-    return (await page.$$(this.currencyFormatRows)).length;
+    return page.locator(this.currencyFormatRows).count();
   }
 
   /**
@@ -243,7 +249,7 @@ class AddCurrency extends LocalizationBasePage {
    * @return {boolean} Return if the modal is visible
    */
   async editCurrencyFormat(page: Page, row: number): Promise<boolean> {
-    await page.click(this.currencyFormatEdit(row));
+    await page.locator(this.currencyFormatEdit(row)).click();
 
     return this.elementVisible(page, this.currencyFormatEditModal, 2000);
   }
@@ -252,10 +258,10 @@ class AddCurrency extends LocalizationBasePage {
    * Click on the edit and displays the modal
    * @param {Page} page
    * @param {number} row
-   * @return {string} Return the message of the grow
+   * @return {string} Return the message of the growl
    */
   async resetCurrencyFormat(page: Page, row: number): Promise<string|null> {
-    await page.click(this.currencyFormatReset(row));
+    await page.locator(this.currencyFormatReset(row)).click();
 
     return this.getGrowlMessageContent(page);
   }
@@ -278,7 +284,7 @@ class AddCurrency extends LocalizationBasePage {
    * @return {void}
    */
   async setCurrencyFormatFormat(page: Page, format: CurrencyFormat): Promise<void> {
-    await page.click(this.currencyFormatEditFormatRadio(format));
+    await page.locator(this.currencyFormatEditFormatRadio(format)).click();
   }
 
   /**
@@ -287,7 +293,7 @@ class AddCurrency extends LocalizationBasePage {
    * @return {void}
    */
   async saveCurrencyFormat(page: Page): Promise<void> {
-    await page.click(this.currencyFormatEditSubmit);
+    await page.locator(this.currencyFormatEditSubmit).click();
   }
 
   /**
@@ -295,7 +301,7 @@ class AddCurrency extends LocalizationBasePage {
    * @param {Page} page
    */
   async restoreDefaultSettings(page: Page): Promise<boolean> {
-    await page.click(this.restoreDefaultSettingsButton);
+    await page.locator(this.restoreDefaultSettingsButton).click();
 
     const isVisible = this.elementVisible(page, `${this.restoreDefaultSettingsModal}.show`, 2000);
 

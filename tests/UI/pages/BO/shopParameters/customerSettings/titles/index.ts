@@ -20,7 +20,13 @@ class Titles extends BOBasePage {
 
   private readonly gridTable: string;
 
+  private readonly gridPanel: string;
+
+  private readonly gridTitle: string;
+
   private readonly filterRow: string;
+
+  private readonly filterSelectAll: string;
 
   private readonly filterColumn: (filterBy: string) => string;
 
@@ -54,15 +60,23 @@ class Titles extends BOBasePage {
 
   private readonly deleteModalButtonYes: string;
 
-  private readonly bulkActionBlock: string;
+  private readonly bulkActionsToggleButton: string;
 
-  private readonly bulkActionMenuButton: string;
+  private readonly deleteSelectionButton: string;
 
-  private readonly bulkActionDropdownMenu: string;
+  private readonly tableHead: string;
 
-  private readonly selectAllLink: string;
+  private readonly sortColumnDiv: (column: string) => string;
 
-  private readonly bulkDeleteLink: string;
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
 
   /**
    * @constructs
@@ -72,11 +86,11 @@ class Titles extends BOBasePage {
     super();
 
     this.pageTitle = 'Titles •';
-
-    this.alertSuccessBlockParagraph = '.alert-success';
+    this.successfulUpdateMessage = 'Update successful';
+    this.successfulMultiDeleteMessage = 'Successful deletion';
 
     // Header selectors
-    this.newTitleLink = 'a[data-role=page-header-desc-gender-link]';
+    this.newTitleLink = '#page-header-desc-configuration-add[title=\'Add new title\']';
 
     // Form selectors
     this.gridForm = '#form-gender';
@@ -84,13 +98,16 @@ class Titles extends BOBasePage {
     this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
 
     // Table selectors
-    this.gridTable = '#table-gender';
+    this.gridTable = '#title_grid';
+    this.gridPanel = '#title_grid_panel';
+    this.gridTitle = `${this.gridPanel} h3.card-header-title`;
 
     // Filter selectors
-    this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='genderFilter_${filterBy}']`;
-    this.filterSearchButton = '#submitFilterButtongender';
-    this.filterResetButton = 'button[name=\'submitResetgender\']';
+    this.filterRow = `${this.gridTable} tr.column-filters`;
+    this.filterSelectAll = `${this.filterRow} td[data-column-id="title_bulk"] .md-checkbox label`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='title[${filterBy}]']`;
+    this.filterSearchButton = `${this.filterRow} button[name='title[actions][search]']`;
+    this.filterResetButton = `${this.filterRow} button[name='title[actions][reset]']`;
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
@@ -105,20 +122,28 @@ class Titles extends BOBasePage {
 
     // Row actions selectors
     this.tableColumnActions = (row:number) => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = (row:number) => `${this.tableColumnActions(row)} a.edit`;
-    this.tableColumnActionsToggleButton = (row:number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsEditLink = (row:number) => `${this.tableColumnActions(row)} a.grid-edit-row-link`;
+    this.tableColumnActionsToggleButton = (row:number) => `${this.tableColumnActions(row)} a.dropdown-toggle`;
     this.tableColumnActionsDropdownMenu = (row:number) => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = (row:number) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActionsDeleteLink = (row:number) => `${this.tableColumnActionsDropdownMenu(row)} a.grid-delete-row-link`;
 
     // Confirmation modal
-    this.deleteModalButtonYes = '#popup_ok';
+    this.deleteModalButtonYes = '#title-grid-confirm-modal button.btn-confirm-submit';
 
     // Bulk actions selectors
-    this.bulkActionBlock = 'div.bulk-actions';
-    this.bulkActionMenuButton = '#bulk_action_menu_gender';
-    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
-    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
-    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.deleteSelectionButton = `${this.gridPanel} #title_grid_bulk_action_delete_selection`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridPanel} thead`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.gridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.gridPanel} div.pagination-block li.next`;
+    this.paginationPreviousLink = `${this.gridPanel} div.pagination-block li.previous`;
   }
 
   /* Header methods */
@@ -143,8 +168,6 @@ class Titles extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTitles(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
-    const currentUrl: string = page.url();
-
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
@@ -152,10 +175,8 @@ class Titles extends BOBasePage {
         break;
 
       case 'select':
-        await Promise.all([
-          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value),
-        ]);
+        await this.selectByVisibleText(page, this.filterColumn(filterBy), value);
+        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       default:
@@ -180,8 +201,8 @@ class Titles extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  getNumberOfElementInGrid(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.gridTitle);
   }
 
   /**
@@ -211,11 +232,11 @@ class Titles extends BOBasePage {
         columnSelector = this.tableColumnId(row);
         break;
 
-      case 'b!name':
+      case 'name':
         columnSelector = this.tableColumnTitle(row);
         break;
 
-      case 'a!type':
+      case 'type':
         columnSelector = this.tableColumnGender(row);
         break;
 
@@ -224,6 +245,24 @@ class Titles extends BOBasePage {
     }
 
     return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Get content from all rows
+   * @param page {Page} Browser tab
+   * @param column {string} Column to get text value
+   * @return {Promise<Array<string>>}
+   */
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable: string[] = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, column);
+      allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
   }
 
   /**
@@ -244,11 +283,11 @@ class Titles extends BOBasePage {
    */
   async deleteTitle(page: Page, row: number): Promise<string> {
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
+      page.locator(this.tableColumnActionsToggleButton(row)).click(),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.locator(this.tableColumnActionsDeleteLink(row)).click();
 
     // Confirm delete action
     await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
@@ -265,30 +304,95 @@ class Titles extends BOBasePage {
    * @return {Promise<string>}
    */
   async bulkDeleteTitles(page: Page): Promise<string> {
-    // To confirm bulk delete action with dialog
-    await this.dialogListener(page, true);
-
     // Select all rows
+    await page.locator(this.filterSelectAll).evaluate((el: HTMLElement) => el.click());
+    await this.waitForVisibleSelector(page, this.bulkActionsToggleButton);
+
+    // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
-      this.waitForVisibleSelector(page, this.selectAllLink),
+      page.locator(this.bulkActionsToggleButton).click(),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
+    // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.selectAllLink),
-      this.waitForHiddenSelector(page, this.selectAllLink),
+      page.locator(this.deleteSelectionButton).click(),
+      this.waitForVisibleSelector(page, this.deleteModalButtonYes),
     ]);
-
-    // Perform delete
-    await Promise.all([
-      page.click(this.bulkActionMenuButton),
-      this.waitForVisibleSelector(page, this.bulkDeleteLink),
-    ]);
-
-    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
+    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table by clicking on column name
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i: number = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getPaginationLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    const currentUrl: string = page.url();
+
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
+    ]);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page: Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
   }
 }
 

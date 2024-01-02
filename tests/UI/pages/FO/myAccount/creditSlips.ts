@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class CreditSlip extends FOBasePage {
+class CreditSlipPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly noCreditSlipsInfoMessage: string;
@@ -30,8 +30,8 @@ class CreditSlip extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on credit slip page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     // Title
     this.pageTitle = 'Credit slip';
@@ -60,7 +60,7 @@ class CreditSlip extends FOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfCreditSlips(page: Page): Promise<number> {
-    return (await page.$$(this.creditSlipsTableRows)).length;
+    return page.locator(this.creditSlipsTableRows).count();
   }
 
   /**
@@ -141,4 +141,5 @@ class CreditSlip extends FOBasePage {
   }
 }
 
-export default new CreditSlip();
+const creditSlipPage = new CreditSlipPage();
+export {creditSlipPage, CreditSlipPage};

@@ -297,8 +297,6 @@ abstract class PaymentModuleCore extends Module
         foreach ($cart_delivery_option as $id_address => $key_carriers) {
             foreach ($delivery_option_list[$id_address][$key_carriers]['carrier_list'] as $id_carrier => $data) {
                 foreach ($data['package_list'] as $id_package) {
-                    // Rewrite the id_warehouse
-                    $package_list[$id_address][$id_package]['id_warehouse'] = (int) $this->context->cart->getPackageIdWarehouse($package_list[$id_address][$id_package], (int) $id_carrier);
                     $package_list[$id_address][$id_package]['id_carrier'] = $id_carrier;
                 }
             }
@@ -315,7 +313,7 @@ abstract class PaymentModuleCore extends Module
                         Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name=' . urlencode($rule->code));
                     } else {
                         $rule_name = isset($rule->name[(int) $this->context->cart->id_lang]) ? $rule->name[(int) $this->context->cart->id_lang] : $rule->code;
-                        $error = $this->trans('The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart', [$rule_name, (int) $rule->id], 'Admin.Payment.Notification');
+                        $error = $this->trans('The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart', [htmlspecialchars($rule_name), (int) $rule->id], 'Admin.Payment.Notification');
                         PrestaShopLogger::addLog($error, 3, 2, 'Cart', (int) $this->context->cart->id);
                     }
                 }
@@ -346,7 +344,7 @@ abstract class PaymentModuleCore extends Module
                     $this->name,
                     $dont_touch_amount,
                     $amount_paid,
-                    $package_list[$id_address][$id_package]['id_warehouse'],
+                    0,
                     $cart_total_paid,
                     self::DEBUG_MODE,
                     $order_status,
@@ -723,18 +721,6 @@ abstract class PaymentModuleCore extends Module
                 }
             }
 
-            // updates stock in shops
-            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                $product_list = $order->getProducts();
-                foreach ($product_list as $product) {
-                    // if the available quantities depends on the physical stock
-                    if (StockAvailable::dependsOnStock($product['product_id'])) {
-                        // synchronizes
-                        StockAvailable::synchronize($product['product_id'], $order->id_shop);
-                    }
-                }
-            }
-
             $order->updateOrderDetailTax();
 
             // sync all stock
@@ -1006,7 +992,6 @@ abstract class PaymentModuleCore extends Module
         $order->recyclable = $cart->recyclable;
         $order->gift = (bool) $cart->gift;
         $order->gift_message = $cart->gift_message;
-        $order->mobile_theme = $cart->mobile_theme;
         $order->conversion_rate = $currency->conversion_rate;
         $amount_paid = !$dont_touch_amount ? Tools::ps_round((float) $amount_paid, $computingPrecision) : $amount_paid;
         $order->total_paid_real = 0;
@@ -1102,7 +1087,7 @@ abstract class PaymentModuleCore extends Module
 
         // Insert new Order detail list using cart for the current order
         $order_detail = new OrderDetail(null, null, $context);
-        $order_detail->createList($order, $cart, $id_order_state, $order->product_list, 0, true, $warehouseId);
+        $order_detail->createList($order, $cart, $id_order_state, $order->product_list, 0, true);
 
         if ($debug) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - OrderCarrier is about to be added', 1, null, 'Cart', (int) $cart->id, true);

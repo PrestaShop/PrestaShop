@@ -9,9 +9,9 @@ import {Page} from 'playwright';
 class FeatureFlag extends BOBasePage {
   public readonly pageTitle: string;
 
-  public readonly featureFlagProductPageV2: string;
-
   public readonly featureFlagMultipleImageFormats: string;
+
+  public readonly featureFlagAuthorizationServer: string;
 
   private readonly featureFlagSwitchButton: (status: string, feature: string, toggle: number) => string;
 
@@ -21,7 +21,7 @@ class FeatureFlag extends BOBasePage {
 
   private readonly modalSubmitFeatureFlag: string;
 
-  private readonly enableExperimentalfeatureButton: string;
+  private readonly enableExperimentalFeatureButton: string;
 
   /**
    * @constructs
@@ -30,20 +30,19 @@ class FeatureFlag extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = `New & Experimental Features • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitle = `New & experimental features • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateMessage = 'Update successful';
 
     // Feature Flag
-    this.featureFlagProductPageV2 = 'product_page_v2';
     this.featureFlagMultipleImageFormats = 'multiple_image_format';
-
+    this.featureFlagAuthorizationServer = 'authorization_server';
     // Selectors
     this.featureFlagSwitchButton = (status: string, feature: string, toggle: number) => `#feature_flag_${
       status}_feature_flags_${feature}_enabled_${toggle}`;
     this.submitButton = (status: string) => `#feature_flag_${status}_submit`;
     this.alertSuccess = 'div.alert.alert-success[role="alert"]';
     this.modalSubmitFeatureFlag = '#modal-confirm-submit-feature-flag';
-    this.enableExperimentalfeatureButton = `${this.modalSubmitFeatureFlag} button.btn-confirm-submit`;
+    this.enableExperimentalFeatureButton = `${this.modalSubmitFeatureFlag} button.btn-confirm-submit`;
   }
 
   /**
@@ -60,8 +59,8 @@ class FeatureFlag extends BOBasePage {
       case this.featureFlagMultipleImageFormats:
         isStable = true;
         break;
-      case this.featureFlagProductPageV2:
-        isStable = true;
+      case this.featureFlagAuthorizationServer:
+        isStable = false;
         break;
       default:
         throw new Error(`The feature flag ${featureFlag} is not defined`);
@@ -81,10 +80,10 @@ class FeatureFlag extends BOBasePage {
     // The confirmation modal is only displayed for experimental/beta feature flags
     if (toEnable && !isStable) {
       await this.waitForVisibleSelector(page, this.modalSubmitFeatureFlag);
-      await this.clickAndWaitForURL(page, this.enableExperimentalfeatureButton);
+      await this.clickAndWaitForLoadState(page, this.enableExperimentalFeatureButton);
     }
 
-    return this.getTextContent(page, this.alertSuccess);
+    return this.getTextContent(page, this.alertSuccess, true);
   }
 }
 

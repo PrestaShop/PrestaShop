@@ -64,7 +64,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('SEO & URLs', [], 'Admin.Navigation.Menu');
+        return $this->trans('Meta configuration', [], 'Admin.Navigation.Menu');
     }
 
     /**

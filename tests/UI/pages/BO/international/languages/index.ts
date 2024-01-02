@@ -253,7 +253,7 @@ class Languages extends LocalizationBasePage {
    */
   async deleteLanguage(page: Page, row: number = 1): Promise<string> {
     await Promise.all([
-      page.click(this.dropdownToggleButton(row)),
+      page.locator(this.dropdownToggleButton(row)).click(),
       this.waitForVisibleSelector(
         page,
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
@@ -262,7 +262,7 @@ class Languages extends LocalizationBasePage {
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.deleteRowLink(row)),
+      page.locator(this.deleteRowLink(row)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteLanguages(page);
@@ -297,7 +297,7 @@ class Languages extends LocalizationBasePage {
    */
   async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
-      await page.click(this.statusColumn(row));
+      await page.locator(this.statusColumn(row)).click();
 
       return true;
     }
@@ -315,16 +315,16 @@ class Languages extends LocalizationBasePage {
   async bulkSetStatus(page: Page, toEnable: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsLabel).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
-    await page.click(toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await page.locator(toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton).click();
     await this.elementNotVisible(page, toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -338,17 +338,17 @@ class Languages extends LocalizationBasePage {
   async deleteWithBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsLabel).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.bulkActionsDeleteButton),
+      page.locator(this.bulkActionsDeleteButton).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteLanguages(page);
@@ -362,7 +362,7 @@ class Languages extends LocalizationBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteLanguages(page: Page): Promise<void> {
-    await page.click(this.confirmDeleteButton);
+    await page.locator(this.confirmDeleteButton).click();
     await this.elementNotVisible(page, this.confirmDeleteButton, 2000);
   }
 

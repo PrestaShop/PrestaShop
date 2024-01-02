@@ -12,7 +12,7 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import contactUsPage from '@pages/FO/contactUs';
+import {contactUsPage} from '@pages/FO/contactUs';
 import {homePage} from '@pages/FO/home';
 
 // Import data
@@ -56,7 +56,7 @@ describe('BO - Customer Service : View message', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to contact us page', async function () {
@@ -66,7 +66,7 @@ describe('BO - Customer Service : View message', async () => {
       await homePage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      expect(pageTitle).to.equal(contactUsPage.pageTitle);
     });
 
     it('should send message to customer service', async function () {
@@ -75,7 +75,7 @@ describe('BO - Customer Service : View message', async () => {
       await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
 
       const validationMessage = await contactUsPage.getAlertSuccess(page);
-      await expect(validationMessage).to.equal(contactUsPage.validationMessage);
+      expect(validationMessage).to.equal(contactUsPage.validationMessage);
     });
   });
 
@@ -94,14 +94,14 @@ describe('BO - Customer Service : View message', async () => {
       );
 
       const pageTitle = await customerServicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
 
     it('should get the customer service id and the date', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getMessageID', baseContext);
 
       idCustomer = await customerServicePage.getTextColumn(page, 1, 'id_customer_thread');
-      await expect(parseInt(idCustomer, 10)).to.be.at.least(0);
+      expect(parseInt(idCustomer, 10)).to.be.at.least(0);
 
       messageDateTime = await customerServicePage.getTextColumn(page, 1, 'date');
     });
@@ -112,14 +112,14 @@ describe('BO - Customer Service : View message', async () => {
       await customerServicePage.goToViewMessagePage(page);
 
       const pageTitle = await viewPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewPage.pageTitle);
+      expect(pageTitle).to.contains(viewPage.pageTitle);
     });
 
     it('should check the thread form', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThreadForm', baseContext);
 
       const badgeNumber = await viewPage.getBadgeNumber(page);
-      await expect(badgeNumber).to.contains(idCustomer);
+      expect(badgeNumber).to.contains(idCustomer);
 
       const text = await viewPage.getCustomerMessage(page);
       expect(text).to.contains(contactUsData.emailAddress);
@@ -163,14 +163,14 @@ describe('BO - Customer Service : View message', async () => {
       );
 
       const pageTitle = await customerServicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
 
     it('should delete the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
       const textResult = await customerServicePage.deleteMessage(page, 1);
-      await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+      expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
     });
   });
 });

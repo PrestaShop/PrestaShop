@@ -60,7 +60,7 @@ $(() => {
     }
   }
 
-  $(document).ready(() => {
+  $(() => {
     if (!$(FormMap.sendEmailSelector).is(':checked')) {
       $(FormMap.mailTemplateSelector).hide();
     }

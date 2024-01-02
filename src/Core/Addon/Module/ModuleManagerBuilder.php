@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,25 +27,18 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
-use Db;
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use PrestaShop\PrestaShop\Adapter\HookManager;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
-use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Router;
@@ -66,12 +58,9 @@ class ModuleManagerBuilder
      */
     public static $moduleManager = null;
     public static $adminModuleDataProvider = null;
-    public static $lecacyContext;
     public static $legacyLogger = null;
     public static $moduleDataProvider = null;
-    public static $moduleDataUpdater = null;
     public static $translator = null;
-    public static $categoriesProvider = null;
     public static $instance = null;
     public static $cacheProvider = null;
 
@@ -102,7 +91,7 @@ class ModuleManagerBuilder
         if (null === self::$moduleManager) {
             $sfContainer = SymfonyContainer::getInstance();
             if (null !== $sfContainer) {
-                self::$moduleManager = $sfContainer->get('prestashop.module.manager');
+                self::$moduleManager = $sfContainer->get(ModuleManager::class);
             } else {
                 self::$moduleManager = new ModuleManager(
                     $this->buildRepository(),
@@ -129,7 +118,7 @@ class ModuleManagerBuilder
         if (null === self::$modulesRepository) {
             $sfContainer = SymfonyContainer::getInstance();
             if (null !== $sfContainer) {
-                self::$modulesRepository = $sfContainer->get('prestashop.core.admin.module.repository');
+                self::$modulesRepository = $sfContainer->get(ModuleRepository::class);
             } else {
                 self::$modulesRepository = new ModuleRepository(
                     self::$moduleDataProvider,
@@ -160,10 +149,6 @@ class ModuleManagerBuilder
             return;
         }
 
-        $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
-
-        $prestashopAddonsConfig = $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
-
         $tools = new Tools();
         $tools->refreshCaCertFile();
 
@@ -171,7 +156,7 @@ class ModuleManagerBuilder
 
         $kernelDir = realpath($this->getConfigDir() . '/../../var');
         $cacheDir = $kernelDir . ($this->isDebug ? '/cache/dev' : '/cache/prod');
-        self::$cacheProvider = new DoctrineProvider(
+        self::$cacheProvider = DoctrineProvider::wrap(
             new FilesystemAdapter(
                 '',
                 0,
@@ -179,30 +164,16 @@ class ModuleManagerBuilder
             )
         );
 
-        $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
-        $themeName = Context::getContext()->shop->theme_name;
-        $themeModules = $themeName ?
-                        $themeManagerBuilder->buildRepository()->getInstanceByName($themeName)->getModulesToEnable() :
-                        [];
-
         self::$legacyLogger = new LegacyLogger();
-        self::$categoriesProvider = new CategoriesProvider(
-            $prestashopAddonsConfig['prestashop']['addons']['categories'],
-            $themeModules
-        );
-        self::$lecacyContext = new LegacyContext();
 
         if (null === self::$adminModuleDataProvider) {
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
-                self::$categoriesProvider,
                 self::$moduleDataProvider,
+                self::$translator,
                 Context::getContext()->employee
             );
             self::$adminModuleDataProvider->setRouter($this->getSymfonyRouter());
-
-            self::$translator = Context::getContext()->getTranslator();
-            self::$moduleDataUpdater = new ModuleDataUpdater();
         }
     }
 

@@ -27,51 +27,17 @@
   <h3 class="card-header">
     <i class="material-icons">shopping_cart</i>
     {{ 'Carts'|trans({}, 'Admin.Global') }}
-    <span class="badge badge-primary rounded">{{ customerInformation.cartsInformation|length }}</span>
+    <span class="badge badge-primary rounded">{{ customerCartGrid.data.records_total }}</span>
   </h3>
   <div class="card-body">
-    {% if customerInformation.cartsInformation is not empty %}
-      <table class="table">
-        <thead>
-          <tr>
-            <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Carrier'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Total'|trans({}, 'Admin.Global') }}</th>
-            <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for cart in customerInformation.cartsInformation %}
-          {% set cartViewUrl = getAdminLink('AdminCarts', true, {'id_cart': cart.cartId, 'viewcart': 1}) %}
-
-          <tr class="customer-cart">
-            <td class="customer-cart-id js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartId }}</td>
-            <td class="customer-cart-date js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartCreationDate }}</td>
-            <td class="customer-cart-carrier js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.carrierName }}</td>
-            <td class="customer-cart-total js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartTotal }}</td>
-            <td class="customer-cart-actions text-right">
-              <div class="btn-group-action">
-                <div class="btn-group">
-                  <a href="{{ cartViewUrl }}"
-                     class="btn tooltip-link dropdown-item grid-view-row-link"
-                     data-toggle="pstooltip"
-                     data-placement="top"
-                     data-original-title="{{ 'View'|trans({}, 'Admin.Actions') }}"
-                  >
-                    <i class="material-icons">zoom_in</i>
-                  </a>
-                </div>
-              </div>
-            </td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+    {% if customerCartGrid.data.records_total > 0 %}
+      {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerCartGrid} %}
     {% else %}
-      <p class="text-muted text-center mb-0">
-        {{ 'No cart is available'|trans({}, 'Admin.Orderscustomers.Notification') }}
-      </p>
+      <div class="text-center">
+        <p class="text-muted mb-2">
+          {{ '%firstname% %lastname% did not create any cart yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
+        </p> 
+      </div>
     {% endif %}
   </div>
 </div>

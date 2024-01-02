@@ -261,7 +261,7 @@ class TaxRules extends BOBasePage {
         throw new Error(`Filter ${filterBy} was not found`);
     }
     // click on search
-    await page.click(this.filterSearchButton);
+    await page.locator(this.filterSearchButton).click();
     await this.elementVisible(page, this.filterResetButton, 2000);
   }
 
@@ -273,7 +273,7 @@ class TaxRules extends BOBasePage {
    */
   async deleteTaxRule(page: Page, row: number = 1): Promise<string> {
     // Click on dropDown
-    await page.click(this.toggleDropDown(row));
+    await page.locator(this.toggleDropDown(row)).click();
     // Click on delete
     await this.clickAndWaitForURL(page, this.deleteRowLink(row));
     // Confirm delete action
@@ -381,10 +381,10 @@ class TaxRules extends BOBasePage {
    * @return {Promise<void>}
    */
   async bulkSelectRows(page: Page): Promise<void> {
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
 
     await Promise.all([
-      page.click(this.selectAllLink),
+      page.locator(this.selectAllLink).click(),
       this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
   }
@@ -400,7 +400,7 @@ class TaxRules extends BOBasePage {
     await this.bulkSelectRows(page);
 
     // Click on Button Bulk actions
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
 
     // Click on delete
     await this.clickAndWaitForURL(page, this.bulkDeleteLink);
@@ -419,7 +419,7 @@ class TaxRules extends BOBasePage {
     await this.bulkSelectRows(page);
 
     // Click on Button Bulk actions
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
 
     // Click to change status
     await this.clickAndWaitForURL(page, enable ? this.bulkEnableLink : this.bulkDisableLink);
@@ -448,7 +448,10 @@ class TaxRules extends BOBasePage {
    */
   async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
-      await page.$eval(`${this.tableColumnActive(row)} i`, (el: HTMLElement) => el.click());
+      await page
+        .locator(`${this.tableColumnActive(row)} i`)
+        .first()
+        .evaluate((el: HTMLElement) => el.click());
 
       return true;
     }

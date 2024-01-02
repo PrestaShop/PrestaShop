@@ -195,7 +195,7 @@ class CommandBuilder
 
         if (!method_exists($command, $setterMethod)) {
             throw new InvalidArgumentException(
-                sprintf('Setter method "%s" not found in command "%s"', $setterMethod, get_class($command))
+                sprintf('Setter method "%s" not found in command "%s"', $setterMethod, $command::class)
             );
         }
         $command->$setterMethod(...$setterArguments);

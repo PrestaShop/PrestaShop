@@ -50,7 +50,7 @@ describe('BO - Catalog - Categories : Export categories', async () => {
     await categoriesPage.closeSfToolBar(page);
 
     const pageTitle = await categoriesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+    expect(pageTitle).to.contains(categoriesPage.pageTitle);
   });
 
   it('should export categories to a csv file', async function () {
@@ -59,7 +59,7 @@ describe('BO - Catalog - Categories : Export categories', async () => {
     filePath = await categoriesPage.exportDataToCsv(page);
 
     const doesFileExist = await files.doesFileExist(filePath, 5000);
-    await expect(doesFileExist, 'Export of data has failed').to.be.true;
+    expect(doesFileExist, 'Export of data has failed').to.eq(true);
   });
 
   it('should check existence of categories data in csv file', async function () {
@@ -70,7 +70,7 @@ describe('BO - Catalog - Categories : Export categories', async () => {
     for (let row = 1; row <= numberOfCategories; row++) {
       const categoryInCsvFormat = await categoriesPage.getCategoryInCsvFormat(page, row);
       const textExist = await files.isTextInFile(filePath, categoryInCsvFormat, true);
-      await expect(textExist, `${categoryInCsvFormat} was not found in the file`).to.be.true;
+      expect(textExist, `${categoryInCsvFormat} was not found in the file`).to.eq(true);
     }
   });
 });

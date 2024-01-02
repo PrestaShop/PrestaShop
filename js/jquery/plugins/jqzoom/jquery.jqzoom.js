@@ -20,7 +20,6 @@
  */
 (function ($) {
     //GLOBAL VARIABLES
-    var isIE6 = ($.browser.msie && $.browser.version < 7);
     var body = $(document.body);
     var window = $(window);
     var jqzoompluging_disabled = false; //disabilita globalmente il plugin
@@ -456,10 +455,6 @@
                     'top': lenstop + 'px'
                 });
                 if (settings.zoomType == 'reverse') {
-                    if ($.browser.msie && $.browser.version > 7) {
-                        $(this.node).empty().append(this.image);
-                    }
-
                     $(this.image).css({
                         position: 'absolute',
                         display: 'block',
@@ -595,23 +590,6 @@
                     this.node.show();
                     break;
                 }
-                if (isIE6 && settings.zoomType != 'innerzoom') {
-                    this.ieframe.width = this.node.width();
-                    this.ieframe.height = this.node.height();
-                    this.ieframe.left = this.node.leftpos;
-                    this.ieframe.top = this.node.toppos;
-                    this.ieframe.css({
-                        display: 'block',
-                        position: "absolute",
-                        left: this.ieframe.left,
-                        top: this.ieframe.top,
-                        zIndex: 99,
-                        width: this.ieframe.width + 'px',
-                        height: this.ieframe.height + 'px'
-                    });
-                    $('.zoomPad', el).append(this.ieframe);
-                    this.ieframe.show();
-                };
             };
         };
 /*========================================================,

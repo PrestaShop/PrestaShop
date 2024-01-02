@@ -41,6 +41,10 @@ class CronJobs extends Module
     protected $_warnings;
 
     public $webservice_url = 'http://webcron.prestashop.com/crons';
+    /**
+     * @var string
+     */
+    public $display;
 
     public function __construct()
     {

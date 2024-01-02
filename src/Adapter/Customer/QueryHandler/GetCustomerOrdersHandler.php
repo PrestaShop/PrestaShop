@@ -30,6 +30,7 @@ use Currency;
 use Customer;
 use Order;
 use PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\AbstractCustomerHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerOrdersHandlerInterface;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 /**
  * Handles GetCustomerOrders query using legacy object models
  */
+#[AsQueryHandler]
 final class GetCustomerOrdersHandler extends AbstractCustomerHandler implements GetCustomerOrdersHandlerInterface
 {
     /**

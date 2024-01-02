@@ -29,153 +29,203 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\InstalledApiResourceScope;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ApiAccessRepository")
  * @ORM\Table()
- * @UniqueEntity("name")
  *
  * @experimental
  */
-class ApiAccess
+#[UniqueEntity('clientId')]
+#[UniqueEntity('clientName')]
+class ApiAccess implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
-     * @var int
-     *
      * @ORM\Id
-     * @ORM\Column(name="id_api_access", type="integer", options={"unsigned":true})
+     * @ORM\Column(name="id_api_access", type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    #[Assert\Positive]
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="client_id", type="string", length=255)
      */
-    private $clientId;
+    #[Assert\Length(max: 255)]
+    #[Assert\NotBlank]
+    private string $clientId;
 
     /**
-     * @var string
+     * @ORM\Column(name="client_name", type="string", length=255)
+     */
+    #[Assert\Length(max: 255)]
+    #[Assert\NotBlank]
+    private string $clientName;
+
+    /**
+     * We make the secret nullable for the moment because it prevents the first step of the feature to be implemented.
      *
-     * @ORM\Column(name="client_secret", type="string", length=255)
+     * @ORM\Column(name="client_secret", type="string", length=255, nullable=true)
      */
-    private $clientSecret;
+    #[Assert\Length(max: 255)]
+    private ?string $clientSecret;
 
     /**
-     * @var AuthorizedApplication
+     * @ORM\Column(name="enabled", type="boolean")
+     */
+    #[Assert\NotNull]
+    private bool $enabled;
+
+    /**
+     * @ORM\Column(name="scopes", type="json")
+     */
+    #[Assert\NotNull]
+    #[InstalledApiResourceScope]
+    private array $scopes = [];
+
+    /**
+     * @ORM\Column(name="description", type="string", options={"default": ""})
+     */
+    #[Assert\Length(max: 21844)]
+    private string $description;
+
+    /**
+     * Lifetime is in milliseconds. Default value is 3600 ms.
      *
-     * @ORM\ManyToOne(targetEntity=AuthorizedApplication::class)
-     * @ORM\JoinColumn(name="id_authorized_application", referencedColumnName="id_authorized_application", nullable=false, onDelete="CASCADE")
+     * @ORM\Column(name="lifetime", type="integer", options={"default": "3600"})
      */
-    private $authorizedApplication;
+    #[Assert\NotNull]
+    #[Assert\Positive]
+    private int $lifetime;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="active", type="boolean")
-     */
-    private $active;
-
-    /**
-     * @ORM\Column(name="scopes", type="array")
-     */
-    private $scopes = [];
-
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
+    public function setId(int $id): self
     {
         $this->id = $id;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getClientId(): string
     {
         return $this->clientId;
     }
 
-    /**
-     * @param string $clientId
-     */
-    public function setClientId(string $clientId): void
+    public function setClientId(string $clientId): self
     {
         $this->clientId = $clientId;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getClientSecret(): string
+    public function getClientName(): string
+    {
+        return $this->clientName;
+    }
+
+    public function setClientName(string $clientName): self
+    {
+        $this->clientName = $clientName;
+
+        return $this;
+    }
+
+    public function getClientSecret(): ?string
     {
         return $this->clientSecret;
     }
 
-    /**
-     * @param mixed $clientSecret
-     */
-    public function setClientSecret($clientSecret): void
+    public function setClientSecret(?string $clientSecret): self
     {
         $this->clientSecret = $clientSecret;
+
+        return $this;
     }
 
-    /**
-     * @return AuthorizedApplication
-     */
-    public function getAuthorizedApplication(): AuthorizedApplication
+    public function isEnabled(): bool
     {
-        return $this->authorizedApplication;
+        return $this->enabled;
     }
 
-    /**
-     * @param AuthorizedApplication $authorizedApplication
-     */
-    public function setAuthorizedApplication(AuthorizedApplication $authorizedApplication): void
+    public function setEnabled(bool $enabled): self
     {
-        $this->authorizedApplication = $authorizedApplication;
+        $this->enabled = $enabled;
+
+        return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
-    }
-
-    /**
-     * @param bool $active
-     */
-    public function setActive(bool $active): void
-    {
-        $this->active = $active;
-    }
-
-    /**
-     * @return array
-     */
     public function getScopes(): array
     {
         return $this->scopes;
     }
 
-    /**
-     * @param array $scopes
-     */
-    public function setScopes(array $scopes): void
+    public function setScopes(array $scopes): self
     {
         $this->scopes = $scopes;
+
+        return $this;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getLifetime(): int
+    {
+        return $this->lifetime;
+    }
+
+    public function setLifetime(int $lifetime): self
+    {
+        $this->lifetime = $lifetime;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return array_map(fn (string $scope): string => 'ROLE_' . strtoupper($scope), $this->getScopes());
+    }
+
+    public function getPassword(): string
+    {
+        return $this->getClientSecret();
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function eraseCredentials()
+    {
+        return null;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->getClientName();
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->getClientId();
     }
 }

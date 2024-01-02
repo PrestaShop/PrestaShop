@@ -72,7 +72,7 @@ $(function(){
 			}
 		});
 
-		panel_selection.find("button").click(function () {
+		panel_selection.find("button").on('click', function () {
 			$("button[name='unhookform']").trigger("click");
 		});
 
@@ -88,16 +88,16 @@ $(function(){
 
 		var show_modules = $("#show_modules");
 		show_modules.select2();
-		show_modules.bind("change", function () {
+		show_modules.on("change", function () {
 			modulesPositionFilterHooks();
 		});
 
 		var hook_position = $("#hook_position");
-		hook_position.bind("change", function () {
+		hook_position.on("change", function () {
 			modulesPositionFilterHooks();
 		});
 
-		$('#hook_search').bind('input', function () {
+		$('#hook_search').on('input', function () {
 			modulesPositionFilterHooks();
 		});
 
@@ -161,7 +161,7 @@ $(function(){
 	//
 	// Used for the anchor module page
 	//
-	$("#hook_module_form").find("select[name='id_module']").change(function(){
+	$("#hook_module_form").find("select[name='id_module']").on('change', function(){
 
 		var $this = $(this);
 		var hook_select = $("select[name='id_hook']");

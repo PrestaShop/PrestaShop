@@ -75,8 +75,8 @@ class CreditSlips extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Credit Slips •';
-    this.pageTitleFR = 'Avoirs •';
+    this.pageTitle = `Credit slips • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleFR = `Avoirs • ${global.INSTALL.SHOP_NAME}`;
     this.errorMessageWhenGenerateFileByDate = 'No order slips were found for this period.';
     this.successfulUpdateMessage = 'Update successful';
 
@@ -175,8 +175,8 @@ class CreditSlips extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterCreditSlipsByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
-    await page.type(this.creditSlipsFilterColumnInput('date_issued_from'), dateFrom);
-    await page.type(this.creditSlipsFilterColumnInput('date_issued_to'), dateTo);
+    await page.locator(this.creditSlipsFilterColumnInput('date_issued_from')).fill(dateFrom);
+    await page.locator(this.creditSlipsFilterColumnInput('date_issued_to')).fill(dateTo);
     // click on search
     await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
@@ -224,7 +224,7 @@ class CreditSlips extends BOBasePage {
    */
   async generatePDFByDateAndFail(page: Page, dateFrom: string = '', dateTo: string = ''): Promise<string> {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
-    await page.click(this.generatePdfByDateButton);
+    await page.locator(this.generatePdfByDateButton).click();
     return this.getAlertDangerBlockParagraphContent(page);
   }
 
@@ -275,7 +275,7 @@ class CreditSlips extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveCreditSlipOptions(page: Page): Promise<string> {
-    await page.click(this.saveCreditSlipOptionsButton);
+    await page.locator(this.saveCreditSlipOptionsButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

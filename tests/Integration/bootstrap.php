@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 define('_PS_IN_TEST_', true);
+define('_PS_API_FORCE_TLS_VERSION_', false);
 define('_PS_ROOT_DIR_', dirname(__DIR__, 2));
 define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/modules/');
 require_once dirname(__DIR__, 2) . '/vendor/smarty/smarty/libs/functions.php';

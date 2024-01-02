@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRulesGroupForEdi
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult\EditableTaxRulesGroup;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\TaxRuleFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxRulesGroupFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -109,6 +110,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'taxRulesGroupForm' => $taxRulesGroupForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'layoutTitle' => $this->trans('New tax rule', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -122,10 +124,11 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param int $taxRulesGroupId
+     * @param TaxRuleFilters $filters
      *
      * @return Response
      */
-    public function editAction(Request $request, int $taxRulesGroupId): Response
+    public function editAction(Request $request, int $taxRulesGroupId, TaxRuleFilters $filters): Response
     {
         $taxRulesGroupForm = null;
 
@@ -148,11 +151,16 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
+        $filters->addFilter(['taxRulesGroupId' => $taxRulesGroupId]);
+        $taxRuleGridFactory = $this->get('prestashop.core.grid.factory.tax_rule');
+        $taxRuleGrid = $taxRuleGridFactory->getGrid($filters);
+
         return $this->render('@PrestaShop/Admin/Improve/International/TaxRulesGroup/edit.html.twig', [
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Edit: %value%', 'Admin.Actions', ['%value%' => $taxRulesGroupForm->getData()['name']]),
+            'layoutTitle' => $this->trans('Editing tax rule %value%', 'Admin.Navigation.Menu', ['%value%' => $taxRulesGroupForm->getData()['name']]),
             'taxRulesGroupForm' => $taxRulesGroupForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'taxRuleGrid' => $this->presentGrid($taxRuleGrid),
         ]);
     }
 
@@ -312,11 +320,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      */
     private function getBulkTaxRulesGroupFromRequest(Request $request): array
     {
-        $taxRulesGroupIds = $request->request->get('tax_rules_group_bulk');
-
-        if (!is_array($taxRulesGroupIds)) {
-            return [];
-        }
+        $taxRulesGroupIds = $request->request->all('tax_rules_group_bulk');
 
         return array_map('intval', $taxRulesGroupIds);
     }
@@ -330,7 +334,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_tax_rules_groups_create'),
-            'desc' => $this->trans('Add new tax rules group', 'Admin.International.Feature'),
+            'desc' => $this->trans('Add new tax rule', 'Admin.International.Feature'),
             'icon' => 'add_circle_outline',
         ];
 

@@ -30,19 +30,28 @@ namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 
 class FeatureFlagSettings
 {
+    /**
+     * Stability consts
+     */
     public const STABILITY_STABLE = 'stable';
     public const STABILITY_BETA = 'beta';
 
     /**
-     * @deprecated Deprecated in 8.1 will be removed in next major.
+     * Type consts
      */
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2 = 'product_page_v2';
+    public const TYPE_DEFAULT = 'env,dotenv,db';
+    public const TYPE_ENV = 'env';
+    public const TYPE_QUERY = 'query';
+    public const TYPE_DOTENV = 'dotenv';
+    public const TYPE_DB = 'db';
 
     /**
-     * @deprecated Deprecated in 8.1 will be removed in next major.
+     * Prefix for DotEnv & Env Layers
      */
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP = 'product_page_v2_multi_shop';
+    public const PREFIX = 'PS_FF_';
 
     public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
     public const FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT = 'multiple_image_format';
+    public const FEATURE_FLAG_SYMFONY_LAYOUT = 'symfony_layout';
+    public const FEATURE_FLAG_FRONT_CONTAINER_V2 = 'front_container_v2';
 }

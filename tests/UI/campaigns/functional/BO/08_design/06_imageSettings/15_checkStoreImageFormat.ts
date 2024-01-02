@@ -4,7 +4,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
@@ -16,7 +16,7 @@ import storesPage from '@pages/BO/shopParameters/stores';
 import createStoresPage from '@pages/BO/shopParameters/stores/add';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
-import storePage from '@pages/FO/stores';
+import {storesPage as storePage} from '@pages/FO/stores';
 
 // Import data
 import StoreData from '@data/faker/store';
@@ -85,7 +85,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
       await imageSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await imageSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
     });
 
     it('should enable WebP image format', async function () {
@@ -100,15 +100,15 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
 
       // JPEG/PNG should be checked
       const jpegChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'jpg');
-      await expect(jpegChecked).to.be.true;
+      expect(jpegChecked).to.eq(true);
 
       // JPEG/PNG should be checked
       const jpegDisabled = await imageSettingsPage.isImageFormatToGenerateDisabled(page, 'jpg');
-      await expect(jpegDisabled).to.be.true;
+      expect(jpegDisabled).to.eq(true);
 
       // WebP should be checked
       const webpChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'webp');
-      await expect(webpChecked).to.be.true;
+      expect(webpChecked).to.eq(true);
     });
   });
 
@@ -132,7 +132,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
           await storePage.goToBO(page);
 
           const pageTitle = await dashboardPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+          expect(pageTitle).to.contains(dashboardPage.pageTitle);
         });
       }
 
@@ -147,7 +147,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         await contactPage.closeSfToolBar(page);
 
         const pageTitle = await contactPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(contactPage.pageTitle);
+        expect(pageTitle).to.contains(contactPage.pageTitle);
       });
 
       it('should go to \'Stores\' tab', async function () {
@@ -156,7 +156,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         await contactPage.goToStoresPage(page);
 
         const pageTitle = await storesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(storesPage.pageTitle);
+        expect(pageTitle).to.contains(storesPage.pageTitle);
       });
 
       it('should click on \'Add new store\' button', async function () {
@@ -165,14 +165,14 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         await storesPage.goToNewStorePage(page);
 
         const pageTitle = await createStoresPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(createStoresPage.pageTitleCreate);
+        expect(pageTitle).to.contains(createStoresPage.pageTitleCreate);
       });
 
       it('should create a store', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createStore${arg.extOriginal}`, baseContext);
 
         const createMessage = await createStoresPage.createEditStore(page, arg.store);
-        await expect(createMessage).to.contains(storesPage.successfulCreationMessage);
+        expect(createMessage).to.contains(storesPage.successfulCreationMessage);
       });
 
       it('should search for the new store and fetch the ID', async function () {
@@ -187,7 +187,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         );
 
         const textColumn = await storesPage.getTextColumn(page, 1, 'sl!name');
-        await expect(textColumn).to.contains(arg.store.name);
+        expect(textColumn).to.contains(arg.store.name);
 
         idStore = parseInt(await storesPage.getTextColumn(page, 1, 'id_store'), 10);
       });
@@ -199,32 +199,32 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         const pathImageOrigJPG: string = `${files.getRootPath()}/img/st/${idStore}.jpg`;
 
         const fileExistsOrigJPG = await files.doesFileExist(pathImageOrigJPG);
-        await expect(fileExistsOrigJPG, `The file ${pathImageOrigJPG} doesn't exist!`).to.be.true;
+        expect(fileExistsOrigJPG, `The file ${pathImageOrigJPG} doesn't exist!`).to.eq(true);
 
-        const imageTypeOrigJPG = await files.getImageType(pathImageOrigJPG);
+        const imageTypeOrigJPG = await files.getFileType(pathImageOrigJPG);
 
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/32527
         if (arg.extOriginal !== 'png') {
-          await expect(imageTypeOrigJPG).to.be.eq(arg.extOriginal);
+          expect(imageTypeOrigJPG).to.be.eq(arg.extOriginal);
         }
 
         // Check the imageFormat file
         const pathImageJPG: string = `${files.getRootPath()}/img/st/${idStore}-stores_default.jpg`;
 
         const fileExistsJPG = await files.doesFileExist(pathImageJPG);
-        await expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.be.true;
+        expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.eq(true);
 
-        const imageTypeJPG = await files.getImageType(pathImageJPG);
-        await expect(imageTypeJPG).to.be.eq(arg.extOriginal);
+        const imageTypeJPG = await files.getFileType(pathImageJPG);
+        expect(imageTypeJPG).to.be.eq(arg.extOriginal);
 
         // Check the WebP file
         const pathImageWEBP: string = `${files.getRootPath()}/img/st/${idStore}-stores_default.webp`;
 
         const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
-        await expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.be.true;
+        expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
 
-        const imageTypeWEBP = await files.getImageType(pathImageWEBP);
-        await expect(imageTypeWEBP).to.be.eq('webp');
+        const imageTypeWEBP = await files.getFileType(pathImageWEBP);
+        expect(imageTypeWEBP).to.be.eq('webp');
       });
 
       it('should go to FO page', async function () {
@@ -234,7 +234,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         await homePage.changeLanguage(page, 'en');
 
         const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to Stores page', async function () {
@@ -243,7 +243,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         await homePage.goToFooterLink(page, 'Stores');
 
         const pageTitle = await storePage.getPageTitle(page);
-        await expect(pageTitle).to.be.eq(storePage.pageTitle);
+        expect(pageTitle).to.be.eq(storePage.pageTitle);
       });
 
       it('should check that the main image of the store is a WebP', async function () {
@@ -251,12 +251,12 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
 
         // Check the WebP file from the Stores page
         const quickViewImageMain = await storePage.getStoreImageMain(page, idStore);
-        await expect(quickViewImageMain).to.be.not.null;
+        expect(quickViewImageMain).to.not.eq(null);
 
         await files.downloadFile(quickViewImageMain as string, 'image.img');
 
-        const quickViewImageMainType = await files.getImageType('image.img');
-        await expect(quickViewImageMainType).to.be.eq('webp');
+        const quickViewImageMainType = await files.getFileType('image.img');
+        expect(quickViewImageMainType).to.be.eq('webp');
 
         await files.deleteFile('image.img');
 
@@ -264,10 +264,10 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         const pathImageWEBP: string = `${files.getRootPath()}/img/st/${idStore}-stores_default.webp`;
 
         const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
-        await expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.be.true;
+        expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
 
-        const imageTypeWEBP = await files.getImageType(pathImageWEBP);
-        await expect(imageTypeWEBP).to.be.eq('webp');
+        const imageTypeWEBP = await files.getFileType(pathImageWEBP);
+        expect(imageTypeWEBP).to.be.eq('webp');
       });
     });
   });
@@ -291,7 +291,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
           await storePage.goToBO(page);
 
           const pageTitle = await dashboardPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+          expect(pageTitle).to.contains(dashboardPage.pageTitle);
         });
 
         it('should go to \'Shop Parameters > Contact\' page', async function () {
@@ -305,7 +305,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
           await contactPage.closeSfToolBar(page);
 
           const pageTitle = await contactPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(contactPage.pageTitle);
+          expect(pageTitle).to.contains(contactPage.pageTitle);
         });
 
         it('should go to \'Stores\' tab', async function () {
@@ -314,7 +314,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
           await contactPage.goToStoresPage(page);
 
           const pageTitle = await storesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(storesPage.pageTitle);
+          expect(pageTitle).to.contains(storesPage.pageTitle);
         });
       }
 
@@ -325,14 +325,14 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         await storesPage.filterTable(page, 'input', 'sl!name', arg.store.name);
 
         const storeName = await storesPage.getTextColumn(page, 1, 'sl!name');
-        await expect(storeName).to.contains(arg.store.name);
+        expect(storeName).to.contains(arg.store.name);
       });
 
       it('should delete store', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteStore${arg.extension}`, baseContext);
 
         const textResult = await storesPage.deleteStore(page, 1);
-        await expect(textResult).to.contains(storesPage.successfulDeleteMessage);
+        expect(textResult).to.contains(storesPage.successfulDeleteMessage);
       });
     });
   });

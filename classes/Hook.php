@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 class HookCore extends ObjectModel
@@ -425,6 +426,9 @@ class HookCore extends ObjectModel
                     return static::coreCallHook($module, $methodName, $hookArgs);
                 }
             }
+        } catch (ModuleErrorInterface $e) {
+            // Exceptions that implements ModuleErrorInterface are usefull to display error messages
+            throw $e;
         } catch (Exception $e) {
             $environment = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Environment');
             if ($environment->isDebug()) {
@@ -853,7 +857,7 @@ class HookCore extends ObjectModel
                 $hookRegistry->collect();
             }
 
-            return ($array_return) ? [] : false;
+            return ($array_return) ? [] : null;
         }
 
         // Store list of executed hooks on this page
@@ -1046,7 +1050,7 @@ class HookCore extends ObjectModel
     public static function coreRenderWidget($module, $hook_name, $params)
     {
         $context = Context::getContext();
-        if (!Module::isEnabled($module->name) || $context->isMobile() && !Module::isEnabledForMobileDevices($module->name)) {
+        if (!Module::isEnabled($module->name)) {
             return null;
         }
 
@@ -1146,8 +1150,7 @@ class HookCore extends ObjectModel
                 Shop::addSqlAssociation(
                     'module',
                     'm',
-                    true,
-                    'module_shop.enable_device & ' . (int) Context::getContext()->getDevice()
+                    true
                 )
             );
         } else {
@@ -1267,7 +1270,7 @@ class HookCore extends ObjectModel
     {
         $cacheId = 'hook_idsbyname';
         if ($withAliases) {
-            $cacheId .= 'hook_idsbyname_withalias';
+            $cacheId = 'hook_idsbyname_withalias';
         }
 
         if (!$refreshCache && Cache::isStored($cacheId)) {

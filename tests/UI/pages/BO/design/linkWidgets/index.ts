@@ -87,10 +87,10 @@ class LinkList extends BOBasePage {
   async deleteLinkWidget(page: Page, hookName: string, row: number): Promise<string> {
     await this.dialogListener(page, true);
     await Promise.all([
-      page.click(this.dropdownToggleButton(hookName, row)),
+      page.locator(this.dropdownToggleButton(hookName, row)).click(),
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(hookName, row)}[aria-expanded='true']`),
     ]);
-    await page.click(this.deleteRowLink(hookName, row));
+    await page.locator(this.deleteRowLink(hookName, row)).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

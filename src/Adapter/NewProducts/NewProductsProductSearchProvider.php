@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrdersCollection;
 use Product;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -44,10 +45,16 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
      */
     private $translator;
 
+    /**
+     * @var SortOrdersCollection
+     */
+    private $sortOrdersCollection;
+
     public function __construct(
         TranslatorInterface $translator
     ) {
         $this->translator = $translator;
+        $this->sortOrdersCollection = new SortOrdersCollection($this->translator);
     }
 
     /**
@@ -94,7 +101,9 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
                 ->setProducts($products)
                 ->setTotalProductsCount($count);
 
+            // We use default set of sort orders + option to sort by date
             $result->setAvailableSortOrders(
+                array_merge(
                 [
                     (new SortOrder('product', 'date_add', 'desc'))->setLabel(
                         $this->translator->trans('Date added, newest to oldest', [], 'Shop.Theme.Catalog')
@@ -102,19 +111,8 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
                     (new SortOrder('product', 'date_add', 'asc'))->setLabel(
                         $this->translator->trans('Date added, oldest to newest', [], 'Shop.Theme.Catalog')
                     ),
-                    (new SortOrder('product', 'name', 'asc'))->setLabel(
-                        $this->translator->trans('Name, A to Z', [], 'Shop.Theme.Catalog')
-                    ),
-                    (new SortOrder('product', 'name', 'desc'))->setLabel(
-                        $this->translator->trans('Name, Z to A', [], 'Shop.Theme.Catalog')
-                    ),
-                    (new SortOrder('product', 'price', 'asc'))->setLabel(
-                        $this->translator->trans('Price, low to high', [], 'Shop.Theme.Catalog')
-                    ),
-                    (new SortOrder('product', 'price', 'desc'))->setLabel(
-                        $this->translator->trans('Price, high to low', [], 'Shop.Theme.Catalog')
-                    ),
-                ]
+                ],
+                $this->sortOrdersCollection->getDefaults())
             );
         }
 

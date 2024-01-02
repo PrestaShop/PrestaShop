@@ -1,4 +1,3 @@
-import 'module-alias/register';
 import helper from '@utils/helpers';
 import files from '@utils/files';
 

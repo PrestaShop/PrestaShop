@@ -20,7 +20,7 @@ import {loginPage as foLoginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
 import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -102,7 +102,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should filter the Orders table by the default customer and check the result', async function () {
@@ -111,7 +111,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(Customers.johnDoe.lastName);
     });
 
     it('should get the order ID', async function () {
@@ -128,21 +128,21 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
       const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should check if the button \'Return products\' is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkReturnProductsButton', baseContext);
 
       const result = await orderPageTabListBlock.isReturnProductsButtonVisible(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
   });
 
@@ -156,7 +156,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -165,7 +165,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await homePage.goToLoginPage(page);
 
       const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
     it('should sign in with customer credentials', async function () {
@@ -174,7 +174,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to account page', async function () {
@@ -183,7 +183,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await homePage.goToMyAccountPage(page);
 
       const pageTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(myAccountPage.pageTitle);
+      expect(pageTitle).to.contains(myAccountPage.pageTitle);
     });
 
     it('should go to \'Order history and details\' page', async function () {
@@ -192,7 +192,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageTitle = await orderHistoryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
+      expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
     });
 
     it('should go to the first order in the list and check the existence of order return form', async function () {
@@ -201,7 +201,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await orderHistoryPage.goToDetailsPage(page, 1);
 
       const result = await orderDetailsPage.isOrderReturnFormVisible(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should create a merchandise return', async function () {
@@ -210,7 +210,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await orderDetailsPage.requestMerchandiseReturn(page, 'Test merchandise returns');
 
       const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+      expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
     });
 
     it('should close the FO page and go back to BO', async function () {
@@ -219,7 +219,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       page = await orderDetailsPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
   });
 
@@ -235,7 +235,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
+      expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
     });
 
     it('should check the existence of the merchandise returns in the table', async function () {
@@ -244,14 +244,14 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await boMerchandiseReturnsPage.filterMerchandiseReturnsTable(page, 'a!id_order', orderID.toString());
 
       const result = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order');
-      await expect(result).to.contains(orderID);
+      expect(result).to.contains(orderID);
     });
 
     it('should get the ID from the table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getTrackingNumber', baseContext);
 
       returnID = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order_return');
-      await expect(parseInt(returnID, 10)).to.not.equal(0);
+      expect(parseInt(returnID, 10)).to.not.equal(0);
     });
   });
 
@@ -266,7 +266,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should filter the Orders table by the default customer and check the result', async function () {
@@ -275,7 +275,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(Customers.johnDoe.lastName);
     });
 
     it('should go to the first order page', async function () {
@@ -285,21 +285,21 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it('should click on \'Merchandise returns\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
 
       const isTabOpened = await orderPageTabListBlock.goToMerchandiseReturnsTab(page);
-      await expect(isTabOpened).to.be.true;
+      expect(isTabOpened).to.eq(true);
     });
 
     it('should check that the merchandise returns number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersNumber', baseContext);
 
       const carriersNumber = await orderPageTabListBlock.getMerchandiseReturnsNumber(page);
-      await expect(carriersNumber).to.be.equal(1);
+      expect(carriersNumber).to.be.equal(1);
     });
 
     it('should check the merchandise returns details', async function () {
@@ -332,7 +332,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         await boMerchandiseReturnsPage.closeSfToolBar(page);
 
         const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
+        expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
       });
 
       it('should check the existence of the merchandise returns in the table', async function () {
@@ -341,7 +341,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         await boMerchandiseReturnsPage.filterMerchandiseReturnsTable(page, 'a!id_order', orderID.toString());
 
         const result = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order');
-        await expect(result).to.contains(orderID);
+        expect(result).to.contains(orderID);
       });
 
       it('should go to edit merchandise returns page', async function () {
@@ -350,14 +350,14 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         await boMerchandiseReturnsPage.goToMerchandiseReturnPage(page);
 
         const pageTitle = await editMerchandiseReturnsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
+        expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
       });
 
       it('should edit merchandise returns status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `editReturnStatus${index}`, baseContext);
 
         const textResult = await editMerchandiseReturnsPage.setStatus(page, test.args.status);
-        await expect(textResult).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
+        expect(textResult).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
       });
     });
 
@@ -372,7 +372,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it('should filter the Orders table by the default customer and check the result', async function () {
@@ -381,7 +381,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
         const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-        await expect(textColumn).to.contains(Customers.johnDoe.lastName);
+        expect(textColumn).to.contains(Customers.johnDoe.lastName);
       });
 
       it('should go to the first order page', async function () {
@@ -391,28 +391,28 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         await ordersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
       it('should click on \'Merchandise returns\' tab', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `clickOnMerchandiseReturn${index}`, baseContext);
 
         const isTabOpened = await orderPageTabListBlock.goToMerchandiseReturnsTab(page);
-        await expect(isTabOpened).to.be.true;
+        expect(isTabOpened).to.eq(true);
       });
 
       it('should check that the merchandise returns number is equal to 1', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkMerchandiseReturnsNumber${index}`, baseContext);
 
         const carriersNumber = await orderPageTabListBlock.getMerchandiseReturnsNumber(page);
-        await expect(carriersNumber).to.be.equal(1);
+        expect(carriersNumber).to.be.equal(1);
       });
 
       it(`should check the merchandise returns status is '${test.args.status}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkCarrierDetails0${index}`, baseContext);
 
         const result = await orderPageTabListBlock.getMerchandiseReturnsDetails(page);
-        await expect(result.status).to.equal(test.args.status);
+        expect(result.status).to.equal(test.args.status);
       });
     });
 
@@ -426,7 +426,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         await homePage.changeLanguage(page, 'en');
 
         const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Home page is not displayed').to.be.true;
+        expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
       it('should go to account page', async function () {
@@ -435,7 +435,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         await homePage.goToMyAccountPage(page);
 
         const pageTitle = await myAccountPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(myAccountPage.pageTitle);
+        expect(pageTitle).to.contains(myAccountPage.pageTitle);
       });
 
       it('should go to \'Merchandise Returns\' page', async function () {
@@ -444,14 +444,14 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         await myAccountPage.goToMerchandiseReturnsPage(page);
 
         const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+        expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
       });
 
       it('should verify order return status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderReturnStatus${index}`, baseContext);
 
         const fileName = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
-        await expect(fileName).to.be.equal(test.args.status);
+        expect(fileName).to.be.equal(test.args.status);
       });
 
       it('should close the FO page and go back to BO', async function () {
@@ -460,7 +460,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         page = await orderDetailsPage.closePage(browserContext, page, 0);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
     });
   });

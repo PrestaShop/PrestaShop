@@ -111,15 +111,6 @@ class AdminImportControllerCore extends AdminController
         ];
 
         // @since 1.5.0
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-            $this->entities = array_merge(
-                $this->entities,
-                [
-                    $this->trans('Supply Orders', [], 'Admin.Advparameters.Feature'),
-                    $this->trans('Supply Order Details', [], 'Admin.Advparameters.Feature'),
-                ]
-            );
-        }
 
         $this->entities = array_flip($this->entities);
 
@@ -164,18 +155,6 @@ class AdminImportControllerCore extends AdminController
                         'label' => $this->trans('ID / Name of the store', [], 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', [], 'Admin.Advparameters.Help'),
                     ],
-                    'advanced_stock_management' => [
-                        'label' => $this->trans('Advanced Stock Management', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Enable advanced stock management on product (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Help'),
-                    ],
-                    'depends_on_stock' => [
-                        'label' => $this->trans('Depends on stock', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('0 = Use quantity set in product, 1 = Use quantity from warehouse.', [], 'Admin.Advparameters.Help'),
-                    ],
-                    'warehouse' => [
-                        'label' => $this->trans('Warehouse', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('ID of the warehouse to set as storage.', [], 'Admin.Advparameters.Help'),
-                    ],
                 ];
 
                 self::$default_values = [
@@ -193,8 +172,6 @@ class AdminImportControllerCore extends AdminController
                     'low_stock_alert' => false,
                     'weight' => 0,
                     'default_on' => null,
-                    'advanced_stock_management' => 0,
-                    'depends_on_stock' => 0,
                     'available_date' => date('Y-m-d'),
                 ];
 
@@ -326,18 +303,6 @@ class AdminImportControllerCore extends AdminController
                         'label' => $this->trans('ID / Name of the store', [], 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', [], 'Admin.Advparameters.Help'),
                     ],
-                    'advanced_stock_management' => [
-                        'label' => $this->trans('Advanced Stock Management', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Enable advanced stock management on product (0 = No, 1 = Yes).', [], 'Admin.Advparameters.Help'),
-                    ],
-                    'depends_on_stock' => [
-                        'label' => $this->trans('Depends on stock', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('0 = Use quantity set in product, 1 = Use quantity from warehouse.', [], 'Admin.Advparameters.Help'),
-                    ],
-                    'warehouse' => [
-                        'label' => $this->trans('Warehouse', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('ID of the warehouse to set as storage.', [], 'Admin.Advparameters.Help'),
-                    ],
                     'accessories' => ['label' => $this->trans('Accessories (x,y,z...)', [], 'Admin.Advparameters.Feature')],
                 ];
 
@@ -368,8 +333,6 @@ class AdminImportControllerCore extends AdminController
                     'customizable' => 0,
                     'uploadable_files' => 0,
                     'text_fields' => 0,
-                    'advanced_stock_management' => 0,
-                    'depends_on_stock' => 0,
                     'is_virtual' => 0,
                 ];
 
@@ -550,68 +513,6 @@ class AdminImportControllerCore extends AdminController
                 break;
         }
 
-        // @since 1.5.0
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-            switch ((int) Tools::getValue('entity')) {
-                case $this->entities[$this->trans('Supply Orders', [], 'Admin.Advparameters.Feature')]:
-                    // required fields
-                    $this->required_fields = [
-                        'id_supplier',
-                        'id_warehouse',
-                        'reference',
-                        'date_delivery_expected',
-                    ];
-                    // available fields
-                    $this->available_fields = [
-                        'no' => ['label' => $this->trans('Ignore this column', [], 'Admin.Advparameters.Feature')],
-                        'id' => ['label' => $this->trans('ID', [], 'Admin.Global')],
-                        'id_supplier' => ['label' => $this->trans('Supplier ID *', [], 'Admin.Advparameters.Feature')],
-                        'id_lang' => ['label' => $this->trans('Lang ID', [], 'Admin.Advparameters.Feature')],
-                        'id_warehouse' => ['label' => $this->trans('Warehouse ID *', [], 'Admin.Advparameters.Feature')],
-                        'id_currency' => ['label' => $this->trans('Currency ID *', [], 'Admin.Advparameters.Feature')],
-                        'reference' => ['label' => $this->trans('Supply Order Reference *', [], 'Admin.Advparameters.Feature')],
-                        'date_delivery_expected' => ['label' => $this->trans('Delivery Date (Y-M-D)*', [], 'Admin.Advparameters.Feature')],
-                        'discount_rate' => ['label' => $this->trans('Discount rate', [], 'Admin.Advparameters.Feature')],
-                        'is_template' => ['label' => $this->trans('Template', [], 'Admin.Advparameters.Feature')],
-                    ];
-                    // default values
-                    self::$default_values = [
-                        'id_lang' => (int) Configuration::get('PS_LANG_DEFAULT'),
-                        'id_currency' => Currency::getDefaultCurrency()->id,
-                        'discount_rate' => '0',
-                        'is_template' => '0',
-                    ];
-
-                    break;
-                case $this->entities[$this->trans('Supply Order Details', [], 'Admin.Advparameters.Feature')]:
-                    // required fields
-                    $this->required_fields = [
-                        'supply_order_reference',
-                        'id_product',
-                        'unit_price_te',
-                        'quantity_expected',
-                    ];
-                    // available fields
-                    $this->available_fields = [
-                        'no' => ['label' => $this->trans('Ignore this column', [], 'Admin.Advparameters.Feature')],
-                        'supply_order_reference' => ['label' => $this->trans('Supply Order Reference *', [], 'Admin.Advparameters.Feature')],
-                        'id_product' => ['label' => $this->trans('Product ID *', [], 'Admin.Advparameters.Feature')],
-                        'id_product_attribute' => ['label' => $this->trans('Product Attribute ID', [], 'Admin.Advparameters.Feature')],
-                        'unit_price_te' => ['label' => $this->trans('Unit Price (tax excl.)*', [], 'Admin.Advparameters.Feature')],
-                        'quantity_expected' => ['label' => $this->trans('Quantity Expected *', [], 'Admin.Advparameters.Feature')],
-                        'discount_rate' => ['label' => $this->trans('Discount Rate', [], 'Admin.Advparameters.Feature')],
-                        'tax_rate' => ['label' => $this->trans('Tax Rate', [], 'Admin.Advparameters.Feature')],
-                    ];
-                    // default values
-                    self::$default_values = [
-                        'discount_rate' => '0',
-                        'tax_rate' => '0',
-                    ];
-
-                    break;
-            }
-        }
-
         $this->separator = ($separator = Tools::substr((string) (trim(Tools::getValue('separator'))), 0, 1)) ? $separator : ';';
         $this->convert = false;
         $this->multiple_value_separator = ($separator = Tools::substr((string) (trim(Tools::getValue('multiple_value_separator'))), 0, 1)) ? $separator : ',';
@@ -774,7 +675,6 @@ class AdminImportControllerCore extends AdminController
             'id_language' => ($id_lang_selected) ? $id_lang_selected : $this->context->language->id,
             'available_fields' => $this->getAvailableFields(),
             'truncateAuthorized' => (Shop::isFeatureActive() && $this->context->employee->isSuperAdmin()) || !Shop::isFeatureActive(),
-            'PS_ADVANCED_STOCK_MANAGEMENT' => Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
         ];
 
         return parent::renderForm();
@@ -938,6 +838,11 @@ class AdminImportControllerCore extends AdminController
         }
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if ($this->display == 'import') {
@@ -1635,10 +1540,18 @@ class AdminImportControllerCore extends AdminController
 
         $product = new Product($id_product);
 
-        $update_advanced_stock_management_value = false;
+        if (!$product->id && empty($info['name'])) {
+            $this->errors[] = sprintf(
+                $this->trans('Product with reference %1$s (ID: %2$s) could not be saved because the product name is missing.', [], 'Admin.Advparameters.Notification'),
+                (!empty($info['reference'])) ? Tools::htmlentitiesUTF8($info['reference']) : 'null',
+                !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
+            );
+
+            return;
+        }
+
         if (isset($product->id) && $product->id && Product::existsInDatabase((int) $product->id, 'product')) {
             $product->loadStockData();
-            $update_advanced_stock_management_value = true;
             $category_data = Product::getProductCategories((int) $product->id);
 
             if (is_array($category_data)) {
@@ -2190,124 +2103,7 @@ class AdminImportControllerCore extends AdminController
             // clean feature positions to avoid conflict
             Feature::cleanPositions();
 
-            // set advanced stock managment
             if (!$validateOnly) {
-                /* @phpstan-ignore-next-line Data from the property `advanced_stock_management` come from the database */
-                if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
-                    $this->warnings[] = $this->trans(
-                        'Advanced stock management has incorrect value. Not set for product %name%',
-                        [
-                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
-                        ],
-                        'Admin.Advparameters.Notification'
-                    );
-                } elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1) {
-                    $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, cannot enable on product %name%',
-                        [
-                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
-                        ],
-                        'Admin.Advparameters.Notification'
-                    );
-                } elseif ($update_advanced_stock_management_value) {
-                    $product->setAdvancedStockManagement($product->advanced_stock_management);
-                }
-                // automaticly disable depends on stock, if a_s_m set to disabled
-                if (StockAvailable::dependsOnStock($product->id) == 1 && $product->advanced_stock_management == 0) {
-                    StockAvailable::setProductDependsOnStock($product->id, false);
-                }
-            }
-
-            // Check if warehouse exists
-            if (isset($product->warehouse) && $product->warehouse) {
-                if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                    $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, warehouse not set on product %name%',
-                        [
-                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
-                        ],
-                        'Admin.Advparameters.Notification'
-                    );
-                } elseif (!$validateOnly) {
-                    if (Warehouse::exists($product->warehouse)) {
-                        // Get already associated warehouses
-                        $associated_warehouses_collection = WarehouseProductLocation::getCollection($product->id);
-                        // Delete any entry in warehouse for this product
-                        foreach ($associated_warehouses_collection as $awc) {
-                            $awc->delete();
-                        }
-                        $warehouse_location_entity = new WarehouseProductLocation();
-                        $warehouse_location_entity->id_product = $product->id;
-                        $warehouse_location_entity->id_product_attribute = 0;
-                        $warehouse_location_entity->id_warehouse = $product->warehouse;
-                        if (WarehouseProductLocation::getProductLocation($product->id, 0, $product->warehouse) !== false) {
-                            $warehouse_location_entity->update();
-                        } else {
-                            $warehouse_location_entity->save();
-                        }
-                        StockAvailable::synchronize($product->id);
-                    } else {
-                        $this->warnings[] = $this->trans(
-                            'Warehouse did not exist, cannot set on product %name%.',
-                            [
-                                '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
-                            ],
-                            'Admin.Advparameters.Notification'
-                        );
-                    }
-                }
-            }
-
-            // stock available
-            if (isset($product->depends_on_stock)) {
-                /* @phpstan-ignore-next-line Data from the property `depends_on_stock` come from the database */
-                if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1) {
-                    $this->warnings[] = $this->trans(
-                        'Incorrect value for "Depends on stock" for product %name%',
-                        [
-                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
-                        ],
-                        'Admin.Advparameters.Notification'
-                    );
-                /* @phpstan-ignore-next-line Data from properties `advanced_stock_management` & `depends_on_stock` come from the database */
-                } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
-                    $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%',
-                        [
-                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
-                        ],
-                        'Admin.Advparameters.Notification'
-                    );
-                } elseif (!$validateOnly) {
-                    StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
-                }
-
-                // This code allows us to set qty and disable depends on stock
-                if (!$validateOnly) {
-                    // if depends on stock and quantity, add quantity to stock
-                    if ($product->depends_on_stock == 1) {
-                        $stock_manager = StockManagerFactory::getManager();
-                        $price = str_replace(',', '.', (string) $product->wholesale_price);
-                        if ($price == '0') {
-                            $price = 0.000001;
-                        }
-                        $price = round((float) $price, 6);
-                        $warehouse = new Warehouse($product->warehouse);
-                        if ($stock_manager->addProduct((int) $product->id, 0, $warehouse, (int) $product->quantity, 1, $price, true)) {
-                            StockAvailable::synchronize((int) $product->id);
-                        }
-                    } else {
-                        if ($shop_is_feature_active) {
-                            foreach ($shops as $shop) {
-                                StockAvailable::setQuantity((int) $product->id, 0, (int) $product->quantity, (int) $shop);
-                            }
-                        } else {
-                            StockAvailable::setQuantity((int) $product->id, 0, (int) $product->quantity, (int) $this->context->shop->id);
-                        }
-                    }
-                }
-            } elseif (!$validateOnly) {
-                // if not depends_on_stock set, use normal qty
                 if ($shop_is_feature_active) {
                     foreach ($shops as $shop) {
                         StockAvailable::setQuantity((int) $product->id, 0, (int) $product->quantity, (int) $shop);
@@ -2784,114 +2580,8 @@ class AdminImportControllerCore extends AdminController
                 }
             }
 
-            // set advanced stock managment
-            if (isset($info['advanced_stock_management'])) {
-                if ($info['advanced_stock_management'] != 1 && $info['advanced_stock_management'] != 0) {
-                    $this->warnings[] = $this->trans(
-                        'Advanced stock management has incorrect value. Not set for product with id %id%.',
-                        [
-                            '%id%' => Tools::htmlentitiesUTF8($product->id),
-                        ],
-                        'Admin.Advparameters.Notification'
-                    );
-                } elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $info['advanced_stock_management'] == 1) {
-                    $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, cannot enable on product with id %id%.',
-                        [
-                            '%id%' => Tools::htmlentitiesUTF8($product->id),
-                        ],
-                        'Admin.Advparameters.Notification'
-                    );
-                } elseif (!$validateOnly) {
-                    $product->setAdvancedStockManagement($info['advanced_stock_management']);
-                }
-                // automaticly disable depends on stock, if a_s_m set to disabled
-                if (!$validateOnly && StockAvailable::dependsOnStock($product->id) == 1 && $info['advanced_stock_management'] == 0) {
-                    StockAvailable::setProductDependsOnStock($product->id, false, null, $id_product_attribute);
-                }
-            }
-
-            // Check if warehouse exists
-            if (isset($info['warehouse']) && $info['warehouse']) {
-                if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                    $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, warehouse is not set on product with id %id%.',
-                        ['%id%' => Tools::htmlentitiesUTF8($product->id)],
-                        'Admin.Advparameters.Notification'
-                    );
-                } else {
-                    if (Warehouse::exists($info['warehouse'])) {
-                        $warehouse_location_entity = new WarehouseProductLocation();
-                        $warehouse_location_entity->id_product = $product->id;
-                        $warehouse_location_entity->id_product_attribute = $id_product_attribute;
-                        $warehouse_location_entity->id_warehouse = $info['warehouse'];
-                        if (!$validateOnly) {
-                            if (WarehouseProductLocation::getProductLocation($product->id, $id_product_attribute, $info['warehouse']) !== false) {
-                                $warehouse_location_entity->update();
-                            } else {
-                                $warehouse_location_entity->save();
-                            }
-                            StockAvailable::synchronize($product->id);
-                        }
-                    } else {
-                        $this->warnings[] = $this->trans(
-                            'Warehouse did not exist, cannot set on product %name%.',
-                            [
-                                '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language]),
-                            ],
-                            'Admin.Advparameters.Notification'
-                        );
-                    }
-                }
-            }
-
             // stock available
-            if (isset($info['depends_on_stock'])) {
-                if ($info['depends_on_stock'] != 0 && $info['depends_on_stock'] != 1) {
-                    $this->warnings[] = $this->trans(
-                        'Incorrect value for "Depends on stock" for product %name%',
-                        [
-                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language]),
-                        ],
-                        'Admin.Notifications.Error'
-                    );
-                } elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1) {
-                    $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%',
-                        [
-                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language]),
-                        ],
-                        'Admin.Advparameters.Notification'
-                    );
-                } elseif (!$validateOnly) {
-                    StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'], null, $id_product_attribute);
-                }
-
-                // This code allows us to set qty and disable depends on stock
-                if (isset($info['quantity'])) {
-                    // if depends on stock and quantity, add quantity to stock
-                    if ($info['depends_on_stock'] == 1) {
-                        $stock_manager = StockManagerFactory::getManager();
-                        $price = str_replace(',', '.', $info['wholesale_price']);
-                        if ($price == '0') {
-                            $price = 0.000001;
-                        }
-                        $price = round((float) $price, 6);
-                        $warehouse = new Warehouse($info['warehouse']);
-                        if (!$validateOnly && $stock_manager->addProduct((int) $product->id, $id_product_attribute, $warehouse, (int) $info['quantity'], 1, $price, true)) {
-                            StockAvailable::synchronize((int) $product->id);
-                        }
-                    } elseif (!$validateOnly) {
-                        if ($shop_is_feature_active) {
-                            foreach ($id_shop_list as $shop) {
-                                StockAvailable::setQuantity((int) $product->id, $id_product_attribute, (int) $info['quantity'], (int) $shop);
-                            }
-                        } else {
-                            StockAvailable::setQuantity((int) $product->id, $id_product_attribute, (int) $info['quantity'], $this->context->shop->id);
-                        }
-                    }
-                }
-            } elseif (!$validateOnly) { // if not depends_on_stock set, use normal qty
+            if (!$validateOnly) {
                 if ($shop_is_feature_active) {
                     foreach ($id_shop_list as $shop) {
                         StockAvailable::setQuantity((int) $product->id, $id_product_attribute, (int) $info['quantity'], (int) $shop);
@@ -3980,305 +3670,29 @@ class AdminImportControllerCore extends AdminController
 
     /**
      * @since 1.5.0
+     * @deprecated Since 9.0 and will be removed in 10.0
      */
     public function supplyOrdersImport($offset = false, $limit = false, $validateOnly = false)
     {
-        // opens CSV & sets locale
-        $this->receiveTab();
-        $handle = $this->openCsvFile($offset);
-        if (!$handle) {
-            return false;
-        }
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
 
-        AdminImportController::setLocale();
-
-        $force_ids = Tools::getValue('forceIDs');
-
-        // main loop, for each supply orders to import
-        $line_count = 0;
-        for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); ++$current_line) {
-            ++$line_count;
-            if ($this->convert) {
-                $line = $this->utf8EncodeArray($line);
-            }
-            $info = AdminImportController::getMaskedRow($line);
-
-            $this->supplyOrdersImportOne(
-                $info,
-                $force_ids,
-                $current_line,
-                $validateOnly
-            );
-        }
-        // closes
-        $this->closeCsvFile($handle);
-
-        return $line_count;
+        return 0;
     }
 
-    protected function supplyOrdersImportOne($info, $force_ids, $current_line, $validateOnly = false)
-    {
-        // sets default values if needed
-        AdminImportController::setDefaultValues($info);
-
-        // if an id is set, instanciates a supply order with this id if possible
-        if (array_key_exists('id', $info) && (int) $info['id'] && SupplyOrder::exists((int) $info['id'])) {
-            $supply_order = new SupplyOrder((int) $info['id']);
-        } elseif (array_key_exists('reference', $info) && $info['reference'] && SupplyOrder::exists(pSQL($info['reference']))) {
-            $supply_order = SupplyOrder::getSupplyOrderByReference(pSQL($info['reference']));
-        } else { // new supply order
-            $supply_order = new SupplyOrder();
-        }
-
-        // gets parameters
-        $id_supplier = (int) $info['id_supplier'];
-        $id_lang = (int) $info['id_lang'];
-        $id_warehouse = (int) $info['id_warehouse'];
-        $id_currency = (int) $info['id_currency'];
-        $reference = pSQL($info['reference']);
-        $date_delivery_expected = pSQL($info['date_delivery_expected']);
-        $discount_rate = (float) $info['discount_rate'];
-        $is_template = (bool) $info['is_template'];
-
-        $error = '';
-        // checks parameters
-        if (!Supplier::supplierExists($id_supplier)) {
-            $error = $this->trans('Supplier ID (%id%) is not valid (at line %line%).', ['%id%' => $id_supplier, '%line%' => $current_line + 1], 'Admin.Advparameters.Notification');
-        }
-        if (!Language::getLanguage($id_lang)) {
-            $error = $this->trans('Lang ID (%id%) is not valid (at line %line%).', ['%id%' => $id_lang, '%line%' => $current_line + 1], 'Admin.Advparameters.Notification');
-        }
-        if (!Warehouse::exists($id_warehouse)) {
-            $error = $this->trans('Warehouse ID (%id%) is not valid (at line %line%).', ['%id%' => $id_warehouse, '%line%' => $current_line + 1], 'Admin.Advparameters.Notification');
-        }
-        if (!Currency::getCurrency($id_currency)) {
-            $error = $this->trans('Currency ID (%id%) is not valid (at line %line%).', ['%id%' => $id_currency, '%line%' => $current_line + 1], 'Admin.Advparameters.Notification');
-        }
-        if (empty($supply_order->reference) && SupplyOrder::exists($reference)) {
-            $error = $this->trans('Reference (%ref%) already exists (at line %line%).', ['%ref%' => $reference, '%line%' => $current_line + 1], 'Admin.Advparameters.Notification');
-        }
-        if (!empty($supply_order->reference) && ($supply_order->reference != $reference && SupplyOrder::exists($reference))) {
-            $error = $this->trans('Reference (%ref%) already exists (at line %line%).', ['%ref%' => $reference, '%line%' => $current_line + 1], 'Admin.Advparameters.Notification');
-        }
-        if (!Validate::isDateFormat($date_delivery_expected)) {
-            $error = $this->trans('Date format (%date%) is not valid (at line %line%). It should be: %date_format%.', ['%date%' => $date_delivery_expected, '%line%' => $current_line + 1, '%date_format%' => $this->trans('YYYY-MM-DD', [], 'Admin.Advparameters.Notification')], 'Admin.Advparameters.Notification');
-        } elseif (new DateTime($date_delivery_expected) <= new DateTime('yesterday')) {
-            $error = $this->trans('Date (%date%) cannot be in the past (at line %line%). Format: %date_format%.', ['%date%' => $date_delivery_expected, '%line%' => $current_line + 1, '%date_format%' => $this->trans('YYYY-MM-DD', [], 'Admin.Advparameters.Notification')], 'Admin.Advparameters.Notification');
-        }
-        if ($discount_rate < 0 || $discount_rate > 100) {
-            $error = $this->trans(
-                'Discount rate (%rate%) is not valid (at line %line%). %format%.',
-                ['%rate%' => $discount_rate, '%line%' => $current_line + 1, '%format%' => $this->trans('Format: Between 0 and 100', [], 'Admin.Advparameters.Notification')],
-                'Admin.Advparameters.Notification'
-            );
-        }
-        if ($supply_order->id > 0 && !$supply_order->isEditable()) {
-            $error = $this->trans('Supply Order (%id%) is not editable (at line %line%).', ['%id%' => $supply_order->id, '%line%' => $current_line + 1], 'Admin.Advparameters.Notification');
-        }
-
-        // if no errors, sets supply order
-        if (empty($error)) {
-            // adds parameters
-            $info['id_ref_currency'] = (int) Currency::getDefaultCurrency()->id;
-            $info['supplier_name'] = pSQL(Supplier::getNameById($id_supplier));
-            if ($supply_order->id > 0) {
-                $info['id_supply_order_state'] = (int) $supply_order->id_supply_order_state;
-                $info['id'] = (int) $supply_order->id;
-            } else {
-                $info['id_supply_order_state'] = 1;
-            }
-
-            // sets parameters
-            AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $supply_order);
-
-            /** @var SupplyOrder $supply_order */
-            if ((int) $supply_order->id && ($supply_order->exists((int) $supply_order->id) || $supply_order->exists($supply_order->reference))) {
-                $res = ($validateOnly || $supply_order->update());
-            } else {
-                $supply_order->force_id = (bool) $force_ids;
-                $res = ($validateOnly || $supply_order->add());
-            }
-
-            // errors
-            if (!$res) {
-                $this->errors[] = $this->trans('Supply Order could not be saved (at line %line%).', ['%line%' => $current_line + 1], 'Admin.Advparameters.Notification');
-            }
-        } else {
-            $this->errors[] = $error;
-        }
-    }
-
+    /**
+     * @deprecated Since 9.0 and will be removed in 10.0
+     */
     public function supplyOrdersDetailsImport($offset = false, $limit = false, &$crossStepsVariables = false, $validateOnly = false)
     {
-        // opens CSV & sets locale
-        $this->receiveTab();
-        $handle = $this->openCsvFile($offset);
-        if (!$handle) {
-            return false;
-        }
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
 
-        AdminImportController::setLocale();
-
-        $products = [];
-        $reset = true;
-        if ($crossStepsVariables !== false && array_key_exists('products', $crossStepsVariables)) {
-            $products = $crossStepsVariables['products'];
-        }
-        if ($crossStepsVariables !== false && array_key_exists('reset', $crossStepsVariables)) {
-            $reset = $crossStepsVariables['reset'];
-        }
-
-        $force_ids = Tools::getValue('forceIDs');
-
-        // main loop, for each supply orders details to import
-        $line_count = 0;
-        for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); ++$current_line) {
-            ++$line_count;
-            if ($this->convert) {
-                $line = $this->utf8EncodeArray($line);
-            }
-            $info = AdminImportController::getMaskedRow($line);
-
-            $this->supplyOrdersDetailsImportOne(
-                $info,
-                $products, // by ref
-                $reset, // by ref
-                $force_ids,
-                $current_line,
-                $validateOnly
-            );
-        }
-        // closes
-        $this->closeCsvFile($handle);
-
-        if ($crossStepsVariables !== false) {
-            $crossStepsVariables['products'] = $products;
-            $crossStepsVariables['reset'] = $reset;
-        }
-
-        return $line_count;
-    }
-
-    protected function supplyOrdersDetailsImportOne($info, &$products, &$reset, $force_ids, $current_line, $validateOnly = false)
-    {
-        // sets default values if needed
-        AdminImportController::setDefaultValues($info);
-
-        // gets the supply order
-        if (array_key_exists('supply_order_reference', $info) && pSQL($info['supply_order_reference']) && SupplyOrder::exists(pSQL($info['supply_order_reference']))) {
-            $supply_order = SupplyOrder::getSupplyOrderByReference(pSQL($info['supply_order_reference']));
-        } else {
-            $this->errors[] = sprintf(
-                $this->trans('Supply Order (%s) could not be loaded (at line %d).', [], 'Admin.Advparameters.Notification'),
-                Tools::htmlentitiesUTF8($info['supply_order_reference']),
-                $current_line + 1
-            );
-
-            return;
-        }
-
-        // sets parameters
-        $id_product = (int) $info['id_product'];
-        if (empty($info['id_product_attribute'])) {
-            $info['id_product_attribute'] = 0;
-        }
-        $id_product_attribute = (int) $info['id_product_attribute'];
-        $unit_price_te = (float) $info['unit_price_te'];
-        $quantity_expected = (int) $info['quantity_expected'];
-        $discount_rate = (float) $info['discount_rate'];
-        $tax_rate = (float) $info['tax_rate'];
-
-        // checks if one product/attribute is there only once
-        if (isset($products[$id_product][$id_product_attribute])) {
-            $this->errors[] = sprintf(
-                $this->trans('Product/Attribute (%d/%d) cannot be added twice (at line %d).', [], 'Admin.Advparameters.Notification'),
-                $id_product,
-                $id_product_attribute,
-                $current_line + 1
-            );
-        } else {
-            $products[$id_product][$id_product_attribute] = $quantity_expected;
-        }
-
-        // checks parameters
-        $supplier_reference = ProductSupplier::getProductSupplierReference($id_product, $id_product_attribute, $supply_order->id_supplier);
-        if (false === $supplier_reference) {
-            $this->errors[] = sprintf(
-                $this->trans('Product (%d/%d) is not available for this order (at line %d).', [], 'Admin.Advparameters.Notification'),
-                $id_product,
-                $id_product_attribute,
-                $current_line + 1
-            );
-        }
-        if ($unit_price_te < 0) {
-            $this->errors[] = sprintf($this->trans('Unit Price (tax excl.) (%d) is not valid (at line %d).', [], 'Admin.Advparameters.Notification'), $unit_price_te, $current_line + 1);
-        }
-        if ($quantity_expected < 0) {
-            $this->errors[] = sprintf($this->trans('Quantity Expected (%d) is not valid (at line %d).', [], 'Admin.Advparameters.Notification'), $quantity_expected, $current_line + 1);
-        }
-        if ($discount_rate < 0 || $discount_rate > 100) {
-            $this->errors[] = sprintf(
-                $this->trans('Discount rate (%d) is not valid (at line %d). %s.', [], 'Admin.Advparameters.Notification'),
-                $discount_rate,
-                $current_line + 1,
-                $this->trans('Format: Between 0 and 100', [], 'Admin.Advparameters.Notification')
-            );
-        }
-        if ($tax_rate < 0 || $tax_rate > 100) {
-            $this->errors[] = sprintf(
-                $this->trans('Quantity Expected (%d) is not valid (at line %d).', [], 'Admin.Advparameters.Notification'),
-                $tax_rate,
-                $current_line + 1,
-                $this->trans('Format: Between 0 and 100', [], 'Admin.Advparameters.Notification')
-            );
-        }
-
-        // if no errors, sets supply order details
-        if (empty($this->errors)) {
-            // resets order if needed
-            if (!$validateOnly && $reset) {
-                $supply_order->resetProducts();
-                $reset = false;
-            }
-
-            // creates new product
-            $supply_order_detail = new SupplyOrderDetail();
-            AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $supply_order_detail);
-
-            /* @var SupplyOrderDetail $supply_order_detail */
-
-            // sets parameters
-            $supply_order_detail->id_supply_order = $supply_order->id;
-            $currency = new Currency($supply_order->id_ref_currency);
-            $supply_order_detail->id_currency = $currency->id;
-            $supply_order_detail->exchange_rate = $currency->conversion_rate;
-            $supply_order_detail->supplier_reference = $supplier_reference;
-            $supply_order_detail->name = Product::getProductName($id_product, $id_product_attribute, $supply_order->id_lang);
-
-            // gets ean13 / ref / upc
-            $query = new DbQuery();
-            $query->select('
-                IFNULL(pa.reference, IFNULL(p.reference, \'\')) as reference,
-                IFNULL(pa.ean13, IFNULL(p.ean13, \'\')) as ean13,
-                IFNULL(pa.upc, IFNULL(p.upc, \'\')) as upc
-            ');
-            $query->from('product', 'p');
-            $query->leftJoin('product_attribute', 'pa', 'pa.id_product = p.id_product AND id_product_attribute = ' . (int) $id_product_attribute);
-            $query->where('p.id_product = ' . (int) $id_product);
-            $query->where('p.is_virtual = 0 AND p.cache_is_pack = 0');
-            $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-            $product_infos = $res['0'];
-
-            $supply_order_detail->reference = $product_infos['reference'];
-            $supply_order_detail->ean13 = $product_infos['ean13'];
-            $supply_order_detail->upc = $product_infos['upc'];
-            $supply_order_detail->force_id = (bool) $force_ids;
-            if (!$validateOnly) {
-                $supply_order_detail->add();
-                $supply_order->update();
-            }
-            unset($supply_order_detail);
-        }
+        return 0;
     }
 
     public function utf8EncodeArray($array)
@@ -4423,13 +3837,11 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_group_reduction_cache`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_sale`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_supplier`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'warehouse_product_location`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock_available`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock_mvt`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'customization`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'customization_field`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'supply_order_detail`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_shop`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_combination`');
@@ -4633,18 +4045,6 @@ class AdminImportControllerCore extends AdminController
                     $clearCache = true;
 
                     break;
-            }
-
-            // @since 1.5.0
-            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                switch ((int) Tools::getValue('entity')) {
-                    case $this->entities[$import_type = $this->trans('Supply Orders', [], 'Admin.Advparameters.Feature')]:
-                        $doneCount += $this->supplyOrdersImport($offset, $limit, $validateOnly);
-                        break;
-                    case $this->entities[$import_type = $this->trans('Supply Order Details', [], 'Admin.Advparameters.Feature')]:
-                        $doneCount += $this->supplyOrdersDetailsImport($offset, $limit, $crossStepsVariables, $validateOnly);
-                        break;
-                }
             }
 
             if ($results !== null) {

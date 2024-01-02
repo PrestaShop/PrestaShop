@@ -3,7 +3,6 @@ parameters:
 
 imports:
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/core/cldr.yml }
-    - { resource: ../../src/PrestaShopBundle/Resources/config/services/core/string.yml }
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/adapter/data_provider_common.yml }
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/adapter/common.yml }
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/core/common.yml }

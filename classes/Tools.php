@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -31,13 +30,11 @@ use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
-use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Security\Hashing;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
-use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,38 +97,13 @@ class ToolsCore
      * @param int $length Desired length (optional)
      * @param string $flag Output type (NUMERIC, ALPHANUMERIC, NO_NUMERIC, RANDOM)
      *
-     * @return bool|string Password
+     * @return string|false Password
      */
     public static function passwdGen($length = 8, $flag = self::PASSWORDGEN_FLAG_ALPHANUMERIC)
     {
         try {
             return (new PasswordGenerator(new OpenSSL()))->generatePassword($length, $flag);
         } catch (InvalidArgumentException $exception) {
-            return false;
-        }
-    }
-
-    /**
-     * Random bytes generator.
-     *
-     * Limited to OpenSSL since 1.7.0.0
-     *
-     * @deprecated Since 8.1.0
-     *
-     * @param int $length Desired length of random bytes
-     *
-     * @return bool|string Random bytes
-     */
-    public static function getBytes($length)
-    {
-        @trigger_error(
-            'Tools::getBytes() is deprecated since version 8.1.0.',
-            E_USER_DEPRECATED
-        );
-
-        try {
-            return (new OpenSSL())->getBytes($length);
-        } catch (\Exception $e) {
             return false;
         }
     }
@@ -202,21 +174,6 @@ class ToolsCore
 
         header('Location: ' . $url);
         exit;
-    }
-
-    /**
-     * Redirect URLs already containing PS_BASE_URI.
-     *
-     * Warning: uses exit
-     *
-     * @param string $url Desired URL
-     *
-     * @deprecated since PrestaShop 8.0.0
-     */
-    public static function redirectLink($url)
-    {
-        Tools::displayAsDeprecated('Use Tools::redirect() instead');
-        static::redirect($url);
     }
 
     /**
@@ -712,51 +669,11 @@ class ToolsCore
     }
 
     /**
-     * Return price with currency sign for a given product.
-     *
-     * @deprecated Since 1.7.6.0. Please use Locale::formatPrice() instead
-     * @see PrestaShop\PrestaShop\Core\Localization\Locale
-     *
-     * @param float $price Product price
-     * @param int|Currency|array|null $currency Current currency (object, id_currency, NULL => context currency)
-     * @param bool $no_utf8 Not used anymore
-     * @param Context|null $context
-     *
-     * @return string Price correctly formatted (sign, decimal separator...)
-     *                if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
-     *
-     * @throws LocalizationException
-     */
-    public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
-    {
-        @trigger_error(
-            'Tools::displayPrice() is deprecated since version 1.7.6.0. Use ' . Locale::class . '::formatPrice() instead.',
-            E_USER_DEPRECATED
-        );
-
-        if (!is_numeric($price)) {
-            return $price;
-        }
-
-        $context = $context ?: Context::getContext();
-        $currency = $currency ?: $context->currency;
-
-        if (is_int($currency)) {
-            $currency = Currency::getCurrencyInstance($currency);
-        }
-
-        $locale = static::getContextLocale($context);
-        $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
-
-        return $locale->formatPrice($price, $currencyCode);
-    }
-
-    /**
      * Return current locale
      *
      * @param Context $context
      *
-     * @return Locale
+     * @return LocaleInterface
      *
      * @throws Exception
      */
@@ -780,33 +697,6 @@ class ToolsCore
         );
 
         return $locale;
-    }
-
-    /**
-     * Returns a well formatted number.
-     *
-     * @deprecated Since 1.7.6.0. Please use Locale::formatNumber() instead
-     * @see Locale
-     *
-     * @param int|float|string $number The number to format
-     * @param null $currency not used anymore
-     *
-     * @return string The formatted number
-     *
-     * @throws Exception
-     * @throws LocalizationException
-     */
-    public static function displayNumber($number, $currency = null)
-    {
-        @trigger_error(
-            'Tools::displayNumber() is deprecated since version 1.7.5.0. Use ' . Locale::class . ' instead.',
-            E_USER_DEPRECATED
-        );
-
-        $context = Context::getContext();
-        $locale = static::getContextLocale($context);
-
-        return $locale->formatNumber($number);
     }
 
     public static function displayPriceSmarty($params, &$smarty)
@@ -915,7 +805,7 @@ class ToolsCore
      *
      * @return string Date
      */
-    public static function displayDate($date, $full = false)
+    public static function displayDate($date, bool $full = false)
     {
         if (!$date || !($time = strtotime($date))) {
             return $date;
@@ -925,7 +815,7 @@ class ToolsCore
             return '';
         }
 
-        if (!Validate::isDate($date) || !Validate::isBool($full)) {
+        if (!Validate::isDate($date)) {
             throw new PrestaShopException('Invalid date');
         }
 
@@ -1007,23 +897,6 @@ class ToolsCore
         }
 
         return html_entity_decode((string) $string, ENT_QUOTES, 'utf-8');
-    }
-
-    /**
-     * @deprecated Since 8.0.0
-     */
-    public static function safePostVars()
-    {
-        @trigger_error(
-            'Tools::safePostVars() is deprecated since version 8.0.0.',
-            E_USER_DEPRECATED
-        );
-
-        if (!is_array($_POST)) {
-            $_POST = [];
-        } else {
-            $_POST = array_map(['Tools', 'htmlentitiesUTF8'], $_POST);
-        }
     }
 
     /**
@@ -1207,20 +1080,6 @@ class ToolsCore
     /**
      * Hash password.
      *
-     * @param string $passwd String to hash
-     *
-     * @return string Hashed password
-     *
-     * @deprecated 1.7.0
-     */
-    public static function encrypt($passwd)
-    {
-        return self::hash($passwd);
-    }
-
-    /**
-     * Hash password.
-     *
      * @param string $passwd String to has
      *
      * @return string Hashed password
@@ -1230,20 +1089,6 @@ class ToolsCore
     public static function hash($passwd)
     {
         return (new Hashing())->hash($passwd, _COOKIE_KEY_);
-    }
-
-    /**
-     * Hash data string.
-     *
-     * @param string $data String to encrypt
-     *
-     * @return string Hashed IV
-     *
-     * @deprecated 1.7.0
-     */
-    public static function encryptIV($data)
-    {
-        return self::hashIV($data);
     }
 
     /**
@@ -1263,7 +1108,7 @@ class ToolsCore
     /**
      * Get token to prevent CSRF.
      *
-     * @param bool $page
+     * @param bool|string $page
      * @param Context|null $context
      *
      * @return string
@@ -1309,11 +1154,10 @@ class ToolsCore
 
     /**
      * @param array $params
-     * @param Smarty|null $smarty unused parameter, please ignore (@todo: remove in next major)
      *
      * @return bool|string
      */
-    public static function getAdminTokenLiteSmarty($params, &$smarty = null)
+    public static function getAdminTokenLiteSmarty($params)
     {
         $context = Context::getContext();
 
@@ -1350,30 +1194,6 @@ class ToolsCore
     public static function getAdminImageUrl($image = null, $entities = false)
     {
         return Tools::getAdminUrl(basename(_PS_IMG_DIR_) . '/' . $image, $entities);
-    }
-
-    /**
-     * Return the friendly url from the provided string.
-     *
-     * @deprecated since 8.1
-     *
-     * @param string $str
-     * @param bool $utf8_decode (deprecated)
-     *
-     * @return string
-     */
-    public static function link_rewrite($str, $utf8_decode = null)
-    {
-        @trigger_error(
-            'This function is deprecated, use Tools::str2url($str) instead.',
-            E_USER_DEPRECATED
-        );
-
-        if ($utf8_decode !== null) {
-            Tools::displayParameterAsDeprecated('utf8_decode');
-        }
-
-        return Tools::str2url($str);
     }
 
     /**
@@ -1641,19 +1461,6 @@ class ToolsCore
         $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8');
 
         return mb_strlen($str, $encoding);
-    }
-
-    /**
-     * @deprecated Since 8.0.0
-     */
-    public static function stripslashes($string)
-    {
-        @trigger_error(
-            'Tools::stripslashes() is deprecated since version 8.0.0. Use PHP\'s stripslashes instead.',
-            E_USER_DEPRECATED
-        );
-
-        return $string;
     }
 
     public static function strtoupper($str)
@@ -1970,7 +1777,7 @@ class ToolsCore
      * @param int $curl_timeout
      * @param array $opts
      *
-     * @return bool|string
+     * @return string|false
      *
      * @throws Exception
      */
@@ -2046,7 +1853,7 @@ class ToolsCore
      * @param int $curl_timeout
      * @param bool $fallback whether or not to use the fallback if the main solution fails
      *
-     * @return bool|string false or the string content
+     * @return string|false false or the file content
      */
     public static function file_get_contents(
         $url,
@@ -2199,60 +2006,6 @@ class ToolsCore
         );
     }
 
-    /**
-     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead
-     *
-     * @param string $hex
-     *
-     * @return float|int|string
-     */
-    public static function getBrightness($hex)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0. Use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        if (Tools::strtolower($hex) == 'transparent') {
-            return '129';
-        }
-
-        $hex = str_replace('#', '', $hex);
-
-        if (Tools::strlen($hex) == 3) {
-            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
-        }
-
-        $r = hexdec(substr($hex, 0, 2));
-        $g = hexdec(substr($hex, 2, 2));
-        $b = hexdec(substr($hex, 4, 2));
-
-        return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
-    }
-
-    /**
-     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead
-     */
-    public static function isBright($hex)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0. Use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        if (null === self::$colorBrightnessCalculator) {
-            self::$colorBrightnessCalculator = new ColorBrightnessCalculator();
-        }
-
-        return self::$colorBrightnessCalculator->isBright($hex);
-    }
-
     public static function parserSQL($sql)
     {
         if (strlen($sql) > 0) {
@@ -2262,13 +2015,6 @@ class ToolsCore
         }
 
         return false;
-    }
-
-    public static function replaceByAbsoluteURL($matches)
-    {
-        Tools::displayAsDeprecated('Use Media::replaceByAbsoluteURL($matches) instead');
-
-        return Media::replaceByAbsoluteURL($matches);
     }
 
     protected static $_cache_nb_media_servers = null;
@@ -2410,7 +2156,10 @@ class ToolsCore
         // Write data in .htaccess file
         fwrite($write_fd, "# ~~start~~ Do not remove this comment, Prestashop will keep automatically the code outside this comment when .htaccess will be generated again\n");
         fwrite($write_fd, "# .htaccess automaticaly generated by PrestaShop e-commerce open-source solution\n");
-        fwrite($write_fd, "# https://www.prestashop.com - https://www.prestashop.com/forums\n\n");
+        fwrite($write_fd, "# https://www.prestashop-project.org\n\n");
+
+        fwrite($write_fd, "# Prevent directory listings\n");
+        fwrite($write_fd, "Options -Indexes\n\n");
 
         if ($disable_modsec) {
             fwrite($write_fd, "<IfModule mod_security.c>\nSecFilterEngine Off\nSecFilterScanPOST Off\n</IfModule>\n\n");
@@ -2430,6 +2179,9 @@ class ToolsCore
         }
 
         fwrite($write_fd, "RewriteEngine on\n");
+
+        // Protect .git files or folders
+        fwrite($write_fd, "# Protect .git\nRewriteRule \.git - [F,L]\n");
 
         if (
             !$medias
@@ -2498,14 +2250,6 @@ class ToolsCore
                 if ($rewrite_settings) {
                     // Compatibility with the old image filesystem
                     fwrite($write_fd, "# Images\n");
-                    if (Configuration::get('PS_LEGACY_IMAGES')) {
-                        fwrite($write_fd, $media_domains);
-                        fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^([a-z0-9]+\-[a-z0-9]+\-[-\w]*)/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/$1$2.jpg [L]' . PHP_EOL);
-                        fwrite($write_fd, $media_domains);
-                        fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^([\d]+(?:\-[\d]+){1,2})/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/$1$2.jpg [L]' . PHP_EOL);
-                    }
 
                     // Rewrite product images < 10 millions
                     $path_components = [];
@@ -2657,7 +2401,7 @@ FileETag none
 
         // PS Comments
         fwrite($write_fd, "# robots.txt automatically generated by PrestaShop e-commerce open-source solution\n");
-        fwrite($write_fd, "# https://www.prestashop.com - https://www.prestashop.com/forums\n");
+        fwrite($write_fd, "# https://www.prestashop-project.org\n");
         fwrite($write_fd, "# This file is to prevent the crawling and indexing of certain parts\n");
         fwrite($write_fd, "# of your site by web crawlers and spiders run by sites like Yahoo!\n");
         fwrite($write_fd, "# and Google. By telling these \"robots\" where not to go on your site,\n");
@@ -2819,19 +2563,6 @@ FileETag none
         }
 
         return $tab;
-    }
-
-    public static function generateIndex()
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1. Use PrestaShop\Autoload\PrestashopAutoload instead.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        \PrestaShop\Autoload\PrestashopAutoload::getInstance()->generateIndex();
     }
 
     /**
@@ -3380,20 +3111,6 @@ exit;
     }
 
     /**
-     * @deprecated since 8.1 and will be removed in next major version.
-     *
-     * @param int|bool $id_product
-     */
-    public static function clearColorListCache($id_product = false)
-    {
-        // Change template dir if called from the BackOffice
-        $current_template_dir = Context::getContext()->smarty->getTemplateDir();
-        Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_);
-        Tools::clearCache(null, _PS_THEME_DIR_ . 'product-list-colors.tpl', Product::getColorsListCacheId((int) $id_product, false));
-        Context::getContext()->smarty->setTemplateDir($current_template_dir);
-    }
-
-    /**
      * Allow to get the memory limit in octets.
      *
      * @since 1.4.5.0
@@ -3720,30 +3437,6 @@ exit;
     }
 
     /**
-     * Delete unicode class from regular expression patterns.
-     *
-     * @deprecated Since 8.0.0 and will be removed in the next major.
-     *
-     * @param string $pattern
-     *
-     * @return string pattern
-     *
-     * @throws Exception
-     */
-    public static function cleanNonUnicodeSupport($pattern)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.0.0. Its use is not required.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return $pattern;
-    }
-
-    /**
      * Returns an array containing information about
      * HTTP file upload variable ($_FILES).
      *
@@ -3889,26 +3582,6 @@ exit;
         return self::$_user_browser;
     }
 
-    /**
-     * Allows to display the category description without HTML tags and slashes.
-     *
-     * @deprecated since version 8.1.0, to be removed.
-     *
-     * @return string
-     */
-    public static function getDescriptionClean($description)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0. There is no replacement',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return strip_tags(stripslashes($description));
-    }
-
     public static function purifyHTML($html, $uri_unescape = null, $allow_style = false)
     {
         static $use_html_purifier = null;
@@ -4035,21 +3708,6 @@ exit;
             ++$position;
         }
         unset($row);
-    }
-
-    /**
-     * Replaces elements from passed arrays into the first array recursively.
-     *
-     * @param array $base the array in which elements are replaced
-     * @param array $replacements the array from which elements will be extracted
-     *
-     * @deprecated since version 8.0.0, to be removed.
-     */
-    public static function arrayReplaceRecursive($base, $replacements)
-    {
-        Tools::displayAsDeprecated('Use PHP\'s array_replace_recursive() instead');
-
-        return array_replace_recursive($base, $replacements);
     }
 
     /**
@@ -4231,6 +3889,51 @@ exit;
         }
 
         return $array;
+    }
+
+    /**
+     * Generate a URL corresponding to the current page but
+     * with the query string altered.
+     *
+     * If $extraParams is set to NULL, then all query params are stripped.
+     *
+     * Otherwise, params from $extraParams that have a null value are stripped,
+     * and other params are added. Params not in $extraParams are unchanged.
+     */
+    public static function updateCurrentQueryString(array $extraParams = null): string
+    {
+        $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
+        $url = Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $uriWithoutParams;
+        $params = [];
+        $paramsFromUri = '';
+        if (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
+            $paramsFromUri = explode('?', $_SERVER['REQUEST_URI'])[1];
+        }
+        parse_str($paramsFromUri, $params);
+
+        if (null !== $extraParams) {
+            foreach ($extraParams as $key => $value) {
+                if (null === $value) {
+                    unset($params[$key]);
+                } else {
+                    $params[$key] = $value;
+                }
+            }
+        }
+
+        if (null !== $extraParams) {
+            foreach ($params as $key => $param) {
+                if ('' === $param) {
+                    unset($params[$key]);
+                }
+            }
+        } else {
+            $params = [];
+        }
+
+        $queryString = str_replace('%2F', '/', http_build_query($params, '', '&'));
+
+        return $url . ($queryString ? "?$queryString" : '');
     }
 }
 

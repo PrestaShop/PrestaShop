@@ -28,19 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Localization\Number;
 
-use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 
 class LocaleNumberTransformer
 {
-    /** @var Locale */
-    private $locale;
-
     /** @var string[] */
     private const FORCED_LOCALES_TO_EN_NUMBERS = ['ar', 'bn', 'fa'];
 
-    public function __construct(Locale $locale)
-    {
-        $this->locale = $locale;
+    public function __construct(
+        private LocaleInterface $locale
+    ) {
     }
 
     /**

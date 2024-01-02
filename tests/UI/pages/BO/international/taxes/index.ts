@@ -93,7 +93,7 @@ class Taxes extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Taxes •';
+    this.pageTitle = `Taxes • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
@@ -161,7 +161,7 @@ class Taxes extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.resetFilterButton, 2000)) {
-      await page.click(this.resetFilterButton);
+      await page.locator(this.resetFilterButton).click();
       await this.elementNotVisible(page, this.resetFilterButton, 2000);
     }
   }
@@ -236,7 +236,7 @@ class Taxes extends BOBasePage {
    */
   async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
-      await page.click(this.taxesGridStatusColumn(row));
+      await page.locator(this.taxesGridStatusColumn(row)).click();
       return true;
     }
 
@@ -302,13 +302,13 @@ class Taxes extends BOBasePage {
     await this.dialogListener(page, true);
     // Click on dropDown
     await Promise.all([
-      page.click(this.taxesGridColumnToggleDropDown(row)),
+      page.locator(this.taxesGridColumnToggleDropDown(row)).click(),
       this.waitForVisibleSelector(page, `${this.taxesGridColumnToggleDropDown(row)}[aria-expanded='true']`),
     ]);
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.taxesGridDeleteLink(row)),
+      page.locator(this.taxesGridDeleteLink(row)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteTaxes(page);
@@ -324,16 +324,16 @@ class Taxes extends BOBasePage {
   async bulkSetStatus(page: Page, enable: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllLabel, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllLabel).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click to change status
-    await page.click(enable ? this.enableSelectionButton : this.disableSelectionButton);
+    await page.locator(enable ? this.enableSelectionButton : this.disableSelectionButton).click();
     await this.elementNotVisible(page, enable ? this.enableSelectionButton : this.disableSelectionButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -347,17 +347,17 @@ class Taxes extends BOBasePage {
   async deleteTaxesBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllLabel, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllLabel).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.deleteSelectionButton),
+      page.locator(this.deleteSelectionButton).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteTaxes(page);
@@ -394,7 +394,7 @@ class Taxes extends BOBasePage {
     }
 
     // Click on save tax Option
-    await page.click(this.saveTaxOptionButton);
+    await page.locator(this.saveTaxOptionButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -408,7 +408,7 @@ class Taxes extends BOBasePage {
     await this.setChecked(page, this.useEcoTaxToggleInput(enableEcoTax ? 1 : 0));
 
     // Click on save tax Option
-    await page.click(this.saveTaxOptionButton);
+    await page.locator(this.saveTaxOptionButton).click();
     await this.elementNotVisible(page, this.useEcoTaxToggleInput(!enableEcoTax ? 1 : 0));
 
     return this.getAlertSuccessBlockParagraphContent(page);

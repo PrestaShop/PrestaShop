@@ -51,14 +51,14 @@ describe('BO - Catalog - Attributes & Features : Filter attributes table', async
     await attributesPage.closeSfToolBar(page);
 
     const pageTitle = await attributesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(attributesPage.pageTitle);
+    expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
   it('should reset all filters and get number of attributes in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfAttributes = await attributesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfAttributes).to.be.above(0);
+    expect(numberOfAttributes).to.be.above(0);
   });
 
   describe('Filter attributes', async () => {
@@ -91,14 +91,14 @@ describe('BO - Catalog - Attributes & Features : Filter attributes table', async
         );
 
         const numberOfAttributesAfterFilter = await attributesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfAttributesAfterFilter).to.be.at.most(numberOfAttributes);
+        expect(numberOfAttributesAfterFilter).to.be.at.most(numberOfAttributes);
 
         const textColumn = await attributesPage.getTextColumn(page, 1, test.args.filterBy);
 
         if (typeof test.args.filterValue === 'number') {
-          await expect(textColumn).to.contains(test.args.filterValue + 1);
+          expect(textColumn).to.contains(test.args.filterValue + 1);
         } else {
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
@@ -106,7 +106,7 @@ describe('BO - Catalog - Attributes & Features : Filter attributes table', async
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfAttributesAfterReset = await attributesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfAttributesAfterReset).to.equal(numberOfAttributes);
+        expect(numberOfAttributesAfterReset).to.equal(numberOfAttributes);
       });
     });
   });

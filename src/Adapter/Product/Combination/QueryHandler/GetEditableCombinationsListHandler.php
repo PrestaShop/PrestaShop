@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
-use PDO;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
@@ -48,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 /**
  * Handles @see GetEditableCombinationsList using legacy object model
  */
+#[AsQueryHandler]
 final class GetEditableCombinationsListHandler implements GetEditableCombinationsListHandlerInterface
 {
     /**
@@ -124,8 +125,8 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
             ]
         );
 
-        $combinations = $this->combinationQueryBuilder->getSearchQueryBuilder($searchCriteria)->execute()->fetchAll();
-        $total = (int) $this->combinationQueryBuilder->getCountQueryBuilder($searchCriteria)->execute()->fetch(PDO::FETCH_COLUMN);
+        $combinations = $this->combinationQueryBuilder->getSearchQueryBuilder($searchCriteria)->executeQuery()->fetchAllAssociative();
+        $total = (int) $this->combinationQueryBuilder->getCountQueryBuilder($searchCriteria)->executeQuery()->fetchOne();
 
         $combinationIds = array_map(function (array $combination): CombinationId {
             return new CombinationId((int) $combination['id_product_attribute']);

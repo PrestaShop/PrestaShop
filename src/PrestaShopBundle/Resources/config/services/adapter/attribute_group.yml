@@ -2,41 +2,44 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\AddAttributeGroupHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\EditAttributeGroupHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler\GetAttributeGroupForEditingHandler:
+    autowire: true
+    autoconfigure: true
+
   PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider:
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
 
-  prestashop.adapter.product.attribute_group.attribute_group_view_data_provider:
-    alias: PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider
-    deprecated: ~
-
   PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\DeleteAttributeGroupHandler:
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\BulkDeleteAttributeGroupHandler:
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\BulkDeleteAttributeGroupCommand'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler\GetAttributeGroupListHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList'
 
   PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandler:
     autowire: true
     public: false
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository:
+    autowire: true
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\AttributeGroup\Validate\AttributeGroupValidator:

@@ -441,7 +441,7 @@ class CurrencyCore extends ObjectModel
      *
      * @return bool Indicates whether the selected Currencies have been succesfully deleted
      */
-    public function deleteSelection($selection)
+    public function deleteSelection(array $selection)
     {
         if (!is_array($selection)) {
             return false;
@@ -1090,20 +1090,6 @@ class CurrencyCore extends ObjectModel
         }
 
         return self::$currencies[(int) ($id)];
-    }
-
-    /**
-     * Get conversion rate.
-     *
-     * @return int|string
-     *
-     * @deprecated 1.7.2.0, use Currency::getConversionRate() instead
-     */
-    public function getConversationRate()
-    {
-        Tools::displayAsDeprecated('Use Currency::getConversionRate() instead');
-
-        return $this->getConversionRate();
     }
 
     /**

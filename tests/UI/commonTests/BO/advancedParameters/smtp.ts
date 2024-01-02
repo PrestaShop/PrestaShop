@@ -51,7 +51,7 @@ function setupSmtpConfigTest(baseContext: string = 'commonTests-configSMTP'): vo
       await emailPage.closeSfToolBar(page);
 
       const pageTitle = await emailPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(emailPage.pageTitle);
+      expect(pageTitle).to.contains(emailPage.pageTitle);
     });
 
     it('should fill the smtp parameters form fields', async function () {
@@ -64,7 +64,7 @@ function setupSmtpConfigTest(baseContext: string = 'commonTests-configSMTP'): vo
         Customers.johnDoe.password,
         smtpPort.toString(),
       );
-      await expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);
+      expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);
     });
   });
 }
@@ -100,14 +100,14 @@ function resetSmtpConfigTest(baseContext: string = 'commonTests-configSMTP'): vo
       await emailPage.closeSfToolBar(page);
 
       const pageTitle = await emailPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(emailPage.pageTitle);
+      expect(pageTitle).to.contains(emailPage.pageTitle);
     });
 
     it('should reset parameters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetMailParameters', baseContext);
 
       const successParametersReset = await emailPage.resetDefaultParameters(page);
-      await expect(successParametersReset).to.contains(emailPage.successfulUpdateMessage);
+      expect(successParametersReset).to.contains(emailPage.successfulUpdateMessage);
     });
   });
 }

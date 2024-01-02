@@ -4,6 +4,4 @@ services:
 
   prestashop.adapter.credit_slip.query_handler.get_credit_slip_ids_by_date_range_handler:
     class: 'PrestaShop\PrestaShop\Adapter\CreditSlip\QueryHandler\GetCreditSlipIdsByDateRangeHandler'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CreditSlip\Query\GetCreditSlipIdsByDateRange
+    autoconfigure: true

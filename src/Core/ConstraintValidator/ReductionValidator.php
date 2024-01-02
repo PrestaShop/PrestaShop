@@ -54,6 +54,11 @@ final class ReductionValidator extends ConstraintValidator
             throw new UnexpectedTypeException($value, 'array');
         }
 
+        if (null === $value['value'] || null === $value['type']) {
+            // when one of these are null, then we assume the ReductionType was disabled, so we skip the validation
+            return;
+        }
+
         if (!$this->isAllowedType($value['type'])) {
             $this->buildViolation(
                 $constraint->invalidTypeMessage,

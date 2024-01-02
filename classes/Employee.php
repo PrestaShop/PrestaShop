@@ -144,11 +144,11 @@ class EmployeeCore extends ObjectModel
     protected $webserviceParameters = [
         'fields' => [
             'id_lang' => ['xlink_resource' => 'languages'],
-            'last_passwd_gen' => ['setter' => null],
-            'stats_date_from' => ['setter' => null],
-            'stats_date_to' => ['setter' => null],
-            'stats_compare_from' => ['setter' => null],
-            'stats_compare_to' => ['setter' => null],
+            'last_passwd_gen' => ['setter' => false],
+            'stats_date_from' => ['setter' => false],
+            'stats_date_to' => ['setter' => false],
+            'stats_compare_from' => ['setter' => false],
+            'stats_compare_to' => ['setter' => false],
             'passwd' => ['setter' => 'setWsPasswd'],
         ],
     ];
@@ -332,8 +332,8 @@ class EmployeeCore extends ObjectModel
             return false;
         }
 
-        $this->id = $result['id_employee'];
-        $this->id_profile = $result['id_profile'];
+        $this->id = (int) $result['id_employee'];
+        $this->id_profile = (int) $result['id_profile'];
         foreach ($result as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
@@ -760,5 +760,29 @@ class EmployeeCore extends ObjectModel
         }
 
         return null;
+    }
+
+    public function getAssociatedShopIds(): array
+    {
+        return $this->associated_shops;
+    }
+
+    public function getAssociatedShopGroupIds(): array
+    {
+        $associatedShopGroupIds = [];
+        foreach ($this->associated_shops as $shopId) {
+            /** @var int $groupFromShop */
+            $groupFromShop = Shop::getGroupFromShop($shopId, true);
+            if (!empty($groupFromShop) && !in_array($groupFromShop, $associatedShopGroupIds)) {
+                $associatedShopGroupIds[] = (int) $groupFromShop;
+            }
+        }
+
+        return $this->associated_shops;
+    }
+
+    public function getImageUrl(): string
+    {
+        return $this->getImage();
     }
 }

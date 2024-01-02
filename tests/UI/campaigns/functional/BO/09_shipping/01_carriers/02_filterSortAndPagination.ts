@@ -52,14 +52,14 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
     );
 
     const pageTitle = await carriersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(carriersPage.pageTitle);
+    expect(pageTitle).to.contains(carriersPage.pageTitle);
   });
 
   it('should reset all filters and get number of carriers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfCarriers = await carriersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCarriers).to.be.above(0);
+    expect(numberOfCarriers).to.be.above(0);
   });
 
   // 1 - Filter carriers
@@ -135,15 +135,15 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
         );
 
         const numberOfCarriersAfterFilter = await carriersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCarriersAfterFilter).to.be.at.most(numberOfCarriers);
+        expect(numberOfCarriersAfterFilter).to.be.at.most(numberOfCarriers);
 
         for (let row = 1; row <= numberOfCarriersAfterFilter; row++) {
           const textColumn = await carriersPage.getTextColumn(page, row, test.args.filterBy);
 
           if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+            expect(textColumn).to.contains(test.expected);
           } else {
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -152,7 +152,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCarriersAfterReset).to.equal(numberOfCarriers);
+        expect(numberOfCarriersAfterReset).to.equal(numberOfCarriers);
       });
     });
   });
@@ -209,17 +209,17 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -239,17 +239,17 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
 
         await carriersPage.goToAddNewCarrierPage(page);
         const pageTitle = await addCarrierPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
+        expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
       });
 
       it(`should create carrier n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCarrier${index}`, baseContext);
 
         const textResult = await addCarrierPage.createEditCarrier(page, carrierData);
-        await expect(textResult).to.contains(carriersPage.successfulCreationMessage);
+        expect(textResult).to.contains(carriersPage.successfulCreationMessage);
 
         const numberOfCarriersAfterCreation = await carriersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCarriersAfterCreation).to.be.equal(numberOfCarriers + 1 + index);
+        expect(numberOfCarriersAfterCreation).to.be.equal(numberOfCarriers + 1 + index);
       });
 
       after(() => files.deleteFile(`todelete${index}.jpg`));
@@ -307,7 +307,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
           i,
           'name',
         );
-        await expect(textColumn).to.contains('todelete');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
@@ -315,14 +315,14 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCarriers', baseContext);
 
       const deleteTextResult = await carriersPage.bulkDeleteCarriers(page);
-      await expect(deleteTextResult).to.be.contains(carriersPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(carriersPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
+      expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
     });
   });
 });

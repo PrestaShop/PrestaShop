@@ -95,7 +95,7 @@ class ShoppingCarts extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Shopping Carts •';
+    this.pageTitle = `Shopping Carts • ${global.INSTALL.SHOP_NAME}`;
     this.alertSuccessBlockParagraph = '.alert-success';
 
     // Selectors
@@ -252,7 +252,7 @@ class ShoppingCarts extends BOBasePage {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
-        await page.click(this.filterSearchButton);
+        await page.locator(this.filterSearchButton).click();
         await this.elementVisible(page, this.filterResetButton);
         break;
 
@@ -276,8 +276,8 @@ class ShoppingCarts extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
-    await page.type(this.filterDateFromColumn, dateFrom);
-    await page.type(this.filterDateToColumn, dateTo);
+    await page.locator(this.filterDateFromColumn).fill(dateFrom);
+    await page.locator(this.filterDateToColumn).fill(dateTo);
     // click on search
     await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
@@ -360,18 +360,18 @@ class ShoppingCarts extends BOBasePage {
 
     // Select all rows
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.selectAllLink),
     ]);
 
     await Promise.all([
-      page.click(this.selectAllLink),
+      page.locator(this.selectAllLink).click(),
       this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
 
     // Perform delete
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.bulkDeleteLink),
     ]);
 

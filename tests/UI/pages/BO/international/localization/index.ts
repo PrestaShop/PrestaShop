@@ -49,7 +49,7 @@ class Localization extends LocalizationBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Localization • ';
+    this.pageTitle = `Localization • ${global.INSTALL.SHOP_NAME}`;
     this.importLocalizationPackSuccessfulMessage = 'Localization pack imported successfully.';
     this.successfulSettingsUpdateMessage = 'Update successful';
 
@@ -106,7 +106,7 @@ class Localization extends LocalizationBasePage {
     await this.setChecked(page, this.downloadPackDataToggleInput(downloadPackData ? 1 : 0));
 
     // Import the pack
-    await page.click(this.importButton);
+    await page.locator(this.importButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -121,7 +121,7 @@ class Localization extends LocalizationBasePage {
   async setDefaultLanguage(page: Page, language: string, languageFromBrowser: boolean = true): Promise<string> {
     await this.selectByVisibleText(page, this.defaultLanguageSelector, language);
     await this.setChecked(page, this.languageFromBrowserToggleInput(languageFromBrowser ? 1 : 0));
-    await page.click(this.saveConfigurationFormButton);
+    await page.locator(this.saveConfigurationFormButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -148,7 +148,7 @@ class Localization extends LocalizationBasePage {
    */
   async setDefaultCountry(page: Page, country: string): Promise<string> {
     await this.selectByVisibleText(page, this.defaultCountrySelect, country);
-    await page.click(this.saveConfigurationFormButton);
+    await page.locator(this.saveConfigurationFormButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

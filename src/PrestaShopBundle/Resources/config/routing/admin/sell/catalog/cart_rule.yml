@@ -7,6 +7,15 @@ admin_cart_rules_index:
     _legacy_link: AdminCartRules
     _legacy_feature_flag: cart_rule
 
+admin_cart_rules_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::createAction'
+    _legacy_controller: AdminCartRules
+    _legacy_link: AdminCartRules:addcartrule
+    _legacy_feature_flag: cart_rule
+
 admin_cart_rules_search:
   path: /search
   methods: [ GET ]

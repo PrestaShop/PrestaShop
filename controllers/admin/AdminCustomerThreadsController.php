@@ -510,6 +510,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
         return parent::postProcess();
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if (isset($_GET['filename'])) {
@@ -847,7 +852,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         return $timeline;
     }
 
-    protected function displayMessage($message, $email = false, $id_employee = null)
+    protected function displayMessage(array $message, string|bool $email = false, int $id_employee = null)
     {
         $tpl = $this->createTemplate('message.tpl');
 
@@ -901,7 +906,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         return $tpl->fetch();
     }
 
-    protected function displayButton($content)
+    protected function displayButton(string $content)
     {
         return '<div><p>' . $content . '</p></div>';
     }

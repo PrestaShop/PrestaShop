@@ -132,6 +132,8 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $country->id_zone = $this->zones[$zoneName]->id;
         $country->active = true;
         $country->save();
+
+        $this->getSharedStorage()->set($countryName, (int) $countryId);
     }
 
     /**
@@ -238,7 +240,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $carrier->active = true;
         $carrier->add();
         $this->carriers[$carrierName] = $carrier;
-        SharedStorage::getStorage()->set($carrierName, $carrier->id);
+        SharedStorage::getStorage()->set($carrierName, (int) $carrier->id);
 
         $groups = Group::getGroups(Context::getContext()->language->id);
         $groupIds = [];

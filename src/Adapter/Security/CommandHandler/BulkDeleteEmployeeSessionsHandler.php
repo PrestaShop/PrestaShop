@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Session\Repository\EmployeeSessionRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeeSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteEmployeeSessionsHandlerInterface;
 
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteEmployee
  *
  * @internal
  */
+#[AsCommandHandler]
 final class BulkDeleteEmployeeSessionsHandler implements BulkDeleteEmployeeSessionsHandlerInterface
 {
     /**

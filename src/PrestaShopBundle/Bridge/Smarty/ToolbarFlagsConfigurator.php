@@ -40,6 +40,11 @@ use Tools;
 class ToolbarFlagsConfigurator implements ConfiguratorInterface
 {
     /**
+     * @var string[]
+     */
+    public $toolbarTitle;
+
+    /**
      * @var Configuration
      */
     private $configuration;

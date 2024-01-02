@@ -123,7 +123,7 @@
 			//hide standard submit button
 			btn_submit.hide();
 			//bind enter key press to validate form
-			$('#{$table}_form').find('input').keypress(function (e) {
+			$('#{$table}_form').find('input').on('keypress', function (e) {
 				if (e.which == 13 && e.target.localName != 'textarea' && !$(e.target).parent().hasClass('tagify-container'))
 					$('#desc-{$table}-save').click();
 			});

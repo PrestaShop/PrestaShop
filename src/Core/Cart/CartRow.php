@@ -303,7 +303,7 @@ class CartRow
         $productId = (int) $rowData['id_product'];
         $quantity = (int) $rowData['cart_quantity'];
 
-        $addressId = $cart->getProductAddressId($rowData);
+        $addressId = $cart->getProductAddressId();
         if (!$addressId) {
             $addressId = $cart->getTaxAddressId();
         }

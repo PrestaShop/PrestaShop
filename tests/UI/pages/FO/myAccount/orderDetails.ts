@@ -87,7 +87,7 @@ class OrderDetails extends FOBasePage {
 
     // Order product table content
     this.productName = (row, column) => `${this.tableBodyColumn(row, column)} a`;
-    this.downloadLink = (row, column) => `${this.tableBodyColumn(row, column)} a[href]`;
+    this.downloadLink = (row, column) => `${this.tableBodyColumn(row, column)} > a[href]`;
 
     // Add message form selectors
     this.productIdSelect = '[name=id_product]';

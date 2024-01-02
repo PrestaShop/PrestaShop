@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\AddSpecificPriceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
@@ -42,6 +43,7 @@ use SpecificPrice;
 /**
  * Handles AddProductSpecificPriceCommand using legacy object model
  */
+#[AsCommandHandler]
 class AddSpecificPriceHandler implements AddSpecificPriceHandlerInterface
 {
     /**

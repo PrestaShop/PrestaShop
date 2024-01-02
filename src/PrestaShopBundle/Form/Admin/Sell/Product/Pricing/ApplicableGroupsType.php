@@ -28,8 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
+use PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,16 +40,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ApplicableGroupsType extends TranslatorAwareType
 {
     /**
-     * @var FormChoiceProviderInterface|FormChoiceAttributeProviderInterface
-     */
-    protected $currencyByIdChoiceProvider;
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    protected $countryByIdChoiceProvider;
-
-    /**
      * @var FormChoiceProviderInterface
      */
     protected $groupByIdChoiceProvider;
@@ -57,11 +48,6 @@ class ApplicableGroupsType extends TranslatorAwareType
      * @var FormChoiceProviderInterface
      */
     protected $shopByIdChoiceProvider;
-
-    /**
-     * @var string
-     */
-    protected $defaultCurrencySymbol;
 
     /**
      * @var bool
@@ -76,51 +62,32 @@ class ApplicableGroupsType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        $currencyByIdChoiceProvider,
-        FormChoiceProviderInterface $countryByIdChoiceProvider,
         FormChoiceProviderInterface $groupByIdChoiceProvider,
         FormChoiceProviderInterface $shopByIdChoiceProvider,
-        string $defaultCurrencySymbol,
         bool $isMultiShopEnabled,
         int $contextShopId
     ) {
         parent::__construct($translator, $locales);
-        $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
-        $this->countryByIdChoiceProvider = $countryByIdChoiceProvider;
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
         $this->shopByIdChoiceProvider = $shopByIdChoiceProvider;
-        $this->defaultCurrencySymbol = $defaultCurrencySymbol;
         $this->isMultiShopEnabled = $isMultiShopEnabled;
         $this->contextShopId = $contextShopId;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $currencies = array_merge([
-            $this->trans('All currencies', 'Admin.Global') => 0,
-        ], $this->currencyByIdChoiceProvider->getChoices());
-        $countries = array_merge([
-            $this->trans('All countries', 'Admin.Global') => 0,
-        ], $this->countryByIdChoiceProvider->getChoices());
         $groups = array_merge([
             $this->trans('All groups', 'Admin.Global') => 0,
         ], $this->groupByIdChoiceProvider->getChoices());
 
         $builder
-            ->add('currency_id', ChoiceType::class, [
-                'label' => false,
-                'placeholder' => false,
-                'choices' => $currencies,
-                'choice_attr' => $this->currencyByIdChoiceProvider->getChoicesAttributes(),
-                'required' => false,
-                'attr' => [
-                    'data-default-currency-symbol' => $this->defaultCurrencySymbol,
-                ],
+            ->add('currency_id', CurrencyChoiceType::class, [
+                'add_all_currencies_option' => true,
             ])
-            ->add('country_id', ChoiceType::class, [
+            ->add('country_id', CountryChoiceType::class, [
+                'add_all_countries_option' => true,
                 'label' => false,
                 'placeholder' => false,
-                'choices' => $countries,
                 'required' => false,
             ])
             ->add('group_id', ChoiceType::class, [

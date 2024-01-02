@@ -42,14 +42,14 @@
 			current = nb;
 			$('#table' + current).show();
 		}
-		$(document).ready(function() {
+		$(function() {
 			var btn_save_import = $('span[class~="process-icon-save-import"]').parent();
 			var btn_submit_import = $('#import');
 			if (btn_save_import.length > 0 && btn_submit_import.length > 0) {
 				btn_submit_import.closest('.form-group').hide();
 				btn_save_import.find('span').removeClass('process-icon-save-import');
 				btn_save_import.find('span').addClass('process-icon-save');
-				btn_save_import.click(function(){
+				btn_save_import.on('click', function(){
 					btn_submit_import.before('<input type="hidden" name="' + btn_submit_import.attr("name") + '" value="1" />');
 					$('#import_form').submit();
 				});

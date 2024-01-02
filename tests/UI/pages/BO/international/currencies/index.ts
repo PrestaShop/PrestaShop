@@ -185,7 +185,7 @@ class Currencies extends LocalizationBasePage {
       // Do nothing
     }
     // click on search
-    await page.click(this.filterSearchButton);
+    await page.locator(this.filterSearchButton).click();
     await this.elementVisible(page, this.filterResetButton);
   }
 
@@ -311,7 +311,7 @@ class Currencies extends LocalizationBasePage {
    * @returns {Promise<void>}
    */
   async selectRow(page: Page, row: number): Promise<void> {
-    await page.$eval(this.bulkSelectColumnCheckbox(row), (el: HTMLElement) => el.click());
+    await page.locator(this.bulkSelectColumnCheckbox(row)).evaluate((el: HTMLElement) => el.click());
   }
 
   /**
@@ -331,12 +331,12 @@ class Currencies extends LocalizationBasePage {
   async bulkDeleteCurrencies(page: Page): Promise<string> {
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.deleteSelectionButton),
+      page.locator(this.deleteSelectionButton).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForLoadState(page, this.confirmDeleteButton);
@@ -352,7 +352,7 @@ class Currencies extends LocalizationBasePage {
    */
   async deleteCurrency(page: Page, row: number = 1): Promise<string> {
     await Promise.all([
-      page.click(this.dropdownToggleButton(row)),
+      page.locator(this.dropdownToggleButton(row)).click(),
       this.waitForVisibleSelector(
         page,
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
@@ -360,7 +360,7 @@ class Currencies extends LocalizationBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.deleteRowLink(row)),
+      page.locator(this.deleteRowLink(row)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteCurrency(page);
@@ -396,7 +396,7 @@ class Currencies extends LocalizationBasePage {
    * @returns {Promise<string>}
    */
   async updateExchangeRate(page: Page): Promise<string> {
-    await page.click(this.updateExchangeRatesButton);
+    await page.locator(this.updateExchangeRatesButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -464,7 +464,7 @@ class Currencies extends LocalizationBasePage {
 
     let i = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await page.hover(this.sortColumnDiv(sortBy));
+      await page.locator(this.sortColumnDiv(sortBy)).hover();
       await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }

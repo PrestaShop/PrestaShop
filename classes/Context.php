@@ -24,12 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use Detection\MobileDetect;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Install\Language as InstallLanguage;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
@@ -75,7 +77,7 @@ class ContextCore
     /** @var Employee|null */
     public $employee;
 
-    /** @var AdminController|FrontController|LegacyControllerBridgeInterface|null */
+    /** @var AdminController|FrontController|LegacyControllerBridgeInterface|LegacyControllerContext|null */
     public $controller;
 
     /** @var string */
@@ -90,7 +92,7 @@ class ContextCore
     /**
      * Current locale instance.
      *
-     * @var Locale|null
+     * @var LocaleInterface|null
      */
     public $currentLocale;
 
@@ -106,8 +108,7 @@ class ContextCore
     /** @var Smarty|null */
     public $smarty;
 
-    /** @var Mobile_Detect */
-    public $mobile_detect;
+    public ?MobileDetect $mobile_detect = null;
 
     /** @var int */
     public $mode;
@@ -127,18 +128,12 @@ class ContextCore
     /** @var int */
     protected $priceComputingPrecision = null;
 
-    /**
-     * Mobile device of the customer.
-     *
-     * @var bool|null
-     */
-    protected $mobile_device = null;
+    /** Mobile device of the customer. */
+    protected ?bool $mobile_device = null;
 
-    /** @var bool|null */
-    protected $is_mobile = null;
+    protected ?bool $is_mobile = null;
 
-    /** @var bool|null */
-    protected $is_tablet = null;
+    protected ?bool $is_tablet = null;
 
     /** @var int */
     public const DEVICE_COMPUTER = 1;
@@ -161,26 +156,18 @@ class ContextCore
     /** @var int */
     public const MODE_HOST = 8;
 
-    /**
-     * Sets Mobile_Detect tool object.
-     *
-     * @return Mobile_Detect
-     */
-    public function getMobileDetect()
+    /** Sets MobileDetect tool object. */
+    public function getMobileDetect(): MobileDetect
     {
         if ($this->mobile_detect === null) {
-            $this->mobile_detect = new Mobile_Detect();
+            $this->mobile_detect = new MobileDetect();
         }
 
         return $this->mobile_detect;
     }
 
-    /**
-     * Checks if visitor's device is a mobile device.
-     *
-     * @return bool
-     */
-    public function isMobile()
+    /** Checks if visitor's device is a mobile device. */
+    public function isMobile(): bool
     {
         if ($this->is_mobile === null) {
             $mobileDetect = $this->getMobileDetect();
@@ -190,12 +177,8 @@ class ContextCore
         return $this->is_mobile;
     }
 
-    /**
-     * Checks if visitor's device is a tablet device.
-     *
-     * @return bool
-     */
-    public function isTablet()
+    /** Checks if visitor's device is a tablet device. */
+    public function isTablet(): bool
     {
         if ($this->is_tablet === null) {
             $mobileDetect = $this->getMobileDetect();
@@ -206,51 +189,26 @@ class ContextCore
     }
 
     /**
-     * Sets mobile_device context variable.
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
      *
-     * @return bool
+     * Sets mobile_device context variable.
      */
-    public function getMobileDevice()
+    public function getMobileDevice(): bool
     {
-        if ($this->mobile_device === null) {
-            $this->mobile_device = false;
-            if ($this->checkMobileContext()) {
-                if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false && (int) Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0) {
-                    $this->mobile_device = true;
-                } else {
-                    switch ((int) Configuration::get('PS_ALLOW_MOBILE_DEVICE')) {
-                        case 1: // Only for mobile device
-                            if ($this->isMobile() && !$this->isTablet()) {
-                                $this->mobile_device = true;
-                            }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-                            break;
-                        case 2: // Only for touchpads
-                            if ($this->isTablet() && !$this->isMobile()) {
-                                $this->mobile_device = true;
-                            }
-
-                            break;
-                        case 3: // For touchpad or mobile devices
-                            if ($this->isMobile() || $this->isTablet()) {
-                                $this->mobile_device = true;
-                            }
-
-                            break;
-                    }
-                }
-            }
-        }
-
-        return $this->mobile_device;
+        return false;
     }
 
-    /**
-     * Returns mobile device type.
-     *
-     * @return int
-     */
-    public function getDevice()
+    /** Returns mobile device type. */
+    public function getDevice(): int
     {
         static $device = null;
 
@@ -268,7 +226,7 @@ class ContextCore
     }
 
     /**
-     * @return Locale|null
+     * @return LocaleInterface|null
      */
     public function getCurrentLocale()
     {
@@ -276,36 +234,24 @@ class ContextCore
     }
 
     /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     *
      * Checks if mobile context is possible.
      *
      * @return bool
-     *
-     * @throws PrestaShopException
      */
     protected function checkMobileContext()
     {
-        // Check mobile context
-        if (Tools::isSubmit('no_mobile_theme')) {
-            Context::getContext()->cookie->no_mobile = true;
-            if (Context::getContext()->cookie->id_guest) {
-                $guest = new Guest((int) Context::getContext()->cookie->id_guest);
-                $guest->mobile_theme = false;
-                $guest->update();
-            }
-        } elseif (Tools::isSubmit('mobile_theme_ok')) {
-            Context::getContext()->cookie->no_mobile = false;
-            if (Context::getContext()->cookie->id_guest) {
-                $guest = new Guest((int) Context::getContext()->cookie->id_guest);
-                $guest->mobile_theme = true;
-                $guest->update();
-            }
-        }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-        return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
-            && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
-            && defined('_PS_THEME_MOBILE_DIR_')
-            && @filemtime(_PS_THEME_MOBILE_DIR_)
-            && !Context::getContext()->cookie->no_mobile;
+        return false;
     }
 
     /**
@@ -421,7 +367,6 @@ class ContextCore
         // If previous logic resolved to some cart to be used, save it and put this information to cookie
         if (Validate::isLoadedObject($this->cart)) {
             $this->cart->save();
-            $this->cart->autosetProductAddress();
             $this->cookie->id_cart = (int) $this->cart->id;
         }
 

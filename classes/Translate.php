@@ -73,41 +73,6 @@ class TranslateCore
     }
 
     /**
-     * Get a translation for an admin controller.
-     *
-     * @deprecated Use Context::getContext()->getTranslator()->trans()
-     *
-     * @param string $string
-     * @param string $class
-     * @param bool $addslashes
-     * @param bool $htmlentities
-     * @param array|null $sprintf
-     *
-     * @return string
-     */
-    public static function getAdminTranslation($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true, $sprintf = null)
-    {
-        @trigger_error(__FUNCTION__ . 'is deprecated. Use Context::getContext()->getTranslator()->trans() instead.', E_USER_DEPRECATED);
-
-        $str = Context::getContext()->getTranslator()->trans($string);
-
-        if ($htmlentities) {
-            $str = htmlspecialchars($str, ENT_QUOTES, 'utf-8');
-        }
-        $str = str_replace('"', '&quot;', $str);
-
-        if (
-            $sprintf !== null &&
-            (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
-        ) {
-            $str = Translate::checkAndReplaceArgs($str, $sprintf);
-        }
-
-        return $addslashes ? addslashes($str) : $str;
-    }
-
-    /**
      * Get a translation for a module.
      *
      * @param string|ModuleCore $module
@@ -257,7 +222,7 @@ class TranslateCore
         }
 
         if (!isset($_LANGPDF) || !is_array($_LANGPDF)) {
-            return str_replace('"', '&quot;', $string);
+            return str_replace('"', '&quot;', Translate::checkAndReplaceArgs($string, $sprintf));
         }
 
         $string = preg_replace("/\\\*'/", "\'", $string);
@@ -319,28 +284,6 @@ class TranslateCore
         }
 
         return $string;
-    }
-
-    /**
-     * Compatibility method that just calls postProcessTranslation.
-     *
-     * @deprecated renamed this to postProcessTranslation, since it is not only used in relation to smarty
-     */
-    public static function smartyPostProcessTranslation($string, $params)
-    {
-        return Translate::postProcessTranslation($string, $params);
-    }
-
-    /**
-     * Helper function to make calls to postProcessTranslation more readable.
-     *
-     * @deprecated 1.7.1.0
-     */
-    public static function ppTags($string, $tags)
-    {
-        Tools::displayAsDeprecated();
-
-        return Translate::postProcessTranslation($string, ['tags' => $tags]);
     }
 
     /**

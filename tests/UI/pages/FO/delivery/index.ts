@@ -6,18 +6,19 @@ import FOBasePage from '@pages/FO/FObasePage';
  * @class
  * @extends FOBasePage
  */
-class Delivery extends FOBasePage {
+class DeliveryPage extends FOBasePage {
   public readonly pageTitle: string;
 
   /**
    * @constructs
    * Setting up texts and selectors to use on delivery page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Delivery';
   }
 }
 
-export default new Delivery();
+const deliveryPage = new DeliveryPage();
+export {deliveryPage, DeliveryPage};

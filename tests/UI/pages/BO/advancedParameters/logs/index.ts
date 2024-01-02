@@ -167,7 +167,7 @@ class Logs extends BOBasePage {
     // Add listener to dialog to accept erase
     await this.dialogListener(page);
 
-    await page.click(this.gridActionButton);
+    await page.locator(this.gridActionButton).click();
     await this.waitForSelectorAndClick(page, this.eraseAllButton);
 
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
@@ -210,7 +210,7 @@ class Logs extends BOBasePage {
 
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await page.hover(this.sortColumnDiv(sortBy));
+      await page.locator(this.sortColumnDiv(sortBy)).hover();
       await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
@@ -275,8 +275,8 @@ class Logs extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterLogsByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
-    await page.type(this.filterColumnInput('date_add_from'), dateFrom);
-    await page.type(this.filterColumnInput('date_add_to'), dateTo);
+    await page.locator(this.filterColumnInput('date_add_from')).fill(dateFrom);
+    await page.locator(this.filterColumnInput('date_add_to')).fill(dateTo);
     // click on search
     await this.clickAndWaitForURL(page, this.filterSearchButton);
   }

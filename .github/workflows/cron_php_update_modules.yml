@@ -19,7 +19,7 @@ jobs:
       matrix:
         BRANCH:
           - develop
-          - 8.0.x
+          - 8.1.x
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}
 
@@ -31,6 +31,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+        if: env.GH_BRANCH == 'develop'
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -39,11 +45,21 @@ jobs:
 
       - name: Install Composer dependencies
         run: |
-          composer self-update --2.2
+          composer self-update --stable
           composer install --prefer-dist
+
+      - name: Install NPM dependencies
+        working-directory: ./tests/UI
+        run: npm ci
+        if: env.GH_BRANCH == 'develop'
 
       - name: Execute script for updating modules
         run: php .github/workflows/cron_update_modules/script.php ${{ env.GH_BRANCH }}
+
+      - name: Execute script for updating modules
+        working-directory: ./tests/UI
+        run: npm run check:data:modules
+        if: env.GH_BRANCH == 'develop'
 
       - name: Update PrestaShop packages
         id: updated-packages

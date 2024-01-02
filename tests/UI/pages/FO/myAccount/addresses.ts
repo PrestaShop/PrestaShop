@@ -8,7 +8,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class Addresses extends FOBasePage {
+class AddressesPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly addressPageTitle: string;
@@ -35,8 +35,8 @@ class Addresses extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on addresses page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Addresses';
     this.addressPageTitle = 'Address';
@@ -75,10 +75,7 @@ class Addresses extends FOBasePage {
    * @return {Promise<number>}
    */
   async getAddressPosition(page: Page, alias: string): Promise<number> {
-    const titles = await page.$$eval(
-      this.addressBodyTitle,
-      (all) => all.map((address) => address.textContent),
-    );
+    const titles = await page.locator(this.addressBodyTitle).allTextContents();
 
     return titles.indexOf(alias) + 1;
   }
@@ -90,13 +87,14 @@ class Addresses extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditAddressPage(page: Page, position: string | number = 'last'): Promise<void> {
-    const editButtons = await page.$$(this.editAddressLink);
-    const positionEditButtons: number = typeof position === 'string' ? (editButtons.length - 1) : (position - 1);
+    const editButtonsLocators = page.locator(this.editAddressLink);
+    const positionEditButtons: number = typeof position === 'string'
+      ? ((await editButtonsLocators.count()) - 1) : (position - 1);
     const currentUrl: string = page.url();
 
     await Promise.all([
       page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
-      editButtons[positionEditButtons].click(),
+      editButtonsLocators.nth(positionEditButtons).click(),
     ]);
   }
 
@@ -107,16 +105,18 @@ class Addresses extends FOBasePage {
    * @returns {Promise<string>}
    */
   async deleteAddress(page: Page, position: string | number = 'last'): Promise<string> {
-    const deleteButtons = await page.$$(this.deleteAddressLink);
-    const positionDeleteButtons: number = typeof position === 'string' ? (deleteButtons.length - 1) : (position - 1);
+    const deleteButtonsLocator = page.locator(this.deleteAddressLink);
+    const positionDeleteButtons: number = typeof position === 'string'
+      ? ((await deleteButtonsLocator.count()) - 1) : (position - 1);
 
     await Promise.all([
       page.waitForLoadState(),
-      deleteButtons[positionDeleteButtons].click(),
+      deleteButtonsLocator.nth(positionDeleteButtons).click(),
     ]);
 
     return this.getTextContent(page, this.notificationsBlock);
   }
 }
 
-export default new Addresses();
+const addressesPage = new AddressesPage();
+export {addressesPage, AddressesPage};

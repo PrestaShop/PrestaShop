@@ -36,8 +36,8 @@ class MyAccountPage extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on my account page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'My account';
     this.resetPasswordSuccessMessage = 'Your password has been successfully reset and a confirmation has been sent to'

@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\ChoiceProvider;
 
 use Generator;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OutOfStockTypeChoiceProvider;
 
 class OutOfStockTypeChoiceProviderTest extends ChoiceProviderTestCase
@@ -40,9 +41,14 @@ class OutOfStockTypeChoiceProviderTest extends ChoiceProviderTestCase
      */
     public function testItProvidesChoicesAsExpected(bool $outOfStockAvailable, array $expectedChoices): void
     {
+        $mock = $this->createMock(ShopConfigurationInterface::class);
+        $mock->expects($this->once())
+            ->method('get')
+            ->willReturn($outOfStockAvailable);
+
         $choiceProvider = new OutOfStockTypeChoiceProvider(
             $this->mockTranslator(),
-            $outOfStockAvailable
+            $mock
         );
 
         $this->assertEquals($expectedChoices, $choiceProvider->getChoices());

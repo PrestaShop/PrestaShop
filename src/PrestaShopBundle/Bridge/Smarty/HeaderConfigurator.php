@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
@@ -71,7 +71,7 @@ class HeaderConfigurator implements ConfiguratorInterface
     private $currency;
 
     /**
-     * @var Locale
+     * @var LocaleInterface
      */
     private $currentLocale;
 
@@ -173,7 +173,7 @@ class HeaderConfigurator implements ConfiguratorInterface
             $currentTabLevel = isset($tab['current_level']) ? $tab['current_level'] : $currentTabLevel;
         }
 
-        $controllerConfiguration->templateVars['bo_query'] = Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query')));
+        $controllerConfiguration->templateVars['bo_query'] = Tools::safeOutput(Tools::getValue('bo_query'));
         $controllerConfiguration->templateVars['collapse_menu'] = isset($this->cookie->collapse_menu) ? (int) $this->cookie->collapse_menu : 0;
         $controllerConfiguration->templateVars['default_tab_link'] = $this->link->getAdminLink(Tab::getClassNameById((int) $controllerConfiguration->getUser()->getData()->default_tab));
         $controllerConfiguration->templateVars['employee'] = $controllerConfiguration->getUser()->getData();
@@ -283,7 +283,7 @@ class HeaderConfigurator implements ConfiguratorInterface
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
                 || !$tab['enabled']
-                || ($tab['class_name'] == 'AdminStock' && $this->configuration->get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+                || $tab['class_name'] == 'AdminStock'
                 || $tab['class_name'] == 'AdminCarrierWizard') {
                 unset($tabs[$index]);
 
@@ -352,7 +352,7 @@ class HeaderConfigurator implements ConfiguratorInterface
         $priceSpecification = $this->currentLocale->getPriceSpecification($this->currency->iso_code);
 
         return array_merge(
-            ['symbol' => $priceSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
+            ['symbol' => $priceSpecification->getSymbolsByNumberingSystem(LocaleInterface::NUMBERING_SYSTEM_LATIN)->toArray()],
             $priceSpecification->toArray()
         );
     }
@@ -368,7 +368,7 @@ class HeaderConfigurator implements ConfiguratorInterface
         $numberSpecification = $this->currentLocale->getNumberSpecification();
 
         return array_merge(
-            ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
+            ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(LocaleInterface::NUMBERING_SYSTEM_LATIN)->toArray()],
             $numberSpecification->toArray()
         );
     }

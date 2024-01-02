@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Command;
 
 use Context;
+use Exception;
 use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use Product;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -37,7 +38,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
-use TypeError;
 
 /**
  * These tests need to run a symfony command with and without the context helper, so it needs to be run isolated or
@@ -58,20 +58,15 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
 
     public function testLoadLegacyCommandWithoutContextFails()
     {
-        /*
-         * Since PHP 8.0.0, error levels changed, that's why we need to check 2 different exception/warning.
-         * Either way, the exception/warning comes from the fact that we try to get the property of the context currency
-         * but the currency is null.
-         *
-         * @see https://wiki.php.net/rfc/engine_warnings
-         */
-        if (version_compare(phpversion(), '8.0', '>=')) {
-            $this->expectWarning();
-            $this->expectWarningMessage('Attempt to read property "precision" on null');
-        } else {
-            $this->expectException(TypeError::class);
-            $this->expectExceptionMessageMatches('/Argument 1 passed to PrestaShop\\\PrestaShop\\\Core\\\Localization\\\CLDR\\\ComputingPrecision::getPrecision\(\) must be of the type int(:?eger)?, null given/');
-        }
+        set_error_handler(
+            static function ($errno, $errstr) {
+                restore_error_handler();
+                throw new Exception($errstr, $errno);
+            },
+            E_WARNING
+        );
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Attempt to read property "controller_type" on null');
 
         $application = new Application(static::$kernel);
         $application->add(new class() extends Command {
@@ -94,7 +89,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
             }
         });
 
-        Context::getContext()->currency = null;
+        Context::getContext()->controller = null;
         $command = $application->find('prestashop-tests:load-legacy-classes');
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
@@ -128,7 +123,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
             }
         });
 
-        Context::getContext()->currency = null;
+        Context::getContext()->controller = null;
         $command = $application->find('prestashop-tests:load-legacy-classes');
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
@@ -140,7 +135,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
 
     protected function tearDown(): void
     {
-        self::$kernel->shutdown();
+        parent::tearDown();
         error_reporting($this->previousErrorReportingLevel);
     }
 }

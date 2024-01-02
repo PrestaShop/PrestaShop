@@ -4,11 +4,12 @@ import {
   ProductCustomization,
   ProductPackItem,
   ProductSpecificPrice,
+  ProductFeatures,
+  ProductFiles,
+  ProductCustomizations,
 } from '@data/types/product';
 
 import {faker} from '@faker-js/faker';
-
-const behavior: string[] = ['Deny orders', 'Allow orders', 'Default behavior'];
 
 /**
  * Create new product to use on creation form on product page on BO
@@ -21,13 +22,13 @@ export default class ProductData {
 
   public nameFR: string;
 
-  public defaultImage: string|null;
+  public defaultImage: string | null;
 
-  public coverImage: string|null;
+  public coverImage: string | null;
 
-  public thumbImage: string|null;
+  public thumbImage: string | null;
 
-  public thumbImageFR: string|null;
+  public thumbImageFR: string | null;
 
   public category: string;
 
@@ -35,11 +36,29 @@ export default class ProductData {
 
   public status: boolean;
 
+  public applyChangesToAllStores: boolean;
+
   public summary: string;
 
   public description: string;
 
   public reference: string;
+
+  public mpn: string | null;
+
+  public upc: string | null;
+
+  public ean13: string | null;
+
+  public isbn: string | null;
+
+  public features: ProductFeatures[];
+
+  public files: ProductFiles[];
+
+  public displayCondition: boolean;
+
+  public condition: string;
 
   public quantity: number;
 
@@ -81,19 +100,42 @@ export default class ProductData {
 
   public customization: ProductCustomization;
 
+  public customizations: ProductCustomizations[];
+
   public downloadFile: boolean;
 
   public fileName: string;
 
   public allowedDownload: number;
 
-  public weight: number;
+  public expirationDate: string | null;
+
+  public numberOfDays: number | null;
+
+  public metaTitle: string | null;
+
+  public metaDescription: string | null;
+
+  public friendlyUrl: string | null;
 
   public combinations: ProductCombination[];
+
+  public packageDimensionWidth: number;
+
+  public packageDimensionHeight: number;
+
+  public packageDimensionDepth: number;
+
+  public packageDimensionWeight: number;
+
+  public deliveryTime: string;
 
   /**
    * Constructor for class ProductData
    * @param productToCreate {Object} Could be used to force the value of some members
+   * @todo Replace taxRule & tax by TaxData object
+   * @todo Rename price to priceTaxIncluded
+   * @todo Check if retailPrice & finalPrice can be removed
    */
   constructor(productToCreate: ProductCreator = {}) {
     /** @type {number} ID of the product */
@@ -121,10 +163,13 @@ export default class ProductData {
     this.category = productToCreate.category || 'Root';
 
     /** @type {string} Type of the product */
-    this.type = productToCreate.type || 'Standard product';
+    this.type = productToCreate.type || 'standard';
 
     /** @type {boolean} Status of the product */
     this.status = productToCreate.status === undefined ? true : productToCreate.status;
+
+    /** @type {boolean} Apply changes to all stores */
+    this.applyChangesToAllStores = productToCreate.applyChangesToAllStores || false;
 
     /** @type {string} Summary of the product */
     this.summary = productToCreate.summary === undefined ? faker.lorem.sentence() : productToCreate.summary;
@@ -133,21 +178,33 @@ export default class ProductData {
     this.description = productToCreate.description === undefined ? faker.lorem.sentence() : productToCreate.description;
 
     /** @type {string} Reference of the product */
-    this.reference = productToCreate.reference || faker.random.alphaNumeric(7);
+    this.reference = productToCreate.reference || faker.string.alphanumeric(7);
+
+    /** @type {string|null} mpn of the product */
+    this.mpn = productToCreate.mpn || null;
+
+    /** @type {string|null} upc of the product */
+    this.upc = productToCreate.upc || null;
+
+    /** @type {string|null} ean13 of the product */
+    this.ean13 = productToCreate.ean13 || null;
+
+    /** @type {string|null} isbn of the product */
+    this.isbn = productToCreate.isbn || null;
 
     /** @type {number} Quantity available of the product */
     this.quantity = productToCreate.quantity === undefined
-      ? faker.datatype.number({min: 1, max: 9})
+      ? faker.number.int({min: 1, max: 9})
       : productToCreate.quantity;
 
     /** @type {number} Tax for the product */
     this.tax = productToCreate.tax === undefined
-      ? faker.datatype.number({min: 1, max: 100})
+      ? faker.number.int({min: 1, max: 100})
       : productToCreate.tax;
 
     /** @type {number} Price tax included of the product */
     this.price = productToCreate.price === undefined
-      ? faker.datatype.number({min: 10, max: 20}) : productToCreate.price;
+      ? faker.number.int({min: 10, max: 20}) : productToCreate.price;
 
     /** @type {number} Retail price of the product */
     this.retailPrice = productToCreate.retailPrice === undefined
@@ -177,15 +234,38 @@ export default class ProductData {
       },
     ];
 
+    /** @type {ProductFeatures[]} Features of the product */
+    this.features = productToCreate.features || [
+      {
+        featureName: 'Composition',
+        preDefinedValue: 'Cotton',
+      },
+    ];
+
+    /** @type {ProductFiles[]} Files attached to the product in details tab*/
+    this.files = productToCreate.files || [
+      {
+        fileName: 'test',
+        description: 'test',
+        file: 'test.txt',
+      },
+    ];
+
+    /** @type {boolean} Boolean to choose if we need to display condition or not */
+    this.displayCondition = productToCreate.displayCondition || false;
+
+    /** @type {string} Condition to choose */
+    this.condition = productToCreate.condition || 'Use';
+
     /** @type {ProductPackItem[]} Pack of products to add to the product */
     this.pack = productToCreate.pack || [
       {
         reference: 'demo_1',
-        quantity: faker.datatype.number({min: 10, max: 100}),
+        quantity: faker.number.int({min: 10, max: 100}),
       },
       {
         reference: 'demo_2',
-        quantity: faker.datatype.number({min: 10, max: 100}),
+        quantity: faker.number.int({min: 10, max: 100}),
       },
     ];
 
@@ -194,38 +274,36 @@ export default class ProductData {
 
     /** @type {number} EcoTax tax included of the product */
     this.ecoTax = productToCreate.ecoTax === undefined
-      ? faker.datatype.number({min: 1, max: 5})
+      ? faker.number.int({min: 1, max: 5})
       : productToCreate.ecoTax;
 
     /** @type {ProductSpecificPrice} Specific price of the product */
     this.specificPrice = productToCreate.specificPrice || {
-      attributes: 'Size - S, Color - White',
-      discount: faker.datatype.number({min: 10, max: 100}),
-      startingAt: faker.datatype.number({min: 2, max: 5}),
+      attributes: null,
+      discount: faker.number.int({min: 10, max: 100}),
+      startingAt: faker.number.int({min: 2, max: 5}),
       reductionType: '',
     };
 
     /** @type {number} Minimum quantity to buy for the product */
-    this.minimumQuantity = productToCreate.minimumQuantity === undefined
-      ? faker.datatype.number({min: 1, max: 9})
-      : productToCreate.minimumQuantity;
+    this.minimumQuantity = productToCreate.minimumQuantity || 1;
 
     /** @type {string} Stock location of the product */
     this.stockLocation = productToCreate.stockLocation || 'stock 1';
 
     /** @type {number} Low stock level of the product */
     this.lowStockLevel = productToCreate.lowStockLevel === undefined
-      ? faker.datatype.number({min: 1, max: 9})
+      ? faker.number.int({min: 1, max: 9})
       : productToCreate.lowStockLevel;
 
     /** @type {string} Label to add if product is in stock */
-    this.labelWhenInStock = productToCreate.labelWhenInStock || 'Label when in stock';
+    this.labelWhenInStock = productToCreate.labelWhenInStock || '';
 
     /** @type {string} Label to add if product is out of stock */
-    this.labelWhenOutOfStock = productToCreate.labelWhenOutOfStock || 'Label when out of stock';
+    this.labelWhenOutOfStock = productToCreate.labelWhenOutOfStock || '';
 
     /** @type {string} Product behavior when it's out of stock */
-    this.behaviourOutOfStock = productToCreate.behaviourOutOfStock || faker.helpers.arrayElement(behavior);
+    this.behaviourOutOfStock = productToCreate.behaviourOutOfStock || 'Default behavior';
 
     /** @type {ProductCustomization} Customized value of the product */
     this.customization = productToCreate.customization || {
@@ -234,6 +312,14 @@ export default class ProductData {
       required: true,
     };
 
+    /** @type {ProductCustomization} Customized value of the product */
+    this.customizations = productToCreate.customizations || [
+      {
+        label: 'Type your text here',
+        type: 'Text',
+        required: true,
+      }];
+
     /** @type {boolean} True to download file */
     this.downloadFile = productToCreate.downloadFile || false;
 
@@ -241,10 +327,37 @@ export default class ProductData {
     this.fileName = productToCreate.fileName || 'virtual.jpg';
 
     /** @type {number} Number of allowed downloads */
-    this.allowedDownload = productToCreate.allowedDownload || faker.datatype.number({min: 1, max: 20});
+    this.allowedDownload = productToCreate.allowedDownload || faker.number.int({min: 1, max: 20});
+
+    /** @type {string} Expiration date */
+    this.expirationDate = productToCreate.expirationDate || null;
+
+    /** @type {number} Number of days limit */
+    this.numberOfDays = productToCreate.numberOfDays || null;
+
+    /** @type {string} Meta title */
+    this.metaTitle = productToCreate.metaTitle || null;
+
+    /** @type {string} Meta description */
+    this.metaDescription = productToCreate.metaDescription || null;
+
+    /** @type {string} Friendly URL */
+    this.friendlyUrl = productToCreate.friendlyUrl || null;
 
     /** @type {number} Weight of the package */
-    this.weight = productToCreate.weight || faker.datatype.number({min: 1, max: 20});
+    this.packageDimensionWeight = productToCreate.packageDimensionWeight || faker.number.int({min: 1, max: 20});
+
+    /** @type {number} Width of the package */
+    this.packageDimensionWidth = productToCreate.packageDimensionWidth || faker.number.int({min: 1, max: 20});
+
+    /** @type {number} Height of the package */
+    this.packageDimensionHeight = productToCreate.packageDimensionHeight || faker.number.int({min: 1, max: 20});
+
+    /** @type {number} Depth of the package */
+    this.packageDimensionDepth = productToCreate.packageDimensionDepth || faker.number.int({min: 1, max: 20});
+
+    /** @type {string} Delivery time */
+    this.deliveryTime = productToCreate.deliveryTime || 'Default delivery time';
 
     /** @type {ProductCombination[]} */
     this.combinations = productToCreate.combinations || [];

@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 {% use '@PrestaShop/Admin/TwigTemplateForm/form_div_layout.html.twig' %}
-{% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/translatable_choice.html.twig' %}
 
@@ -364,6 +363,7 @@
     <div class="input-group colorpicker">
       <input type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     </div>
+    {{- block('form_help') -}}
   {% endapply %}
 {% endblock color_picker_widget %}
 
@@ -553,22 +553,14 @@
         {%- if errors|length > 1 -%}
             <ul class="alert-text">
                 {%- for error in errors -%}
-                    <li> {{
-                        error.messagePluralization is null
-                        ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-                        : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-                        }}
+                    <li> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
                     </li>
                 {%- endfor -%}
             </ul>
         {%- else -%}
             <div class="alert-text">
             {%- for error in errors -%}
-                <p> {{
-                    error.messagePluralization is null
-                    ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-                    : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-                    }}
+                <p> {{ error.messageTemplate|trans(error.messageParameters, 'form_error')}}
                 </p>
             {%- endfor -%}
             </div>

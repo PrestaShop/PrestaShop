@@ -28,6 +28,7 @@
  * Webservice entity for stock movements.
  *
  * @since 1.5.0
+ * @deprecated since 9.0 and will be removed in 10.0, this object model is no longer needed
  */
 class StockMvtWSCore extends ObjectModelCore
 {

@@ -84,7 +84,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
 
                         $output = new NullOutput();
                         $application->doRun($input, $output);
-                    } catch (Exception $e) {
+                    } catch (Exception) {
                         // Do nothing but at least does not break the loop nor function
                     }
                 }

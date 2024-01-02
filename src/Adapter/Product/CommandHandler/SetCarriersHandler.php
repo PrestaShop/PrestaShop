@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetCarriersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetCarriersHandlerInterface;
 
 /**
  * Handles @var SetCarriersCommand using repository
  */
+#[AsCommandHandler]
 class SetCarriersHandler implements SetCarriersHandlerInterface
 {
     /**

@@ -33,11 +33,14 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -45,6 +48,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Twig\Environment;
 
 /**
  * Responsible of "Improve > Modules > Modules & Services > Catalog / Manage" page display.
@@ -54,6 +58,10 @@ class ModuleController extends ModuleAbstractController
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
 
     public const MAX_MODULES_DISPLAYED = 6;
+
+    public function __construct(private readonly Environment $twig)
+    {
+    }
 
     /**
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
@@ -65,7 +73,7 @@ class ModuleController extends ModuleAbstractController
     public function manageAction()
     {
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+        $moduleRepository = $this->get(ModuleRepository::class);
 
         $installedProducts = $moduleRepository->getList();
 
@@ -76,14 +84,12 @@ class ModuleController extends ModuleAbstractController
 
         $categories = $this->getCategories($modulesProvider, $installedProducts);
         $bulkActions = [
-            'bulk-install' => $this->trans('Install', 'Admin.Actions'),
-            'bulk-uninstall' => $this->trans('Uninstall', 'Admin.Actions'),
-            'bulk-disable' => $this->trans('Disable', 'Admin.Actions'),
-            'bulk-enable' => $this->trans('Enable', 'Admin.Actions'),
-            'bulk-reset' => $this->trans('Reset', 'Admin.Actions'),
-            'bulk-enable-mobile' => $this->trans('Enable Mobile', 'Admin.Modules.Feature'),
-            'bulk-disable-mobile' => $this->trans('Disable Mobile', 'Admin.Modules.Feature'),
-            'bulk-delete' => $this->trans('Delete', 'Admin.Modules.Feature'),
+            'bulk-install' => $this->trans('Install', 'Admin.Modules.Actions'),
+            'bulk-uninstall' => $this->trans('Uninstall', 'Admin.Modules.Actions'),
+            'bulk-disable' => $this->trans('Disable', 'Admin.Modules.Actions'),
+            'bulk-enable' => $this->trans('Enable', 'Admin.Modules.Actions'),
+            'bulk-reset' => $this->trans('Reset', 'Admin.Modules.Actions'),
+            'bulk-delete' => $this->trans('Delete', 'Admin.Modules.Actions'),
         ];
 
         return $this->render(
@@ -120,7 +126,7 @@ class ModuleController extends ModuleAbstractController
         $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
         $legacyContextProvider = $this->get('prestashop.adapter.legacy.context');
         $legacyContext = $legacyContextProvider->getContext();
-        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+        $moduleRepository = $this->get(ModuleRepository::class);
         // Get accessed module object
         $moduleAccessed = $moduleRepository->getModule($module_name);
 
@@ -176,16 +182,14 @@ class ModuleController extends ModuleAbstractController
             case ModuleAdapter::ACTION_RESET:
             case ModuleAdapter::ACTION_ENABLE:
             case ModuleAdapter::ACTION_DISABLE:
-            case ModuleAdapter::ACTION_ENABLE_MOBILE:
-            case ModuleAdapter::ACTION_DISABLE_MOBILE:
-                $deniedAccess = $this->checkPermission(PageVoter::UPDATE);
+                $deniedAccess = $this->checkPermission(Permission::UPDATE);
                 break;
             case ModuleAdapter::ACTION_INSTALL:
-                $deniedAccess = $this->checkPermission(PageVoter::CREATE);
+                $deniedAccess = $this->checkPermission(Permission::CREATE);
                 break;
             case ModuleAdapter::ACTION_DELETE:
             case ModuleAdapter::ACTION_UNINSTALL:
-                $deniedAccess = $this->checkPermission(PageVoter::DELETE);
+                $deniedAccess = $this->checkPermission(Permission::DELETE);
                 break;
 
             default:
@@ -202,9 +206,9 @@ class ModuleController extends ModuleAbstractController
 
         $moduleName = $request->get('module_name');
         $source = $request->query->get('source');
-        $moduleManager = $this->container->get('prestashop.module.manager');
-        $moduleRepository = $this->container->get('prestashop.core.admin.module.repository');
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $moduleManager = $this->get(ModuleManager::class);
+        $moduleRepository = $this->get(ModuleRepository::class);
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $response = [$moduleName => []];
 
         if (!method_exists($moduleManager, $action)) {
@@ -221,7 +225,7 @@ class ModuleController extends ModuleAbstractController
                 $args[] = $source;
             }
             if ($action === ModuleAdapter::ACTION_UNINSTALL) {
-                $args[] = (bool) ($request->request->get('actionParams', [])['deletion'] ?? false);
+                $args[] = (bool) ($request->request->all('actionParams')['deletion'] ?? false);
                 $moduleInstance = $moduleRepository->getModule($moduleName);
                 $response[$moduleName]['refresh_needed'] = $this->moduleNeedsReload($moduleInstance);
                 $response[$moduleName]['has_download_url'] = $moduleInstance->attributes->has('download_url');
@@ -232,7 +236,7 @@ class ModuleController extends ModuleAbstractController
                 $response[$moduleName]['has_download_url'] = $moduleInstance->attributes->has('download_url');
             }
             $systemCacheClearEnabled = filter_var(
-                $request->request->get('actionParams', [])['cacheClearEnabled'] ?? true,
+                $request->request->all('actionParams')['cacheClearEnabled'] ?? true,
                 FILTER_VALIDATE_BOOLEAN
             );
             if (!$systemCacheClearEnabled) {
@@ -277,7 +281,7 @@ class ModuleController extends ModuleAbstractController
 
             $modulePresenter = $this->get('prestashop.adapter.presenter.module');
             $collectionPresented = $modulePresenter->presentCollection($collectionWithActionUrls);
-            $response[$moduleName]['action_menu_html'] = $this->container->get('twig')->render(
+            $response[$moduleName]['action_menu_html'] = $this->twig->render(
                 '@PrestaShop/Admin/Module/Includes/action_menu.html.twig',
                 [
                     'module' => $collectionPresented[0],
@@ -319,16 +323,16 @@ class ModuleController extends ModuleAbstractController
 
         $deniedAccess = $this->checkPermissions(
             [
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
+                Permission::LEVEL_CREATE,
+                Permission::LEVEL_DELETE,
             ]
         );
         if (null !== $deniedAccess) {
             return $deniedAccess;
         }
 
-        $moduleManager = $this->get('prestashop.module.manager');
-        $zipSource = $this->get('prestashop.module.sourcehandler.zip');
+        $moduleManager = $this->get(ModuleManager::class);
+        $zipSource = $this->get(ZipSourceHandler::class);
         $serverParams = new ServerParams();
         $moduleName = '';
 
@@ -404,7 +408,7 @@ class ModuleController extends ModuleAbstractController
                     'Admin.Modules.Notification',
                     ['%module%' => $moduleName]
                 );
-                $installationResponse['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
+                $installationResponse['is_configurable'] = (bool) $this->get(ModuleRepository::class)
                     ->getModule($moduleName)
                     ->attributes
                     ->get('is_configurable');

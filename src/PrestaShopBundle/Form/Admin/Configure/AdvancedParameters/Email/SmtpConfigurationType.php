@@ -70,11 +70,9 @@ class SmtpConfigurationType extends TranslatorAwareType
                 'choices' => [
                     'None' => 'off',
                     'TLS' => 'tls',
-                    'SSL' => 'ssl',
                 ],
                 'choice_translation_domain' => 'Admin.Advparameters.Feature',
                 'label' => $this->trans('Encryption', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('SSL does not seem to be available on your server.', 'Admin.Advparameters.Help'),
             ])
             ->add('port', TextType::class, [
                 'required' => false,

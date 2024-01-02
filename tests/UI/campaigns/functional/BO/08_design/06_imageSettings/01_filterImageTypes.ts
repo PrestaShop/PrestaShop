@@ -50,14 +50,14 @@ describe('BO - Design - Positions : Filter image types table', async () => {
     await imageSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await imageSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
   });
 
   it('should reset all filters and get number of image types in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfImageTypes = await imageSettingsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfImageTypes).to.be.above(0);
+    expect(numberOfImageTypes).to.be.above(0);
   });
 
   describe('Filter image types table', async () => {
@@ -157,19 +157,19 @@ describe('BO - Design - Positions : Filter image types table', async () => {
         );
 
         const numberOfImageTypesAfterFilter = await imageSettingsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfImageTypesAfterFilter).to.be.at.most(numberOfImageTypes);
+        expect(numberOfImageTypesAfterFilter).to.be.at.most(numberOfImageTypes);
 
         for (let row = 1; row <= numberOfImageTypesAfterFilter; row++) {
           if (test.args.filterType === 'select') {
             const status = await imageSettingsPage.getImageTypeStatus(page, row, test.args.filterBy);
-            await expect(status).to.equal(test.args.filterValue === '1');
+            expect(status).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await imageSettingsPage.getTextColumn(
               page,
               row,
               test.args.filterBy,
             );
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -178,7 +178,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfImageTypesAfterReset = await imageSettingsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfImageTypesAfterReset).to.equal(numberOfImageTypes);
+        expect(numberOfImageTypesAfterReset).to.equal(numberOfImageTypes);
       });
     });
   });

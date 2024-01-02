@@ -46,8 +46,8 @@ class CreateAccountPage extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on create account page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Login';
     this.formTitle = 'Create an account';
@@ -100,11 +100,11 @@ class CreateAccountPage extends FOBasePage {
       `${customer.monthOfBirth}/${customer.dayOfBirth}/${customer.yearOfBirth}`,
     );
 
-    await page.click(this.customerPrivacyCheckbox);
+    await page.locator(this.customerPrivacyCheckbox).click();
     if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
-      await page.click(this.psgdprCheckbox);
+      await page.locator(this.psgdprCheckbox).click();
     }
-    await page.click(this.saveButton);
+    await page.locator(this.saveButton).click();
   }
 
   /**

@@ -33,8 +33,8 @@ class AddFile extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Add new file •';
-    this.pageTitleEdit = 'Edit:';
+    this.pageTitle = `New file • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing file';
 
     // Selectors
     this.nameLangButton = '#attachment_name_dropdown';
@@ -51,29 +51,41 @@ class AddFile extends BOBasePage {
    * Create or edit file
    * @param page {Page} Browser tab
    * @param fileData {FileData} Data to set on add/edit file form
+   * @param save {boolean} True if we need to save the form
    * @returns {Promise<string>}
    */
-  async createEditFile(page: Page, fileData: FileData): Promise<string> {
+  async createEditFile(page: Page, fileData: FileData, save: boolean = true): Promise<string | null> {
     // Fill name and description in english
     await this.changeLanguageForSelectors(page, 'en');
     await this.setValue(page, this.nameInput(1), fileData.name);
     await this.setValue(page, this.descriptionInput(1), fileData.description);
 
-    // Fill name and description in french
+    // Fill name and description in French
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.nameInput(2), fileData.frName);
     await this.setValue(page, this.descriptionInput(2), fileData.frDescription);
 
     // Upload file
-    const fileInputElement = await page.$(this.fileInput);
+    await this.uploadFile(page, this.fileInput, fileData.filename);
 
-    if (fileInputElement) {
-      await fileInputElement.setInputFiles(fileData.filename);
+    if (save) {
+      // Save
+      await this.clickAndWaitForURL(page, this.saveButton);
+
+      return this.getAlertSuccessBlockParagraphContent(page);
     }
+    return null;
+  }
 
-    // Save Supplier
-    await this.clickAndWaitForURL(page, this.saveButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+  /**
+   * Get text danger
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getTextDanger(page: Page): Promise<string> {
+    await page.locator(this.saveButton).click();
+
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**
@@ -84,11 +96,11 @@ class AddFile extends BOBasePage {
    */
   async changeLanguageForSelectors(page: Page, lang: string = 'en'): Promise<void> {
     await Promise.all([
-      page.click(this.nameLangButton),
+      page.locator(this.nameLangButton).click(),
       this.waitForVisibleSelector(page, `${this.nameLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      page.click(this.nameLangSpan(lang)),
+      page.locator(this.nameLangSpan(lang)).click(),
       this.waitForVisibleSelector(page, `${this.nameLangButton}[aria-expanded='false']`),
     ]);
   }

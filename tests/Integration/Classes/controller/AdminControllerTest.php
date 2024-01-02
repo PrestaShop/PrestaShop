@@ -36,6 +36,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\EntityMapper;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
 use PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker;
@@ -45,7 +46,6 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Shop;
 use Smarty;
@@ -93,7 +93,7 @@ class AdminControllerTest extends TestCase
     }
 
     /**
-     * Check if html in trans is not escaped when the _raw parameter is used
+     * Check if html in trans is not escaped by trans method but escaped with htmlspecialchars on parameters
      *
      * @dataProvider getControllersClasses
      *
@@ -106,11 +106,11 @@ class AdminControllerTest extends TestCase
         $testedController = new $controllerClass();
         $transMethod = new \ReflectionMethod($testedController, 'trans');
         $transMethod->setAccessible(true);
-        $trans = $transMethod->invoke($testedController, '<a href="test">%d Succesful deletion "%s"</a>', ['_raw' => true, 10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
+        $trans = $transMethod->invoke($testedController, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
         $this->assertEquals('<a href="test">10 Succesful deletion "<b>stringTest</b>"</a>', $trans);
 
-        $trans = $transMethod->invoke($testedController, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
-        $this->assertEquals('&lt;a href="test"&gt;10 Succesful deletion "&lt;b&gt;stringTest&lt;/b&gt;"&lt;/a&gt;', $trans);
+        $trans = $transMethod->invoke($testedController, '<a href="test">%d Succesful deletion "%s"</a>', [10, htmlspecialchars('<b>stringTest</b>')], 'Admin.Notifications.Success');
+        $this->assertEquals('<a href="test">10 Succesful deletion "&lt;b&gt;stringTest&lt;/b&gt;"</a>', $trans);
     }
 
     /**
@@ -152,7 +152,6 @@ class AdminControllerTest extends TestCase
     {
         return [
             ['AdminCarriersController'],
-            ['AdminStatusesController'],
             ['AdminLoginController'],
             ['AdminQuickAccessesController'],
             ['AdminCustomerThreadsController'],
@@ -161,8 +160,6 @@ class AdminControllerTest extends TestCase
             ['AdminSuppliersController'],
             ['AdminAttributesGroupsController'],
             ['AdminNotFoundController'],
-            ['AdminFeaturesController'],
-            ['AdminGendersController'],
             ['AdminTagsController'],
             ['AdminShopController'],
             ['AdminCartRulesController'],
@@ -172,7 +169,6 @@ class AdminControllerTest extends TestCase
             ['AdminCartsController'],
             ['AdminImagesController'],
             ['AdminShopUrlController'],
-            ['AdminStatesController'],
             ['AdminStatsController'],
             ['AdminLegacyLayoutController'],
         ];
@@ -249,6 +245,7 @@ class AdminControllerTest extends TestCase
     {
         $language = $this->getMockBuilder(Language::class)->getMock();
         $language->iso_code = 'en';
+        $language->locale = 'en';
 
         return $language;
     }
@@ -272,7 +269,7 @@ class AdminControllerTest extends TestCase
 
     private function getMockContainerBuilder(): ContainerBuilder
     {
-        $mockContainerBuilder = $this->getMockBuilder(ContainerBuilder::class)->getMock();
+        $mockContainerBuilder = $this->getMockBuilder(ContainerBuilder::class)->disableOriginalConstructor()->getMock();
         $mockContainerBuilder->method('get')
             ->willReturnCallback(function (string $param) {
                 if ($param === Controller::SERVICE_LOCALE_REPOSITORY) {
@@ -293,8 +290,8 @@ class AdminControllerTest extends TestCase
                 if ($param === 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker') {
                     return $this->getMockedAvifExtensionChecker();
                 }
-                if ($param === 'prestashop.core.admin.feature_flag.repository' || $param === FeatureFlagRepository::class) {
-                    return $this->getMockedFeatureFlagRepository();
+                if ($param === FeatureFlagStateCheckerInterface::class) {
+                    return $this->getMockedFeatureFlagStateCheckerInterface();
                 }
             });
 
@@ -375,15 +372,15 @@ class AdminControllerTest extends TestCase
         return $mockAvifExtensionChecker;
     }
 
-    private function getMockedFeatureFlagRepository(): FeatureFlagRepository
+    private function getMockedFeatureFlagStateCheckerInterface(): FeatureFlagStateCheckerInterface
     {
-        $mockFeatureFlagRepository = $this->getMockBuilder(FeatureFlagRepository::class)
+        $mockFeatureFlagStateChecker = $this->getMockBuilder(FeatureFlagStateCheckerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockFeatureFlagRepository->method('isEnabled')->willReturn(false);
+        $mockFeatureFlagStateChecker->method('isEnabled')->willReturn(false);
 
-        return $mockFeatureFlagRepository;
+        return $mockFeatureFlagStateChecker;
     }
 
     private function getMockNumberSpecification(): NumberSpecification

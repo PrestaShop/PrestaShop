@@ -127,7 +127,7 @@ class SearchResults extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getSearchPanelsLinksNumber(page: Page): Promise<number> {
-    return (await page.$$(this.searchPanelsLinks)).length;
+    return page.locator(this.searchPanelsLinks).count();
   }
 
   /**

@@ -2,9 +2,6 @@ name: Js
 on:
   push:
   pull_request:
-    # Do not run when only tests are updated
-    paths-ignore:
-      - 'tests/UI/**'
 
 permissions:
   contents: read
@@ -24,9 +21,6 @@ jobs:
         with:
           node-version: ${{ matrix.js }}
 
-      - name: Setup NPM
-        run: npm install -g npm@7
-
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -38,5 +32,5 @@ jobs:
           restore-keys: ${{ runner.os }}-node-
 
       - name: Run tests
-        run: npm install && npm run test
+        run: npm ci && npm run test
         working-directory: ./admin-dev/themes/new-theme

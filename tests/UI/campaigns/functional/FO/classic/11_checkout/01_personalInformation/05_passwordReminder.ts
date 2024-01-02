@@ -11,9 +11,9 @@ import {createAccountTest} from '@commonTests/FO/account';
 // Import pages
 import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
-import passwordReminderPage from '@pages/FO/passwordReminder';
+import {passwordReminderPage} from '@pages/FO/passwordReminder';
 import {myAccountPage} from '@pages/FO/myAccount';
 
 // Import data
@@ -87,7 +87,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should add product to cart', async function () {
@@ -97,7 +97,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await productPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(cartPage.pageTitle);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should proceed to checkout and validate the cart', async function () {
@@ -106,7 +106,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await cartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage).to.be.true;
+      expect(isCheckoutPage).to.eq(true);
     });
 
     it('should click on sign in then on \'Forgot your password?\' link ', async function () {
@@ -116,7 +116,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await checkoutPage.goToPasswordReminderPage(page);
 
       const pageTitle = await passwordReminderPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
+      expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
     });
 
     it('should set the email address and send reset link', async function () {
@@ -125,13 +125,13 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await passwordReminderPage.sendResetPasswordLink(page, customerData.email);
 
       const successAlertContent = await passwordReminderPage.checkResetLinkSuccess(page);
-      await expect(successAlertContent).to.contains(customerData.email);
+      expect(successAlertContent).to.contains(customerData.email);
     });
 
     it('should check if reset password mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResetPasswordMail', baseContext);
 
-      await expect(newMail.subject).to.contains(resetPasswordMailSubject);
+      expect(newMail.subject).to.contains(resetPasswordMailSubject);
     });
 
     it('should open reset password link', async function () {
@@ -140,14 +140,14 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await passwordReminderPage.openForgotPasswordPage(page, newMail.text);
 
       const pageTitle = await passwordReminderPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
+      expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
     });
 
     it('should check the email address to reset password', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmailAddress', baseContext);
 
       const emailAddress = await passwordReminderPage.getEmailAddressToReset(page);
-      await expect(emailAddress).to.contains(customerData.email);
+      expect(emailAddress).to.contains(customerData.email);
     });
 
     it('should change the password and check the validation message', async function () {
@@ -156,7 +156,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await passwordReminderPage.setNewPassword(page, newPassword);
 
       const successMessage = await myAccountPage.getSuccessMessageAlert(page);
-      await expect(successMessage).to.equal(`${myAccountPage.resetPasswordSuccessMessage} ${customerData.email}`);
+      expect(successMessage).to.equal(`${myAccountPage.resetPasswordSuccessMessage} ${customerData.email}`);
     });
 
     it('should logout from FO', async function () {
@@ -164,7 +164,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
 
       await myAccountPage.logout(page);
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
 
@@ -174,7 +174,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
 
       await myAccountPage.goToHomePage(page);
       const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      expect(result).to.eq(true);
     });
 
     it('should add product to cart', async function () {
@@ -184,7 +184,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await productPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(cartPage.pageTitle);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should proceed to checkout and validate the cart', async function () {
@@ -193,7 +193,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await cartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage).to.be.true;
+      expect(isCheckoutPage).to.eq(true);
     });
 
     it('should enter an invalid credentials', async function () {
@@ -202,17 +202,17 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await checkoutPage.clickOnSignIn(page);
 
       const isCustomerConnected = await checkoutPage.customerLogin(page, customerData);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
 
       const loginError = await checkoutPage.getLoginError(page);
-      await expect(loginError).to.contains(checkoutPage.authenticationErrorMessage);
+      expect(loginError).to.contains(checkoutPage.authenticationErrorMessage);
     });
 
     it('should sign in with customer credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signIn', baseContext);
 
       const isCustomerConnected = await checkoutPage.customerLogin(page, customerNewPassword);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
   });
 

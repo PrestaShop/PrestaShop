@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Grid\Data\Factory;
 
 use Doctrine\DBAL\Query\QueryBuilder;
-use PDOStatement;
+use Doctrine\DBAL\Result;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
@@ -71,8 +71,8 @@ class DoctrineGridDataFactoryTest extends TestCase
      */
     private function createDoctrineQueryBuilderMock(): DoctrineQueryBuilderInterface
     {
-        $statement = $this->createMock(PDOStatement::class);
-        $statement->method('fetchAll')
+        $result = $this->createMock(Result::class);
+        $result->method('fetchAllAssociative')
             ->willReturn([
                 [
                     'id' => 1,
@@ -83,12 +83,12 @@ class DoctrineGridDataFactoryTest extends TestCase
                     'name' => 'Test name 2',
                 ],
             ]);
-        $statement->method('fetch')
+        $result->method('fetchOne')
             ->willReturn(4);
 
         $qb = $this->createMock(QueryBuilder::class);
-        $qb->method('execute')
-            ->willReturn($statement);
+        $qb->method('executeQuery')
+            ->willReturn($result);
         $qb->method('getSQL')
             ->willReturn('SELECT * FROM ps_test WHERE id = :id');
         $qb->method('getParameters')

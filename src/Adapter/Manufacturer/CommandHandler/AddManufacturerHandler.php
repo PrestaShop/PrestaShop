@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
 use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler\AddManufacturerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 /**
  * Handles command which adds new manufacturer using legacy object model
  */
+#[AsCommandHandler]
 final class AddManufacturerHandler extends AbstractManufacturerHandler implements AddManufacturerHandlerInterface
 {
     /**

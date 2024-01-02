@@ -64,7 +64,7 @@ export default {
    * @param browser {Browser} Created browser context with options on global
    * @return {Promise<BrowserContext>}
    */
-  createBrowserContext(browser: Browser): Promise<BrowserContext> {
+  async createBrowserContext(browser: Browser): Promise<BrowserContext> {
     return browser.newContext(
       {
         acceptDownloads: global.BROWSER.acceptDownloads,
@@ -74,6 +74,9 @@ export default {
             width: global.BROWSER.width,
             height: global.BROWSER.height,
           },
+        permissions: [
+          'clipboard-read',
+        ],
         // @todo : Remove it when Puppeteer will accept self signed certificates
         ignoreHTTPSErrors: false,
       },

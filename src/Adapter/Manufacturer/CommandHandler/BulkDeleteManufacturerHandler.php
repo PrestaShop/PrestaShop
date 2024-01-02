@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler\BulkDeleteManufacturerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
@@ -33,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerE
 /**
  * Handles command which deletes manufacturers in bulk action
  */
+#[AsCommandHandler]
 final class BulkDeleteManufacturerHandler extends AbstractManufacturerCommandHandler implements BulkDeleteManufacturerHandlerInterface
 {
     /**

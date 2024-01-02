@@ -31,11 +31,12 @@ import SortingExtension from '@components/grid/extension/sorting-extension';
 import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 
 const {$} = window;
 
 $(() => {
-  const grid = new Grid('authorization_server');
+  const grid = new Grid('authorized_application');
 
   grid.addExtension(new ReloadListActionExtension());
   grid.addExtension(new ExportToSqlManagerExtension());
@@ -43,4 +44,5 @@ $(() => {
   grid.addExtension(new SortingExtension());
   grid.addExtension(new SubmitGridActionExtension());
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  grid.addExtension(new SubmitRowActionExtension());
 });

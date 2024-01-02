@@ -2,6 +2,7 @@
 import CommonPage from '@pages/commonPage';
 
 import {Frame, Page} from 'playwright';
+import type {PageFunction} from 'playwright-core/types/structs';
 
 /**
  * BO parent page, contains functions that can be used on all BO page
@@ -15,7 +16,7 @@ export default class BOBasePage extends CommonPage {
 
   public successfulDeleteMessage: string;
 
-  public readonly successfulMultiDeleteMessage: string;
+  public successfulMultiDeleteMessage: string;
 
   public readonly accessDeniedMessage: string;
 
@@ -39,9 +40,11 @@ export default class BOBasePage extends CommonPage {
 
   private readonly headerShopNameLink: string;
 
+  private readonly quickAccessContainer: string;
+
   private readonly quickAccessDropdownToggle: string;
 
-  private readonly quickAccessLink: (idLink: number) => string;
+  private readonly quickAccessLink: (linkName: string) => string;
 
   private readonly quickAddCurrentLink: string;
 
@@ -185,7 +188,7 @@ export default class BOBasePage extends CommonPage {
 
   public readonly performanceLink: string;
 
-  private readonly administrationLink: string;
+  public readonly administrationLink: string;
 
   public readonly emailLink: string;
 
@@ -198,6 +201,8 @@ export default class BOBasePage extends CommonPage {
   public readonly webserviceLink: string;
 
   public readonly logsLink: string;
+
+  public readonly authorizationServerLink: string;
 
   public readonly featureFlagLink: string;
 
@@ -223,7 +228,7 @@ export default class BOBasePage extends CommonPage {
 
   protected alertBlockCloseButton: string;
 
-  protected readonly alertSuccessBlock: string;
+  protected alertSuccessBlock: string;
 
   private readonly alertDangerBlock: string;
 
@@ -255,6 +260,22 @@ export default class BOBasePage extends CommonPage {
 
   public readonly debugModeToolbar: string;
 
+  public readonly multistoreHeader: string;
+
+  public readonly multistoreButton: string;
+
+  public readonly multistoreModal: string;
+
+  public readonly viewMyStoreButton: string;
+
+  public readonly multistoreTopBar: string;
+
+  public readonly storeName: string;
+
+  public readonly pageSubtitle: string;
+
+  public readonly chooseShopName: (shopNumber: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on all BO pages
@@ -272,6 +293,8 @@ export default class BOBasePage extends CommonPage {
     this.accessDeniedMessage = 'Access denied';
     this.pageNotFoundMessage = 'Page not found';
 
+    this.pageSubtitle = '#content .page-subtitle';
+
     // top navbar
     this.userProfileIconNonMigratedPages = '#employee_infos';
     this.userProfileIcon = '#header_infos #header-employee-container';
@@ -283,20 +306,21 @@ export default class BOBasePage extends CommonPage {
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
     this.quickAccessDropdownToggle = '#quick_select';
-    this.quickAccessLink = (idLink) => `.quick-row-link:nth-child(${idLink})`;
-    this.quickAddCurrentLink = '#quick-add-link';
-    this.quickAccessRemoveLink = '#quick-remove-link';
-    this.manageYourQuickAccessLink = '#quick-manage-link';
+    this.quickAccessContainer = '#quick-access-container';
+    this.quickAccessLink = (linkName) => `${this.quickAccessContainer} [data-item='${linkName}']`;
+    this.quickAddCurrentLink = `${this.quickAccessContainer} #quick-add-link`;
+    this.quickAccessRemoveLink = `${this.quickAccessContainer} #quick-remove-link`;
+    this.manageYourQuickAccessLink = `${this.quickAccessContainer} #quick-manage-link`;
     this.navbarSearchInput = '#bo_query';
 
     // Header links
     this.helpButton = '#product_form_open_help';
     this.menuMobileButton = '.js-mobile-menu';
-    this.notificationsLink = '#notification';
-    this.notificationsDropDownMenu = '#notification div.dropdown-menu-right.notifs_dropdown';
-    this.totalNotificationsValue = '#total_notif_value';
+    this.notificationsLink = '#notification,#notif';
+    this.notificationsDropDownMenu = '#notification div.dropdown-menu-right.notifs_dropdown,#notif div.dropdown-menu';
+    this.totalNotificationsValue = '#total_notif_value,#notifications-total';
     this.notificationsTab = (tabName: string) => `#${tabName}-tab`;
-    this.notificationsNumberInTab = (tabName: string) => `#${tabName}_notif_value`;
+    this.notificationsNumberInTab = (tabName: string) => `#${tabName}_notif_value,#_nb_new_${tabName}_`;
     this.notificationRowInTab = (tabName: string, row: number) => `#${tabName}-notifications div a:nth-child(${row})`;
 
     // left navbar
@@ -307,6 +331,16 @@ export default class BOBasePage extends CommonPage {
       : ':not(.page-sidebar-closed)'}`;
 
     this.debugModeToolbar = 'div[id*=sfToolbarMainContent]';
+
+    // Multistore selectors
+    this.multistoreHeader = '#header-multishop';
+    this.multistoreButton = `${this.multistoreHeader} button.header-multishop-button`;
+    this.multistoreModal = '#multishop-modal';
+    this.chooseShopName = (shopNumber: number) => `${this.multistoreModal} li:nth-child(${2 + shopNumber})`
+      + ' a.multishop-modal-shop-name';
+    this.viewMyStoreButton = `${this.multistoreHeader} div.header-multishop-right a.header-multishop-view-action`;
+    this.multistoreTopBar = `${this.multistoreHeader} div.header-multishop-top-bar`;
+    this.storeName = `${this.multistoreTopBar} div h2`;
 
     // Dashboard
     this.dashboardLink = '#tab-AdminDashboard';
@@ -438,6 +472,8 @@ export default class BOBasePage extends CommonPage {
     this.webserviceLink = '#subtab-AdminWebservice';
     // Logs
     this.logsLink = '#subtab-AdminLogs';
+    // Authorization Server
+    this.authorizationServerLink = '#subtab-AdminAuthorizationServer';
     // New & Experimental Features
     this.featureFlagLink = '#subtab-AdminFeatureFlag';
     // Security
@@ -558,7 +594,7 @@ export default class BOBasePage extends CommonPage {
     this.alertInfoBlock = `${this.alertBlock}.alert-info`;
     this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} div.alert-text p`;
     this.alertDangerBlockParagraph = `${this.alertDangerBlock} div.alert-text p`;
-    this.alertInfoBlockParagraph = `${this.alertInfoBlock} p.alert-text`;
+    this.alertInfoBlockParagraph = `${this.alertInfoBlock} div.alert-text, ${this.alertInfoBlock} p.alert-text`;
 
     // Modal dialog
     this.confirmationModal = '#confirmation_modal.show';
@@ -567,7 +603,7 @@ export default class BOBasePage extends CommonPage {
 
     // Symfony Toolbar
     this.sfToolbarMainContentDiv = "div[id*='sfToolbarMainContent']";
-    this.sfCloseToolbarLink = "a[id*='sfToolbarHideButton']";
+    this.sfCloseToolbarLink = "button[id*='sfToolbarHideButton']";
 
     // Sidebar
     this.rightSidebar = '#right-sidebar';
@@ -582,6 +618,15 @@ export default class BOBasePage extends CommonPage {
   Methods
    */
   /**
+   * Get page subtitle
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getPageSubTitle(page: Page): Promise<string> {
+    return this.getTextContent(page, this.pageSubtitle);
+  }
+
+  /**
    * Go to dashboard page
    * @param page {Page} Browser tab
    */
@@ -592,24 +637,35 @@ export default class BOBasePage extends CommonPage {
   /**
    * Click on link from Quick access dropdown toggle
    * @param page {Page} Browser tab
-   * @param linkId {number} Page ID
+   * @param linkName {linkName} Page name
    * @returns {Promise<void>}
    */
-  async quickAccessToPage(page: Page, linkId: number): Promise<void> {
+  async quickAccessToPage(page: Page, linkName: string): Promise<void> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    await this.clickAndWaitForURL(page, this.quickAccessLink(linkId));
+    await this.clickAndWaitForURL(page, this.quickAccessLink(linkName));
     await this.waitForPageTitleToLoad(page);
+  }
+
+  /**
+   * Quick access to page with frame
+   * @param page {Page} Browser tab
+   * @param linkName {linkName} Page name
+   * @returns {Promise<Page>}
+   */
+  async quickAccessToPageWithFrame(page: Page, linkName: string): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
+    await this.waitForSelectorAndClick(page, this.quickAccessLink(linkName));
   }
 
   /**
    * Click on link from Quick access dropdown toggle and get the opened Page
    * @param page {Page} Browser tab
-   * @param linkId {number} Page ID
+   * @param linkName {linkName} Page name
    * @returns {Promise<Page>}
    */
-  async quickAccessToPageNewWindow(page: Page, linkId: number): Promise<Page> {
+  async quickAccessToPageNewWindow(page: Page, linkName: string): Promise<Page> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    return this.openLinkWithTargetBlank(page, this.quickAccessLink(linkId));
+    return this.openLinkWithTargetBlank(page, this.quickAccessLink(linkName));
   }
 
   /**
@@ -621,7 +677,7 @@ export default class BOBasePage extends CommonPage {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.waitForSelectorAndClick(page, this.quickAccessRemoveLink);
 
-    return page.textContent(this.growlDiv);
+    return page.locator(this.growlDiv).textContent();
   }
 
   /**
@@ -635,7 +691,7 @@ export default class BOBasePage extends CommonPage {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.waitForSelectorAndClick(page, this.quickAddCurrentLink);
 
-    return page.textContent(this.growlDiv);
+    return page.locator(this.growlDiv).textContent();
   }
 
   /**
@@ -680,7 +736,7 @@ export default class BOBasePage extends CommonPage {
       await this.scrollTo(page, parentSelector);
 
       await Promise.all([
-        page.click(parentSelector),
+        page.locator(parentSelector).click(),
         this.waitForVisibleSelector(page, `${parentSelector}${openSelector}`),
       ]);
     }
@@ -693,7 +749,7 @@ export default class BOBasePage extends CommonPage {
    * @return {Promise<boolean>}
    */
   async isSubMenuActive(page: Page, linkSelector: string): Promise<boolean> {
-    return (await page.$$(`${linkSelector}.link-active`)).length > 0;
+    return ((await page.locator(`${linkSelector}.link-active`).count()) > 0);
   }
 
   /**
@@ -729,7 +785,7 @@ export default class BOBasePage extends CommonPage {
       await this.scrollTo(page, parentSelector);
 
       await Promise.all([
-        page.click(parentSelector),
+        page.locator(parentSelector).click(),
         this.waitForVisibleSelector(page, `${parentSelector}${openSelector}`),
       ]);
 
@@ -749,7 +805,7 @@ export default class BOBasePage extends CommonPage {
 
     if (isCurrentCollapsed !== isCollapsed) {
       await Promise.all([
-        page.click(this.navbarCollapseButton),
+        page.locator(this.navbarCollapseButton).click(),
         this.waitForVisibleSelector(
           page,
           this.navbarCollapsed(isCollapsed),
@@ -768,8 +824,18 @@ export default class BOBasePage extends CommonPage {
   }
 
   /**
+   * Is notifications link visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async isNotificationsLinkVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.notificationsLink, 1000);
+  }
+
+  /**
    * Click on notifications link
    * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
    */
   async clickOnNotificationsLink(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.notificationsLink);
@@ -780,15 +846,27 @@ export default class BOBasePage extends CommonPage {
   /**
    * Get all notifications number
    * @param page {Page} Browser tab
+   * @return {Promise<number>}
    */
-  getAllNotificationsNumber(page: Page): Promise<number> {
+  async getAllNotificationsNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.totalNotificationsValue, 2000);
+  }
+
+  /**
+   * Is notifications tab visible
+   * @param page {Page} Browser tab
+   * @param tabName {string} Messages, customers or orders tab
+   * @return {Promise<boolean>}
+   */
+  async isNotificationsTabVisible(page: Page, tabName: string): Promise<boolean> {
+    return this.elementVisible(page, this.notificationsTab(tabName));
   }
 
   /**
    * Click on notifications tab
    * @param page {Page} Browser tab
    * @param tabName {string} Messages, customers or orders tab
+   * @return {Promise<void>}
    */
   async clickOnNotificationsTab(page: Page, tabName: string): Promise<void> {
     await this.waitForSelectorAndClick(page, this.notificationsTab(tabName));
@@ -798,8 +876,9 @@ export default class BOBasePage extends CommonPage {
    * Get notifications number in tab
    * @param page {Page} Browser tab
    * @param tabName {string} Messages, customers or orders tab
+   * @return {Promise<number>}
    */
-  getNotificationsNumberInTab(page: Page, tabName: string): Promise<number> {
+  async getNotificationsNumberInTab(page: Page, tabName: string): Promise<number> {
     return this.getNumberFromText(page, this.notificationsNumberInTab(tabName), 2000);
   }
 
@@ -817,12 +896,13 @@ export default class BOBasePage extends CommonPage {
    * Go to my profile page
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async goToMyProfile(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
-      await page.click(this.userProfileIcon);
+      await page.locator(this.userProfileIcon).click();
     } else {
-      await page.click(this.userProfileIconNonMigratedPages);
+      await page.locator(this.userProfileIconNonMigratedPages).click();
     }
     if (await this.elementVisible(page, this.userProfileYourProfileLink, 1000)) {
       await this.waitForVisibleSelector(page, this.userProfileYourProfileLink);
@@ -839,12 +919,12 @@ export default class BOBasePage extends CommonPage {
    */
   async getCurrentEmployeeAvatar(page: Page): Promise<string | null> {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
-      await page.click(this.userProfileIcon);
+      await page.locator(this.userProfileIcon).click();
     } else {
-      await page.click(this.userProfileIconNonMigratedPages);
+      await page.locator(this.userProfileIconNonMigratedPages).click();
     }
 
-    return page.getAttribute(this.userProfileAvatar, 'src');
+    return this.getAttributeContent(page, this.userProfileAvatar, 'src');
   }
 
   /**
@@ -854,9 +934,9 @@ export default class BOBasePage extends CommonPage {
    */
   async logoutBO(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
-      await page.click(this.userProfileIcon);
+      await page.locator(this.userProfileIcon).click();
     } else {
-      await page.click(this.userProfileIconNonMigratedPages);
+      await page.locator(this.userProfileIconNonMigratedPages).click();
     }
     await this.waitForVisibleSelector(page, this.userProfileLogoutLink);
     await this.clickAndWaitForURL(page, this.userProfileLogoutLink);
@@ -881,7 +961,7 @@ export default class BOBasePage extends CommonPage {
   async setValueOnTinymceInput(page: Page, iFrameSelector: string, value: string): Promise<void> {
     const args = {selector: iFrameSelector, vl: value};
     // eslint-disable-next-line no-eval
-    const fn = eval(`({
+    const fn: { fnSetValueOnTinymceInput: PageFunction<{ selector: string, vl: string }, void> } = eval(`({
       async fnSetValueOnTinymceInput(args) {
         /* eslint-env browser */
         const iFrameElement = await document.querySelector(args.selector);
@@ -894,13 +974,37 @@ export default class BOBasePage extends CommonPage {
   }
 
   /**
+   * Set value on tinyMce textarea
+   * @param page {Page} Browser tab
+   * @param selector {string} Selector of the input to set value on
+   * @param value {string} Value
+   * @param onChange {boolean} Trigger the event 'change' on selector
+   * @return {Promise<void>}
+   */
+  async setValueOnDateTimePickerInput(page: Page, selector: string, value: string, onChange: boolean = false): Promise<void> {
+    const args = {selector, value, onChange};
+    // eslint-disable-next-line no-eval
+    const fn: { fnSetValueOnDTPickerInput: PageFunction<{ selector: string, value: string, onChange: boolean }, void> } = eval(`({
+      async fnSetValueOnDTPickerInput(args) {
+        /* eslint-env browser */
+        const textElement = await document.querySelector(args.selector);
+        textElement.value = args.value;
+        if (args.onChange) {
+          textElement.dispatchEvent(new Event('change'));
+        }
+      }
+    })`);
+    await page.evaluate(fn.fnSetValueOnDTPickerInput, args);
+  }
+
+  /**
    * Close symfony Toolbar
    * @param page {Frame|Page} Browser tab
    * @return {Promise<void>}
    */
-  async closeSfToolBar(page: Frame|Page): Promise<void> {
+  async closeSfToolBar(page: Frame | Page): Promise<void> {
     if (await this.elementVisible(page, `${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
-      await page.click(this.sfCloseToolbarLink);
+      await page.locator(this.sfCloseToolbarLink).click();
     }
   }
 
@@ -939,7 +1043,7 @@ export default class BOBasePage extends CommonPage {
    * @param timeout {number} Timeout to wait for the selector
    * @return {Promise<string|null>}
    */
-  getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string | null> {
+  async getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string | null> {
     return page.textContent(this.growlMessageBlock, {timeout});
   }
 
@@ -953,7 +1057,7 @@ export default class BOBasePage extends CommonPage {
 
     while (!growlNotVisible) {
       try {
-        await page.click(this.growlCloseButton);
+        await page.locator(this.growlCloseButton).click();
       } catch (e) {
         // If element does not exist it's already not visible
       }
@@ -962,6 +1066,15 @@ export default class BOBasePage extends CommonPage {
     }
 
     await this.waitForHiddenSelector(page, this.growlMessageBlock);
+  }
+
+  /**
+   * Return if an alert block is visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async hasAlertBlock(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.alertBlock, 1000);
   }
 
   /**
@@ -1000,7 +1113,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Frame|Page} Browser tab
    * @return {Promise<string>}
    */
-  async getAlertSuccessBlockContent(page: Frame|Page): Promise<string> {
+  async getAlertSuccessBlockContent(page: Frame | Page): Promise<string> {
     await this.elementVisible(page, this.alertSuccessBlock, 2000);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
@@ -1010,7 +1123,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Frame|Page} Browser tab
    * @return {Promise<string>}
    */
-  async getAlertSuccessBlockParagraphContent(page: Frame|Page): Promise<string> {
+  async getAlertSuccessBlockParagraphContent(page: Frame | Page): Promise<string> {
     await this.elementVisible(page, this.alertSuccessBlockParagraph, 2000);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
@@ -1063,6 +1176,53 @@ export default class BOBasePage extends CommonPage {
   async resize(page: Page, mobileSize: boolean): Promise<void> {
     await super.resize(page, mobileSize);
     await this.waitForSelector(page, this.menuMobileButton, mobileSize ? 'visible' : 'hidden');
+  }
+
+  // Multistore methods
+  /**
+   * Click on multistore header
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnMultiStoreHeader(page: Page): Promise<void> {
+    await page.locator(this.multistoreButton).click();
+  }
+
+  /**
+   * Choose shop
+   * @param page {Page} Browser tab
+   * @param shopNumber
+   * @returns {Promise<void>}
+   */
+  async chooseShop(page: Page, shopNumber: number): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.chooseShopName(shopNumber));
+  }
+
+  /**
+   * View my store
+   * @param page {Page} Browser tab
+   * @returns {Promise<Page>}
+   */
+  async viewMyStore(page: Page): Promise<Page> {
+    return this.openLinkWithTargetBlank(page, this.viewMyStoreButton);
+  }
+
+  /**
+   * Get store color
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getShopColor(page: Page): Promise<string> {
+    return this.getAttributeContent(page, this.multistoreTopBar, 'style');
+  }
+
+  /**
+   * Get store name
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async getShopName(page: Page): Promise<string> {
+    return this.getTextContent(page, this.storeName);
   }
 }
 

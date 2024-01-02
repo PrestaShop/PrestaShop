@@ -37,7 +37,7 @@ class DeliverySlips extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Delivery Slips';
+    this.pageTitle = `Delivery slips • ${global.INSTALL.SHOP_NAME}`;
     this.errorMessageWhenGenerateFileByDate = 'No delivery slip was found for this period.';
     this.successfulUpdateMessage = 'Update successful';
 
@@ -67,7 +67,7 @@ class DeliverySlips extends BOBasePage {
    * @param dateTo {string} Value to set on date to input
    * @returns {Promise<string>}
    */
-  async generatePDFByDateAndDownload(page: Page, dateFrom: string = '', dateTo: string = ''): Promise<string|null> {
+  async generatePDFByDateAndDownload(page: Page, dateFrom: string = '', dateTo: string = ''): Promise<string | null> {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
 
     return this.clickAndWaitForDownload(page, this.generatePdfByDateButton);
@@ -82,7 +82,7 @@ class DeliverySlips extends BOBasePage {
    */
   async generatePDFByDateAndFail(page: Page, dateFrom: string = '', dateTo: string = ''): Promise<string> {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
-    await page.click(this.generatePdfByDateButton);
+    await page.locator(this.generatePdfByDateButton).click();
     return this.getAlertDangerBlockParagraphContent(page);
   }
 
@@ -136,8 +136,9 @@ class DeliverySlips extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveDeliverySlipOptions(page: Page): Promise<string> {
-    await page.click(this.saveDeliverySlipOptionsButton);
+    await page.locator(this.saveDeliverySlipOptionsButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
+
 export default new DeliverySlips();

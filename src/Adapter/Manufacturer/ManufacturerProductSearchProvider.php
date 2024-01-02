@@ -31,14 +31,25 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrdersCollection;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ManufacturerProductSearchProvider implements ProductSearchProviderInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var Manufacturer
+     */
     private $manufacturer;
-    private $sortOrderFactory;
+
+    /**
+     * @var SortOrdersCollection
+     */
+    private $sortOrdersCollection;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -46,7 +57,7 @@ class ManufacturerProductSearchProvider implements ProductSearchProviderInterfac
     ) {
         $this->translator = $translator;
         $this->manufacturer = $manufacturer;
-        $this->sortOrderFactory = new SortOrderFactory($this->translator);
+        $this->sortOrdersCollection = new SortOrdersCollection($this->translator);
     }
 
     /**
@@ -94,8 +105,9 @@ class ManufacturerProductSearchProvider implements ProductSearchProviderInterfac
                 ->setProducts($products)
                 ->setTotalProductsCount($count);
 
+            // We use only default set of sort orders
             $result->setAvailableSortOrders(
-                $this->sortOrderFactory->getDefaultSortOrders()
+                $this->sortOrdersCollection->getDefaults()
             );
         }
 

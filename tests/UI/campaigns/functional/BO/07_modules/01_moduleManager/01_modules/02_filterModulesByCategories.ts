@@ -46,7 +46,7 @@ describe('BO - Modules - Module Manager : Filter modules by Categories', async (
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   describe('Filter modules by categories', async () => {
@@ -58,7 +58,7 @@ describe('BO - Modules - Module Manager : Filter modules by Categories', async (
         await moduleManagerPage.filterByCategory(page, category);
 
         const firstBlockTitle = await moduleManagerPage.getBlockModuleTitle(page, 1);
-        await expect(firstBlockTitle).to.equal(category);
+        expect(firstBlockTitle).to.equal(category);
       });
     });
   });

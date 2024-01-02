@@ -60,7 +60,7 @@ describe('CLDR : Search a currency by ISO code', async () => {
     await localizationPage.closeSfToolBar(page);
 
     const pageTitle = await localizationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(localizationPage.pageTitle);
+    expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   it('should go to Currencies Tab', async function () {
@@ -69,14 +69,14 @@ describe('CLDR : Search a currency by ISO code', async () => {
     await localizationPage.goToSubTabCurrencies(page);
 
     const pageTitle = await currenciesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    expect(pageTitle).to.contains(currenciesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
     numberOfCurrencies = await currenciesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCurrencies).to.be.above(0);
+    expect(numberOfCurrencies).to.be.above(0);
   });
 
   installedCurrencies.forEach((currency: CurrencyData, index: number) => {
@@ -86,7 +86,7 @@ describe('CLDR : Search a currency by ISO code', async () => {
       await currenciesPage.goToAddNewCurrencyPage(page);
 
       const pageTitle = await addCurrencyPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+      expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
     });
 
     it(`should create the currency ${currency.isoCode}`, async function () {
@@ -94,11 +94,11 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
       // Create and check successful message
       const textResult = await addCurrencyPage.addOfficialCurrency(page, currency);
-      await expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
+      expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
 
       // Check number of currencies after creation
       const numberOfCurrenciesAfterCreation = await currenciesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCurrenciesAfterCreation).to.be.equal(numberOfCurrencies + index + 1);
+      expect(numberOfCurrenciesAfterCreation).to.be.equal(numberOfCurrencies + index + 1);
     });
   });
 
@@ -110,11 +110,11 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
+    expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    await expect(textColumn).to.contains(Currencies.euro.isoCode);
+    expect(textColumn).to.contains(Currencies.euro.isoCode);
   });
 
   it('should filter by iso code "US"', async function () {
@@ -125,11 +125,11 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
+    expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    await expect(textColumn).to.contains(Currencies.usd.isoCode);
+    expect(textColumn).to.contains(Currencies.usd.isoCode);
   });
 
   it('should filter by iso code "PY"', async function () {
@@ -141,14 +141,14 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCurrenciesAfterFilter).to.be.equal(2);
+    expect(numberOfCurrenciesAfterFilter).to.be.equal(2);
 
     // Check currencies
     const textColumnRow1 = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    await expect(textColumnRow1).to.contains(Currencies.jpy.isoCode);
+    expect(textColumnRow1).to.contains(Currencies.jpy.isoCode);
 
     const textColumnRow2 = await currenciesPage.getTextColumnFromTableCurrency(page, 2, 'iso_code');
-    await expect(textColumnRow2).to.contains(Currencies.pyg.isoCode);
+    expect(textColumnRow2).to.contains(Currencies.pyg.isoCode);
   });
 
   it('should filter by iso code "P"', async function () {
@@ -160,17 +160,17 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCurrenciesAfterFilter).to.be.equal(3);
+    expect(numberOfCurrenciesAfterFilter).to.be.equal(3);
 
     // Check currencies
     const textColumnRow1 = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    await expect(textColumnRow1).to.contains(Currencies.gbp.isoCode);
+    expect(textColumnRow1).to.contains(Currencies.gbp.isoCode);
 
     const textColumnRow2 = await currenciesPage.getTextColumnFromTableCurrency(page, 2, 'iso_code');
-    await expect(textColumnRow2).to.contains(Currencies.jpy.isoCode);
+    expect(textColumnRow2).to.contains(Currencies.jpy.isoCode);
 
     const textColumnRow3 = await currenciesPage.getTextColumnFromTableCurrency(page, 3, 'iso_code');
-    await expect(textColumnRow3).to.contains(Currencies.pyg.isoCode);
+    expect(textColumnRow3).to.contains(Currencies.pyg.isoCode);
   });
 
   it('should filter by iso code "ABC"', async function () {
@@ -181,18 +181,18 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCurrenciesAfterFilter).to.be.equal(0);
+    expect(numberOfCurrenciesAfterFilter).to.be.equal(0);
 
     // Check currencies
     const textColumn = await currenciesPage.getTextForEmptyTable(page);
-    await expect(textColumn).to.equal('warning No records found');
+    expect(textColumn).to.equal('warning No records found');
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFinal', baseContext);
 
     const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCurrenciesAfterReset).to.be.eq(numberOfCurrencies + installedCurrencies.length);
+    expect(numberOfCurrenciesAfterReset).to.be.eq(numberOfCurrencies + installedCurrencies.length);
   });
 
   // Post-condition - Delete currencies

@@ -183,10 +183,10 @@ export default class AutoCompleteSearch {
     /* eslint-disable */
     this.$searchInput
       .typeahead(<TypeaheadJQueryOptions>typeaheadOptions, <TypeaheadJQueryDataset>dataSetConfig)
-      .bind('typeahead:select', (e: any, selectedItem: any) =>
+      .on('typeahead:select', (e: any, selectedItem: any) =>
         this.config.onSelect(selectedItem, e, this.$searchInput)
       )
-      .bind('typeahead:close', (e: any) => {
+      .on('typeahead:close', (e: any) => {
         this.config.onClose(e, this.$searchInput);
       });
     /* eslint-enable */

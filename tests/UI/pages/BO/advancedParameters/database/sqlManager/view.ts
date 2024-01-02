@@ -31,10 +31,10 @@ class ViewSQLQuery extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'SQL Manager';
+    this.pageTitle = `Result of SQL query • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
-    this.sqlQueryResultTitle = '#card-title';
+    this.sqlQueryResultTitle = '.card-header';
     this.resultsTable = '#grid-table';
     this.tableColumnName = (column: number) => `${this.resultsTable} th:nth-child(${column})`;
     this.tableBody = `${this.resultsTable} tbody`;

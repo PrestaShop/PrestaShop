@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
@@ -173,9 +173,9 @@ class StockRepository extends StockManagementRepository
         $statement = $this->connection->prepare($query);
         $this->bindStockManagementValues($statement, null, $productIdentity);
 
-        $statement->execute();
-        $rows = $statement->fetchAll();
-        $statement->closeCursor();
+        $result = $statement->executeQuery();
+        $rows = $result->fetchAllAssociative();
+        $result->free();
         $this->foundRows = $this->getFoundRows();
 
         if (count($rows) === 0) {
@@ -360,9 +360,9 @@ class StockRepository extends StockManagementRepository
                         WHERE id_product=:id_product';
             $statement = $this->connection->prepare($query);
             $statement->bindValue('id_product', (int) $row['product_id'], \PDO::PARAM_INT);
-            $statement->execute();
-            $this->totalCombinations[$row['product_id']] = $statement->fetchColumn(0);
-            $statement->closeCursor();
+            $result = $statement->executeQuery();
+            $this->totalCombinations[$row['product_id']] = $result->fetchOne();
+            $result->free();
         }
 
         return $this->totalCombinations[$row['product_id']];

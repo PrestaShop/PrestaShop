@@ -25,8 +25,8 @@
  */
 
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 
 /**
  * @property ImageType $object
@@ -35,7 +35,7 @@ class AdminImagesControllerCore extends AdminController
 {
     protected $start_time = 0;
     protected $max_execution_time = 7200;
-    protected $display_move;
+    protected $display_move = false;
 
     /**
      * @var bool
@@ -73,20 +73,6 @@ class AdminImagesControllerCore extends AdminController
             'suppliers' => ['title' => $this->trans('Suppliers', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
             'stores' => ['title' => $this->trans('Stores', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
         ];
-
-        // No need to display the old image system migration tool except if product images are in _PS_PRODUCT_IMG_DIR_
-        $this->display_move = false;
-        $dir = _PS_PRODUCT_IMG_DIR_;
-        if (is_dir($dir)) {
-            if ($dh = opendir($dir)) {
-                while (($file = readdir($dh)) !== false && $this->display_move == false) {
-                    if (!is_dir($dir . DIRECTORY_SEPARATOR . $file) && $file[0] != '.' && is_numeric($file[0])) {
-                        $this->display_move = true;
-                    }
-                }
-                closedir($dh);
-            }
-        }
     }
 
     public function init()
@@ -97,7 +83,7 @@ class AdminImagesControllerCore extends AdminController
         parent::init();
 
         $this->canGenerateAvif = $this->get('PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker')->isAvailable();
-        $this->isMultipleImageFormatFeatureEnabled = $this->get(FeatureFlagRepository::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
+        $this->isMultipleImageFormatFeatureEnabled = $this->get(FeatureFlagStateCheckerInterface::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
         $this->imageFormatConfiguration = $this->get(ImageFormatConfiguration::class);
 
         $formFields = [];
@@ -264,15 +250,6 @@ class AdminImagesControllerCore extends AdminController
                 'suffix' => $this->trans('pixels', [], 'Admin.Design.Feature'),
                 'visibility' => Shop::CONTEXT_ALL,
             ],
-            'PS_HIGHT_DPI' => [
-                'type' => 'bool',
-                'title' => $this->trans('Generate high resolution images', [], 'Admin.Design.Feature'),
-                'required' => false,
-                'is_bool' => true,
-                'hint' => $this->trans('This will generate an additional file for each image (thus doubling your total amount of images). Resolution of these images will be twice higher.', [], 'Admin.Design.Help'),
-                'desc' => $this->trans('Enable to optimize the display of your images on high pixel density screens.', [], 'Admin.Design.Help'),
-                'visibility' => Shop::CONTEXT_ALL,
-            ],
         ];
         $formFields = array_merge($formFields, $fields);
 
@@ -288,18 +265,6 @@ class AdminImagesControllerCore extends AdminController
                 'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
             ],
         ];
-
-        if ($this->display_move) {
-            $this->fields_options['product_images']['fields']['PS_LEGACY_IMAGES'] = [
-                'title' => $this->trans('Use the legacy image filesystem', [], 'Admin.Design.Feature'),
-                'hint' => $this->trans('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.', [], 'Admin.Design.Help'),
-                'validation' => 'isBool',
-                'cast' => 'intval',
-                'required' => false,
-                'type' => 'bool',
-                'visibility' => Shop::CONTEXT_ALL,
-            ];
-        }
 
         $this->fields_form = [
             'legend' => [
@@ -620,7 +585,7 @@ class AdminImagesControllerCore extends AdminController
      *
      * @return bool
      */
-    protected function _deleteOldImages($dir, $type, $product = false)
+    protected function _deleteOldImages(string $dir, array $type, bool $product = false)
     {
         if (!is_dir($dir)) {
             return false;
@@ -675,14 +640,11 @@ class AdminImagesControllerCore extends AdminController
      *
      * @return bool|string
      */
-    protected function _regenerateNewImages($dir, $type, $productsImages = false)
+    protected function _regenerateNewImages(string $dir, array $type, bool $productsImages = false)
     {
         if (!is_dir($dir)) {
             return false;
         }
-
-        // Should we generate high DPI images?
-        $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
         /*
          * Let's resolve which formats we will use for image generation.
@@ -726,17 +688,6 @@ class AdminImagesControllerCore extends AdminController
                                         )) {
                                         $this->errors[] = $this->trans('Failed to resize image file (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
                                     }
-
-                                    if ($generate_high_dpi_images && !ImageManager::resize(
-                                        $dir . $image,
-                                        $newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
-                                        (int) $imageType['width'] * 2,
-                                        (int) $imageType['height'] * 2,
-                                        $imageFormat,
-                                        $forceFormat
-                                    )) {
-                                        $this->errors[] = $this->trans('Failed to resize image file to high resolution (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
-                                    }
                                 }
                             }
                         }
@@ -777,27 +728,6 @@ class AdminImagesControllerCore extends AdminController
                                     );
                                 }
                             }
-                            if ($generate_high_dpi_images) {
-                                if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat)) {
-                                    if (!ImageManager::resize(
-                                            $existing_img,
-                                            $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
-                                            (int) $imageType['width'] * 2,
-                                            (int) $imageType['height'] * 2,
-                                            $imageFormat,
-                                            $forceFormat
-                                        )) {
-                                        $this->errors[] = $this->trans(
-                                            'Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.',
-                                            [
-                                                '%filename%' => $existing_img,
-                                                '%id%' => (int) $imageObj->id_product,
-                                            ],
-                                            'Admin.Design.Notification'
-                                        );
-                                    }
-                                }
-                            }
                         }
                     }
                 } else {
@@ -828,12 +758,9 @@ class AdminImagesControllerCore extends AdminController
      *
      * @return bool
      */
-    protected function _regenerateNoPictureImages($dir, $type, $languages)
+    protected function _regenerateNoPictureImages(string $dir, array $type, array $languages)
     {
         $errors = false;
-
-        // Should we generate high DPI images?
-        $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
         /*
          * Let's resolve which formats we will use for image generation.
@@ -863,16 +790,6 @@ class AdminImagesControllerCore extends AdminController
                         )) {
                             $errors = true;
                         }
-                        if ($generate_high_dpi_images && !ImageManager::resize(
-                            $file,
-                            $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.' . $imageFormat,
-                            (int) $image_type['width'] * 2,
-                            (int) $image_type['height'] * 2,
-                            $imageFormat,
-                            $forceFormat
-                        )) {
-                            $errors = true;
-                        }
                     }
                 }
             }
@@ -882,7 +799,7 @@ class AdminImagesControllerCore extends AdminController
     }
 
     /* Hook watermark optimization */
-    protected function _regenerateWatermark($dir, $type = null)
+    protected function _regenerateWatermark(string $dir, array $formats = null)
     {
         $result = Db::getInstance()->executeS('
 		SELECT m.`name` FROM `' . _DB_PREFIX_ . 'module` m
@@ -898,7 +815,7 @@ class AdminImagesControllerCore extends AdminController
                     foreach ($result as $module) {
                         $moduleInstance = Module::getInstanceByName($module['name']);
                         if ($moduleInstance && is_callable([$moduleInstance, 'hookActionWatermark'])) {
-                            call_user_func([$moduleInstance, 'hookActionWatermark'], ['id_image' => $imageObj->id, 'id_product' => $imageObj->id_product, 'image_type' => $type]);
+                            call_user_func([$moduleInstance, 'hookActionWatermark'], ['id_image' => $imageObj->id, 'id_product' => $imageObj->id_product, 'image_type' => $formats]);
                         }
 
                         if (time() - $this->start_time > $this->max_execution_time - 4) { // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
@@ -910,7 +827,7 @@ class AdminImagesControllerCore extends AdminController
         }
     }
 
-    protected function _regenerateThumbnails($type = 'all', $deleteOldImages = false)
+    protected function _regenerateThumbnails(string $type = 'all', bool $deleteOldImages = false)
     {
         $this->start_time = time();
         ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
@@ -1010,6 +927,11 @@ class AdminImagesControllerCore extends AdminController
         return count($this->errors) > 0 ? false : true;
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if ($this->display != 'edit' && $this->display != 'add') {

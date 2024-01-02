@@ -45,14 +45,14 @@ describe('BO - Catalog - Categories : Change category position', async () => {
     await categoriesPage.closeSfToolBar(page);
 
     const pageTitle = await categoriesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+    expect(pageTitle).to.contains(categoriesPage.pageTitle);
   });
 
   it('should reset all filters and get number of categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
     numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCategories).to.be.above(0);
+    expect(numberOfCategories).to.be.above(0);
   });
 
   it('should sort categories by position', async function () {
@@ -68,7 +68,7 @@ describe('BO - Catalog - Categories : Change category position', async () => {
     const sortedTableFloat: number[] = await sortedTable.map((text: string): number => parseFloat(text));
 
     const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
-    await expect(sortedTableFloat).to.deep.equal(expectedResult);
+    expect(sortedTableFloat).to.deep.equal(expectedResult);
   });
 
   describe('Change categories position', async () => {
@@ -82,21 +82,21 @@ describe('BO - Catalog - Categories : Change category position', async () => {
       );
 
       const resultText = await categoriesPage.changeCategoryPosition(page, 1, 2);
-      await expect(resultText).to.equal(categoriesPage.successfulUpdateMessage);
+      expect(resultText).to.equal(categoriesPage.successfulUpdateMessage);
 
       const firstCategoryNameAfterUpdate = await categoriesPage.getTextColumnFromTableCategories(
         page,
         1,
         'name',
       );
-      await expect(firstCategoryNameBeforeUpdate).to.not.equal(firstCategoryNameAfterUpdate);
+      expect(firstCategoryNameBeforeUpdate).to.not.equal(firstCategoryNameAfterUpdate);
 
       const secondCategoryNameAfterUpdate = await categoriesPage.getTextColumnFromTableCategories(
         page,
         2,
         'name',
       );
-      await expect(firstCategoryNameBeforeUpdate).to.equal(secondCategoryNameAfterUpdate);
+      expect(firstCategoryNameBeforeUpdate).to.equal(secondCategoryNameAfterUpdate);
     });
 
     it('should reset category position', async function () {
@@ -109,21 +109,21 @@ describe('BO - Catalog - Categories : Change category position', async () => {
       );
 
       const resultText = await categoriesPage.changeCategoryPosition(page, 2, 1);
-      await expect(resultText).to.equal(categoriesPage.successfulUpdateMessage);
+      expect(resultText).to.equal(categoriesPage.successfulUpdateMessage);
 
       const secondCategoryNameAfterUpdate = await categoriesPage.getTextColumnFromTableCategories(
         page,
         2,
         'name',
       );
-      await expect(secondCategoryNameBeforeUpdate).to.not.equal(secondCategoryNameAfterUpdate);
+      expect(secondCategoryNameBeforeUpdate).to.not.equal(secondCategoryNameAfterUpdate);
 
       const firstCategoryNameAfterUpdate = await categoriesPage.getTextColumnFromTableCategories(
         page,
         1,
         'name',
       );
-      await expect(secondCategoryNameBeforeUpdate).to.equal(firstCategoryNameAfterUpdate);
+      expect(secondCategoryNameBeforeUpdate).to.equal(firstCategoryNameAfterUpdate);
     });
   });
 });

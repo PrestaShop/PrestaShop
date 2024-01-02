@@ -15,7 +15,7 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
-import cartPage from '@pages/FO/cart';
+import {cartPage} from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
@@ -122,7 +122,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await orderSettingsPage.closeSfToolBar(page);
 
           const pageTitle = await orderSettingsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+          expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
         });
 
         it('should set gift options', async function () {
@@ -135,7 +135,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             test.args.isGiftWrappingTax,
             test.args.isRecycledPackaging,
           );
-          await expect(result, 'Success message is not displayed!')
+          expect(result, 'Success message is not displayed!')
             .to.contains(orderSettingsPage.successfulUpdateMessage);
         });
       });
@@ -148,7 +148,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await homePage.changeLanguage(page, 'en');
 
           const isHomePage = await homePage.isHomePage(page);
-          await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+          expect(isHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
         it('should go to login page', async function () {
@@ -157,7 +157,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await homePage.goToLoginPage(page);
 
           const pageTitle = await foLoginPage.getPageTitle(page);
-          await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+          expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
         });
 
         it('should sign in with default customer', async function () {
@@ -166,7 +166,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await foLoginPage.customerLogin(page, Customers.johnDoe);
 
           const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-          await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+          expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
         it('should go to home page', async function () {
@@ -175,7 +175,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await foLoginPage.goToHomePage(page);
 
           const isHomePage = await homePage.isHomePage(page);
-          await expect(isHomePage, 'Fail to open home page!').to.be.true;
+          expect(isHomePage, 'Fail to open home page!').to.eq(true);
         });
 
         it('should add product to the cart', async function () {
@@ -186,7 +186,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await productPage.addProductToTheCart(page);
 
           const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-          await expect(notificationsNumber).to.be.equal(1);
+          expect(notificationsNumber).to.be.equal(1);
         });
 
         it('should click on proceed to checkout and go to delivery step', async function () {
@@ -195,14 +195,14 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await cartPage.clickOnProceedToCheckout(page);
 
           const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-          await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+          expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
         });
 
         it(`should check that gift checkbox visibility is '${test.args.isGiftWrapping}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkGiftVisibility${index}`, baseContext);
 
           const isGiftCheckboxVisible = await checkoutPage.isGiftCheckboxVisible(page);
-          await expect(
+          expect(
             isGiftCheckboxVisible,
             'Gift checkbox has not the correct status',
           ).to.equal(test.args.isGiftWrapping);
@@ -215,7 +215,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             await checkoutPage.setGiftCheckBox(page);
 
             const isVisible = await checkoutPage.isGiftMessageTextareaVisible(page);
-            await expect(isVisible, 'Gift message textarea is not visible!').to.be.true;
+            expect(isVisible, 'Gift message textarea is not visible!').to.eq(true);
 
             if (isVisible) {
               await checkoutPage.setGiftMessage(page, 'This is your gift');
@@ -228,7 +228,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftPrice${index}`, baseContext);
 
             const giftPrice = await checkoutPage.getGiftPrice(page);
-            await expect(giftPrice, 'Gift price is incorrect').to.equal(
+            expect(giftPrice, 'Gift price is incorrect').to.equal(
               test.args.giftWrappingPrice === 0
                 ? 'Free'
                 : `€${(
@@ -245,7 +245,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             await testContext.addContextItem(this, 'testIdentifier', `checkRecycleDVisibility${index}`, baseContext);
 
             const isRecycledPackagingCheckboxVisible = await checkoutPage.isRecycledPackagingCheckboxVisible(page);
-            await expect(
+            expect(
               isRecycledPackagingCheckboxVisible,
               'Recycled packaging checkbox has not the correct status',
             ).to.equal(test.args.isRecycledPackaging);
@@ -259,7 +259,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
           const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-          await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+          expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
         });
 
         it('should choose payment method and confirm the order', async function () {
@@ -268,7 +268,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
 
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-          await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
         });
 
         if (test.args.giftWrappingPrice !== 0) {
@@ -276,7 +276,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftWrappingPrice${index}`, baseContext);
 
             const giftWrappingValue = await orderConfirmationPage.getGiftWrappingValue(page);
-            await expect(giftWrappingValue).to.equal(test.args.giftWrappingPrice);
+            expect(giftWrappingValue).to.equal(test.args.giftWrappingPrice);
           });
         }
 
@@ -287,7 +287,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await homePage.logout(page);
 
           const isCustomerConnected = await homePage.isCustomerConnected(page);
-          await expect(isCustomerConnected, 'Customer should be disconnected').to.be.false;
+          expect(isCustomerConnected, 'Customer should be disconnected').to.eq(false);
         });
       });
 
@@ -298,7 +298,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           page = await checkoutPage.closePage(browserContext, page, 0);
 
           const pageTitle = await orderSettingsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+          expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
         });
 
         it('should go to \'Orders > Orders\' page', async function () {
@@ -308,14 +308,14 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await ordersPage.closeSfToolBar(page);
 
           const pageTitle = await ordersPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(ordersPage.pageTitle);
+          expect(pageTitle).to.contains(ordersPage.pageTitle);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `resetOrderTableFilters${index}`, baseContext);
 
           const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-          await expect(numberOfOrders).to.be.above(5);
+          expect(numberOfOrders).to.be.above(5);
         });
 
         it('should view the first order in the list', async function () {
@@ -324,7 +324,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await ordersPage.goToOrder(page, 1);
 
           const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-          await expect(pageTitle, 'View order page is not visible!').to.contains(orderPageTabListBlock.pageTitle);
+          expect(pageTitle, 'View order page is not visible!').to.contains(orderPageTabListBlock.pageTitle);
         });
 
         if (test.args.isGiftWrapping && !test.args.isRecycledPackaging) {
@@ -332,34 +332,34 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftOnStatusTab${index}`, baseContext);
 
             const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 1);
-            await expect(isGiftWrapping).to.be.equal('Gift wrapping');
+            expect(isGiftWrapping).to.be.equal('Gift wrapping');
           });
 
           it('should check \'gift wrapping\' badge on documents tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftOnDocTab${index}`, baseContext);
 
             const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
-            await expect(isTabOpened, 'Documents tab is not opened!').to.be.true;
+            expect(isTabOpened, 'Documents tab is not opened!').to.eq(true);
 
             const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 1);
-            await expect(isGiftWrapping).to.be.equal('Gift wrapping');
+            expect(isGiftWrapping).to.be.equal('Gift wrapping');
           });
 
           it('should check \'gift wrapping\' badge on carriers tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftOnCarriersTab${index}`, baseContext);
 
             const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
-            await expect(isTabOpened, 'Carriers tab is not opened!').to.be.true;
+            expect(isTabOpened, 'Carriers tab is not opened!').to.eq(true);
 
             const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 1);
-            await expect(isGiftWrapping).to.be.equal('Gift wrapping');
+            expect(isGiftWrapping).to.be.equal('Gift wrapping');
           });
 
           it('should check the gift message', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftMessage${index}`, baseContext);
 
             const giftMessageText = await orderPageTabListBlock.getGiftMessage(page);
-            await expect(giftMessageText).to.be.equal('This is your gift');
+            expect(giftMessageText).to.be.equal('This is your gift');
           });
         }
 
@@ -368,7 +368,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             await testContext.addContextItem(this, 'testIdentifier', `checkWrappingAmount${index}`, baseContext);
 
             const wrappingAmount = await orderPageProductsBlock.getOrderWrappingTotal(page);
-            await expect(wrappingAmount).to.be.equal(
+            expect(wrappingAmount).to.be.equal(
               test.args.giftWrappingPrice * (test.args.isGiftWrappingTax === 'None' ? 1 : (1 + test.args.taxValue)));
           });
         }
@@ -378,7 +378,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             await testContext.addContextItem(this, 'testIdentifier', `checkBadgesOnStatusTab${index}`, baseContext);
 
             const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 2);
-            await expect(isRecycledPackaging).to.contain('Recycled packaging')
+            expect(isRecycledPackaging).to.contain('Recycled packaging')
               .and.to.contain('Gift wrapping');
           });
 
@@ -386,10 +386,10 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             await testContext.addContextItem(this, 'testIdentifier', `checkBadgesOnDocTab${index}`, baseContext);
 
             const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
-            await expect(isTabOpened, 'Documents tab is not opened!').to.be.true;
+            expect(isTabOpened, 'Documents tab is not opened!').to.eq(true);
 
             const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 2);
-            await expect(isRecycledPackaging).to.contain('Recycled packaging')
+            expect(isRecycledPackaging).to.contain('Recycled packaging')
               .and.to.contain('Gift wrapping');
           });
 
@@ -397,10 +397,10 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             await testContext.addContextItem(this, 'testIdentifier', `checkBadgesOnCarriersTab${index}`, baseContext);
 
             const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
-            await expect(isTabOpened, 'Carriers tab is not opened!').to.be.true;
+            expect(isTabOpened, 'Carriers tab is not opened!').to.eq(true);
 
             const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 2);
-            await expect(isRecycledPackaging).to.be.contain('Recycled packaging')
+            expect(isRecycledPackaging).to.be.contain('Recycled packaging')
               .and.to.contain('Gift wrapping');
           });
         }
@@ -416,14 +416,14 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
       await dashboardPage.goToSubMenu(page, dashboardPage.shopParametersParentLink, dashboardPage.orderSettingsLink);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
     });
 
     it('should go back to the default configuration', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultConfig', baseContext);
 
       const result = await orderSettingsPage.setGiftOptions(page, false, 0, 'None', false);
-      await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
   });
 });

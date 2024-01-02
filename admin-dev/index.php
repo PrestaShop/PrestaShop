@@ -24,8 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShopBundle\Api\Api;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -37,7 +39,7 @@ if (!defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
-require _PS_ADMIN_DIR_.'/../config/config.inc.php';
+require _PS_ADMIN_DIR_ . '/../config/config.inc.php';
 
 //small test to clear cache after upgrade
 if (Configuration::get('PS_UPGRADE_CLEAR_CACHE')) {
@@ -69,22 +71,41 @@ $apcLoader->register(true);
 if (_PS_MODE_DEV_) {
     Debug::enable();
 }
-require_once __DIR__.'/../app/AppKernel.php';
+require_once __DIR__ . '/../autoload.php';
 
-$kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+// Loads .env file from the root of project
+$dotEnvFile = dirname(__FILE__, 2) . '/.env';
+(new Dotenv())
+    // DO NOT use putEnv
+    ->usePutenv(false)
+    ->loadEnv($dotEnvFile)
+;
+
+$kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
 // When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
 //Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();
-Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_ALL);
+Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO);
 
-$catch = strpos($request->getRequestUri(), Api::API_BASE_PATH) !== false;
+$catch = str_contains($request->getRequestUri(), Api::API_BASE_PATH);
 
 try {
-    require_once __DIR__.'/../autoload.php';
-    $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, $catch);
+    $response = $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, $catch);
     $response->send();
     $kernel->terminate($request, $response);
+    /*
+     * @todo during the refacto for getLegacyLayout, this behaviour should be changed, when no route is found`
+     *       we should fallback to a common LegacyFallbackController symfony controller, that doesn't end the request
+     *       it is responsible for calling the dispatcher and display the legacy controller content inside the new
+     *       Symfony layout
+     */
 } catch (NotFoundHttpException $exception) {
+    /** @var RequestStack $requestStack */
+    $requestStack = $kernel->getContainer()->get('request_stack');
+    // We force pushing the request in the stack again because when kernel detected the exception it popped it out,
+    // but we need the request to be accessible, especially to access the session that stores CSRF value for the user
+    $requestStack->push($request);
+
     define('ADMIN_LEGACY_CONTEXT', true);
     // correct Apache charset (except if it's too late)
     if (!headers_sent()) {
@@ -93,4 +114,5 @@ try {
 
     // Prepare and trigger LEGACY admin dispatcher
     Dispatcher::getInstance()->dispatch();
+    $requestStack->pop();
 }

@@ -4,17 +4,13 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  setFeatureFlag,
-  resetNewProductPageAsDefault,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
+import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
+import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,9 +20,6 @@ const baseContext: string = 'functional_BO_shopParameters_productSettings_produc
 describe('BO - Shop Parameters - Product Settings : Enable/Disable stock management', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -59,14 +52,14 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable stock managem
         );
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
 
       it(`should ${test.args.action} stock management`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}StockManagement`, baseContext);
 
         const result = await productSettingsPage.setEnableStockManagementStatus(page, test.args.enable);
-        await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
@@ -77,22 +70,32 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable stock managem
           productSettingsPage.catalogParentLink,
           productSettingsPage.productsLink,
         );
+        await productsPage.closeSfToolBar(page);
 
         const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
+        expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
-      it('should go to create product page and check the existence of quantity input', async function () {
+      it('should click on new product button and go to new product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `clickOnNewProductPage${index}`, baseContext);
+
+        const isModalVisible = await productsPage.clickOnNewProductButton(page);
+        expect(isModalVisible).to.be.equal(true);
+
+        await productsPage.selectProductType(page, 'standard');
+
+        await productsPage.clickOnAddNewProduct(page);
+
+        const pageTitle = await addProductPage.getPageTitle(page);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
+      });
+
+      it('should check the existence of quantity input', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkIsQuantityInput${test.args.action}`, baseContext);
 
-        await productsPage.goToAddProductPage(page);
-
-        const isVisible = await addProductPage.isQuantityInputVisible(page);
-        await expect(isVisible).to.equal(test.args.isQuantityVisible);
+        const isVisible = await stocksTab.isQuantityInputVisible(page);
+        expect(isVisible).to.equal(test.args.isQuantityVisible);
       });
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

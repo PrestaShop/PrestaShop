@@ -40,67 +40,67 @@ class AddCountryCommand
     /**
      * @var string[]
      */
-    protected $localizedNames;
+    private $localizedNames;
 
     /**
      * @var string
      */
-    protected $isoCode;
+    private $isoCode;
 
     /**
      * @var int
      */
-    protected $callPrefix;
+    private $callPrefix;
 
     /**
      * @var int
      */
-    protected $defaultCurrency = 0;
+    private $defaultCurrency;
 
     /**
      * @var ZoneId
      */
-    protected $zoneId;
+    private $zoneId;
 
     /**
      * @var bool
      */
-    protected $needZipCode = false;
+    private $needZipCode;
 
     /**
      * @var ?CountryZipCodeFormat
      */
-    protected $zipCodeFormat;
+    private $zipCodeFormat;
 
     /**
      * @var string
      */
-    protected $addressFormat = '';
+    private $addressFormat;
 
     /**
      * @var bool
      */
-    protected $enabled = false;
+    private $enabled;
 
     /**
      * @var bool
      */
-    protected $containsStates = false;
+    private $containsStates;
 
     /**
      * @var bool
      */
-    protected $needIdNumber = false;
+    private $needIdNumber;
 
     /**
      * @var bool
      */
-    protected $displayTaxLabel = false;
+    private $displayTaxLabel;
 
     /**
      * @var int[]
      */
-    protected $shopAssociation = [];
+    private $shopAssociation;
 
     public function __construct(
         array $localizedNames,

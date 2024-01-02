@@ -65,6 +65,7 @@ class PermissionController extends FrameworkBundleAdminController
             [
                 'help_link' => $this->generateSidebarLink('AdminAccess'),
                 'enableSidebar' => true,
+                'layoutTitle' => $this->trans('Permissions', 'Admin.Navigation.Menu'),
                 'configurablePermissions' => $configurablePermissions,
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',

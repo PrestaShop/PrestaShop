@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-$(document).ready(function() {
+$(function() {
   const $modulesContainer = $('#modules-container');
   const $modulesList = $('input[name="modules[]"]');
   const $selectAllButton = $('input[name="select-all"]');

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\ORM\Tools\Setup;
 use Exception;
 use LegacyCompilerPass;
@@ -39,7 +40,6 @@ use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\Exception\ServiceContainerException;
 use PrestaShopBundle\PrestaShopBundle;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\FileResource;
@@ -50,6 +50,8 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * Build the Container for PrestaShop Legacy.
+ *
+ * @deprecated since 9.0. Please use SymfonyContainer instead.
  */
 class ContainerBuilder
 {
@@ -210,7 +212,7 @@ class ContainerBuilder
     private function loadDoctrineAnnotationMetadata()
     {
         //IMPORTANT: we need to provide a cache because doctrine tries to init a connection on redis, memcached, ... on its own
-        $cacheProvider = new DoctrineProvider(new ArrayAdapter());
+        $cacheProvider = DoctrineProvider::wrap(new ArrayAdapter());
         Setup::createAnnotationMetadataConfiguration([], $this->environment->isDebug(), null, $cacheProvider);
     }
 
@@ -243,13 +245,9 @@ class ContainerBuilder
      */
     private function loadModulesAutoloader(ContainerInterface $container)
     {
-        if (!$container->hasParameter('kernel.active_modules')) {
-            return;
-        }
-
-        $activeModules = $container->getParameter('kernel.active_modules');
-        /** @var array<string> $activeModules */
-        foreach ($activeModules as $module) {
+        $installedModules = $container->getParameter('prestashop.installed_modules');
+        /** @var array<string> $installedModules */
+        foreach ($installedModules as $module) {
             $autoloader = _PS_MODULE_DIR_ . $module . '/vendor/autoload.php';
 
             if (file_exists($autoloader)) {

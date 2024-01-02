@@ -31,7 +31,7 @@ import addressFormMap from './address-form-map';
 
 const {$} = window;
 
-$(document).ready(() => {
+$(() => {
   new AutocompleteWithEmail(addressFormMap.addressEmailInput, {
     firstName: addressFormMap.addressFirstnameInput,
     lastName: addressFormMap.addressLastnameInput,

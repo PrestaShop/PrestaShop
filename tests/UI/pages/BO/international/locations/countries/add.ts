@@ -104,6 +104,7 @@ class AddCountry extends BOBasePage {
 
   /**
    * Get the value of an input
+   * @override
    * @param page {Page} Browser tab
    * @param input {string} ID of the input
    * @returns {Promise<string>}
@@ -131,7 +132,7 @@ class AddCountry extends BOBasePage {
         throw new Error(`Field ${input} was not found`);
     }
 
-    return page.inputValue(selector);
+    return super.getInputValue(page, selector);
   }
 
   /**
@@ -154,7 +155,7 @@ class AddCountry extends BOBasePage {
         throw new Error(`Field ${input} was not found`);
     }
 
-    return page.$eval(selector, (node: HTMLSelectElement) => node.value);
+    return page.locator(selector).evaluate((node: HTMLSelectElement) => node.value);
   }
 
   /**

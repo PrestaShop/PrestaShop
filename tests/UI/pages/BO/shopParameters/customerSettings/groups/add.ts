@@ -52,7 +52,7 @@ class AddGroup extends BOBasePage {
 
     // Language selectors
     this.dropdownButton = `${this.groupForm} button.dropdown-toggle`;
-    this.dropdownMenu = `${this.groupForm} ul.dropdown-menu`;
+    this.dropdownMenu = `${this.groupForm} .open ul.dropdown-menu:visible`;
     this.dropdownMenuItemLink = (idLang: number) => `${this.dropdownMenu} li:nth-child(${idLang}) a`;
   }
 
@@ -68,12 +68,12 @@ class AddGroup extends BOBasePage {
    */
   async changeLanguage(page: Page, idLang: number): Promise<void> {
     await Promise.all([
-      page.click(this.dropdownButton),
+      page.locator(this.dropdownButton).first().click(),
       this.waitForVisibleSelector(page, this.dropdownMenuItemLink(idLang)),
     ]);
 
     await Promise.all([
-      page.click(this.dropdownMenuItemLink(idLang)),
+      page.locator(this.dropdownMenuItemLink(idLang)).click(),
       this.waitForHiddenSelector(page, this.dropdownMenuItemLink(idLang)),
     ]);
   }

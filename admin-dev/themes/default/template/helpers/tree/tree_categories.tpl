@@ -56,7 +56,7 @@
 		}
 	{/if}
 	{if isset($use_search) && $use_search == true}
-		$("#{$id|escape:'html':'UTF-8'}-categories-search").bind("typeahead:selected", function(obj, datum) {
+		$("#{$id|escape:'html':'UTF-8'}-categories-search").on("typeahead:selected", function(obj, datum) {
 		    $("#{$id|escape:'html':'UTF-8'}").find(":input").each(
 				function()
 				{
@@ -76,7 +76,7 @@
 			);
 		});
 	{/if}
-	$(document).ready(function () {
+	$(function () {
 		$("#{$id|escape:'html':'UTF-8'}").tree("collapseAll");
 
 		{if isset($selected_categories)}

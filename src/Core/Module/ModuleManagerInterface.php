@@ -47,10 +47,6 @@ interface ModuleManagerInterface
 
     public function disable(string $name): bool;
 
-    public function enableMobile(string $name): bool;
-
-    public function disableMobile(string $name): bool;
-
     public function reset(string $name, bool $keepData = false): bool;
 
     public function postInstall(string $name): bool;

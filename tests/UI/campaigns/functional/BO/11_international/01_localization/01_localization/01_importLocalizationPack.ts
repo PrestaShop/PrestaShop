@@ -67,7 +67,7 @@ describe('BO - International - Localization : Import a localization pack', async
     await localizationPage.closeSfToolBar(page);
 
     const pageTitle = await localizationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(localizationPage.pageTitle);
+    expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   describe('Import localization pack and check existence of language and currency in FO', async () => {
@@ -75,7 +75,7 @@ describe('BO - International - Localization : Import a localization pack', async
       await testContext.addContextItem(this, 'testIdentifier', 'importLocalizationPack', baseContext);
 
       const textResult = await localizationPage.importLocalizationPack(page, 'Chile', contentToImport);
-      await expect(textResult).to.equal(localizationPage.importLocalizationPackSuccessfulMessage);
+      expect(textResult).to.equal(localizationPage.importLocalizationPackSuccessfulMessage);
     });
 
     it('should go to FO', async function () {
@@ -85,7 +85,7 @@ describe('BO - International - Localization : Import a localization pack', async
       page = await currenciesPage.viewMyShop(page);
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      expect(isHomePage).to.eq(true);
     });
 
     it('should change FO currency', async function () {
@@ -95,7 +95,7 @@ describe('BO - International - Localization : Import a localization pack', async
       await foHomePage.changeCurrency(page, Currencies.chileanPeso.isoCode, Currencies.chileanPeso.symbol);
 
       const shopCurrency = await foHomePage.getDefaultCurrency(page);
-      await expect(shopCurrency).to.contain(Currencies.chileanPeso.isoCode);
+      expect(shopCurrency).to.contain(Currencies.chileanPeso.isoCode);
     });
 
     it('should change FO language', async function () {
@@ -104,7 +104,7 @@ describe('BO - International - Localization : Import a localization pack', async
       await foHomePage.changeLanguage(page, Languages.spanish.isoCode);
 
       const shopLanguage = await foHomePage.getDefaultShopLanguage(page);
-      await expect(Languages.spanish.name).to.contain(shopLanguage);
+      expect(Languages.spanish.name).to.contain(shopLanguage);
     });
 
     it('should go back to BO', async function () {
@@ -113,7 +113,7 @@ describe('BO - International - Localization : Import a localization pack', async
       page = await foHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await localizationPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(localizationPage.pageTitle);
+      expect(pageTitle).to.contains(localizationPage.pageTitle);
     });
   });
 
@@ -124,7 +124,7 @@ describe('BO - International - Localization : Import a localization pack', async
       await localizationPage.goToSubTabLanguages(page);
 
       const pageTitle = await languagesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(languagesPage.pageTitle);
+      expect(pageTitle).to.contains(languagesPage.pageTitle);
     });
 
     it(`should filter language by name '${Languages.spanish.name}'`, async function () {
@@ -133,24 +133,24 @@ describe('BO - International - Localization : Import a localization pack', async
       await languagesPage.filterTable(page, 'input', 'name', Languages.spanish.name);
 
       const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+      expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
       const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textColumn).to.contains(Languages.spanish.name);
+      expect(textColumn).to.contains(Languages.spanish.name);
     });
 
     it('should delete language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLanguage', baseContext);
 
       const textResult = await languagesPage.deleteLanguage(page, 1);
-      await expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
+      expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetLanguages', baseContext);
 
       const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfLanguagesAfterReset).to.be.at.least(1);
+      expect(numberOfLanguagesAfterReset).to.be.at.least(1);
     });
   });
 
@@ -161,7 +161,7 @@ describe('BO - International - Localization : Import a localization pack', async
       await localizationPage.goToSubTabCurrencies(page);
 
       const pageTitle = await currenciesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+      expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });
 
     it(`should filter by iso code of currency '${Currencies.chileanPeso.isoCode}'`, async function () {
@@ -170,21 +170,21 @@ describe('BO - International - Localization : Import a localization pack', async
       await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.chileanPeso.isoCode);
 
       const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-      await expect(textColumn).to.contains(Currencies.chileanPeso.isoCode);
+      expect(textColumn).to.contains(Currencies.chileanPeso.isoCode);
     });
 
     it('should delete currency', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrency', baseContext);
 
       const result = await currenciesPage.deleteCurrency(page, 1);
-      await expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
+      expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
     });
 
     it('should reset filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencies', baseContext);
 
       const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCurrenciesAfterReset).to.be.at.least(1);
+      expect(numberOfCurrenciesAfterReset).to.be.at.least(1);
     });
   });
 });

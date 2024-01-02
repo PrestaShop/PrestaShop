@@ -227,7 +227,7 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
 
             if (!$objectModel->delete()) {
                 throw new $exceptionClass(
-                    sprintf('Failed to delete %s #%d', get_class($objectModel), $objectModel->id),
+                    sprintf('Failed to delete %s #%d', $objectModel::class, $objectModel->id),
                     $errorCode
                 );
             }
@@ -235,12 +235,119 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
             throw new CoreException(
                 sprintf(
                     'Error occurred when trying to delete %s #%d [%s]',
-                    get_class($objectModel),
+                    $objectModel::class,
                     $objectModel->id,
                     $e->getMessage()
                 ),
                 0,
                 $e
+            );
+        }
+    }
+
+    /**
+     * @param int $id
+     * @param string $objectModelClassName
+     *
+     * @return int[]
+     *
+     * @throws ShopDefinitionNotFound
+     */
+    protected function getObjectModelAssociatedShopIds(int $id, string $objectModelClassName): array
+    {
+        $modelDefinition = $objectModelClassName::$definition;
+        $objectTable = $modelDefinition['table'];
+        $primaryColumn = $modelDefinition['primary'];
+
+        $query = new DbQuery();
+        $primaryColumn = 'e.`' . bqSQL($primaryColumn) . '`';
+        $shopColumn = 'e.`id_shop`';
+        if (Shop::isTableAssociated($objectTable)) {
+            $query
+                ->select($shopColumn . ' AS id_shop')
+                ->where($primaryColumn . ' = ' . $id)
+                ->from(bqSQL($objectTable) . '_shop', 'e')
+                ->groupBy($shopColumn)
+            ;
+        } elseif (!empty($modelDefinition['multilang_shop'])) {
+            $query
+                ->select($shopColumn . ' AS id_shop')
+                ->where($primaryColumn . ' = ' . $id)
+                ->from(bqSQL($objectTable) . '_lang', 'e')
+                ->groupBy($shopColumn)
+            ;
+        } else {
+            throw new ShopDefinitionNotFound(sprintf(
+                'Entity %s has no multishop feature',
+                $objectModelClassName
+            ));
+        }
+
+        try {
+            $rows = Db::getInstance()->executeS($query);
+
+            return array_map(fn (array $row) => (int) $row['id_shop'], $rows);
+        } catch (PrestaShopDatabaseException|PrestaShopException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * This function assigns stores ids to the specified object if they are not already and it removes existing associations
+     * if they are not wanted anymore.
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    protected function updateObjectModelShopAssociations(
+        int $id,
+        string $objectModelClassName,
+        array $updatedShopIds
+    ): void {
+        if (empty($updatedShopIds)) {
+            return;
+        }
+
+        $modelDefinition = $objectModelClassName::$definition;
+        $tableName = (string) $modelDefinition['table'];
+        $primaryKeyName = (string) $modelDefinition['primary'];
+
+        $associatedShopIds = $this->getObjectModelAssociatedShopIds($id, $objectModelClassName);
+
+        $shopIdsToAdd = [];
+        foreach ($updatedShopIds as $shopId) {
+            if (!in_array($shopId, $associatedShopIds)) {
+                $shopIdsToAdd[] = $shopId;
+            }
+        }
+        $shopIdsToRemove = [];
+        foreach ($associatedShopIds as $shopId) {
+            if (!in_array($shopId, $updatedShopIds)) {
+                $shopIdsToRemove[] = $shopId;
+            }
+        }
+
+        if (!empty($shopIdsToRemove)) {
+            Db::getInstance()->delete(
+                $tableName . '_shop',
+                '`' . $primaryKeyName . '` = ' . $id . ' AND `id_shop` IN (' . implode(',', $shopIdsToRemove) . ')'
+            );
+        }
+
+        if (!empty($shopIdsToAdd)) {
+            $insert = [];
+            foreach ($shopIdsToAdd as $shopId) {
+                $insert[] = [
+                    $primaryKeyName => $id,
+                    'id_shop' => (int) $shopId,
+                ];
+            }
+
+            Db::getInstance()->insert(
+                $tableName . '_shop',
+                $insert,
+                false,
+                true,
+                Db::INSERT_IGNORE
             );
         }
     }

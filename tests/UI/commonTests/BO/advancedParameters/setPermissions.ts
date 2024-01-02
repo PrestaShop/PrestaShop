@@ -53,21 +53,21 @@ function setPermissions(
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(employeesPage.pageTitle);
+      expect(pageTitle).to.contains(employeesPage.pageTitle);
     });
 
     it('should go to \'Permissions\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPermissionsTab', baseContext);
 
       const isTabOpened = await employeesPage.goToPermissionsTab(page);
-      await expect(isTabOpened, 'Permissions tab is not opened!').to.be.true;
+      expect(isTabOpened, 'Permissions tab is not opened!').to.eq(true);
     });
 
     it('should click on the defined profile', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProfileSubTab', baseContext);
 
       const isSubTabOpened = await permissionsPage.goToProfileSubTab(page, profileName);
-      await expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.be.true;
+      expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.eq(true);
     });
 
     permissionsData.forEach((permission: EmployeePermission) => {
@@ -81,7 +81,7 @@ function setPermissions(
           );
 
           const isPermissionDefined = await permissionsPage.setPermission(page, permission.className, access);
-          await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
+          expect(isPermissionDefined, 'Permission is not updated').to.eq(true);
         });
       });
     });

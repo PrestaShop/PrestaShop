@@ -215,11 +215,7 @@ class AddressController extends FrameworkBundleAdminController
      */
     private function getBulkAddressesFromRequest(Request $request): array
     {
-        $addressIds = $request->request->get('address_addresses_bulk');
-
-        if (!is_array($addressIds)) {
-            return [];
-        }
+        $addressIds = $request->request->all('address_addresses_bulk');
 
         foreach ($addressIds as $i => $addressId) {
             $addressIds[$i] = (int) $addressId;
@@ -255,12 +251,12 @@ class AddressController extends FrameworkBundleAdminController
         $customerInfo = null;
         $customerId = null;
         if ($request->request->has('customer_address')) {
-            if (isset($request->request->get('customer_address')['id_country'])) {
-                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+            if (isset($request->request->all('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->all('customer_address')['id_country'];
                 $formData['id_country'] = $formCountryId;
             }
-            if (isset($request->request->get('customer_address')['id_customer'])) {
-                $idCustomer = (int) $request->request->get('customer_address')['id_customer'];
+            if (isset($request->request->all('customer_address')['id_customer'])) {
+                $idCustomer = (int) $request->request->all('customer_address')['id_customer'];
                 $formData['id_customer'] = $idCustomer;
             }
         }
@@ -311,6 +307,7 @@ class AddressController extends FrameworkBundleAdminController
             'customerId' => $customerId,
             'customerInformation' => $customerInfo,
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New address', 'Admin.Navigation.Menu'),
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -346,8 +343,8 @@ class AddressController extends FrameworkBundleAdminController
 
             $formData = [];
             // Country needs to be preset before building form type because it is used to build state field choices
-            if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
-                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+            if ($request->request->has('customer_address') && isset($request->request->all('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->all('customer_address')['id_country'];
                 $formData['id_country'] = $formCountryId;
             }
 
@@ -386,7 +383,7 @@ class AddressController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'customerId' => $editableAddress->getCustomerId()->getValue(),
             'customerInformation' => $customerInfo,
-            'layoutTitle' => $this->trans('Edit', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('Editing address %alias%', 'Admin.Navigation.Menu', ['%alias%' => $editableAddress->getAddressAlias()]),
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -441,8 +438,8 @@ class AddressController extends FrameworkBundleAdminController
                 'address_type' => $addressType,
             ];
             // Country needs to be preset before building form type because it is used to build state field choices
-            if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
-                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+            if ($request->request->has('customer_address') && isset($request->request->all('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->all('customer_address')['id_country'];
                 $formData['id_country'] = $formCountryId;
             }
 
@@ -487,7 +484,7 @@ class AddressController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'customerId' => $editableAddress->getCustomerId()->getValue(),
             'customerInformation' => $customerInfo,
-            'layoutTitle' => $this->trans('Edit', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('Editing address %alias%', 'Admin.Navigation.Menu', ['%alias%' => $editableAddress->getAddressAlias()]),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cancelPath' => $this->generateUrl('admin_orders_view', ['orderId' => $orderId]),
@@ -542,8 +539,8 @@ class AddressController extends FrameworkBundleAdminController
                 'address_type' => $addressType,
             ];
             // Country needs to be preset before building form type because it is used to build state field choices
-            if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
-                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+            if ($request->request->has('customer_address') && isset($request->request->all('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->all('customer_address')['id_country'];
                 $formData['id_country'] = $formCountryId;
             }
 
@@ -588,7 +585,7 @@ class AddressController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'customerId' => $editableAddress->getCustomerId()->getValue(),
             'customerInformation' => $customerInfo,
-            'layoutTitle' => $this->trans('Edit', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('Editing address %alias%', 'Admin.Navigation.Menu', ['%alias%' => $editableAddress->getAddressAlias()]),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cancelPath' => $this->generateUrl('admin_carts_view', ['cartId' => $cartId]),

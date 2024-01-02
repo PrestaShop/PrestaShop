@@ -101,7 +101,7 @@ class Brands extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Brands •';
+    this.pageTitle = `Brands • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Header Selectors
@@ -349,7 +349,7 @@ class Brands extends BOBasePage {
    */
   async goToEditBrandPage(page: Page, row: number = 1): Promise<void> {
     await Promise.all([
-      page.click(this.dropdownToggleButton('manufacturer', row)),
+      page.locator(this.dropdownToggleButton('manufacturer', row)).click(),
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton('manufacturer', row)}[aria-expanded='true']`),
     ]);
     await this.clickAndWaitForURL(page, this.editBrandLink(row));
@@ -374,12 +374,12 @@ class Brands extends BOBasePage {
    */
   async deleteRowInTable(page: Page, tableName: string, row: number = 1): Promise<string> {
     await Promise.all([
-      page.click(this.dropdownToggleButton(tableName, row)),
+      page.locator(this.dropdownToggleButton(tableName, row)).click(),
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(tableName, row)}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.deleteRowLink(tableName, row)),
+      page.locator(this.deleteRowLink(tableName, row)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(tableName)}.show`),
     ]);
     await this.confirmDelete(page, tableName);
@@ -426,18 +426,18 @@ class Brands extends BOBasePage {
   async bulkSetBrandsStatus(page: Page, enable: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel('manufacturer'), (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsLabel('manufacturer')).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton('manufacturer')}:not([disabled])`, 40000),
     ]);
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton('manufacturer')),
+      page.locator(this.bulkActionsToggleButton('manufacturer')).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton('manufacturer')}[aria-expanded='true']`),
     ]);
 
     // Click on delete and wait for modal
-    await page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await page.locator(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -450,22 +450,22 @@ class Brands extends BOBasePage {
   async deleteWithBulkActions(page: Page, tableName: string): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel(tableName), (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsLabel(tableName)).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton(tableName)),
+      page.locator(this.bulkActionsToggleButton(tableName)).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}[aria-expanded='true']`),
     ]);
 
     // Click on delete and wait for modal
     if (tableName === 'manufacturer') {
-      await page.click(this.deleteBrandsButton);
+      await page.locator(this.deleteBrandsButton).click();
       await this.waitForVisibleSelector(page, `${this.confirmDeleteModal(tableName)}.show`);
     } else if (tableName === 'manufacturer_address') {
-      await page.click(this.deleteAddressesButton);
+      await page.locator(this.deleteAddressesButton).click();
       await this.waitForVisibleSelector(page, `${this.confirmDeleteModal('manufacturer_address')}.show`);
     }
     await this.confirmDelete(page, tableName);
@@ -638,9 +638,9 @@ class Brands extends BOBasePage {
    * @param table {string} Which table to export
    * @return {Promise<string|null>}
    */
-  async exportDataToCsv(page: Page, table: string): Promise<string|null> {
+  async exportDataToCsv(page: Page, table: string): Promise<string | null> {
     await Promise.all([
-      page.click(this.gridActionButton(table)),
+      page.locator(this.gridActionButton(table)).click(),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu(table)}.show`),
     ]);
 
@@ -652,7 +652,7 @@ class Brands extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string|null>}
    */
-  async exportBrandsDataToCsv(page: Page): Promise<string|null> {
+  async exportBrandsDataToCsv(page: Page): Promise<string | null> {
     return this.exportDataToCsv(page, 'manufacturer');
   }
 

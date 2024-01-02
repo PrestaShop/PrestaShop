@@ -23,6 +23,8 @@ services:
   prestashop.core.localization.locale.repository:
     alias: PrestaShop\PrestaShop\Core\Localization\Locale\Repository
 
+  PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface: '@PrestaShop\PrestaShop\Core\Localization\Locale\Repository'
+
   prestashop.core.localization.locale.context_locale:
     factory: [ '@prestashop.core.localization.locale.repository', 'getLocale' ]
     class: PrestaShop\PrestaShop\Core\Localization\Locale

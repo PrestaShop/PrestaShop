@@ -56,7 +56,7 @@ describe('BO - International - Localization : Update default language', async ()
         await localizationPage.closeSfToolBar(page);
 
         const pageTitle = await localizationPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(localizationPage.pageTitle);
+        expect(pageTitle).to.contains(localizationPage.pageTitle);
       });
 
       it('should set \'Default language\' and \'Set language from browser\'', async function () {
@@ -67,7 +67,7 @@ describe('BO - International - Localization : Update default language', async ()
           test.args.language,
           test.args.defaultBrowserLanguage,
         );
-        await expect(textResult).to.equal('Update successful');
+        expect(textResult).to.equal('Update successful');
       });
     });
 
@@ -89,7 +89,7 @@ describe('BO - International - Localization : Update default language', async ()
           await homePage.goTo(page, global.FO.URL);
 
           const isHomePage = await homePage.isHomePage(page);
-          await expect(isHomePage).to.be.true;
+          expect(isHomePage).to.eq(true);
         });
 
         it('should go to FO and check the language', async function () {

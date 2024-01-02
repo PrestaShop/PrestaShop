@@ -60,7 +60,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
     await customerSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -82,24 +82,32 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
         CustomerSettingsOptions.OPTION_CART_LOGIN,
         test.args.enable,
       );
-      await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
 
-    it('should view my shop and login FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `loginFO_${index}`, baseContext);
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop_${index}`, baseContext);
 
       // Go to FO
       page = await customerSettingsPage.viewMyShop(page);
+      await homePage.changeLanguage(page, 'en');
+
+      const isHomePage = await homePage.isHomePage(page);
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+    });
+
+    it('should login', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `loginFO_${index}`, baseContext);
 
       // Login FO
       await homePage.goToLoginPage(page);
       await loginFOPage.customerLogin(page, Customers.johnDoe);
 
       const connected = await homePage.isCustomerConnected(page);
-      await expect(connected, 'Customer is not connected in FO').to.be.true;
+      expect(connected, 'Customer is not connected in FO').to.eq(true);
     });
 
-    it('should add the first product to the cart then logout', async function () {
+    it('should add the first product to the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `addProductToTheCart_${index}`, baseContext);
 
       // Add first product to the cart
@@ -109,10 +117,17 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
 
       // Check number of product in cart
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.above(0);
+      expect(notificationsNumber).to.be.above(0);
+    });
+
+    it('should logout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `logoutFO_${index}`, baseContext);
 
       // Logout from FO
       await homePage.logout(page);
+
+      const connected = await homePage.isCustomerConnected(page);
+      expect(connected, 'Customer is connected in FO').to.eq(false);
     });
 
     it('should login FO', async function () {
@@ -123,7 +138,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       await loginFOPage.customerLogin(page, Customers.johnDoe);
 
       const connected = await homePage.isCustomerConnected(page);
-      await expect(connected, 'Customer is not connected in FO').to.be.true;
+      expect(connected, 'Customer is not connected in FO').to.eq(true);
     });
 
     it('should check the cart then logout', async function () {
@@ -133,11 +148,11 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
 
       if (test.args.enable) {
-        await expect(notificationsNumber).to.be.above(0);
+        expect(notificationsNumber).to.be.above(0);
         // Logout from FO
         await homePage.logout(page);
       } else {
-        await expect(notificationsNumber).to.be.equal(0);
+        expect(notificationsNumber).to.be.equal(0);
       }
     });
 
@@ -149,7 +164,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
         page = await homePage.closePage(browserContext, page, 0);
 
         const pageTitle = await customerSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+        expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
       });
     }
   });

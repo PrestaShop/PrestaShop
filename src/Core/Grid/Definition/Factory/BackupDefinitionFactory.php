@@ -55,7 +55,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('DB Backup', [], 'Admin.Navigation.Menu');
+        return $this->trans('DB backups', [], 'Admin.Navigation.Menu');
     }
 
     /**

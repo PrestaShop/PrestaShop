@@ -53,7 +53,7 @@ class Preferences extends BOBasePage {
     await this.setValue(page, this.handlingChargesInput, value);
 
     // Save handling form and return successful message
-    await page.click(this.saveHandlingButton);
+    await page.locator(this.saveHandlingButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -73,7 +73,7 @@ class Preferences extends BOBasePage {
     );
 
     // Save configuration and return successful message
-    await page.click(this.saveCarrierOptionsButton);
+    await page.locator(this.saveCarrierOptionsButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -89,7 +89,7 @@ class Preferences extends BOBasePage {
     await this.selectByVisibleText(page, this.orderBySelect, orderBy);
 
     // Save configuration and return successful message
-    await page.click(this.saveCarrierOptionsButton);
+    await page.locator(this.saveCarrierOptionsButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

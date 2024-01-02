@@ -1,11 +1,11 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags multiple-currencies-to-order
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-currency
 @restore-all-tables-before-feature
 @clear-cache-before-feature
 @reboot-kernel-before-feature
 @restore-currencies-after-feature
 @reboot-kernel-after-feature
 @restore-currencies-before-scenario
-@multiple-currencies-to-order
+@order-currency
 Feature: Multiple currencies for Order in Back Office (BO)
   In order to manage multiple currencies for orders in BO
   As a BO user
@@ -13,7 +13,8 @@ Feature: Multiple currencies for Order in Back Office (BO)
 
   Background:
     Given email sending is disabled
-    Given shop "shop1" with name "test_shop" exists
+    And shop "shop1" with name "test_shop" exists
+    And there is a currency named "usd" with iso code "USD" and exchange rate of 1.0
     And the current currency is "USD"
     And country "US" is enabled
     And country "FR" is enabled
@@ -59,13 +60,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 2      |
-      | original_product_price      | 119.00 |
-      | product_price               | 119.00 |
-      | unit_price_tax_incl         | 126.14 |
-      | unit_price_tax_excl         | 119.00 |
-      | total_price_tax_incl        | 252.28 |
-      | total_price_tax_excl        | 238.00 |
+      | product_quantity       | 2      |
+      | original_product_price | 119.00 |
+      | product_price          | 119.00 |
+      | unit_price_tax_incl    | 126.14 |
+      | unit_price_tax_excl    | 119.00 |
+      | total_price_tax_incl   | 252.28 |
+      | total_price_tax_excl   | 238.00 |
 
   Scenario: Add cart rule of type 'amount' to an order with secondary currency
     Given I add discount to order "bo_order1" with following details:
@@ -132,13 +133,19 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
-    And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies an amount discount of 1.0 with priority 1, quantity of 100 and quantity per user 100
-    And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
-    And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product With Discount and SpecificPrice"
+    And there is a cart rule CartRuleAmountOnSelectedProduct with following properties:
+      | name[en-US]               | CartRuleAmountOnSelectedProduct              |
+      | discount_amount           | 1                                            |
+      | discount_currency         | usd                                          |
+      | discount_includes_tax     | false                                        |
+      | total_quantity            | 100                                          |
+      | quantity_per_user         | 100                                          |
+      | discount_application_type | specific_product                             |
+      | discount_product          | Test Product With Discount and SpecificPrice |
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Discount and SpecificPrice |
-      | amount        | 2                                            |
-      | price         | 120                                          |
+      | name   | Test Product With Discount and SpecificPrice |
+      | amount | 2                                            |
+      | price  | 120                                          |
     Then product "Test Product With Discount and SpecificPrice" in order "bo_order1" should have no specific price
 #    For product "Test Product With Discount and SpecificPrice"
 #    Due to the specific price 25% of €160, the customer have to pay 75% of the product price : €120
@@ -158,13 +165,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 2        |
-      | product_price               | 119.00   |
-      | original_product_price      | 119.00   |
-      | unit_price_tax_incl         | 126.14   |
-      | unit_price_tax_excl         | 119.00   |
-      | total_price_tax_incl        | 252.28   |
-      | total_price_tax_excl        | 238.00   |
+      | product_quantity       | 2      |
+      | product_price          | 119.00 |
+      | original_product_price | 119.00 |
+      | unit_price_tax_incl    | 126.14 |
+      | unit_price_tax_excl    | 119.00 |
+      | total_price_tax_incl   | 252.28 |
+      | total_price_tax_excl   | 238.00 |
     And product "Test Product With Discount and SpecificPrice" in order "bo_order1" has following details:
       | product_quantity       | 2      |
       | original_product_price | 160.00 |
@@ -192,7 +199,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity       | 2     |
+      | product_quantity       | 2      |
       | original_product_price | 119.00 |
       | product_price          | 119.00 |
       | unit_price_tax_incl    | 126.14 |
@@ -228,20 +235,20 @@ Feature: Multiple currencies for Order in Back Office (BO)
   Scenario: Update product quantity in order with secondary currency when its category has discount
     Given the default category of product "Mug The best is yet to come" has a group reduction of 50.00% for the customer "testCustomer"
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
-      | amount        | 3                       |
-      | price         | 11.90                   |
+      | amount | 3     |
+      | price  | 11.90 |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 3      |
-      | original_product_price      | 119.00 |
-      | product_price               | 11.90  |
-      | unit_price_tax_incl         | 12.614 |
-      | unit_price_tax_excl         | 11.90  |
-      | total_price_tax_incl        | 37.84  |
-      | total_price_tax_excl        | 35.70  |
+      | product_quantity       | 3      |
+      | original_product_price | 119.00 |
+      | product_price          | 11.90  |
+      | unit_price_tax_incl    | 12.614 |
+      | unit_price_tax_excl    | 11.90  |
+      | total_price_tax_incl   | 37.84  |
+      | total_price_tax_excl   | 35.70  |
     And order "bo_order1" should have following details:
-      | total_products           | 35.70 |
-      | total_products_wt        | 37.84 |
+      | total_products           | 35.70  |
+      | total_products_wt        | 37.84  |
       | total_discounts_tax_excl | 0.00   |
       | total_discounts_tax_incl | 0.00   |
       | total_paid_tax_excl      | 105.70 |
@@ -251,20 +258,20 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
-      | amount        | 3                       |
-      | price         | 20.00                   |
+      | amount | 3     |
+      | price  | 20.00 |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 3      |
-      | original_product_price      | 119.00 |
-      | product_price               | 20.00  |
-      | unit_price_tax_incl         | 21.20  |
-      | unit_price_tax_excl         | 20.00  |
-      | total_price_tax_incl        | 63.60  |
-      | total_price_tax_excl        | 60.00  |
+      | product_quantity       | 3      |
+      | original_product_price | 119.00 |
+      | product_price          | 20.00  |
+      | unit_price_tax_incl    | 21.20  |
+      | unit_price_tax_excl    | 20.00  |
+      | total_price_tax_incl   | 63.60  |
+      | total_price_tax_excl   | 60.00  |
     And order "bo_order1" should have following details:
-      | total_products           | 60.00 |
-      | total_products_wt        | 63.60 |
+      | total_products           | 60.00  |
+      | total_products_wt        | 63.60  |
       | total_discounts_tax_excl | 0.00   |
       | total_discounts_tax_incl | 0.00   |
       | total_paid_tax_excl      | 130.00 |
@@ -396,140 +403,146 @@ Feature: Multiple currencies for Order in Back Office (BO)
 
   @reset-database-before-scenario
     # We reset database before this scenario to be sure only default_carrier is enabled
-    Scenario: I add the product with associated gift when the order already has the gift
-      Given there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
-      And there is a product in the catalog named "Test Product Gifted" with a price of 15.0 and 100 items in stock
-      And there is a cart rule named "MultiGiftAutoCartRule" that applies an amount discount of 1.0 with priority 1, quantity of 100 and quantity per user 100
-      And cart rule "MultiGiftAutoCartRule" has no discount code
-      And cart rule "MultiGiftAutoCartRule" is restricted to product "Test Product With Auto Gift"
-      And cart rule "MultiGiftAutoCartRule" offers free shipping
-      And cart rule "MultiGiftAutoCartRule" offers a gift product "Test Product Gifted"
-      And I add products to order "bo_order1" with new invoice and the following products details:
-        | name   | Test Product Gifted |
-        | amount | 1                   |
-        | price  | 150.0               |
-      Then order "bo_order1" should have 3 products in total
-      And order "bo_order1" should have 0 invoice
-      And order "bo_order1" should have 0 cart rule
-      And order "bo_order1" should have "default_carrier" as a carrier
-      And order "bo_order1" should have following details:
-        | total_products           | 388.00 |
-        | total_products_wt        | 411.28 |
-        | total_discounts_tax_excl | 0.0    |
-        | total_discounts_tax_incl | 0.0    |
-        | total_paid_tax_excl      | 458.00 |
-        | total_paid_tax_incl      | 485.48 |
-        | total_paid               | 485.48 |
-        | total_paid_real          | 0.0    |
-        | total_shipping_tax_excl  | 70.00  |
-        | total_shipping_tax_incl  | 74.20  |
-      And order "bo_order1" carrier should have following details:
-        | weight                 | 0.600 |
-        | shipping_cost_tax_excl | 70.00 |
-        | shipping_cost_tax_incl | 74.20 |
-      And product "Mug The best is yet to come" in order "bo_order1" has following details:
-        | product_quantity       | 2      |
-        | original_product_price | 119.00 |
-        | product_price          | 119.00 |
-        | unit_price_tax_incl    | 126.14 |
-        | unit_price_tax_excl    | 119.00 |
-        | total_price_tax_incl   | 252.28 |
-        | total_price_tax_excl   | 238.00 |
-      And product "Test Product Gifted" in order "bo_order1" has following details:
-        | product_quantity       | 1      |
-        | original_product_price | 150.00 |
-        | product_price          | 150.00 |
-        | unit_price_tax_incl    | 159.00 |
-        | unit_price_tax_excl    | 150.00 |
-        | total_price_tax_incl   | 159.00 |
-        | total_price_tax_excl   | 150.00 |
-      When I add products to order "bo_order1" with new invoice and the following products details:
-        | name   | Test Product With Auto Gift |
-        | amount | 1                           |
-        | price  | 120.00                      |
-      Then order "bo_order1" should have 5 products in total
-      And order "bo_order1" should have 0 invoice
-      And order "bo_order1" should have 1 cart rule
-      And order "bo_order1" should have following details:
-        | total_products           | 658.00 |
-        | total_products_wt        | 697.48 |
-        | total_discounts_tax_excl | 230.0  |
-        | total_discounts_tax_incl | 243.80 |
-        | total_paid_tax_excl      | 498.00 |
-        | total_paid_tax_incl      | 527.88 |
-        | total_paid               | 527.88 |
-        | total_paid_real          | 0.0    |
-        | total_shipping_tax_excl  | 70.00  |
-        | total_shipping_tax_incl  | 74.20  |
-      And order "bo_order1" carrier should have following details:
-        | weight                 | 0.600 |
-        | shipping_cost_tax_excl | 70.00 |
-        | shipping_cost_tax_incl | 74.20 |
-      And order "bo_order1" should have cart rule "MultiGiftAutoCartRule" with amount "€230.00"
-      And product "Mug The best is yet to come" in order "bo_order1" has following details:
-        | product_quantity       | 2      |
-        | original_product_price | 119.00 |
-        | product_price          | 119.00 |
-        | unit_price_tax_incl    | 126.14 |
-        | unit_price_tax_excl    | 119.00 |
-        | total_price_tax_incl   | 252.28 |
-        | total_price_tax_excl   | 238.00 |
-      And product "Test Product Gifted" in order "bo_order1" has following details:
-        | product_quantity       | 2      |
-        | original_product_price | 150.00 |
-        | product_price          | 150.00 |
-        | unit_price_tax_incl    | 159.00 |
-        | unit_price_tax_excl    | 150.00 |
-        | total_price_tax_incl   | 318.00 |
-        | total_price_tax_excl   | 300.00 |
-      And product "Test Product With Auto Gift" in order "bo_order1" has following details:
-        | product_quantity       | 1      |
-        | original_product_price | 120.00 |
-        | product_price          | 120.00 |
-        | unit_price_tax_incl    | 127.20 |
-        | unit_price_tax_excl    | 120.00 |
-        | total_price_tax_incl   | 127.20 |
-        | total_price_tax_excl   | 120.00 |
-      When I remove cart rule "MultiGiftAutoCartRule" from order "bo_order1"
-      Then order "bo_order1" should have 4 products in total
-      And order "bo_order1" should have 0 invoice
-      And order "bo_order1" should have 0 cart rule
-      And order "bo_order1" should have following details:
-        | total_products           | 508.00 |
-        | total_products_wt        | 538.48 |
-        | total_discounts_tax_excl | 0.00   |
-        | total_discounts_tax_incl | 0.00   |
-        | total_paid_tax_excl      | 578.00 |
-        | total_paid_tax_incl      | 612.68 |
-        | total_paid               | 612.68 |
-        | total_paid_real          | 0.0    |
-        | total_shipping_tax_excl  | 70.00  |
-        | total_shipping_tax_incl  | 74.20  |
-      And order "bo_order1" carrier should have following details:
-        | weight                 | 0.600 |
-        | shipping_cost_tax_excl | 70.00 |
-        | shipping_cost_tax_incl | 74.20 |
-      And product "Mug The best is yet to come" in order "bo_order1" has following details:
-        | product_quantity       | 2      |
-        | original_product_price | 119.00 |
-        | product_price          | 119.00 |
-        | unit_price_tax_incl    | 126.14 |
-        | unit_price_tax_excl    | 119.00 |
-        | total_price_tax_incl   | 252.28 |
-        | total_price_tax_excl   | 238.00 |
-      And product "Test Product Gifted" in order "bo_order1" has following details:
-        | product_quantity       | 1      |
-        | original_product_price | 150.00 |
-        | product_price          | 150.00 |
-        | unit_price_tax_incl    | 159.00 |
-        | unit_price_tax_excl    | 150.00 |
-        | total_price_tax_incl   | 159.00 |
-        | total_price_tax_excl   | 150.00 |
-      And product "Test Product With Auto Gift" in order "bo_order1" has following details:
-        | product_quantity       | 1      |
-        | original_product_price | 120.00 |
-        | product_price          | 120.00 |
-        | unit_price_tax_incl    | 127.20 |
-        | unit_price_tax_excl    | 120.00 |
-        | total_price_tax_incl   | 127.20 |
-        | total_price_tax_excl   | 120.00 |
+  Scenario: I add the product with associated gift when the order already has the gift
+    Given there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
+    And there is a product in the catalog named "Test Product Gifted" with a price of 15.0 and 100 items in stock
+    And there is a cart rule MultiGiftAutoCartRule with following properties:
+      | name[en-US]               | MultiGiftAutoCartRule       |
+      | free_shipping             | true                        |
+      | discount_amount           | 1                           |
+      | discount_currency         | usd                         |
+      | discount_includes_tax     | false                       |
+      | total_quantity            | 100                         |
+      | quantity_per_user         | 100                         |
+      | discount_application_type | specific_product            |
+      | discount_product          | Test Product With Auto Gift |
+      | gift_product              | Test Product Gifted         |
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name   | Test Product Gifted |
+      | amount | 1                   |
+      | price  | 150.0               |
+    Then order "bo_order1" should have 3 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have "default_carrier" as a carrier
+    And order "bo_order1" should have following details:
+      | total_products           | 388.00 |
+      | total_products_wt        | 411.28 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 458.00 |
+      | total_paid_tax_incl      | 485.48 |
+      | total_paid               | 485.48 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 70.00  |
+      | total_shipping_tax_incl  | 74.20  |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 70.00 |
+      | shipping_cost_tax_incl | 74.20 |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity       | 2      |
+      | original_product_price | 119.00 |
+      | product_price          | 119.00 |
+      | unit_price_tax_incl    | 126.14 |
+      | unit_price_tax_excl    | 119.00 |
+      | total_price_tax_incl   | 252.28 |
+      | total_price_tax_excl   | 238.00 |
+    And product "Test Product Gifted" in order "bo_order1" has following details:
+      | product_quantity       | 1      |
+      | original_product_price | 150.00 |
+      | product_price          | 150.00 |
+      | unit_price_tax_incl    | 159.00 |
+      | unit_price_tax_excl    | 150.00 |
+      | total_price_tax_incl   | 159.00 |
+      | total_price_tax_excl   | 150.00 |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name   | Test Product With Auto Gift |
+      | amount | 1                           |
+      | price  | 120.00                      |
+    Then order "bo_order1" should have 5 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 658.00 |
+      | total_products_wt        | 697.48 |
+      | total_discounts_tax_excl | 230.0  |
+      | total_discounts_tax_incl | 243.80 |
+      | total_paid_tax_excl      | 498.00 |
+      | total_paid_tax_incl      | 527.88 |
+      | total_paid               | 527.88 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 70.00  |
+      | total_shipping_tax_incl  | 74.20  |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 70.00 |
+      | shipping_cost_tax_incl | 74.20 |
+    And order "bo_order1" should have cart rule "MultiGiftAutoCartRule" with amount "€230.00"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity       | 2      |
+      | original_product_price | 119.00 |
+      | product_price          | 119.00 |
+      | unit_price_tax_incl    | 126.14 |
+      | unit_price_tax_excl    | 119.00 |
+      | total_price_tax_incl   | 252.28 |
+      | total_price_tax_excl   | 238.00 |
+    And product "Test Product Gifted" in order "bo_order1" has following details:
+      | product_quantity       | 2      |
+      | original_product_price | 150.00 |
+      | product_price          | 150.00 |
+      | unit_price_tax_incl    | 159.00 |
+      | unit_price_tax_excl    | 150.00 |
+      | total_price_tax_incl   | 318.00 |
+      | total_price_tax_excl   | 300.00 |
+    And product "Test Product With Auto Gift" in order "bo_order1" has following details:
+      | product_quantity       | 1      |
+      | original_product_price | 120.00 |
+      | product_price          | 120.00 |
+      | unit_price_tax_incl    | 127.20 |
+      | unit_price_tax_excl    | 120.00 |
+      | total_price_tax_incl   | 127.20 |
+      | total_price_tax_excl   | 120.00 |
+    When I remove cart rule "MultiGiftAutoCartRule" from order "bo_order1"
+    Then order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 508.00 |
+      | total_products_wt        | 538.48 |
+      | total_discounts_tax_excl | 0.00   |
+      | total_discounts_tax_incl | 0.00   |
+      | total_paid_tax_excl      | 578.00 |
+      | total_paid_tax_incl      | 612.68 |
+      | total_paid               | 612.68 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 70.00  |
+      | total_shipping_tax_incl  | 74.20  |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 70.00 |
+      | shipping_cost_tax_incl | 74.20 |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity       | 2      |
+      | original_product_price | 119.00 |
+      | product_price          | 119.00 |
+      | unit_price_tax_incl    | 126.14 |
+      | unit_price_tax_excl    | 119.00 |
+      | total_price_tax_incl   | 252.28 |
+      | total_price_tax_excl   | 238.00 |
+    And product "Test Product Gifted" in order "bo_order1" has following details:
+      | product_quantity       | 1      |
+      | original_product_price | 150.00 |
+      | product_price          | 150.00 |
+      | unit_price_tax_incl    | 159.00 |
+      | unit_price_tax_excl    | 150.00 |
+      | total_price_tax_incl   | 159.00 |
+      | total_price_tax_excl   | 150.00 |
+    And product "Test Product With Auto Gift" in order "bo_order1" has following details:
+      | product_quantity       | 1      |
+      | original_product_price | 120.00 |
+      | product_price          | 120.00 |
+      | unit_price_tax_incl    | 127.20 |
+      | unit_price_tax_excl    | 120.00 |
+      | total_price_tax_incl   | 127.20 |
+      | total_price_tax_excl   | 120.00 |

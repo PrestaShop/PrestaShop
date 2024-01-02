@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use AdminController;
 use AdminLegacyLayoutControllerCore;
 use Context;
 use Currency;
@@ -79,14 +78,7 @@ class LegacyContext
     public function getContext()
     {
         if (null === static::$instance) {
-            $legacyContext = Context::getContext();
-
-            if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
-                //init real legacy shop context
-                $adminController = new AdminController();
-                $adminController->initShopContext();
-            }
-            static::$instance = $legacyContext;
+            static::$instance = Context::getContext();
         }
 
         return static::$instance;
@@ -122,7 +114,7 @@ class LegacyContext
      *
      * @param string $controller the controller name
      * @param bool $withToken
-     * @param array<string> $extraParams
+     * @param array $extraParams
      *
      * @return string
      */

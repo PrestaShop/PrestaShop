@@ -37,7 +37,7 @@ describe('BO - Dashboard : Enable/Disable demo mode & check stats', async () => 
     await dashboardPage.setDemoMode(page, true);
 
     const salesScore = await dashboardPage.getSalesScore(page);
-    await expect(salesScore).to.be.above(400000);
+    expect(salesScore).to.be.above(400000);
   });
 
   it('should disable demo mode and check stats', async function () {
@@ -46,6 +46,6 @@ describe('BO - Dashboard : Enable/Disable demo mode & check stats', async () => 
     await dashboardPage.setDemoMode(page, false);
 
     const salesScore = await dashboardPage.getSalesScore(page);
-    await expect(salesScore).to.be.below(50000);
+    expect(salesScore).to.be.below(50000);
   });
 });

@@ -2,9 +2,6 @@ name: Integration tests
 on:
   push:
   pull_request:
-    # Do not run when only tests are updated
-    paths-ignore:
-      - 'tests/UI/**'
 
 permissions:
   contents: read   #   to clone the repos and get release assets (shivammathur/setup-php)
@@ -19,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
+        php: [ '8.1', '8.2' ]
       fail-fast: false
     steps:
       - name: Setup PHP
@@ -39,9 +36,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16'
-
-      - name: Setup NPM
-        run: npm install -g npm@7
 
       - uses: actions/checkout@v3
 

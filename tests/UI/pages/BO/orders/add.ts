@@ -223,7 +223,7 @@ class AddOrder extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Create order •';
+    this.pageTitle = `New order • ${global.INSTALL.SHOP_NAME}`;
     this.noCustomerFoundText = 'No customers found';
     this.noProductFoundText = 'No products found';
     this.cartRuleAlreadyExistErrorText = 'This voucher is already in your cart';
@@ -386,7 +386,7 @@ class AddOrder extends BOBasePage {
   async getCustomersSearchNumber(page: Page): Promise<number> {
     await this.waitForVisibleSelector(page, this.customerCardNameTitle(1));
 
-    return page.$$eval(this.customerResultsBlock, (divs: HTMLElement[]) => divs.length);
+    return page.locator(this.customerResultsBlock).count();
   }
 
   /**
@@ -416,7 +416,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<string>}
    */
   async addNewCustomer(page: Page, customerData: CustomerData): Promise<string> {
-    await page.click(this.addCustomerLink);
+    await page.locator(this.addCustomerLink).click();
     await this.waitForVisibleSelector(page, this.iframe);
 
     const customerFrame = await page.frame({url: /sell\/customers\/new/gmi});
@@ -440,7 +440,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async chooseCustomer(page: Page, cardPosition: number = 1): Promise<boolean> {
-    await page.click(this.customerCardChooseButton(cardPosition));
+    await page.locator(this.customerCardChooseButton(cardPosition)).click();
 
     await Promise.all([
       this.waitForHiddenSelector(page, this.customerCardChooseButton(cardPosition)),
@@ -560,7 +560,7 @@ class AddOrder extends BOBasePage {
   async getOrdersNumber(page: Page): Promise<number> {
     await this.waitForVisibleSelector(page, this.customerOrdersTable);
 
-    return page.$$eval(this.customerOrdersTableRows, (trs: HTMLElement[]) => trs.length);
+    return page.locator(this.customerOrdersTableRows).count();
   }
 
   /**
@@ -645,7 +645,7 @@ class AddOrder extends BOBasePage {
     await this.setValue(page, this.productQuantityInput, quantity);
 
     // Add to cart
-    await page.click(this.addtoCartButton);
+    await page.locator(this.addtoCartButton).click();
 
     // Return error message
     return this.getTextContent(page, this.cartErrorBlock);
@@ -661,7 +661,7 @@ class AddOrder extends BOBasePage {
   async addProductQuantity(page: Page, quantity: number, row: number): Promise<void> {
     await this.setValue(page, this.productTableQuantityColumn(row), quantity);
 
-    await page.click(this.productsTableColumn('total-price', row));
+    await page.locator(this.productsTableColumn('total-price', row)).click();
 
     await page.waitForTimeout(2000);
   }
@@ -694,7 +694,7 @@ class AddOrder extends BOBasePage {
     await this.setValue(page, this.productQuantityInput, quantity);
 
     // Add to cart
-    await page.click(this.addtoCartButton);
+    await page.locator(this.addtoCartButton).click();
 
     await page.waitForTimeout(500);
     await this.waitForVisibleSelector(page, this.productsTable);
@@ -1064,7 +1064,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<void>}
    */
   async setFreeShipping(page: Page, isEnabled: boolean): Promise<void> {
-    await page.$eval(this.freeShippingToggleInput(isEnabled ? 1 : 0), (el: HTMLElement) => el.click());
+    await page.locator(this.freeShippingToggleInput(isEnabled ? 1 : 0)).evaluate((el: HTMLElement) => el.click());
   }
 
   /**
@@ -1179,7 +1179,7 @@ class AddOrder extends BOBasePage {
   async setPaymentMethod(page: Page, paymentMethodModuleName: string): Promise<void> {
     await this.waitForSelectorAndClick(page, this.paymentMethodSelect);
     await this.waitForVisibleSelector(page, this.paymentMethodSelectResult);
-    await page.click(this.paymentMethodOption(paymentMethodModuleName));
+    await page.locator(this.paymentMethodOption(paymentMethodModuleName)).click();
   }
 
   /**

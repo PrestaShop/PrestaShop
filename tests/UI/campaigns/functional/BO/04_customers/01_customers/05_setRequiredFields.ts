@@ -48,7 +48,7 @@ describe('BO - Customers - Customers : Set required fields', async () => {
     await customersPage.closeSfToolBar(page);
 
     const pageTitle = await customersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customersPage.pageTitle);
+    expect(pageTitle).to.contains(customersPage.pageTitle);
   });
 
   [
@@ -59,7 +59,7 @@ describe('BO - Customers - Customers : Set required fields', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}PartnersOffers`, baseContext);
 
       const textResult = await customersPage.setRequiredFields(page, 0, test.args.exist);
-      await expect(textResult).to.equal(customersPage.successfulUpdateMessage);
+      expect(textResult).to.equal(customersPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
@@ -71,7 +71,7 @@ describe('BO - Customers - Customers : Set required fields', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to create account FO and check \'Receive offers from our partners\' checkbox', async function () {
@@ -82,7 +82,7 @@ describe('BO - Customers - Customers : Set required fields', async () => {
       await foLoginPage.goToCreateAccountPage(page);
 
       const pageTitle = await foCreateAccountPage.getHeaderTitle(page);
-      await expect(pageTitle).to.contains(foCreateAccountPage.formTitle);
+      expect(pageTitle).to.contains(foCreateAccountPage.formTitle);
     });
 
     it('should check \'Receive offers from our partners\' checkbox', async function () {
@@ -90,7 +90,7 @@ describe('BO - Customers - Customers : Set required fields', async () => {
 
       // Check partner offer required
       const isPartnerOfferRequired = await foCreateAccountPage.isPartnerOfferRequired(page);
-      await expect(isPartnerOfferRequired).to.be.equal(test.args.exist);
+      expect(isPartnerOfferRequired).to.be.equal(test.args.exist);
     });
 
     it('should go back to BO', async function () {
@@ -100,7 +100,7 @@ describe('BO - Customers - Customers : Set required fields', async () => {
       page = await foCreateAccountPage.closePage(browserContext, page, 0);
 
       const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      expect(pageTitle).to.contains(customersPage.pageTitle);
     });
   });
 });

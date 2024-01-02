@@ -47,14 +47,14 @@ describe('BO - Modules - Module Manager : Configure module', async () => {
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   it(`should search for module ${Modules.contactForm.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
-    await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+    expect(isModuleVisible, 'Module is not visible!').to.eq(true);
   });
 
   it('should go to module configuration page', async function () {
@@ -63,6 +63,6 @@ describe('BO - Modules - Module Manager : Configure module', async () => {
     await moduleManagerPage.goToConfigurationPage(page, Modules.contactForm.tag);
 
     const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-    await expect(pageSubtitle).to.contains(Modules.contactForm.name);
+    expect(pageSubtitle).to.contains(Modules.contactForm.name);
   });
 });

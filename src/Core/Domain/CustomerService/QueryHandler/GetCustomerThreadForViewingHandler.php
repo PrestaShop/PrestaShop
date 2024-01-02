@@ -34,6 +34,7 @@ use CustomerThread;
 use DateTime;
 use Employee;
 use Order;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerInformation;
@@ -45,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThread
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadMessageType;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Product;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
@@ -53,6 +55,7 @@ use Validate;
 /**
  * @internal
  */
+#[AsQueryHandler]
 class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingHandlerInterface
 {
     /**
@@ -66,12 +69,19 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
     private $translator;
 
     /**
-     * @param Context $context
+     * @var Locale
      */
-    public function __construct(Context $context)
+    protected $locale;
+
+    /**
+     * @param Context $context
+     * @param Locale $locale
+     */
+    public function __construct(Context $context, Locale $locale)
     {
         $this->context = $context;
         $this->translator = $context->getTranslator();
+        $this->locale = $locale;
     }
 
     /**
@@ -349,9 +359,9 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
                 }
 
                 $orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
-                $orders[$key]['total_paid_real'] = Tools::displayPrice(
+                $orders[$key]['total_paid_real'] = $this->locale->formatPrice(
                     $order['total_paid_real'],
-                    new Currency((int) $order['id_currency'])
+                    (new Currency((int) $order['id_currency']))->iso_code
                 );
             }
         }
@@ -362,7 +372,9 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
             $customer->lastname,
             $thread->email,
             count($ordersOk),
-            $totalOk ? Tools::displayPrice($totalOk, $this->context->currency) : $totalOk,
+            $totalOk
+                ? $this->context->getCurrentLocale()->formatPrice($totalOk, $this->context->currency->iso_code)
+                : $totalOk,
             (new DateTime($customer->date_add))->format($this->context->language->date_format_lite)
         );
     }

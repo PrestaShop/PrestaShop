@@ -29,7 +29,7 @@ export default class CategoryData {
 
   public readonly thumbnailImage: string|null;
 
-  public readonly metaImage: string|null;
+  public readonly children: CategoryData[];
 
   /**
    * Constructor for class CategoryData
@@ -67,7 +67,7 @@ export default class CategoryData {
     /** @type {string|null} Category thumbnail of the category */
     this.thumbnailImage = categoryToCreate.thumbnailImage || null;
 
-    /** @type {string|null} Menu thumbnail of the category */
-    this.metaImage = categoryToCreate.metaImage || null;
+    /** @type {CategoryData[]} Category thumbnail of the category */
+    this.children = categoryToCreate.children || [];
   }
 }

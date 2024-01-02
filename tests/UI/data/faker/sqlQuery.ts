@@ -23,7 +23,7 @@ export default class SqlQueryData {
    */
   constructor(sqlQueryToCreate: SqlQueryCreator = {}) {
     /** @type {string} Name of the query */
-    this.name = sqlQueryToCreate.name || faker.random.word();
+    this.name = sqlQueryToCreate.name || faker.lorem.word();
 
     /** @type {string} Table to use on the query */
     this.tableName = sqlQueryToCreate.tableName || faker.helpers.arrayElement(tableNames);

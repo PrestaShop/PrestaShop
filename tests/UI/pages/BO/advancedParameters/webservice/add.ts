@@ -34,8 +34,8 @@ class AddWebserviceKey extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Webservice •';
-    this.pageTitleEdit = 'Webservice •';
+    this.pageTitleCreate = `New webservice key • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing webservice key';
 
     // Selectors
     this.webserviceKeyInput = '#webservice_key_key';
@@ -61,7 +61,7 @@ class AddWebserviceKey extends BOBasePage {
   async createEditWebservice(page: Page, webserviceData: WebserviceData, toGenerate: boolean = true): Promise<string> {
     // Key
     if (toGenerate) {
-      await page.click(this.generateButton);
+      await page.locator(this.generateButton).click();
     } else {
       await this.setValue(page, this.webserviceKeyInput, webserviceData.key);
     }

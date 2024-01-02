@@ -47,7 +47,7 @@ describe('BO - Design - Theme & Logo : Install/Uninstall module', async () => {
     await themeAndLogoPage.closeSfToolBar(page);
 
     const pageTitle = await themeAndLogoPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+    expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
   });
 
   it('should go to \'Pages configuration\' page', async function () {
@@ -56,20 +56,20 @@ describe('BO - Design - Theme & Logo : Install/Uninstall module', async () => {
     await themeAndLogoPage.goToSubTabPagesConfiguration(page);
 
     const pageTitle = await pagesConfigurationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(pagesConfigurationPage.pageTitle);
+    expect(pageTitle).to.contains(pagesConfigurationPage.pageTitle);
   });
 
   it('should uninstall the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
     const successMessage = await pagesConfigurationPage.setActionInModule(page, Modules.mainMenu, 'uninstall');
-    await expect(successMessage).to.eq(pagesConfigurationPage.successMessage);
+    expect(successMessage).to.eq(pagesConfigurationPage.successMessage);
   });
 
   it('should install the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
     const successMessage = await pagesConfigurationPage.setActionInModule(page, Modules.mainMenu, 'install');
-    await expect(successMessage).to.eq(pagesConfigurationPage.successMessage);
+    expect(successMessage).to.eq(pagesConfigurationPage.successMessage);
   });
 });

@@ -44,7 +44,6 @@ window.combinations = (function () {
             elem.removeAttr('disabled');
             $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').removeAttr('disabled');
             supplierCombinations.refresh();
-            warehouseCombinations.refresh();
             if ($('.js-combinations-list .combination').length <= 0) {
               $('#combinations_thead').fadeOut();
             }

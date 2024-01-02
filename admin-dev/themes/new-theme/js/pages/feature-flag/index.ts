@@ -39,11 +39,11 @@ $(() => {
   const initialState = $form.serialize();
   const initialFormData = $form.serializeArray();
 
-  $betaFormInputs.change(() => {
+  $betaFormInputs.on('change', () => {
     $submitButton.prop('disabled', initialState === $form.serialize());
   });
 
-  $stableFormInputs.change(() => {
+  $stableFormInputs.on('change', () => {
     $stableFormSubmitButton.prop('disabled', $stableFormInitialState === $stableForm.serialize());
   });
 

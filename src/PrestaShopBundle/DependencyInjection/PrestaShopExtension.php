@@ -28,27 +28,23 @@ namespace PrestaShopBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * Adds main PrestaShop core services to the Symfony container.
  */
-class PrestaShopExtension extends Extension
+class PrestaShopExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new AddOnsConfiguration();
-        $config = $this->processConfiguration($configuration, $configs);
-
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
         $env = $container->getParameter('kernel.environment');
         $loader->load('services_' . $env . '.yml');
-
-        $container->setParameter('prestashop.addons.categories', $config['addons']['categories']);
     }
 
     /**
@@ -65,5 +61,46 @@ class PrestaShopExtension extends Extension
     public function getAlias()
     {
         return 'prestashop';
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        $this->preprendApiConfig($container);
+    }
+
+    public function preprendApiConfig(ContainerBuilder $container)
+    {
+        $paths = [];
+        $activeModules = $container->getParameter('prestashop.active_modules');
+        $moduleDir = $container->getParameter('prestashop.module_dir');
+
+        // We only load endpoints from active modules
+        foreach ($activeModules as $moduleName) {
+            $modulePath = $moduleDir . $moduleName;
+            // Load YAML definition from the config/api_platform folder in the module
+            $moduleConfigPath = sprintf('%s/config/api_platform', $modulePath);
+            if (file_exists($moduleConfigPath)) {
+                $paths[] = $moduleConfigPath;
+            }
+
+            /**
+             * TODO: Understand why this crashes PrestaShop and redirects to Front Office - maybe duplicated/conflicts with ModulesDoctrineCompilerPass that could be removed in favor of this method
+             * // Load Doctrine entities that could be used as ApiPlatform DTO resources as well in the src/Entity folder
+             * $entitiesRessourcesPath = sprintf('%s/src/Entity', $modulePath);
+             * if (file_exists($entitiesRessourcesPath)) {
+             *   $paths[] = $entitiesRessourcesPath;
+             * }
+             */
+
+            // Load ApiPlatform DTOs from the src/ApiPlatform/Resources folder
+            $moduleRessourcesPath = sprintf('%s/src/ApiPlatform/Resources', $modulePath);
+            if (file_exists($moduleRessourcesPath)) {
+                $paths[] = $moduleRessourcesPath;
+            }
+        }
+
+        if (!empty($paths)) {
+            $container->prependExtensionConfig('api_platform', ['mapping' => ['paths' => $paths]]);
+        }
     }
 }

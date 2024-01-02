@@ -117,8 +117,8 @@ export default {
       new AttributeValueData({id: 22, value: 'Rules', position: 1}),
       // 1 : plain
       new AttributeValueData({id: 23, value: 'Plain', position: 2}),
-      // 2 : squarred
-      new AttributeValueData({id: 24, value: 'Squarred', position: 3}),
+      // 2 : squared
+      new AttributeValueData({id: 24, value: 'Squared', position: 3}),
       // 3 : doted
       new AttributeValueData({id: 25, value: 'Doted', position: 4}),
     ],

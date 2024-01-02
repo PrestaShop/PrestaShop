@@ -28,8 +28,7 @@ View new status in order page
 Update order status
 Delete order status
  */
-describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, update and '
-  + 'delete order status in BO', async () => {
+describe('BO - Shop Parameters - Order Settings - Statuses : CRUD order status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfOrderStatuses: number = 0;
@@ -74,7 +73,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
     );
 
     const pageTitle = await orderSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
   });
 
   it('should go to \'Statuses\' page', async function () {
@@ -83,14 +82,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
     await orderSettingsPage.goToStatusesPage(page);
 
     const pageTitle = await statusesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(statusesPage.pageTitle);
+    expect(pageTitle).to.contains(statusesPage.pageTitle);
   });
 
   it('should reset all filters and get number of order statuses', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfOrderStatuses = await statusesPage.resetAndGetNumberOfLines(page, tableName);
-    await expect(numberOfOrderStatuses).to.be.above(0);
+    expect(numberOfOrderStatuses).to.be.above(0);
   });
 
   // 1 - Create order status
@@ -101,17 +100,17 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
       await statusesPage.goToNewOrderStatusPage(page);
 
       const pageTitle = await addOrderStatusPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderStatusPage.pageTitleCreate);
+      expect(pageTitle).to.contains(addOrderStatusPage.pageTitleCreate);
     });
 
     it('should create order status and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrderStatus', baseContext);
 
       const textResult = await addOrderStatusPage.setOrderStatus(page, createOrderStatusData);
-      await expect(textResult).to.contains(statusesPage.successfulCreationMessage);
+      expect(textResult).to.contains(statusesPage.successfulCreationMessage);
 
       const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page, tableName);
-      await expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderStatuses + 1);
+      expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderStatuses + 1);
     });
   });
 
@@ -127,7 +126,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
@@ -136,14 +135,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
       await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await viewOrderBasePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+      expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
     });
 
     it(`should check if the order status '${createOrderStatusData.name}' is visible`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDoesStatusVisible', baseContext);
 
       const isStatusExist = await viewOrderBasePage.doesStatusExist(page, createOrderStatusData.name);
-      await expect(isStatusExist, 'Status does not exist').to.be.true;
+      expect(isStatusExist, 'Status does not exist').to.eq(true);
     });
   });
 
@@ -159,7 +158,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
       );
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
     });
 
     it('should go to \'Statuses\' page', async function () {
@@ -168,7 +167,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
       await orderSettingsPage.goToStatusesPage(page);
 
       const pageTitle = await statusesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(statusesPage.pageTitle);
+      expect(pageTitle).to.contains(statusesPage.pageTitle);
     });
 
     it('should filter list by name', async function () {
@@ -184,7 +183,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
       );
 
       const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name');
-      await expect(textEmail).to.contains(createOrderStatusData.name);
+      expect(textEmail).to.contains(createOrderStatusData.name);
     });
 
     it('should go to edit order status page', async function () {
@@ -193,17 +192,17 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
       await statusesPage.goToEditPage(page, tableName, 1);
 
       const pageTitle = await addOrderStatusPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderStatusPage.pageTitleEdit);
+      expect(pageTitle).to.contains(addOrderStatusPage.pageTitleEdit(createOrderStatusData.name));
     });
 
     it('should update order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
       const textResult = await addOrderStatusPage.setOrderStatus(page, editOrderStatusData);
-      await expect(textResult).to.contains(statusesPage.successfulUpdateMessage);
+      expect(textResult).to.contains(statusesPage.successfulUpdateMessage);
 
       const numberOfOrderStatusesAfterUpdate = await statusesPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfOrderStatusesAfterUpdate).to.be.equal(numberOfOrderStatuses + 1);
+      expect(numberOfOrderStatusesAfterUpdate).to.be.equal(numberOfOrderStatuses + 1);
     });
   });
 
@@ -222,17 +221,17 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
       );
 
       const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name');
-      await expect(textEmail).to.contains(editOrderStatusData.name);
+      expect(textEmail).to.contains(editOrderStatusData.name);
     });
 
     it('should delete order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderStatus', baseContext);
 
       const textResult = await statusesPage.deleteOrderStatus(page, tableName, 1);
-      await expect(textResult).to.contains(statusesPage.successfulDeleteMessage);
+      expect(textResult).to.contains(statusesPage.successfulDeleteMessage);
 
       const numberOfOrderStatusesAfterDelete = await statusesPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfOrderStatusesAfterDelete).to.be.equal(numberOfOrderStatuses);
+      expect(numberOfOrderStatusesAfterDelete).to.be.equal(numberOfOrderStatuses);
     });
   });
 });

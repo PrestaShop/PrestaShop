@@ -61,19 +61,25 @@ export default class CustomerData {
     this.socialTitle = customerToCreate.socialTitle || faker.helpers.arrayElement(genders);
 
     /** @type {string} Firstname of the customer */
-    this.firstName = customerToCreate.firstName || faker.name.firstName();
+    this.firstName = customerToCreate.firstName || faker.person.firstName();
 
     /** @type {string} Lastname of the customer */
-    this.lastName = customerToCreate.lastName || faker.name.lastName();
+    this.lastName = customerToCreate.lastName || faker.person.lastName();
 
     /** @type {string} Email for the customer account */
-    this.email = customerToCreate.email || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
+    this.email = customerToCreate.email || faker.internet.email(
+      {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        provider: 'prestashop.com',
+      },
+    );
 
     /** @type {string} Password for the customer account */
     this.password = customerToCreate.password === undefined ? faker.internet.password() : customerToCreate.password;
 
     /** @type {Date} Birthdate of the customer */
-    this.birthDate = customerToCreate.birthDate || faker.date.between('1950-01-01', '2000-12-31');
+    this.birthDate = customerToCreate.birthDate || faker.date.between({from: '1950-01-01', to: '2000-12-31'});
 
     /** @type {string} Year of the birth 'yyyy' */
     this.yearOfBirth = customerToCreate.yearOfBirth || this.birthDate.getFullYear().toString();
@@ -100,7 +106,7 @@ export default class CustomerData {
     this.company = customerToCreate.company || faker.company.name();
 
     /** @type {Number} Allowed outstanding amount for the customer */
-    this.allowedOutstandingAmount = customerToCreate.allowedOutstandingAmount || faker.datatype.number({
+    this.allowedOutstandingAmount = customerToCreate.allowedOutstandingAmount || faker.number.int({
       min: 0,
       max: 100,
     });

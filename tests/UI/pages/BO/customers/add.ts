@@ -63,7 +63,7 @@ class AddCustomer extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Creating a new Customer •';
+    this.pageTitleCreate = `New customer • ${global.INSTALL.SHOP_NAME}`;
     this.pageTitleEdit = 'Editing customer';
     this.updateSuccessfullMessage = 'Update successful';
 

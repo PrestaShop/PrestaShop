@@ -53,14 +53,14 @@ describe('BO - Catalog - Brands & Suppliers : Export brands', async () => {
     await brandsPage.closeSfToolBar(page);
 
     const pageTitle = await brandsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(brandsPage.pageTitle);
+    expect(pageTitle).to.contains(brandsPage.pageTitle);
   });
 
   it('should reset all filters and get number of brands in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
     numberOfBrands = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-    await expect(numberOfBrands).to.be.above(0);
+    expect(numberOfBrands).to.be.above(0);
   });
 
   it('should export brands to a csv file', async function () {
@@ -69,7 +69,7 @@ describe('BO - Catalog - Brands & Suppliers : Export brands', async () => {
     filePath = await brandsPage.exportBrandsDataToCsv(page);
 
     const doesFileExist = await files.doesFileExist(filePath, 5000);
-    await expect(doesFileExist, 'Export of data has failed').to.be.true;
+    expect(doesFileExist, 'Export of data has failed').to.eq(true);
   });
 
   it('should check existence of brands data in csv file', async function () {
@@ -81,7 +81,7 @@ describe('BO - Catalog - Brands & Suppliers : Export brands', async () => {
       const brandInCsvFormat = await brandsPage.getBrandInCsvFormat(page, row);
 
       const textExist = await files.isTextInFile(filePath, brandInCsvFormat, true, true);
-      await expect(textExist, `${brandInCsvFormat} was not found in the file`).to.be.true;
+      expect(textExist, `${brandInCsvFormat} was not found in the file`).to.eq(true);
     }
   });
 });

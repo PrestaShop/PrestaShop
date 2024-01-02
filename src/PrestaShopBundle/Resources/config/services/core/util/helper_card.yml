@@ -2,11 +2,6 @@ services:
   _defaults:
     public: false
 
-  prestashop.core.util.helper_card.documentation_link_provider:
-    alias: 'PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProvider'
-    public: true
-    deprecated: ~
-
   PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface:
     alias: 'PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProvider'
     public: true
@@ -90,7 +85,13 @@ services:
           '_fallback': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/improving-shop/managing-shipping/carriers'
         'combinations':
           'en': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-catalog/managing-products#managingproducts-creatingaproductwithcombinations'
-          'fr': "https://docs.prestashop-project.org/1.7-documentation/v/french/guide-utilisateur/vendre/gerer-catalogue/gerer-produits#creation-dun-produit-avec-des-declinaisons"
+          'fr': 'https://docs.prestashop-project.org/1.7-documentation/v/french/guide-utilisateur/vendre/gerer-catalogue/gerer-produits#creation-dun-produit-avec-des-declinaisons'
           'es': 'https://docs.prestashop-project.org/1.7-documentation/v/spanish/guia-usuario/vender/gestionar-catalogo/gestionar-productos#gestionarlosproductos-crearunproductoconcombinaciones'
           'it': 'https://docs.prestashop-project.org/1.7-documentation/v/italian/guida-utente/vendere/gestire-catalogo/gestire-prodotti#gestireprodotti-creareunprodottoconcombinazioni'
           '_fallback': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-catalog/managing-products#managingproducts-creatingaproductwithcombinations'
+        'feature':
+          'en': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-catalog/managing-product-features'
+          'fr': 'https://docs.prestashop-project.org/1.7-documentation/v/french/guide-utilisateur/vendre/gerer-catalogue/gerer-caracteristiques-produits'
+          'es': 'https://docs.prestashop-project.org/1.7-documentation/v/spanish/guia-usuario/vender/gestionar-catalogo/gestionar-caracteristicas-producto'
+          'it': 'https://docs.prestashop-project.org/1.7-documentation/v/italian/guida-utente/vendere/gestire-catalogo/gestire-funzioni-prodotto'
+          '_fallback': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-catalog/managing-product-features'

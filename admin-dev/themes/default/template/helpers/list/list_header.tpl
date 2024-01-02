@@ -26,7 +26,7 @@
 {if $ajax}
 	<script type="text/javascript">
 		$(function () {
-			$(".ajax_table_link").click(function () {
+			$(".ajax_table_link").on('click', function () {
 				var link = $(this);
 				$.post($(this).attr('href'), function (data) {
 				  // If response comes from symfony controller
@@ -69,7 +69,7 @@
 {if !$simple_header}
 	<script type="text/javascript">
 		$(function() {
-			$('table.{$list_id} .filter').keypress(function(e){
+			$('table.{$list_id} .filter').on('keypress', function(e){
 				var key = (e.keyCode ? e.keyCode : e.which);
 				if (key == 13)
 				{
@@ -77,7 +77,7 @@
 					formSubmit(e, 'submitFilterButton{$list_id}');
 				}
 			})
-			$('#submitFilterButton{$list_id}').click(function() {
+			$('#submitFilterButton{$list_id}').on('click', function() {
 				$('#submitFilter{$list_id}').val(1);
 			});
 
@@ -209,14 +209,14 @@
 						//hide standard submit button
 						btn_submit.hide();
 						//bind enter key press to validate form
-						$('#{$table}_form').keypress(function (e) {
+						$('#{$table}_form').on('keypress', function (e) {
 							if (e.which == 13 && e.target.localName != 'textarea') {
 								$('#desc-{$table}-save').click();
 							}
 						});
 						//submit the form
 						{block name=formSubmit}
-							btn_save.click(function() {
+							btn_save.on('click', function() {
 								// Avoid double click
 								if (submited) {
 									return false;
@@ -228,7 +228,7 @@
 								return false;
 							});
 							if (btn_save_and_stay) {
-								btn_save_and_stay.click(function() {
+								btn_save_and_stay.on('click', function() {
 									//add hidden input to emulate submit button click when posting the form -> field name posted
 									btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'AndStay" value="1" />');
 									$('#{$table}_form').submit();

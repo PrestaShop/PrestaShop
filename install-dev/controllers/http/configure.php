@@ -32,10 +32,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     /**
      * @var array
      */
-    public $list_activities = [];
-    /**
-     * @var array
-     */
     public $list_countries = [];
     /**
      * @var string
@@ -54,7 +50,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         if (Tools::isSubmit('shop_name')) {
             // Save shop configuration
             $this->session->shop_name = trim(Tools::getValue('shop_name'));
-            $this->session->shop_activity = Tools::getValue('shop_activity');
             $this->session->enable_ssl = (bool) Tools::getValue('enable_ssl');
             $this->session->shop_country = Tools::getValue('shop_country');
             $this->session->shop_timezone = Tools::getValue('shop_timezone');
@@ -197,33 +192,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
      */
     public function display(): void
     {
-        // List of activities
-        $list_activities = [
-            1 => $this->translator->trans('Lingerie and Adult', [], 'Install'),
-            2 => $this->translator->trans('Animals and Pets', [], 'Install'),
-            3 => $this->translator->trans('Art and Culture', [], 'Install'),
-            4 => $this->translator->trans('Babies', [], 'Install'),
-            5 => $this->translator->trans('Beauty and Personal Care', [], 'Install'),
-            6 => $this->translator->trans('Cars', [], 'Install'),
-            7 => $this->translator->trans('Computer Hardware and Software', [], 'Install'),
-            8 => $this->translator->trans('Download', [], 'Install'),
-            9 => $this->translator->trans('Fashion and Accessories', [], 'Install'),
-            10 => $this->translator->trans('Flowers, Gifts and Crafts', [], 'Install'),
-            11 => $this->translator->trans('Food and beverage', [], 'Install'),
-            12 => $this->translator->trans('HiFi, Photo and Video', [], 'Install'),
-            13 => $this->translator->trans('Home and Garden', [], 'Install'),
-            14 => $this->translator->trans('Home Appliances', [], 'Install'),
-            15 => $this->translator->trans('Jewelry', [], 'Install'),
-            16 => $this->translator->trans('Mobile and Telecom', [], 'Install'),
-            17 => $this->translator->trans('Services', [], 'Install'),
-            18 => $this->translator->trans('Shoes and accessories', [], 'Install'),
-            19 => $this->translator->trans('Sports and Entertainment', [], 'Install'),
-            20 => $this->translator->trans('Travel', [], 'Install'),
-        ];
-
-        asort($list_activities);
-        $this->list_activities = $list_activities;
-
         // Countries list
         $this->list_countries = [];
         $countries = $this->language->getCountries();

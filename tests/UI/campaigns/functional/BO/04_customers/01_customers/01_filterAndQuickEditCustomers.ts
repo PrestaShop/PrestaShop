@@ -54,19 +54,19 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
     await customersPage.closeSfToolBar(page);
 
     const pageTitle = await customersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customersPage.pageTitle);
+    expect(pageTitle).to.contains(customersPage.pageTitle);
   });
 
   it('should reset all filters and get number of customers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
     numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCustomers).to.be.above(0);
+    expect(numberOfCustomers).to.be.above(0);
   });
 
   // 1 : Filter Customers with all inputs and selects in grid table
   describe('Filter customers table', async () => {
-    const tests = [
+    [
       {
         args:
           {
@@ -139,9 +139,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
             filterValue: '0',
           },
       },
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
@@ -160,26 +158,25 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
           );
         }
         const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
-
-        await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
+        expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
 
         for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
           switch (test.args.filterBy) {
             case 'active': {
               const customerStatus = await customersPage.getCustomerStatus(page, i);
-              await expect(customerStatus).to.equal(test.args.filterValue === '1');
+              expect(customerStatus).to.equals(test.args.filterValue === '1');
               break;
             }
 
             case 'newsletter': {
               const newsletterStatus = await customersPage.getNewsletterStatus(page, i);
-              await expect(newsletterStatus).to.equal(test.args.filterValue === '1');
+              expect(newsletterStatus).to.equals(test.args.filterValue === '1');
               break;
             }
 
             case 'optin': {
               const partnerOffersStatus = await customersPage.getPartnerOffersStatus(page, i);
-              await expect(partnerOffersStatus).to.equal(test.args.filterValue === '1');
+              expect(partnerOffersStatus).to.equals(test.args.filterValue === '1');
               break;
             }
 
@@ -189,7 +186,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
                 i,
                 test.args.filterBy,
               );
-              await expect(textColumn).to.contains(test.args.filterValue);
+              expect(textColumn).to.contains(test.args.filterValue);
               break;
             }
           }
@@ -200,7 +197,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
+        expect(numberOfCustomersAfterReset).to.equals(numberOfCustomers);
       });
     });
 
@@ -214,7 +211,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
 
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
         const textColumn = await customersPage.getTextColumnFromTableCustomers(page, i, 'date_add');
-        await expect(textColumn).to.contains(today);
+        expect(textColumn).to.contains(today);
       }
     });
 
@@ -222,7 +219,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
       const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
+      expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
   });
 
@@ -239,7 +236,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
       );
 
       const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCustomersAfterFilter).to.be.at.above(0);
+      expect(numberOfCustomersAfterFilter).to.be.at.above(0);
     });
 
     describe('Quick edit customer status', async () => {
@@ -253,11 +250,11 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
           const resultMessage = await customersPage.setCustomerStatus(page, 1, test.args.value);
 
           if (resultMessage) {
-            await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
+            expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
           }
 
           const customerStatus = await customersPage.getCustomerStatus(page, 1);
-          await expect(customerStatus).to.be.equal(test.args.value);
+          expect(customerStatus).to.equals(test.args.value);
         });
       });
     });
@@ -273,11 +270,11 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
           const resultMessage = await customersPage.setNewsletterStatus(page, 1, test.args.value);
 
           if (resultMessage) {
-            await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
+            expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
           }
 
           const customerStatus = await customersPage.getNewsletterStatus(page, 1);
-          await expect(customerStatus).to.be.equal(test.args.value);
+          expect(customerStatus).to.equals(test.args.value);
         });
       });
     });
@@ -293,11 +290,11 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
           const resultMessage = await customersPage.setPartnerOffersStatus(page, 1, test.args.value);
 
           if (resultMessage) {
-            await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
+            expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
           }
 
           const customerStatus = await customersPage.getPartnerOffersStatus(page, 1);
-          await expect(customerStatus).to.be.equal(test.args.value);
+          expect(customerStatus).to.be.equal(test.args.value);
         });
       });
     });

@@ -43,7 +43,13 @@ class GuestCore extends ObjectModel
     public $real_player;
     public $windows_media;
     public $accept_language;
-    public $mobile_theme;
+
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Attribute will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     *
+     * @var bool Mobile Theme */
+    public $mobile_theme = false;
 
     /**
      * @see ObjectModel::$definition
@@ -86,7 +92,6 @@ class GuestCore extends ObjectModel
         $this->accept_language = $this->getLanguage($acceptLanguage);
         $this->id_operating_system = $this->getOs($userAgent);
         $this->id_web_browser = $this->getBrowser($userAgent);
-        $this->mobile_theme = Context::getContext()->getMobileDevice();
     }
 
     /**

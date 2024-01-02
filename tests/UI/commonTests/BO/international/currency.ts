@@ -53,7 +53,7 @@ function createCurrencyTest(currencyData: CurrencyData, baseContext: string = 'c
       await localizationPage.closeSfToolBar(page);
 
       const pageTitle = await localizationPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(localizationPage.pageTitle);
+      expect(pageTitle).to.contains(localizationPage.pageTitle);
     });
 
     it('should go to \'Currencies\' page', async function () {
@@ -62,7 +62,7 @@ function createCurrencyTest(currencyData: CurrencyData, baseContext: string = 'c
       await localizationPage.goToSubTabCurrencies(page);
 
       const pageTitle = await currenciesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+      expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });
 
     it('should go to create new currency page', async function () {
@@ -71,7 +71,7 @@ function createCurrencyTest(currencyData: CurrencyData, baseContext: string = 'c
       await currenciesPage.goToAddNewCurrencyPage(page);
 
       const pageTitle = await addCurrencyPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+      expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
     });
 
     it('should create currency', async function () {
@@ -79,7 +79,7 @@ function createCurrencyTest(currencyData: CurrencyData, baseContext: string = 'c
 
       // Create and check successful message
       const textResult = await addCurrencyPage.addOfficialCurrency(page, currencyData);
-      await expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
+      expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
     });
   });
 }
@@ -116,7 +116,7 @@ function deleteCurrencyTest(currencyData: CurrencyData, baseContext: string = 'c
       await localizationPage.closeSfToolBar(page);
 
       const pageTitle = await localizationPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(localizationPage.pageTitle);
+      expect(pageTitle).to.contains(localizationPage.pageTitle);
     });
 
     it('should go to \'Currencies\' page', async function () {
@@ -125,7 +125,7 @@ function deleteCurrencyTest(currencyData: CurrencyData, baseContext: string = 'c
       await localizationPage.goToSubTabCurrencies(page);
 
       const pageTitle = await currenciesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+      expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });
 
     it(`should filter by iso code of currency '${currencyData.isoCode}'`, async function () {
@@ -136,14 +136,14 @@ function deleteCurrencyTest(currencyData: CurrencyData, baseContext: string = 'c
 
       // Check currency to delete
       const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-      await expect(textColumn).to.contains(currencyData.isoCode);
+      expect(textColumn).to.contains(currencyData.isoCode);
     });
 
     it('should delete currency', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrency', baseContext);
 
       const result = await currenciesPage.deleteCurrency(page, 1);
-      await expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
+      expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
     });
   });
 }

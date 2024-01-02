@@ -29,7 +29,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Module\Configuration;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\PDOMySql\Driver;
+use Doctrine\DBAL\Driver\PDO\MySQL\Driver;
+use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -294,12 +295,6 @@ class ModuleSelfConfiguratorTest extends TestCase
             ->method('onReset')
             ->willReturn(true);
         $moduleS
-            ->method('onMobileDisable')
-            ->willReturn(true);
-        $moduleS
-            ->method('onMobileEnable')
-            ->willReturn(true);
-        $moduleS
             ->method('hasValidInstance')
             ->willReturn(true);
 
@@ -367,7 +362,7 @@ class ConnectionMock extends Connection
         return true;
     }
 
-    public function prepare($statement)
+    public function prepare($statement): Statement
     {
         $this->sql[] = $statement;
 
@@ -382,8 +377,15 @@ class StatementMock extends Statement
     {
     }
 
-    public function execute($params = null)
+    public function execute($params = null): Result
     {
-        return true;
+        return new ResultMock();
+    }
+}
+
+class ResultMock extends Result
+{
+    public function __construct()
+    {
     }
 }

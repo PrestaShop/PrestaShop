@@ -48,7 +48,7 @@ describe('BO - International - Taxes : Edit Tax options with all EcoTax values',
     await taxesPage.closeSfToolBar(page);
 
     const pageTitle = await taxesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(taxesPage.pageTitle);
+    expect(pageTitle).to.contains(taxesPage.pageTitle);
   });
 
   // Testing all options of EcoTax
@@ -63,7 +63,7 @@ describe('BO - International - Taxes : Edit Tax options with all EcoTax values',
         await testContext.addContextItem(this, 'testIdentifier', `updateForm${index + 1}`, baseContext);
 
         const textResult = await taxesPage.updateTaxOption(page, taxOption);
-        await expect(textResult).to.be.equal('Update successful');
+        expect(textResult).to.be.equal('Update successful');
       });
     });
   });

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
-use Configuration;
 use ImageManager;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -79,7 +78,6 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
     private function generateDifferentSizeImages($manufacturerId)
     {
         $resized = true;
-        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
 
         try {
             /* Generate images with different size */
@@ -103,17 +101,6 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
                             $imageFormat,
                             $forceFormat
                         );
-
-                        if ($generateHighDpiImages) {
-                            $resized &= ImageManager::resize(
-                                _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
-                                _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
-                                (int) $imageType['width'] * 2,
-                                (int) $imageType['height'] * 2,
-                                $imageFormat,
-                                $forceFormat
-                            );
-                        }
                     }
                 }
 

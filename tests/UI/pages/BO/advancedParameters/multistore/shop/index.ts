@@ -182,12 +182,12 @@ class ShopSettings extends BOBasePage {
     await this.dialogListener(page);
     // Click on dropDown
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
+      page.locator(this.tableColumnActionsToggleButton(row)).click(),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
     // Click on delete
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.locator(this.tableColumnActionsDeleteLink(row)).click();
 
     // Get successful message
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
