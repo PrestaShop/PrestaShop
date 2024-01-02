@@ -140,7 +140,7 @@ class ValidateTest extends TestCase
 
     /**
      * @param string $html
-     * @param bool $iframeAllowed
+     * @param bool $allowFrame
      * @param $expectedResult
      *
      * @dataProvider isCleanHtmlDataProvider
