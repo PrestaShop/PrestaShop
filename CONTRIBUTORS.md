@@ -36,6 +36,7 @@ GitHub contributors:
 - Alexander Simonchik
 - Alexandra Even
 - Alexandre Alouit
+- Alexandre Bak
 - Alexandre Bru
 - Alexandre Debusschere
 - Alexandre Hellin
@@ -246,6 +247,7 @@ GitHub contributors:
 - Dvir Julius
 - Dvir-Julius
 - e-gaulue
+- ecommerce-manager
 - edamart
 - Edouard
 - Edouard Gaulue
@@ -307,6 +309,7 @@ GitHub contributors:
 - Frédéric Benoist
 - Gabriel Arama
 - Gabriel Schwardy
+- Gabriel Tenita
 - Gabriele Manganello
 - Gaelle ITZKOVITZ
 - Gamesh
@@ -501,6 +504,7 @@ GitHub contributors:
 - Lucas Rolff
 - LucasC
 - Ludovic CHEVRAUX
+- Lunyyx
 - Luis David de la Fuente
 - Lukas Laurinaitis
 - Lyo Nick
@@ -616,6 +620,7 @@ GitHub contributors:
 - mplh
 - mRaigne
 - mrAKAR
+- mrkalchemy
 - mushroot
 - MustangZhong
 - nache
