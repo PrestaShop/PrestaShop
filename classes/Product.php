@@ -3627,7 +3627,7 @@ class ProductCore extends ObjectModel
         $id_state = (int) $address->id_state;
         $zipcode = $address->postcode;
 
-        if (Tax::excludeTaxeOption()) {
+        if (!Configuration::get('PS_TAX')) {
             $usetax = false;
         }
 
@@ -5565,7 +5565,7 @@ class ProductCore extends ObjectModel
         }
 
         // Tax
-        $usetax = !Tax::excludeTaxeOption();
+        $usetax = Configuration::get('PS_TAX');
 
         $cache_key = $row['id_product'] . '-' . $id_product_attribute . '-' . $id_lang . '-' . (int) $usetax;
         if (isset($row['id_product_pack'])) {

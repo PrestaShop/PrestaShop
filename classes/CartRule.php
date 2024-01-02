@@ -1224,7 +1224,7 @@ class CartRuleCore extends ObjectModel
         $all_cart_rules_ids = $context->cart->getOrderedCartRulesIds();
 
         if (!array_key_exists($context->cart->id, static::$cartAmountCache)) {
-            if (Tax::excludeTaxeOption()) {
+            if (!Configuration::get('PS_TAX')) {
                 static::$cartAmountCache[$context->cart->id]['te'] = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
                 static::$cartAmountCache[$context->cart->id]['ti'] = static::$cartAmountCache[$context->cart->id]['te'];
             } else {
