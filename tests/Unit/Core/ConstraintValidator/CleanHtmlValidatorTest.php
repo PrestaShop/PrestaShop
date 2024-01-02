@@ -214,7 +214,6 @@ randomattribute="blabla"
         ;
 
         $this->context->getViolations();
-
     }
 
     protected function createValidator()
