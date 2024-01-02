@@ -140,7 +140,7 @@ class ValidateTest extends TestCase
 
     /**
      * @param string $html
-     * @param bool $iframeAllowed
+     * @param bool $allowFrame
      * @param $expectedResult
      *
      * @dataProvider isCleanHtmlDataProvider
@@ -168,13 +168,13 @@ class ValidateTest extends TestCase
         ];
     }
 
-    private function isCleanHtmlDataProvider()
+    public function isCleanHtmlDataProvider()
     {
         return [
             [
                 '<div randomattribute="randomvalue">test</div>', // nominal case
                 false,
-                true
+                true,
             ],
             [
                 '<div
@@ -185,64 +185,64 @@ randomattribute="anything"   attributewithoutvalue
 
 </div>', // nominal case with added spaces and line jumps
                 false,
-                true
+                true,
             ],
             [
                 '/form input > embed onerror iframe object', // test plain words with forbidden tag / attributes: should pass
                 false,
-                true
+                true,
             ],
             [
                 '<a href="#" onchange="evilJavascriptIsCalled()"></a>', // event attributes are forbidden, should not pass
                 false,
-                false
+                false,
             ],
             [
                 '<a href="#" onanything="evilJavascriptIsCalled()"></a>', // random attribute starting with on should not pass
                 false,
-                false
+                false,
             ],
             [
                 '<a href="#" oNnotexi="evilJavascriptIsCalled()"></a>', // random attribute starting with on but case insensitive: should not pass
                 false,
-                false
+                false,
             ],
             [
                 '<iframe src="catvideo.html" /></iframe>', // iframe forbidden
                 false,
-                false
+                false,
             ],
             [
                 '<iframe src="catvideo.html" /></iframe>', // iframe parameter is set to true, should pass
                 true,
-                true
+                true,
             ],
             [
                 '<form></form>', // form should not pass,
                 false,
-                false
+                false,
             ],
             [
                 '<embed></embed>', // embed should not pass
                 false,
-                false
+                false,
             ],
             [
                 '<input>', // input should not pass
                 false,
-                false
+                false,
             ],
             [
                 '<script>
 
     </script>', // script tags are forbidden, should not pass (added a random tabulation and line break
                 false,
-                false
+                false,
             ],
             [
                 '<object></object>', // objects are forbidden, should not pass
                 false,
-                false
+                false,
             ],
             [
                 '<div
@@ -254,13 +254,13 @@ randomattribute="anything"
 
         </div>', // puting an attribute starting with "on" in the middle of other attributes, with spaces and line breaks: shouldn't pass
                 false,
-                false
+                false,
             ],
             [
                 '‮<img src=x onerror="alert(\'img\')">', // test RLO xss attack
                 false,
-                false
-            ]
+                false,
+            ],
         ];
     }
 }
