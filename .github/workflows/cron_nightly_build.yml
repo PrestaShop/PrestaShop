@@ -67,7 +67,14 @@ jobs:
         run: php tools/build/CreateRelease.php --destination-dir=${{ env.RELEASE_DIR }}
 
       - name: Rename build
-        run: today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$GH_BRANCH-$i; done
+        run: today=`date +%Y-%m-%d`; for i in *; do mv $i $today-$GH_BRANCH-$i; done
+        working-directory: ${{ env.RELEASE_DIR }}
+
+      - name: Create nightly.zip for develop
+        if: matrix.BRANCH == 'develop'
+        run: |
+          today=`date +%Y-%m-%d`
+          cp $today-$GH_BRANCH*.zip nightly.zip
         working-directory: ${{ env.RELEASE_DIR }}
 
       - name: Auth Cloud Sdk
@@ -78,6 +85,10 @@ jobs:
 
       - name: Setup Cloud Sdk
         uses: google-github-actions/setup-gcloud@v1
+
+      - name: Delete last Nightly zip from develop
+        if: matrix.BRANCH == 'develop'
+        run: gsutil rm -rf gs://prestashop-core-nightly/nightly.zip
 
       - name: Upload to Google Cloud Storage (GCS)
         run: gsutil cp -r "${{ env.RELEASE_DIR }}/**" gs://prestashop-core-nightly
