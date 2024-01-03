@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
@@ -110,17 +111,10 @@ class ProductController extends FrameworkBundleAdminController
      */
     private const BULK_PRODUCT_IDS_KEY = 'product_bulk';
 
-    /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
-     * @param ProductRepository $productRepository
-     */
-    public function __construct(ProductRepository $productRepository)
-    {
-        $this->productRepository = $productRepository;
+    public function __construct(
+        private readonly ProductRepository $productRepository,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     /**
@@ -989,7 +983,7 @@ class ProductController extends FrameworkBundleAdminController
     public function downloadVirtualFileAction(int $virtualProductFileId): BinaryFileResponse
     {
         $configuration = $this->getConfiguration();
-        $download = $this->getDoctrine()
+        $download = $this->entityManager
             ->getRepository(ProductDownload::class)
             ->findOneBy([
                 'id' => $virtualProductFileId,

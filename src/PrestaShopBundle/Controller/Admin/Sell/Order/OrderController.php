@@ -107,6 +107,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -128,6 +129,10 @@ class OrderController extends FrameworkBundleAdminController
      * Options used for the number of products per page
      */
     public const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
+
+    public function __construct(private readonly FormFactoryInterface $formFactory)
+    {
+    }
 
     /**
      * Shows list of orders
@@ -426,14 +431,13 @@ class OrderController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_orders_index');
         }
 
-        $formFactory = $this->get('form.factory');
-        $updateOrderStatusForm = $formFactory->createNamed(
+        $updateOrderStatusForm = $this->formFactory->createNamed(
             'update_order_status',
             UpdateOrderStatusType::class, [
                 'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
             ]
         );
-        $updateOrderStatusActionBarForm = $formFactory->createNamed(
+        $updateOrderStatusActionBarForm = $this->formFactory->createNamed(
             'update_order_status_action_bar',
             UpdateOrderStatusType::class, [
                 'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
@@ -1119,9 +1123,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateStatusAction(int $orderId, Request $request): RedirectResponse
     {
-        $formFactory = $this->get('form.factory');
-
-        $form = $formFactory->createNamed(
+        $form = $this->formFactory->createNamed(
             'update_order_status',
             UpdateOrderStatusType::class
         );
@@ -1129,7 +1131,7 @@ class OrderController extends FrameworkBundleAdminController
 
         if (!$form->isSubmitted() || !$form->isValid()) {
             // Check if the form is submit from the action bar
-            $form = $formFactory->createNamed(
+            $form = $this->formFactory->createNamed(
                 'update_order_status_action_bar',
                 UpdateOrderStatusType::class
             );

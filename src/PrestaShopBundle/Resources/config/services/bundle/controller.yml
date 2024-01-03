@@ -26,10 +26,11 @@ services:
     class: PrestaShopBundle\Controller\Api\StockController
     parent: PrestaShopBundle\Controller\Api\ApiController
     public: true
-    properties:
-      movements: "@prestashop.core.api.stock.movements_collection"
-      stockRepository: "@prestashop.core.api.stock.repository"
-      queryParams: "@prestashop.core.api.query_stock_params_collection"
+    arguments:
+      $translator: "@translator"
+      $stockRepository: "@prestashop.core.api.stock.repository"
+      $movements: "@prestashop.core.api.stock.movements_collection"
+      $queryParams: "@prestashop.core.api.query_stock_params_collection"
 
   PrestaShopBundle\Controller\Api\StockMovementController:
     class: PrestaShopBundle\Controller\Api\StockMovementController
@@ -86,9 +87,10 @@ services:
     class: PrestaShopBundle\Controller\Api\TranslationController
     parent: PrestaShopBundle\Controller\Api\ApiController
     public: true
-    properties:
-      translationService: "@prestashop.service.translation"
-      queryParams: "@prestashop.core.api.query_translation_params_collection"
+    arguments:
+      $translator: '@translator'
+      $translationService: "@prestashop.service.translation"
+      $queryParams: "@prestashop.core.api.query_translation_params_collection"
 
   PrestaShopBundle\Controller\Api\Improve\Design\PositionsController:
     class: PrestaShopBundle\Controller\Api\Improve\Design\PositionsController

@@ -28,9 +28,9 @@ namespace PrestaShopBundle\Controller\Admin\Improve;
 
 use DateTime;
 use Db;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
@@ -48,6 +48,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
 
 /**
@@ -59,8 +60,11 @@ class ModuleController extends ModuleAbstractController
 
     public const MAX_MODULES_DISPLAYED = 6;
 
-    public function __construct(private readonly Environment $twig)
-    {
+    public function __construct(
+        private readonly Environment $twig,
+        private readonly ValidatorInterface $validator,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     /**
@@ -136,7 +140,7 @@ class ModuleController extends ModuleAbstractController
         $moduleAccessedId = (int) $moduleAccessed->database->get('id');
 
         // Save history for this module
-        $moduleHistory = $this->getDoctrine()
+        $moduleHistory = $this->entityManager
             ->getRepository(ModuleHistory::class)
             ->findOneBy(
                 [
@@ -153,9 +157,8 @@ class ModuleController extends ModuleAbstractController
         $moduleHistory->setIdModule($moduleAccessedId);
         $moduleHistory->setDateUpd(new DateTime());
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($moduleHistory);
-        $em->flush();
+        $this->entityManager->persist($moduleHistory);
+        $this->entityManager->flush();
 
         return $this->redirect(
             $legacyUrlGenerator->generate(
@@ -372,7 +375,7 @@ class ModuleController extends ModuleAbstractController
                 ),
             ];
 
-            $violations = $this->get('validator')->validate($fileUploaded, $constraints);
+            $violations = $this->validator->validate($fileUploaded, $constraints);
             if (0 !== count($violations)) {
                 $violationsMessages = [];
                 foreach ($violations as $violation) {

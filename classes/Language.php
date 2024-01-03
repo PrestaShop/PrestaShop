@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\Intl\Countries;
 
 class LanguageCore extends ObjectModel implements LanguageInterface
@@ -1552,7 +1553,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function updateMultilangTables(Language $language, array $tablesToUpdate)
     {
-        $translator = SymfonyContainer::getInstance()->get('translator');
+        $translator = SymfonyContainer::getInstance()->get(TranslatorInterface::class);
 
         foreach ($tablesToUpdate as $tableName) {
             $className = (new DataLangFactory(_DB_PREFIX_, $translator))
@@ -1612,7 +1613,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function updateMultilangFromClass($table, $className, $lang)
     {
-        $translator = SymfonyContainer::getInstance()->get('translator');
+        $translator = SymfonyContainer::getInstance()->get(TranslatorInterface::class);
 
         try {
             $classObject = (new DataLangFactory(_DB_PREFIX_, $translator))
@@ -1649,7 +1650,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $shopDefaultLanguage = new Language($shopDefaultLangId);
 
         $sfContainer = SymfonyContainer::getInstance();
-        $translator = $sfContainer->get('translator');
+        $translator = $sfContainer->get(TranslatorInterface::class);
         if (!$translator->isLanguageLoaded($shopDefaultLanguage->locale)) {
             $sfContainer->get('prestashop.translation.translator_language_loader')
                 ->setIsAdminContext(true)

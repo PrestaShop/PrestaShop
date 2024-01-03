@@ -71,8 +71,8 @@ class GetSqlRequestExecutionResultHandlerTest extends KernelTestCase
     {
         self::bootKernel();
 
-        $this->queryBus = self::$container->get('prestashop.core.query_bus');
-        $this->commandBus = self::$container->get('prestashop.core.command_bus');
+        $this->queryBus = self::getContainer()->get('prestashop.core.query_bus');
+        $this->commandBus = self::getContainer()->get('prestashop.core.command_bus');
     }
 
     public function testSensitiveDataAreHidden(): void

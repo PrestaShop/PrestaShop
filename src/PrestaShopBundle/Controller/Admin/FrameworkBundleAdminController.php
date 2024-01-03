@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -75,6 +77,42 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
     }
 
     /**
+     * This method was removed in Symfony 6, for backward compatibility reasons this method is temporarily
+     * maintained so the modules can keep using it a little longer. It will be removed in the next major though
+     * along with this base controller class
+     *
+     * @deprecated since 9.0
+     */
+    protected function has(string $id): bool
+    {
+        return $this->container->has($id);
+    }
+
+    /**
+     * This method was removed in Symfony 6, for backward compatibility reasons this method is temporarily
+     * maintained so the modules can keep using it a little longer. It will be removed in the next major though
+     * along with this base controller class
+     *
+     * @deprecated since 9.0
+     */
+    protected function get(string $id): object
+    {
+        return $this->container->get($id);
+    }
+
+    /**
+     * This method was removed in Symfony 6, for backward compatibility reasons this method is temporarily
+     * maintained so the modules can keep using it a little longer. It will be removed in the next major though
+     * along with this base controller class
+     *
+     * @deprecated since 9.0
+     */
+    protected function getDoctrine(): ManagerRegistry
+    {
+        return $this->container->get('doctrine');
+    }
+
+    /**
      * @var string|null
      */
     protected $layoutTitle;
@@ -106,8 +144,6 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
             return $errors;
         }
 
-        $translator = $this->get('translator');
-
         foreach ($form->getErrors(true) as $error) {
             if ($error->getCause() && method_exists($error->getCause(), 'getPropertyPath')) {
                 $formId = str_replace(
@@ -120,7 +156,7 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
             }
 
             if ($error->getMessagePluralization()) {
-                $errors[$formId][] = $translator->trans(
+                $errors[$formId][] = $this->getTranslator()->trans(
                     $error->getMessageTemplate(),
                     array_merge(
                         $error->getMessageParameters(),
@@ -129,7 +165,7 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
                     'validators'
                 );
             } else {
-                $errors[$formId][] = $translator->trans(
+                $errors[$formId][] = $this->getTranslator()->trans(
                     $error->getMessageTemplate(),
                     $error->getMessageParameters(),
                     'validators'
@@ -305,7 +341,7 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
      */
     protected function trans($key, $domain, array $parameters = [])
     {
-        return $this->container->get('translator')->trans($key, $parameters, $domain);
+        return $this->getTranslator()->trans($key, $parameters, $domain);
     }
 
     /**
@@ -543,5 +579,10 @@ class FrameworkBundleAdminController extends AbstractController implements Conta
             $exceptionCode,
             $e->getMessage()
         );
+    }
+
+    protected function getTranslator(): TranslatorInterface
+    {
+        return $this->get(TranslatorInterface::class);
     }
 }

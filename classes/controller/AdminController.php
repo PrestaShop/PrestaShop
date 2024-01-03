@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class AdminControllerCore extends Controller
 {
@@ -2682,7 +2683,7 @@ class AdminControllerCore extends Controller
             }
 
             $username = $this->get('prestashop.user_provider')->getUsername();
-            $token = $this->get('security.csrf.token_manager')
+            $token = $this->get(CsrfTokenManagerInterface::class)
                 ->getToken($username)
                 ->getValue();
 
