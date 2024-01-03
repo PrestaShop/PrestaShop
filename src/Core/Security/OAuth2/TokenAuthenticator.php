@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
 
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,8 +45,6 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
  */
 class TokenAuthenticator extends AbstractAuthenticator
 {
-    use ExternalApiTrait;
-
     public function __construct(
         private readonly AuthorisationServerInterface $authorizationServer,
         private readonly HttpMessageFactoryInterface $httpMessageFactory,
@@ -61,7 +58,16 @@ class TokenAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): bool
     {
-        return $this->isExternalApiRequest($request);
+        $authorization = $request->headers->get('Authorization') ?? null;
+        if (null === $authorization) {
+            return false;
+        }
+        if (!str_starts_with(strtolower($authorization), 'bearer ')) {
+            return false;
+        }
+
+        // Every request to the API should be handled by this Authenticator
+        return true;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response

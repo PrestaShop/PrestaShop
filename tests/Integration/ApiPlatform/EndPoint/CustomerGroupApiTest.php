@@ -59,7 +59,14 @@ class CustomerGroupApiTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request($method, $uri);
         self::assertResponseStatusCodeSame(401);
-        $this->assertEmpty($response->getContent(false));
+
+        $content = $response->getContent(false);
+        $this->assertNotEmpty($content);
+        $decodedContent = json_decode($content, true);
+        $this->assertArrayHasKey('title', $decodedContent);
+        $this->assertArrayHasKey('detail', $decodedContent);
+        $this->assertStringContainsString('An error occurred', $decodedContent['title']);
+        $this->assertStringContainsString('Full authentication is required to access this resource.', $decodedContent['detail']);
     }
 
     public function getProtectedEndpoints(): iterable
