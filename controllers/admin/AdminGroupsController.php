@@ -572,7 +572,7 @@ class AdminGroupsControllerCore extends AdminController
             $result['hasError'] = true;
         } else {
             $result['id_category'] = (int) $id_category;
-            $result['catPath'] = Tools::getPath(self::$currentIndex . '?tab=AdminCategories', (int) $id_category);
+            $result['catPath'] = Tools::getPath(self::$currentIndex . '?controller=AdminCategories', (int) $id_category);
             $result['discount'] = $category_reduction;
             $result['hasError'] = false;
         }

@@ -198,7 +198,7 @@ class AdminModulesControllerCore extends AdminController
         }
 
         $this->context->smarty->assign([
-            'trad_link' => 'index.php?tab=AdminTranslations&token=' . Tools::getAdminTokenLite('AdminTranslations') . '&type=modules&module=' . Tools::getValue('configure') . '&lang=',
+            'trad_link' => 'index.php?controller=AdminTranslations&token=' . Tools::getAdminTokenLite('AdminTranslations') . '&type=modules&module=' . Tools::getValue('configure') . '&lang=',
             'module_languages' => $languages,
             'module_name' => Tools::getValue('configure'),
             'translateLinks' => $translateLinks,
@@ -260,11 +260,6 @@ class AdminModulesControllerCore extends AdminController
      */
     protected function buildModuleConfigurationPage(Module $module): void
     {
-        // retrocompatibility
-        if (Tools::getValue('controller') != '') {
-            $_POST['tab'] = Tools::safeOutput(Tools::getValue('controller'));
-        }
-
         // We check if method of module exists
         if (!method_exists($module, 'getContent')) {
             throw new PrestaShopException(sprintf('Module %s has no getContent() method', $module->name));

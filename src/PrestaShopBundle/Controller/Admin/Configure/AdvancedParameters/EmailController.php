@@ -85,33 +85,6 @@ class EmailController extends FrameworkBundleAdminController
     }
 
     /**
-     * @deprecated since 8.0 and will be removed in next major. Use CommonController:searchGridAction instead
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.email_logs');
-        $emailLogsDefinition = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);
-        $filtersForm->handleRequest($request);
-
-        $filters = [];
-
-        if ($filtersForm->isSubmitted()) {
-            $filters = $filtersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_emails_index', ['filters' => $filters]);
-    }
-
-    /**
      * Process email configuration saving.
      *
      * @AdminSecurity(

@@ -610,7 +610,6 @@ class HelperListCore extends Helper
 
         switch ($this->currentIndex) {
             case 'index.php?controller=AdminProducts':
-            case 'index.php?tab=AdminProducts':
                 if ($this->identifier == 'id_product') {
                     $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);
                 }

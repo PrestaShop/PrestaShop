@@ -44,7 +44,7 @@ class ProductCore extends ObjectModel
      *
      * @deprecated Since 1.4
      */
-    public $tax_name;
+    public $tax_name = 'deprecated';
 
     /** @var float Tax rate */
     public $tax_rate;
@@ -416,20 +416,6 @@ class ProductCore extends ObjectModel
      */
     protected static $_combination_associations = [];
 
-    /**
-     * @deprecated Since 1.5.6.1
-     *
-     * @var array
-     */
-    protected static $_cart_quantity = [];
-
-    /**
-     * @deprecated Since 1.5.0.9
-     *
-     * @var array
-     */
-    protected static $_tax_rules_group = [];
-
     /** @var array */
     protected static $_cacheFeatures = [];
 
@@ -438,13 +424,6 @@ class ProductCore extends ObjectModel
 
     /** @var array */
     protected static $productPropertiesCache = [];
-
-    /**
-     * @deprecated Since 1.5.0.1 Unused
-     *
-     * @var array cache stock data in getStock() method
-     */
-    protected static $cacheStock = [];
 
     /** @var int|null */
     protected static $psEcotaxTaxRulesGroupId = null;
@@ -743,7 +722,6 @@ class ProductCore extends ObjectModel
             }
 
             $this->isFullyLoaded = $full;
-            $this->tax_name = 'deprecated'; // The applicable tax may be BOTH the product one AND the state one (moreover this variable is some deadcode)
             $this->manufacturer_name = Manufacturer::getNameById((int) $this->id_manufacturer);
             $this->supplier_name = Supplier::getNameById((int) $this->id_supplier);
             $address = null;
@@ -1775,89 +1753,6 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * addProductAttribute is deprecated.
-     *
-     * The quantity params now set StockAvailable for the current shop with the specified quantity
-     * The supplier_reference params now set the supplier reference of the default supplier of the product if possible
-     *
-     * @deprecated since 1.5.0
-     * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
-     * @see ProductSupplier for manage supplier reference(s)
-     *
-     * @param float $price Additional price
-     * @param float $weight Additional weight
-     * @param float $unit_impact
-     * @param float $ecotax Additional ecotax
-     * @param int $quantity
-     * @param int[] $id_images Image ids
-     * @param string $reference Reference
-     * @param int $id_supplier Supplier identifier
-     * @param string $ean13
-     * @param bool $default Is default attribute for product
-     * @param string $location
-     * @param string $upc
-     * @param int $minimal_quantity
-     * @param string $isbn
-     * @param int|null $low_stock_threshold Low stock for mail alert
-     * @param bool $low_stock_alert Low stock mail alert activated
-     * @param string|null $mpn
-     *
-     * @return int|false Attribute identifier if success, false if it fail
-     */
-    public function addProductAttribute(
-        $price,
-        $weight,
-        $unit_impact,
-        $ecotax,
-        $quantity,
-        $id_images,
-        $reference,
-        $id_supplier,
-        $ean13,
-        $default,
-        $location,
-        $upc,
-        $minimal_quantity,
-        $isbn,
-        $low_stock_threshold = null,
-        $low_stock_alert = false,
-        $mpn = null
-    ) {
-        Tools::displayAsDeprecated();
-
-        $id_product_attribute = $this->addAttribute(
-            $price,
-            $weight,
-            $unit_impact,
-            $ecotax,
-            $id_images,
-            $reference,
-            $ean13,
-            $default,
-            $location,
-            $upc,
-            $minimal_quantity,
-            [],
-            null,
-            0,
-            $isbn,
-            $low_stock_threshold,
-            $low_stock_alert,
-            $mpn
-        );
-
-        if (!$id_product_attribute) {
-            return false;
-        }
-
-        StockAvailable::setQuantity($this->id, $id_product_attribute, $quantity);
-        //Try to set the default supplier reference
-        $this->addSupplierReference($id_supplier, $id_product_attribute);
-
-        return $id_product_attribute;
-    }
-
-    /**
      * @param array $combinations
      * @param array $attributes
      * @param bool $resetExistingCombination
@@ -2074,91 +1969,6 @@ class ProductCore extends ObjectModel
         } else {
             return $result;
         }
-    }
-
-    /**
-     * Update a product attribute.
-     *
-     * @deprecated since 1.5
-     * @see updateAttribute() to use instead
-     * @see ProductSupplier for manage supplier reference(s)
-     *
-     * @param int $id_product_attribute Attribute identifier
-     * @param float $wholesale_price
-     * @param float $price Additional price
-     * @param float $weight Additional weight
-     * @param float $unit
-     * @param float $ecotax Additional ecotax
-     * @param int[] $id_images Image ids
-     * @param string $reference
-     * @param int $id_supplier Supplier identifier
-     * @param string $ean13
-     * @param bool $default Is default attribute for product
-     * @param string $location
-     * @param string $upc
-     * @param int $minimal_quantity
-     * @param string $available_date Date in mysql format Y-m-d
-     * @param string $isbn
-     * @param int|null $low_stock_threshold Low stock for mail alert
-     * @param bool $low_stock_alert Low stock mail alert activated
-     * @param string|null $mpn
-     * @param string[]|string|null $available_now Combination available now labels
-     * @param string[]|string|null $available_later Combination available later labels
-     *
-     * @return bool
-     */
-    public function updateProductAttribute(
-        $id_product_attribute,
-        $wholesale_price,
-        $price,
-        $weight,
-        $unit,
-        $ecotax,
-        $id_images,
-        $reference,
-        $id_supplier,
-        $ean13,
-        $default,
-        $location,
-        $upc,
-        $minimal_quantity,
-        $available_date,
-        $isbn = '',
-        $low_stock_threshold = null,
-        $low_stock_alert = false,
-        $mpn = null,
-        $available_now = null,
-        $available_later = null
-    ) {
-        Tools::displayAsDeprecated('Use updateAttribute() instead');
-
-        $return = $this->updateAttribute(
-            $id_product_attribute,
-            $wholesale_price,
-            $price,
-            $weight,
-            $unit,
-            $ecotax,
-            $id_images,
-            $reference,
-            $ean13,
-            $default,
-            $location = null,
-            $upc = null,
-            $minimal_quantity,
-            $available_date,
-            true,
-            [],
-            $isbn,
-            $low_stock_threshold,
-            $low_stock_alert,
-            $mpn = null,
-            $available_now,
-            $available_later
-        );
-        $this->addSupplierReference($id_supplier, $id_product_attribute);
-
-        return $return;
     }
 
     /**

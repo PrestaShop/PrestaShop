@@ -30,7 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand;
@@ -166,7 +166,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
             return $this->getSharedStorage()->get($dataRow['combination']);
         }
 
-        return CombinationId::NO_COMBINATION;
+        return NoCombinationId::NO_COMBINATION_ID;
     }
 
     private function assertPackContents(string $packReference, TableNode $table, ShopConstraint $shopConstraint): void

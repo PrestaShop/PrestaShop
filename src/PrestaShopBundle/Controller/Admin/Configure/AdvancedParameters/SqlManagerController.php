@@ -101,34 +101,6 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_sql_requests_index")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
-    public function searchAction(Request $request)
-    {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.request_sql');
-        $emailLogsDefinition = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);
-        $filtersForm->handleRequest($request);
-
-        $filters = [];
-
-        if ($filtersForm->isSubmitted()) {
-            $filters = $filtersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_sql_requests_index', ['filters' => $filters]);
-    }
-
-    /**
      * Process Request SQL settings save.
      *
      * @AdminSecurity(

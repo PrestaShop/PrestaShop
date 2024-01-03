@@ -78,35 +78,6 @@ class ContactsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @deprecated since 8.0 and will be removed in next major. Use CommonController:searchGridAction instead
-     *
-     * Grid search action.
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        $gridDefinitionFactory = $this->get('prestashop.core.grid.definition.factory.contacts');
-        $contactsGridDefinition = $gridDefinitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $filtersForm = $gridFilterFormFactory->create($contactsGridDefinition);
-        $filtersForm->handleRequest($request);
-
-        $filters = [];
-
-        if ($filtersForm->isSubmitted()) {
-            $filters = $filtersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_contacts_index', ['filters' => $filters]);
-    }
-
-    /**
      * Display the Contact creation form.
      *
      * @AdminSecurity(

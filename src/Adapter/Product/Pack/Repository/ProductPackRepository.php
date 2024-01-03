@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Pack\Repository;
 use Doctrine\DBAL\Connection;
 use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
@@ -140,7 +140,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
                 $productForPacking->getQuantity(),
                 $productForPacking->getCombinationId() ?
                     $productForPacking->getCombinationId()->getValue() :
-                    CombinationId::NO_COMBINATION
+                    NoCombinationId::NO_COMBINATION_ID
             );
             if (!$packed) {
                 throw new ProductPackException(
