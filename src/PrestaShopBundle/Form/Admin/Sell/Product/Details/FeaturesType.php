@@ -30,8 +30,10 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Details;
 
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -85,13 +87,21 @@ class FeaturesType extends TranslatorAwareType
             ])
             ->add('feature_value_id', ChoiceType::class, [
                 'empty_data' => 0,
-                'placeholder' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
-                'label' => $this->trans('Pre-defined value', 'Admin.Catalog.Feature'),
-                'invalid_message' => $this->trans('Choose a value or provide a customized one', 'Admin.Catalog.Feature'),
+                'placeholder' => $this->trans('Choose a value or provide a customized one', 'Admin.Catalog.Feature'),
+                'label' => false,
                 'disabled' => true,
                 'attr' => [
+                    'data-placeholder-label' => $this->trans('Choose a value or provide a customized one', 'Admin.Catalog.Feature'),
                     'data-custom-value-label' => $this->trans('Add a customized value', 'Admin.Catalog.Feature'),
                     'class' => 'feature-value-selector',
+                ],
+            ])
+            ->add('custom_value', TranslatableType::class, [
+                'label' => false,
+                'required' => false,
+                'type' => TextType::class,
+                'attr' => [
+                    'class' => 'new-custom-values d-none',
                 ],
             ])
             ->add('add_feature', IconButtonType::class, [

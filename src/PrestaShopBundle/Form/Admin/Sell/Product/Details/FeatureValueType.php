@@ -76,9 +76,6 @@ class FeatureValueType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'custom-values-form-group',
                 ],
-                'attr' => [
-                    'class' => 'custom-values',
-                ],
                 'constraints' => [
                     new DefaultLanguage([
                         'message' => $this->trans(

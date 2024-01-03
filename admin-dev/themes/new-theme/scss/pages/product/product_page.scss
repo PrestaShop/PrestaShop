@@ -574,6 +574,14 @@ $product-page-padding-bottom: 80px !default;
       }
     }
 
+    .new-custom-values {
+      &.d-none {
+        // stylelint-disable-next-line
+        display: none !important;
+      }
+
+      max-width: 350px;
+    }
 
     .feature-value-add-button {
       padding: 0.4rem 1rem;

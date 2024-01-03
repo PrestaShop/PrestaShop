@@ -35,6 +35,7 @@
         {{ 'Loading feature values...'|trans({}, 'Admin.Catalog.Feature') }}
       </div>
       {{ form_widget(form.feature_value_id) }}
+      {{ form_widget(form.custom_value) }}
       {{ form_widget(form.add_feature) }}
     </div>
     {# Manually add the external link block because we don't use form_row and this way it's under the whole block #}
