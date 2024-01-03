@@ -26,42 +26,31 @@
 
 namespace PrestaShopBundle\Security\Annotation;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationAnnotation;
-
 /**
  * Forbid access to the page if the defined module mode is inactive.
- *
- * @Annotation
  */
-class ModuleActivated extends ConfigurationAnnotation
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
+class ModuleActivated
 {
-    /**
-     * The translation domain for the message.
-     *
-     * @var string
-     */
-    protected $domain = 'Admin.Notifications.Error';
-
-    /**
-     * The message of the exception.
-     *
-     * @var string
-     */
-    protected $message = 'The module %s is inactive.';
-
-    /**
-     * The route for the redirection.
-     *
-     * @var string|null
-     */
-    protected $redirectRoute;
-
-    /**
-     * The module name to check.
-     *
-     * @var string|null
-     */
-    protected $moduleName;
+    public function __construct(
+        /**
+         * The translation domain for the message.
+         */
+        private string $domain = 'Admin.Notifications.Error',
+        /**
+         * The message of the exception.
+         */
+        private string $message = 'The module %s is inactive.',
+        /**
+         * The route for the redirection.
+         */
+        private ?string $redirectRoute = 'admin_module_manage',
+        /**
+         * The module name to check.
+         */
+        private ?string $moduleName = null,
+    ) {
+    }
 
     /**
      * @return string

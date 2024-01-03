@@ -26,14 +26,11 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use Doctrine\Common\Annotations\AnnotationException;
-use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Util\ClassUtils;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeException;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
-use ReflectionClass;
-use ReflectionObject;
+use ReflectionException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -46,59 +43,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ModuleActivatedListener
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * @var Reader
-     */
-    private $annotationReader;
-
-    /**
-     * @var ModuleRepository
-     */
-    private $moduleRepository;
-
-    /**
-     * @param RouterInterface $router
-     * @param TranslatorInterface $translator
-     * @param Session $session
-     * @param Reader $annotationReader
-     * @param ModuleRepository $moduleRepository
-     */
     public function __construct(
-        RouterInterface $router,
-        TranslatorInterface $translator,
-        Session $session,
-        Reader $annotationReader,
-        ModuleRepository $moduleRepository
+        private readonly RouterInterface $router,
+        private readonly TranslatorInterface $translator,
+        private readonly Session $session,
+        private readonly ModuleRepository $moduleRepository
     ) {
-        $this->router = $router;
-        $this->translator = $translator;
-        $this->session = $session;
-        $this->annotationReader = $annotationReader;
-        $this->moduleRepository = $moduleRepository;
     }
 
     /**
      * @param ControllerEvent $event
      *
-     * @throws AnnotationException
-     * @throws \ReflectionException
+     * @throws AttributeException
+     * @throws ReflectionException
      */
-    public function onKernelController(ControllerEvent $event)
+    public function onKernelController(ControllerEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
@@ -111,21 +70,34 @@ class ModuleActivatedListener
         }
 
         [$controllerObject, $methodName] = $controller;
-        $moduleActivated = $this->getAnnotation($controllerObject, $methodName);
 
-        if (null === $moduleActivated) {
+        $method = new \ReflectionMethod($controllerObject, $methodName);
+        $moduleActivated = array_merge(
+            $method->getDeclaringClass()->getAttributes(ModuleActivated::class),
+            $method->getAttributes(ModuleActivated::class)
+        );
+
+        if ([] === $moduleActivated) {
             return;
         }
 
-        /** @var Module $module */
-        $module = $this->moduleRepository->getModule($moduleActivated->getModuleName());
-        if (!$module->isActive()) {
-            $this->showNotificationMessage($moduleActivated);
-            $url = $this->router->generate($moduleActivated->getRedirectRoute());
+        foreach ($moduleActivated as $moduleActivatedAttribute) {
+            /** @var ModuleActivated $moduleActivated */
+            $moduleActivatedAttribute = $moduleActivatedAttribute->newInstance();
 
-            $event->setController(function () use ($url) {
-                return new RedirectResponse($url);
-            });
+            $this->validateAttribute($moduleActivatedAttribute, $controllerObject::class . '::' . $methodName);
+
+            /** @var Module $module */
+            $module = $this->moduleRepository->getModule($moduleActivatedAttribute->getModuleName());
+            if (!$module->isActive()) {
+                $this->showNotificationMessage($moduleActivatedAttribute);
+                $url = $this->router->generate($moduleActivatedAttribute->getRedirectRoute());
+
+                $event->setController(function () use ($url) {
+                    return new RedirectResponse($url);
+                });
+                break;
+            }
         }
     }
 
@@ -134,7 +106,7 @@ class ModuleActivatedListener
      *
      * @param ModuleActivated $moduleActivated
      */
-    private function showNotificationMessage(ModuleActivated $moduleActivated)
+    private function showNotificationMessage(ModuleActivated $moduleActivated): void
     {
         $this->session->getFlashBag()->add(
             'error',
@@ -147,58 +119,19 @@ class ModuleActivatedListener
     }
 
     /**
-     * @param object $controllerObject
-     * @param string $methodName
+     * @param ModuleActivated $attribute
+     * @param string $attributePosition
      *
-     * @return ModuleActivated|null
-     *
-     * @throws AnnotationException
-     * @throws \ReflectionException
+     * @throws AttributeException
      */
-    private function getAnnotation($controllerObject, $methodName)
+    private function validateAttribute(ModuleActivated $attribute, string $attributePosition): void
     {
-        $tokenAnnotation = ModuleActivated::class;
-
-        $controllerClass = ClassUtils::getClass($controllerObject);
-        $classAnnotation = $this->annotationReader->getClassAnnotation(
-            new ReflectionClass($controllerClass),
-            $tokenAnnotation
-        );
-
-        if (null !== $classAnnotation && $classAnnotation instanceof ModuleActivated) {
-            $this->validateAnnotation($classAnnotation, $controllerClass);
-
-            return $classAnnotation;
+        if (null === $attribute->getModuleName()) {
+            throw new AttributeException(sprintf('You must specify @ModuleActivated(moduleName) annotation parameter on %s', $attributePosition));
         }
 
-        $controllerReflectionObject = new ReflectionObject($controllerObject);
-        $reflectionMethod = $controllerReflectionObject->getMethod($methodName);
-
-        $annotation = $this->annotationReader->getMethodAnnotation($reflectionMethod, $tokenAnnotation);
-
-        if (null !== $annotation && $annotation instanceof ModuleActivated) {
-            $this->validateAnnotation($annotation, $controllerClass . '::' . $methodName);
-
-            return $annotation;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param ModuleActivated $annotation
-     * @param string $annotationPosition
-     *
-     * @throws AnnotationException
-     */
-    private function validateAnnotation(ModuleActivated $annotation, $annotationPosition)
-    {
-        if (null === $annotation->getModuleName()) {
-            throw new AnnotationException(sprintf('You must specify @ModuleActivated(moduleName) annotation parameter on %s', $annotationPosition));
-        }
-
-        if (null === $annotation->getRedirectRoute()) {
-            throw new AnnotationException(sprintf('You must specify @ModuleActivated(redirectRoute) annotation parameter on %s', $annotationPosition));
+        if (null === $attribute->getRedirectRoute()) {
+            throw new AttributeException(sprintf('You must specify @ModuleActivated(redirectRoute) annotation parameter on %s', $attributePosition));
         }
     }
 }
