@@ -35,10 +35,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSPartialUpdate;
+use Symfony\Component\HttpFoundation\Response;
 
 #[ApiResource(
     operations: [
@@ -81,7 +83,10 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSPartialUpdate;
             ],
         ),
     ],
-    exceptionToStatus: [ProductNotFoundException::class => 404],
+    exceptionToStatus: [
+        ProductNotFoundException::class => Response::HTTP_NOT_FOUND,
+        ShopAssociationNotFound::class => Response::HTTP_NOT_FOUND,
+    ],
 )]
 class Product
 {

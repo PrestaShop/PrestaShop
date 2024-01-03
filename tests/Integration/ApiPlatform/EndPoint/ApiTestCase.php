@@ -31,7 +31,12 @@ namespace Tests\Integration\ApiPlatform\EndPoint;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase as ApiPlatformTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use RuntimeException;
+use Shop;
+use ShopGroup;
 use Tests\Resources\DatabaseDump;
 
 abstract class ApiTestCase extends ApiPlatformTestCase
@@ -133,5 +138,50 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         $commandBus = $container->get('prestashop.core.command_bus');
 
         return $commandBus->handle($command)->getValue();
+    }
+
+    protected static function addShopGroup(string $groupName, string $color = null): int
+    {
+        $shopGroup = new ShopGroup();
+        $shopGroup->name = $groupName;
+        $shopGroup->active = true;
+
+        if ($color !== null) {
+            $shopGroup->color = $color;
+        }
+
+        if (!$shopGroup->add()) {
+            throw new RuntimeException('Could not create shop group');
+        }
+
+        return (int) $shopGroup->id;
+    }
+
+    protected static function addShop(string $shopName, int $shopGroupId, string $color = null): int
+    {
+        $shop = new Shop();
+        $shop->active = true;
+        $shop->id_shop_group = $shopGroupId;
+        // 2 : ID Category for "Home" in database
+        $shop->id_category = 2;
+        $shop->theme_name = _THEME_NAME_;
+        $shop->name = $shopName;
+        if ($color !== null) {
+            $shop->color = $color;
+        }
+
+        if (!$shop->add()) {
+            throw new RuntimeException('Could not create shop');
+        }
+        $shop->setTheme();
+        Shop::resetContext();
+        Shop::resetStaticCache();
+
+        return (int) $shop->id;
+    }
+
+    protected static function updateConfiguration(string $configurationKey, $value, ?ShopConstraint $shopConstraint = null): void
+    {
+        self::getContainer()->get(ShopConfigurationInterface::class)->set($configurationKey, $value, $shopConstraint ?: ShopConstraint::allShops());
     }
 }
