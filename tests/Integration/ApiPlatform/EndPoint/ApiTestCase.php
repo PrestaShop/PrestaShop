@@ -106,7 +106,11 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         $isoCode = substr($locale, 0, strpos($locale, '-'));
 
         // Copy resource assets into tmp folder to mimic an upload file path
-        $flagImage = __DIR__ . '/../../../../img/l/' . $isoCode . '.jpg';
+        $flagImage = __DIR__ . '/../../../Resources/assets/lang/' . $isoCode . '.jpg';
+        if (!file_exists($flagImage)) {
+            $flagImage = __DIR__ . '/../../../Resources/assets/lang/en.jpg';
+        }
+
         $tmpFlagImage = sys_get_temp_dir() . '/' . $isoCode . '.jpg';
         $tmpNoPictureImage = sys_get_temp_dir() . '/' . $isoCode . '-no-picture.jpg';
         copy($flagImage, $tmpFlagImage);
