@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use ArrayIterator;
 use Combination;
 use Configuration as ConfigurationLegacy;
 use Feature;
@@ -36,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Shop;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Traversable;
 
 /**
  * Adapter of Configuration ObjectModel.
@@ -57,9 +57,11 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     }
 
     /**
+     * @param string|null $key
+     *
      * @throws NotImplementedException
      */
-    public function all()
+    public function all(string $key = null): array
     {
         throw new NotImplementedException();
     }
@@ -67,7 +69,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function keys()
+    public function keys(): array
     {
         return array_keys($this->all());
     }
@@ -101,7 +103,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @return mixed
      */
-    public function get($key, $default = null, ShopConstraint $shopConstraint = null)
+    public function get($key, $default = null, ShopConstraint $shopConstraint = null): mixed
     {
         if (null === $shopConstraint) {
             $shopConstraint = $this->buildShopConstraintFromContext();
@@ -192,7 +194,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @return bool
      */
-    public function has($key, ShopConstraint $shopConstraint = null)
+    public function has($key, ShopConstraint $shopConstraint = null): bool
     {
         if (null === $shopConstraint) {
             $shopConstraint = $this->buildShopConstraintFromContext();
@@ -290,9 +292,9 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getIterator(): Traversable
+    public function getIterator(): ArrayIterator
     {
-        return new \ArrayIterator($this->all());
+        return new ArrayIterator($this->all());
     }
 
     /**

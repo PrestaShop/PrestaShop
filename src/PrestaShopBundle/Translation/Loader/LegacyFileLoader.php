@@ -63,7 +63,7 @@ final class LegacyFileLoader implements LoaderInterface
      *
      * @throws \PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException
      */
-    public function load($path, $locale, $domain = 'messages')
+    public function load($path, $locale, $domain = 'messages'): MessageCatalogue
     {
         $catalogue = new MessageCatalogue($locale);
 
