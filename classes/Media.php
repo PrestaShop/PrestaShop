@@ -208,6 +208,7 @@ class MediaCore
                 }
             }
         }
+
         if (@filemtime($fileUri)) {
             if (!empty($uiTmp)) {
                 foreach ($uiTmp as $ui) {
@@ -219,18 +220,13 @@ class MediaCore
                         $uiPath['css'][] = $ui['css'];
                     }
                 }
-                $uiPath['js'][] = Media::getJSPath($folder . $file);
-            } else {
-                $uiPath['js'] = Media::getJSPath($folder . $file);
             }
+
+            $uiPath['js'][] = Media::getJSPath($folder . $file);
         }
 
         //add i18n file for datepicker
         if ($component == 'ui.datepicker') {
-            if (!is_array($uiPath['js'])) {
-                $uiPath['js'] = [$uiPath['js']];
-            }
-
             $datePickerIsoCode = Context::getContext()->language->iso_code;
             if (array_key_exists($datePickerIsoCode, self::$jquery_ui_datepicker_iso_code)) {
                 $datePickerIsoCode = self::$jquery_ui_datepicker_iso_code[$datePickerIsoCode];
