@@ -81,7 +81,9 @@ services:
   prestashop.adapter.shop.context:
     alias: PrestaShop\PrestaShop\Adapter\Shop\Context
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface: '@prestashop.adapter.shop.context'
   PrestaShop\PrestaShop\Core\Shop\ShopContextInterface: '@prestashop.adapter.shop.context'

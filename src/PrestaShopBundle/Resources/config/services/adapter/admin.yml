@@ -6,4 +6,6 @@ services:
     public: true
     class: 'Db'
     factory: [ 'Db', 'getInstance' ]
-    deprecated: '%service_id% service is deprecated and will be removed in 8.0.'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 8.0

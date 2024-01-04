@@ -66,83 +66,114 @@ services:
 
   PrestaShopBundle\Twig\Layout\SmartyVariablesFiller: ~
 
-  # Deprecated since 9.0
   prestashop.twig.modules.loader:
     alias: PrestaShopBundle\Twig\Locator\ModuleTemplateLoader
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.stringloader:
     alias: Twig\Extension\StringLoaderExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.layout:
     alias: PrestaShopBundle\Twig\LayoutExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.translation:
     alias: PrestaShopBundle\Twig\TranslationsExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.data_formatter:
     alias: PrestaShopBundle\Twig\DataFormatterExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.hook:
     alias: PrestaShopBundle\Twig\HookExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.column:
     alias: 'PrestaShopBundle\Twig\Extension\GridExtension'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.documentation_link_provider_extension:
     alias: 'PrestaShopBundle\Twig\Extension\DocumentationLinkExtension'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.context_iso_code_provider_extension:
     alias: PrestaShopBundle\Twig\ContextIsoCodeProviderExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.path_with_back_url_extension:
     alias: PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.js_router_metadata_extension:
     alias: PrestaShopBundle\Twig\Extension\JsRouterMetadataExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.localization_extension:
     alias: 'PrestaShopBundle\Twig\Extension\LocalizationExtension'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.number_extension:
     alias: 'PrestaShopBundle\Twig\Extension\NumberExtension'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.multistore_components_extension:
     alias: 'PrestaShopBundle\Twig\Extension\MultistoreComponentsExtension'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.multistore_url:
     alias: 'PrestaShopBundle\Twig\Extension\MultistoreUrlExtension'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.entity_search_extension:
     alias: 'PrestaShopBundle\Twig\Extension\EntitySearchExtension'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0

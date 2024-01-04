@@ -10,7 +10,9 @@ services:
 
   prestashop.core.admin.tab.repository:
     alias: PrestaShopBundle\Entity\Repository\TabRepository
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.admin.shop.repository:
     class: 'PrestaShopBundle\Entity\Repository\ShopRepository'

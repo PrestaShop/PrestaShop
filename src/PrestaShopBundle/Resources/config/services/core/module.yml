@@ -52,8 +52,9 @@ services:
     arguments:
       - !tagged core.module.source_handler
 
-  # Deprecated in 8.1.0
   prestashop.module.factory.sourcehandler:
     alias: PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 8.1
