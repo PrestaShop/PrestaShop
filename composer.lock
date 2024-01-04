@@ -6949,23 +6949,23 @@
         },
         {
             "name": "prestashop/ps_mainmenu",
-            "version": "v2.3.2",
+            "version": "v2.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_mainmenu.git",
-                "reference": "48e7ab8e6dfc871c541ffb71f7da659a077b7985"
+                "reference": "81f0ac0ae851c54c127b24065d6eeddb453304b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_mainmenu/zipball/48e7ab8e6dfc871c541ffb71f7da659a077b7985",
-                "reference": "48e7ab8e6dfc871c541ffb71f7da659a077b7985",
+                "url": "https://api.github.com/repos/PrestaShop/ps_mainmenu/zipball/81f0ac0ae851c54c127b24065d6eeddb453304b8",
+                "reference": "81f0ac0ae851c54c127b24065d6eeddb453304b8",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.6.0"
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "^3.4"
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -6986,9 +6986,9 @@
             "description": "PrestaShop - Main menu",
             "homepage": "https://github.com/PrestaShop/ps_mainmenu",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_mainmenu/tree/v2.3.2"
+                "source": "https://github.com/PrestaShop/ps_mainmenu/tree/v2.3.3"
             },
-            "time": "2023-02-02T17:25:19+00:00"
+            "time": "2024-01-03T14:24:31+00:00"
         },
         {
             "name": "prestashop/ps_newproducts",
@@ -7151,16 +7151,16 @@
         },
         {
             "name": "prestashop/ps_socialfollow",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_socialfollow.git",
-                "reference": "5ec2d68f021fcd26fb0b2a7c124851aa19397aad"
+                "reference": "a5eb5b58c0e68a33624c433e466e33ff6c9c3182"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_socialfollow/zipball/5ec2d68f021fcd26fb0b2a7c124851aa19397aad",
-                "reference": "5ec2d68f021fcd26fb0b2a7c124851aa19397aad",
+                "url": "https://api.github.com/repos/PrestaShop/ps_socialfollow/zipball/a5eb5b58c0e68a33624c433e466e33ff6c9c3182",
+                "reference": "a5eb5b58c0e68a33624c433e466e33ff6c9c3182",
                 "shasum": ""
             },
             "require": {
@@ -7183,9 +7183,9 @@
             "description": "PrestaShop module ps_socialfollow",
             "homepage": "https://github.com/PrestaShop/ps_socialfollow",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_socialfollow/tree/v2.3.0"
+                "source": "https://github.com/PrestaShop/ps_socialfollow/tree/v2.3.1"
             },
-            "time": "2023-03-01T13:36:39+00:00"
+            "time": "2024-01-03T11:10:08+00:00"
         },
         {
             "name": "prestashop/ps_specials",
