@@ -41,7 +41,9 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\CustomMoneyType:
     alias: 'PrestaShopBundle\Form\Extension\CustomMoneyTypeExtension'
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\EventListener\FeatureFlagTypeListener:
     tags:

@@ -9,7 +9,9 @@ services:
 
   prestashop.core.category.name_builder.category_display_name_builder:
     alias: PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   PrestaShop\PrestaShop\Core\Category\Provider\CategoryImageFinder:
     autowire: true

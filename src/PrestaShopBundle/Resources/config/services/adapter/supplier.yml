@@ -13,7 +13,9 @@ services:
 
   prestashop.adapter.supplier.supplier_order_validator:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierOrderValidator'
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   # Command handlers
 

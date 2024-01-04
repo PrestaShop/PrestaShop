@@ -74,7 +74,9 @@ services:
 
   prestashop.user_provider:
     alias: PrestaShopBundle\Service\DataProvider\UserProvider
-    deprecated: 'The "%alias_id%" service alias is deprecated since v9.0.'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
     public: true
 
   prestashop.router:

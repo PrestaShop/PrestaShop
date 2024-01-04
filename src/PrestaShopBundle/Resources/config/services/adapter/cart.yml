@@ -61,7 +61,9 @@ services:
 
   prestashop.adapter.command_handler.send_cart_to_customer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\SendCartToCustomerHandler'
-    deprecated: 'The "%service_id%" service is deprecated since 9.0 and will be removed in next major.'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
     autoconfigure: true
 
   prestashop.adapter.query_handler.get_cart_for_viewing_handler:

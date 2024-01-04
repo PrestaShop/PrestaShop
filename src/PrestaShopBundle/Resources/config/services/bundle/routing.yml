@@ -18,7 +18,9 @@ services:
   prestashop.bundle.routing.converter.legacy_parameters_converter:
     alias: 'PrestaShopBundle\Routing\Converter\LegacyParametersConverter'
     public: true
-    deprecated: '%alias_id% service alias is deprecated and will be removed in 10.0.'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   PrestaShopBundle\Routing\Converter\RouterProvider:
     autowire: true
