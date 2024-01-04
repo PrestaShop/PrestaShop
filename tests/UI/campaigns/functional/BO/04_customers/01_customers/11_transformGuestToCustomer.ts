@@ -172,6 +172,6 @@ describe('BO - Customers _ Customers : Transform guest to customer account', asy
   // Post-condition: Delete customers
   deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
 
-  // Pre-Condition: Setup config SMTP
+  // Post-Condition: Setup config SMTP
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
 });
