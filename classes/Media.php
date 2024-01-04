@@ -196,6 +196,7 @@ class MediaCore
                 $uiPath['css'] = array_merge($uiPath['css'], $compCss);
             }
         }
+
         if ($checkDependencies && array_key_exists($component, self::$jquery_ui_dependencies)) {
             foreach (self::$jquery_ui_dependencies[$component]['dependencies'] as $dependency) {
                 $uiTmp[] = Media::getJqueryUIPath($dependency, $theme, false);
@@ -212,12 +213,12 @@ class MediaCore
         if (@filemtime($fileUri)) {
             if (!empty($uiTmp)) {
                 foreach ($uiTmp as $ui) {
-                    if (!empty($ui['js'])) {
-                        $uiPath['js'][] = $ui['js'];
+                    if (!empty($ui['js'][0])) {
+                        $uiPath['js'][] = $ui['js'][0];
                     }
 
-                    if (!empty($ui['css'])) {
-                        $uiPath['css'][] = $ui['css'];
+                    if (!empty($ui['css'][0])) {
+                        $uiPath['css'][] = $ui['css'][0];
                     }
                 }
             }
