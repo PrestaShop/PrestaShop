@@ -66,19 +66,19 @@ class EditAttributeCommand
     /**
      * @param int $attributeId
      * @param int $attributeGroupId
-     * @param array $localizedValue
+     * @param array $localizedNames
      * @param string $color
      * @param int[] $shopAssociation
      *
      * @throws AttributeConstraintException
      * @throws AttributeGroupConstraintException
      */
-    public function __construct(int $attributeId, int $attributeGroupId, array $localizedValue, string $color, array $shopAssociation = [])
+    public function __construct(int $attributeId, int $attributeGroupId, array $localizedNames, string $color, array $shopAssociation = [])
     {
-        $this->assertValuesAreValid($localizedValue);
+        $this->assertValuesAreValid($localizedNames);
         $this->attributeId = new AttributeId($attributeId);
         $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
-        $this->localizedValue = $localizedValue;
+        $this->localizedValue = $localizedNames;
         $this->color = $color;
         $this->shopAssociation = $shopAssociation;
     }
