@@ -6,6 +6,10 @@ inputs:
     PHP_VERSION:
         required: true
         description: PHP Version For PrestaShop
+    NODE_VERSION:
+        required: false
+        description: Node Version to Build Themes
+        default: 14.21.3
     ENABLE_SSL:
         required: false
         description: True to Run with SSL
@@ -18,6 +22,10 @@ inputs:
         required: false
         description: True To Copy API Config
         default: 'false'
+    DEV_MODE:
+        required: false
+        description: True to enable Developer mode
+        default: 'false'
 
 runs:
     using: 'composite'
@@ -29,10 +37,11 @@ runs:
               PS_ENABLE_SSL: '0'
               PS_INSTALL_AUTO: ${{ (inputs.INSTALL_AUTO == 'true') && '1' || '0' }}
               VERSION: ${{ inputs.PHP_VERSION }}
+              NODE_VERSION: ${{ inputs.NODE_VERSION }}
               URL_FO: 'http://localhost:8001/'
               URL_PING: ${{ (inputs.INSTALL_AUTO == 'true') && 'en/' || 'install-dev/' }}
               PS_DOMAIN: 'localhost:8001'
-              PS_DEV_MODE: '0'
+              PS_DEV_MODE: ${{ (inputs.DEV_MODE == 'false') && '0' || '1' }}
               DB_SERVER: 'mysql'
               DB_NAME: 'prestashop'
               DB_PREFIX: 'tst_'
