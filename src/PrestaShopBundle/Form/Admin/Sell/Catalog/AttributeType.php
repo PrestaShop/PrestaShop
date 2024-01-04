@@ -28,7 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupDataProvider;
+use AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
@@ -52,40 +54,28 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class AttributeType extends TranslatorAwareType
 {
-    /**
-     * @var AttributeGroupRepository
-     */
-    private $attributeGroupRepository;
+    private AttributeGroupRepository $attributeGroupRepository;
 
-    /**
-     * @var AttributeGroupDataProvider
-     */
-    private $attributeGroupDataProvider;
+    private FeatureInterface $multistoreFeature;
 
-    /**
-     * @var int
-     */
-    private $contextShopId;
+    private int $contextShopId;
 
-    /**
-     * @var int
-     */
-    private $contextLangId;
+    private int $contextLangId;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         AttributeGroupRepository $attributeGroupRepository,
-        AttributeGroupDataProvider $attributeGroupDataProvider,
         int $contextShopId,
-        int $contextLangId
+        int $contextLangId,
+        FeatureInterface $multistoreFeature
     ) {
         parent::__construct($translator, $locales);
 
         $this->attributeGroupRepository = $attributeGroupRepository;
         $this->contextShopId = $contextShopId;
-        $this->attributeGroupDataProvider = $attributeGroupDataProvider;
         $this->contextLangId = $contextLangId;
+        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**
@@ -102,7 +92,7 @@ class AttributeType extends TranslatorAwareType
             ->add('attribute_group', ChoiceType::class, [
                 'label' => $this->trans('Attribute group', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('The way the attribute\'s values will be presented to the customers in the product\'s page.', 'Admin.Catalog.Help'),
-                'choices' => $this->attributeGroupDataProvider->getAttributeGroupChoices(
+                'choices' => $this->getAttributeGroupChoices(
                     new ShopId($this->contextShopId),
                     new LanguageId($this->contextLangId)
                 ),
@@ -131,16 +121,33 @@ class AttributeType extends TranslatorAwareType
             ]);
         }
 
-        $builder->add('shop_association', ShopChoiceTreeType::class, [
-            'label' => $this->trans('Shop association', 'Admin.Global'),
-            'required' => false,
-            'constraints' => [
-                new NotBlank([
-                    'message' => $this->trans(
-                        'This field cannot be empty.', 'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ]);
+        if ($this->multistoreFeature->isUsed()) {
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans('Shop association', 'Admin.Global'),
+                'required' => false,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'This field cannot be empty.', 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ]);
+        }
+    }
+
+    private function getAttributeGroupChoices(ShopId $shopId, LanguageId $languageId): array
+    {
+        $shopConstraint = ShopConstraint::shop($shopId->getValue());
+
+        $groups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint);
+        $return = [];
+
+        /** @var AttributeGroup $group */
+        foreach ($groups as $group) {
+            $return[sprintf('%s (%d)', $group->name[$languageId->getValue()], $group->id)] = $group->id;
+        }
+
+        return $return;
     }
 }

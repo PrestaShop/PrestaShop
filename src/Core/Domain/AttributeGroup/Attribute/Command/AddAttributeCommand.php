@@ -44,7 +44,7 @@ class AddAttributeCommand
     /**
      * @var array
      */
-    private $localizedValue;
+    private $localizedNames;
 
     /**
      * @var string
@@ -68,7 +68,7 @@ class AddAttributeCommand
     {
         $this->assertValuesAreValid($localizedValue);
         $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
-        $this->localizedValue = $localizedValue;
+        $this->localizedNames = $localizedValue;
         $this->color = $color;
         $this->shopAssociation = $shopAssociation;
     }
@@ -84,9 +84,9 @@ class AddAttributeCommand
     /**
      * @return array
      */
-    public function getLocalizedValue(): array
+    public function getLocalizedNames(): array
     {
-        return $this->localizedValue;
+        return $this->localizedNames;
     }
 
     /**

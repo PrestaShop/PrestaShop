@@ -61,7 +61,7 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
             $data['attribute_group'],
             $data['value'],
             $data['color'] ?? '',
-            $data['shop_association']
+            $data['shop_association'] ?? []
         ));
 
         return $attributeId->getValue();

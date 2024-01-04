@@ -27,5 +27,5 @@
  * Defines all selectors that are used in attribute address add/edit form.
  */
 export default {
-  attributeShopAssociationInput: '#attribute__shop_association',
+  attributeShopAssociationInput: '#attribute_shop_association',
 };

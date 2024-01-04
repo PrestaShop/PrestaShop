@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler\EditAttributeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 
 /**
  * Handles editing of attribute groups using legacy logic.
@@ -55,7 +56,7 @@ final class EditAttributeHandler extends AbstractObjectModelHandler implements E
      */
     public function handle(EditAttributeCommand $command): void
     {
-        $attribute = new \ProductAttribute($command->getAttributeId()->getValue());
+        $attribute = $this->attributeRepository->get(new AttributeId($command->getAttributeId()->getValue()));
 
         $attribute->name = $command->getLocalizedValue();
         $attribute->color = $command->getColor();

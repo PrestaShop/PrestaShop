@@ -359,6 +359,7 @@ services:
       $attributeGroupRepository: '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
       $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
       $contextLangId: "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      $multistoreFeature: '@prestashop.adapter.multistore_feature'
     tags:
       - { name: form.type }
 
