@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  TEST_CAMPAIGN: 'sanity'
+  TEST_CAMPAIGN: 'sanity:fast-fail'
 
 jobs:
   sanity:
