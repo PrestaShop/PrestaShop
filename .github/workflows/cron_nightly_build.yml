@@ -29,7 +29,7 @@ jobs:
           - BRANCH: 8.1.x
             node: 16
           - BRANCH: 8.0.x
-            node: 16
+            node: 14
           - BRANCH: 1.7.8.x
             node: 14
 
@@ -71,7 +71,7 @@ jobs:
         working-directory: ${{ env.RELEASE_DIR }}
 
       - name: Create nightly.zip for develop
-        if: matrix.BRANCH == 'develop'
+        if: env.GH_BRANCH == 'develop'
         run: |
           today=`date +%Y-%m-%d`
           cp $today-$GH_BRANCH*.zip nightly.zip
@@ -87,8 +87,9 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Delete last Nightly zip from develop
-        if: matrix.BRANCH == 'develop'
+        if: env.GH_BRANCH == 'develop'
         run: gsutil rm -rf gs://prestashop-core-nightly/nightly.zip
 
       - name: Upload to Google Cloud Storage (GCS)
+        if: always()
         run: gsutil cp -r "${{ env.RELEASE_DIR }}/**" gs://prestashop-core-nightly
