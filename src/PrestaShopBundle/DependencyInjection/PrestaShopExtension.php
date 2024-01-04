@@ -58,7 +58,7 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'prestashop';
     }

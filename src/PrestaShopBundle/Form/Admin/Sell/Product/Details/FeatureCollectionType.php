@@ -51,7 +51,7 @@ class FeatureCollectionType extends CollectionType
      *
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'feature_collection';
     }

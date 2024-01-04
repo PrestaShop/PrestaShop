@@ -319,7 +319,7 @@ class ConfigurationMock extends Configuration
         return $this;
     }
 
-    public function get($key, $default = null, ShopConstraint $shopConstraint = null)
+    public function get($key, $default = null, ShopConstraint $shopConstraint = null): mixed
     {
         return isset($this->configurationData[$key]) ? $this->configurationData[$key] : $default;
     }

@@ -77,7 +77,7 @@ class ImageWithPreviewType extends FileType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'image_with_preview';
     }

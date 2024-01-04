@@ -48,7 +48,7 @@ class IpAddressType extends TextType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'ip_address_text';
     }
