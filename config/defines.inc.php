@@ -67,10 +67,6 @@ if (!defined('_PS_API_FORCE_TLS_VERSION_')) {
     define('_PS_API_FORCE_TLS_VERSION_', true);
 }
 
-if (!defined('_PS_DO_NOT_LOAD_CONFIGURATION_')) {
-    define('_PS_DO_NOT_LOAD_CONFIGURATION_', false);
-}
-
 $currentDir = dirname(__FILE__);
 
 if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__PS_ROOT_DIR_'))) {
