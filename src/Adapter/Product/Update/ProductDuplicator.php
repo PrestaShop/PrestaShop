@@ -855,15 +855,6 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 $newOriginalPath
             );
 
-            // And fileType
-            $originalFileTypePath = dirname($oldOriginalPath) . '/fileType';
-            if (file_exists($originalFileTypePath)) {
-                $fs->copy(
-                    $originalFileTypePath,
-                    dirname($newOriginalPath) . '/fileType'
-                );
-            }
-
             $imagesMapping[$oldImageId->getValue()] = $newImageId->getValue();
         }
 
