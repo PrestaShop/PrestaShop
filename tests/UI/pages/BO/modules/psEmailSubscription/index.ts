@@ -40,8 +40,8 @@ class PsEmailSubscription extends ModuleConfiguration {
     this.updateSettingsSuccessMessage = 'Settings updated';
 
     // Selectors in settings block
-    this.sendVerificationEmail = (toEnable: string) => `#NW_CONFIRMATION_EMAIL_${toEnable}`;
-    this.sendConfirmationEmail = (toEnable: string) => `#NW_CONFIRMATION_EMAIL_${toEnable}`;
+    this.sendVerificationEmail = (toEnable: string) => `#NW_VERIFICATION_EMAIL_${toEnable}`;
+    this.sendConfirmationEmail = (toEnable: string) => `label[for='NW_CONFIRMATION_EMAIL_${toEnable}']`;
     this.saveSettingsForm = '#module_form_submit_btn';
 
     // Newsletter registrations table selectors
@@ -61,9 +61,6 @@ class PsEmailSubscription extends ModuleConfiguration {
    * @returns {Promise<number>}
    */
   async setSendVerificationEmail(page: Page, toEnable: boolean): Promise<string> {
-    if (toEnable && await this.elementVisible(page, this.sendVerificationEmail('on'))) {
-      await page.locator(this.sendVerificationEmail(toEnable ? 'on' : 'off')).click({force: true});
-    }
     await page.locator(this.sendVerificationEmail(toEnable ? 'on' : 'off')).click({force: true});
     await this.clickAndWaitForLoadState(page, this.saveSettingsForm);
 
@@ -80,7 +77,7 @@ class PsEmailSubscription extends ModuleConfiguration {
     if (toEnable && await this.elementVisible(page, this.sendConfirmationEmail('on'))) {
       await page.locator(this.sendConfirmationEmail(toEnable ? 'on' : 'off')).click({force: true});
     }
-    await this.setChecked(page, this.sendConfirmationEmail(toEnable ? 'on' : 'off'));
+    await page.locator(this.sendConfirmationEmail(toEnable ? 'on' : 'off')).click({force: true});
     await this.clickAndWaitForLoadState(page, this.saveSettingsForm);
 
     return this.getAlertSuccessBlockContent(page);
