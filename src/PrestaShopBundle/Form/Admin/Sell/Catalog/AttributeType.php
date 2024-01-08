@@ -48,6 +48,7 @@ use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -85,7 +86,7 @@ class AttributeType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $attributeGroupId = $options['data']['attribute_group'];
+        $attributeGroupId = $options['attribute_group'];
         $attributeGroup = $this->attributeGroupRepository->get(
             new AttributeGroupId($attributeGroupId)
         );
@@ -135,6 +136,12 @@ class AttributeType extends TranslatorAwareType
                 ],
             ]);
         }
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired('attribute_group');
+        parent::configureOptions($resolver);
     }
 
     private function getAttributeGroupChoices(ShopId $shopId, LanguageId $languageId): array

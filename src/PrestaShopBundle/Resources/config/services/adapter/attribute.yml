@@ -2,11 +2,6 @@ services:
   _defaults:
     public: false
     autowire: true
-
-  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\DeleteAttributeHandler:
-    autoconfigure: true
-
-  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\BulkDeleteAttributeHandler:
     autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository:
@@ -14,13 +9,9 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
-  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\AddAttributeHandler:
-    autoconfigure: true
-
-  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\EditAttributeHandler:
-    autoconfigure: true
-
-  PrestaShop\PrestaShop\Adapter\Attribute\QueryHandler\GetAttributeForEditingHandler:
-    autoconfigure: true
-
-  PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator:
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\DeleteAttributeHandler: ~
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\BulkDeleteAttributeHandler: ~
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\AddAttributeHandler: ~
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\EditAttributeHandler: ~
+  PrestaShop\PrestaShop\Adapter\Attribute\QueryHandler\GetAttributeForEditingHandler: ~
+  PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator: ~

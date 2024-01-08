@@ -72,7 +72,7 @@ final class AddAttributeHandler extends AbstractObjectModelHandler implements Ad
 
         $id = $this->attributeRepository->add($attribute);
 
-        $this->associateWithShops($attribute, $command->getShopAssociation());
+        $this->associateWithShops($attribute, $command->getAssociatedShopIds());
 
         return $id;
     }

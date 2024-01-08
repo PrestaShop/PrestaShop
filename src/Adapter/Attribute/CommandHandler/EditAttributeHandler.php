@@ -77,6 +77,6 @@ final class EditAttributeHandler extends AbstractObjectModelHandler implements E
 
         $this->attributeValidator->validate($attribute);
         $this->attributeRepository->partialUpdate($attribute, $propertiesToUpdate);
-        $this->associateWithShops($attribute, $command->getShopAssociation());
+        $this->associateWithShops($attribute, $command->getAssociatedShopIds());
     }
 }

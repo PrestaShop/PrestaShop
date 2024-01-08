@@ -186,9 +186,9 @@ class AttributeController extends FrameworkBundleAdminController
         $attributeFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeFormBuilder');
         $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeFormHandler');
 
-        $attributeForm = $attributeFormBuilder->getFormFor($attributeId, ['attribute_group' => $attributeGroupId])
+        $attributeForm = $attributeFormBuilder->getFormFor($attributeId, [], ['attribute_group' => $attributeGroupId])
             ->handleRequest($request);
-        //$attributeForm;
+
         $formData = $attributeForm->getData();
         $attributeName = $formData['value'][$this->getContextLangId()] ?? reset($formData['value']);
 
