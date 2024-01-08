@@ -50,7 +50,24 @@ services:
       - '@Nyholm\Psr7\Factory\Psr17Factory'
       - '@Nyholm\Psr7\Factory\Psr17Factory'
 
-  Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory:
+  Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface:
+    class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
+
+  Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface:
+    class: Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory
+    autowire: true
+
+  Psr\Http\Message\ResponseFactoryInterface:
+    class: Nyholm\Psr7\Factory\Psr17Factory
+
+  Psr\Http\Message\ServerRequestFactoryInterface:
+    class: Nyholm\Psr7\Factory\Psr17Factory
+
+  Psr\Http\Message\StreamFactoryInterface:
+    class: Nyholm\Psr7\Factory\Psr17Factory
+
+  Psr\Http\Message\UploadedFileFactoryInterface:
+    class: Nyholm\Psr7\Factory\Psr17Factory
 
   PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController:
     autowire: true

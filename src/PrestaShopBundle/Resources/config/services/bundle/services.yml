@@ -83,6 +83,8 @@ services:
     class: PrestaShopBundle\Service\Routing\Router
     parent: 'router.default'
     public: true
+    arguments:
+      $container: '@service_container'
     calls:
       - [ 'setTokenManager', [ '@security.csrf.token_manager' ] ]
       - [ 'setUserProvider', [ '@PrestaShopBundle\Service\DataProvider\UserProvider' ] ]
