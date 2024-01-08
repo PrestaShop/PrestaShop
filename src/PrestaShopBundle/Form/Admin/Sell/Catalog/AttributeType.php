@@ -29,15 +29,17 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
 use AttributeGroup;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -58,23 +60,23 @@ class AttributeType extends TranslatorAwareType
 
     private FeatureInterface $multistoreFeature;
 
-    private int $contextShopId;
+    private ShopContext $shopContext;
 
-    private int $contextLangId;
+    private LanguageContext $languageContext;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         AttributeGroupRepository $attributeGroupRepository,
-        int $contextShopId,
-        int $contextLangId,
+        ShopContext $shopContext,
+        LanguageContext $languageContext,
         FeatureInterface $multistoreFeature
     ) {
         parent::__construct($translator, $locales);
 
         $this->attributeGroupRepository = $attributeGroupRepository;
-        $this->contextShopId = $contextShopId;
-        $this->contextLangId = $contextLangId;
+        $this->shopContext = $shopContext;
+        $this->languageContext = $languageContext;
         $this->multistoreFeature = $multistoreFeature;
     }
 
@@ -85,16 +87,15 @@ class AttributeType extends TranslatorAwareType
     {
         $attributeGroupId = $options['data']['attribute_group'];
         $attributeGroup = $this->attributeGroupRepository->get(
-            new AttributeGroupId($attributeGroupId),
-            new ShopId($this->contextShopId)
+            new AttributeGroupId($attributeGroupId)
         );
         $builder
             ->add('attribute_group', ChoiceType::class, [
                 'label' => $this->trans('Attribute group', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('The way the attribute\'s values will be presented to the customers in the product\'s page.', 'Admin.Catalog.Help'),
                 'choices' => $this->getAttributeGroupChoices(
-                    new ShopId($this->contextShopId),
-                    new LanguageId($this->contextLangId)
+                    new ShopId($this->shopContext->getId()),
+                    new LanguageId($this->languageContext->getId())
                 ),
             ])
             ->add('value', TranslatableType::class, [
