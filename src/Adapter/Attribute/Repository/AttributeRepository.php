@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Attribute\Repository;
 
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\CannotAddAttributeException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\CannotUpdateAttributeException;
@@ -51,33 +50,16 @@ use RuntimeException;
  */
 class AttributeRepository extends AbstractObjectModelRepository
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-    /**
-     * @var AttributeValidator
-     */
-    private $attributeValidator;
+    private string $dbPrefix;
 
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     * @param AttributeValidator $attributeValidator
-     */
     public function __construct(
         Connection $connection,
-        string $dbPrefix,
-        AttributeValidator $attributeValidator
+        string $dbPrefix
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
-        $this->attributeValidator = $attributeValidator;
     }
 
     /**
@@ -109,7 +91,6 @@ class AttributeRepository extends AbstractObjectModelRepository
      */
     public function add(ProductAttribute $attribute): AttributeId
     {
-        $this->attributeValidator->validate($attribute);
         $id = $this->addObjectModel($attribute, CannotAddAttributeException::class);
 
         return new AttributeId($id);
@@ -125,7 +106,6 @@ class AttributeRepository extends AbstractObjectModelRepository
      */
     public function update(ProductAttribute $attribute, int $errorCode = 0): void
     {
-        $this->attributeValidator->validate($attribute);
         $this->updateObjectModel($attribute, CannotUpdateAttributeException::class, $errorCode);
     }
 

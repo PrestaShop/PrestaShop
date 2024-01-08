@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
@@ -42,14 +43,14 @@ use ProductAttribute;
 #[AsCommandHandler]
 final class AddAttributeHandler extends AbstractObjectModelHandler implements AddAttributeHandlerInterface
 {
-    /**
-     * @var AttributeRepository
-     */
-    private $attributeRepository;
+    private AttributeRepository $attributeRepository;
 
-    public function __construct(AttributeRepository $attributeRepository)
+    private AttributeValidator $attributeValidator;
+
+    public function __construct(AttributeRepository $attributeRepository, AttributeValidator $attributeValidator)
     {
         $this->attributeRepository = $attributeRepository;
+        $this->attributeValidator = $attributeValidator;
     }
 
     /**
@@ -66,6 +67,8 @@ final class AddAttributeHandler extends AbstractObjectModelHandler implements Ad
         }
 
         $attribute->id_attribute_group = $command->getAttributeGroupId()->getValue();
+
+        $this->attributeValidator->validate($attribute);
 
         $id = $this->attributeRepository->add($attribute);
 
