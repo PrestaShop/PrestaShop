@@ -58,14 +58,25 @@ final class EditAttributeHandler extends AbstractObjectModelHandler implements E
     public function handle(EditAttributeCommand $command): void
     {
         $attribute = $this->attributeRepository->get(new AttributeId($command->getAttributeId()->getValue()));
+        $propertiesToUpdate = [];
 
-        $attribute->name = $command->getLocalizedValue();
-        $attribute->color = $command->getColor();
-        $attribute->id_attribute_group = $command->getAttributeGroupId()->getValue();
+        if ($command->getLocalizedValue()) {
+            $attribute->name = $command->getLocalizedValue();
+            $propertiesToUpdate['name'] = array_keys($command->getLocalizedValue());
+        }
+
+        if ($command->getColor()) {
+            $attribute->color = $command->getColor();
+            $propertiesToUpdate[] = 'color';
+        }
+
+        if ($command->getAttributeGroupId()) {
+            $attribute->id_attribute_group = $command->getAttributeGroupId()->getValue();
+            $propertiesToUpdate[] = 'id_attribute_group';
+        }
 
         $this->attributeValidator->validate($attribute);
-
-        $this->attributeRepository->update($attribute);
+        $this->attributeRepository->partialUpdate($attribute, $propertiesToUpdate);
         $this->associateWithShops($attribute, $command->getShopAssociation());
     }
 }

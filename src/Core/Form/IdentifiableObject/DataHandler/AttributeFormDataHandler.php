@@ -72,12 +72,12 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $this->commandBus->handle(new EditAttributeCommand(
-            $id,
-            $data['attribute_group'],
-            $data['value'],
-            $data['color'],
-            $data['shop_association']
-        ));
+        $updateCommand = new EditAttributeCommand($id);
+        $updateCommand->setAttributeGroupId($data['attribute_group'])
+            ->setLocalizedValue($data['value'])
+            ->setColor($data['color'])
+            ->setAssociatedShopIds($data['shop_association']);
+
+        $this->commandBus->handle($updateCommand);
     }
 }

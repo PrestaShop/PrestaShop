@@ -109,6 +109,11 @@ class AttributeRepository extends AbstractObjectModelRepository
         $this->updateObjectModel($attribute, CannotUpdateAttributeException::class, $errorCode);
     }
 
+    public function partialUpdate(ProductAttribute $attribute, array $propertiesToUpdate, int $errorCode = 0): void
+    {
+        $this->partiallyUpdateObjectModel($attribute, $propertiesToUpdate, CannotUpdateAttributeException::class, $errorCode);
+    }
+
     /**
      * @param int[] $attributeIds
      */

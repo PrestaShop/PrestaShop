@@ -100,7 +100,7 @@ class AddAttributeCommand
     /**
      * @return int[]
      */
-    public function getShopAssociation(): array
+    public function getAssociatedShopIds(): array
     {
         return $this->shopAssociation;
     }

@@ -38,25 +38,13 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupI
  */
 class EditAttributeCommand
 {
-    /**
-     * @var AttributeId
-     */
-    private $attributeId;
+    private AttributeId $attributeId;
 
-    /**
-     * @var AttributeGroupId
-     */
-    private $attributeGroupId;
+    private AttributeGroupId $attributeGroupId;
 
-    /**
-     * @var array
-     */
-    private $localizedValue;
+    private array $localizedValue;
 
-    /**
-     * @var string
-     */
-    private $color;
+    private string $color;
 
     /**
      * @var int[]
@@ -65,22 +53,13 @@ class EditAttributeCommand
 
     /**
      * @param int $attributeId
-     * @param int $attributeGroupId
-     * @param array $localizedNames
-     * @param string $color
-     * @param int[] $shopAssociation
      *
      * @throws AttributeConstraintException
      * @throws AttributeGroupConstraintException
      */
-    public function __construct(int $attributeId, int $attributeGroupId, array $localizedNames, string $color, array $shopAssociation = [])
+    public function __construct(int $attributeId)
     {
-        $this->assertValuesAreValid($localizedNames);
         $this->attributeId = new AttributeId($attributeId);
-        $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
-        $this->localizedValue = $localizedNames;
-        $this->color = $color;
-        $this->shopAssociation = $shopAssociation;
     }
 
     /**
@@ -99,12 +78,27 @@ class EditAttributeCommand
         return $this->attributeGroupId;
     }
 
+    public function setAttributeGroupId(int $attributeGroupId): self
+    {
+        $this->attributeId = new AttributeId($attributeGroupId);
+
+        return $this;
+    }
+
     /**
      * @return array
      */
     public function getLocalizedValue(): array
     {
         return $this->localizedValue;
+    }
+
+    public function setLocalizedValue(array $localizedValue): self
+    {
+        $this->assertValuesAreValid($localizedValue);
+        $this->localizedValue = $localizedValue;
+
+        return $this;
     }
 
     /**
@@ -115,12 +109,26 @@ class EditAttributeCommand
         return $this->color;
     }
 
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
     /**
      * @return int[]
      */
-    public function getShopAssociation(): array
+    public function getAssociatedShopIds(): array
     {
         return $this->shopAssociation;
+    }
+
+    public function setAssociatedShopIds(array $shopAssociation): self
+    {
+        $this->shopAssociation = $shopAssociation;
+
+        return $this;
     }
 
     /**
