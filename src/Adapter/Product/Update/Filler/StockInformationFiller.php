@@ -38,6 +38,8 @@ use Product;
  */
 class StockInformationFiller implements ProductFillerInterface
 {
+    use LocalizedValueFillerTrait;
+
     /**
      * @param Product $product
      * @param UpdateProductCommand $command
@@ -52,14 +54,12 @@ class StockInformationFiller implements ProductFillerInterface
 
         $localizedLaterLabels = $command->getLocalizedAvailableLaterLabels();
         if (null !== $localizedLaterLabels) {
-            $product->available_later = $localizedLaterLabels;
-            $updatableProperties['available_later'] = array_keys($localizedLaterLabels);
+            $this->fillLocalizedValues($product, 'available_later', $localizedLaterLabels, $updatableProperties);
         }
 
         $localizedNowLabels = $command->getLocalizedAvailableNowLabels();
         if (null !== $localizedNowLabels) {
-            $product->available_now = $localizedNowLabels;
-            $updatableProperties['available_now'] = array_keys($localizedNowLabels);
+            $this->fillLocalizedValues($product, 'available_now', $localizedNowLabels, $updatableProperties);
         }
 
         $lowStockThreshold = $command->getLowStockThreshold();

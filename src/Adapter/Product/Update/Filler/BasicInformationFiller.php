@@ -35,6 +35,8 @@ use Product;
  */
 class BasicInformationFiller implements ProductFillerInterface
 {
+    use LocalizedValueFillerTrait;
+
     /**
      * @var int
      */
@@ -60,26 +62,30 @@ class BasicInformationFiller implements ProductFillerInterface
         if (null !== $localizedNames) {
             $defaultName = $localizedNames[$this->defaultLanguageId] ?? $product->name[$this->defaultLanguageId];
             // Go through all the product languages and make sure name is filled for each of them
-            $productLanguages = array_keys($product->name);
-            foreach ($productLanguages as $languageId) {
-                if (empty($localizedNames[$languageId])) {
-                    $localizedNames[$languageId] = $defaultName;
+            if (!empty($defaultName)) {
+                $productLanguages = array_keys($product->name);
+                foreach ($productLanguages as $languageId) {
+                    // Prevent forcing an empty value and use the default language instead
+                    if (isset($localizedNames[$languageId]) && empty($localizedNames[$languageId])) {
+                        $localizedNames[$languageId] = $defaultName;
+                    } elseif (empty($product->name[$languageId]) && empty($localizedNames[$languageId])) {
+                        // If no update value is specified but current value is empty use the default language as fallback
+                        $localizedNames[$languageId] = $defaultName;
+                    }
                 }
             }
-            $product->name = $localizedNames;
-            $updatableProperties['name'] = array_keys($localizedNames);
+
+            $this->fillLocalizedValues($product, 'name', $localizedNames, $updatableProperties);
         }
 
         $localizedDescriptions = $command->getLocalizedDescriptions();
         if (null !== $localizedDescriptions) {
-            $product->description = $localizedDescriptions;
-            $updatableProperties['description'] = array_keys($localizedDescriptions);
+            $this->fillLocalizedValues($product, 'description', $localizedDescriptions, $updatableProperties);
         }
 
         $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
         if (null !== $localizedShortDescriptions) {
-            $product->description_short = $localizedShortDescriptions;
-            $updatableProperties['description_short'] = array_keys($localizedShortDescriptions);
+            $this->fillLocalizedValues($product, 'description_short', $localizedShortDescriptions, $updatableProperties);
         }
 
         return $updatableProperties;

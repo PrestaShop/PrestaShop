@@ -194,6 +194,36 @@ class ProductEndpointTest extends ApiTestCase
             $decodedResponse
         );
 
+        // Update product with partial data, only name default language the other names are not impacted
+        $response = $client->request('PATCH', '/api/product/' . $productId, [
+            'auth_bearer' => $bearerToken,
+            'json' => [
+                'names' => [
+                    self::EN_LANG_ID => 'new product name',
+                ],
+            ],
+        ]);
+        self::assertResponseStatusCodeSame(200);
+        $decodedResponse = json_decode($response->getContent(), true);
+        $this->assertNotFalse($decodedResponse);
+        // Returned data has modified fields, the others haven't changed
+        $this->assertEquals(
+            [
+                'type' => ProductType::TYPE_STANDARD,
+                'productId' => $productId,
+                'names' => [
+                    self::EN_LANG_ID => 'new product name',
+                    self::$frenchLangId => 'nouveau nom',
+                ],
+                'descriptions' => [
+                    self::EN_LANG_ID => 'new description',
+                    self::$frenchLangId => '',
+                ],
+                'active' => true,
+            ],
+            $decodedResponse
+        );
+
         return $productId;
     }
 
@@ -219,7 +249,7 @@ class ProductEndpointTest extends ApiTestCase
                 'type' => ProductType::TYPE_STANDARD,
                 'productId' => $productId,
                 'names' => [
-                    self::EN_LANG_ID => 'product name',
+                    self::EN_LANG_ID => 'new product name',
                     self::$frenchLangId => 'nouveau nom',
                 ],
                 'descriptions' => [

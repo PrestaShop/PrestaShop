@@ -35,6 +35,8 @@ use Product;
  */
 class ShippingFiller implements ProductFillerInterface
 {
+    use LocalizedValueFillerTrait;
+
     /**
      * {@inheritDoc}
      */
@@ -73,13 +75,11 @@ class ShippingFiller implements ProductFillerInterface
         }
 
         if (null !== $command->getLocalizedDeliveryTimeInStockNotes()) {
-            $product->delivery_in_stock = $command->getLocalizedDeliveryTimeInStockNotes();
-            $updatableProperties['delivery_in_stock'] = array_keys($command->getLocalizedDeliveryTimeInStockNotes());
+            $this->fillLocalizedValues($product, 'delivery_in_stock', $command->getLocalizedDeliveryTimeInStockNotes(), $updatableProperties);
         }
 
         if (null !== $command->getLocalizedDeliveryTimeOutOfStockNotes()) {
-            $product->delivery_out_stock = $command->getLocalizedDeliveryTimeOutOfStockNotes();
-            $updatableProperties['delivery_out_stock'] = array_keys($command->getLocalizedDeliveryTimeOutOfStockNotes());
+            $this->fillLocalizedValues($product, 'delivery_out_stock', $command->getLocalizedDeliveryTimeOutOfStockNotes(), $updatableProperties);
         }
 
         return $updatableProperties;

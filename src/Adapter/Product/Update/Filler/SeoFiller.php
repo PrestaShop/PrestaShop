@@ -40,6 +40,8 @@ use Product;
 
 class SeoFiller implements ProductFillerInterface
 {
+    use LocalizedValueFillerTrait;
+
     /**
      * @var ProductRepository
      */
@@ -89,14 +91,12 @@ class SeoFiller implements ProductFillerInterface
 
         $localizedMetaDescriptions = $command->getLocalizedMetaDescriptions();
         if (null !== $localizedMetaDescriptions) {
-            $product->meta_description = $localizedMetaDescriptions;
-            $updatableProperties['meta_description'] = array_keys($localizedMetaDescriptions);
+            $this->fillLocalizedValues($product, 'meta_description', $localizedMetaDescriptions, $updatableProperties);
         }
 
         $localizedMetaTitles = $command->getLocalizedMetaTitles();
         if (null !== $localizedMetaTitles) {
-            $product->meta_title = $localizedMetaTitles;
-            $updatableProperties['meta_title'] = array_keys($localizedMetaTitles);
+            $this->fillLocalizedValues($product, 'meta_title', $localizedMetaTitles, $updatableProperties);
         }
 
         $localizedLinkRewrites = $command->getLocalizedLinkRewrites();
