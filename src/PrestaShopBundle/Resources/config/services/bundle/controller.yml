@@ -99,7 +99,6 @@ services:
 
   prestashop.core.admin.multistore:
     class: PrestaShopBundle\Controller\Admin\MultistoreController
-    parent: PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController
     public: true
     lazy: true
     properties:
@@ -107,5 +106,5 @@ services:
       multiStoreContext: "@prestashop.adapter.shop.context"
       entityManager: "@doctrine.orm.entity_manager"
       productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-    calls:
-      - [ setContainer, [ '@service_container' ] ]
+    autoconfigure: true
+    autowire: true

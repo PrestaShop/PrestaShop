@@ -28,7 +28,7 @@
 {% block content %}
   {% block translations_kpis_row %}
     {{ render(controller(
-      'PrestaShopBundle\\Controller\\Admin\\CommonController:renderKpiRowAction',
+      'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
       { 'kpiRow': kpiRow }
     )) }}
   {% endblock %}
