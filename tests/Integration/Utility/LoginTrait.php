@@ -26,43 +26,30 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
+namespace Tests\Integration\Utility;
 
+use PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface;
+use PrestaShopBundle\Security\Admin\Employee;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
-use Tests\Integration\Utility\ContextMockerTrait;
-use Tests\Integration\Utility\LoginTrait;
 
-class TitleControllerTest extends WebTestCase
+trait LoginTrait
 {
-    use ContextMockerTrait;
-    use LoginTrait;
-
-    /**
-     * @var KernelBrowser
-     */
-    protected $client;
-    /**
-     * @var Router
-     */
-    protected $router;
-
-    protected function setUp(): void
+    protected function loginUser(KernelBrowser $kernelBrowser): void
     {
-        parent::setUp();
-        self::mockContext();
+        $employeePermissionProvider = $kernelBrowser->getContainer()->get(EmployeePermissionProviderInterface::class);
+        $employeeId = 1;
 
-        $this->client = self::createClient();
-        $this->loginUser($this->client);
-        $this->router = self::$kernel->getContainer()->get('router');
-    }
+        $employee = new Employee(
+            (object) [
+                'email' => 'test@prestashop.com',
+                'id' => $employeeId,
+                'passwd' => '',
+            ]
+        );
+        $employee->setRoles(
+            array_merge(['ROLE_EMPLOYEE'], $employeePermissionProvider->getRoles($employeeId))
+        );
 
-    public function testIndexAction(): void
-    {
-        $this->client->request('GET', $this->router->generate('admin_title_index'));
-
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $kernelBrowser->loginUser($employee);
     }
 }

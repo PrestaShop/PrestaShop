@@ -36,11 +36,13 @@ use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Routing\RouterInterface;
 use Tests\Integration\PrestaShopBundle\Controller\FormFiller\FormFiller;
 use Tests\Integration\Utility\ContextMockerTrait;
+use Tests\Integration\Utility\LoginTrait;
 use Tests\Resources\DatabaseDump;
 
 abstract class GridControllerTestCase extends WebTestCase
 {
     use ContextMockerTrait;
+    use LoginTrait;
 
     /**
      * @var KernelBrowser
@@ -73,13 +75,9 @@ abstract class GridControllerTestCase extends WebTestCase
     {
         self::mockContext();
         $this->client = static::createClient();
+        $this->loginUser($this->client);
         $this->router = $this->client->getContainer()->get('router');
         $this->formFiller = new FormFiller();
-        //Since symfony 5.4, the session is fetch from the request stack
-        //We do need a request in the request stack to be able to use the configured session.
-        //With this line we ensure to have a request in the request stack at any time
-        //For more details see TokenStorageSession::getSession()
-        $this->client->request('GET', '/');
     }
 
     /**
@@ -164,6 +162,8 @@ abstract class GridControllerTestCase extends WebTestCase
      */
     protected function getFilteredEntitiesFromGrid(array $testFilters, array $routeParams = []): TestEntityDTOCollection
     {
+        $this->client->disableReboot();
+
         $gridUrl = $this->generateGridUrl($routeParams);
         $crawler = $this->client->request('GET', $gridUrl);
         $this->assertResponseIsSuccessful();

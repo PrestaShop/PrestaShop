@@ -59,6 +59,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testCreate(): int
     {
+        $this->client->disableReboot();
+
         // First create product, we don't check if this works very thoroughly as it is already handled
         // by ProductControllerTest this is only to have a parent for combinations.
         $formData = [
@@ -85,6 +87,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testGenerateCombinations(int $productId): array
     {
+        $this->client->disableReboot();
+
         $this->client->xmlHttpRequest('GET', $this->router->generate('admin_all_attribute_groups'));
         $attributeGroups = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertNotFalse($attributeGroups);
@@ -122,6 +126,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testEditDefaultCombination(array $generatedCombinations): array
     {
+        $this->client->disableReboot();
+
         $defaultCombinationId = $generatedCombinations['combination_ids'][0];
         // First assert that first combination is the default one
         $formData = [
@@ -184,6 +190,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testEditNotDefaultCombination(array $generatedCombinations): array
     {
+        $this->client->disableReboot();
+
         $initialDefaultCombinationId = $generatedCombinations['combination_ids'][0];
         $newDefaultCombinationId = $generatedCombinations['combination_ids'][1];
 
@@ -207,6 +215,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testEditFromList(array $generatedCombinations): array
     {
+        $this->client->disableReboot();
+
         $newDefaultCombinationId = $generatedCombinations['combination_ids'][1];
         $productId = $generatedCombinations['product_id'];
 
@@ -253,6 +263,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testDefaultFromList(array $generatedCombinations): array
     {
+        $this->client->disableReboot();
+
         $initialDefaultCombinationId = $generatedCombinations['combination_ids'][0];
         $newDefaultCombinationId = $generatedCombinations['combination_ids'][1];
         $productId = $generatedCombinations['product_id'];

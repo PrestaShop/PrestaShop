@@ -80,6 +80,8 @@ class AddressControllerTest extends FormGridControllerTestCase
      */
     public function testCreate(int $initialEntityCount): int
     {
+        $this->client->disableReboot();
+
         // First create address
         $formData = [
             'customer_address[customer_email]' => 'pub@prestashop.com',
@@ -117,6 +119,8 @@ class AddressControllerTest extends FormGridControllerTestCase
      */
     public function testEdit(int $addressId): int
     {
+        $this->client->disableReboot();
+
         // First update the address with a few data
         $formData = [
             'customer_address[alias]' => 'edit_alias',
@@ -177,6 +181,8 @@ class AddressControllerTest extends FormGridControllerTestCase
      */
     public function testDelete(int $addressId): void
     {
+        $this->client->disableReboot();
+
         $addresses = $this->getEntitiesFromGrid();
         $initialEntityCount = $addresses->count();
 

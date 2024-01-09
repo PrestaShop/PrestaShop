@@ -42,7 +42,6 @@ use Product;
 use RuntimeException;
 use SpecificPrice;
 use StockAvailable;
-use Symfony\Component\HttpFoundation\Request;
 use TaxRulesGroup;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;

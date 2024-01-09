@@ -361,7 +361,10 @@ class AdminControllerTest extends TestCase
         $mockResponse = $this->getMockBuilder(Response::class)->getMock();
         $mockResponse->method('getContent')->willReturn('');
 
-        $mockMultistoreController = $this->getMockBuilder(MultistoreController::class)->getMock();
+        $mockMultistoreController = $this
+            ->getMockBuilder(MultistoreController::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $mockMultistoreController->method('header')->withAnyParameters()->willReturn($mockResponse);
 
         return $mockMultistoreController;

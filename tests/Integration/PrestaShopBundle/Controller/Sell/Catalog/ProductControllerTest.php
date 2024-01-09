@@ -77,6 +77,7 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     public function testCreate(int $initialEntityCount): int
     {
+        $this->client->disableReboot();
         // First create product
         $formData = [
             'create_product[type]' => ProductType::TYPE_STANDARD,
@@ -110,6 +111,7 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     public function testEdit(int $productId): int
     {
+        $this->client->disableReboot();
         // @todo: need to add dedicated tests for different product types, they all cannot be tested in one scenario,
         //       because inputs existence depends on product type
         // @todo: also the fields with disabling input doesnt seem to work in tests. The data dissappears from request.
@@ -273,6 +275,8 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     public function testDelete(int $productId): void
     {
+        $this->client->disableReboot();
+
         $products = $this->getEntitiesFromGrid();
         $initialEntityCount = $products->count();
 

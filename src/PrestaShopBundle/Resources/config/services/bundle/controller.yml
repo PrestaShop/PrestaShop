@@ -8,6 +8,7 @@ services:
     calls:
       - [ setLogger, [ '@logger' ] ]
       - [ setContainer, [ '@service_container' ] ]
+      - [ setAuthorizationChecker, [ '@security.authorization_checker' ] ]
 
   # Every single controller should be loaded here, except the legacy ones, and some misplaced files are also excluded.
   PrestaShopBundle\Controller\:

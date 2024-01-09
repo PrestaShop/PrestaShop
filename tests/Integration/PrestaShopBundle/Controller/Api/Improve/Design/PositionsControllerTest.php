@@ -41,6 +41,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Tests\Integration\Utility\LoginTrait;
 
 /**
  * The controller installs and uninstalls modules so it needs to clear the cache, that's why it's better isolated
@@ -49,6 +50,7 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class PositionsControllerTest extends TestCase
 {
+    use LoginTrait;
     /**
      * @var int
      */
@@ -78,6 +80,7 @@ class PositionsControllerTest extends TestCase
         parent::setUp();
 
         $this->client = self::createClient();
+        $this->loginUser($this->client);
 
         // Unregister all modules hooked on displayHome
         Db::getInstance()->execute(sprintf(

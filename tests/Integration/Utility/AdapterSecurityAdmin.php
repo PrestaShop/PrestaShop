@@ -28,24 +28,13 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Utility;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Admin Middleware security
  */
 class AdapterSecurityAdmin
 {
-    public function __construct(
-        private readonly LegacyContext $context,
-        private readonly TokenStorageInterface $securityTokenStorage,
-        private readonly UserProviderInterface $userProvider
-    ) {
-    }
-
     /**
      * Aims to authenticate the employee present in the context, only on routes not concerning the API
      *
@@ -55,17 +44,5 @@ class AdapterSecurityAdmin
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        $actualFirewall = $event->getRequest()->attributes->get('_firewall_context');
-
-        if (null !== $actualFirewall && (str_ends_with($actualFirewall, 'api_token') || str_ends_with($actualFirewall, 'api'))) {
-            return;
-        }
-        $employee = $this->context->getContext()->employee;
-
-        if (null !== $employee && null !== $employee->email) {
-            $user = $this->userProvider->loadUserByIdentifier($employee->email);
-            $token = new UsernamePasswordToken($user, 'admin', $user->getRoles());
-            $this->securityTokenStorage->setToken($token);
-        }
     }
 }

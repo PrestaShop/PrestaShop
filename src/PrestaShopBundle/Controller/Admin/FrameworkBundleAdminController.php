@@ -145,8 +145,6 @@ class FrameworkBundleAdminController extends AbstractController
      *
      * @param string $id
      *
-     * @return object|mixed|Container|null
-     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */

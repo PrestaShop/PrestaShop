@@ -36,10 +36,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Tests\Integration\Utility\ContextMockerTrait;
+use Tests\Integration\Utility\LoginTrait;
 
 class OrderControllerTest extends WebTestCase
 {
     use ContextMockerTrait;
+    use LoginTrait;
 
     /**
      * @var KernelBrowser
@@ -72,6 +74,7 @@ class OrderControllerTest extends WebTestCase
             ]));
 
         $this->client = self::createClient();
+        $this->loginUser($this->client);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
         $this->router = self::$kernel->getContainer()->get('router');
         $this->tokenManager = self::$kernel->getContainer()->get('security.csrf.token_manager');
