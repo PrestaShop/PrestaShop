@@ -47,10 +47,10 @@ class CQRSUpdateTest extends TestCase
         $this->assertFalse($operation->canRead());
 
         // With positioned parameters
-        $operation = new CQRSUpdate(CQRSUpdate::METHOD_PATCH, '/uri');
+        $operation = new CQRSUpdate('/uri');
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
         $this->assertNull($operation->getProvider());
-        $this->assertEquals(CQRSUpdate::METHOD_PATCH, $operation->getMethod());
+        $this->assertEquals(CQRSUpdate::METHOD_PUT, $operation->getMethod());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
 

@@ -37,11 +37,34 @@ use Symfony\Component\HttpFoundation\Request;
  */
 trait ExternalApiTrait
 {
+    /**
+     * Return true if the request is accessing a resource API or the access token endpoint.
+     *
+     * @param Request $request
+     *
+     * @return bool
+     */
     protected function isExternalApiRequest(Request $request): bool
     {
         return in_array(
             $request->attributes->get('_controller'),
             [AccessTokenController::class, 'api_platform.action.placeholder']
+        );
+    }
+
+    /**
+     * Return true only for request that are Resource APIs, the controller should always be the same default
+     * ApiPlatform empty controller api_platform.action.placeholder.
+     *
+     * @param Request $request
+     *
+     * @return bool
+     */
+    protected function isResourceApiRequest(Request $request): bool
+    {
+        return in_array(
+            $request->attributes->get('_controller'),
+            ['api_platform.action.placeholder']
         );
     }
 }

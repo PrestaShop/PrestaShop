@@ -75,7 +75,7 @@ class SslMiddleware
 
         //If It's an API call and not using https, redirect to https
         if ($this->isExternalApiRequest($event->getRequest()) && !$event->getRequest()->isSecure()) {
-            $this->redirectToSsl($event);
+            $this->useSecureProtocol($event);
 
             return;
         }
@@ -107,10 +107,11 @@ class SslMiddleware
 
     private function isSSLrequirementsMet(Request $request): bool
     {
-        if ($this->configuration->get('_PS_API_FORCE_TLS_VERSION_') === false) {
-            return true;
-        }
         if ($this->isExternalApiRequest($request)) {
+            if ($this->configuration->get('_PS_API_FORCE_TLS_VERSION_') === false) {
+                return true;
+            }
+
             return $this->isTLSVersionAccepted($request);
         }
 
@@ -140,6 +141,18 @@ class SslMiddleware
                 'TLSv1.2 or higher is required.',
                 Response::HTTP_UPGRADE_REQUIRED,
                 ['Upgrade' => implode(', ', self::AVAILABLE_SECURE_PROTOCOLS)]
+            )
+        );
+    }
+
+    private function useSecureProtocol(RequestEvent $event): void
+    {
+        $redirect = str_replace('http://', 'https://', $event->getRequest()->getUri());
+        $event->setResponse(
+            new JsonResponse(
+                'Use HTTPS protocol',
+                Response::HTTP_UNAUTHORIZED,
+                ['Location' => $redirect]
             )
         );
     }

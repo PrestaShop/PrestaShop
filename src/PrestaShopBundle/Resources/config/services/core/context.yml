@@ -44,3 +44,8 @@ services:
   PrestaShop\PrestaShop\Core\Context\LegacyControllerContext:
     lazy: true
     factory: [ '@PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder', 'build' ]
+
+  PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\ApiClientContext:
+    lazy: true
+    factory: [ '@PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder', 'build' ]

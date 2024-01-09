@@ -29,15 +29,11 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\EventListener\Context\Admin;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
-use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShopBundle\EventListener\Context\Admin\ShopContextListener;
-use Shop;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
@@ -313,35 +309,5 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         }
 
         return $employeeContext;
-    }
-
-    private function mockShopRepository(int $expectedShopId): ShopRepository|MockObject
-    {
-        $fakeShop = new Shop();
-        $fakeShop->id = $expectedShopId;
-        $fakeShop->name = 'Fake shop';
-        $fakeShop->active = true;
-        $fakeShop->theme_name = 'classic';
-        $fakeShop->color = 'red';
-        $fakeShop->physical_uri = $fakeShop->virtual_uri = $fakeShop->domain = $fakeShop->domain_ssl = '';
-
-        $shopRepository = $this->createMock(ShopRepository::class);
-        $shopRepository
-            ->method('get')
-            ->with(self::callback(function ($shopId) use ($expectedShopId) {
-                self::assertInstanceOf(ShopId::class, $shopId);
-                self::assertEquals($expectedShopId, $shopId->getValue());
-
-                return true;
-            }))
-            ->willReturn($fakeShop)
-        ;
-
-        return $shopRepository;
-    }
-
-    private function mockContextStateManager(): ContextStateManager|MockObject
-    {
-        return $this->createMock(ContextStateManager::class);
     }
 }
