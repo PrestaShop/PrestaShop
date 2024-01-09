@@ -67,13 +67,7 @@ class Router extends BaseRouter
             return $url;
         }
 
-        $username = $this->userProvider->getUsername();
-        // Do not generate token each time we want to generate a route for a user
-        if (!isset($this->tokens[$username])) {
-            $this->tokens[$username] = $this->tokenManager->getToken($username)->getValue();
-        }
-
-        return self::generateTokenizedUrl($url, $this->tokens[$username]);
+        return self::generateTokenizedUrl($url, $this->getUserToken());
     }
 
     public function setTokenManager(CsrfTokenManager $tokenManager)
@@ -106,5 +100,17 @@ class Router extends BaseRouter
         }
 
         return $url;
+    }
+
+    protected function getUserToken(): string
+    {
+        $username = $this->userProvider->getUsername();
+
+        // Do not generate token each time we want to generate a route for a user
+        if (!isset($this->tokens[$username])) {
+            $this->tokens[$username] = $this->tokenManager->getToken($username)->getValue();
+        }
+
+        return $this->tokens[$username];
     }
 }

@@ -67,6 +67,8 @@ class FeatureControllerTest extends FormGridControllerTestCase
      */
     public function testCreate(int $initialEntityCount): int
     {
+        $this->client->disableReboot();
+
         // First create feature
         $formData = [
             'feature[name][1]' => self::TEST_NAME,
@@ -100,6 +102,8 @@ class FeatureControllerTest extends FormGridControllerTestCase
      */
     public function testEdit(int $featureId): int
     {
+        $this->client->disableReboot();
+
         $formData = [
             'feature[name][1]' => self::TEST_NAME,
         ];

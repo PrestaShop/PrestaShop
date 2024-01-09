@@ -24,45 +24,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShopBundle\DependencyInjection\Compiler;
 
-namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
-use Tests\Integration\Utility\ContextMockerTrait;
-use Tests\Integration\Utility\LoginTrait;
-
-class TitleControllerTest extends WebTestCase
+/**
+ * Used to configure services specifically for the test environment.
+ */
+class TestEnvironmentPass implements CompilerPassInterface
 {
-    use ContextMockerTrait;
-    use LoginTrait;
-
     /**
-     * @var KernelBrowser
+     * {@inheritdoc}
      */
-    protected $client;
-    /**
-     * @var Router
-     */
-    protected $router;
-
-    protected function setUp(): void
+    public function process(ContainerBuilder $container)
     {
-        parent::setUp();
-        self::mockContext();
+        $env = $container->getParameter('kernel.environment');
 
-        $this->client = self::createClient();
-        $this->loginUser($this->client);
-        $this->router = self::$kernel->getContainer()->get('router');
-    }
-
-    public function testIndexAction(): void
-    {
-        $this->client->request('GET', $this->router->generate('admin_title_index'));
-
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        if ('test' === $env) {
+            // see https://symfony.com/doc/current/testing.html#multiple-requests-in-one-test
+            $container->getDefinition('security.token_storage')->clearTag('kernel.reset');
+            $container->getDefinition('doctrine')->clearTag('kernel.reset');
+        }
     }
 }

@@ -37,9 +37,11 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Tests\Integration\Utility\LoginTrait;
 
 class PositionsControllerTest extends WebTestCase
 {
+    use LoginTrait;
     /**
      * @var int
      */
@@ -65,6 +67,7 @@ class PositionsControllerTest extends WebTestCase
         parent::setUp();
 
         $this->client = self::createClient();
+        $this->loginUser($this->client);
         /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get(ModuleManager::class);
         if (!$moduleManager->isInstalled('ps_emailsubscription')) {

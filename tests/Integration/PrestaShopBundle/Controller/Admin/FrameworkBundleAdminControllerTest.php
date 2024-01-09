@@ -45,10 +45,12 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\Translator;
 use Tests\Integration\Utility\ContextMockerTrait;
+use Tests\Integration\Utility\LoginTrait;
 
 class FrameworkBundleAdminControllerTest extends WebTestCase
 {
     use ContextMockerTrait;
+    use LoginTrait;
 
     /**
      * @var KernelBrowser
@@ -71,6 +73,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
         self::mockContext();
 
         $this->client = self::createClient();
+        $this->loginUser($this->client);
         $this->router = self::$kernel->getContainer()->get('router');
         $this->translator = self::$kernel->getContainer()->get('translator');
 

@@ -53,6 +53,8 @@ class CountryControllerTest extends FormGridControllerTestCase
      */
     public function testCreate(int $initialEntityCount): int
     {
+        $this->client->disableReboot();
+
         //todo: uncomment and use it when address format PR is merged
 //        $addressFormat = 'firstname lastname
 //            company
@@ -102,6 +104,8 @@ class CountryControllerTest extends FormGridControllerTestCase
      */
     public function testEdit(int $countryId): int
     {
+        $this->client->disableReboot();
+
         // this is the default format that is taken when opening country form, if you try to add spaces the test will fail.
         $addressFormat = 'firstname lastname
 company
@@ -180,6 +184,8 @@ phone';
      */
     public function testDelete(int $countryId): void
     {
+        $this->client->disableReboot();
+
         $countries = $this->getEntitiesFromGrid();
         $initialEntityCount = $countries->count();
 

@@ -44,3 +44,6 @@ services:
           - 'AdminLogin'
           - 'AdminQuickAccesses'
           - 'AdminTabs'
+
+    security.csrf.token_storage:
+      class: Tests\Integration\Utility\CsrfTokenStorage

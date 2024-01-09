@@ -216,6 +216,8 @@ class StoreControllerTest extends GridControllerTestCase
      */
     public function testDelete(): int
     {
+        $this->client->disableReboot();
+
         $initialEntityCount = $this->getEntitiesFromGrid()->count();
         $this->deleteEntityFromPage('admin_stores_delete', ['storeId' => 5]);
 
@@ -230,6 +232,8 @@ class StoreControllerTest extends GridControllerTestCase
      */
     public function testBulkDelete(): void
     {
+        $this->client->disableReboot();
+
         $initialEntityCount = $this->getEntitiesFromGrid()->count();
         $this->bulkDeleteEntitiesFromPage('admin_stores_bulk_delete', ['store_bulk' => [2, 3]]);
         $this->assertCount($initialEntityCount - 2, $this->getEntitiesFromGrid());

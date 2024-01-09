@@ -34,30 +34,27 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 abstract class ApiController
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected LoggerInterface $logger;
+    protected ContainerInterface $container;
+    protected AuthorizationCheckerInterface $authorizationChecker;
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
     public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
+    }
+
+    public function setAuthorizationChecker(AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -204,7 +201,7 @@ abstract class ApiController
      */
     protected function isGranted($accessLevel, $controller)
     {
-        return $this->container->get('security.authorization_checker')->isGranted(
+        return $this->authorizationChecker->isGranted(
             $accessLevel,
             $controller . '_'
         );
