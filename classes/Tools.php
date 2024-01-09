@@ -3784,6 +3784,11 @@ exit;
 
     public static function redirectToInstall()
     {
+        // No redirection in CLI mode
+        if (Tools::isPHPCLI()) {
+            return;
+        }
+
         if (file_exists(__DIR__ . '/../install')) {
             if (defined('_PS_ADMIN_DIR_')) {
                 header('Location: ../install/');
