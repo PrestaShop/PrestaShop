@@ -55,6 +55,11 @@ if (!file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.yml') && !file_exists(_
 }
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
+// If this const is not defined others are likely to be absent but this one is the most likely to cause a fatal error,
+// the following initialization is going to fail, so we throw an exception early
+if (!defined('_DB_PREFIX_')) {
+    throw new PrestaShopException('Constant _DB_PREFIX_ not defined');
+}
 
 if (defined('_PS_CREATION_DATE_')) {
     $creationDate = _PS_CREATION_DATE_;
