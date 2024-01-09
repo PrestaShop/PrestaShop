@@ -17,6 +17,7 @@ services:
       - "@prestashop.adapter.legacy.configuration"
       - "@doctrine.dbal.default_connection"
       - "@filesystem"
+    lazy: true
 
   # MODULE TAB MANAGEMENT
   prestashop.adapter.module.tab.register:
