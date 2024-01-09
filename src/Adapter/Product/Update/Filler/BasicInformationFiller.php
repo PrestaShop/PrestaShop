@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update\Filler;
 
+use PrestaShop\PrestaShop\Adapter\Domain\LocalizedObjectModelTrait;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use Product;
 
@@ -35,7 +36,7 @@ use Product;
  */
 class BasicInformationFiller implements ProductFillerInterface
 {
-    use LocalizedValueFillerTrait;
+    use LocalizedObjectModelTrait;
 
     /**
      * @var int

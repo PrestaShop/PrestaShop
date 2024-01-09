@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Update\Filler;
 
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
+use PrestaShop\PrestaShop\Adapter\Domain\LocalizedObjectModelTrait;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
@@ -40,7 +41,7 @@ use Product;
 
 class SeoFiller implements ProductFillerInterface
 {
-    use LocalizedValueFillerTrait;
+    use LocalizedObjectModelTrait;
 
     /**
      * @var ProductRepository

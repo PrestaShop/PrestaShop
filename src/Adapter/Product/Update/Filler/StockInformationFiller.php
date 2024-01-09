@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update\Filler;
 
+use PrestaShop\PrestaShop\Adapter\Domain\LocalizedObjectModelTrait;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
@@ -38,7 +39,7 @@ use Product;
  */
 class StockInformationFiller implements ProductFillerInterface
 {
-    use LocalizedValueFillerTrait;
+    use LocalizedObjectModelTrait;
 
     /**
      * @param Product $product

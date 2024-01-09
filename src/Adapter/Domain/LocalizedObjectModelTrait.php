@@ -26,13 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Update\Filler;
+namespace PrestaShop\PrestaShop\Adapter\Domain;
 
-use Product;
+use ObjectModel;
 
-trait LocalizedValueFillerTrait
+trait LocalizedObjectModelTrait
 {
-    protected function fillLocalizedValues(Product $product, string $propertyName, array $localizedValues, array &$updatableProperties): void
+    protected function fillLocalizedValues(ObjectModel $product, string $propertyName, array $localizedValues, array &$updatableProperties): void
     {
         foreach ($localizedValues as $langId => $localizedValue) {
             $product->$propertyName[$langId] = $localizedValue;
