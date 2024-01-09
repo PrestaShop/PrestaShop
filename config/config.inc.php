@@ -116,12 +116,25 @@ $context = Context::getContext();
 try {
     $context->shop = Shop::initialize();
 } catch (PrestaShopException $e) {
-    $e->displayMessage();
+    // In CLI command the Shop initialization is bound to fail when the shop is not installed, but we don't want to stop
+    // the process or this will break any Symfony command even a simple ./bin/console)
+    $e->displayMessage(!ToolsCore::isPHPCLI());
 }
-define('_THEME_NAME_', $context->shop->theme->getName());
-define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 
-define('__PS_BASE_URI__', $context->shop->getBaseURI());
+if ($context->shop) {
+    define('__PS_BASE_URI__', $context->shop->getBaseURI());
+} else {
+    define('__PS_BASE_URI__', '/');
+}
+
+if ($context->shop && $context->shop->theme) {
+    define('_THEME_NAME_', $context->shop->theme->getName());
+    define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
+} else {
+    // Not ideal fallback but on install when nothing else is available it does the job, better than not having these const at all
+    define('_THEME_NAME_', 'classic');
+    define('_PARENT_THEME_NAME_', '');
+}
 
 /* Include all defines related to base uri and theme name */
 require_once __DIR__ . '/defines_uri.inc.php';

@@ -13,7 +13,11 @@ use Symfony\Component\ErrorHandler\Debug;
 
 set_time_limit(0);
 
-require_once __DIR__ . '/../config/config.inc.php';
+try {
+  require_once __DIR__ . '/../config/config.inc.php';
+} catch (PrestaShopException) {
+  // Prevent breaking all CLI command when the shop is not installed
+}
 
 $input = new ArgvInput();
 $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');

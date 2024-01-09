@@ -32,7 +32,7 @@ class PrestaShopExceptionCore extends Exception
     /**
      * This method acts like an error handler, if dev mode is on, display the error else use a better silent way.
      */
-    public function displayMessage()
+    public function displayMessage(bool $dieAfterDisplay = true)
     {
         if (getenv('kernel.environment') === 'test') {
             throw $this;
@@ -96,8 +96,11 @@ class PrestaShopExceptionCore extends Exception
         }
         // Log the error in the disk
         $this->logError();
-        //We only need the error code 1 in cli context
-        exit((int) ToolsCore::isPHPCLI());
+
+        if ($dieAfterDisplay) {
+            //We only need the error code 1 in cli context
+            exit((int) ToolsCore::isPHPCLI());
+        }
     }
 
     /**
@@ -203,7 +206,14 @@ class PrestaShopExceptionCore extends Exception
     {
         $logger = new FileLogger();
         $logger->setFilename(_PS_ROOT_DIR_ . '/var/logs/' . date('Ymd') . '_exception.log');
-        $logger->logError($this->getExtendedMessage(false));
+
+        try {
+            $logger->logError($this->getExtendedMessage(false));
+        } catch (PrestaShopException) {
+            // Catch exception because there is a hook executed in the AbstractLogger that is bound to fail when the DB
+            // is not accessible, there is no point adding some potential error in this method that is already logging
+            // a previous error, it would only confuse the error messages and cause an unwanted fatal error
+        }
     }
 
     /**

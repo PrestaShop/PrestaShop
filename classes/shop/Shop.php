@@ -117,7 +117,7 @@ class ShopCore extends ObjectModel
     /** @var bool|null is multistore activated */
     protected static $feature_active;
 
-    /** @var Theme * */
+    /** @var Theme|null * */
     public $theme;
 
     /**
