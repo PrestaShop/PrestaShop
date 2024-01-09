@@ -31,7 +31,6 @@ npm-debug.log.*
 !/download/index.php
 
 # Images
-/img/tmp/CACHEDIR.TAG
 /img/*
 !/img/.htaccess
 !/img/index.php
