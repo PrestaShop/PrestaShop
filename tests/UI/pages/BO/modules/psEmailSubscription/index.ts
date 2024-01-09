@@ -74,6 +74,7 @@ class PsEmailSubscription extends ModuleConfiguration {
    * @returns {Promise<number>}
    */
   async setSendConfirmationEmail(page: Page, toEnable: boolean): Promise<string> {
+    // @todo https://github.com/PrestaShop/PrestaShop/issues/35004
     if (toEnable && await this.elementVisible(page, this.sendConfirmationEmail('on'))) {
       await page.locator(this.sendConfirmationEmail(toEnable ? 'on' : 'off')).click({force: true});
     }
