@@ -60,13 +60,19 @@ class SqlTranslationLoader implements LoaderInterface
         static $localeResults = [];
 
         if (!array_key_exists($locale, $localeResults)) {
-            $locale = Db::getInstance()->escape($locale, false, true);
+            try {
+                $locale = Db::getInstance()->escape($locale, false, true);
 
-            $localeResults[$locale] = Db::getInstance()->getRow(
-                'SELECT `id_lang`
+                $localeResults[$locale] = Db::getInstance()->getRow(
+                    'SELECT `id_lang`
                 FROM `' . _DB_PREFIX_ . 'lang`
                 WHERE `locale` = "' . $locale . '"'
-            );
+                );
+            } catch (\PrestaShopException) {
+                // When no DB is created there is nothing to fetch, so we return an empty catalog to avoid breaking process for
+                // invalid reasons (like CLI commands before the shop is installed)
+                return new MessageCatalogue($locale);
+            }
         }
 
         if (empty($localeResults[$locale])) {
