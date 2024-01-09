@@ -299,6 +299,8 @@ class Install extends AbstractInstall
      */
     public function installDatabase($clear_database = false)
     {
+        $this->getLogger()->log('Installing database');
+
         // Clear database (only tables with same prefix)
         require_once _PS_ROOT_DIR_ . '/' . $this->bootstrapFile;
         if ($clear_database) {
@@ -370,6 +372,8 @@ class Install extends AbstractInstall
      */
     public function clearDatabase($truncate = false)
     {
+        $this->getLogger()->log($truncate ? 'Truncating database' : 'Dropping database tables');
+
         $instance = Db::getInstance();
         $instance->execute('SET FOREIGN_KEY_CHECKS=0');
         foreach ($instance->executeS('SHOW TABLES') as $row) {
@@ -387,6 +391,8 @@ class Install extends AbstractInstall
      */
     public function initializeTestContext()
     {
+        $this->getLogger()->log('Initializing test context');
+
         $smarty = null;
         // Clean all cache values
         Cache::clean('*');
@@ -438,6 +444,8 @@ class Install extends AbstractInstall
      */
     public function installDefaultData($shop_name, $iso_country = false, $all_languages = false, $clear_database = false)
     {
+        $this->getLogger()->log('Installing default data');
+
         if ($clear_database) {
             $this->clearDatabase(true);
         }
@@ -493,6 +501,8 @@ class Install extends AbstractInstall
      */
     public function populateDatabase($entity = null)
     {
+        $this->getLogger()->log('Populating database');
+
         $languages = [];
         foreach (EntityLanguage::getLanguages(true) as $lang) {
             $languages[$lang['id_lang']] = $lang['iso_code'];
@@ -747,6 +757,8 @@ class Install extends AbstractInstall
      */
     public function configureShop(array $data = [])
     {
+        $this->getLogger()->log('Configuring shop');
+
         //clear image cache in tmp folder
         if (file_exists(_PS_TMP_IMG_DIR_)) {
             foreach (scandir(_PS_TMP_IMG_DIR_, SCANDIR_SORT_NONE) as $file) {
@@ -994,6 +1006,8 @@ class Install extends AbstractInstall
      */
     public function installModules(array $modules): bool
     {
+        $this->getLogger()->log('Installing modules on disk');
+
         ModuleEntity::updateTranslationsAfterInstall(false);
 
         $result = $this->executeAction(
@@ -1092,6 +1106,8 @@ class Install extends AbstractInstall
      */
     public function installFixtures($entity = null, array $data = [])
     {
+        $this->getLogger()->log('Installing fixtures');
+
         $fixtures_path = _PS_INSTALL_FIXTURES_PATH_ . 'fashion/';
         $fixtures_name = 'fashion';
         $zip_file = _PS_ROOT_DIR_ . '/download/fixtures.zip';
@@ -1171,6 +1187,8 @@ class Install extends AbstractInstall
     public function installTheme(string $themeName = null): bool
     {
         $themeName = $themeName ?: _THEME_NAME_;
+        $this->getLogger()->log('Installing theme ' . $themeName);
+
         $builder = new ThemeManagerBuilder(
             Context::getContext(),
             Db::getInstance(),

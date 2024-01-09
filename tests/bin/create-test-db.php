@@ -25,6 +25,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Install\Database;
 use PrestaShopBundle\Install\Install;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Tests\Resources\DatabaseDump;
@@ -40,27 +41,23 @@ require_once _PS_ROOT_DIR_ . '/install-dev/init.php';
 $output = new ConsoleOutput();
 $logger = new SymfonyConsoleLogger($output, PrestaShopLoggerInterface::DEBUG);
 
+$translator = Context::getContext()->getTranslatorFromLocale('en');
 $install = new Install(null, null, $logger);
-$install->setTranslator(Context::getContext()->getTranslatorFromLocale('en'));
-$logger->log(sprintf('Creating database %s', _DB_NAME_));
-DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
-$logger->log('Clearing database');
+$install->setTranslator($translator);
+
+$modelDatabase = new Database($logger);
+$modelDatabase->setTranslator($translator);
+$modelDatabase->testDatabaseSettings(_DB_SERVER_, _DB_NAME_, _DB_USER_, _DB_PASSWD_, _DB_PREFIX_);
+$modelDatabase->createDatabase(_DB_SERVER_, _DB_NAME_, _DB_USER_, _DB_PASSWD_);
+
 $install->clearDatabase(false);
-$logger->log('Installing database');
 if (!$install->installDatabase(true)) {
-    // Something went wrong during installation
-    $logger->logError('Database installation failed');
     exit(1);
 }
 
-$logger->log('Initializing test context');
 $install->initializeTestContext();
-$logger->log('Installing default data');
 $install->installDefaultData('test_shop', false, false, false);
-$logger->log('Populating database');
 $install->populateDatabase();
-
-$logger->log('Configuring shop');
 $install->configureShop([
     'admin_firstname' => 'puff',
     'admin_lastname' => 'daddy',
@@ -77,16 +74,12 @@ if (!Language::translationPackIsInCache('fr-FR')) {
 }
 Language::installSfLanguagePack('fr-FR');
 
-$logger->log('Installing fixtures');
 $install->installFixtures();
 
 Category::regenerateEntireNtree();
 Tab::resetStaticCache();
 
-$logger->log('Installing default theme');
 $install->installTheme();
-
-$logger->log('Installing modules on disk');
 $install->installModules(array_keys($install->getModulesOnDisk()));
 
 $logger->log('Creating database dump');

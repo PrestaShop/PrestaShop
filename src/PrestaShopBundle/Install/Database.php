@@ -28,9 +28,17 @@ namespace PrestaShopBundle\Install;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
+use PrestaShopLoggerInterface;
 
 class Database extends AbstractInstall
 {
+    public function __construct(
+        ?PrestaShopLoggerInterface $logger = null
+    ) {
+        parent::__construct();
+        $this->logger = $logger;
+    }
+
     /**
      * Check database configuration and try a connection.
      *
@@ -45,6 +53,7 @@ class Database extends AbstractInstall
      */
     public function testDatabaseSettings($server, $database, $login, $password, $prefix, $clear = false)
     {
+        $this->getLogger()->log('Testing database settings');
         $errors = [];
 
         // Check if fields are correctly typed
@@ -120,6 +129,7 @@ class Database extends AbstractInstall
 
     public function createDatabase($server, $database, $login, $password, $dropit = false)
     {
+        $this->getLogger()->log(sprintf('Creating database %s', $database));
         $class = '\\' . Db::getClass();
 
         return call_user_func([$class, 'createDatabase'], $server, $login, $password, $database, $dropit);

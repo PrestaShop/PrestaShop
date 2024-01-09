@@ -47,7 +47,7 @@ abstract class AbstractInstall
     protected $errors = [];
 
     /**
-     * @var PrestaShopLoggerInterface
+     * @var PrestaShopLoggerInterface|null
      */
     protected $logger;
 

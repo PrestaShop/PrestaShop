@@ -26,6 +26,7 @@
 
 use PrestaShopBundle\Install\Database;
 use PrestaShopBundle\Install\Install;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 
 class InstallControllerConsoleProcess extends InstallControllerConsole implements HttpConfigureInterface
@@ -45,10 +46,13 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     public function init()
     {
-        $this->model_install = new Install();
+        $output = new ConsoleOutput();
+        $logger = new SymfonyConsoleLogger($output, PrestaShopLoggerInterface::DEBUG);
+
+        $this->model_install = new Install(null, null, $logger);
         $this->model_install->setTranslator($this->translator);
 
-        $this->model_database = new Database();
+        $this->model_database = new Database($logger);
         $this->model_database->setTranslator($this->translator);
     }
 
