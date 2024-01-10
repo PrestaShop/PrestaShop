@@ -81,7 +81,7 @@ class CustomerAddressPersisterCore
         $id = $address->id;
         $ok = $address->delete();
 
-        /* 
+        /*
          * If the address was successfully deleted, we need to update the current cart.
          * Deleted address ID was already unassigned from all non-ordered carts in the database in delete() method,
          * but we can still have the deleted ID assigned in context->cart.
@@ -119,11 +119,11 @@ class CustomerAddressPersisterCore
         $address->id = $address->id_address = null;
 
         if ($address->save() && $old_address->delete()) {
-            /* 
-            * If the address was successfully changed, we need to update the current cart.
-            * Old address ID was already unassigned from all non-ordered carts in the database in delete() method,
-            * but we can still have the deleted ID assigned in context->cart.
-            */
+            /*
+             * If the address was successfully changed, we need to update the current cart.
+             * Old address ID was already unassigned from all non-ordered carts in the database in delete() method,
+             * but we can still have the deleted ID assigned in context->cart.
+             */
             $this->cart->updateAddressId($old_address->id, $address->id);
 
             return true;

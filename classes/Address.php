@@ -244,7 +244,7 @@ class AddressCore extends ObjectModel
         /*
          * Deleting an address can go two ways.
          *
-         * 1) If the address is used in an order, we will only soft-delete it. This means mark it with a flag, 
+         * 1) If the address is used in an order, we will only soft-delete it. This means mark it with a flag,
          *    hide it everywhere and prevent anyone using it. We must absolutely retain all the business data
          *    for the order.
          * 2) If it's not used, we can safely delete the address.
