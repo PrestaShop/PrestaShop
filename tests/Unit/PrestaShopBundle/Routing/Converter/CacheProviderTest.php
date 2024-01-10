@@ -33,6 +33,7 @@ use PrestaShopBundle\Routing\Converter\CacheProvider;
 use PrestaShopBundle\Routing\Converter\LegacyRoute;
 use PrestaShopBundle\Routing\Converter\LegacyRouteProviderInterface;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
@@ -353,7 +354,7 @@ class CacheProviderTest extends TestCase
 
         //AdapterInterface mock
         $cacheMock = $this
-            ->getMockBuilder(AdapterInterface::class)
+            ->getMockBuilder(CacheItemPoolInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -396,7 +397,7 @@ class CacheProviderTest extends TestCase
 
         //AdapterInterface mock
         $cacheMock = $this
-            ->getMockBuilder(AdapterInterface::class)
+            ->getMockBuilder(CacheItemPoolInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
