@@ -76,11 +76,15 @@ jobs:
       - name: Composer Install
         run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
+      - name: First run to cache doctrine configuration that fails on the first run when no database is set
+        run: ./bin/console
+        continue-on-error: true
+
       - name: Run Lint Yaml on `app`
         run: php bin/console lint:yaml app
 
-      - name: Run Lint Yaml on `src`
-        run: php bin/console lint:yaml src
+      - name: Run Lint Yaml on `src` tags are allowed
+        run: php bin/console lint:yaml src --parse-tags
 
       - name: Run Lint Yaml on `.t9n.yml`
         run: php bin/console lint:yaml .t9n.yml
@@ -135,6 +139,10 @@ jobs:
 
       - name: Composer Install
         run: composer install --ansi --prefer-dist --no-interaction --no-progress
+
+      - name: First run to cache doctrine configuration that fails on the first run when no database is set
+        run: ./bin/console
+        continue-on-error: true
 
       - name: Run Lint Twig
         run: php bin/console lint:twig src/PrestaShopBundle/Resources/views/
