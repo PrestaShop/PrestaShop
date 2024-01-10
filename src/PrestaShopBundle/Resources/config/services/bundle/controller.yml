@@ -101,10 +101,5 @@ services:
   prestashop.core.admin.multistore:
     class: PrestaShopBundle\Controller\Admin\MultistoreController
     public: true
-    properties:
-      multiStoreFeature: "@prestashop.adapter.multistore_feature"
-      multiStoreContext: "@prestashop.adapter.shop.context"
-      entityManager: "@doctrine.orm.entity_manager"
-      productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
     autoconfigure: true
     autowire: true
