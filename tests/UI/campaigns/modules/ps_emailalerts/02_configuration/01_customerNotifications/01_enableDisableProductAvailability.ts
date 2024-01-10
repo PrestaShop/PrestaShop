@@ -424,7 +424,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     });
 
     it('should click on \'Notify me when available\' button', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickNotifyButton', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'clickNotifyButton2', baseContext);
 
       const textMessage = await foProductPage.notifyEmailAlert(page);
       expect(textMessage).to.be.equal(foProductPage.messageAlertNotificationSaved);
