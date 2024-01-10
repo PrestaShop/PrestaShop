@@ -55,7 +55,15 @@ class HelpProviderTest extends TestCase
         $routerMock = $this->getMockBuilder(RouterInterface::class)->getMock();
         $routerMock
             ->method('generate')
-            ->willReturnArgument(1);
+            ->with(
+                'admin_common_sidebar',
+                $this->callback(function ($urlParameters) {
+                    $this->assertEquals('https://help.prestashop.com/en/doc/products?version=8.0.0&country=en', urldecode($urlParameters['url']));
+                    $this->assertEquals('Help', $urlParameters['title']);
+
+                    return true;
+                }
+            ));
 
         $provider = new HelpProvider(
             $legacyContextMock,
@@ -64,10 +72,7 @@ class HelpProviderTest extends TestCase
             $this->buildDocumentation()
         );
 
-        /** @var array $urlParameters */
-        $urlParameters = $provider->getUrl('products');
-        $this->assertEquals('https://help.prestashop.com/en/doc/products?version=8.0.0&country=en', urldecode($urlParameters['url']));
-        $this->assertEquals('Help', $urlParameters['title']);
+        $provider->getUrl('products');
     }
 
     private function buildDocumentation(): Documentation
