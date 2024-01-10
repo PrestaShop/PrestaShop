@@ -89,8 +89,7 @@ services:
       - [ 'setTokenManager', [ '@security.csrf.token_manager' ] ]
       - [ 'setUserProvider', [ '@PrestaShopBundle\Service\DataProvider\UserProvider' ] ]
 
-  prestashop.multistore.customized_configuration_checker:
-    class: PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker
+  PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker:
     arguments:
       - "@prestashop.adapter.legacy.configuration"
 
