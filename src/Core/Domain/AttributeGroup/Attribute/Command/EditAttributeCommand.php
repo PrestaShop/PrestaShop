@@ -40,16 +40,16 @@ class EditAttributeCommand
 {
     private AttributeId $attributeId;
 
-    private AttributeGroupId $attributeGroupId;
+    private ?AttributeGroupId $attributeGroupId;
 
-    private array $localizedValue;
+    private ?array $localizedValue;
 
-    private string $color;
+    private ?string $color;
 
     /**
      * @var int[]
      */
-    private $shopAssociation;
+    private ?array $shopAssociation;
 
     /**
      * @param int $attributeId
@@ -70,25 +70,19 @@ class EditAttributeCommand
         return $this->attributeId;
     }
 
-    /**
-     * @return AttributeGroupId
-     */
-    public function getAttributeGroupId(): AttributeGroupId
+    public function getAttributeGroupId(): ?AttributeGroupId
     {
         return $this->attributeGroupId;
     }
 
     public function setAttributeGroupId(int $attributeGroupId): self
     {
-        $this->attributeId = new AttributeId($attributeGroupId);
+        $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getLocalizedValue(): array
+    public function getLocalizedValue(): ?array
     {
         return $this->localizedValue;
     }
@@ -104,7 +98,7 @@ class EditAttributeCommand
     /**
      * @return string
      */
-    public function getColor(): string
+    public function getColor(): ?string
     {
         return $this->color;
     }
@@ -119,7 +113,7 @@ class EditAttributeCommand
     /**
      * @return int[]
      */
-    public function getAssociatedShopIds(): array
+    public function getAssociatedShopIds(): ?array
     {
         return $this->shopAssociation;
     }

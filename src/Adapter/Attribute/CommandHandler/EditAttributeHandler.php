@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Adapter\Domain\LocalizedObjectModelTrait;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler\EditAttributeHandlerInterface;
@@ -42,6 +43,8 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\Attri
 #[AsCommandHandler]
 final class EditAttributeHandler extends AbstractObjectModelHandler implements EditAttributeHandlerInterface
 {
+    use LocalizedObjectModelTrait;
+
     private AttributeRepository $attributeRepository;
 
     private AttributeValidator $attributeValidator;
@@ -60,17 +63,18 @@ final class EditAttributeHandler extends AbstractObjectModelHandler implements E
         $attribute = $this->attributeRepository->get(new AttributeId($command->getAttributeId()->getValue()));
         $propertiesToUpdate = [];
 
-        if ($command->getLocalizedValue()) {
+        if (null !== $command->getLocalizedValue()) {
             $attribute->name = $command->getLocalizedValue();
-            $propertiesToUpdate['name'] = array_keys($command->getLocalizedValue());
+            //$propertiesToUpdate['name'] = array_keys($command->getLocalizedValue());
+            $this->fillLocalizedValues($attribute, 'name', $command->getLocalizedValue(), $propertiesToUpdate);
         }
 
-        if ($command->getColor()) {
+        if (null !== $command->getColor()) {
             $attribute->color = $command->getColor();
             $propertiesToUpdate[] = 'color';
         }
 
-        if ($command->getAttributeGroupId()) {
+        if (null !== $command->getAttributeGroupId()) {
             $attribute->id_attribute_group = $command->getAttributeGroupId()->getValue();
             $propertiesToUpdate[] = 'id_attribute_group';
         }

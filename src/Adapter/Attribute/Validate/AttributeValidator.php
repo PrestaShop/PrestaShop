@@ -46,5 +46,7 @@ class AttributeValidator extends AbstractObjectModelValidator
     public function validate(ProductAttribute $attribute): void
     {
         $this->validateObjectModelLocalizedProperty($attribute, 'name', AttributeConstraintException::class, AttributeConstraintException::INVALID_NAME);
+        $this->validateObjectModelProperty($attribute, 'color', AttributeConstraintException::class, AttributeConstraintException::INVALID_COLOR);
+        $this->validateObjectModelProperty($attribute, 'id_attribute_group', AttributeConstraintException::class, AttributeConstraintException::INVALID_ATTRIBUTE_GROUP_ID);
     }
 }

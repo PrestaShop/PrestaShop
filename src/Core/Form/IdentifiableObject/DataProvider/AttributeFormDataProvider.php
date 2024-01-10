@@ -54,10 +54,10 @@ class AttributeFormDataProvider implements FormDataProviderInterface
         $editableAttribute = $this->queryBus->handle(new GetAttributeForEditing((int) $id));
 
         return [
-            'attribute_group' => $editableAttribute->getAttributeGroupId()->getValue(),
+            'attribute_group' => $editableAttribute->getAttributeGroupId(),
             'value' => $editableAttribute->getValue(),
             'color' => $editableAttribute->getColor(),
-            'shop_association' => $editableAttribute->getShopAssociationIds(),
+            'shop_association' => $editableAttribute->getAssociatedShopIds(),
         ];
     }
 

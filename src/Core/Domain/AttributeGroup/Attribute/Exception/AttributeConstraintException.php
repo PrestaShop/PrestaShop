@@ -45,4 +45,14 @@ class AttributeConstraintException extends AttributeException
      * Used when feature name is invalid.
      */
     public const INVALID_NAME = 30;
+
+    /**
+     * Used when color is invalid
+     */
+    public const INVALID_COLOR = 40;
+
+    /**
+     * Used when attribute group id is invalid
+     */
+    public const INVALID_ATTRIBUTE_GROUP_ID = 50;
 }

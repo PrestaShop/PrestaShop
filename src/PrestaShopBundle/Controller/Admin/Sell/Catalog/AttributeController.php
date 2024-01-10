@@ -145,7 +145,7 @@ class AttributeController extends FrameworkBundleAdminController
         $attributeFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeFormBuilder');
         $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeFormHandler');
 
-        $attributeForm = $attributeFormBuilder->getForm(['attribute_group' => $attributeGroupId]);
+        $attributeForm = $attributeFormBuilder->getForm([], ['attribute_group' => $attributeGroupId]);
         $attributeForm->handleRequest($request);
 
         try {
@@ -357,15 +357,23 @@ class AttributeController extends FrameworkBundleAdminController
             'Admin.Notifications.Error'
         );
 
-        $wrongValueMessage = $this->trans(
-            'A field is invalid.',
-            'Admin.Notifications.Error'
-        );
-
         return [
             AttributeNotFoundException::class => $notFoundMessage,
             AttributeGroupNotFoundException::class => $notFoundMessage,
-            AttributeConstraintException::class => $wrongValueMessage,
+            AttributeConstraintException::class => [
+                AttributeConstraintException::INVALID_NAME => $this->trans(
+                    'Attribute name is invalid',
+                    'Admin.Notifications.Error'
+                ),
+                AttributeConstraintException::INVALID_COLOR => $this->trans(
+                    'Attribute color is invalid ',
+                    'Admin.Notifications.Error'
+                ),
+                AttributeConstraintException::INVALID_ATTRIBUTE_GROUP_ID => $this->trans(
+                    'Attribute group is invalid',
+                    'Admin.Notifications.Error'
+                ),
+            ],
             DeleteAttributeException::class => [
                 DeleteAttributeException::FAILED_DELETE => $this->trans(
                     'An error occurred while deleting the object.',

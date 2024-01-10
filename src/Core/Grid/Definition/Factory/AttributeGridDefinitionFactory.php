@@ -99,11 +99,6 @@ final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinit
         return $this->attributeGroupViewDataProvider->getAttributeGroupNameById((int) $this->attributeGroupId);
     }
 
-    protected function getGroupId()
-    {
-        return $this->attributeGroupId;
-    }
-
     /**
      * {@inheritdoc}
      */

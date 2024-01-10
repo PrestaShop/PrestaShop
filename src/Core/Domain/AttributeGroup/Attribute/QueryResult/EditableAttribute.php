@@ -28,9 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
-
 /**
  * Stores attributes data that's needed for editing.
  */
@@ -70,33 +67,21 @@ class EditableAttribute
         $this->shopAssociationIds = $shopAssociationIds;
     }
 
-    /**
-     * @return AttributeId
-     */
-    public function getAttributeId(): AttributeId
+    public function getAttributeId(): int
     {
-        return new AttributeId($this->attributeId);
+        return $this->attributeId;
     }
 
-    /**
-     * @return AttributeGroupId
-     */
-    public function getAttributeGroupId(): AttributeGroupId
+    public function getAttributeGroupId(): int
     {
-        return new AttributeGroupId($this->attributeGroupId);
+        return $this->attributeGroupId;
     }
 
-    /**
-     * @return array
-     */
     public function getValue(): array
     {
         return $this->value;
     }
 
-    /**
-     * @return string
-     */
     public function getColor(): string
     {
         return $this->color;
@@ -105,7 +90,7 @@ class EditableAttribute
     /**
      * @return int[]
      */
-    public function getShopAssociationIds(): array
+    public function getAssociatedShopIds(): array
     {
         return $this->shopAssociationIds;
     }
