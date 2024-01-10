@@ -2721,6 +2721,15 @@ $mobile-menu-height: 2.6rem !default;
           }
         }
       }
+
+      .product-features-controls {
+        flex-direction: column;
+        gap: 10px;
+
+        .new-custom-values {
+          max-width: 100%;
+        }
+      }
     }
   }
 
