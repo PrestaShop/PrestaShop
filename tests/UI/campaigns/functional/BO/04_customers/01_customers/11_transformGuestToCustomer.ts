@@ -1,11 +1,13 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByGuestTest} from '@commonTests/FO/order';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
+import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -21,6 +23,8 @@ import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import MailDevEmail from '@data/types/maildevEmail';
+import MailDev from 'maildev';
 
 const baseContext = 'functional_BO_customers_customers_transformGuestToCustomer';
 
@@ -28,6 +32,8 @@ describe('BO - Customers _ Customers : Transform guest to customer account', asy
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCustomers: number;
+  let newMail: MailDevEmail;
+  let mailListener: MailDev;
 
   const customerData: CustomerData = new CustomerData({password: ''});
   const addressData: AddressData = new AddressData({country: 'France'});
@@ -44,17 +50,32 @@ describe('BO - Customers _ Customers : Transform guest to customer account', asy
     paymentMethod: PaymentMethods.wirePayment,
   });
 
+  // Pre-Condition: Setup config SMTP
+  setupSmtpConfigTest(`${baseContext}_preTest_1`);
+
   // Pre-condition: Create order in FO by guest
-  createOrderByGuestTest(orderData, baseContext);
+  createOrderByGuestTest(orderData, `${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Start listening to maildev server
+    mailListener = mailHelper.createMailListener();
+    mailHelper.startListener(mailListener);
+
+    // Handle every new email
+    mailListener.on('new', (email: MailDevEmail) => {
+      newMail = email;
+    });
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+
+    // Stop listening to maildev server
+    mailHelper.stopListener(mailListener);
   });
 
   describe('Transform a guest to customer account', async () => {
@@ -109,6 +130,12 @@ describe('BO - Customers _ Customers : Transform guest to customer account', asy
       expect(successMessage).to.contains(viewCustomerPage.successfulCreationMessage);
     });
 
+    it('should check if the mail is in mailbox and check the subject', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMailIsInMailbox', baseContext);
+
+      expect(newMail.subject).to.contains(`[${global.INSTALL.SHOP_NAME}] Your guest account was converted to a customer account`);
+    });
+
     it('should check the transform to customer account button is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isButtonVisible', baseContext);
 
@@ -144,4 +171,7 @@ describe('BO - Customers _ Customers : Transform guest to customer account', asy
 
   // Post-condition: Delete customers
   deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
+
+  // Post-Condition: Setup config SMTP
+  resetSmtpConfigTest(`${baseContext}_postTest_2`);
 });
