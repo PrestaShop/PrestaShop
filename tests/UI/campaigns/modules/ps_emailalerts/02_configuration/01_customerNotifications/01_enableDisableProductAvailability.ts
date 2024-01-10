@@ -21,6 +21,7 @@ import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import addProductPage from '@pages/BO/catalog/products/add';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
+import stocksPage from '@pages/BO/catalog/stocks';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
@@ -42,7 +43,6 @@ import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 import type {BrowserContext, Page} from 'playwright';
 import MailDev from 'maildev';
-import stocksPage from "@pages/BO/catalog/stocks";
 
 const baseContext: string = 'modules_ps_emailalerts_configuration_customerNotifications_enableDisableProductAvailability';
 
