@@ -65,11 +65,13 @@ class AddressControllerCore extends FrontController
             $this->address_form->loadAddressById($id_address);
         }
 
-        // Fill the form with data
-        $this->address_form->fillWith(Tools::getAllValues());
+
 
         // Submit the address, don't care if it's an edit or add
         if (Tools::isSubmit('submitAddress')) {
+            // Fill the form with data
+            $this->address_form->fillWith(Tools::getAllValues());
+
             if (!$this->address_form->submit()) {
                 $this->errors[] = $this->trans('Please fix the error below.', [], 'Shop.Notifications.Error');
             } else {
