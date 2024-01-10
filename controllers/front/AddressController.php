@@ -65,11 +65,6 @@ class AddressControllerCore extends FrontController
             $this->address_form->loadAddressById($id_address);
         }
 
-        // Initialize address if an id exists.
-        if ($id_address) {
-            $this->address_form->loadAddressById($id_address);
-        }
-
         // Submit the address, don't care if it's an edit or add
         if (Tools::isSubmit('submitAddress')) {
             // Fill the form with data
