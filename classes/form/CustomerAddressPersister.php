@@ -77,20 +77,28 @@ class CustomerAddressPersisterCore
             return false;
         }
 
+        // We mark the address ID we are deleting
         $id = $address->id;
         $ok = $address->delete();
 
+        /* 
+         * If the address was successfully deleted, we need to update the current cart.
+         * Deleted address ID was already unassigned from all non-ordered carts in the database in delete() method,
+         * but we can still have the deleted ID assigned in context->cart.
+         */
         if ($ok) {
+            // Unsetting the addresses from the cart is probably not necessary, because
+            // it's doing it again inside updateAddressId method.
             if ($this->cart->id_address_invoice == $id) {
                 unset($this->cart->id_address_invoice);
             }
             if ($this->cart->id_address_delivery == $id) {
                 unset($this->cart->id_address_delivery);
-                $this->cart->updateAddressId(
-                    $id,
-                    Address::getFirstCustomerAddressId($this->customer->id)
-                );
             }
+            $this->cart->updateAddressId(
+                $id,
+                Address::getFirstCustomerAddressId($this->customer->id)
+            );
         }
 
         return $ok;
@@ -111,7 +119,11 @@ class CustomerAddressPersisterCore
         $address->id = $address->id_address = null;
 
         if ($address->save() && $old_address->delete()) {
-            // a new address was created, we must update current cart
+            /* 
+            * If the address was successfully changed, we need to update the current cart.
+            * Old address ID was already unassigned from all non-ordered carts in the database in delete() method,
+            * but we can still have the deleted ID assigned in context->cart.
+            */
             $this->cart->updateAddressId($old_address->id, $address->id);
 
             return true;
