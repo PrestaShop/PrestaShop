@@ -59,8 +59,11 @@ class AddressControllerCore extends FrontController
     public function postProcess()
     {
         $this->context->smarty->assign('editing', false);
-
-        $id_address = (int) Tools::getValue('id_address', 0);
+        $id_address = (int) Tools::getValue('id_address');
+        // Initialize address if an id exists
+        if ($id_address) {
+            $this->address_form->loadAddressById($id_address);
+        }
 
         // Initialize address if an id exists.
         if ($id_address) {
