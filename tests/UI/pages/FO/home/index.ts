@@ -137,6 +137,10 @@ class HomePage extends FOBasePage {
 
   public readonly successSubscriptionMessage: string;
 
+  public readonly successSendVerificationEmailMessage: string;
+
+  public readonly successSendConfirmationEmailMessage: string;
+
   public readonly alreadyUsedEmailMessage: string;
 
   public readonly productHummingbird: (number: number) => string;
@@ -229,6 +233,8 @@ class HomePage extends FOBasePage {
 
     // Newsletter subscription messages
     this.successSubscriptionMessage = 'You have successfully subscribed to this newsletter.';
+    this.successSendVerificationEmailMessage = 'A verification email has been sent. Please check your inbox.';
+    this.successSendConfirmationEmailMessage = 'A confirmation email has been sent. Please check your inbox.';
     this.alreadyUsedEmailMessage = 'This email address is already registered.';
 
     // Hummingbird
@@ -592,11 +598,11 @@ class HomePage extends FOBasePage {
    */
   async getProductWithDiscountDetailsFromQuickViewModal(page: Page): Promise<{
     discountPercentage: string,
-    thumbImage: string|null,
+    thumbImage: string | null,
     price: number,
     taxShippingDeliveryLabel: string,
     regularPrice: number,
-    coverImage: string|null,
+    coverImage: string | null,
     name: string,
     shortDescription: string,
   }> {
@@ -619,10 +625,10 @@ class HomePage extends FOBasePage {
    * coverImage: string|null, name: string, shortDescription: string}>}
    */
   async getProductDetailsFromQuickViewModal(page: Page): Promise<{
-    thumbImage: string|null,
+    thumbImage: string | null,
     price: number,
     taxShippingDeliveryLabel: string,
-    coverImage: string|null,
+    coverImage: string | null,
     name: string,
     shortDescription: string,
   }> {
