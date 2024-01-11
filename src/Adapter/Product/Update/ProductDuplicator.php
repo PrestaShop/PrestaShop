@@ -855,15 +855,6 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 $newOriginalPath
             );
 
-            // And fileType
-            $originalFileTypePath = dirname($oldOriginalPath) . '/fileType';
-            if (file_exists($originalFileTypePath)) {
-                $fs->copy(
-                    $originalFileTypePath,
-                    dirname($newOriginalPath) . '/fileType'
-                );
-            }
-
             $imagesMapping[$oldImageId->getValue()] = $newImageId->getValue();
         }
 
@@ -1023,6 +1014,10 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 } elseif (!empty($columnValue) && DateTime::isNull($columnValue)) {
                     // We can't use 0000-00-00 as a value it's not valid in Mysql, so we use null instead
                     return 'null';
+                }
+
+                if (is_string($columnValue)) {
+                    $columnValue = str_replace("'", "''", $columnValue);
                 }
 
                 // We stringify values to avoid SQL syntax error, the float and integers will correctly casted in the DB anyway

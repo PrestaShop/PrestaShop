@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\ORM\Tools\Setup;
 use Exception;
 use LegacyCompilerPass;
@@ -39,7 +40,6 @@ use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\Exception\ServiceContainerException;
 use PrestaShopBundle\PrestaShopBundle;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\FileResource;
@@ -127,7 +127,7 @@ class ContainerBuilder
     {
         $this->containerName = $containerName;
         $this->containerClassName = ucfirst($this->containerName) . 'Container';
-        $this->dumpFile = $this->environment->getCacheDir() . $this->containerClassName . '.php';
+        $this->dumpFile = $this->environment->getCacheDir() . DIRECTORY_SEPARATOR . $this->containerClassName . '.php';
         $this->containerConfigCache = new ConfigCache($this->dumpFile, $this->environment->isDebug());
 
         //These methods load required files like autoload or annotation metadata so we need to load
@@ -212,7 +212,7 @@ class ContainerBuilder
     private function loadDoctrineAnnotationMetadata()
     {
         //IMPORTANT: we need to provide a cache because doctrine tries to init a connection on redis, memcached, ... on its own
-        $cacheProvider = new DoctrineProvider(new ArrayAdapter());
+        $cacheProvider = DoctrineProvider::wrap(new ArrayAdapter());
         Setup::createAnnotationMetadataConfiguration([], $this->environment->isDebug(), null, $cacheProvider);
     }
 
@@ -245,9 +245,9 @@ class ContainerBuilder
      */
     private function loadModulesAutoloader(ContainerInterface $container)
     {
-        $activeModules = $container->getParameter('prestashop.installed_modules');
-        /** @var array<string> $activeModules */
-        foreach ($activeModules as $module) {
+        $installedModules = $container->getParameter('prestashop.installed_modules');
+        /** @var array<string> $installedModules */
+        foreach ($installedModules as $module) {
             $autoloader = _PS_MODULE_DIR_ . $module . '/vendor/autoload.php';
 
             if (file_exists($autoloader)) {

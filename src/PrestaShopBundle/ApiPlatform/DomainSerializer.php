@@ -27,9 +27,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform;
 
+use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use ReflectionNamedType;
+use ReflectionParameter;
+use ReflectionProperty;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer as SymfonySerializer;
@@ -37,14 +42,30 @@ use Traversable;
 
 class DomainSerializer implements NormalizerInterface, DenormalizerInterface
 {
-    private SymfonySerializer $serializer;
+    public const NORMALIZATION_MAPPING = 'normalization_mapping';
+
+    protected SymfonySerializer $serializer;
+
+    protected PropertyAccessorInterface $propertyAccessor;
+
+    /**
+     * @var array<string, ReflectionClass>
+     */
+    protected $cachedReflectionClasses = [];
 
     /**
      * @param Traversable $denormalizers
      */
-    public function __construct(Traversable $denormalizers)
+    public function __construct(iterable $denormalizers)
     {
         $this->serializer = new SymfonySerializer(iterator_to_array($denormalizers));
+        // Invalid (or absent) indexes or properties in array/objects are invalid, therefore ignored when checking isReadable
+        // which is important for the normalization mapping process
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
+            ->enableExceptionOnInvalidIndex()
+            ->enableExceptionOnInvalidPropertyPath()
+            ->getPropertyAccessor()
+        ;
     }
 
     /**
@@ -54,9 +75,14 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
      */
     public function denormalize($data, string $type, string $format = null, array $context = []): mixed
     {
+        // Before anything perform the mapping if specified
+        if (!empty($context[self::NORMALIZATION_MAPPING])) {
+            $this->mapNormalizedData($data, $context[self::NORMALIZATION_MAPPING]);
+        }
+
         $dataConstruct = [];
-        $reflectionClass = new \ReflectionClass($type);
-        if ($reflectionClass->getConstructor()) {
+        $reflectionClass = $this->getReflectionClass($type);
+        if ($reflectionClass->getConstructor() && $reflectionClass->getConstructor()->isPublic()) {
             $constructParameters = $reflectionClass->getConstructor()->getParameters();
             foreach ($constructParameters as $constructParameter) {
                 if (isset($data[$constructParameter->getName()])) {
@@ -64,32 +90,48 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
                     unset($data[$constructParameter->getName()]);
                 }
             }
+        } else {
+            $dataConstruct = $data;
         }
 
-        $action = $this->serializer->denormalize($dataConstruct, $type, $format, $context);
+        $denormalizedObject = $this->serializer->denormalize($dataConstruct, $type, $format, $context);
 
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
         //Try to call setters
-        foreach ($data as $param => $value) {
-            $parameters = [];
-            if ($reflectionMethod = $this->findSetterMethod($param, $type)) {
-                $methodParameters = $reflectionMethod->getParameters();
-                foreach ($methodParameters as $methodParameter) {
-                    $requestValue = is_array($value) && isset($value[$methodParameter->getName()]) ? $value[$methodParameter->getName()] : $value;
-                    if ($methodParameter->getType() instanceof \ReflectionNamedType && $methodParameter->getType()->getName() !== gettype($requestValue)) {
-                        $parameters[] = $this->serializer->denormalize($requestValue, $methodParameter->getType()->getName());
+        if (is_iterable($data)) {
+            foreach ($data as $propertyName => $value) {
+                $parameters = [];
+                if ($reflectionMethod = $this->findSetterMethod($propertyName, $type)) {
+                    $methodParameters = $reflectionMethod->getParameters();
+                    // Using setter method with multiple parameters, use parameters by name
+                    if (count($methodParameters) > 1 && is_array($value)) {
+                        foreach ($methodParameters as $methodParameter) {
+                            $parameters[$methodParameter->getName()] = $this->getConvertedValue($value[$methodParameter->getName()], $methodParameter);
+                        }
                     } else {
-                        $parameters[] = $requestValue;
+                        // Single parameter use positioned parameter
+                        $parameters[] = $this->getConvertedValue($value, $methodParameters[0]);
                     }
-                }
 
-                $reflectionMethod->invoke($action, ...$parameters);
-            } elseif ($propertyAccessor->isWritable($action, $param)) {
-                $propertyAccessor->setValue($action, $param, $value);
+                    $reflectionMethod->invoke($denormalizedObject, ...$parameters);
+                } elseif ($this->propertyAccessor->isWritable($denormalizedObject, $propertyName)) {
+                    $reflectionClass = $this->getReflectionClass($type);
+                    $reflectionProperty = $reflectionClass->hasProperty($propertyName) ? $reflectionClass->getProperty($propertyName) : null;
+                    $this->propertyAccessor->setValue($denormalizedObject, $propertyName, $this->getConvertedValue($value, $reflectionProperty));
+                }
             }
         }
 
-        return $action;
+        return $denormalizedObject;
+    }
+
+    private function getConvertedValue($value, ReflectionParameter|ReflectionProperty $parameter = null)
+    {
+        $paramType = $parameter->getType() instanceof ReflectionNamedType ? $parameter->getType()->getName() : null;
+        if ($paramType && $paramType !== gettype($value)) {
+            return $this->serializer->denormalize($value, $paramType);
+        } else {
+            return $value;
+        }
     }
 
     /**
@@ -97,7 +139,12 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
      */
     public function normalize($object, string $format = null, array $context = [])
     {
-        return $this->serializer->normalize($object, $format, $context);
+        $normalizedData = $this->serializer->normalize($object, $format, $context);
+        if (!empty($context[self::NORMALIZATION_MAPPING])) {
+            $this->mapNormalizedData($normalizedData, $context[self::NORMALIZATION_MAPPING]);
+        }
+
+        return $normalizedData;
     }
 
     /**
@@ -116,25 +163,51 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
         return $this->serializer->supportsDenormalization($data, $type, $format);
     }
 
-    /**
-     * @param $propertyName
-     * @param $queryClass
-     *
-     * @return false|ReflectionMethod
-     */
-    private function findSetterMethod($propertyName, $queryClass): bool|ReflectionMethod
+    protected function findSetterMethod(string $propertyName, string $queryClass): bool|ReflectionMethod
     {
-        $reflectionClass = new \ReflectionClass($queryClass);
+        $reflectionClass = $this->getReflectionClass($queryClass);
 
         foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if (str_starts_with($method->getName(), 'set')) {
-                $methodName = lcfirst(substr($method->getName(), 3));
-                if ($methodName === $propertyName) {
+                $methodName = substr($method->getName(), 3);
+                if ($methodName === $propertyName || lcfirst($methodName) === $propertyName) {
+                    return $method;
+                }
+            }
+
+            if (str_starts_with($method->getName(), 'with')) {
+                $methodName = substr($method->getName(), 4);
+                if ($methodName === $propertyName || lcfirst($methodName) === $propertyName) {
                     return $method;
                 }
             }
         }
 
         return false;
+    }
+
+    /**
+     * Modify the normalized data based on a mapping, basically it copies some values from a path to another, the original
+     * path is not modified.
+     *
+     * @param $normalizedData
+     * @param array $normalizationMapping
+     */
+    protected function mapNormalizedData(&$normalizedData, array $normalizationMapping): void
+    {
+        foreach ($normalizationMapping as $originPath => $targetPath) {
+            if ($this->propertyAccessor->isReadable($normalizedData, $originPath) && $this->propertyAccessor->isWritable($normalizedData, $targetPath)) {
+                $this->propertyAccessor->setValue($normalizedData, $targetPath, $this->propertyAccessor->getValue($normalizedData, $originPath));
+            }
+        }
+    }
+
+    protected function getReflectionClass(string $type): ReflectionClass
+    {
+        if (!isset($this->cachedReflectionClasses[$type])) {
+            $this->cachedReflectionClasses[$type] = new ReflectionClass($type);
+        }
+
+        return $this->cachedReflectionClasses[$type];
     }
 }

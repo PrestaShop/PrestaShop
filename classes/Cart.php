@@ -140,7 +140,7 @@ class CartCore extends ObjectModel
             'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'recyclable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'gift' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage'],
+            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'],
             'mobile_theme' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'delivery_option' => ['type' => self::TYPE_STRING],
             'secure_key' => ['type' => self::TYPE_STRING, 'size' => 32],
@@ -189,9 +189,6 @@ class CartCore extends ObjectModel
     public const BOTH_WITHOUT_SHIPPING = 4;
     public const ONLY_SHIPPING = 5;
     public const ONLY_WRAPPING = 6;
-
-    /** @deprecated since 1.7 **/
-    public const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
     public const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
 
     private const DEFAULT_ATTRIBUTES_KEYS = ['attributes' => '', 'attributes_small' => ''];
@@ -488,7 +485,7 @@ class CartCore extends ObjectModel
         // set base cart total values, they will be updated and used for percentage cart rules (because percentage cart rules
         // are applied to the cart total's value after previously applied cart rules)
         $virtual_context->virtualTotalTaxExcluded = $virtual_context->cart->getOrderTotal(false, self::ONLY_PRODUCTS);
-        if (Tax::excludeTaxeOption()) {
+        if (!Configuration::get('PS_TAX')) {
             $virtual_context->virtualTotalTaxIncluded = $virtual_context->virtualTotalTaxExcluded;
         } else {
             $virtual_context->virtualTotalTaxIncluded = $virtual_context->cart->getOrderTotal(true, self::ONLY_PRODUCTS);
@@ -776,7 +773,8 @@ class CartCore extends ObjectModel
 
                             if (
                                 $product['id_product'] == $gift['gift_product'] &&
-                                $product['id_product_attribute'] == $gift['gift_product_attribute']
+                                $product['id_product_attribute'] == $gift['gift_product_attribute'] &&
+                                empty($product['id_customization'])
                             ) {
                                 $product['is_gift'] = true;
                                 $products[$rowIndex] = $product;
@@ -1393,6 +1391,8 @@ class CartCore extends ObjectModel
             pr.`pack_stock_type` = ' . Pack::STOCK_TYPE_DEFAULT . '
             AND ' . $packStockTypesDefaultSupported . ' = 1
         ))';
+
+        // Construct the final SQL that will join the results of these two queries
         $parentSql = 'SELECT
             COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
             COALESCE(SUM(first_level_quantity), 0) as quantity
@@ -1456,7 +1456,7 @@ class CartCore extends ObjectModel
         }
 
         if (!Validate::isLoadedObject($product)) {
-            die(Tools::displayError());
+            die(Tools::displayError(sprintf('Product with ID "%s" could not be loaded.', $id_product)));
         }
 
         if (isset(self::$_nbProducts[$this->id])) {
@@ -1741,6 +1741,7 @@ class CartCore extends ObjectModel
             unset(self::$_totalWeight[$this->id]);
         }
 
+        // First, if we are deleting a product with customization, we delete it from the database
         if ((int) $id_customization) {
             if (!$this->_deleteCustomization((int) $id_customization)) {
                 return false;
@@ -1760,17 +1761,26 @@ class CartCore extends ObjectModel
             return false;
         }
 
+        // Now, we must check if there are any products added as gifts in the cart and keep them.
+        // We do this only for products without customization, because we can't have a customized
+        // product added as a gift
         $preservedGifts = [];
         $giftKey = (int) $id_product . '-' . (int) $id_product_attribute;
-        if ($preserveGiftsRemoval) {
+        if ($preserveGiftsRemoval && empty($id_customization)) {
+            // We check the cart and see if there are any gifts added
             $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
+
+            // If yes, we do not delete the product, but change it's quantity to the number of gifts that are in cart,
+            // so they remain. We must specifically target the product ID, combination ID and customization ID.
+            // If we didn't use these conditions, we would set all cart rows with this product ID to $preservedGifts[$giftKey].
             if (isset($preservedGifts[$giftKey]) && $preservedGifts[$giftKey] > 0) {
                 return Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-                    SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
+                    SET `quantity` = ' . (int) $preservedGifts[$giftKey] . '
                     WHERE `id_cart` = ' . (int) $this->id . '
-                    AND `id_product` = ' . (int) $id_product .
-                    ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
+                    AND `id_product` = ' . (int) $id_product . '
+                    AND `id_product_attribute` = ' . (int) $id_product_attribute . '
+                    AND `id_customization` = 0'
                 );
             }
         }
@@ -1892,7 +1902,7 @@ class CartCore extends ObjectModel
     {
         $cart = new Cart($id_cart);
         if (!Validate::isLoadedObject($cart)) {
-            die(Tools::displayError());
+            die(Tools::displayError(sprintf('Cart with ID "%s" could not be loaded.', $id_cart)));
         }
 
         $with_taxes = $use_tax_display ? $cart->_taxCalculationMethod != PS_TAX_EXC : true;
@@ -1927,7 +1937,6 @@ class CartCore extends ObjectModel
      *                  - Cart::BOTH_WITHOUT_SHIPPING
      *                  - Cart::ONLY_SHIPPING
      *                  - Cart::ONLY_WRAPPING
-     *                  - Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
      *                  - Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
      * @param array $products
      * @param int $id_carrier
@@ -1948,11 +1957,6 @@ class CartCore extends ObjectModel
     ) {
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
-        }
-
-        // deprecated type
-        if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
-            $type = Cart::ONLY_PRODUCTS;
         }
 
         // check type
@@ -2007,7 +2011,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        if (Tax::excludeTaxeOption()) {
+        if (!Configuration::get('PS_TAX')) {
             $withTaxes = false;
         }
 
@@ -3457,7 +3461,7 @@ class CartCore extends ObjectModel
         }
 
         // Select carrier tax
-        if ($use_tax && !Tax::excludeTaxeOption()) {
+        if ($use_tax && Configuration::get('PS_TAX')) {
             $address = Address::initialize((int) $address_id);
 
             if (Configuration::get('PS_ATCP_SHIPWRAP')) {
@@ -4726,5 +4730,40 @@ class CartCore extends ObjectModel
         return $taxCalculationMethod == PS_TAX_EXC ?
             $summary['total_price_without_tax'] :
             $summary['total_price'];
+    }
+
+    /**
+     * Returns quantities in cart of given product ID, not taking combinations or customizations into consideration.
+     *
+     * @param int $idProduct Product ID
+     *
+     * @return array quantity index     : number of product in cart without counting those of pack in cart
+     *               deep_quantity index: number of product in cart counting those of pack in cart
+     */
+    public function getProductQuantityInAllVariants($idProduct)
+    {
+        // We will build 2 separate queries and merge their results together
+        // First query selects the standalone quantity of the product
+        $firstUnionSql = 'SELECT
+          SUM(cp.`quantity`) as standalone_quantity,
+          0 as pack_quantity
+          FROM `' . _DB_PREFIX_ . 'cart_product` cp
+          WHERE cp.`id_cart` = ' . (int) $this->id . ' AND cp.`id_product` = ' . (int) $idProduct;
+
+        // Second query selects quantity of this products in packs
+        $secondUnionSql = 'SELECT
+          0 as standalone_quantity,
+          SUM(cp.`quantity` * p.`quantity`) as pack_quantity
+          FROM `' . _DB_PREFIX_ . 'cart_product` cp
+          INNER JOIN `' . _DB_PREFIX_ . 'pack` p ON cp.`id_product` = p.`id_product_pack`
+          WHERE cp.`id_cart` = ' . (int) $this->id . ' AND p.`id_product_item` = ' . (int) $idProduct;
+
+        // Construct the final SQL that will join the results of these two queries
+        $parentSql = 'SELECT
+            COALESCE(SUM(pack_quantity), 0) as pack_quantity,
+            COALESCE(SUM(standalone_quantity), 0) as standalone_quantity
+          FROM (' . $firstUnionSql . ' UNION ' . $secondUnionSql . ') as q';
+
+        return Db::getInstance()->getRow($parentSql);
     }
 }

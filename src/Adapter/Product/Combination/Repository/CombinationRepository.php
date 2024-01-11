@@ -815,6 +815,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
             ->andWhere($qb->expr()->in('pac.id_attribute', ':attributes'))
             ->setParameter('attributes', $attributeIds, Connection::PARAM_INT_ARRAY)
             ->setParameter('productId', $productId->getValue())
+            ->groupBy('pac.id_product_attribute')
         ;
 
         if ($limit) {

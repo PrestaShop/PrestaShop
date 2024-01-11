@@ -27,7 +27,6 @@
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin;
 
 use Context;
-use Cookie;
 use Country;
 use Currency;
 use Employee;
@@ -36,6 +35,7 @@ use Link;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Psr\Log\NullLogger;
@@ -205,7 +205,14 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
 
         $mockFeatureFlagRepository->method('isEnabled')->willReturn(false);
 
+        $mockFeatureFlagStateChecker = $this->getMockBuilder(FeatureFlagStateCheckerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockFeatureFlagStateChecker->method('isEnabled')->willReturn(false);
+
         self::$kernel->getContainer()->set(FeatureFlagRepository::class, $mockFeatureFlagRepository);
+        self::$kernel->getContainer()->set(FeatureFlagStateCheckerInterface::class, $mockFeatureFlagStateChecker);
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
         self::$kernel->getContainer()->set('prestashop.core.kpi_row.presenter', $kpiRowPresenterMock);
@@ -220,8 +227,6 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
      */
     public function testPagesAreAvailable(string $pageName, string $route): void
     {
-        $this->logIn();
-
         $uri = $this->router->generate($route);
 
         $this->client->catchExceptions(false);
@@ -329,16 +334,5 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
             'admin_webservice_keys_create' => ['Webservice', 'admin_webservice_keys_create'],
             'admin_webservice_keys_index' => ['Webservice', 'admin_webservice_keys_index'],
         ];
-    }
-
-    /**
-     * Emulates a real employee logged to the Back Office.
-     * For survival tests only.
-     */
-    private function logIn(): void
-    {
-        $container = self::$kernel->getContainer();
-        $cookie = new Cookie('psAdmin', '', 3600);
-        $container->get('prestashop.adapter.legacy.context')->getContext()->cookie = $cookie;
     }
 }

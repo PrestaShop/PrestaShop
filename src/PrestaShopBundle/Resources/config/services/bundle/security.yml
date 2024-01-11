@@ -12,6 +12,12 @@ services:
       - "@prestashop.static_cache.adapter"
       - '@PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface'
 
+  prestashop.security.api-access.provider:
+    class: PrestaShopBundle\Security\OAuth2\Provider\ApiAccessProvider
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\ApiAccessRepository'
+      - '@Symfony\Component\PasswordHasher\PasswordHasherInterface'
+
   prestashop.security.role.dynamic_role_hierarchy:
     class: PrestaShopBundle\Security\Role\DynamicRoleHierarchy
 
@@ -22,14 +28,13 @@ services:
       - { name: security.voter }
     public: false
 
-  PrestaShopBundle\Security\OAuth2\ResourceServer:
+  PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer:
     public: false
     arguments:
       - '@League\OAuth2\Server\ResourceServer'
-      - '@security.user.provider.concrete.oauth2'
 
-  PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface:
-    alias: PrestaShopBundle\Security\OAuth2\ResourceServer
+  PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface:
+    alias: PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer
     public: false
 
   # SSL middleware
@@ -38,3 +43,14 @@ services:
       - '@prestashop.adapter.legacy.configuration'
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  prestashop.security.password_hasher.factory:
+    class: Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory
+    arguments:
+      -
+        common: { 'algorithm': 'auto' }
+
+  Symfony\Component\PasswordHasher\PasswordHasherInterface:
+    factory: [ '@prestashop.security.password_hasher.factory', 'getPasswordHasher' ]
+    arguments:
+      - 'common'

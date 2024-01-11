@@ -100,7 +100,7 @@
                   data-update-url="{{ path('api_improve_design_positions_update') }}"
                   data-togglestatus-url="{{ path('admin_modules_positions_toggle_status') }}">
               {% for hook in hooks %}
-                <section class="hook-panel{% if not hook['position'] %} hook-position{% endif %}" {% if not hook['position'] %} style="display:none;" {% endif %}>
+                <section class="hook-panel{% if not hook['position'] %} hook-position{% else %} hook-visible{% endif %}" {% if not hook['position'] %} style="display:none;" {% endif %}>
                   <a name="{{ hook['name'] }}"></a>
                   <header class="hook-panel-header">
                     <span class="hook-status">

@@ -26,12 +26,12 @@
 
 namespace Tests\Unit\PrestaShopBundle\Security\OAuth2;
 
+use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\ResourceServer as LeagueResourceServer;
 use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Security\OAuth2\ResourceServer;
+use PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Security\Core\User\InMemoryUserProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class OAuth2ClientTest extends TestCase
@@ -41,12 +41,8 @@ class OAuth2ClientTest extends TestCase
 
     public function setUp(): void
     {
-        $userProvider = new InMemoryUserProvider(['myclientid' => ['password' => 'myclientsecret2']]);
         $this->leagueResourceServer = $this->createMock(LeagueResourceServer::class);
-        $this->leagueResourceServer->method('validateAuthenticatedRequest')->willReturnCallback(function (ServerRequestInterface $request) {
-            return $request->withAttribute('oauth_client_id', $request->getParsedBody()['client_id'] ?? null);
-        });
-        $this->client = new ResourceServer($this->leagueResourceServer, $userProvider);
+        $this->client = new PrestashopAuthorisationServer($this->leagueResourceServer);
         parent::setUp();
     }
 
@@ -57,10 +53,20 @@ class OAuth2ClientTest extends TestCase
      */
     public function testGetUser(ServerRequestInterface $request, bool $exists): void
     {
-        $user = $this->client->getUser($request);
         if ($exists) {
+            $this->leagueResourceServer->method('validateAuthenticatedRequest')->willReturnCallback(function (ServerRequestInterface $request) {
+                return $request->withAttribute('oauth_client_id', $request->getParsedBody()['client_id'] ?? null);
+            });
+            $user = $this->client->getUser($request);
+
             $this->assertTrue($user instanceof UserInterface);
         } else {
+            $this
+                ->leagueResourceServer
+                ->method('validateAuthenticatedRequest')
+                ->willThrowException(new OAuthServerException('Client authentication failed', 4, 'invalid_client', 401))
+            ;
+            $user = $this->client->getUser($request);
             $this->assertNull($user);
         }
     }
@@ -95,7 +101,7 @@ class OAuth2ClientTest extends TestCase
         ];
         yield [
             (new ServerRequest('POST', '/'))
-                ->withParsedBody(['client_secret' => 'myclientsecret']),
+                ->withParsedBody(['client_id' => 'bad_client_id', 'client_secret' => 'myclientsecret']),
             false,
         ];
     }

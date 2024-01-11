@@ -37,7 +37,7 @@ class KeycloakConnectorDemo extends ModuleConfiguration {
    * @returns {Promise<number>}
    */
   async setKeycloakEndpoint(page: Page, endpoint: string): Promise<string> {
-    await page.fill(this.formKeycloakEndpoint, endpoint);
+    await page.locator(this.formKeycloakEndpoint).fill(endpoint);
 
     await this.clickAndWaitForLoadState(page, this.formKeycloakButtonSubmit);
 

@@ -25,7 +25,10 @@
 
 <template>
   <div class="ps-checkboxes-dropdown">
-    <div class="dropdown">
+    <div
+      class="dropdown"
+      :data-role="`filter-by-${label.toLowerCase()}-block`"
+    >
       <button
         :class="[
           'btn',
@@ -38,7 +41,7 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
-        :data-role="`filter-by-${label.toLowerCase()}`"
+        :data-role="`filter-by-${label.toLowerCase()}-btn`"
       >
         {{ label }} {{ nbFiles }}
       </button>

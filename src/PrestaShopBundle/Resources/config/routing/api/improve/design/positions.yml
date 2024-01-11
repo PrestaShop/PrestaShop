@@ -2,5 +2,5 @@ api_improve_design_positions_update:
   path: /update
   methods: [ POST ]
   defaults:
-    _controller: prestashop.core.api.improve.design.postions.controller:updateAction
+    _controller: PrestaShopBundle\Controller\Api\Improve\Design\PositionsController::updateAction
     _legacy_controller: AdminModulesPositions

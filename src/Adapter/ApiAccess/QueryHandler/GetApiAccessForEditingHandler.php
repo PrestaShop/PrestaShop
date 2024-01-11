@@ -47,7 +47,7 @@ class GetApiAccessForEditingHandler implements GetApiAccessForEditingHandlerInte
     public function handle(GetApiAccessForEditing $query): EditableApiAccess
     {
         try {
-            $apiAccess = $this->repository->findOneBy(['id' => $query->getApiAccessId()->getValue()]);
+            $apiAccess = $this->repository->getById($query->getApiAccessId()->getValue());
         } catch (NoResultException $e) {
             throw new ApiAccessNotFoundException(sprintf('Could not find Api access %s', $query->getApiAccessId()->getValue()), 0, $e);
         }
@@ -57,7 +57,9 @@ class GetApiAccessForEditingHandler implements GetApiAccessForEditingHandlerInte
             $apiAccess->getClientId(),
             $apiAccess->getClientName(),
             $apiAccess->isEnabled(),
-            $apiAccess->getDescription()
+            $apiAccess->getDescription(),
+            $apiAccess->getScopes(),
+            $apiAccess->getLifetime()
         );
     }
 }

@@ -243,7 +243,7 @@ class CatalogPriceRules extends BOBasePage {
     await page.locator(this.filterDateFromColumn(filterBy)).fill(dateFrom);
     await page.locator(this.filterDateToColumn(filterBy)).fill(dateTo);
     // click on search
-    await page.click(this.filterSearchButton);
+    await page.locator(this.filterSearchButton).click();
     await this.elementVisible(page, this.filterResetButton);
   }
 
@@ -259,7 +259,7 @@ class CatalogPriceRules extends BOBasePage {
     }
     await this.waitForSelectorAndClick(page, this.dropdownToggleButton(1));
     await Promise.all([
-      page.click(this.deleteRowLink(1)),
+      page.locator(this.deleteRowLink(1)).click(),
       this.waitForVisibleSelector(page, this.confirmDeleteButton),
     ]);
     await this.clickAndWaitForURL(page, this.confirmDeleteButton);
@@ -331,10 +331,10 @@ class CatalogPriceRules extends BOBasePage {
    * @return {Promise<void>}
    */
   async bulkSelectRows(page: Page): Promise<void> {
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
 
     await Promise.all([
-      page.click(this.selectAllLink),
+      page.locator(this.selectAllLink).click(),
       this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
   }
@@ -352,7 +352,7 @@ class CatalogPriceRules extends BOBasePage {
     await this.bulkSelectRows(page);
 
     // Perform delete
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
     await this.clickAndWaitForURL(page, this.bulkDeleteLink);
 
     // Return successful message

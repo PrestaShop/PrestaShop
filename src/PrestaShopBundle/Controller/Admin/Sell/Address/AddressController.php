@@ -251,12 +251,12 @@ class AddressController extends FrameworkBundleAdminController
         $customerInfo = null;
         $customerId = null;
         if ($request->request->has('customer_address')) {
-            if (isset($request->request->get('customer_address')['id_country'])) {
-                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+            if (isset($request->request->all('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->all('customer_address')['id_country'];
                 $formData['id_country'] = $formCountryId;
             }
-            if (isset($request->request->get('customer_address')['id_customer'])) {
-                $idCustomer = (int) $request->request->get('customer_address')['id_customer'];
+            if (isset($request->request->all('customer_address')['id_customer'])) {
+                $idCustomer = (int) $request->request->all('customer_address')['id_customer'];
                 $formData['id_customer'] = $idCustomer;
             }
         }
@@ -343,8 +343,8 @@ class AddressController extends FrameworkBundleAdminController
 
             $formData = [];
             // Country needs to be preset before building form type because it is used to build state field choices
-            if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
-                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+            if ($request->request->has('customer_address') && isset($request->request->all('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->all('customer_address')['id_country'];
                 $formData['id_country'] = $formCountryId;
             }
 
@@ -438,8 +438,8 @@ class AddressController extends FrameworkBundleAdminController
                 'address_type' => $addressType,
             ];
             // Country needs to be preset before building form type because it is used to build state field choices
-            if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
-                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+            if ($request->request->has('customer_address') && isset($request->request->all('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->all('customer_address')['id_country'];
                 $formData['id_country'] = $formCountryId;
             }
 
@@ -539,8 +539,8 @@ class AddressController extends FrameworkBundleAdminController
                 'address_type' => $addressType,
             ];
             // Country needs to be preset before building form type because it is used to build state field choices
-            if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
-                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+            if ($request->request->has('customer_address') && isset($request->request->all('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->all('customer_address')['id_country'];
                 $formData['id_country'] = $formCountryId;
             }
 

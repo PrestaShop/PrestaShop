@@ -53,7 +53,7 @@ class PageType extends TranslatorAwareType
             ])
             ->add('allow_add_variant_to_cart_from_listing', SwitchType::class, [
                 'label' => $this->trans(
-                    'Display the "%add_to_cart_label%" button when a product has attributes',
+                    'Display the "%add_to_cart_label%" button when a product has combinations',
                     'Admin.Shopparameters.Help',
                     [
                         '%add_to_cart_label%' => $this->trans(
@@ -63,14 +63,20 @@ class PageType extends TranslatorAwareType
                     ]
                 ),
                 'help' => $this->trans(
-                    'Display or hide the "%add_to_cart_label%" button on category pages for products that have attributes forcing customers to see product details.',
+                    'Some themes allow your customers to add a product to their cart directly from the product list. You may want to deactivate this feature if a product has combinations, requiring your customers to check product details and choose one of the options.',
                     'Admin.Shopparameters.Help',
-                    [
-                        '%add_to_cart_label%' => $this->trans(
-                            'Add to cart',
-                            'Shop.Theme.Actions'
-                        ),
-                    ]
+                    []
+                ),
+                'required' => false,
+            ])
+            ->add('use_combination_image_in_listing', SwitchType::class, [
+                'label' => $this->trans(
+                    'Use combination image in listings',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'This option allows you to choose which image to display in listings for products with combinations. By default, the cover image of the product will be used. If you enable this option and your filtering module is properly passing the required information, then the default image of the combination found will be displayed.',
+                    'Admin.Shopparameters.Feature'
                 ),
                 'required' => false,
             ])
@@ -94,6 +100,17 @@ class PageType extends TranslatorAwareType
                 ),
                 'help' => $this->trans(
                     'In the volume discount table on the product page, display the discounted unit price instead of the unit discount. E.g. If you sell a product for $10 with a discount of $2 from 3 items purchased, the discounted unit price ($8) will be displayed instead of the unit discount ($2).',
+                    'Admin.Shopparameters.Help'
+                ),
+                'required' => false,
+            ])
+            ->add('display_amount_in_cart', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display notifications if the product is already in the cart',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'If your customer already has this product in their cart, a notification will be displayed on top of the product page. The customer will also be notified if the product they are browsing is part of a pack that\'s in their cart.',
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,

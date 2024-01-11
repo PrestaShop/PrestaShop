@@ -568,7 +568,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
      *
      * @return TaxRulesGroup
      */
-    protected function updateTaxRulesGroup($object)
+    protected function updateTaxRulesGroup(TaxRulesGroup $object)
     {
         static $tax_rules_group = null;
         if ($tax_rules_group === null) {

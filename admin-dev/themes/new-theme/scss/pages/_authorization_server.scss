@@ -17,3 +17,34 @@
     }
   }
 }
+
+.accordion-form {
+  .card-body {
+    padding: 0 0.625rem;
+  }
+}
+
+.switch-scope {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .switch-widget {
+    .input-container {
+      min-width: 300px;
+
+      .ps-switch {
+        label {
+          right: 0;
+          padding-right: 2.8rem;
+          padding-left: 0;
+          text-align: right;
+        }
+
+        .slide-button {
+          right: 0;
+        }
+      }
+    }
+  }
+}

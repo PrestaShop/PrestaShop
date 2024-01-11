@@ -141,7 +141,7 @@
             <tr class="{% if loop.index > productsPreviewLimit %}js-product-preview-more d-none{% endif %}">
               <td class="p-1">
                 {% if productDetail.id %}
-                  <a class="px-0 external-link" href="{{ path('admin_product_form', {'id': productDetail.id}) }}" target="_blank">{{ productDetail.name }}</a>
+                  <a class="px-0 external-link" href="{{ path('admin_products_edit', {'productId': productDetail.id}) }}" target="_blank">{{ productDetail.name }}</a>
                 {% else %}
                   {{ productDetail.name }} ({{ 'Product deleted'|trans({}, 'Admin.Catalog.Feature') }})
                 {% endif %}

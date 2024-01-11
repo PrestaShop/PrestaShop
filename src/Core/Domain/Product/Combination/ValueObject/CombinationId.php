@@ -34,14 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationC
 class CombinationId implements CombinationIdInterface
 {
     /**
-     * Indicates that no combination is provided/selected
-     *
-     * @deprecated since 8.0.0 and will be removed in next major version.
-     * @see NoCombinationId instead
-     */
-    public const NO_COMBINATION = 0;
-
-    /**
      * @var int
      */
     private $combinationId;

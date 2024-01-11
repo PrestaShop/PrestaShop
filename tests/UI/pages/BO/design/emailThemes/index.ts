@@ -1,6 +1,6 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {ElementHandle, Page} from 'playwright';
+import type {Page} from 'playwright';
 
 /**
  * Email theme page, contains functions that can be used on the page
@@ -71,26 +71,21 @@ class EmailTheme extends BOBasePage {
    * @return {Promise<void>}
    */
   async previewEmailTheme(page: Page, name: string): Promise<void> {
-    const tableRows: ElementHandle<HTMLElement | SVGElement>[] = await page.$$(this.tableRows);
-    let found: boolean = false;
+    const rowLocator = page
+      .locator(this.tableRows)
+      .filter({hasText: name})
+      .first();
 
-    for (let i = 0; i < tableRows.length; i++) {
-      const textColumnName: string | null = await tableRows[i].$eval(this.columnName, (columnName) => columnName.textContent);
-
-      if (textColumnName && textColumnName.includes(name)) {
-        /* eslint-disable no-loop-func */
-        await Promise.all([
-          tableRows[i].$eval(this.columnActionPreviewLink, (el: HTMLElement) => el.click()),
-          page.waitForURL('**/mail_theme/preview/**'),
-        ]);
-        /* eslint-enable no-loop-func */
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
+    if ((await rowLocator.textContent()) === null) {
       throw Error(`${name} was not found in theme emails table`);
     }
+
+    await Promise.all([
+      rowLocator
+        .locator(this.columnActionPreviewLink)
+        .evaluate((el: HTMLElement) => el.click()),
+      page.waitForURL('**/mail_theme/preview/**'),
+    ]);
   }
 }
 

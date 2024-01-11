@@ -36,6 +36,8 @@ services:
     arguments:
       - PrestaShopBundle\Entity\Lang
 
+  PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface: '@prestashop.core.admin.lang.repository'
+
   prestashop.core.admin.log.repository:
     class: PrestaShopBundle\Entity\Repository\LogRepository
     arguments:

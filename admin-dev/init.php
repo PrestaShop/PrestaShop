@@ -29,9 +29,6 @@ use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 ob_start();
 $timerStart = microtime(true);
 
-//	$_GET['tab'] = $_GET['controller'];
-//	$_POST['tab'] = $_POST['controller'];
-//	$_REQUEST['tab'] = $_REQUEST['controller'];
 try {
     $context = Context::getContext();
     if (isset($_GET['logout'])) {

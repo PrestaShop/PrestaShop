@@ -148,10 +148,9 @@ class AddAddressPage extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async countryExist(page: Page, countryName: string): Promise<boolean> {
-    const options: (string|null)[] = await page.$$eval(
-      `${this.countrySelect} option`,
-      (all) => all.map((option) => option.textContent),
-    );
+    const options: (string|null)[] = await page
+      .locator(`${this.countrySelect} option`)
+      .allTextContents();
 
     return options.indexOf(countryName) !== -1;
   }

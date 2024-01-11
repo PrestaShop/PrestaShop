@@ -69,10 +69,18 @@ describe('BO - Shop Parameters - Product Settings : Update Number of days for wh
       expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
-    it('should check the new flag in the product miniature in FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkIfNewFlagIs${test.args.state}`, baseContext);
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${test.args.state}`, baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
+      await homePage.changeLanguage(page, 'en');
+
+      const isHomePage = await homePage.isHomePage(page);
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+    });
+
+    it('should check the new flag in the product miniature in FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkIfNewFlagIs${test.args.state}`, baseContext);
 
       const isNewFlagVisible = await homePage.isNewFlagVisible(page, 1);
       expect(isNewFlagVisible).to.be.equal(test.args.exist);

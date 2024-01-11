@@ -511,7 +511,7 @@ class AdminCarrierWizardControllerCore extends AdminController
      * @param array $tpl_vars
      * @param array $fields_value
      */
-    protected function getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value)
+    protected function getTplRangesVarsAndValues(Carrier $carrier, array &$tpl_vars, array &$fields_value)
     {
         $tpl_vars['zones'] = Zone::getZones(false, true);
         $carrier_zones = $carrier->getZones();
@@ -664,7 +664,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         die($template->fetch());
     }
 
-    protected function validateForm($die = true)
+    protected function validateForm(bool $die = true)
     {
         $step_number = (int) Tools::getValue('step_number');
         $return = ['has_error' => false];
@@ -889,7 +889,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         die(json_encode($return));
     }
 
-    protected function changeGroups($id_carrier, $delete = true)
+    protected function changeGroups(int $id_carrier, bool $delete = true)
     {
         $carrier = new Carrier((int) $id_carrier);
         if (!Validate::isLoadedObject($carrier)) {

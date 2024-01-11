@@ -99,7 +99,7 @@ class ContactUsPage extends FOBasePage {
     }
 
     await this.setValue(page, this.messageTextarea, contactUsData.message);
-    await page.click(this.sendButton);
+    await page.locator(this.sendButton).click();
   }
 
   /**

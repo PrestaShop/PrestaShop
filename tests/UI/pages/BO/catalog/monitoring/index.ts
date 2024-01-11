@@ -32,8 +32,6 @@ class Monitoring extends BOBasePage {
 
   private readonly tableRow: (table: string, row: number) => string;
 
-  private readonly tableEmptyRow: (table: string) => string;
-
   private readonly tableColumn: (table: string, row: number, column: string) => string;
 
   private readonly enableColumn: (table: string, row: number) => string;
@@ -109,7 +107,6 @@ class Monitoring extends BOBasePage {
     // Table
     this.tableBody = (table: string) => `${this.gridTable(table)} tbody`;
     this.tableRow = (table: string, row: number) => `${this.tableBody(table)} tr:nth-child(${row})`;
-    this.tableEmptyRow = (table: string) => `${this.tableBody(table)} tr.empty_row`;
     this.tableColumn = (table: string, row: number, column: string) => `${this.tableRow(table, row)} td.column-${column}`;
 
     // Enable column
@@ -169,7 +166,7 @@ class Monitoring extends BOBasePage {
    */
   async resetFilter(page: Page, tableName: string): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton(tableName), 2000)) {
-      await page.click(this.filterResetButton(tableName));
+      await page.locator(this.filterResetButton(tableName)).click();
       await this.elementNotVisible(page, this.filterResetButton(tableName), 2000);
     }
   }
@@ -232,7 +229,7 @@ class Monitoring extends BOBasePage {
    */
   async openDropdownMenu(page: Page, tableName: string, row: number): Promise<void> {
     await Promise.all([
-      page.click(this.dropdownToggleButton(tableName, row)),
+      page.locator(this.dropdownToggleButton(tableName, row)).click(),
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(tableName, row)}[aria-expanded='true']`),
     ]);
   }
@@ -249,7 +246,7 @@ class Monitoring extends BOBasePage {
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.deleteRowLink(tableName, row)),
+      page.locator(this.deleteRowLink(tableName, row)).click(),
       this.waitForVisibleSelector(page, `${this.deleteProductModal(tableName)}.show`),
     ]);
 
@@ -266,23 +263,23 @@ class Monitoring extends BOBasePage {
   async bulkDeleteElementsInTable(page: Page, tableName: string): Promise<string> {
     // Select all elements in table
     await Promise.all([
-      page.$eval(this.selectAllCheckBox(tableName), (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllCheckBox(tableName)).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsButton(tableName)}:not([disabled])`),
     ]);
 
     // Click on bulk actions
     await Promise.all([
-      page.click(this.bulkActionsButton(tableName)),
+      page.locator(this.bulkActionsButton(tableName)).click(),
       this.waitForVisibleSelector(page, this.deleteSelectButton(tableName)),
     ]);
 
     // Click on delete selected and wait for modal
     await Promise.all([
-      page.$eval(this.deleteSelectButton(tableName), (el: HTMLElement) => el.click()),
+      page.locator(this.deleteSelectButton(tableName)).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.deleteProductModal(tableName)}.show`),
     ]);
 
-    await page.click(this.submitDeleteProductButton(tableName));
+    await page.locator(this.submitDeleteProductButton(tableName)).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -297,16 +294,16 @@ class Monitoring extends BOBasePage {
    * @param deletionModePosition {number} value of mode position to delete
    * @return {Promise<string>}
    */
-  async deleteCategoryInGrid(page: Page, tableName: string, row: number, deletionModePosition: number) {
+  async deleteCategoryInGrid(page: Page, tableName: string, row: number, deletionModePosition: number): Promise<string> {
     await this.dialogListener(page, true);
     await this.openDropdownMenu(page, tableName, row);
     await Promise.all([
-      page.click(this.deleteCategoryRowLink(row)),
+      page.locator(this.deleteCategoryRowLink(row)).click(),
       this.waitForVisibleSelector(page, this.deleteModeCategoryModal),
     ]);
 
     // choose deletion mode
-    await page.click(this.deleteModeInput(deletionModePosition));
+    await page.locator(this.deleteModeInput(deletionModePosition)).click();
     await this.clickAndWaitForURL(page, this.submitDeleteCategoryButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

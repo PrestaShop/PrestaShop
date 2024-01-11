@@ -59,7 +59,7 @@
         "prestashop/blockreassurance": "^5.1",
         "prestashop/blockwishlist": "^3.0",
         "prestashop/circuit-breaker": "^4.0",
-        "prestashop/classic": "^2.1",
+        "prestashop/classic": "develop-dev",
         "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
         "prestashop/dashgoals": "^2",
@@ -71,6 +71,7 @@
         "prestashop/gsitemap": "^4",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^6.0",
+        "prestashop/ps_apiresources": "dev-dev",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
         "prestashop/ps_brandlist": "^1.0",
@@ -99,7 +100,7 @@
         "prestashop/ps_newproducts": "^1.0",
         "prestashop/ps_searchbar": "^2",
         "prestashop/ps_sharebuttons": "^2",
-        "prestashop/ps_shoppingcart": "^2",
+        "prestashop/ps_shoppingcart": "^3",
         "prestashop/ps_socialfollow": "^2",
         "prestashop/ps_specials": "^1.0",
         "prestashop/ps_supplierlist": "^1.0",
@@ -244,7 +245,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "Tests\\Unit\\Resources\\": "tests/Unit/Resources/api_platform/fake_core_resources/src",
+            "FakeModule\\": "tests/Unit/Resources/api_platform/fake_module_resources/fake_module/src"
         }
     },
     "minimum-stability": "dev",

@@ -31,11 +31,13 @@ class HomePage extends FOBasePage {
 
   private readonly homePageSection: string;
 
+  private productsBlock: (blockId: number) => string;
+
   private readonly productsBlockTitle: (blockId: number) => string;
 
   private readonly productsBlockDiv: (blockId: number) => string;
 
-  private readonly productArticle: (number: number) => string;
+  public productArticle: (number: number) => string;
 
   private readonly productImg: (number: number) => string;
 
@@ -44,8 +46,6 @@ class HomePage extends FOBasePage {
   private readonly productQuickViewLink: (number: number) => string;
 
   private readonly productColorLink: (number: number, color: string) => string;
-
-  private readonly allProductLink: string;
 
   private readonly allProductsBlockLink: (blockId: number) => string;
 
@@ -137,13 +137,17 @@ class HomePage extends FOBasePage {
 
   public readonly successSubscriptionMessage: string;
 
+  public readonly successSendVerificationEmailMessage: string;
+
+  public readonly successSendConfirmationEmailMessage: string;
+
   public readonly alreadyUsedEmailMessage: string;
 
   public readonly productHummingbird: (number: number) => string;
 
   public readonly productImgHummingbird: (number: number) => string;
 
-  public readonly quickviewButtonHummingbird: (number: number) => string;
+  public readonly quickViewButtonHummingbird: (number: number) => string;
 
   public readonly blockCartModalCloseButtonHummingbird: string;
 
@@ -167,15 +171,15 @@ class HomePage extends FOBasePage {
 
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
-    this.productsBlockTitle = (blockId: number) => `#content section:nth-child(${blockId}) h2`;
-    this.productsBlockDiv = (blockId: number) => `#content section:nth-child(${blockId}) div.products div.js-product`;
-    this.productArticle = (number: number) => `#content .products div:nth-child(${number}) article`;
+    this.productsBlock = (blockId: number) => `#content section:nth-child(${blockId})`;
+    this.productsBlockTitle = (blockId: number) => `${this.productsBlock(blockId)} h2`;
+    this.productsBlockDiv = (blockId: number) => `${this.productsBlock(blockId)} div.products div.js-product`;
+    this.productArticle = (number: number) => `${this.productsBlock(2)} .products div:nth-child(${number}) article`;
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = (number: number) => `${this.productArticle(number)} div.product-description`;
     this.productQuickViewLink = (number: number) => `${this.productArticle(number)} a.quick-view`;
     this.productColorLink = (number: number, color: string) => `${this.productArticle(number)} .variant-links`
       + ` a[aria-label='${color}']`;
-    this.allProductLink = '#content a.all-product-link';
     this.allProductsBlockLink = (blockId: number) => `#content section:nth-child(${blockId}) a.all-product-link`;
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.productPrice = (number: number) => `${this.productArticle(number)} span[aria-label="Price"]`;
@@ -183,7 +187,7 @@ class HomePage extends FOBasePage {
     this.bannerImg = '.banner img';
     this.customTextBlock = '#custom-text';
     this.newsletterFormField = '.block_newsletter [name=email]';
-    this.newsletterSubmitButton = '.block_newsletter [name=submitNewsletter]';
+    this.newsletterSubmitButton = '.block_newsletter [name="submitNewsletter"][value="Subscribe"]';
 
     // Newsletter Subscription alert message
     this.subscriptionAlertMessage = '.block_newsletter_alert';
@@ -229,12 +233,14 @@ class HomePage extends FOBasePage {
 
     // Newsletter subscription messages
     this.successSubscriptionMessage = 'You have successfully subscribed to this newsletter.';
+    this.successSendVerificationEmailMessage = 'A verification email has been sent. Please check your inbox.';
+    this.successSendConfirmationEmailMessage = 'A confirmation email has been sent. Please check your inbox.';
     this.alreadyUsedEmailMessage = 'This email address is already registered.';
 
     // Hummingbird
     this.productHummingbird = (number: number) => `#content .products div:nth-child(${number})`;
     this.productImgHummingbird = (number: number) => `${this.productHummingbird(number)} img`;
-    this.quickviewButtonHummingbird = (number: number) => `${this.productHummingbird(number)} .product-miniature__quickview `
+    this.quickViewButtonHummingbird = (number: number) => `${this.productHummingbird(number)} .product-miniature__quickview `
       + 'button';
     this.blockCartModalCloseButtonHummingbird = `${this.blockCartModalDiv} button.btn-close`;
   }
@@ -264,7 +270,7 @@ class HomePage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnLeftOrRightArrow(page: Page, direction: string): Promise<void> {
-    await page.click(this.carouselControlDirectionLink(direction));
+    await page.locator(this.carouselControlDirectionLink(direction)).click();
   }
 
   /**
@@ -319,12 +325,12 @@ class HomePage extends FOBasePage {
   }
 
   /**
-   * Go to home category page by clicking on all products
+   * Goto home category page by clicking on all products
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAllProductsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, this.allProductLink);
+    await this.goToAllProductsBlockPage(page, 1);
   }
 
   /**
@@ -389,7 +395,7 @@ class HomePage extends FOBasePage {
         throw new Error(`Block ${blockID} was not found`);
     }
 
-    return (await page.$$(columnSelector)).length;
+    return page.locator(columnSelector).count();
   }
 
   /**
@@ -450,14 +456,14 @@ class HomePage extends FOBasePage {
    */
   async quickViewProduct(page: Page, id: number): Promise<void> {
     if (this.theme === 'hummingbird') {
-      await page.hover(this.productImgHummingbird(id));
-      await this.waitForVisibleSelector(page, this.quickviewButtonHummingbird(id));
-      await page.click(this.quickviewButtonHummingbird(id));
+      await page.locator(this.productImgHummingbird(id)).first().hover();
+      await this.waitForVisibleSelector(page, this.quickViewButtonHummingbird(id));
+      await page.locator(this.quickViewButtonHummingbird(id)).first().click();
 
       return;
     }
 
-    await page.hover(this.productImg(id));
+    await page.locator(this.productImg(id)).hover();
     let displayed: boolean = false;
 
     /* eslint-disable no-await-in-loop */
@@ -481,7 +487,7 @@ class HomePage extends FOBasePage {
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.$eval(this.productQuickViewLink(id), (el: HTMLElement) => el.click()),
+      page.locator(this.productQuickViewLink(id)).evaluate((el: HTMLElement) => el.click()),
     ]);
   }
 
@@ -506,7 +512,7 @@ class HomePage extends FOBasePage {
     await this.setValue(page, this.quickViewQuantityWantedInput, quantityWanted);
     await Promise.all([
       this.waitForVisibleSelector(page, this.blockCartModalDiv),
-      page.click(this.addToCartButton),
+      page.locator(this.addToCartButton).click(),
     ]);
 
     return this.getTextContent(page, this.blockCartLabel);
@@ -592,11 +598,11 @@ class HomePage extends FOBasePage {
    */
   async getProductWithDiscountDetailsFromQuickViewModal(page: Page): Promise<{
     discountPercentage: string,
-    thumbImage: string|null,
+    thumbImage: string | null,
     price: number,
     taxShippingDeliveryLabel: string,
     regularPrice: number,
-    coverImage: string|null,
+    coverImage: string | null,
     name: string,
     shortDescription: string,
   }> {
@@ -619,10 +625,10 @@ class HomePage extends FOBasePage {
    * coverImage: string|null, name: string, shortDescription: string}>}
    */
   async getProductDetailsFromQuickViewModal(page: Page): Promise<{
-    thumbImage: string|null,
+    thumbImage: string | null,
     price: number,
     taxShippingDeliveryLabel: string,
-    coverImage: string|null,
+    coverImage: string | null,
     name: string,
     shortDescription: string,
   }> {
@@ -651,16 +657,16 @@ class HomePage extends FOBasePage {
     if ('color' in attribute && 'size' in attribute) {
       attributes.push({
         name: 'size',
-        value: await page.getAttribute(`${this.quickViewProductSize} option[selected]`, 'title') ?? '',
+        value: await this.getAttributeContent(page, `${this.quickViewProductSize} option[selected]`, 'title'),
       });
       attributes.push({
         name: 'color',
-        value: await page.getAttribute(`${this.quickViewProductColor} input[checked='checked']`, 'title') ?? '',
+        value: await this.getAttributeContent(page, `${this.quickViewProductColor} input[checked='checked']`, 'title'),
       });
     } else {
       attributes.push({
         name: 'dimension',
-        value: await page.getAttribute(`${this.quickViewProductDimension} option[selected]`, 'title') ?? '',
+        value: await this.getAttributeContent(page, `${this.quickViewProductDimension} option[selected]`, 'title'),
       });
     }
     return attributes;
@@ -718,7 +724,7 @@ class HomePage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async selectProductColor(page: Page, id: number, color: string): Promise<void> {
-    await page.hover(this.productImg(id));
+    await page.locator(this.productImg(id)).hover();
     let displayed = false;
 
     /* eslint-disable no-await-in-loop */

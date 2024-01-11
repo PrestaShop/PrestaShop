@@ -96,7 +96,6 @@ smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
-smartyRegisterFunction($smarty, 'function', 'render_template', 'renderTemplate');
 
 // Native PHP functions
 smartyRegisterFunction($smarty, 'modifier', 'addcslashes', 'addcslashes');
@@ -247,23 +246,3 @@ function smarty_endWithoutReference($arrayValue)
     return end($arrayValue);
 }
 
-function renderTemplate(array $params) {
-    $twigTemplate = $params['twig_template'];
-    unset($params['twig_template']);
-    $smartyTemplate = $params['smarty_template'];
-    unset($params['smarty_template']);
-
-    if (
-        SymfonyContainer::getInstance()
-            ->get(FeatureFlagStateCheckerInterface::class)
-            ->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)
-    ) {
-        /** @var Twig\Environment $twig */
-        $twig = SymfonyContainer::getInstance()->get('twig');
-        return $twig->render($twigTemplate, $params);
-    } else {
-        global $smarty;
-        $smarty->display($smartyTemplate);
-    }
-
-}

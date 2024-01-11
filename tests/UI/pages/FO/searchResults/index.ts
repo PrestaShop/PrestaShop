@@ -64,7 +64,7 @@ class SearchResultsPage extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async hasResults(page: Page): Promise<boolean> {
-    return page.$$eval(this.productNoMatches, (all) => all.length === 0);
+    return (await page.locator(this.productNoMatches).count()) === 0;
   }
 
   /**
@@ -93,7 +93,7 @@ class SearchResultsPage extends FOBasePage {
    * @return {Promise<void>}
    */
   async quickViewProduct(page: Page, id: number): Promise<void> {
-    await page.hover(this.productImg(id));
+    await page.locator(this.productImg(id)).hover();
     let displayed: boolean = false;
 
     /* eslint-disable no-await-in-loop */
@@ -117,7 +117,7 @@ class SearchResultsPage extends FOBasePage {
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.$eval(this.productQuickViewLink(id), (el: HTMLElement) => el.click()),
+      page.locator(this.productQuickViewLink(id)).evaluate((el: HTMLElement) => el.click()),
     ]);
   }
 
@@ -137,7 +137,7 @@ class SearchResultsPage extends FOBasePage {
    * @returns {Promise<string>}
    */
   async selectThumbImage(page: Page, position: number): Promise<string> {
-    await page.click(this.quickViewThumbImage(position));
+    await page.locator(this.quickViewThumbImage(position)).click();
     await this.waitForVisibleSelector(page, `${this.quickViewThumbImage(position)}.selected`);
 
     return this.getAttributeContent(page, this.quickViewCoverImage, 'src');

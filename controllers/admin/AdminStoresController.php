@@ -427,16 +427,12 @@ class AdminStoresControllerCore extends AdminController
             $images_types = ImageType::getImagesTypes('stores');
             foreach ($images_types as $image_type) {
                 foreach ($configuredImageFormats as $imageFormat) {
-                    // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
-                    // For webp and avif extensions, we want it to follow our command and ignore the original format.
-                    $forceFormat = ($imageFormat !== 'jpg');
                     ImageManager::resize(
                         _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
                         _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '.' . $imageFormat,
                         (int) $image_type['width'],
                         (int) $image_type['height'],
-                        $imageFormat,
-                        $forceFormat
+                        $imageFormat
                     );
                 }
             }
@@ -534,7 +530,7 @@ class AdminStoresControllerCore extends AdminController
         return $formFields;
     }
 
-    protected function _buildOrderedFieldsShop($formFields)
+    protected function _buildOrderedFieldsShop(array $formFields)
     {
         // You cannot do that, because the fields must be sorted for the country you've selected.
         // Simple example: the current country is France, where we don't display the state. You choose "US" as a country in the form. The state is not dsplayed at the right place...
@@ -610,7 +606,7 @@ class AdminStoresControllerCore extends AdminController
      *
      * @return array
      */
-    protected function adaptHoursFormat($value)
+    protected function adaptHoursFormat(array $value)
     {
         $separator = array_fill(0, count($value), ' | ');
 

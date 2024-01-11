@@ -28,8 +28,7 @@ View new status in order page
 Update order status
 Delete order status
  */
-describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, update and '
-  + 'delete order status in BO', async () => {
+describe('BO - Shop Parameters - Order Settings - Statuses : CRUD order status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfOrderStatuses: number = 0;

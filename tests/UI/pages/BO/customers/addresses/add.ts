@@ -104,6 +104,14 @@ class AddAddress extends BOBasePage {
   ): Promise<string|null> {
     if (await this.elementVisible(page, this.customerEmailInput, 2000)) {
       await this.setValue(page, this.customerEmailInput, addressData.email);
+      if ('keyboard' in page) {
+        await page.keyboard.press('Tab');
+      }
+      if ('waitForResponse' in page) {
+        await page.waitForResponse('**/sell/customers/customer-information**', {
+          timeout: 2000,
+        });
+      }
     }
     await this.setValue(page, this.customerAddressdniInput, addressData.dni);
     await this.setValue(page, this.customerAddressAliasInput, addressData.alias);
@@ -120,7 +128,7 @@ class AddAddress extends BOBasePage {
     await this.setValue(page, this.customerAddressOtherInput, addressData.other);
 
     if (await this.elementVisible(page, this.customerAddressStateSelect, 1000)) {
-      await page.click(this.customerAddressStateSelect);
+      await page.locator(this.customerAddressStateSelect).click();
       await this.setValue(page, this.searchStateInput, addressData.state);
       await this.waitForSelectorAndClick(page, this.searchResultState);
     }
@@ -131,7 +139,7 @@ class AddAddress extends BOBasePage {
         return this.saveAddress(page);
       }
 
-      await page.click(this.saveAddressButton);
+      await page.locator(this.saveAddressButton).click();
     }
 
     return null;

@@ -31,7 +31,7 @@
     {% endif %}
   </td>
   <td class="cellProductName">
-    <a href="{{ path('admin_product_form', {'id': product.id}) }}">
+    <a href="{{ path('admin_products_edit', {'productId': product.id}) }}">
       <p class="mb-0 productName">{{ product.name }}</p>
       {% if product.reference %}
         <p class="mb-0 productReference">

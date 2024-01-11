@@ -91,8 +91,8 @@ class TokenizedUrlsListener
         $token = false;
         if ($request->query->has('_token')) {
             $token = new CsrfToken($this->userProvider->getUsername(), $request->query->get('_token'));
-        } elseif (isset($request->query->get('form')['_token'])) {
-            $token = new CsrfToken('form', $request->query->get('form')['_token']);
+        } elseif (isset($request->query->all('form')['_token'])) {
+            $token = new CsrfToken('form', $request->query->all('form')['_token']);
         }
 
         if ((false === $token || !$this->tokenManager->isTokenValid($token)) && $event instanceof RequestEvent) {

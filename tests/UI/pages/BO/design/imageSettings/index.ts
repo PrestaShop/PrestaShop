@@ -102,6 +102,8 @@ class ImageSettings extends BOBasePage {
 
   private readonly selectRegenerateThumbnailsFormat: (imageFormat: string) => string;
 
+  private readonly optionSelectRegenerateThumbnailsFormat: (imageFormat: string) => string;
+
   private readonly checkboxRegenerateThumbnailsErasePreviousImages: (value: string) => string;
 
   private readonly submitRegenerateThumbnails: string;
@@ -195,6 +197,8 @@ class ImageSettings extends BOBasePage {
     this.selectRegenerateThumbnailsImage = `${this.formRegenerateThumbnails} select[name="type"]`;
     this.selectRegenerateThumbnailsFormat = (imageFormat: string) => `${this.formRegenerateThumbnails} `
       + `select[name="format_${imageFormat}"]`;
+    this.optionSelectRegenerateThumbnailsFormat = (imageFormat: string) => `${this.selectRegenerateThumbnailsFormat(imageFormat)
+    } option`;
     this.checkboxRegenerateThumbnailsErasePreviousImages = (value: string) => `${this.formRegenerateThumbnails} `
       + `input#erase_${value}`;
     this.submitRegenerateThumbnails = `${this.formRegenerateThumbnails} button[type="submit"]`;
@@ -336,11 +340,11 @@ class ImageSettings extends BOBasePage {
    */
   async deleteImageType(page: Page, row: number, deleteLinkedImages: boolean = false): Promise<string> {
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
+      page.locator(this.tableColumnActionsToggleButton(row)).click(),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.locator(this.tableColumnActionsDeleteLink(row)).click();
 
     // Check/Uncheck the option "Delete the images linked to this image setting"
     await this.setChecked(page, this.deleteModalCheckboxDeleteLinkedImages, deleteLinkedImages);
@@ -364,18 +368,18 @@ class ImageSettings extends BOBasePage {
 
     // Select all rows
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.selectAllLink),
     ]);
 
     await Promise.all([
-      page.click(this.selectAllLink),
+      page.locator(this.selectAllLink).click(),
       this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
 
     // Perform delete
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.bulkDeleteLink),
     ]);
 
@@ -481,19 +485,19 @@ class ImageSettings extends BOBasePage {
     erasePreviousImages: boolean = false,
   ): Promise<string> {
     // Choose the type of image to regenerate thumbnails
-    await page.selectOption(this.selectRegenerateThumbnailsImage, image);
+    await this.selectByValue(page, this.selectRegenerateThumbnailsImage, image);
     if (image !== 'all') {
       // Choose the format of image to regenerate thumbnails
-      await page.selectOption(this.selectRegenerateThumbnailsFormat(image), {label: format});
+      await this.selectByVisibleText(page, this.selectRegenerateThumbnailsFormat(image), format);
     }
     // Erase previous images
     await this.setChecked(page, this.checkboxRegenerateThumbnailsErasePreviousImages(erasePreviousImages ? 'on' : 'off'));
     // Click on Submit
-    await page.click(this.submitRegenerateThumbnails);
+    await page.locator(this.submitRegenerateThumbnails).click();
 
     // Modal & Submit
     await this.waitForVisibleSelector(page, this.modalSubmitRegenerateThumbnails);
-    await page.click(this.modalSubmitRegenerateThumbnails);
+    await page.locator(this.modalSubmitRegenerateThumbnails).click();
 
     // Return successful message
     return this.getAlertSuccessBlockContent(page);
@@ -528,7 +532,7 @@ class ImageSettings extends BOBasePage {
    */
   async setImageFormatToGenerateChecked(page: Page, imageFormat: string, valueWanted: boolean): Promise<string> {
     await this.setChecked(page, this.checkboxImageFormat(imageFormat), valueWanted);
-    await page.click(this.submitImageGenerationOptions);
+    await page.locator(this.submitImageGenerationOptions).click();
 
     // Return successful message
     return this.getAlertSuccessBlockContent(page);
@@ -553,7 +557,7 @@ class ImageSettings extends BOBasePage {
    */
   async setBaseFormatChecked(page: Page, baseFormat: string, valueWanted: boolean): Promise<string> {
     await this.setChecked(page, this.checkboxBaseFormat(baseFormat), valueWanted);
-    await page.click(this.submitImageGenerationOptions);
+    await page.locator(this.submitImageGenerationOptions).click();
 
     // Return successful message
     return this.getAlertSuccessBlockContent(page);
@@ -565,7 +569,7 @@ class ImageSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getRegenerateThumbnailsImage(page: Page): Promise<string> {
-    return page.$eval(this.selectRegenerateThumbnailsImage, (el: HTMLSelectElement) => el.value);
+    return page.locator(this.selectRegenerateThumbnailsImage).evaluate((el: HTMLSelectElement) => el.value);
   }
 
   /**
@@ -580,12 +584,10 @@ class ImageSettings extends BOBasePage {
   ): Promise<string[]> {
     await this.waitForHiddenSelector(page, this.selectRegenerateThumbnailsFormat(image));
 
-    return page.$$eval(
-      `${this.selectRegenerateThumbnailsFormat(image)} option`,
-      (all: HTMLElement[]) => all
-        .map((el: HTMLElement) => el.textContent)
-        .filter((el: string|null): el is string => (el !== null && el !== 'All')),
-    );
+    return (await page
+      .locator(this.optionSelectRegenerateThumbnailsFormat(image))
+      .allTextContents())
+      .filter((el: string|null): el is string => (el !== null && el !== 'All'));
   }
 }
 

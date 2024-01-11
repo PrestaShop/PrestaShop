@@ -47,7 +47,7 @@ class Login extends BOBasePage {
     this.passwordInput = '#passwd';
     this.submitLoginButton = '#submit_login';
     this.alertDangerDiv = '#error';
-    this.alertDangerTextBlock = `${this.alertDangerDiv} li`;
+    this.alertDangerTextBlock = `${this.alertDangerDiv} p`;
     // reset password selectors
     this.forgotPasswordLink = '#forgot-password-link';
     this.resetPasswordEmailFormField = '#email_forgot';
@@ -102,7 +102,7 @@ class Login extends BOBasePage {
     if (waitForNavigation) {
       await this.clickAndWaitForURL(page, this.submitLoginButton);
     } else {
-      await page.click(this.submitLoginButton);
+      await page.locator(this.submitLoginButton).click();
     }
   }
 
@@ -146,7 +146,7 @@ class Login extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToForgotPasswordView(page: Page): Promise<void> {
-    await page.click(this.forgotPasswordLink);
+    await page.locator(this.forgotPasswordLink).click();
     await this.waitForVisibleSelector(page, this.resetPasswordButton);
   }
 
@@ -169,7 +169,7 @@ class Login extends BOBasePage {
   async sendResetPasswordLink(page: Page, email: string): Promise<void> {
     await this.goToForgotPasswordView(page);
     await this.fillResetPasswordEmailInput(page, email);
-    await page.click(this.resetPasswordButton);
+    await page.locator(this.resetPasswordButton).click();
   }
 
   /**

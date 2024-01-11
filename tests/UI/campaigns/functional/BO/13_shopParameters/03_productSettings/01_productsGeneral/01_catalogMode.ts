@@ -107,11 +107,18 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
           expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
         });
 
-        it('should check product prices in the home page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `checkPricesInHomePage${index}`, baseContext);
+        it('should view my shop', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
           page = await productSettingsPage.viewMyShop(page);
           await homePage.changeLanguage(page, 'en');
+
+          const isHomePage = await homePage.isHomePage(page);
+          expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+        });
+
+        it('should check the product price of the first product in the home page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkPricesInHomePage${index}`, baseContext);
 
           const isPriceVisible = await homePage.isPriceVisible(page, 1);
           expect(isPriceVisible).to.equal(showPrices.args.enable);
@@ -146,16 +153,18 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
         });
       });
     } else {
-      it('should check product prices in the home page', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'checkPricesInHomePageVisible',
-          baseContext,
-        );
+      it('should view my shop', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
         page = await productSettingsPage.viewMyShop(page);
         await homePage.changeLanguage(page, 'en');
+
+        const isHomePage = await homePage.isHomePage(page);
+        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      });
+
+      it('should check that the product price is visible in the home page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkPricesInHomePageVisible', baseContext);
 
         const isPriceVisible = await homePage.isPriceVisible(page, 1);
         expect(isPriceVisible).to.eq(true);
@@ -171,12 +180,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
       });
 
       it('should check the existence of product price and add to cart button', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'checkPrice&AddToCartButtonVisible',
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', 'checkPrice&AddToCartButtonVisible', baseContext);
 
         let isVisible = await productPage.isPriceDisplayed(page);
         expect(isVisible).to.eq(true);

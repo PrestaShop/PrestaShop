@@ -1,0 +1,70 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="robots" content="NOFOLLOW, NOINDEX">
+
+<link rel="icon" type="image/x-icon" href="{{ this.imgDir }}favicon.ico" />
+<link rel="apple-touch-icon" href="{{ this.imgDir }}app_icon.png" />
+
+<title>{% if this.metaTitle %}{{ this.metaTitle }} • {% endif %}{{ this.shopName }}</title>
+
+<script type="text/javascript">
+  var help_class_name = '{{ this.controllerName|e('js') }}';
+  var iso_user = '{{ this.isoUser|e('js') }}';
+  var lang_is_rtl = '{{ this.langIsRtl|intCast }}';
+  var full_language_code = '{{ this.fullLanguageCode|e('js') }}';
+  var full_cldr_language_code = '{{ this.fullCldrLanguageCode|e('js') }}';
+  var country_iso_code = '{{ this.countryIsoCode|e('js') }}';
+  var _PS_VERSION_ = '{{ this.psVersion|e('js') }}';
+  var roundMode = {{ this.roundMode|intCast }};
+  var youEditFieldFor = '{{ this.editForLabel|e('js') }}';
+  var new_order_msg = '{{ 'A new order has been placed on your store.'|trans({}, 'Admin.Navigation.Header') }}';
+  var order_number_msg = '{{ 'Order number:'|trans({}, 'Admin.Navigation.Header') }} ';
+  var total_msg = '{{ 'Total:'|trans({}, 'Admin.Global') }} ';
+  var from_msg = '{{ 'From:'|trans({}, 'Admin.Global') }} ';
+  var see_order_msg = '{{ 'View this order'|trans({}, 'Admin.Orderscustomers.Feature') }}';
+  var new_customer_msg = '{{ 'A new customer registered on your store.'|trans({}, 'Admin.Navigation.Header') }}';
+  var customer_name_msg = '{{ 'Customer name:'|trans({}, 'Admin.Navigation.Header') }} ';
+  var new_msg = '{{ 'A new message was posted on your store.'|trans({}, 'Admin.Navigation.Header') }}';
+  var see_msg = '{{ 'Read this message'|trans({}, 'Admin.Navigation.Header') }}';
+  var token = '{{ this.legacyToken|e('js') }}';
+  var currentIndex = '{{ this.currentIndex|e('js') }}';
+  var employee_token = '{{ this.employeeToken|e('js') }}';
+  var choose_language_translate = '{{ 'Choose language:'|trans({}, 'Admin.Actions') }}';
+  var default_language = '{{ this.defaultLanguage|intCast }}';
+  var admin_modules_link = '{{ path('admin_module_manage')|e('js')}}';
+  var admin_notification_get_link = '{{ path('admin_common_notifications')|e('js') }}';
+  var admin_notification_push_link = adminNotificationPushLink = '{{ path('admin_common_notifications_ack')|e('js') }}';
+  var update_success_msg = '{{ 'Update successful'|trans({}, 'Admin.Notifications.Success') }}';
+  var search_product_msg = '{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}';
+</script>
+
+{% include "@AdminNewTheme/public/preload.html.twig" %}
+
+{# Many modules register on this hook to add their assets, they use addCss and/or addJs methods to do that
+(even if this is supposed to be a display hook). These methods must be executed before we loop through the
+list of assets which is why it must be executed before the loop, its content is temporarily stored to be
+then correctly appended in the output (after the loops). This little hack is necessary to avoid a breaking change
+and keep backward compatibility for this use case even if it's not very clean. #}
+{% set displayBackOfficeHeaderRendered = renderhook('displayBackOfficeHeader') %}
+
+{% for css_uri, css_media in this.cssFiles %}
+  <link href="{{ css_uri }}" rel="stylesheet" type="text/css" media="{{ css_media }}"/>
+{% endfor %}
+
+{% if this.jsDef %}
+  <script type="text/javascript">
+    {% for k, def in this.jsDef %}
+    var {{ k }} = {{ def|json_encode|raw }};
+    {% endfor %}
+  </script>
+{% endif %}
+
+{% block headJavascripts %}{% endblock %}
+
+{% for js_uri in this.jsFiles %}
+  <script type="text/javascript" src="{{ js_uri }}"></script>
+{% endfor %}
+
+{# After some CSS/JS files inclusion (that can be added in 'displayBackOfficeHeader' hook), we need to display the html compiled that are returned for this hook. #}
+{{ displayBackOfficeHeaderRendered|raw }}

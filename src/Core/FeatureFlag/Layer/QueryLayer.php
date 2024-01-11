@@ -44,7 +44,7 @@ class QueryLayer implements TypeLayerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTypeName(): string
+    public static function getTypeName(): string
     {
         return FeatureFlagSettings::TYPE_QUERY;
     }

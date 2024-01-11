@@ -39,6 +39,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Responsible for handling all actions with modules.
+ *
+ * If you want to refactor this in the future and searching for usage of some methods,
+ * beware that they are called magically from ModuleController::moduleAction method.
+ */
 class ModuleManager implements ModuleManagerInterface
 {
     /** @var ModuleRepository */

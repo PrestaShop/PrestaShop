@@ -73,12 +73,12 @@ class AddTitle extends BOBasePage {
    */
   async changeLanguage(page: Page, lang: string): Promise<void> {
     await Promise.all([
-      page.click(this.dropdownButton),
+      page.locator(this.dropdownButton).click(),
       this.waitForVisibleSelector(page, this.dropdownMenuItemLink(lang)),
     ]);
 
     await Promise.all([
-      page.click(this.dropdownMenuItemLink(lang)),
+      page.locator(this.dropdownMenuItemLink(lang)).click(),
       this.waitForHiddenSelector(page, this.dropdownMenuItemLink(lang)),
     ]);
   }
@@ -98,7 +98,7 @@ class AddTitle extends BOBasePage {
     await this.changeLanguage(page, 'fr');
     await this.setValue(page, this.nameInput(2), titleData.frName);
 
-    await page.click(this.genderInput(genders.indexOf(titleData.gender)));
+    await page.locator(this.genderInput(genders.indexOf(titleData.gender))).click();
 
     // Upload image
     await this.uploadFile(page, this.imageInput, titleData.imageName);

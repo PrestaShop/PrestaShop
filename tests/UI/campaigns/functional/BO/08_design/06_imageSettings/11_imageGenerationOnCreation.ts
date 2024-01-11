@@ -6,14 +6,12 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
-import productsPage from '@pages/BO/catalog/productsV2';
-import createProductsPage from '@pages/BO/catalog/productsV2/add';
+import productsPage from '@pages/BO/catalog/products';
+import createProductsPage from '@pages/BO/catalog/products/add';
 import dashboardPage from '@pages/BO/dashboard';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
@@ -48,9 +46,6 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
     coverImage: 'cover.jpg',
     thumbnailImage: 'thumb.jpg',
   });
-
-  // Pre-condition: Enable Multiple image formats
-  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, true, `${baseContext}_enableMultipleImageFormats`);
 
   // before and after functions
   before(async function () {
@@ -197,13 +192,13 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
     it('should check the product header details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductHeaderDetails', baseContext);
 
-      const taxValue = await basicHelper.percentage(productData.price, productData.tax);
+      const taxValue = await basicHelper.percentage(productData.priceTaxExcluded, productData.tax);
 
       const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
       await Promise.all([
-        expect(productHeaderSummary.priceTaxExc).to.equal(`€${(productData.price.toFixed(2))} tax excl.`),
+        expect(productHeaderSummary.priceTaxExc).to.equal(`€${(productData.priceTaxExcluded.toFixed(2))} tax excl.`),
         expect(productHeaderSummary.priceTaxIncl).to.equal(
-          `€${(productData.price + taxValue).toFixed(2)} tax incl. (tax rule: ${productData.tax}%)`),
+          `€${(productData.priceTaxExcluded + taxValue).toFixed(2)} tax incl. (tax rule: ${productData.tax}%)`),
         expect(productHeaderSummary.quantity).to.equal(`${productData.quantity} in stock`),
         expect(productHeaderSummary.reference).to.contains(productData.reference),
       ]);
@@ -322,7 +317,4 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
       }));
     });
   });
-
-  // Post-condition: Disable Multiple image formats
-  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, false, `${baseContext}_disableMultipleImageFormats`);
 });

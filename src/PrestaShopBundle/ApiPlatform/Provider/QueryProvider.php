@@ -28,24 +28,28 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Provider;
 
-use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShopBundle\ApiPlatform\ContextParametersTrait;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
-use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use PrestaShopBundle\ApiPlatform\Exception\CQRSQueryNotFoundException;
+use PrestaShopBundle\ApiPlatform\QueryResultSerializerTrait;
 use ReflectionException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class QueryProvider implements ProviderInterface
 {
-    /**
-     * @param CommandBusInterface $queryBus
-     * @param DomainSerializer $apiPlatformSerializer
-     */
+    use QueryResultSerializerTrait;
+    use ContextParametersTrait;
+
     public function __construct(
-        private readonly CommandBusInterface $queryBus,
-        private readonly DomainSerializer $apiPlatformSerializer,
+        protected readonly CommandBusInterface $queryBus,
+        protected readonly DomainSerializer $domainSerializer,
+        protected readonly ShopContext $shopContext,
+        protected readonly LanguageContext $languageContext
     ) {
     }
 
@@ -57,34 +61,22 @@ class QueryProvider implements ProviderInterface
      * @return mixed
      *
      * @throws ExceptionInterface
-     * @throws NoExtraPropertiesFoundException
+     * @throws CQRSQueryNotFoundException
      * @throws ReflectionException
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        $queryClass = $operation->getExtraProperties()['query'] ?? null;
+        $CQRSQueryClass = $this->getCQRSQueryClass($operation);
+        if (null === $CQRSQueryClass) {
+            throw new CQRSQueryNotFoundException(sprintf('Resource %s has no CQRS query defined.', $operation->getClass()));
+        }
+
         $filters = $context['filters'] ?? [];
-        $queryParameters = array_merge($uriVariables, $filters);
+        $queryParameters = array_merge($uriVariables, $filters, $this->getContextParameters());
 
-        if (null === $queryClass) {
-            throw new NoExtraPropertiesFoundException('Extra property "query" not found');
-        }
+        $CQRSQuery = $this->domainSerializer->denormalize($queryParameters, $CQRSQueryClass, null, [DomainSerializer::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
+        $CQRSQueryResult = $this->queryBus->handle($CQRSQuery);
 
-        $query = $this->apiPlatformSerializer->denormalize($queryParameters, $queryClass);
-
-        $queryResult = $this->queryBus->handle($query);
-
-        //Handle return type
-        $normalizedQueryResult = $this->apiPlatformSerializer->normalize($queryResult);
-
-        if ($operation instanceof CollectionOperationInterface) {
-            foreach ($normalizedQueryResult as $key => $result) {
-                $normalizedQueryResult[$key] = $this->apiPlatformSerializer->denormalize($result, $operation->getClass());
-            }
-
-            return $normalizedQueryResult;
-        }
-
-        return $this->apiPlatformSerializer->denormalize($normalizedQueryResult, $operation->getClass());
+        return $this->denormalizeQueryResult($CQRSQueryResult, $operation);
     }
 }

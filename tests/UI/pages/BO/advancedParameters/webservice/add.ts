@@ -61,7 +61,7 @@ class AddWebserviceKey extends BOBasePage {
   async createEditWebservice(page: Page, webserviceData: WebserviceData, toGenerate: boolean = true): Promise<string> {
     // Key
     if (toGenerate) {
-      await page.click(this.generateButton);
+      await page.locator(this.generateButton).click();
     } else {
       await this.setValue(page, this.webserviceKeyInput, webserviceData.key);
     }

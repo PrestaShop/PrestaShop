@@ -13,16 +13,16 @@ const loginBO = async function (page: Page): Promise<void> {
   await page.locator('#passwd').fill(global.BO.PASSWD);
 
   await Promise.all([
-    page.click('#submit_login'),
+    page.locator('#submit_login').click(),
     page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
   ]);
 
   const block = await page.$('button.onboarding-button-shut-down');
 
   if (block !== null) {
-    await page.click('button.onboarding-button-shut-down');
+    await page.locator('button.onboarding-button-shut-down').click();
     await page.waitForSelector('a.onboarding-button-stop', {state: 'visible'});
-    await page.click('a.onboarding-button-stop');
+    await page.locator('a.onboarding-button-stop').click();
   }
 };
 
@@ -38,7 +38,7 @@ const loginFO = async function (page: Page): Promise<void> {
   await page.locator('#login-form input[name=password]').fill(Customers.johnDoe.password);
 
   await Promise.all([
-    page.click('#submit-login'),
+    page.locator('#submit-login').click(),
     page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
   ]);
 };

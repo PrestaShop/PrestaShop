@@ -4,32 +4,34 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-import authorizationServerPage from '@pages/BO/advancedParameters/authorizationServer';
-import addNewAuthorizedAppPage from '@pages/BO/advancedParameters/authorizationServer/add';
+import apiAccessPage from 'pages/BO/advancedParameters/APIAccess';
+import addNewApiAccessPage from '@pages/BO/advancedParameters/APIAccess/add';
 import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import AuthorizedApplicationData from '@data/faker/authorizedApplication';
+import APIAccessData from '@data/faker/APIAccess';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_authorizationServer_CRUD';
 
-describe('BO - Advanced Parameter - Authorization Server : CRUD', async () => {
+describe('BO - Advanced Parameter - API Access : CRUD', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const createApplication: AuthorizedApplicationData = new AuthorizedApplicationData({
-    appName: 'Application XYZ',
+  const createAPIAccess: APIAccessData = new APIAccessData({
+    clientName: 'API Access XYZ',
+    clientId: 'api-access-xyz',
     description: 'Description ABC',
   });
-  const editApplication: AuthorizedApplicationData = new AuthorizedApplicationData({
-    appName: 'Application UVW',
+  const editAPIAccess: APIAccessData = new APIAccessData({
+    clientName: 'API Access UVW',
+    clientId: 'api-access-uvw',
     description: 'Description DEF',
   });
 
@@ -46,13 +48,12 @@ describe('BO - Advanced Parameter - Authorization Server : CRUD', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // This scenario is skipped for now, it will be adapted to test API access in the next PR
-  describe.skip('BO - Advanced Parameter - Authorization Server : CRUD', async () => {
+  describe('BO - Advanced Parameter - API Access : CRUD', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Advanced Parameters > Authorization Server\' page', async function () {
+    it('should go to \'Advanced Parameters > API Access\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -61,62 +62,74 @@ describe('BO - Advanced Parameter - Authorization Server : CRUD', async () => {
         dashboardPage.authorizationServerLink,
       );
 
-      const pageTitle = await authorizationServerPage.getPageTitle(page);
-      expect(pageTitle).to.eq(authorizationServerPage.pageTitle);
+      const pageTitle = await apiAccessPage.getPageTitle(page);
+      expect(pageTitle).to.eq(apiAccessPage.pageTitle);
     });
 
     it('should check that no records found', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatNoRecordFound', baseContext);
 
-      const noRecordsFoundText = await authorizationServerPage.getTextForEmptyTable(page);
+      const noRecordsFoundText = await apiAccessPage.getTextForEmptyTable(page);
       expect(noRecordsFoundText).to.contains('warning No records found');
     });
 
-    it('should go to add New Authorized App page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAuthorizedAppPage', baseContext);
+    it('should go to add New API Access page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIAccessPage', baseContext);
 
-      await authorizationServerPage.goToNewAuthorizedAppPage(page);
+      await apiAccessPage.goToNewAPIAccessPage(page);
 
-      const pageTitle = await addNewAuthorizedAppPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewAuthorizedAppPage.pageTitleCreate);
+      const pageTitle = await addNewApiAccessPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleCreate);
     });
 
-    it('should create authorized app', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createAuthorizedApp', baseContext);
+    it('should create API Access', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAPIAccess', baseContext);
 
-      const textResult = await addNewAuthorizedAppPage.addAuthorizedApplication(page, createApplication);
-      expect(textResult).to.equal(addNewAuthorizedAppPage.successfulCreationMessage);
+      const textResult = await addNewApiAccessPage.addAPIAccess(page, createAPIAccess);
+      expect(textResult).to.contain(addNewApiAccessPage.successfulCreationMessage);
 
-      const numElements = await authorizationServerPage.getNumberOfElementInGrid(page);
+      // Go back to list to get number of elements because creation form redirects to edition form
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.authorizationServerLink,
+      );
+      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);
     });
 
-    it('should go to edit Authorized App page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAuthorizedAppPage', baseContext);
+    it('should go to edit API Access page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIAccessPage', baseContext);
 
-      await authorizationServerPage.goToEditAuthorizedAppPage(page, 1);
+      await apiAccessPage.goToEditAPIAccessPage(page, 1);
 
-      const pageTitle = await addNewAuthorizedAppPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewAuthorizedAppPage.pageTitleEdit(createApplication.appName));
+      const pageTitle = await addNewApiAccessPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleEdit(createAPIAccess.clientName));
     });
 
-    it('should edit authorized app', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'editAuthorizedApp', baseContext);
+    it('should edit API Access', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editAPIAccess', baseContext);
 
-      const textResult = await addNewAuthorizedAppPage.addAuthorizedApplication(page, editApplication);
-      expect(textResult).to.equal(addNewAuthorizedAppPage.successfulUpdateMessage);
+      const textResult = await addNewApiAccessPage.addAPIAccess(page, editAPIAccess);
+      expect(textResult).to.equal(addNewApiAccessPage.successfulUpdateMessage);
 
-      const numElements = await authorizationServerPage.getNumberOfElementInGrid(page);
+      // Go back to list to get number of elements because edition form redirects to itself
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.authorizationServerLink,
+      );
+      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);
     });
 
-    it('should delete authorized app', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteAuthorizedApp', baseContext);
+    it('should delete API Access', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAPIAccess', baseContext);
 
-      const textResult = await authorizationServerPage.deleteAuthorizationApplication(page, 1);
-      expect(textResult).to.equal(addNewAuthorizedAppPage.successfulDeleteMessage);
+      const textResult = await apiAccessPage.deleteAPIAccess(page, 1);
+      expect(textResult).to.equal(addNewApiAccessPage.successfulDeleteMessage);
 
-      const numElements = await authorizationServerPage.getNumberOfElementInGrid(page);
+      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(0);
     });
   });

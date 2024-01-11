@@ -64,11 +64,6 @@ class TabCore extends ObjectModel
     public $wording_domain;
 
     /**
-     * @deprecated Since 1.7.7
-     */
-    public const TAB_MODULE_LIST_URL = '';
-
-    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [

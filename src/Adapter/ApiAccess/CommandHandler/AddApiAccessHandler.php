@@ -35,9 +35,11 @@ use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler\AddApiAccessCommandHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotAddApiAccessException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessId;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
+use PrestaShop\PrestaShop\Core\Util\String\RandomString;
 use PrestaShopBundle\Entity\ApiAccess;
 use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsCommandHandler]
@@ -45,17 +47,22 @@ class AddApiAccessHandler implements AddApiAccessCommandHandlerInterface
 {
     public function __construct(
         private readonly ApiAccessRepository $repository,
-        private readonly ValidatorInterface $validator
+        private readonly ValidatorInterface $validator,
+        private readonly PasswordHasherInterface $passwordHasher
     ) {
     }
 
-    public function handle(AddApiAccessCommand $command): ApiAccessId
+    public function handle(AddApiAccessCommand $command): CreatedApiAccess
     {
         $apiAccess = new ApiAccess();
         $apiAccess->setClientId($command->getApiClientId());
         $apiAccess->setClientName($command->getClientName());
+        $secret = RandomString::generate();
+        $apiAccess->setClientSecret($this->passwordHasher->hash($secret));
         $apiAccess->setEnabled($command->isEnabled());
         $apiAccess->setDescription($command->getDescription());
+        $apiAccess->setScopes($command->getScopes());
+        $apiAccess->setLifetime($command->getLifetime());
 
         $errors = $this->validator->validate($apiAccess);
 
@@ -68,11 +75,11 @@ class AddApiAccessHandler implements AddApiAccessCommandHandlerInterface
         }
 
         try {
-            $savedApiAccess = $this->repository->save($apiAccess);
+            $apiAccessId = $this->repository->save($apiAccess);
         } catch (ORMException $e) {
             throw new CannotAddApiAccessException('Could not add Api access', 0, $e);
         }
 
-        return new ApiAccessId($savedApiAccess);
+        return new CreatedApiAccess($apiAccessId, $secret);
     }
 }

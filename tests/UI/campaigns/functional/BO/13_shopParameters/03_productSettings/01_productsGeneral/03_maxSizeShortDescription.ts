@@ -4,17 +4,13 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
+import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 // Import data
 import ProductData from '@data/faker/product';
@@ -34,12 +30,9 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductData = new ProductData({type: 'Standard product', status: false});
+  const productData: ProductData = new ProductData({type: 'standard', status: false});
   const maxSummarySizeValue: number = 5;
   const defaultSummarySizeValue: number = 800;
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -63,7 +56,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
 
     tests.forEach((test, index: number) => {
       it('should go to \'Shop parameters > Product Settings\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index + 1}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
@@ -77,14 +70,14 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
       });
 
       it(`should update max size of short description to ${test.args.descriptionSize}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `updateMaxSizeSummaryValue${index + 1}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `updateMaxSizeSummaryValue${index}`, baseContext);
 
         const result = await productSettingsPage.UpdateMaxSizeOfSummary(page, test.args.descriptionSize);
         expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToCatalogProductsPage${index + 1}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToCatalogProductsPage${index}`, baseContext);
 
         await productSettingsPage.goToSubMenu(
           page,
@@ -96,29 +89,37 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
         expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
+      it('should click on new product button and go to new product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `clickOnNewProductPage${index}`, baseContext);
+
+        const isModalVisible = await productsPage.clickOnNewProductButton(page);
+        expect(isModalVisible).to.be.equal(true);
+
+        await productsPage.selectProductType(page, productData.type);
+        await productsPage.clickOnAddNewProduct(page);
+
+        const pageTitle = await addProductPage.getPageTitle(page);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
+      });
+
       if (test.args.descriptionSize === maxSummarySizeValue) {
         it(`should create a product with a summary more than ${test.args.descriptionSize} characters
       and check the error message`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index + 1}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index}`, baseContext);
 
-          await productsPage.goToAddProductPage(page);
+          await descriptionTab.setProductDescription(page, productData);
 
-          let errorMessage = await addProductPage.createEditBasicProduct(page, productData);
-          expect(errorMessage).to.equal(addProductPage.errorMessage);
-
-          errorMessage = await addProductPage.getErrorMessageWhenSummaryIsTooLong(page);
-          expect(errorMessage).to.equal(
+          const errorMessage = await addProductPage.getErrorMessageWhenSummaryIsTooLong(page);
+          expect(errorMessage).to.contains(
             addProductPage.errorMessageWhenSummaryTooLong(maxSummarySizeValue),
           );
         });
       } else {
         it(`should create a product with a summary less than ${test.args.descriptionSize} characters`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index + 1}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index}`, baseContext);
 
-          await productsPage.goToAddProductPage(page);
-
-          const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
-          expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
+          const successMessage = await addProductPage.setProduct(page, productData);
+          expect(successMessage).to.equal(addProductPage.successfulUpdateMessage);
         });
       }
     });
@@ -127,10 +128,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const testResult = await addProductPage.deleteProduct(page);
-      expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      expect(testResult).to.equal(productsPage.successfulDeleteMessage);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

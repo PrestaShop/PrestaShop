@@ -4,15 +4,13 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
-import {deleteProductV2Test} from '@commonTests/BO/catalog/product';
+import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
-import productsPage from '@pages/BO/catalog/productsV2';
-import createProductsPage from '@pages/BO/catalog/productsV2/add';
-import descriptionTab from '@pages/BO/catalog/productsV2/add/descriptionTab';
+import productsPage from '@pages/BO/catalog/products';
+import createProductsPage from '@pages/BO/catalog/products/add';
+import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import dashboardPage from '@pages/BO/dashboard';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
@@ -45,12 +43,6 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
     coverImage: 'coverPNGBaseFormatPNG.png',
     status: true,
   });
-
-  // Pre-condition: Enable Multiple image formats
-  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, true, `${baseContext}_enableMultipleImageFormats`);
-
-  // Pre-condition: Enable Product Page v2
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableProductPageV2`);
 
   // before and after functions
   before(async function () {
@@ -253,7 +245,7 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
           const fileExistsJPG = await files.doesFileExist(pathImageJPG);
           expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.eq(true);
 
-          const imageTypeJPG = await files.getImageType(pathImageJPG);
+          const imageTypeJPG = await files.getFileType(pathImageJPG);
           expect(imageTypeJPG).to.be.eq(arg.extGenerated);
         });
       });
@@ -266,12 +258,6 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
     productDataJPEGBaseFormatJPEG,
     productDataPNGBaseFormatPNG,
   ].forEach((product: ProductData, index: number) => {
-    deleteProductV2Test(product, `${baseContext}_removeProduct${index}`);
+    deleteProductTest(product, `${baseContext}_removeProduct${index}`);
   });
-
-  // Post-condition: Disable Product Page V2
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableProductPageV2`);
-
-  // Post-condition: Disable Multiple image formats
-  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, false, `${baseContext}_disableMultipleImageFormats`);
 });

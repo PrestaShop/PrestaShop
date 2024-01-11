@@ -29,7 +29,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\InstalledApiResourceScope;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -40,7 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[UniqueEntity('clientId')]
 #[UniqueEntity('clientName')]
-class ApiAccess
+class ApiAccess implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -79,16 +82,26 @@ class ApiAccess
     private bool $enabled;
 
     /**
-     * @ORM\Column(name="scopes", type="array")
+     * @ORM\Column(name="scopes", type="json")
      */
+    #[Assert\NotNull]
+    #[InstalledApiResourceScope]
     private array $scopes = [];
 
     /**
-     * @ORM\Column(name="description", type="string")
+     * @ORM\Column(name="description", type="string", options={"default": ""})
      */
     #[Assert\Length(max: 21844)]
-    #[Assert\NotBlank]
     private string $description;
+
+    /**
+     * Lifetime is in milliseconds. Default value is 3600 ms.
+     *
+     * @ORM\Column(name="lifetime", type="integer", options={"default": "3600"})
+     */
+    #[Assert\NotNull]
+    #[Assert\Positive]
+    private int $lifetime;
 
     public function getId(): int
     {
@@ -172,5 +185,47 @@ class ApiAccess
         $this->description = $description;
 
         return $this;
+    }
+
+    public function getLifetime(): int
+    {
+        return $this->lifetime;
+    }
+
+    public function setLifetime(int $lifetime): self
+    {
+        $this->lifetime = $lifetime;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return array_map(fn (string $scope): string => 'ROLE_' . strtoupper($scope), $this->getScopes());
+    }
+
+    public function getPassword(): string
+    {
+        return $this->getClientSecret();
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function eraseCredentials()
+    {
+        return null;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->getClientName();
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->getClientId();
     }
 }

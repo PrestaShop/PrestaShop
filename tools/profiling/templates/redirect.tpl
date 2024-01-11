@@ -25,7 +25,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <script src="//code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
   </head>

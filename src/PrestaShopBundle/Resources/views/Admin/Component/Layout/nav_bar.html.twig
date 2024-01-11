@@ -31,7 +31,7 @@
   <div class="nav-bar-overflow">
     <div class="logo-container">
       <div class="d-flex align-items-center">
-        <a id="header_logo" class="logo float-left" href="{{ legacy_path(this.defaultTab)|escape('html_attr') }}"></a>
+        <a id="header_logo" class="logo float-left" href="{{ legacy_path(this.defaultTab) }}"></a>
         <span id="shop_version" class="header-version">{{ this.psVersion }}</span>
       </div>
       <div class="logo-container__close js-mobile-menu">
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <ul class="main-menu{% if this.collapseMenu %} sidebar-closed{% endif %}">
+    <ul class="main-menu{% if ps.menuCollapsed %} sidebar-closed{% endif %}">
       {% for level1 in this.tabs %}
         {% if level1.active %}
 
@@ -78,9 +78,9 @@
         {% endif %}
         {% set levelOneClass = '' %}
 
-        {% if level2.current and not this.collapseMenu %}
+        {% if level2.current and not ps.menuCollapsed %}
           {% set levelOneClass = " link-active open ul-open" %}
-        {% elseif level2.current and this.collapseMenu %}
+        {% elseif level2.current and ps.menuCollapsed %}
           {% set levelOneClass =" link-active" %}
         {% endif %}
 

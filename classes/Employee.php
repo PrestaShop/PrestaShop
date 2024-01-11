@@ -27,13 +27,12 @@ use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
-use PrestaShop\PrestaShop\Core\Model\EmployeeInterface;
 use PrestaShopBundle\Security\Admin\SessionRenewer;
 
 /**
  * Class EmployeeCore.
  */
-class EmployeeCore extends ObjectModel implements EmployeeInterface
+class EmployeeCore extends ObjectModel
 {
     /** @var int|null Employee ID */
     public $id;
@@ -307,7 +306,7 @@ class EmployeeCore extends ObjectModel implements EmployeeInterface
     public function getByEmail($email, $plaintextPassword = null, $activeOnly = true)
     {
         if (!Validate::isEmail($email)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Email address is invalid.'));
         }
 
         $sql = new DbQuery();
@@ -360,7 +359,7 @@ class EmployeeCore extends ObjectModel implements EmployeeInterface
     public static function employeeExists($email)
     {
         if (!Validate::isEmail($email)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Email address is invalid.'));
         }
 
         return (bool) Db::getInstance()->getValue('
@@ -380,7 +379,7 @@ class EmployeeCore extends ObjectModel implements EmployeeInterface
     public static function checkPassword($idEmployee, $passwordHash)
     {
         if (!Validate::isUnsignedId($idEmployee)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Employee ID is invalid.'));
         }
 
         $sql = new DbQuery();
@@ -562,7 +561,7 @@ class EmployeeCore extends ObjectModel implements EmployeeInterface
      *
      * @since 1.5.0
      */
-    public function getDefaultShopID(): int
+    public function getDefaultShopID()
     {
         if ($this->isSuperAdmin() || in_array(Configuration::get('PS_SHOP_DEFAULT'), $this->associated_shops)) {
             return (int) Configuration::get('PS_SHOP_DEFAULT');
@@ -761,49 +760,6 @@ class EmployeeCore extends ObjectModel implements EmployeeInterface
         }
 
         return null;
-    }
-
-    /*
-     * Interface functions
-     */
-    public function getId(): int
-    {
-        return (int) $this->id;
-    }
-
-    public function getProfileId(): int
-    {
-        return (int) $this->id_profile;
-    }
-
-    public function getLanguageId(): int
-    {
-        return (int) $this->id_lang;
-    }
-
-    public function getFirstName(): string
-    {
-        return $this->firstname;
-    }
-
-    public function getLastName(): string
-    {
-        return $this->lastname;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->passwd;
-    }
-
-    public function getDefaultTabId(): int
-    {
-        return (int) $this->default_tab;
     }
 
     public function getAssociatedShopIds(): array

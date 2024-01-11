@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
 use PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
@@ -53,6 +54,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Tests\Integration\Utility\ContextMockerTrait;
 use Tools;
 
@@ -284,7 +286,7 @@ class AdminControllerTest extends TestCase
                 if ($param === 'prestashop.user_provider') {
                     return $this->getMockedUserProvider();
                 }
-                if ($param === 'security.csrf.token_manager') {
+                if ($param === CsrfTokenManagerInterface::class) {
                     return $this->getMockedCsrfTokenManager();
                 }
                 if ($param === 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker') {
@@ -292,6 +294,9 @@ class AdminControllerTest extends TestCase
                 }
                 if ($param === FeatureFlagStateCheckerInterface::class) {
                     return $this->getMockedFeatureFlagStateCheckerInterface();
+                }
+                if ($param === ImageFormatConfiguration::class) {
+                    return $this->getMockedImageFormatConfiguration();
                 }
             });
 
@@ -381,6 +386,17 @@ class AdminControllerTest extends TestCase
         $mockFeatureFlagStateChecker->method('isEnabled')->willReturn(false);
 
         return $mockFeatureFlagStateChecker;
+    }
+
+    private function getMockedImageFormatConfiguration(): ImageFormatConfiguration
+    {
+        $mockImageFormatConfiguration = $this->getMockBuilder(ImageFormatConfiguration::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockImageFormatConfiguration->method('getGenerationFormats')->willReturn(['jpg']);
+
+        return $mockImageFormatConfiguration;
     }
 
     private function getMockNumberSpecification(): NumberSpecification

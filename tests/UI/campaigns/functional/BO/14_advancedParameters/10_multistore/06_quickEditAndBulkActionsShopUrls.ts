@@ -97,7 +97,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
     it('should create shop URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
 
-      const textResult = await addShopUrlPage.setVirtualUrl(page, ShopUrlData);
+      const textResult = await addShopUrlPage.setVirtualUrl(page, ShopUrlData.name);
       expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
     });
   });

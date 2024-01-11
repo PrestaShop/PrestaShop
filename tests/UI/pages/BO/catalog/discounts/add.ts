@@ -114,6 +114,8 @@ class AddCartRule extends BOBasePage {
 
   private readonly actionsTabLink: string;
 
+  private readonly titleOfExcludeDiscountedProduct: string;
+
   private readonly freeShippingToggle: (toggle: string) => string;
 
   private readonly applyDiscountRadioButton: (toggle: string) => string;
@@ -149,6 +151,8 @@ class AddCartRule extends BOBasePage {
   private readonly freeGiftFilterInput: string;
 
   private readonly freeGiftProductSelect: string;
+
+  private readonly desktopButtonsBlock: string;
 
   private readonly saveButton: string;
 
@@ -245,6 +249,7 @@ class AddCartRule extends BOBasePage {
 
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
+    this.titleOfExcludeDiscountedProduct = '#apply_discount_to_product_special label span[data-original-title]';
     this.freeShippingToggle = (toggle: string) => `${this.cartRuleForm} #free_shipping_${toggle}`;
 
     // Discount percent selectors
@@ -275,20 +280,30 @@ class AddCartRule extends BOBasePage {
     this.freeGiftProductSelect = '#gift_product';
 
     // Form footer selectors
-    this.saveButton = '#desc-cart_rule-save';
+    this.desktopButtonsBlock = '.desktop-buttons';
+    this.saveButton = `${this.desktopButtonsBlock} #desc-cart_rule-save`;
     this.cancelButton = '#desc-cart_rule-cancel';
   }
 
   /* Methods */
+  /**
+   * Get generate button name
+   * @param page {Frame|Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getGenerateButtonName(page: Page): Promise<string> {
+    return this.getTextContent(page, this.generateButton);
+  }
+
   /**
    * Fill form in information tab
    * @param page {Frame|Page} Browser tab
    * @param cartRuleData {CartRuleData} Data to set on information form
    * @return {Promise<void>}
    */
-  async fillInformationForm(page: Frame|Page, cartRuleData: CartRuleData): Promise<void> {
+  async fillInformationForm(page: Frame | Page, cartRuleData: CartRuleData): Promise<void> {
     // Go to tab conditions
-    await page.click(this.infomationsTabLink);
+    await page.locator(this.infomationsTabLink).click();
 
     // Fill information form
     await this.setValue(page, this.nameInput(1), cartRuleData.name);
@@ -296,7 +311,7 @@ class AddCartRule extends BOBasePage {
 
     // Generate a discount code
     if (cartRuleData.generateCode) {
-      await page.click(this.generateButton);
+      await page.locator(this.generateButton).click();
     } else if (cartRuleData.code === null) {
       await this.clearInput(page, this.codeInput);
     } else {
@@ -320,49 +335,49 @@ class AddCartRule extends BOBasePage {
    * @param cartRuleData {CartRuleData} Data to set on conditions form
    * @return {Promise<void>}
    */
-  async fillConditionsForm(page: Frame|Page, cartRuleData: CartRuleData): Promise<void> {
+  async fillConditionsForm(page: Frame | Page, cartRuleData: CartRuleData): Promise<void> {
     // Go to tab conditions
-    await page.click(this.conditionsTabLink);
+    await page.locator(this.conditionsTabLink).click();
 
     // Set Customer
     // Customer will not be set if we want to use the cart rule for any customer
     if (cartRuleData.customer) {
       await this.setValue(page, this.singleCustomerInput, cartRuleData.customer.email);
       await this.waitForVisibleSelector(page, `${this.singleCustomerResultBlock}:not([style*='display: none;'])`);
-      await page.click(this.singleCustomerResultItem);
+      await page.locator(this.singleCustomerResultItem).click();
     }
 
     // Fill date from if its changed
     if (cartRuleData.dateFrom) {
       await this.setValue(page, this.dateFromInput, cartRuleData.dateFrom);
-      await page.press(this.dateFromInput, 'Enter');
+      await page.locator(this.dateFromInput).press('Enter');
     }
 
     // Fill date to if its changed
     if (cartRuleData.dateTo) {
       await this.setValue(page, this.dateToInput, cartRuleData.dateTo);
-      await page.press(this.dateToInput, 'Enter');
+      await page.locator(this.dateToInput).press('Enter');
     }
 
     // Set carrier discount
     if (cartRuleData.carrierRestriction) {
       await this.setChecked(page, this.carrierRestriction);
-      await page.click(this.carrierRestrictionPickUpInStore);
-      await page.click(this.carrierRestrictionRemoveButton);
+      await page.locator(this.carrierRestrictionPickUpInStore).click();
+      await page.locator(this.carrierRestrictionRemoveButton).click();
     }
 
     // Choose the country selection
     if (cartRuleData.countrySelection) {
       await this.setChecked(page, this.countryRestriction);
       await this.selectByValue(page, this.countrySelection, cartRuleData.countryIDToRemove);
-      await page.click(this.countryGroupRemoveButton);
+      await page.locator(this.countryGroupRemoveButton).click();
     }
 
     // Set Customer Group Selection
     if (cartRuleData.customerGroupSelection) {
       await this.setChecked(page, this.customerGroupRestriction);
-      await page.click(this.customerGroupCustomer);
-      await page.click(this.customerGroupRemoveButton);
+      await page.locator(this.customerGroupCustomer).click();
+      await page.locator(this.customerGroupRemoveButton).click();
     }
 
     // Set product selection
@@ -407,9 +422,9 @@ class AddCartRule extends BOBasePage {
    * @param cartRuleData {CartRuleData} Data to set on actions form
    * @return {Promise<void>}
    */
-  async fillActionsForm(page: Frame|Page, cartRuleData: CartRuleData): Promise<void> {
+  async fillActionsForm(page: Frame | Page, cartRuleData: CartRuleData): Promise<void> {
     // Go to actions tab
-    await page.click(this.actionsTabLink);
+    await page.locator(this.actionsTabLink).click();
 
     // Set free shipping toggle
     await this.setChecked(page, this.freeShippingToggle(cartRuleData.freeShipping ? 'on' : 'off'));
@@ -478,6 +493,17 @@ class AddCartRule extends BOBasePage {
   }
 
   /**
+   * Get title of exclude discounted product
+   * @param page
+   */
+  async getTitleOfExcludeDiscountedProduct(page: Page): Promise<string> {
+    // Go to actions tab
+    await page.locator(this.actionsTabLink).click();
+
+    return this.getAttributeContent(page, this.titleOfExcludeDiscountedProduct, 'data-original-title');
+  }
+
+  /**
    * Create/edit cart rule
    * @param page {Frame|Page} Browser tab
    * @param cartRuleData {CartRuleData} Data to set on add/edit cart rule form
@@ -485,10 +511,10 @@ class AddCartRule extends BOBasePage {
    * @returns {Promise<string|null>}
    */
   async createEditCartRules(
-    page: Frame|Page,
+    page: Frame | Page,
     cartRuleData: CartRuleData,
     waitForNavigation: boolean = true,
-  ): Promise<string|null> {
+  ): Promise<string | null> {
     // Fill information form
     await this.fillInformationForm(page, cartRuleData);
 
@@ -500,13 +526,26 @@ class AddCartRule extends BOBasePage {
 
     if (waitForNavigation) {
       // Save and return successful message
-      await this.clickAndWaitForURL(page, this.saveButton);
-      return this.getAlertSuccessBlockContent(page);
+      return this.saveCartRule(page);
     }
 
     // Save
     await this.waitForSelectorAndClick(page, this.saveButton);
     return null;
+  }
+
+  /**
+   * Save cart rule
+   * @param page {Frame|Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async saveCartRule(page: Frame | Page): Promise<string> {
+    await this.clickAndWaitForURL(page, this.saveButton);
+
+    if (await this.elementVisible(page, `${this.alertSuccessBlock}[role='alert']`, 2000)) {
+      return this.getTextContent(page, `${this.alertSuccessBlock}[role='alert']`);
+    }
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
@@ -516,7 +555,7 @@ class AddCartRule extends BOBasePage {
    */
   async getLimitSingleCustomer(page: Page): Promise<string | null> {
     // Go to tab conditions
-    await page.click(this.conditionsTabLink);
+    await page.locator(this.conditionsTabLink).click();
 
     return this.getAttributeContent(page, this.singleCustomerInput, 'value');
   }
@@ -528,7 +567,7 @@ class AddCartRule extends BOBasePage {
    */
   async getAmountValue(page: Page): Promise<string | null> {
     // Go to actions tab
-    await page.click(this.actionsTabLink);
+    await page.locator(this.actionsTabLink).click();
 
     return this.getAttributeContent(page, this.discountAmountInput, 'value');
   }

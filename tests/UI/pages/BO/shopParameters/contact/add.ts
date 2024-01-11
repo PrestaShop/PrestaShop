@@ -65,11 +65,11 @@ class AddContact extends BOBasePage {
    */
   async changeLanguageForSelectors(page: Page, lang: string = 'en'): Promise<void> {
     await Promise.all([
-      page.click(this.pageTitleLangButton),
+      page.locator(this.pageTitleLangButton).click(),
       this.waitForVisibleSelector(page, `${this.pageTitleLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      page.click(this.pageTitleLangSpan(lang)),
+      page.locator(this.pageTitleLangSpan(lang)).click(),
       this.waitForVisibleSelector(page, `${this.pageTitleLangButton}[aria-expanded='false']`),
     ]);
   }

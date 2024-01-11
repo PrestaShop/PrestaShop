@@ -4,10 +4,53 @@ services:
     autowire: true
     autoconfigure: true
 
+  # Employee context must have a higher priority because Shop and Language depend on it
   PrestaShopBundle\EventListener\Context\Admin\EmployeeContextListener:
     tags:
-      - { name: kernel.event_listener, method: onKernelRequest }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
+
+  # Language depends on Employee so its priority is lower, however it has higher priority than Currency and Country because they depend on Language
+  PrestaShopBundle\EventListener\Context\Admin\LanguageContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 15 }
 
   PrestaShopBundle\EventListener\Context\Admin\ShopContextListener:
     tags:
-      - { name: kernel.event_listener, method: onKernelRequest }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\Context\Admin\CurrencyContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\Context\Admin\CountryContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\Context\Admin\LegacyContextListener:
+    arguments:
+      $legacyBuilders: !tagged_iterator core.legacy_context_builder
+    tags:
+      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+  PrestaShopBundle\EventListener\Context\Admin\LegacyControllerContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  # These listeners are used in the API context
+
+  # We set a high priority so this listener has a bigger one than ReadListener ApiPlatform (which has a priority of 4)
+  PrestaShopBundle\EventListener\Context\API\ApiClientContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
+
+  # We set a high priority so this listener has a bigger one than ReadListener ApiPlatform (which has a priority of 4)
+  # but lower than the ApiClientListener because the listener depends on it
+  PrestaShopBundle\EventListener\Context\API\ShopContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 6 }
+
+  # We set a high priority so this listener has a bigger one than ReadListener ApiPlatform (which has a priority of 4)
+  # but lower than the ShopContextListener because the listener depends on it
+  PrestaShopBundle\EventListener\Context\API\LanguageContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 5 }

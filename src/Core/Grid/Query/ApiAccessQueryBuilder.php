@@ -32,7 +32,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShop\PrestaShop\Core\Search\Filters\ApiAccessesFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\ApiAccessFilters;
 
 /**
  * Class ApiAccessQueryBuilder builds search & count queries for api access grid.
@@ -64,11 +64,11 @@ class ApiAccessQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        if (!$searchCriteria instanceof ApiAccessesFilters) {
+        if (!$searchCriteria instanceof ApiAccessFilters) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Expected %s, but got %s',
-                    ApiAccessesFilters::class, get_class($searchCriteria)
+                    ApiAccessFilters::class, get_class($searchCriteria)
                 )
             );
         }
@@ -89,11 +89,11 @@ class ApiAccessQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        if (!$searchCriteria instanceof ApiAccessesFilters) {
+        if (!$searchCriteria instanceof ApiAccessFilters) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Expected %s, but got %s',
-                    ApiAccessesFilters::class, get_class($searchCriteria)
+                    ApiAccessFilters::class, get_class($searchCriteria)
                 )
             );
         }

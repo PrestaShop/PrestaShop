@@ -62,7 +62,7 @@ class PreviewEmailTheme extends BOBasePage {
    * @return {Promise<number>}
    */
   async getNumberOfLayoutInGrid(page: Page): Promise<number> {
-    return (await page.$$(this.tableRows)).length;
+    return page.locator(this.tableRows).count();
   }
 
   /**
@@ -82,12 +82,12 @@ class PreviewEmailTheme extends BOBasePage {
    */
   async viewRawHtml(page: Page, row: number): Promise<Page> {
     // Click on dropdown
-    await page.click(this.tableActionColumnDropDownLink(row));
+    await page.locator(this.tableActionColumnDropDownLink(row)).click();
 
     // Open link in new target and return URL
     const [newPage] = await Promise.all([
       page.waitForEvent('popup'),
-      page.click(this.tableActionColumnRawHtmlLink(row)),
+      page.locator(this.tableActionColumnRawHtmlLink(row)).click(),
     ]);
 
     return newPage;
@@ -101,12 +101,12 @@ class PreviewEmailTheme extends BOBasePage {
    */
   async viewRawText(page: Page, row: number): Promise<Page> {
     // Click on dropdown
-    await page.click(this.tableActionColumnDropDownLink(row));
+    await page.locator(this.tableActionColumnDropDownLink(row)).click();
 
     // Open link in new target and return URL
     const [newPage] = await Promise.all([
       page.waitForEvent('popup'),
-      page.click(this.tableActionColumnRawTextLink(row)),
+      page.locator(this.tableActionColumnRawTextLink(row)).click(),
     ]);
 
     return newPage;

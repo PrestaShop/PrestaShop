@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Security;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
+use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,6 +45,8 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class SslMiddleware
 {
+    use ExternalApiTrait;
+
     private const AVAILABLE_SECURE_PROTOCOLS = ['tls/1.2', 'tls/1.3'];
 
     /**
@@ -72,14 +74,14 @@ class SslMiddleware
         }
 
         //If It's an API call and not using https, redirect to https
-        if ($this->isApi($event->getRequest()) && !$event->getRequest()->isSecure()) {
-            $this->redirectToSsl($event);
+        if ($this->isExternalApiRequest($event->getRequest()) && !$event->getRequest()->isSecure()) {
+            $this->useSecureProtocol($event);
 
             return;
         }
 
         //If It's an API call and not using TLS 1.2+, display error message
-        if ($this->isApi($event->getRequest())) {
+        if ($this->isExternalApiRequest($event->getRequest())) {
             $this->upgradeProtocol($event);
 
             return;
@@ -105,22 +107,15 @@ class SslMiddleware
 
     private function isSSLrequirementsMet(Request $request): bool
     {
-        if ($this->configuration->get('_PS_API_FORCE_TLS_VERSION_') === false) {
-            return true;
-        }
-        if ($this->isApi($request)) {
+        if ($this->isExternalApiRequest($request)) {
+            if ($this->configuration->get('_PS_API_FORCE_TLS_VERSION_') === false) {
+                return true;
+            }
+
             return $this->isTLSVersionAccepted($request);
         }
 
         return $request->isSecure();
-    }
-
-    private function isApi(Request $request): bool
-    {
-        return in_array(
-            $request->attributes->get('_controller'),
-            [AccessTokenController::class, 'api_platform.action.placeholder']
-        );
     }
 
     private function isTLSVersionAccepted(Request $request): bool
@@ -146,6 +141,18 @@ class SslMiddleware
                 'TLSv1.2 or higher is required.',
                 Response::HTTP_UPGRADE_REQUIRED,
                 ['Upgrade' => implode(', ', self::AVAILABLE_SECURE_PROTOCOLS)]
+            )
+        );
+    }
+
+    private function useSecureProtocol(RequestEvent $event): void
+    {
+        $redirect = str_replace('http://', 'https://', $event->getRequest()->getUri());
+        $event->setResponse(
+            new JsonResponse(
+                'Use HTTPS protocol',
+                Response::HTTP_UNAUTHORIZED,
+                ['Location' => $redirect]
             )
         );
     }

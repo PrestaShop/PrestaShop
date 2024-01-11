@@ -22,48 +22,33 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% set url, priceRaw, priceDisplay, url_active, urls, name, transLabels, transDomains =
-  module.attributes.url,
-  module.attributes.price.raw,
-  module.attributes.price.displayPrice,
-  module.attributes.url_active,
-  module.attributes.urls,
-  module.attributes.name,
-  module.attributes.actionTranslationLabels,
-  module.attributes.actionTranslationDomains
-%}
+
  <div class="btn-group module-actions">
-  {% if url_active == 'buy' %}
-    <a class="btn btn-primary btn-primary-reverse btn-block btn-outline-primary module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
-      {{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
-    </a>
-  {% elseif urls|length %}
+  {% if module.attributes.urls|length %}
     {% include '@PrestaShop/Admin/Module/Includes/action_button.html.twig' with {
-        'name': name,
+        'name': module.attributes.name,
         'classes_form': 'btn-group form-action-button',
         'classes' : 'btn btn-primary-reverse btn-outline-primary',
-        'url': urls[url_active],
-        'action': url_active,
-        'transLabels': transLabels,
-        'transDomain': transDomains}
+        'url': module.attributes.urls[module.attributes.url_active],
+        'action': module.attributes.url_active,
+        'label': module.attributes.urls_labels[module.attributes.url_active]}
     %}
-    {% if (urls|length > 1) %}
+    {% if (module.attributes.urls|length > 1) %}
         <input type="hidden" class="btn" />
         <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="caret"></span>
         </button>
         <span class="sr-only">{{ 'Toggle dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
         <div class="dropdown-menu">
-          {% for module_action, module_url in urls %}
-            {% if module_action != url_active %}
+          {% for module_action, module_url in module.attributes.urls %}
+            {% if module_action != module.attributes.url_active %}
                 <li>
                   {% include '@PrestaShop/Admin/Module/Includes/action_button.html.twig' with {
-                      'name': name,
+                      'name': module.attributes.name,
                       'classes' : 'dropdown-item',
                       'url': module_url,
                       'action': module_action,
-                      'transLabels': transLabels,
-                      'transDomain': transDomains}
+                      'label': module.attributes.urls_labels[module_action]}
                   %}
                 </li>
             {% endif %}

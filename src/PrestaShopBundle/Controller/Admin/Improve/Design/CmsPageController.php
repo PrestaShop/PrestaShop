@@ -542,7 +542,7 @@ class CmsPageController extends FrameworkBundleAdminController
         ;
 
         $positionsData = [
-            'positions' => $request->request->get('positions'),
+            'positions' => $request->request->all('positions'),
             'parentId' => $cmsCategoryParentId,
         ];
 
@@ -592,7 +592,7 @@ class CmsPageController extends FrameworkBundleAdminController
         ;
 
         $positionsData = [
-            'positions' => $request->request->get('positions'),
+            'positions' => $request->request->all('positions'),
             'parentId' => $cmsCategoryParentId,
         ];
 

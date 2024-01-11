@@ -25,7 +25,6 @@
  */
 use PrestaShop\PrestaShop\Adapter\Routing\AdminLinkBuilder;
 use PrestaShop\PrestaShop\Adapter\Routing\LegacyHelperLinkBuilder;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderFactory;
 use PrestaShop\PrestaShop\Core\Routing\Exception\BuilderNotFoundException;
 
@@ -611,11 +610,7 @@ class HelperListCore extends Helper
 
         switch ($this->currentIndex) {
             case 'index.php?controller=AdminProducts':
-            case 'index.php?tab=AdminProducts':
-                // New architecture modification: temporary behavior to switch between old and new controllers.
-                $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
-                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
-                if (!$redirectLegacy && $this->identifier == 'id_product') {
+                if ($this->identifier == 'id_product') {
                     $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);
                 }
 

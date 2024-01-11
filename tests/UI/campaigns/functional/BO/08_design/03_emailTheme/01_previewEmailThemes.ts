@@ -49,8 +49,8 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
 
   describe('Preview email theme', async () => {
     [
-      {args: {emailThemeName: 'classic', numberOfLayouts: 50}},
-      {args: {emailThemeName: 'modern', numberOfLayouts: 54}},
+      {args: {emailThemeName: 'classic', numberOfLayouts: 43}},
+      {args: {emailThemeName: 'modern', numberOfLayouts: 43}},
     ].forEach((test) => {
       it(`should preview email theme '${test.args.emailThemeName}'`, async function () {
         await testContext.addContextItem(

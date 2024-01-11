@@ -234,7 +234,7 @@ class States extends BOBasePage {
    * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(page: Page): Promise<number> {
-    return (await page.$$(`${this.tableBodyRows}:not(.empty_row)`)).length;
+    return page.locator(`${this.tableBodyRows}:not(.empty_row)`).count();
   }
 
   /**
@@ -347,7 +347,7 @@ class States extends BOBasePage {
       // Click and wait for message
       const [message] = await Promise.all([
         this.getGrowlMessageContent(page),
-        page.click(this.tableColumnStatusToggle(row)),
+        page.locator(this.tableColumnStatusToggle(row)).click(),
       ]);
 
       await this.closeGrowlMessage(page);
@@ -378,13 +378,13 @@ class States extends BOBasePage {
     await this.dialogListener(page, true);
     // Click on dropDown
     await Promise.all([
-      page.click(this.columnActionsDropdownButton(row)),
+      page.locator(this.columnActionsDropdownButton(row)).click(),
       this.waitForVisibleSelector(page, `${this.columnActionsDropdownButton(row)}[aria-expanded='true']`),
     ]);
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.columnActionsDeleteLink(row)),
+      page.locator(this.columnActionsDeleteLink(row)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForURL(page, this.confirmDeleteButton);
@@ -420,7 +420,7 @@ class States extends BOBasePage {
   async bulkSelectRows(page: Page): Promise<void> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllLabel, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllLabel).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
   }
@@ -435,12 +435,12 @@ class States extends BOBasePage {
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.deleteSelectionButton),
+      page.locator(this.deleteSelectionButton).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForURL(page, this.confirmDeleteButton);
@@ -460,7 +460,7 @@ class States extends BOBasePage {
 
     // Set status
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click to change status

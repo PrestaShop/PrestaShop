@@ -111,7 +111,7 @@ class Vouchers extends FOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfVouchers(page: Page): Promise<number> {
-    return (await page.$$(this.vouchersTableRows)).length;
+    return page.locator(this.vouchersTableRows).count();
   }
 }
 

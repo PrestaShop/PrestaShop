@@ -219,6 +219,9 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         $this->fillSeo($command, $data);
         $this->fillShipping($command, $data);
         $this->fillStock($command, $data);
+        if (isset($data['active'])) {
+            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
+        }
 
         return $command;
     }

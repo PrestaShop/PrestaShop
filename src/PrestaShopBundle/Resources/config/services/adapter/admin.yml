@@ -2,12 +2,6 @@ services:
   _defaults:
     public: false
 
-  PrestaShop\PrestaShop\Adapter\Admin\PagePreference:
-    arguments:
-      - "@session"
-      - !php/const _PS_MODE_DEV_
-    decorates: prestashop.core.admin.page_preference_interface
-
   prestashop.adapter.legacy_db:
     public: true
     class: 'Db'

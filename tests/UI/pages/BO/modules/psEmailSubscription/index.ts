@@ -8,6 +8,16 @@ import type {Page} from 'playwright';
  * @extends ModuleConfiguration
  */
 class PsEmailSubscription extends ModuleConfiguration {
+  public readonly pageTitle: string;
+
+  public readonly updateSettingsSuccessMessage: string;
+
+  private readonly sendVerificationEmail: (toEnable: string) => string;
+
+  private readonly sendConfirmationEmail: (toEnable: string) => string;
+
+  private readonly saveSettingsForm: string;
+
   private readonly newsletterTable: string;
 
   private readonly newsletterTableBody: string;
@@ -26,6 +36,13 @@ class PsEmailSubscription extends ModuleConfiguration {
    */
   constructor() {
     super();
+    this.pageTitle = 'Newsletter subscription';
+    this.updateSettingsSuccessMessage = 'Settings updated';
+
+    // Selectors in settings block
+    this.sendVerificationEmail = (toEnable: string) => `#NW_VERIFICATION_EMAIL_${toEnable}`;
+    this.sendConfirmationEmail = (toEnable: string) => `label[for='NW_CONFIRMATION_EMAIL_${toEnable}']`;
+    this.saveSettingsForm = '#module_form_submit_btn';
 
     // Newsletter registrations table selectors
     this.newsletterTable = '#table-merged';
@@ -37,6 +54,35 @@ class PsEmailSubscription extends ModuleConfiguration {
   }
 
   /* Methods */
+  /**
+   * Set send verification email
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable send verification email
+   * @returns {Promise<number>}
+   */
+  async setSendVerificationEmail(page: Page, toEnable: boolean): Promise<string> {
+    await page.locator(this.sendVerificationEmail(toEnable ? 'on' : 'off')).click({force: true});
+    await this.clickAndWaitForLoadState(page, this.saveSettingsForm);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Set send confirmation email
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable send confirmation email
+   * @returns {Promise<number>}
+   */
+  async setSendConfirmationEmail(page: Page, toEnable: boolean): Promise<string> {
+    // @todo https://github.com/PrestaShop/PrestaShop/issues/35004
+    if (toEnable && await this.elementVisible(page, this.sendConfirmationEmail('on'))) {
+      await page.locator(this.sendConfirmationEmail(toEnable ? 'on' : 'off')).click({force: true});
+    }
+    await page.locator(this.sendConfirmationEmail(toEnable ? 'on' : 'off')).click({force: true});
+    await this.clickAndWaitForLoadState(page, this.saveSettingsForm);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
 
   /**
    * Get number of newsletter registrations
@@ -48,7 +94,7 @@ class PsEmailSubscription extends ModuleConfiguration {
       return 0;
     }
 
-    return (await page.$$(this.newsletterTableRows)).length;
+    return page.locator(this.newsletterTableRows).count();
   }
 
   /**

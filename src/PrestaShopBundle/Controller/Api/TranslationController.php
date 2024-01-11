@@ -40,21 +40,19 @@ use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTransla
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TranslationController extends ApiController
 {
-    /**
-     * @var QueryTranslationParamsCollection
-     */
-    public $queryParams;
-
-    /**
-     * @var TranslationService
-     */
-    public $translationService;
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly QueryTranslationParamsCollection $queryParams,
+        private readonly TranslationService $translationService,
+    ) {
+    }
 
     /**
      * Show translations for 1 domain & 1 locale given & 1 theme given (optional).
@@ -348,13 +346,11 @@ class TranslationController extends ApiController
     private function translateMultilingualContent(array $modifiedDomains, Lang $lang)
     {
         if (in_array('AdminNavigationMenu', $modifiedDomains)) {
-            $translator = $this->container->get('translator');
-
             // reset translator
-            $translator->clearLanguage($lang->getLocale());
+            $this->translator->clearLanguage($lang->getLocale());
 
             // update menu items (tabs)
-            (new EntityTranslatorFactory($translator))
+            (new EntityTranslatorFactory($this->translator))
                 ->buildFromTableName('tab', $lang->getLocale())
                 ->translate($lang->getId(), \Context::getContext()->shop->id);
         }

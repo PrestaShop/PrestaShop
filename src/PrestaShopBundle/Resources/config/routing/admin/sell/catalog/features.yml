@@ -132,6 +132,8 @@ admin_feature_values_export:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::exportAction
     _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
 
 admin_feature_values_delete:
   path: /{featureId}/values/{featureValueId}/delete
@@ -152,3 +154,14 @@ admin_feature_values_bulk_delete:
   requirements:
     featureId: \d+
     featureValueId: \d+
+
+admin_feature_get_feature_values:
+  path: /values/{featureId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::getFeatureValuesAction
+    _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
+  options:
+    expose: true

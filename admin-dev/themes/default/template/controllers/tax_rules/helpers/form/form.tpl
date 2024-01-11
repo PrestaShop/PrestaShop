@@ -62,7 +62,7 @@
 
 	function populateStates(id_country, id_state)
 	{
-		if ($("#country option:selected").size() > 1)
+		if ($("#country option:selected").length > 1)
 		{
 			$("#zipcode-label").hide();
 			$("#zipcode").hide();
@@ -73,7 +73,7 @@
 			$.ajax({
 				url: "index.php",
 				cache: false,
-				data: "ajax=1&tab=AdminStates&token={getAdminToken tab='AdminStates'}&action=states&id_country="+id_country+"&id_state="+id_state+"&empty_value={l s='All' d='Admin.Global'}",
+				data: "ajax=1&controller=AdminStates&token={getAdminToken tab='AdminStates'}&action=states&id_country="+id_country+"&id_state="+id_state+"&empty_value={l s='All' d='Admin.Global'}",
 				success: function(html){
 					if (html == "false")
 					{
@@ -102,7 +102,7 @@
 			url: 'index.php',
 			async: true,
 			dataType: 'json',
-			data: 'ajax=1&tab=AdminTaxRulesGroup&token={getAdminToken tab='AdminTaxRulesGroup'}&ajaxStates=1&action=updateTaxRule&id_tax_rule='+id_tax_rule,
+			data: 'ajax=1&controller=AdminTaxRulesGroup&token={getAdminToken tab='AdminTaxRulesGroup'}&ajaxStates=1&action=updateTaxRule&id_tax_rule='+id_tax_rule,
 			success: function(data){
 				$('#tax_rule_form').show();
 				$('#id_tax_rule').val(data.id);

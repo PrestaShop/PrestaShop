@@ -71,12 +71,13 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
 
-  prestashop.adapter.form.choice_provider.feature_values_choice_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeatureValuesChoiceProvider'
+  PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeatureValuesChoiceProvider:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
       - '@prestashop.adapter.legacy.context'
-      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+
+  prestashop.adapter.form.choice_provider.feature_values_choice_provider:
+    alias: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeatureValuesChoiceProvider'
 
   prestashop.adapter.form.choice_provider.supplier_name_by_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\SupplierNameByIdChoiceProvider'

@@ -234,6 +234,7 @@ class CombinationController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/bulk.html.twig', [
             'bulkCombinationForm' => $bulkCombinationForm->createView(),
+            'lightDisplay' => true,
         ]);
     }
 

@@ -127,7 +127,7 @@ class AddSupplier extends BOBasePage {
     await this.setValue(page, this.postalCodeInput, supplierData.postalCode);
     await this.setValue(page, this.cityInput, supplierData.city);
     // Select country
-    await page.click(this.selectCountryList);
+    await page.locator(this.selectCountryList).click();
     await this.setValue(page, this.searchCountryInput, supplierData.country);
     await this.waitForSelectorAndClick(page, this.countrySearchResult);
 
@@ -169,13 +169,11 @@ class AddSupplier extends BOBasePage {
    * @return {Promise<void>}
    */
   async deleteKeywords(page: Page, lang: string = 'en'): Promise<void> {
-    const closeButtons = await page.$$(this.deleteKeywordLink(lang));
+    const closeButtonsLocator = page.locator(this.deleteKeywordLink(lang));
 
-    /* eslint-disable no-restricted-syntax */
-    for (const closeButton of closeButtons) {
-      await closeButton.click();
+    for (let i = (await closeButtonsLocator.count()) - 1; i > 0; i--) {
+      await closeButtonsLocator.nth(i).click();
     }
-    /* eslint-enable no-restricted-syntax */
   }
 
   /**
@@ -186,12 +184,10 @@ class AddSupplier extends BOBasePage {
    * @return {Promise<void>}
    */
   async addKeywords(page: Page, keywords: string[], idLang: number = 1): Promise<void> {
-    /* eslint-disable no-restricted-syntax */
-    for (const keyword of keywords) {
-      await page.locator(this.metaKeywordsInput(idLang)).fill(keyword);
+    for (let i = 0; i < keywords.length; i++) {
+      await page.locator(this.metaKeywordsInput(idLang)).fill(keywords[i]);
       await page.keyboard.press('Enter');
     }
-    /* eslint-enable no-restricted-syntax */
   }
 
   /**
@@ -203,17 +199,17 @@ class AddSupplier extends BOBasePage {
   async changeLanguageForSelectors(page: Page, lang: string = 'en'): Promise<void> {
     // Change language for Description input
     await Promise.all([
-      page.click(this.descriptionLangNavItemLink(lang)),
+      page.locator(this.descriptionLangNavItemLink(lang)).click(),
       this.waitForVisibleSelector(page, `${this.descriptionLangNavItemLink(lang)}.active`),
     ]);
 
     // Change language for meta selectors
     await Promise.all([
-      page.click(this.metaTitleLangButton),
+      page.locator(this.metaTitleLangButton).click(),
       this.waitForVisibleSelector(page, `${this.metaTitleLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      page.click(this.metaTitleLangSpan(lang)),
+      page.locator(this.metaTitleLangSpan(lang)).click(),
       this.waitForVisibleSelector(page, `${this.metaTitleLangButton}[aria-expanded='false']`),
     ]);
   }

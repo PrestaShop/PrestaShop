@@ -228,7 +228,7 @@ class SqlManager extends BOBasePage {
    */
   async goToViewSQLQueryPage(page: Page, row: number = 1): Promise<void> {
     await Promise.all([
-      page.click(this.sqlQueryListTableToggleDropDown(row)),
+      page.locator(this.sqlQueryListTableToggleDropDown(row)).click(),
       this.waitForVisibleSelector(
         page,
         `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`,
@@ -245,7 +245,7 @@ class SqlManager extends BOBasePage {
    */
   async goToEditSQLQueryPage(page: Page, row: number = 1): Promise<void> {
     await Promise.all([
-      page.click(this.sqlQueryListTableToggleDropDown(row)),
+      page.locator(this.sqlQueryListTableToggleDropDown(row)).click(),
       this.waitForVisibleSelector(
         page,
         `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`),
@@ -262,7 +262,7 @@ class SqlManager extends BOBasePage {
   async deleteSQLQuery(page: Page, row: number = 1): Promise<string> {
     // Click on dropDown
     await Promise.all([
-      page.click(this.sqlQueryListTableToggleDropDown(row)),
+      page.locator(this.sqlQueryListTableToggleDropDown(row)).click(),
       this.waitForVisibleSelector(
         page,
         `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`,
@@ -270,7 +270,7 @@ class SqlManager extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.sqlQueryListTableDeleteLink(row)),
+      page.locator(this.sqlQueryListTableDeleteLink(row)).click(),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
 
@@ -376,19 +376,19 @@ class SqlManager extends BOBasePage {
   async deleteWithBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsDiv).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.bulkActionsDeleteButton),
+      page.locator(this.bulkActionsDeleteButton).click(),
       this.waitForVisibleSelector(page, this.deleteModal),
     ]);
     await this.clickAndWaitForURL(page, this.modalDeleteButton);

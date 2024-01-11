@@ -7,7 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import productsPage from '@pages/BO/catalog/productsV2';
+import productsPage from '@pages/BO/catalog/products';
 
 // Import data
 import Products from '@data/demo/products';
@@ -47,7 +47,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         dashboardPage.productsLink,
       );
 
-      const pageTitle: string = await productsPage.getPageTitle(page);
+      const pageTitle = await productsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 

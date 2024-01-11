@@ -142,7 +142,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
             $result->setAvailableSortOrders(
                 array_merge(
                 [
-                    (new SortOrder('product', 'position', 'asc'))->setLabel(
+                    (new SortOrder('product', 'position', 'desc'))->setLabel(
                         $this->translator->trans('Relevance', [], 'Shop.Theme.Catalog')
                     ),
                 ],

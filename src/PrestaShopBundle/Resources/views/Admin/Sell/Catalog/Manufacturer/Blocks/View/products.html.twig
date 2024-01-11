@@ -32,7 +32,7 @@
     {% for product in viewableManufacturer.manufacturerProducts %}
       <div class="card">
         <div class="card-header clearfix">
-          <a href="{{ path('admin_product_form', {'id': product.id}) }}">{{ product.name }}</a>
+          <a href="{{ path('admin_products_edit', {'productId': product.id}) }}">{{ product.name }}</a>
 
           <div class="d-inline-block float-right">
             <div class="btn-group-action text-right">
@@ -41,13 +41,13 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                   <a class="btn tooltip-link js-submit-row-action dropdown-item"
-                     href="{{ path('admin_product_form', {'id': product.id}) }}"
+                     href="{{ path('admin_products_edit', {'productId': product.id}) }}"
                   >
                     {{ 'Edit'|trans({}, 'Admin.Actions') }}
                   </a>
                   <button class="btn tooltip-link js-form-submit-btn dropdown-item"
                           type="button"
-                          data-form-submit-url="{{ path('admin_product_unit_action', {'action': 'delete', 'id': product.id}) }}"
+                          data-form-submit-url="{{ path('admin_products_delete_from_all_shops', {'productId': product.id}) }}"
                           data-form-confirm-message="{{ '%s%s?'|format('Delete item #'|trans({}, 'Admin.International.Feature'), product.id) }}"
                   >
                     {{ 'Delete'|trans({}, 'Admin.Actions') }}

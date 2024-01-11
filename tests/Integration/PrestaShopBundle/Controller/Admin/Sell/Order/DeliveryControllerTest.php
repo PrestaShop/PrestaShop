@@ -51,10 +51,6 @@ class DeliveryControllerTest extends WebTestCase
      * @var CsrfTokenManager
      */
     protected $tokenManager;
-    /**
-     * @var Session
-     */
-    protected $session;
 
     protected function setUp(): void
     {
@@ -79,7 +75,6 @@ class DeliveryControllerTest extends WebTestCase
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
         $this->router = self::$kernel->getContainer()->get('router');
         $this->tokenManager = self::$kernel->getContainer()->get('security.csrf.token_manager');
-        $this->session = self::$kernel->getContainer()->get('session');
     }
 
     public function testSlipAction(): void
@@ -138,9 +133,11 @@ class DeliveryControllerTest extends WebTestCase
             $response->getStatusCode()
         );
 
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
         $this->assertArrayHasKey(
             'success',
-            $this->session->getFlashBag()->all()
+            $session->getFlashBag()->all()
         );
     }
 
@@ -165,9 +162,11 @@ class DeliveryControllerTest extends WebTestCase
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
         $this->assertArrayHasKey(
             'error',
-            $this->session->getFlashBag()->all()
+            $session->getFlashBag()->all()
         );
         $this->assertStringContainsString('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
     }
@@ -193,9 +192,11 @@ class DeliveryControllerTest extends WebTestCase
             $response->getStatusCode()
         );
 
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
         $this->assertArrayHasKey(
             'error',
-            $this->session->getFlashBag()->all()
+            $session->getFlashBag()->all()
         );
         $this->assertStringContainsString('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
     }

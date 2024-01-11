@@ -30,9 +30,9 @@ use Context;
 use Employee;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 
 /**
@@ -43,22 +43,6 @@ use Tools;
  */
 class AdminModuleDataProvider implements ModuleInterface
 {
-    public const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
-
-    /**
-     * @const array giving a translation domain key for each module action
-     */
-    public const _ACTIONS_TRANSLATION_DOMAINS_ = [
-        Module::ACTION_INSTALL => 'Admin.Actions',
-        Module::ACTION_UNINSTALL => 'Admin.Actions',
-        Module::ACTION_ENABLE => 'Admin.Actions',
-        Module::ACTION_DISABLE => 'Admin.Actions',
-        Module::ACTION_RESET => 'Admin.Actions',
-        Module::ACTION_UPGRADE => 'Admin.Actions',
-        Module::ACTION_CONFIGURE => 'Admin.Actions',
-        Module::ACTION_DELETE => 'Admin.Actions',
-    ];
-
     /**
      * @const array giving a translation label for each module action
      */
@@ -93,11 +77,6 @@ class AdminModuleDataProvider implements ModuleInterface
     private $router = null;
 
     /**
-     * @var CategoriesProvider
-     */
-    private $categoriesProvider;
-
-    /**
      * @var ModuleDataProvider
      */
     private $moduleProvider;
@@ -106,6 +85,13 @@ class AdminModuleDataProvider implements ModuleInterface
      * @var Employee|null
      */
     private $employee;
+
+    /**
+     * Translator.
+     *
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @var array
@@ -123,12 +109,12 @@ class AdminModuleDataProvider implements ModuleInterface
     public $failed = false;
 
     public function __construct(
-        CategoriesProvider $categoriesProvider,
         ModuleDataProvider $modulesProvider,
+        TranslatorInterface $translator,
         Employee $employee = null
     ) {
-        $this->categoriesProvider = $categoriesProvider;
         $this->moduleProvider = $modulesProvider;
+        $this->translator = $translator;
         $this->employee = $employee;
     }
 
@@ -281,12 +267,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
             $moduleAttributes->set('urls', $filteredUrls);
             $moduleAttributes->set('url_active', $urlActive);
-            $moduleAttributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
-            $moduleAttributes->set('actionTranslationLabels', self::ACTIONS_TRANSLATION_LABELS);
-            $moduleAttributes->set(
-                'categoryParent',
-                $this->categoriesProvider->getParentCategory($moduleAttributes->get('categoryName'))
-            );
+            $moduleAttributes->set('urls_labels', $this->getUrlsLabels($filteredUrls));
         }
 
         return $modules;
@@ -344,5 +325,20 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         return $modules;
+    }
+
+    /**
+     * @param array $actions Actions to get labels for
+     *
+     * @return array with labels
+     */
+    protected function getUrlsLabels(array $actions)
+    {
+        $urlsLabels = [];
+        foreach ($actions as $actionName => $actionUrl) {
+            $urlsLabels[$actionName] = $this->translator->trans(self::ACTIONS_TRANSLATION_LABELS[$actionName], [], 'Admin.Modules.Actions');
+        }
+
+        return $urlsLabels;
     }
 }

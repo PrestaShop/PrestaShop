@@ -3,10 +3,6 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
@@ -15,9 +11,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByGuestTest} from '@commonTests/FO/order';
 
 // Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
+import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
+import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import dashboardPage from '@pages/BO/dashboard';
@@ -73,6 +70,8 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   let browserContext: BrowserContext;
   let page: Page;
   let productNumber: number = 0;
+  let createProductMessage: string | null = '';
+  let updateProductMessage: string | null = '';
 
   // Prefix for the new products to simply delete them by bulk actions
   const prefixNewProduct: string = 'TOTEST';
@@ -93,7 +92,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   const productOutOfStockAllowed: ProductData = new ProductData({
     name: `Out of stock allowed ${prefixNewProduct}`,
     reference: 'd12345',
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: -12,
     minimumQuantity: 1,
@@ -103,7 +102,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   const productOutOfStockNotAllowed: ProductData = new ProductData({
     name: `Out of stock not allowed ${prefixNewProduct}`,
     reference: 'e12345',
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: -36,
     minimumQuantity: 3,
@@ -114,7 +113,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   const packOfProducts: ProductData = new ProductData({
     name: `Pack of products ${prefixNewProduct}`,
     reference: 'c12345',
-    type: 'Pack of products',
+    type: 'pack',
     pack: [
       {
         reference: 'demo_13',
@@ -135,14 +134,14 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   const virtualProduct: ProductData = new ProductData({
     name: `Virtual product ${prefixNewProduct}`,
     reference: 'b12345',
-    type: 'Virtual product',
+    type: 'virtual',
     taxRule: 'No tax',
     quantity: 20,
   });
   const combinationProduct: ProductData = new ProductData({
     name: `Product with combination ${prefixNewProduct}`,
     reference: 'a12345',
-    type: 'Standard product',
+    type: 'combinations',
     productHasCombinations: true,
     taxRule: 'No tax',
     quantity: 197,
@@ -153,7 +152,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   const simpleProduct: ProductData = new ProductData({
     name: `Simple product ${prefixNewProduct}`,
     reference: 'i12345',
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: 50,
     price: 20,
@@ -165,7 +164,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   const productWithSpecificPrice: ProductData = new ProductData({
     name: `Product with specific price ${prefixNewProduct}`,
     reference: 'f12345',
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: 20,
     specificPrice: {
@@ -178,7 +177,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   const productWithEcoTax: ProductData = new ProductData({
     name: `Product with ecotax ${prefixNewProduct}`,
     reference: 'g12345',
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: 20,
     minimumQuantity: 1,
@@ -187,7 +186,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   const productWithCartRule: ProductData = new ProductData({
     name: `Product with cart rule ${prefixNewProduct}`,
     reference: 'h12345',
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: 50,
     minimumQuantity: 1,
@@ -210,9 +209,6 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
   // Pre-condition: Enable EcoTax
   enableEcoTaxTest(`${baseContext}_preTest_2`);
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -259,37 +255,105 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       productWithCartRule,
     ].forEach((product: ProductData, index: number) => {
       describe(`Create product : '${product.name}'`, async () => {
-        it('should go to add product page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToAddProductPage${index}`, baseContext);
+        if (index === 0) {
+          it('should click on \'New product\' button and check new product modal', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', `clickOnNewProductButton${index}`, baseContext);
 
-          if (index === 0) {
-            await productsPage.goToAddProductPage(page);
+            const isModalVisible = await productsPage.clickOnNewProductButton(page);
+            expect(isModalVisible).to.be.eq(true);
+          });
+
+          it(`should choose '${product.type} product'`, async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
+
+            await productsPage.selectProductType(page, product.type);
+
+            const pageTitle = await addProductPage.getPageTitle(page);
+            expect(pageTitle).to.contains(addProductPage.pageTitle);
+          });
+        }
+
+        it('should go to new product page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToNewProductPage${index}`, baseContext);
+
+          if (index !== 0) {
+            await addProductPage.clickOnNewProductButton(page);
           } else {
-            await addProductPage.goToAddProductPage(page);
+            await productsPage.clickOnAddNewProduct(page);
           }
 
           const pageTitle = await addProductPage.getPageTitle(page);
           expect(pageTitle).to.contains(addProductPage.pageTitle);
         });
 
-        it('should create Product', async function () {
+        if (index !== 0) {
+          it(`should choose '${product.type} product'`, async function () {
+            await testContext.addContextItem(this, 'testIdentifier', `chooseProductType${index}`, baseContext);
+
+            await addProductPage.chooseProductType(page, product.type);
+
+            const pageTitle = await addProductPage.getPageTitle(page);
+            expect(pageTitle).to.contains(addProductPage.pageTitle);
+          });
+        }
+
+        it(`create product '${product.name}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
-          let createProductMessage: string|null;
+          createProductMessage = await addProductPage.setProduct(page, product);
+          expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
 
-          if (product === virtualProduct || product === productWithSpecificPrice) {
-            createProductMessage = await addProductPage.createEditBasicProduct(page, product);
-          } else {
-            createProductMessage = await addProductPage.setProduct(page, product);
-          }
+          // Add specific price
           if (product === productWithSpecificPrice) {
-            await addProductPage.addSpecificPrices(page, productWithSpecificPrice.specificPrice);
+            await addProductPage.goToTab(page, 'pricing');
+            await pricingTab.clickOnAddSpecificPriceButton(page);
+
+            createProductMessage = await pricingTab.setSpecificPrice(page, productWithSpecificPrice.specificPrice);
+            expect(createProductMessage).to.equal(addProductPage.successfulCreationMessage);
           }
+          // Add eco tax
           if (product === productWithEcoTax) {
-            await addProductPage.addEcoTax(page, productWithEcoTax.ecoTax);
+            await addProductPage.goToTab(page, 'pricing');
+            await pricingTab.addEcoTax(page, productWithEcoTax.ecoTax);
+
+            updateProductMessage = await addProductPage.saveProduct(page);
+            expect(updateProductMessage).to.equal(addProductPage.successfulUpdateMessage);
           }
-          expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
         });
+
+        if (product.type === 'combinations') {
+          it('should create combinations and check generate combinations button', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'createCombinations', baseContext);
+
+            const generateCombinationsButton = await combinationsTab.setProductAttributes(
+              page,
+              product.attributes,
+            );
+            expect(generateCombinationsButton).to.equal(combinationsTab.generateCombinationsMessage(4));
+          });
+
+          it('should click on generate combinations button', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations', baseContext);
+
+            const successMessage = await combinationsTab.generateCombinations(page);
+            expect(successMessage).to.equal(combinationsTab.successfulGenerateCombinationsMessage(4));
+          });
+
+          it('should close combinations generation modal', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
+
+            const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);
+            expect(isModalClosed).to.be.eq(true);
+
+            await combinationsTab.editCombinationRowQuantity(page, 1, combinationProduct.quantity);
+
+            const successMessage = await combinationsTab.saveCombinationsForm(page);
+            expect(successMessage).to.equal(combinationsTab.successfulUpdateMessage);
+
+            updateProductMessage = await addProductPage.saveProduct(page);
+            expect(updateProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+          });
+        }
       });
     });
 
@@ -863,7 +927,4 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
   // Post-condition: Disable EcoTax
   disableEcoTaxTest(`${baseContext}_postTest_4`);
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -1,0 +1,185 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+{# TODO: To be removed when we find a better time to fill the smarty variables. #}
+{{ ps.setupSmarty(layoutTitle ?? '', metaTitle, lightDisplay) }}
+<!DOCTYPE html>
+<html lang="{{ ps.isoUser }}">
+  <head>
+    {% block header %}
+      {% block core_javascript %}
+        {% include '@PrestaShop/Admin/Layout/core_javascript.html.twig' %}
+      {% endblock %}
+      {{ component('HeadTag', { metaTitle: metaTitle }) }}
+      {% block stylesheets %}
+        {% include '@PrestaShop/Admin/Layout/stylesheets.html.twig' %}
+      {% endblock %}
+      {% block extra_stylesheets %}{% endblock %}
+    {% endblock %}
+  </head>
+  <body class="lang-{{ ps.isoUser }}{% if ps.isRtlLanguage %} lang-rtl{% endif %} {{ ps.controllerName|escape|lower }}{% if ps.menuCollapsed %} page-sidebar-closed{% endif %}{% if ps.multiShop|default(false) %} multishop-enabled{% endif %}{% if ps.debugMode|default(false) %} developer-mode{% endif %}"
+    {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.base_url is defined %}data-base-url="{{ ps.jsRouterMetadata.base_url }}"{% endif %}
+    {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.token is defined %}data-token="{{ ps.jsRouterMetadata.token }}"{% endif %}
+  >
+{# Layout header #}
+{% block layout_header %}
+  <header id="header" class="d-print-none">
+    <nav id="header_infos" class="main-header">
+      <button class="btn btn-primary-reverse onclick btn-lg unbind ajax-spinner"></button>
+
+      {# Logo #}
+      <i class="material-icons js-mobile-menu">menu</i>
+      <a id="header_logo" class="logo float-left" href="{{ ps.defaultTabLink }}"></a>
+      <span id="shop_version">{{ ps.version }}</span>
+
+      {{ component('QuickAccess') }}
+
+      <div class="component component-search" id="header-search-container">
+        <div class="component-search-body">
+          <div class="component-search-top">
+            {{ component('SearchForm') }}
+            <button class="component-search-cancel d-none">
+              {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+            </button>
+          </div>
+          {{ component('MobileQuickAccess') }}
+        </div>
+        <div class="component-search-background d-none"></div>
+      </div>
+
+      {% if ps.debugMode|default(false) %}
+        <div class="component hide-mobile-sm" id="header-debug-mode-container">
+          <a class="link shop-state"
+             id="debug-mode"
+             data-toggle="pstooltip"
+             data-placement="bottom"
+             data-html="true"
+             title="<p class=&quot;text-left&quot;><strong>{{ 'Your shop is in debug mode.'|trans({}, 'Admin.Navigation.Notification') }}</strong></p><p class=&quot;text-left&quot;>{{ 'All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.'|trans({'[1]': '<strong>', '[/1]': '</strong>'}, 'Admin.Navigation.Notification') }}</p>"
+             href="{{ url('admin_performance') }}"
+          >
+            <i class="material-icons">bug_report</i>
+            <span>{{ 'Debug mode'|trans({}, 'Admin.Navigation.Header') }}</span>
+          </a>
+        </div>
+      {% endif %}
+
+      {% if ps.maintenanceModeEnabled|default(false) %}
+        {% set maintenanceTitle %}
+          <p class="text-left text-nowrap">
+            <strong>
+              {{ 'Your store is in maintenance mode.'|trans({}, 'Admin.Navigation.Notification') }}
+            </strong>
+          </p>
+          <p class="text-left">
+            {{ 'Your visitors and customers cannot access your store while in maintenance mode.'|trans({}, 'Admin.Navigation.Notification') }}
+          </p>
+          <p class="text-left">
+            {{ 'To manage the maintenance settings, go to Shop Parameters > Maintenance tab.'|trans({}, 'Admin.Navigation.Notification') }}
+          </p>
+          {% if ps.frontOfficeAccessibleForAdmins|default(false) %}
+            <p class="text-left">
+              {{ 'Admins can access the store front office without storing their IP.'|trans({}, 'Admin.Navigation.Notification') }}
+            </p>
+          {% endif %}
+        {% endset %}
+        <div class="component hide-mobile-sm" id="header-maintenance-mode-container">
+          <a class="link shop-state"
+             id="maintenance-mode"
+             data-toggle="pstooltip"
+             data-placement="bottom"
+             data-html="true"
+             title="{{ maintenanceTitle|e('html') }}"
+             href="{{ url('admin_maintenance') }}"
+          >
+            <i class="material-icons"
+               style="{% if ps.frontOfficeAccessibleForAdmins|default(false) %}color: var(--green);{% endif %}"
+            >build</i>
+            <span>{{ 'Maintenance mode'|trans({}, 'Admin.Navigation.Header') }}</span>
+          </a>
+        </div>
+      {% endif %}
+
+      <div class="header-right">
+        <div class="shop-list">
+          <a class="link" id="header_shopname" href="{{ ps.baseUrl }}" target= "_blank">
+            <i class="material-icons">visibility</i>
+            <span>{{ 'View my store'|trans({}, 'Admin.Navigation.Header') }}</span>
+          </a>
+        </div>
+        {{ component('NotificationsCenter') }}
+        {{ component('EmployeeDropdown') }}
+        {{ renderhook('displayBackOfficeTop') }}
+      </div>
+    </nav>
+  </header>
+
+  {{ component('NavBar') }}
+{% endblock %}
+
+{# Page header toolbar #}
+{% if showContentHeader %}
+  {% component Toolbar with {
+    layoutTitle: layoutTitle|default,
+    toolbarBtn: toolbarBtn|default({}),
+    helpLink: help_link|default(false),
+    enableSidebar: enableSidebar|default(false)
+  } %}
+    {% block pageTitle %}{{ block(outerBlocks.pageTitle) ?: parent() }}{% endblock %}
+  {% endcomponent %}
+{% endif %}
+
+<div id="main-div">
+  <div
+    class="content-div{% if showContentHeader is same as(false) %} -notoolbar{% endif %}{% if ps.displayedWithTabs %} with-tabs{% endif %}">
+    {% if ps.installDirExists %}
+      <div class="alert alert-warning">
+        {{ 'For security reasons, you must also delete the /install folder.'|trans({}, 'Admin.Login.Notification') }}
+      </div>
+    {% else %}
+      {{ renderhook('displayAdminAfterHeader', {}) }}
+
+      <div id="ajax_confirmation" class="alert alert-success" style="display: none;"></div>
+      <div id="content-message-box"></div>
+
+      {# Page content blocks #}
+      {% block content_header %}{% endblock %}
+      {% block content %}{% endblock %}
+      {% block content_footer %}{% endblock %}
+      {% block sidebar_right %}{% endblock %}
+
+      {{ renderhook('displayAdminEndContent', {}) }}
+    {% endif %}
+  </div>
+</div>
+
+  <div class="mobile-layer"></div>
+
+  {{ component('Footer') }}
+
+  {# Javascript blocks #}
+  {% block javascripts %}{% endblock %}
+  {% block extra_javascripts %}{% endblock %}
+  {% block translate_javascripts %}{% endblock %}
+</body>
+</html>

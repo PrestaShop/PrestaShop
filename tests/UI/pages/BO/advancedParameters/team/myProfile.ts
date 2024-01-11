@@ -71,7 +71,7 @@ class MyProfile extends EmployeeBasePage {
     }
     await this.setChecked(page, this.enableGravatarInput(newEmployeeData.enableGravatar ? 1 : 0));
     await this.setValue(page, this.emailInput, newEmployeeData.email);
-    await page.click(this.passwordButton);
+    await page.locator(this.passwordButton).click();
     await this.setValue(page, this.currentPasswordInput, currentPassword);
     await this.setValue(page, this.newPasswordInput, newEmployeeData.password);
     await this.setValue(page, this.confirmPasswordInput, newEmployeeData.password);
@@ -82,7 +82,7 @@ class MyProfile extends EmployeeBasePage {
 
   /**
    * Get the value of an input
-   *
+   * @override
    * @param page {Page} Browser tab
    * @param input {string} ID of the input
    * @returns {Promise<string>}
@@ -101,7 +101,7 @@ class MyProfile extends EmployeeBasePage {
         throw new Error(`Field ${input} was not found`);
     }
 
-    return page.inputValue(inputSelector);
+    return super.getInputValue(page, inputSelector);
   }
 
   /**

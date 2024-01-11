@@ -222,11 +222,9 @@ class WebserviceRequestCore
         return $this->_outputEnabled;
     }
 
-    public function setOutputEnabled($bool)
+    public function setOutputEnabled(bool $bool)
     {
-        if (Validate::isBool($bool)) {
-            $this->_outputEnabled = $bool;
-        }
+        $this->_outputEnabled = $bool;
 
         return $this;
     }

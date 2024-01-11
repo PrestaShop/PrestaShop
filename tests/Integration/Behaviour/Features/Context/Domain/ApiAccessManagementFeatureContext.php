@@ -31,38 +31,50 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\DeleteApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\EditApiAccessCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateApiAccessSecretCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessException;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessId;
+use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
+use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\Resetter\ApiAccessResetter;
 
 class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When /^I create an api access "(.+)" with following properties:$/
+     * @When I create an api access :apiAccessReference with following properties:
      */
     public function createApiAccessUsingCommand(string $apiAccessReference, TableNode $table)
     {
-        $data = $this->fixDataType($table->getRowsHash());
+        $this->createApiAccess($apiAccessReference, $table);
+    }
 
-        $command = new AddApiAccessCommand(
-          $data['clientName'],
-          $data['apiClientId'],
-          $data['enabled'],
-          $data['description']
-        );
+    /**
+     * @When I create an api access :apiAccessReference with generated secret :secretReference using following properties:
+     */
+    public function createApiAccessUsingCommandAndStoreSecret(string $apiAccessReference, string $secretReference, TableNode $table)
+    {
+        $this->createApiAccess($apiAccessReference, $table, $secretReference);
+    }
 
-        try {
-            /** @var ApiAccessId $id */
-            $id = $this->getCommandBus()->handle($command);
+    /**
+     * @When I generate new secret :secretReference for api access :apiAccessReference
+     */
+    public function generateSecretApiAccessUsingCommand(string $secretReference, string $apiAccessReference)
+    {
+        $this->getSharedStorage()->exists($apiAccessReference);
 
-            $this->getSharedStorage()->set($apiAccessReference, $id->getValue());
-        } catch (ApiAccessConstraintException $e) {
-            $this->setLastException($e);
-        }
+        $commandBus = $this->getCommandBus();
+        $command = new GenerateApiAccessSecretCommand($this->getSharedStorage()->get($apiAccessReference));
+        $newSecret = $commandBus->handle($command);
+        $this->getSharedStorage()->set($secretReference, $newSecret);
     }
 
     /**
@@ -98,6 +110,13 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             }
         }
 
+        if (isset($expectedData['scopes'])) {
+            $expectedScopes = PrimitiveUtils::castStringArrayIntoArray($expectedData['scopes']);
+            if ($result->getScopes() !== $expectedScopes) {
+                $errors[] = 'scopes';
+            }
+        }
+
         if (count($errors) > 0) {
             throw new \RuntimeException(sprintf('Fields %s are not identical', implode(', ', $errors)));
         }
@@ -127,8 +146,18 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['description'])) {
             $command->setDescription($data['description']);
         }
+        if (isset($data['scopes'])) {
+            $command->setScopes(PrimitiveUtils::castStringArrayIntoArray($data['scopes']));
+        }
+        if (isset($data['lifetime'])) {
+            $command->setLifetime($data['lifetime']);
+        }
 
-        $commandBus->handle($command);
+        try {
+            $commandBus->handle($command);
+        } catch (ApiAccessConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -142,7 +171,9 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             $data['clientName'],
             $data['apiClientId'],
             $data['enabled'],
-            $data['description']
+            $data['description'],
+            $data['lifetime'],
+            PrimitiveUtils::castStringArrayIntoArray($data['scopes'] ?? '')
         );
 
         try {
@@ -187,6 +218,27 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When /^I delete api access "(.+)"$/
+     */
+    public function iDeleteApiAccess(string $apiAccessReference)
+    {
+        $this->getCommandBus()->handle(new DeleteApiAccessCommand($this->getSharedStorage()->get($apiAccessReference)));
+    }
+
+    /**
+     * @Then /^api access "(.+)" should not exist$/
+     */
+    public function checkApiAccessNotFound(string $apiAccessReference)
+    {
+        try {
+            $this->getCommandBus()->handle(new GetApiAccessForEditing($this->getSharedStorage()->get($apiAccessReference)));
+        } catch (ApiAccessNotFoundException $e) {
+            return;
+        }
+        throw new \RuntimeException(sprintf('API Access %s still exists', $apiAccessReference));
+    }
+
+    /**
      * @Then I should get an error that :fieldName is not unique
      */
     public function iShouldGetAnErrorThatFieldIsNotUnique(string $fieldName): void
@@ -220,6 +272,40 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then secret :secretReference is valid for api access :apiAccessReference
+     */
+    public function assertSecretIsValid(string $secretReference, string $apiAccessReference): void
+    {
+        $this->assertSecret($secretReference, $apiAccessReference, true);
+    }
+
+    /**
+     * @Then secret :secretReference is invalid for api access :apiAccessReference
+     */
+    public function assertSecretIsInvalid(string $secretReference, string $apiAccessReference): void
+    {
+        $this->assertSecret($secretReference, $apiAccessReference, false);
+    }
+
+    private function assertSecret(string $secretReference, string $apiAccessReference, bool $expected): void
+    {
+        // Manually get the entity because secret is not part of the CQRS query
+        $apiAccessRepository = $this->getContainer()->get(ApiAccessRepository::class);
+        $apiAccess = $apiAccessRepository->getById($this->getSharedStorage()->get($apiAccessReference));
+        $hashedSecret = $apiAccess->getClientSecret();
+
+        $plainSecret = $this->getSharedStorage()->get($secretReference);
+        $passwordHasher = $this->getContainer()->get(PasswordHasherInterface::class);
+        if ($expected !== $passwordHasher->verify($hashedSecret, $plainSecret)) {
+            throw new \RuntimeException(sprintf(
+                'Secret %s was expected to be %s',
+                $secretReference,
+                $expected ? 'valid' : 'invalid'
+            ));
+        }
+    }
+
+    /**
      * @BeforeFeature @restore-api-access-before-feature
      */
     public static function restoreProductTablesBeforeFeature(): void
@@ -227,10 +313,40 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
         ApiAccessResetter::resetApiAccess();
     }
 
+    private function createApiAccess(string $apiAccessReference, TableNode $table, string $secretReference = null): void
+    {
+        $data = $this->fixDataType($table->getRowsHash());
+
+        $command = new AddApiAccessCommand(
+            $data['clientName'],
+            $data['apiClientId'],
+            $data['enabled'],
+            $data['description'],
+            $data['lifetime'],
+            PrimitiveUtils::castStringArrayIntoArray($data['scopes'] ?? '')
+        );
+
+        try {
+            /** @var CreatedApiAccess $apiAccess */
+            $apiAccess = $this->getCommandBus()->handle($command);
+
+            $this->getSharedStorage()->set($apiAccessReference, $apiAccess->getApiAccessId()->getValue());
+            if (!empty($secretReference)) {
+                $this->getSharedStorage()->set($secretReference, $apiAccess->getSecret());
+            }
+        } catch (ApiAccessConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
     private function fixDataType(array $data): array
     {
         if (array_key_exists('enabled', $data) && !is_null($data['enabled'])) {
-            $data['enabled'] = filter_var($data['enabled'], FILTER_VALIDATE_BOOL);
+            $data['enabled'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']);
+        }
+
+        if (array_key_exists('lifetime', $data) && !is_null($data['lifetime'])) {
+            $data['lifetime'] = intval($data['lifetime']);
         }
 
         return $data;
@@ -257,6 +373,8 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             'clientName' => ApiAccessConstraintException::INVALID_CLIENT_NAME,
             'enabled' => ApiAccessConstraintException::INVALID_ENABLED,
             'description' => ApiAccessConstraintException::INVALID_DESCRIPTION,
+            'scopes' => ApiAccessConstraintException::NON_INSTALLED_SCOPES,
+            'lifetime' => ApiAccessConstraintException::NOT_POSITIVE_LIFETIME,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {

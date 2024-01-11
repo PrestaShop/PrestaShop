@@ -100,11 +100,11 @@ class CreateAccountPage extends FOBasePage {
       `${customer.monthOfBirth}/${customer.dayOfBirth}/${customer.yearOfBirth}`,
     );
 
-    await page.click(this.customerPrivacyCheckbox);
+    await page.locator(this.customerPrivacyCheckbox).click();
     if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
-      await page.click(this.psgdprCheckbox);
+      await page.locator(this.psgdprCheckbox).click();
     }
-    await page.click(this.saveButton);
+    await page.locator(this.saveButton).click();
   }
 
   /**

@@ -84,7 +84,10 @@ class ModuleRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * Return active modules.
+     * Return active modules (active in DB and present on the disk).
+     *
+     * This method must not trigger any exception because it is called during install and/or on kernel initialisation,
+     * it must not block those steps in any occasion.
      *
      * @return array
      */
@@ -101,15 +104,60 @@ class ModuleRepository extends AbstractObjectModelRepository
             );
 
             if (is_array($modulesData)) {
-                $activeModules = array_map(function (array $module): string {
+                $activeModulesInDb = array_map(function (array $module): string {
                     return $module['name'];
                 }, $modulesData);
+
+                foreach ($this->getModulesFromFolder() as $moduleName => $modulePath) {
+                    if (in_array($moduleName, $activeModulesInDb)) {
+                        $activeModules[] = $moduleName;
+                    }
+                }
             }
-        } catch (Exception $exception) {
+        } catch (Exception) {
             // DO nothing. getActiveModules() can be called during install BEFORE the database configuration has been defined
+            return [];
         }
 
         return $activeModules;
+    }
+
+    /**
+     * Return installed modules (present in DB regardless of its state AND in the modules folder).
+     *
+     * This method must not trigger any exception because it is called during install and/or on kernel initialisation,
+     * it must not block those steps in any occasion.
+     *
+     * @return array
+     */
+    public function getInstalledModules(): array
+    {
+        if (!defined('_DB_PREFIX_')) {
+            return [];
+        }
+
+        $installedModules = [];
+        try {
+            $modulesData = \Db::getInstance()->executeS(
+                'SELECT m.* FROM `' . _DB_PREFIX_ . 'module` m'
+            );
+
+            if (is_array($modulesData)) {
+                $installedModulesInDb = array_map(function (array $module): string {
+                    return $module['name'];
+                }, $modulesData);
+
+                foreach ($this->getModulesFromFolder() as $moduleName => $modulePath) {
+                    if (in_array($moduleName, $installedModulesInDb)) {
+                        $installedModules[] = $moduleName;
+                    }
+                }
+            }
+        } catch (Exception) {
+            return [];
+        }
+
+        return $installedModules;
     }
 
     /**
@@ -123,7 +171,7 @@ class ModuleRepository extends AbstractObjectModelRepository
             $this->activeModulesPaths = [];
             $activeModules = $this->getActiveModules();
 
-            foreach ($this->getModules() as $moduleName => $modulePath) {
+            foreach ($this->getModulesFromFolder() as $moduleName => $modulePath) {
                 if (in_array($moduleName, $activeModules)) {
                     $this->activeModulesPaths[$moduleName] = $modulePath;
                 }
@@ -174,7 +222,7 @@ class ModuleRepository extends AbstractObjectModelRepository
 
         $modules = [];
 
-        foreach ($this->getModules() as $moduleName => $modulePath) {
+        foreach ($this->getModulesFromFolder() as $moduleName => $modulePath) {
             if (!in_array($moduleName, $nativeModules)) {
                 $modules[] = $moduleName;
             }
@@ -188,7 +236,7 @@ class ModuleRepository extends AbstractObjectModelRepository
      *
      * @return iterable
      */
-    private function getModules(): iterable
+    private function getModulesFromFolder(): iterable
     {
         $modulesFiles = Finder::create()->directories()->in($this->moduleDir)->depth(0);
         foreach ($modulesFiles as $moduleFile) {

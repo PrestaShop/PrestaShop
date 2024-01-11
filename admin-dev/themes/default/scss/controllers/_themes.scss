@@ -1,11 +1,15 @@
 .theme-container {
   position: relative;
   width: 100%;
-  height: 300px;
   overflow: hidden;
   background-color: rgba(#4d576e, 0.3);
   border: solid 1px #ccc;
   @include border-radius(3px);
+
+  .thumbnail {
+    width: 100%;
+    margin-bottom: 0;
+  }
 
   .theme-title {
     height: 40px;
