@@ -3868,7 +3868,7 @@ class AdminImportControllerCore extends AdminController
             }
         }
 
-        if (is_array($store->hours)) {
+        if (is_array($store->hours) && isset($info['hours'])) {
             $newHours = [];
             foreach ($store->hours as $hour) {
                 $newHours[] = [$hour];
