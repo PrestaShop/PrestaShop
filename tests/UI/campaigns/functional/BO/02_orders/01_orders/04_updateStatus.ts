@@ -151,8 +151,7 @@ describe('BO - orders : Update order status', async () => {
         it('should check received email', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkEmail${index}`, baseContext);
 
-          numberOfEmails = allEmails.length;
-          expect(allEmails[numberOfEmails - 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] ${test.args.email}`);
+          expect(allEmails[allEmails.length - 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] ${test.args.email}`);
         });
 
         if (test.args.orderStatus.name === OrderStatuses.paymentAccepted.name) {
