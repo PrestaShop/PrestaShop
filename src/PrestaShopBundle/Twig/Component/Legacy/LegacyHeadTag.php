@@ -35,6 +35,26 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/LegacyLayout/head_tag.html.twig')]
 class LegacyHeadTag extends HeadTag
 {
+    /**
+     * Legacy controller build the meta title differently, so we match this for backward compatibility and so that the UI
+     * tests can run with their expected values.
+     *
+     * @return string
+     */
+    public function getMetaTitle(): string
+    {
+        $legacyMetaTitle = $this->getLegacyController()->getMetaTitle();
+        if (empty($legacyMetaTitle)) {
+            return parent::getMetaTitle();
+        }
+
+        if (is_array($legacyMetaTitle)) {
+            $legacyMetaTitle = strip_tags(implode(' ' . $this->configuration->get('PS_NAVIGATION_PIPE') . ' ', $legacyMetaTitle));
+        }
+
+        return $legacyMetaTitle;
+    }
+
     public function getControllerName(): string
     {
         return $this->getLegacyController()->controller_name;

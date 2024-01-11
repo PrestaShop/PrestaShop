@@ -2432,6 +2432,11 @@ class AdminControllerCore extends Controller
         return $this->tpl_list_vars;
     }
 
+    public function getMetaTitle()
+    {
+        return $this->meta_title;
+    }
+
     /**
      * Override to render the view page.
      *
