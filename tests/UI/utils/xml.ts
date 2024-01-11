@@ -54,12 +54,15 @@ export default {
    * Returns the XML Node value from a specific path
    * @param {string} xml
    * @param {string} path
-   * @return {string}
+   * @return {string|null}
    */
-  getNodeValue(xml: string, path: string): string {
+  getNodeValue(xml: string, path: string): string|null {
     const xmlDocument = this.getXmlDocument(xml);
 
-    return xpath.select1(`string(${path})`, xmlDocument) as string;
+    if (xpath.select1(`boolean(${path})`, xmlDocument)) {
+      return xpath.select1(`string(${path})`, xmlDocument) as string;
+    }
+    return null;
   },
 
   /**

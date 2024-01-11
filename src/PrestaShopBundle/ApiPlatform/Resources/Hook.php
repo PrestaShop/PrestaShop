@@ -67,7 +67,7 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
             exceptionToStatus: [HookNotFoundException::class => 404],
             provider: QueryProvider::class,
             extraProperties: [
-                'query' => GetHookStatus::class,
+                'CQRSQuery' => GetHookStatus::class,
                 'scopes' => ['hook_read'],
             ]
         ),
@@ -75,7 +75,7 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
             uriTemplate: '/hook-status',
             processor: CommandProcessor::class,
             extraProperties: [
-                'command' => UpdateHookStatusCommand::class,
+                'CQRSCommand' => UpdateHookStatusCommand::class,
                 'scopes' => ['hook_write'],
             ]
         ),
@@ -85,7 +85,7 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
             exceptionToStatus: [HookNotFoundException::class => 404],
             provider: QueryProvider::class,
             extraProperties: [
-                'query' => GetHook::class,
+                'CQRSQuery' => GetHook::class,
                 'scopes' => ['hook_read'],
             ]
         ),

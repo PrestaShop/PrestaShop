@@ -86,7 +86,7 @@ class PaymentBlock extends ViewOrderBasePage {
    * @returns {*}
    */
   getPaymentAmountInputValue(page: Page): Promise<string> {
-    return page.$eval(this.paymentAmountInput, (el: HTMLInputElement) => el.value);
+    return page.locator(this.paymentAmountInput).evaluate((el: HTMLInputElement) => el.value);
   }
 
   /**
@@ -109,7 +109,7 @@ class PaymentBlock extends ViewOrderBasePage {
       await this.selectByVisibleText(page, this.paymentInvoiceSelect, invoice);
     }
 
-    await page.click(this.paymentAddButton);
+    await page.locator(this.paymentAddButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

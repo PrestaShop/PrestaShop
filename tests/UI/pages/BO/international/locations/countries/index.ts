@@ -309,7 +309,7 @@ class Countries extends BOBasePage {
    */
   async setCountryStatus(page: Page, row: number, wantedStatus: boolean): Promise<void> {
     if (wantedStatus !== await this.getCountryStatus(page, row)) {
-      await page.click(this.tableColumnStatusLink(row));
+      await page.locator(this.tableColumnStatusLink(row)).click();
     }
   }
 
@@ -344,10 +344,10 @@ class Countries extends BOBasePage {
    * @return {Promise<void>}
    */
   async bulkSelectRows(page: Page): Promise<void> {
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
 
     await Promise.all([
-      page.click(this.selectAllLink),
+      page.locator(this.selectAllLink).click(),
       this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
   }
@@ -363,7 +363,7 @@ class Countries extends BOBasePage {
     await this.bulkSelectRows(page);
 
     // Click on Button Bulk actions
-    await page.click(this.bulkActionMenuButton);
+    await page.locator(this.bulkActionMenuButton).click();
 
     // Click on delete
     await this.clickAndWaitForURL(page, this.bulkDeleteLink);
@@ -382,7 +382,7 @@ class Countries extends BOBasePage {
 
     // Set status
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
+      page.locator(this.bulkActionMenuButton).click(),
       this.waitForVisibleSelector(page, this.bulkEnableLink),
     ]);
 
@@ -487,7 +487,7 @@ class Countries extends BOBasePage {
    */
   async setCountriesRestrictions(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.enableRestrictCountriesToggleLabel(toEnable ? 'on' : 'off'));
-    await page.click(this.saveButton);
+    await page.locator(this.saveButton).click();
     await this.elementNotVisible(page, this.enableRestrictCountriesToggleLabel(!toEnable ? 'on' : 'off'));
 
     return this.getAlertSuccessBlockContent(page);

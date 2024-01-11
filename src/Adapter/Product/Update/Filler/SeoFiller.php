@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Update\Filler;
 
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
+use PrestaShop\PrestaShop\Adapter\Domain\LocalizedObjectModelTrait;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
@@ -40,6 +41,8 @@ use Product;
 
 class SeoFiller implements ProductFillerInterface
 {
+    use LocalizedObjectModelTrait;
+
     /**
      * @var ProductRepository
      */
@@ -89,14 +92,12 @@ class SeoFiller implements ProductFillerInterface
 
         $localizedMetaDescriptions = $command->getLocalizedMetaDescriptions();
         if (null !== $localizedMetaDescriptions) {
-            $product->meta_description = $localizedMetaDescriptions;
-            $updatableProperties['meta_description'] = array_keys($localizedMetaDescriptions);
+            $this->fillLocalizedValues($product, 'meta_description', $localizedMetaDescriptions, $updatableProperties);
         }
 
         $localizedMetaTitles = $command->getLocalizedMetaTitles();
         if (null !== $localizedMetaTitles) {
-            $product->meta_title = $localizedMetaTitles;
-            $updatableProperties['meta_title'] = array_keys($localizedMetaTitles);
+            $this->fillLocalizedValues($product, 'meta_title', $localizedMetaTitles, $updatableProperties);
         }
 
         $localizedLinkRewrites = $command->getLocalizedLinkRewrites();

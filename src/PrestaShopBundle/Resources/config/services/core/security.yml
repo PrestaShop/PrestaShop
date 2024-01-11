@@ -17,10 +17,10 @@ services:
     alias: 'PrestaShop\PrestaShop\Adapter\Security\Access'
     public: false
 
-  PrestaShop\PrestaShop\Core\Security\TokenAuthenticator:
+  PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator:
     public: false
     arguments:
-      - '@PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface'
+      - '@PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface'
       - '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'
 
   PrestaShop\PrestaShop\Core\Security\OAuth2\ApiRequestMatcher:

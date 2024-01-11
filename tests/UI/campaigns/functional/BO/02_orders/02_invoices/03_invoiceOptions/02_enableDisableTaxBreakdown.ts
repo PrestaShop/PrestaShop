@@ -6,14 +6,9 @@ import testContext from '@utils/testContext';
 // Import commonSteps
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import addProductPage from '@pages/BO/catalog/products/add';
 import boProductsPage from '@pages/BO/catalog/products';
 import dashboardPage from '@pages/BO/dashboard';
@@ -72,12 +67,9 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
     name: 'TVA FR 10%',
   });
   const productData: ProductData = new ProductData({
-    type: 'Standard product',
+    type: 'standard',
     taxRule: taxRuleGroupToCreate.name,
   });
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_dnableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -197,13 +189,38 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
-      it('should create product', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+      it('should click on \'New product\' button and check new product modal', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-        await boProductsPage.goToAddProductPage(page);
+        const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
+        expect(isModalVisible).to.be.eq(true);
+      });
 
-        const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
-        expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+      it('should choose \'Standard product\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
+
+        await boProductsPage.selectProductType(page, productData.type);
+
+        const pageTitle = await addProductPage.getPageTitle(page);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
+      });
+
+      it('should go to new product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
+
+        await boProductsPage.clickOnAddNewProduct(page);
+
+        const pageTitle = await addProductPage.getPageTitle(page);
+        expect(pageTitle).to.contains(addProductPage.pageTitle);
+      });
+
+      it('should create standard product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
+
+        await addProductPage.closeSfToolBar(page);
+
+        const createProductMessage = await addProductPage.setProduct(page, productData);
+        expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
       });
     });
 
@@ -472,7 +489,4 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
   // Post-condition: Delete the created products
   bulkDeleteProductsTest(productData.name, `${baseContext}_postTest`);
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

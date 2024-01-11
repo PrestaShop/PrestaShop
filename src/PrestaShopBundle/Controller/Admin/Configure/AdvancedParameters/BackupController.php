@@ -51,7 +51,7 @@ class BackupController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
      *           message="You do not have permission to update this.",
-     *          redirectRoute="admin_product_catalog"
+     *          redirectRoute="admin_products_index"
      * )
      *
      * @param Request $request

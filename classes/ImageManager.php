@@ -171,10 +171,10 @@ class ImageManagerCore
      *
      * @param string $sourceFile Image object from $_FILE
      * @param string $destinationFile Destination filename
-     * @param int $destinationWidth Desired width (optional)
-     * @param int $destinationHeight Desired height (optional)
-     * @param string $destinationFileType Desired file_type (may be override by PS_IMAGE_QUALITY)
-     * @param bool $forceType Don't override $file_type by PS_IMAGE_QUALITY, used when generating webp and avif files
+     * @param int $destinationWidth Desired width (optional), pass null to use original dimensions
+     * @param int $destinationHeight Desired height (optional), pass null to use original dimensions
+     * @param string $destinationFileType Desired file type inside the image. If jpg and $forceType is false, format inside will be decided by PS_IMAGE_QUALITY
+     * @param bool $forceType If false and $destinationFileType is jpg, format inside will be decided by PS_IMAGE_QUALITY
      * @param int $error Out error code
      * @param int $targetWidth Needed by AdminImportController to speed up the import process
      * @param int $targetHeight Needed by AdminImportController to speed up the import process
@@ -248,17 +248,19 @@ class ImageManagerCore
             $sourceHeight = $tmpHeight;
         }
 
-        // If the filetype is not forced and we are requesting a JPG file, we must
-        // adjust the format inside according to PS_IMAGE_QUALITY in some cases.
+        /*
+         * If the filetype is not forced and we are requesting a JPG file, we will adjust the format inside
+         * the image according to PS_IMAGE_QUALITY in some cases.
+         */
         if (!$forceType && $destinationFileType === 'jpg') {
-            if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
-                || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $sourceFileType == IMAGETYPE_PNG)) {
+            // If PS_IMAGE_QUALITY is set to png_all, we will use PNG file no matter the source.
+            if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all') {
                 $destinationFileType = 'png';
             }
 
-            if (Configuration::get('PS_IMAGE_QUALITY') == 'webp_all'
-                || (Configuration::get('PS_IMAGE_QUALITY') == 'webp' && $sourceFileType == IMAGETYPE_WEBP)) {
-                $destinationFileType = 'webp';
+            // If PS_IMAGE_QUALITY is set to png (optional), we will use PNG if the original format could support transparency.
+            if (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $sourceFileType != IMAGETYPE_JPEG) {
+                $destinationFileType = 'png';
             }
         }
 
@@ -329,11 +331,6 @@ class ImageManagerCore
         $writeFile = ImageManager::write($destinationFileType, $destImage, $destinationFile);
         Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $destinationFileType]);
         @imagedestroy($srcImage);
-
-        file_put_contents(
-            dirname($destinationFile) . DIRECTORY_SEPARATOR . 'fileType',
-            $destinationFileType
-        );
 
         return $writeFile;
     }

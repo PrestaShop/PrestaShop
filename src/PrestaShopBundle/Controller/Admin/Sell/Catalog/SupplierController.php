@@ -108,8 +108,8 @@ class SupplierController extends FrameworkBundleAdminController
     public function createAction(Request $request)
     {
         $formData = [];
-        if ($request->request->has('supplier') && isset($request->request->get('supplier')['id_country'])) {
-            $formCountryId = (int) $request->request->get('supplier')['id_country'];
+        if ($request->request->has('supplier') && isset($request->request->all('supplier')['id_country'])) {
+            $formCountryId = (int) $request->request->all('supplier')['id_country'];
             $formData['id_country'] = $formCountryId;
         }
 
@@ -294,8 +294,8 @@ class SupplierController extends FrameworkBundleAdminController
     public function editAction(Request $request, $supplierId)
     {
         $formData = [];
-        if ($request->request->has('supplier') && isset($request->request->get('supplier')['id_country'])) {
-            $formCountryId = (int) $request->request->get('supplier')['id_country'];
+        if ($request->request->has('supplier') && isset($request->request->all('supplier')['id_country'])) {
+            $formCountryId = (int) $request->request->all('supplier')['id_country'];
             $formData['id_country'] = $formCountryId;
         }
 

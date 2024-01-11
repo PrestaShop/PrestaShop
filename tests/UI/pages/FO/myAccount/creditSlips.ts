@@ -60,7 +60,7 @@ class CreditSlipPage extends FOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfCreditSlips(page: Page): Promise<number> {
-    return (await page.$$(this.creditSlipsTableRows)).length;
+    return page.locator(this.creditSlipsTableRows).count();
   }
 
   /**

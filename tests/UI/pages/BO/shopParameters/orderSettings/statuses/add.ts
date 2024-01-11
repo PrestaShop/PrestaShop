@@ -75,7 +75,7 @@ class AddOrderStatus extends BOBasePage {
     await this.setValue(page, this.nameInput, orderStatusData.name);
 
     // Set color
-    await this.setColorValue(page, this.colorInput, orderStatusData.color);
+    await this.setInputValue(page, this.colorInput, orderStatusData.color);
 
     await this.setHiddenCheckboxValue(page, this.logableOnCheckbox, orderStatusData.logableOn);
     await this.setHiddenCheckboxValue(page, this.invoiceOnCheckbox, orderStatusData.invoiceOn);

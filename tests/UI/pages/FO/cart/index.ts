@@ -273,7 +273,7 @@ class CartPage extends FOBasePage {
   async editProductQuantity(page: Page, productID: number, quantity: number | string): Promise<void> {
     await this.setValue(page, this.productQuantity(productID), quantity);
     // click on price to see that its changed
-    await page.click(this.productPrice(productID));
+    await page.locator(this.productPrice(productID)).click();
   }
 
   /**
@@ -288,12 +288,12 @@ class CartPage extends FOBasePage {
 
     if (productQuantity < quantity) {
       for (let i: number = 1; i < quantity; i++) {
-        await page.click(this.productQuantityScrollUpButton);
+        await page.locator(this.productQuantityScrollUpButton).click();
         await page.waitForTimeout(1000);
       }
     } else {
       for (let i: number = productQuantity; i > quantity; i--) {
-        await page.click(this.productQuantityScrollDownButton);
+        await page.locator(this.productQuantityScrollDownButton).click();
         await page.waitForTimeout(1000);
       }
     }
@@ -384,10 +384,10 @@ class CartPage extends FOBasePage {
    */
   async addPromoCode(page: Page, code: string, clickOnPromoCodeLink: boolean = true): Promise<void> {
     if (clickOnPromoCodeLink) {
-      await page.click(this.promoCodeLink);
+      await page.locator(this.promoCodeLink).click();
     }
     await this.setValue(page, this.promoInput, code);
-    await page.click(this.addPromoCodeButton);
+    await page.locator(this.addPromoCodeButton).click();
     await page.waitForTimeout(1000);
   }
 
@@ -407,7 +407,7 @@ class CartPage extends FOBasePage {
    */
   async clickOnPromoCode(page: Page): Promise<void> {
     await this.waitForSelectorAndClick(page, this.highlightPromoCode);
-    await page.click(this.addPromoCodeButton);
+    await page.locator(this.addPromoCodeButton).click();
   }
 
   /**

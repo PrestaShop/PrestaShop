@@ -1,0 +1,73 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+{# TODO: To be removed when we find a better time to fill the smarty variables. #}
+{{ ps.setupSmarty(layoutTitle ?? '', metaTitle, lightDisplay) }}
+<!DOCTYPE html>
+<html lang="{{ ps.isoUser }}">
+<head>
+  {% block header %}
+    {% block core_javascript %}
+      {% include '@PrestaShop/Admin/Layout/core_javascript.html.twig' %}
+    {% endblock %}
+    {{ component('HeadTag', { metaTitle: metaTitle }) }}
+    {% block stylesheets %}
+      {% include '@PrestaShop/Admin/Layout/stylesheets.html.twig' %}
+    {% endblock %}
+    {% block extra_stylesheets %}{% endblock %}
+  {% endblock %}
+</head>
+
+<body
+  class="lang-{{ ps.isoUser }}{%if ps.isRtlLanguage %} lang-rtl{% endif %} {{ ps.controllerName|escape|lower }}{% if ps.menuCollapsed %} page-sidebar-closed{% endif %}{% if ps.debugMode|default(false) %} developer-mode{% endif %}"
+  {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.base_url is defined %}data-base-url="{{ ps.jsRouterMetadata.base_url }}"{% endif %}
+  {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.token %}data-token="{{ ps.jsRouterMetadata.token }}"{% endif %}
+>
+
+<div id="main-div" class="light_display_layout">
+  {% if ps.installDirExists %}
+    <div class="alert alert-warning">
+      {{ 'For security reasons, you must also delete the /install folder.'|trans({}, 'Admin.Login.Notification') }}
+    </div>
+  {% else %}
+    <div class="-notoolbar">
+      {{ renderhook('displayAdminAfterHeader', {}) }}
+
+      {# Page content blocks #}
+      {% block content_header %}{% endblock %}
+      {% block content %}{% endblock %}
+      {% block content_footer %}{% endblock %}
+      {% block sidebar_right %}{% endblock %}
+
+      {{ renderhook('displayAdminEndContent', {}) }}
+    </div>
+  {% endif %}
+</div>
+
+{# Javascript blocks #}
+{% block javascripts %}{% endblock %}
+{% block extra_javascripts %}{% endblock %}
+{% block translate_javascripts %}{% endblock %}
+</body>
+</html>

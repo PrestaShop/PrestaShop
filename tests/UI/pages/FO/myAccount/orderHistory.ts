@@ -95,7 +95,7 @@ class OrderHistoryPage extends FOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfOrders(page: Page): Promise<number> {
-    return (await page.$$(this.ordersTableRows)).length;
+    return page.locator(this.ordersTableRows).count();
   }
 
   /**

@@ -20,6 +20,17 @@ parameters:
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
   api_base_path: !php/const PrestaShopBundle\Api\Api::API_BASE_PATH
+  prestashop.controllers_all_shop_context:
+    - AdminAccess
+    - AdminFeatureFlag
+    - AdminLanguages
+    - AdminProfiles
+    - AdminSpecificPriceRule
+    - AdminStatuses
+    - AdminSecurity
+    - AdminSecuritySessionEmployee
+    - AdminSecuritySessionCustomer
+    - AdminTranslations
 
 # Autowires Core controllers
 services:
@@ -30,6 +41,9 @@ services:
 framework:
   assets:
     version: !php/const PrestaShop\PrestaShop\Core\Version::VERSION
+    packages:
+      front_js:
+        base_path: '../js'
 
   # esi: ~
   secret: "%secret%"
@@ -78,7 +92,6 @@ twig:
   form_themes:
     - '@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_horizontal_layout.html.twig'
   paths:
-    '%admin_page%/Product': Product
     '%admin_page%/TwigTemplateForm': Twig
     '%admin_page%/Common': Common
     '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
@@ -88,6 +101,7 @@ twig:
     '%prestashop_views%': PrestaShopCore
     '%kernel.project_dir%/admin-dev/themes/new-theme': AdminNewTheme
   globals:
+    ps: '@PrestaShopBundle\Twig\Layout\PrestaShopLayoutGlobalVariables'
     webpack_server: false
     multistore_field_prefix: !php/const PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX
     modify_all_shops_prefix: !php/const PrestaShopBundle\Form\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
@@ -96,13 +110,19 @@ twig:
 api_platform:
   title: Backoffice API
   version: 0.1.0
+  enable_docs: true
   enable_entrypoint: false
+  enable_swagger: true
+  enable_swagger_ui: true
   formats:
     json:
       mime_types: [ 'application/json' ]
     # Allow this format for other API endpoint than native endpoint (by default we will use json)
     jsonld:
       mime_types: [ 'application/ld+json' ]
+    # This is used to allow using the Swagger UI in HTML presentation
+    html:
+      mime_types: [ 'text/html' ]
   mapping:
     paths:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'

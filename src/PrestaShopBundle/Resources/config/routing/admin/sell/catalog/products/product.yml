@@ -1,112 +1,514 @@
-# Product Form
-admin_product_new:
-  path: /new
+_combinations:
+  resource: 'combination.yml'
+
+_images:
+  resource: 'image.yml'
+
+_specific_prices:
+  resource: 'specific_price.yml'
+
+admin_products_index:
+  path: /
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\ProductController::newAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::indexAction
+    _legacy_controller: AdminProducts
+    _legacy_link: AdminProducts
+
+# Old route temporarily kept for backward compatibility
+admin_product_catalog:
+  path: /legacy-list
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::backwardCompatibleListAction
+    _legacy_controller: AdminProducts
+    limit: last
+    offset: 0
+    orderBy: last
+    sortOrder: last
+
+admin_products_light_list:
+  path: /light-list
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::lightListAction
     _legacy_controller: AdminProducts
 
-admin_product_form:
-  path: /{id}
+admin_products_preview:
+  path: /{productId}/preview/{shopId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::previewAction
+    _legacy_controller: AdminProducts
+    _legacy_link: AdminProducts:preview
+    _legacy_parameters:
+      id_product: productId
+    shopId: null
+  requirements:
+    productId: \d+
+
+admin_products_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::searchGridAction
+    _legacy_controller: AdminProducts
+
+admin_products_reset_grid_search:
+  path: /reset_grid_search
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::resetGridSearchAction
+    _legacy_controller: AdminProducts
+
+admin_products_grid_category_filter:
+  path: /grid_category_filter
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::gridCategoryFilterAction
+    _legacy_controller: AdminProducts
+
+admin_products_grid_shop_previews:
+  path: /shop_previews/{productId}/{shopGroupId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::productShopPreviewsAction
+    _legacy_controller: AdminProducts
+    shopGroupId: null
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
+
+admin_products_create:
+  path: /create
   methods: [ GET, POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\ProductController::formAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::createAction
     _legacy_controller: AdminProducts
-    _legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
-    _legacy_param_mapper_method: mapLegacyParametersProductForm
+    _legacy_link:
+      - AdminProducts:addproduct
+      - AdminProducts:add
+
+admin_products_edit:
+  path: /{productId}/edit
+  methods: [ GET, POST, PATCH ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::editAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:updateproduct
+      - AdminProducts:update
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+# Old route temporarily kept for backward compatibility
+admin_product_form:
+  path: /{id}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::backwardCompatibleEditAction
+    _legacy_controller: AdminProducts
   requirements:
     id: \d+
   options:
     expose: true
 
-admin_product_virtual_save_action:
-  path: /virtual/save/{idProduct}
-  methods: [ POST ]
+admin_products_select_shops:
+  path: /{productId}/shops
+  methods: [ GET, POST, PATCH ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::saveAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::selectProductShopsAction
     _legacy_controller: AdminProducts
-    idProduct: 0
-  requirements:
-    idProduct: \d+
-
-admin_product_virtual_remove_file_action:
-  path: /virtual/remove-file/{idProduct}
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::removeFileAction
-    _legacy_controller: AdminProducts
-    idProduct: 0
-  requirements:
-    idProduct: \d+
-
-admin_product_virtual_download_file_action:
-  path: /virtual/download-file/{idProduct}
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::downloadFileAction
-    _legacy_controller: AdminProducts
-    idProduct: 0
-  requirements:
-    idProduct: \d+
-
-admin_product_virtual_remove_action:
-  path: /virtual/remove/{idProduct}
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::removeAction
-    _legacy_controller: AdminProducts
-    idProduct: 0
-  requirements:
-    idProduct: \d+
-
-admin_product_attachement_add_action:
-  path: /attachment/form/add/{idProduct}
-  methods: [ POST ]
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\AttachementProductController::addAction
-    _legacy_controller: AdminProducts
-    idProduct: 0
-  requirements:
-    idProduct: \d+
-
-admin_product_image_upload:
-  path: /image/upload/{idProduct}
-  methods: [ POST ]
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\ProductImageController::uploadImageAction
-    _legacy_controller: AdminProducts
-    idProduct: 0
-  requirements:
-    idProduct: \d+
-
-admin_product_image_positions:
-  path: /image/positions
-  methods: [ POST ]
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\ProductImageController::updateImagePositionAction
-    _legacy_controller: AdminProducts
-
-admin_product_image_form:
-  path: image/form/{idImage}
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\ProductImageController::formAction
-    _legacy_controller: AdminProducts
-    idImage: 0
-  requirements:
-    idImage: \d+
-
-admin_product_image_delete:
-  path: /image/delete/{idImage}
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\ProductImageController::deleteAction
-    _legacy_controller: AdminProducts
-    idImage: 0
-  requirements:
-    idImage: \d+
-
-admin_product_toggle_status:
-  path: /{productId}/toggle-status
-  methods: [ POST ]
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\ProductController::toggleStatusAction
-    _legacy_controller: AdminTracking
-    _legacy_link: AdminTracking:statusproduct
+    _legacy_link:
+      - AdminProducts:assignshops
     _legacy_parameters:
       id_product: productId
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_download_virtual_product_file:
+  path: /virtual-product-file/{virtualProductFileId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::downloadVirtualFileAction
+    _legacy_controller: AdminProducts
+  requirements:
+    virtualProductFileId: \d+
+
+admin_products_delete_from_all_shops:
+  path: /{productId}/delete-from-all-shops
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteFromAllShopsAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:delete
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+
+admin_products_delete_from_shop_group:
+  path: /{productId}/delete-from-shop-group/{shopGroupId}
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteFromShopGroupAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
+
+admin_products_delete_from_shop:
+  path: /{productId}/delete-from-shop/{shopId}
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteFromShopAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+    shopId: \d+
+
+admin_products_duplicate_all_shops:
+  path: /{productId}/duplicate-all-shops
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::duplicateAllShopsAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:duplicate
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+
+admin_products_duplicate_shop:
+  path: /{productId}/duplicate-shop/{shopId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::duplicateShopAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:duplicate
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopId: \d+
+
+admin_products_duplicate_shop_group:
+  path: /{productId}/duplicate-shop-group/{shopGroupId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::duplicateShopGroupAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:duplicate
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
+
+admin_products_toggle_status_for_shop:
+  path: /{productId}/toggle-status-for-shop/{shopId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::toggleStatusForShopAction
+    _legacy_controller: AdminProducts
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopId: \d+
+
+admin_products_toggle_status_for_all_shops:
+  path: /{productId}/toggle-status-for-all-shops
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::toggleStatusForAllShopsAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:statusproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopId: \d+
+
+admin_products_enable_for_all_shops:
+  path: /{productId}/enable-for-all-shops
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::enableForAllShopsAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
+admin_products_enable_for_shop_group:
+  path: /{productId}/enable-for-shop-group/{shopGroupId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::enableForShopGroupAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
+
+admin_products_disable_for_all_shops:
+  path: /{productId}/disable-for-all-shops
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::disableForAllShopsAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
+admin_products_disable_for_shop_group:
+  path: /{productId}/disable-for-shop-group/{shopGroupId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::disableForShopGroupAction
+    _legacy_controller: AdminProducts
+    shopGroupId: null
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
+
+admin_products_update_position:
+  path: /update_position
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::updatePositionAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:positionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+
+admin_products_bulk_enable_all_shops:
+  path: /bulk-enable-all-shops
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkEnableAllShopsAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdisableSelectionproduct
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_bulk_enable_shop:
+  path: /bulk-enable-shop/{shopId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkEnableShopAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdisableSelectionproduct
+  requirements:
+    productId: \d+
+    shopId: \d+
+  options:
+    expose: true
+
+admin_products_bulk_enable_shop_group:
+  path: /bulk-enable-shop-group/{shopGroupId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkEnableShopGroupAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdisableSelectionproduct
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
+  options:
+    expose: true
+
+admin_products_bulk_disable_all_shops:
+  path: /bulk-disable-for-all-shops
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableAllShopsAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkenableSelectionproduct
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_bulk_disable_shop:
+  path: /bulk-disable-shop/{shopId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableShopAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkenableSelectionproduct
+  requirements:
+    productId: \d+
+    shopId: \d+
+  options:
+    expose: true
+
+admin_products_bulk_disable_shop_group:
+  path: /bulk-disable-shop-group/{shopGroupId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableShopGroupAction
+    _legacy_controller: AdminProducts
+    _legacy_link: AdminProducts:submitBulkdisableSelectionproduct
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
+  options:
+    expose: true
+
+admin_products_bulk_duplicate_all_shops:
+  path: /bulk-duplicate-all-shops
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDuplicateAllShopsAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkduplicateSelectionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_bulk_duplicate_shop:
+  path: /bulk-duplicate-shop/{shopId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDuplicateShopAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkduplicateSelectionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopId: \d+
+  options:
+    expose: true
+
+admin_products_bulk_duplicate_shop_group:
+  path: /bulk-duplicate-shop-group/{shopGroupId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDuplicateShopGroupAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkduplicateSelectionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
+  options:
+    expose: true
+
+admin_products_bulk_delete_from_all_shops:
+  path: /bulk-delete-from-all-shops
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteFromAllShopsAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdeleteproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_bulk_delete_from_shop:
+  path: /bulk-delete-from-shop/{shopId}
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteFromShopAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdeleteproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopId: \d+
+  options:
+    expose: true
+
+admin_products_bulk_delete_from_shop_group:
+  path: /bulk-delete-from-shop-group/{shopGroupId}
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteFromShopGroupAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdeleteproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
+  options:
+    expose: true
+
+admin_products_search_products_for_association:
+  path: /search/{languageCode}
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::searchProductsForAssociationAction
+    _legacy_controller: AdminProducts
+  requirements:
+    languageCode: !php/const PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF::IETF_TAG_REGEXP
+
+admin_products_search_combinations_for_association:
+  path: /search/combination/{languageCode}
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::searchCombinationsForAssociationAction
+    _legacy_controller: AdminProducts
+  requirements:
+    languageCode: !php/const PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF::IETF_TAG_REGEXP
+
+admin_products_search_product_combinations:
+  path: /{productId}/search-product-combinations/{shopId}/{languageId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::searchProductCombinationsAction
+    _legacy_controller: AdminProducts
+    languageId: null
+    shopId: null
+  requirements:
+    productId: \d+
+    shopId: \d+
+    languageId: \d+
+  options:
+    expose: true
+
+admin_products_quantity:
+  path: /{productId}/quantity/{shopId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::quantityAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+    shopId: \d+
+  options:
+    expose: true

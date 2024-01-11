@@ -641,8 +641,8 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="8a8e09c10c464ed914e3e0278ea53164">
-        <source>https://docs.prestashop-project.org/1.7-documentation/user-guide/configuring-shop/advanced-parameters/import</source>
-        <target>https://docs.prestashop-project.org/1.7-documentation/user-guide/configuring-shop/advanced-parameters/import</target>
+        <source>https://docs.prestashop-project.org/v.8-documentation/user-guide/configuring-shop/advanced-parameters/import</source>
+        <target>https://docs.prestashop-project.org/v.8-documentation/user-guide/configuring-shop/advanced-parameters/import</target>
         <note>Line: 41</note>
       </trans-unit>
       <trans-unit id="3bb4a695db0c87a3d70a2deffddeb743">

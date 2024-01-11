@@ -351,7 +351,7 @@ class Checkout extends FOBasePage {
     this.checkoutSummary = '#js-checkout-summary';
     this.checkoutPromoBlock = `${this.checkoutSummary} div.block-promo`;
     this.checkoutHavePromoCodeButton = `${this.checkoutPromoBlock} p.promo-code-button a`;
-    this.checkoutRemoveDiscountLink = `${this.checkoutPromoBlock} i.material-icons`;
+    this.checkoutRemoveDiscountLink = `${this.checkoutPromoBlock} a[data-link-action='remove-voucher'] i`;
     this.cartTotalATI = '.cart-summary-totals span.value';
     this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
     this.promoCodeArea = '#promo-code';
@@ -480,7 +480,7 @@ class Checkout extends FOBasePage {
    * @return {Promise<void>}
    */
   async clickOnSignIn(page: Page): Promise<void> {
-    await page.click(this.signInHyperLink);
+    await page.locator(this.signInHyperLink).click();
   }
 
   /**
@@ -614,7 +614,7 @@ class Checkout extends FOBasePage {
     }
 
     // Click on continue
-    await page.click(this.checkoutGuestContinueButton);
+    await page.locator(this.checkoutGuestContinueButton).click();
 
     return this.isStepCompleted(page, this.personalInformationStepForm);
   }
@@ -700,7 +700,7 @@ class Checkout extends FOBasePage {
    * @param page {Page} Browser tab
    */
   async clickOnContinueButtonFromAddressStep(page: Page): Promise<boolean> {
-    await page.click(this.addressStepContinueButton);
+    await page.locator(this.addressStepContinueButton).click();
 
     return this.isStepCompleted(page, this.addressStepSection);
   }
@@ -747,9 +747,9 @@ class Checkout extends FOBasePage {
     await this.fillAddressForm(page, invoiceAddress);
 
     if (await this.elementVisible(page, this.addressStepContinueButton, 2000)) {
-      await page.click(this.addressStepContinueButton);
+      await page.locator(this.addressStepContinueButton).click();
     } else {
-      await page.click(this.addressStepSubmitButton);
+      await page.locator(this.addressStepSubmitButton).click();
     }
 
     return this.isStepCompleted(page, this.addressStepSection);
@@ -769,16 +769,16 @@ class Checkout extends FOBasePage {
     // Set invoice address if not null
     if (invoiceAddress !== null) {
       await this.setChecked(page, this.addressStepUseSameAddressCheckbox, false);
-      await page.click(this.addressStepContinueButton);
+      await page.locator(this.addressStepContinueButton).click();
       await this.fillAddressForm(page, invoiceAddress);
     } else {
       await this.setChecked(page, this.addressStepUseSameAddressCheckbox, true);
     }
 
     if (await this.elementVisible(page, this.addressStepContinueButton, 2000)) {
-      await page.click(this.addressStepContinueButton);
+      await page.locator(this.addressStepContinueButton).click();
     } else {
-      await page.click(this.addressStepSubmitButton);
+      await page.locator(this.addressStepSubmitButton).click();
     }
 
     return this.isStepCompleted(page, this.addressStepSection);
@@ -792,7 +792,7 @@ class Checkout extends FOBasePage {
   async getNumberOfAddresses(page: Page): Promise<number> {
     await this.waitForSelector(page, this.deliveryAddressBlock, 'visible');
 
-    return (await page.$$(this.deliveryAddressSection)).length;
+    return page.locator(this.deliveryAddressSection).count();
   }
 
   /**
@@ -803,7 +803,7 @@ class Checkout extends FOBasePage {
   async getNumberOfInvoiceAddresses(page: Page): Promise<number> {
     await this.waitForSelector(page, this.invoiceAddressesBlock, 'visible');
 
-    return (await page.$$(this.invoiceAddressSection)).length;
+    return page.locator(this.invoiceAddressSection).count();
   }
 
   /**
@@ -952,12 +952,10 @@ class Checkout extends FOBasePage {
    * @returns {Promise<Array<string>>}
    */
   async getAllCarriersPrices(page: Page): Promise<string[]> {
-    return page.$$eval(
-      this.deliveryOptionAllPricesSpan,
-      (all) => all
-        .map((el): string|null => el.textContent)
-        .filter((el: string|null): el is string => el !== null),
-    );
+    return (await page
+      .locator(this.deliveryOptionAllPricesSpan)
+      .allTextContents())
+      .filter((el: string|null): el is string => el !== null);
   }
 
   /**
@@ -977,7 +975,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<Array<string>>}
    */
   async getAllCarriersNames(page: Page): Promise<(string | null)[]> {
-    return page.$$eval(this.deliveryOptionAllNamesSpan, (all) => all.map((el) => el.textContent));
+    return page.locator(this.deliveryOptionAllNamesSpan).allTextContents();
   }
 
   /**
@@ -1041,20 +1039,13 @@ class Checkout extends FOBasePage {
   /**
    * Get selected shipping method name
    * @param page {Page} Browser tab
-   * @return {Promise<string>}
+   * @return {Promise<string | null>}
    */
-  async getSelectedShippingMethod(page: Page): Promise<string> {
-    // Get checkbox radios
-    const optionsRadiosElement = await page.$$(this.deliveryOptionsRadioButton);
-    let selectedOptionId: number = 0;
-
-    // Get id of selected option
-    for (let position: number = 1; position <= optionsRadiosElement.length; position++) {
-      if (await (await optionsRadiosElement[position - 1].getProperty('checked')).jsonValue()) {
-        selectedOptionId = position;
-        break;
-      }
-    }
+  async getSelectedShippingMethod(page: Page): Promise<string | null> {
+    const selectedOptionId = parseInt(
+      await this.getAttributeContent(page, `${this.deliveryOptionsRadioButton}[checked]`, 'value') ?? '0',
+      10,
+    );
 
     // Return text of the selected option
     if (selectedOptionId !== 0) {
@@ -1072,10 +1063,10 @@ class Checkout extends FOBasePage {
    */
   async addPromoCode(page: Page, code: string, clickOnCheckoutPromoCodeLink: boolean = true): Promise<void> {
     if (clickOnCheckoutPromoCodeLink) {
-      await page.click(this.checkoutHavePromoCodeButton);
+      await page.locator(this.checkoutHavePromoCodeButton).click();
     }
     await this.setValue(page, this.checkoutHavePromoInputArea, code);
-    await page.click(this.checkoutPromoCodeAddButton);
+    await page.locator(this.checkoutPromoCodeAddButton).click();
   }
 
   /**
@@ -1096,11 +1087,11 @@ class Checkout extends FOBasePage {
    */
   async choosePaymentAndOrder(page: Page, paymentModuleName: string): Promise<void> {
     if (await this.elementVisible(page, this.paymentOptionInput(paymentModuleName), 1000)) {
-      await page.click(this.paymentOptionInput(paymentModuleName));
+      await page.locator(this.paymentOptionInput(paymentModuleName)).click();
     }
     await Promise.all([
       this.waitForVisibleSelector(page, this.paymentConfirmationButton),
-      page.click(this.conditionToApproveLabel),
+      page.locator(this.conditionToApproveLabel).click(),
     ]);
     await this.clickAndWaitForURL(page, this.paymentConfirmationButton);
   }
@@ -1120,7 +1111,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async removePromoCode(page: Page): Promise<boolean> {
-    await page.click(this.checkoutRemoveDiscountLink);
+    await page.locator(this.checkoutRemoveDiscountLink).click();
 
     return this.elementNotVisible(page, this.checkoutRemoveDiscountLink, 1000);
   }
@@ -1144,7 +1135,7 @@ class Checkout extends FOBasePage {
     if (await this.elementVisible(page, this.conditionToApproveLabel, 500)) {
       await Promise.all([
         this.waitForVisibleSelector(page, this.paymentConfirmationButton),
-        page.click(this.conditionToApproveLabel),
+        page.locator(this.conditionToApproveLabel).click(),
       ]);
     }
 
@@ -1177,7 +1168,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<string>}
    */
   async getTermsOfServicePageTitle(page: Page): Promise<string> {
-    await page.click(this.termsOfServiceLink);
+    await page.locator(this.termsOfServiceLink).click();
 
     return this.getTextContent(page, this.termsOfServiceModalDiv);
   }

@@ -942,7 +942,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @return bool
      */
-    public function deleteSelection($ids)
+    public function deleteSelection(array $ids)
     {
         $result = true;
         foreach ($ids as $id) {

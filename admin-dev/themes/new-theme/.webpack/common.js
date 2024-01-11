@@ -41,6 +41,8 @@ module.exports = {
   },
   entry: {
     address: './js/pages/address',
+    api_access: './js/pages/api-access',
+    api_access_form: './js/pages/api-access/form',
     attachment: './js/pages/attachment',
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',
@@ -446,7 +448,7 @@ module.exports = {
       extensions: ['woff2'],
       filter: /preload/,
       // eslint-disable-next-line
-      replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{{ admin_dir }}')),
+      replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="([^"]+)"/g, 'href="{{ asset(\'themes/new-theme/public/$1\') }}"')),
     }),
     new CssoWebpackPlugin({
       forceMediaMerge: true,

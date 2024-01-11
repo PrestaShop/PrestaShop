@@ -51,7 +51,7 @@ class TypedRegexValidator extends ConstraintValidator
     public const CATALOG_CHARS = '<>;=#{}';
     public const GENERIC_NAME_CHARS = '<>={}';
     public const MESSAGE_CHARS = '<>{}';
-    public const NAME_CHARS = '0-9!<>,;?=+()@#"�{}_$%:';
+    public const NAME_CHARS = '0-9!<>,;?=+()@#"{}_$%:';
 
     /**
      * @var ConfigurationInterface

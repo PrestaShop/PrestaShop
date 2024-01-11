@@ -86,6 +86,8 @@ class PackCore extends Product
         }
 
         if (!array_key_exists($id_product, self::$cacheIsPack)) {
+            // This is not very efficient, isn't an entry in pack table a proof that it's a pack?
+            // Moreover, we already have cache_is_pack column, product_type is just a duplicate.
             $result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'pack` WHERE id_product_pack = ' . (int) $id_product);
             $productType = Db::getInstance()->getValue('SELECT product_type FROM `' . _DB_PREFIX_ . 'product` WHERE id_product = ' . (int) $id_product);
             self::$cacheIsPack[$id_product] = ($result > 0) || $productType === ProductType::TYPE_PACK;
@@ -405,19 +407,13 @@ class PackCore extends Product
             $line = Product::getTaxesInformations($line);
         }
 
-        if (!$full) {
-            return $result;
-        }
-
-        $array_result = [];
-        foreach ($result as $prow) {
-            if (!Pack::isPack($prow['id_product'])) {
-                $prow['id_product_attribute'] = (int) $prow['id_product_attribute_item'];
-                $array_result[] = Product::getProductProperties($id_lang, $prow);
+        foreach ($result as $k => $v) {
+            if (!Pack::isPack($v['id_product'])) {
+                $result[$k]['id_product_attribute'] = (int) $v['id_product_attribute_item'];
             }
         }
 
-        return $array_result;
+        return $result;
     }
 
     public static function getPacksTable($id_product, $id_lang, $full = false, $limit = null)
@@ -462,7 +458,7 @@ class PackCore extends Product
         $array_result = [];
         foreach ($result as $row) {
             if (!Pack::isPacked($row['id_product'])) {
-                $array_result[] = Product::getProductProperties($id_lang, $row);
+                $array_result[] = $row;
             }
         }
 

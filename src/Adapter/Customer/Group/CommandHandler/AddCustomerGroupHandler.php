@@ -34,24 +34,15 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\CommandHandler\AddCustomerGroupHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 #[AsCommandHandler]
 class AddCustomerGroupHandler implements AddCustomerGroupHandlerInterface
 {
-    /**
-     * @var CustomerGroupValidator
-     */
-    private $customerGroupValidator;
-
-    /**
-     * @var GroupRepository
-     */
-    private $customerGroupRepository;
-
-    public function __construct(CustomerGroupValidator $customerGroupValidator, GroupRepository $customerGroupRepository)
-    {
-        $this->customerGroupValidator = $customerGroupValidator;
-        $this->customerGroupRepository = $customerGroupRepository;
+    public function __construct(
+        private readonly CustomerGroupValidator $customerGroupValidator,
+        private readonly GroupRepository $customerGroupRepository
+    ) {
     }
 
     public function handle(AddCustomerGroupCommand $command): GroupId
@@ -61,7 +52,7 @@ class AddCustomerGroupHandler implements AddCustomerGroupHandlerInterface
         $customerGroup->reduction = (string) $command->getReductionPercent();
         $customerGroup->price_display_method = (int) $command->displayPriceTaxExcluded();
         $customerGroup->show_prices = $command->showPrice();
-        $customerGroup->id_shop_list = $command->getShopIds();
+        $customerGroup->id_shop_list = array_map(fn (ShopId $shopId) => $shopId->getValue(), $command->getShopIds());
 
         $this->customerGroupValidator->validate($customerGroup);
 

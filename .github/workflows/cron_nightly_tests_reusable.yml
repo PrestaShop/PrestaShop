@@ -8,6 +8,9 @@ on:
       BRANCH:
         required: true
         type: string
+      PHP_VERSION:
+        required: true
+        type: string
       NODE_VERSION:
         description: 'Node Version'
         required: false
@@ -159,22 +162,15 @@ jobs:
             CAMPAIGN: 'functional:FO:08-12'
           - BRANCH: develop
             CAMPAIGN: 'sanity:productV2'
+          - BRANCH: develop
+            CAMPAIGN: 'functional:productV2'
 
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test
       REPORTS_DIR: 'reports_${{ matrix.BRANCH }}'  # Where to move test's reports
-      TEST_CAMPAIGN: 'test:${{ matrix.CAMPAIGN }}'  # Command to execute from the matrix
-      PS_LANGUAGE: 'en'
-      PS_INSTALL_AUTO: ${{ (matrix.CAMPAIGN == 'sanity') && '0' || '1' }}
-      PS_DEV_MODE: 0
-      PS_ENABLE_SSL: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && '0' || '1' }}
-      PS_DOMAIN: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && 'localhost:8001' || 'localhost:8002' }}
-      DB_SERVER: 'mysql'
-      DB_NAME: 'prestashop'
-      DB_PREFIX: 'tst_'
-      DB_USER: 'root'
-      DB_PASSWD: 'prestashop'
-      ADMIN_PASSWD: ${{ (matrix.BRANCH == '1.7.8.x') && 'prestashop_demo' || 'Correct Horse Battery Staple' }}
+      TEST_CAMPAIGN: ${{ matrix.CAMPAIGN }}  # Command to execute from the matrix
+      INSTALL_AUTO: ${{ (matrix.CAMPAIGN == 'sanity') && 'false' || 'true' }}
+      ENABLE_SSL: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && 'false' || 'true' }}
 
     steps:
       - uses: actions/checkout@v3
@@ -182,63 +178,22 @@ jobs:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
 
-      # Workaround until https://github.com/PrestaShop/PrestaShop/issues/29813 is fixed
-      - name: PrestaShop Configuration (Copy of Config API)
-        if: (env.GH_BRANCH == '8.1.x') || (env.GH_BRANCH == 'develop')
-        run: cp ./app/config/security_test.yml ./app/config/security_prod.yml
-
-      # Certificate
-      - name: Generate a certificate
-        if: (env.GH_BRANCH == '8.1.x') || (env.GH_BRANCH == 'develop')
-        run: |
-          ## Install MkCert
-          sudo apt install libnss3-tools
-          curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
-          chmod +x mkcert-v*-linux-amd64
-          sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
-          ## Generate certificate
-          mkcert -key-file ./${{ env.PS_DIR }}/.docker/ssl.key -cert-file ./${{ env.PS_DIR }}/.docker/ssl.crt localhost
-          ## Link certificate to Chrome Trust Store
-          mkdir -p $HOME/.pki/nssdb
-          certutil -d $HOME/.pki/nssdb -N
-          certutil -d sql:$HOME/.pki/nssdb -n localhost -A -t "TCu,Cu,Tu" -i ./${{ env.PS_DIR }}/.docker/ssl.crt
-          ## Add self-signed certificate to Chrome Trust Store
-          mkcert -install
-
-      # Use docker to create shop
-      - name: Build and run shop with docker
+      - name: Setup Environment
         timeout-minutes: 15
-        env:
-          URL_FO: ${{ ((env.GH_BRANCH == '8.0.x') || (env.GH_BRANCH == '1.7.8.x')) && 'http://localhost:8001/' || 'https://localhost:8002/' }}
-          URL_PING: ${{ matrix.CAMPAIGN == 'sanity' && 'install-dev/' || 'en/' }}
-        run: |
-          USER_ID=$(id -u) GROUP_ID=$(id -g) \
-          docker-compose -f docker-compose.yml up -d --build
-          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }})" != "200" ]]; do sleep 5; done'
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: ./.github/actions/setup-env
         with:
-          node-version: ${{ inputs.NODE_VERSION }}
+          PHP_VERSION: ${{ inputs.PHP_VERSION }}
+          ENABLE_SSL: ${{ env.ENABLE_SSL }}
+          INSTALL_AUTO: ${{ env.INSTALL_AUTO }}
+          CP_API_CONFIG: ${{ (env.GH_BRANCH == '8.1.x') && 'true' || 'false' }}
 
-      - name: Install dependencies
-        working-directory: ${{ inputs.TESTS_DIR }}
-        run: npm ci
-
-      - name: Install browsers
-        working-directory: ${{ inputs.TESTS_DIR }}
-        if: env.GH_BRANCH != '1.7.8.x'
-        run: npx playwright install --with-deps
-
-      # Run tests (if error, we continue for uploading report)
-      - name: Run tests
+      - name: Run Tests
         continue-on-error: true
-        working-directory: ${{ inputs.TESTS_DIR }}
-        env:
-          URL_FO: ${{ ((env.GH_BRANCH == '8.0.x') || (env.GH_BRANCH == '1.7.8.x')) && 'http://localhost:8001/' || 'https://localhost:8002/' }}
-          ENABLE_SSL: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && false || true }}
-          SMTP_SERVER: '172.17.0.1'
-        run: npm run ${{ env.TEST_CAMPAIGN }}
+        uses: ./.github/actions/ui-test
+        with:
+          NODE_VERSION: ${{ inputs.NODE_VERSION }}
+          TEST_CAMPAIGN: ${{ env.TEST_CAMPAIGN }}
+          TESTS_DIR: ${{ inputs.TESTS_DIR }}
 
       # Rename and upload report as artifact
       - name: Rename file reports
@@ -297,11 +252,6 @@ jobs:
         working-directory: ${{ inputs.TESTS_DIR }}
         run: npm ci
 
-      - name: Install browsers
-        working-directory: ${{ inputs.TESTS_DIR }}
-        if: env.GH_BRANCH != '1.7.8.x'
-        run: npx playwright install --with-deps
-
       - name: Combine reports
         working-directory: ${{ inputs.TESTS_DIR }}
         env:
@@ -313,13 +263,13 @@ jobs:
           npx mochawesome-merge "${{ env.REPORTS_DIR_PATH }}/*.json" -o "${{ env.COMBINED_REPORT_DIR_PATH }}/${REPORT_NAME}.json"
 
       - name: Auth Cloud Sdk
-        uses: google-github-actions/auth@v0
+        uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GC_SERVICE_KEY }}
           project_id: ${{ secrets.GC_PROJECT_ID }}
 
       - name: Setup Cloud Sdk
-        uses: google-github-actions/setup-gcloud@v0
+        uses: google-github-actions/setup-gcloud@v1
 
       - name: Upload to Google Cloud Storage (GCS)
         run: gsutil cp -r "${{ env.COMBINED_REPORT_DIR }}/**" gs://prestashop-core-nightly/reports

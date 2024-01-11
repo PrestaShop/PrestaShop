@@ -29,24 +29,84 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Resources;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Post;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
-use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\DeleteCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
 
 #[ApiResource(
     operations: [
-        new Post(
-            uriTemplate: '/customers/group',
-            processor: CommandProcessor::class,
-            extraProperties: [
-                'command' => AddCustomerGroupCommand::class,
+        new CQRSGet(
+            uriTemplate: '/customers/group/{customerGroupId}',
+            CQRSQuery: GetCustomerGroupForEditing::class,
+            scopes: [
+                'customer_group_read',
+            ],
+            // QueryResult format doesn't match with ApiResource, so we can specify a mapping so that it is normalized with extra fields adapted for the ApiResource DTO
+            CQRSQueryMapping: [
+                // EditableCustomerGroup::$id is normalized as [customerGroupId]
+                '[id]' => '[customerGroupId]',
+                // EditableCustomerGroup::$reduction is normalized as [reductionPercent]
+                '[reduction]' => '[reductionPercent]',
             ],
         ),
-    ]
+        new CQRSCreate(
+            uriTemplate: '/customers/group',
+            CQRSCommand: AddCustomerGroupCommand::class,
+            CQRSQuery: GetCustomerGroupForEditing::class,
+            scopes: [
+                'customer_group_write',
+            ],
+            // Here, we use query mapping to adapt normalized query result for the ApiPlatform DTO
+            CQRSQueryMapping: [
+                '[id]' => '[customerGroupId]',
+                '[reduction]' => '[reductionPercent]',
+            ],
+            // Here, we use command mapping to adapt the normalized command result for the CQRS query
+            CQRSCommandMapping: [
+                '[groupId]' => '[customerGroupId]',
+            ],
+        ),
+        new CQRSUpdate(
+            uriTemplate: '/customers/group/{customerGroupId}',
+            CQRSCommand: EditCustomerGroupCommand::class,
+            CQRSQuery: GetCustomerGroupForEditing::class,
+            scopes: [
+                'customer_group_write',
+            ],
+            // Here we use the ApiResource DTO mapping to transform the normalized query result
+            ApiResourceMapping: [
+                '[id]' => '[customerGroupId]',
+                '[reduction]' => '[reductionPercent]',
+            ],
+        ),
+        new CQRSDelete(
+            uriTemplate: '/customers/group/{customerGroupId}',
+            CQRSQuery: DeleteCustomerGroupCommand::class,
+            scopes: [
+                'customer_group_write',
+            ],
+            // Here, we use query mapping to adapt URI parameters to the expected constructor parameter name
+            CQRSQueryMapping: [
+                '[customerGroupId]' => '[groupId]',
+            ],
+        ),
+    ],
+    exceptionToStatus: [GroupNotFoundException::class => 404],
 )]
 class CustomerGroup
 {
+    #[ApiProperty(identifier: true)]
+    public int $customerGroupId;
+
     public array $localizedNames;
 
     public float $reductionPercent;

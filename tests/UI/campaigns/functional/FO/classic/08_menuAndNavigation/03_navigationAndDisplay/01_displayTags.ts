@@ -4,18 +4,18 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
+import addProductPage from '@pages/BO/catalog/products/add';
+import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
+import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
+import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import {homePage} from '@pages/FO/home';
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import {searchResultsPage} from '@pages/FO/searchResults';
 import productPage from '@pages/FO/product';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-import addProductPage from '@pages/BO/catalog/products/add';
 
 // Import data
 import Products from '@data/demo/products';
@@ -47,6 +47,7 @@ Post-condition:
 describe('FO - Navigation and display : Display tags', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+
   const specificPriceData: ProductData = new ProductData({
     specificPrice: {
       attributes: null,
@@ -55,10 +56,17 @@ describe('FO - Navigation and display : Display tags', async () => {
       reductionType: '€',
     },
   });
-
+  const newProductData: ProductData = new ProductData({
+    type: 'standard',
+    taxRule: 'FR Taux standard (20%)',
+    tax: 20,
+    quantity: 100,
+    minimumQuantity: 2,
+    status: true,
+  });
   const packOfProducts: ProductData = new ProductData({
     name: 'Pack of products',
-    type: 'Pack of products',
+    type: 'pack',
     pack: [
       {
         reference: 'demo_13',
@@ -77,9 +85,6 @@ describe('FO - Navigation and display : Display tags', async () => {
     lowStockLevel: 3,
     behaviourOutOfStock: 'Default behavior',
   });
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -189,7 +194,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     });
   });
 
-  describe(`BO - Add specific price to the product '${Products.demo_6.name}'`, async () => {
+  describe('BO - Create product with specific', async () => {
     it('should go back BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
@@ -213,36 +218,33 @@ describe('FO - Navigation and display : Display tags', async () => {
       expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+    it('should click on new product button and go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductPage', baseContext);
 
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      expect(numberOfProducts).to.be.above(0);
-    });
+      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).to.be.eq(true);
 
-    it('should filter by product name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterProductName', baseContext);
-
-      await productsPage.filterProducts(page, 'name', Products.demo_6.name, 'input');
-
-      const numberOfProducts = await productsPage.getNumberOfProductsFromList(page);
-      expect(numberOfProducts).to.eq(1);
-    });
-
-    it('should go to the product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage2', baseContext);
-
-      await productsPage.goToEditProductPage(page, 1);
+      await productsPage.selectProductType(page, newProductData.type);
+      await productsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
+    it('should create standard product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
+
+      const createProductMessage = await addProductPage.setProduct(page, newProductData);
+      expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+    });
+
     it('should add a specific price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addSpecificPrice', baseContext);
 
-      const message = await addProductPage.addSpecificPrices(page, specificPriceData.specificPrice);
-      expect(message).to.equal(addProductPage.settingUpdatedMessage);
+      await pricingTab.clickOnAddSpecificPriceButton(page);
+
+      const message = await pricingTab.setSpecificPrice(page, specificPriceData.specificPrice);
+      expect(message).to.equal(addProductPage.successfulCreationMessage);
     });
   });
 
@@ -253,7 +255,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       page = await addProductPage.previewProduct(page);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_6.name);
+      expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the discount tag', async function () {
@@ -284,12 +286,28 @@ describe('FO - Navigation and display : Display tags', async () => {
       expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it('should go to add product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductPage2', baseContext);
+    it('should click on \'New product\' button and check new product modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      await productsPage.goToAddProductPage(page);
+      const isModalVisible: boolean = await productsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
+    });
 
-      const pageTitle = await addProductPage.getPageTitle(page);
+    it('should choose \'Pack of products\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
+
+      await productsPage.selectProductType(page, packOfProducts.type);
+
+      const pageTitle: string = await addProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
+
+      await productsPage.clickOnAddNewProduct(page);
+
+      const pageTitle: string = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
@@ -297,7 +315,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
       const createProductMessage = await addProductPage.setProduct(page, packOfProducts);
-      expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+      expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
     });
   });
 
@@ -332,10 +350,10 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should edit the quantity', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editQuantity', baseContext);
 
-      await addProductPage.setProductQuantity(page, 0);
+      await stocksTab.setProductQuantity(page, 0);
 
       const message = await addProductPage.saveProduct(page);
-      expect(message).to.eq(addProductPage.settingUpdatedMessage);
+      expect(message).to.eq(addProductPage.successfulUpdateMessage);
     });
   });
 
@@ -391,57 +409,8 @@ describe('FO - Navigation and display : Display tags', async () => {
   });
 
   // Post-condition: Delete specific price
-  describe('POST-TEST : Delete specific price', async () => {
-    it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
-      );
-      await productsPage.closeSfToolBar(page);
-
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters2', baseContext);
-
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      expect(numberOfProducts).to.be.above(0);
-    });
-
-    it('should filter by product name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByProductName2', baseContext);
-
-      await productsPage.filterProducts(page, 'name', Products.demo_6.name, 'input');
-
-      const numberOfProducts = await productsPage.getNumberOfProductsFromList(page);
-      expect(numberOfProducts).to.eq(1);
-    });
-
-    it('should go to the product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
-
-      await productsPage.goToEditProductPage(page, 1);
-
-      const pageTitle = await addProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addProductPage.pageTitle);
-    });
-
-    it('should delete the specific price', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteSpecificPrice', baseContext);
-
-      const message = await addProductPage.deleteSpecificPrice(page);
-      expect(message).to.equal(addProductPage.successfulDeleteMessage);
-    });
-  });
+  deleteProductTest(newProductData, `${baseContext}_deleteProduct_1`);
 
   // Post-condition: Delete created product
-  deleteProductTest(packOfProducts, `${baseContext}_deleteProduct`);
-
-  // Post-condition: Enable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
+  deleteProductTest(packOfProducts, `${baseContext}_deleteProduct_2`);
 });

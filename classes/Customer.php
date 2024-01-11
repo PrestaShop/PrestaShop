@@ -322,9 +322,6 @@ class CustomerCore extends ObjectModel
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
         }
-        if (isset(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin') {
-            $this->updateGroup($this->groupBox);
-        }
 
         if ($this->deleted) {
             $addresses = $this->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -831,7 +828,7 @@ class CustomerCore extends ObjectModel
     public static function checkPassword($idCustomer, $passwordHash)
     {
         if (!Validate::isUnsignedId($idCustomer)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Customer ID is invalid.'));
         }
 
         // Check that customers password hasn't changed since last login

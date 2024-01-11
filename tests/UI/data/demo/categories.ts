@@ -1,5 +1,35 @@
 import CategoryData from '@data/faker/category';
 
+const category4: CategoryData = new CategoryData({
+  id: 4,
+  name: 'Men',
+  description: 'T-shirts, sweaters, hoodies and men\'s accessories.',
+  position: 1,
+  displayed: true,
+});
+const category5: CategoryData = new CategoryData({
+  id: 5,
+  name: 'Women',
+  description: 'T-shirts, sweaters, hoodies and women\'s accessories. From basics to original creations, '
+    + 'for every style.',
+  position: 2,
+  displayed: true,
+});
+const category7: CategoryData = new CategoryData({
+  id: 7,
+  name: 'Stationery',
+  description: 'Notebooks, agendas, office accessories and more.',
+  position: 1,
+  displayed: true,
+});
+const category8: CategoryData = new CategoryData({
+  id: 8,
+  name: 'Home Accessories',
+  description: 'Details matter! Liven up your interior with our selection of home accessories.',
+  position: 2,
+  displayed: true,
+});
+
 export default {
   home: new CategoryData({
     id: 2,
@@ -16,43 +46,26 @@ export default {
       + 'wardrobe. Compose a unique style with personality which matches your own.',
     position: 1,
     displayed: true,
+    children: [
+      category4,
+      category5,
+    ],
   }),
-  men: new CategoryData({
-    id: 4,
-    name: 'Men',
-    description: 'T-shirts, sweaters, hoodies and men\'s accessories.',
-    position: 1,
-    displayed: true,
-  }),
-  women: new CategoryData({
-    id: 5,
-    name: 'Women',
-    description: 'T-shirts, sweaters, hoodies and women\'s accessories. From basics to original creations, '
-      + 'for every style.',
-    position: 2,
-    displayed: true,
-  }),
+  men: category4,
+  women: category5,
   accessories: new CategoryData({
     id: 6,
     name: 'Accessories',
     description: 'Items and accessories for your desk',
     position: 2,
     displayed: true,
+    children: [
+      category7,
+      category8,
+    ],
   }),
-  stationery: new CategoryData({
-    id: 7,
-    name: 'Stationery',
-    description: 'Notebooks, agendas, office accessories and more.',
-    position: 1,
-    displayed: true,
-  }),
-  homeAccessories: new CategoryData({
-    id: 8,
-    name: 'Home Accessories',
-    description: 'Details matter! Liven up your interior with our selection of home accessories.',
-    position: 2,
-    displayed: true,
-  }),
+  stationery: category7,
+  homeAccessories: category8,
   art: new CategoryData({
     id: 9,
     name: 'Art',

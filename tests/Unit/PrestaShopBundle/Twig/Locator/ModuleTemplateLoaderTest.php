@@ -44,7 +44,8 @@ class ModuleTemplateLoaderTest extends TestCase
     protected function setUp(): void
     {
         $namespaces = [
-            'Product' => 'Admin/Product',
+            'AdvancedParameters' => 'Admin/Configure/AdvancedParameters',
+            'ShopParameters' => 'Admin/Configure/ShopParameters',
             'PrestaShop' => '',
         ];
 
@@ -69,8 +70,8 @@ class ModuleTemplateLoaderTest extends TestCase
     {
         $this->assertCount(
             2,
-            $this->loader->getPaths('Product'),
-            'Two templates for the namespace "Product" should be found.'
+            $this->loader->getPaths('ShopParameters'),
+            'Two templates for the namespace "ShopParameters" should be found.'
         );
 
         $this->assertCount(
@@ -102,9 +103,9 @@ class ModuleTemplateLoaderTest extends TestCase
     public function getSourceContextsProvider(): array
     {
         return [
-            ['module1', '@Product/test.html.twig', 'Module 1 wins as Module 3 is loaded after.'],
-            ['module1', '@PrestaShop/Admin/Product/test.html.twig', 'PrestaShop is the main namespace.'],
-            ['List from module 3', '@Product/ProductPage/Lists/list.html.twig', 'Module 3 templates are available.'],
+            ['module1', '@ShopParameters/test.html.twig', 'Module 1 wins as Module 3 is loaded after.'],
+            ['module1', '@PrestaShop/Admin/Configure/ShopParameters/test.html.twig', 'PrestaShop is the main namespace.'],
+            ['List from module 3', '@AdvancedParameters/list.html.twig', 'Module 3 templates are available.'],
             ['module2', '@PrestaShop/test.html.twig', 'Module 2 templates are availables.'],
         ];
     }

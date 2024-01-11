@@ -4,13 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
-// Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import categoryPage from '@pages/FO/category';
@@ -53,16 +47,13 @@ describe('FO - Home Page : Product quick view', async () => {
   // Data to create product out of stock not allowed
   const productOutOfStockNotAllowed: ProductData = new ProductData({
     name: 'Out of stock not allowed',
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: -15,
     minimumQuantity: 1,
     lowStockLevel: 3,
     behaviourOutOfStock: 'Deny orders',
   });
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // Pre-condition : Create product out of stock not allowed
   createProductTest(productOutOfStockNotAllowed, `${baseContext}_preTest`);
@@ -278,7 +269,4 @@ describe('FO - Home Page : Product quick view', async () => {
 
   // Post-condition : Delete the created product
   deleteProductTest(productOutOfStockNotAllowed, `${baseContext}_postTest`);
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -55,8 +55,15 @@ describe('BO - International - Translation : Add update a language', async () =>
     expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
-  it(`should choose the '${Languages.deutsch.name}' language to add or update`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'chooseLanguage', baseContext);
+  it(`should select from update language the '${Languages.english.name}' language`, async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'chooseLanguage1', baseContext);
+
+    const textResult = await translationsPage.addUpdateLanguage(page, Languages.english.name);
+    expect(textResult).to.equal(translationsPage.successAlertMessage);
+  });
+
+  it(`should select from add language the '${Languages.deutsch.name}' language`, async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'chooseLanguage2', baseContext);
 
     const textResult = await translationsPage.addUpdateLanguage(page, Languages.deutsch.name);
     expect(textResult).to.equal(translationsPage.successAlertMessage);
@@ -82,56 +89,66 @@ describe('BO - International - Translation : Add update a language', async () =>
     expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
-  it('should go to localization page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
+  it(`should check that the language '${Languages.deutsch.name}' is visible in update a language list`, async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkLanguage', baseContext);
 
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.localizationLink,
-    );
-
-    const pageTitle = await localizationPage.getPageTitle(page);
-    expect(pageTitle).to.contains(localizationPage.pageTitle);
+    const languagesInUpdateSection = await translationsPage.getLanguagesFromUpdateResult(page);
+    expect(languagesInUpdateSection).to.contains(Languages.deutsch.name);
   });
 
-  it('should go to languages page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
+  // Post-condition : Delete language
+  describe('POST-TEST: Delete language', async () => {
+    it('should go to localization page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-    await localizationPage.goToSubTabLanguages(page);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.internationalParentLink,
+        dashboardPage.localizationLink,
+      );
 
-    const pageTitle = await languagesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(languagesPage.pageTitle);
-  });
+      const pageTitle = await localizationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(localizationPage.pageTitle);
+    });
 
-  it('should reset all filters and get number of languages in BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
+    it('should go to languages page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
-    numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
-    expect(numberOfLanguages).to.be.above(0);
-  });
+      await localizationPage.goToSubTabLanguages(page);
 
-  it(`should filter language by name '${Languages.deutsch.name}'`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
+      const pageTitle = await languagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(languagesPage.pageTitle);
+    });
 
-    // Filter
-    await languagesPage.filterTable(page, 'input', 'name', Languages.deutsch.name);
+    it('should reset all filters and get number of languages in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
-    expect(textColumn).to.contains(Languages.deutsch.name);
-  });
+      numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfLanguages).to.be.above(0);
+    });
 
-  it('should delete language', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'deleteLanguage', baseContext);
+    it(`should filter language by name '${Languages.deutsch.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
-    const textResult = await languagesPage.deleteLanguage(page, 1);
-    expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
-  });
+      // Filter
+      await languagesPage.filterTable(page, 'input', 'name', Languages.deutsch.name);
 
-  it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+      const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
+      expect(textColumn).to.contains(Languages.deutsch.name);
+    });
 
-    const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
-    expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages - 1);
+    it('should delete language', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteLanguage', baseContext);
+
+      const textResult = await languagesPage.deleteLanguage(page, 1);
+      expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+
+      const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages - 1);
+    });
   });
 });

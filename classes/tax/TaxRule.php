@@ -63,7 +63,7 @@ class TaxRuleCore extends ObjectModel
     public static function deleteByGroupId($id_group)
     {
         if (empty($id_group)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Parameter "id_group" (id_tax_rules_group you want to delete) is invalid.'));
         }
 
         return Db::getInstance()->execute(

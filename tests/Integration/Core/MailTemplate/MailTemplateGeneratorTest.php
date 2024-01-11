@@ -165,14 +165,14 @@ class MailTemplateGeneratorTest extends TestCase
         $generator = new MailTemplateGenerator($this->createRendererMock());
         $this->assertNotNull($generator);
 
-        $generator->generateTemplates($this->theme, $this->createLanguageMock(), $this->coreTempDir, $this->modulesTempDir);
+        $generator->generateTemplates($this->theme, $this->createLanguageMock('en'), $this->coreTempDir, $this->modulesTempDir);
         $expectedFiles = [
-            'core/account.html' => 'account_html__',
-            'core/account.txt' => 'account_txt__',
-            'modules/followup/mails/followup_1.html' => 'followup_1_html_followup_',
-            'modules/followup/mails/followup_1.txt' => 'followup_1_txt_followup_',
-            'modules/ps_reminder/mails/productoutofstock.html' => 'productoutofstock_html_ps_reminder_',
-            'modules/ps_reminder/mails/productoutofstock.txt' => 'productoutofstock_txt_ps_reminder_',
+            'core/en/account.html' => 'account_html__en',
+            'core/en/account.txt' => 'account_txt__en',
+            'modules/followup/mails/en/followup_1.html' => 'followup_1_html_followup_en',
+            'modules/followup/mails/en/followup_1.txt' => 'followup_1_txt_followup_en',
+            'modules/ps_reminder/mails/en/productoutofstock.html' => 'productoutofstock_html_ps_reminder_en',
+            'modules/ps_reminder/mails/en/productoutofstock.txt' => 'productoutofstock_txt_ps_reminder_en',
         ];
         $this->checkExpectedFiles($expectedFiles);
     }
@@ -288,7 +288,7 @@ class MailTemplateGeneratorTest extends TestCase
      *
      * @return MockObject|LanguageInterface
      */
-    private function createLanguageMock($isoCode = null)
+    private function createLanguageMock(?string $isoCode = null)
     {
         $languageMock = $this->getMockBuilder(LanguageInterface::class)
             ->disableOriginalConstructor()
@@ -297,7 +297,7 @@ class MailTemplateGeneratorTest extends TestCase
         $languageMock
             ->expects(null !== $isoCode ? $this->atLeastOnce() : $this->any())
             ->method('getIsoCode')
-            ->willReturn($isoCode)
+            ->willReturn($isoCode ?? 'en')
         ;
 
         return $languageMock;

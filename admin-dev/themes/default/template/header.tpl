@@ -125,7 +125,7 @@
 
       {* Quick access *}
       <div id="header_quick" class="component">
-        <div class="dropdown">
+        <div class="dropdown" id="quick-access-container">
           <button
             id="quick_select"
             class="btn btn-link dropdown-toggle"
@@ -135,9 +135,10 @@
             {if !empty($quick_access)}
               {foreach $quick_access as $quick}
                 <li class="quick-row-link{if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access} active{/if}">
-                  <a {if isset($quick.class)}class="{$quick.class}"{/if} href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window}target="_blank"{/if}>
-                      {$quick.name}
-                  </a>
+                  <a {if isset($quick.class)}class="{$quick.class}"{/if}
+                     href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window}target="_blank"{/if}
+                     data-item="{$quick.name}"
+                  >{$quick.name}</a>
                 </li>
               {/foreach}
             {/if}

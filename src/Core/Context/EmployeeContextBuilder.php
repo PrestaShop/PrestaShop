@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Context;
 
 use Employee as LegacyEmployee;
-use PrestaShop\PrestaShop\Core\Model\Employee;
+use PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository;
 
 /**
  * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
@@ -37,23 +37,29 @@ use PrestaShop\PrestaShop\Core\Model\Employee;
 class EmployeeContextBuilder
 {
     private ?int $employeeId = null;
+    private ?LegacyEmployee $legacyEmployee = null;
+
+    public function __construct(
+        private readonly EmployeeRepository $employeeRepository
+    ) {
+    }
 
     public function build(): EmployeeContext
     {
         $employee = null;
-        if ($this->employeeId) {
-            $legacyEmployee = new LegacyEmployee($this->employeeId);
+        $legacyEmployee = $this->getLegacyEmployee();
+        if ($legacyEmployee) {
             $employee = new Employee(
-                id: $legacyEmployee->getId(),
-                profileId: $legacyEmployee->getProfileId(),
-                languageId: $legacyEmployee->getLanguageId(),
-                firstName: $legacyEmployee->getFirstName(),
-                lastName: $legacyEmployee->getLastName(),
-                email: $legacyEmployee->getEmail(),
-                password: $legacyEmployee->getPassword(),
-                imageUrl: $legacyEmployee->getImageUrl(),
-                defaultTabId: $legacyEmployee->getDefaultTabId(),
-                defaultShopId: $legacyEmployee->getDefaultShopId(),
+                id: (int) $legacyEmployee->id,
+                profileId: (int) $legacyEmployee->id_profile,
+                languageId: (int) $legacyEmployee->id_lang,
+                firstName: $legacyEmployee->firstname,
+                lastName: $legacyEmployee->lastname,
+                email: $legacyEmployee->email,
+                password: $legacyEmployee->passwd,
+                imageUrl: $legacyEmployee->getImage(),
+                defaultTabId: (int) $legacyEmployee->default_tab,
+                defaultShopId: (int) $legacyEmployee->getDefaultShopID(),
                 associatedShopIds: $legacyEmployee->getAssociatedShopIds(),
                 associatedShopGroupIds: $legacyEmployee->getAssociatedShopGroupIds()
             );
@@ -67,5 +73,14 @@ class EmployeeContextBuilder
         $this->employeeId = $employeeId;
 
         return $this;
+    }
+
+    private function getLegacyEmployee(): ?LegacyEmployee
+    {
+        if (!$this->legacyEmployee && !empty($this->employeeId)) {
+            $this->legacyEmployee = $this->employeeRepository->get($this->employeeId);
+        }
+
+        return $this->legacyEmployee;
     }
 }

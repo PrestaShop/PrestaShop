@@ -111,7 +111,7 @@ export default {
     attributes: [
       {
         name: 'Paper Type',
-        values: ['Ruled', 'Plain', 'Squarred', 'Doted'],
+        values: ['Ruled', 'Plain', 'Squared', 'Doted'],
       },
     ],
   }),

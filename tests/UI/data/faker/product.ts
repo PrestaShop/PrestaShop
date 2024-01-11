@@ -11,8 +11,6 @@ import {
 
 import {faker} from '@faker-js/faker';
 
-const behavior: string[] = ['Deny orders', 'Allow orders', 'Default behavior'];
-
 /**
  * Create new product to use on creation form on product page on BO
  * @class
@@ -37,6 +35,8 @@ export default class ProductData {
   public type: string;
 
   public status: boolean;
+
+  public applyChangesToAllStores: boolean;
 
   public summary: string;
 
@@ -112,6 +112,12 @@ export default class ProductData {
 
   public numberOfDays: number | null;
 
+  public metaTitle: string | null;
+
+  public metaDescription: string | null;
+
+  public friendlyUrl: string | null;
+
   public combinations: ProductCombination[];
 
   public packageDimensionWidth: number;
@@ -127,6 +133,9 @@ export default class ProductData {
   /**
    * Constructor for class ProductData
    * @param productToCreate {Object} Could be used to force the value of some members
+   * @todo Replace taxRule & tax by TaxData object
+   * @todo Rename price to priceTaxIncluded
+   * @todo Check if retailPrice & finalPrice can be removed
    */
   constructor(productToCreate: ProductCreator = {}) {
     /** @type {number} ID of the product */
@@ -154,10 +163,13 @@ export default class ProductData {
     this.category = productToCreate.category || 'Root';
 
     /** @type {string} Type of the product */
-    this.type = productToCreate.type || 'Standard product';
+    this.type = productToCreate.type || 'standard';
 
     /** @type {boolean} Status of the product */
     this.status = productToCreate.status === undefined ? true : productToCreate.status;
+
+    /** @type {boolean} Apply changes to all stores */
+    this.applyChangesToAllStores = productToCreate.applyChangesToAllStores || false;
 
     /** @type {string} Summary of the product */
     this.summary = productToCreate.summary === undefined ? faker.lorem.sentence() : productToCreate.summary;
@@ -267,7 +279,7 @@ export default class ProductData {
 
     /** @type {ProductSpecificPrice} Specific price of the product */
     this.specificPrice = productToCreate.specificPrice || {
-      attributes: 'Size - S, Color - White',
+      attributes: null,
       discount: faker.number.int({min: 10, max: 100}),
       startingAt: faker.number.int({min: 2, max: 5}),
       reductionType: '',
@@ -285,13 +297,13 @@ export default class ProductData {
       : productToCreate.lowStockLevel;
 
     /** @type {string} Label to add if product is in stock */
-    this.labelWhenInStock = productToCreate.labelWhenInStock || 'Label when in stock';
+    this.labelWhenInStock = productToCreate.labelWhenInStock || '';
 
     /** @type {string} Label to add if product is out of stock */
-    this.labelWhenOutOfStock = productToCreate.labelWhenOutOfStock || 'Label when out of stock';
+    this.labelWhenOutOfStock = productToCreate.labelWhenOutOfStock || '';
 
     /** @type {string} Product behavior when it's out of stock */
-    this.behaviourOutOfStock = productToCreate.behaviourOutOfStock || faker.helpers.arrayElement(behavior);
+    this.behaviourOutOfStock = productToCreate.behaviourOutOfStock || 'Default behavior';
 
     /** @type {ProductCustomization} Customized value of the product */
     this.customization = productToCreate.customization || {
@@ -322,6 +334,15 @@ export default class ProductData {
 
     /** @type {number} Number of days limit */
     this.numberOfDays = productToCreate.numberOfDays || null;
+
+    /** @type {string} Meta title */
+    this.metaTitle = productToCreate.metaTitle || null;
+
+    /** @type {string} Meta description */
+    this.metaDescription = productToCreate.metaDescription || null;
+
+    /** @type {string} Friendly URL */
+    this.friendlyUrl = productToCreate.friendlyUrl || null;
 
     /** @type {number} Weight of the package */
     this.packageDimensionWeight = productToCreate.packageDimensionWeight || faker.number.int({min: 1, max: 20});

@@ -266,6 +266,11 @@
       <title>Successful customer account update</title>
       <description>This hook is called when a customer updates its account successfully</description>
     </hook>
+    <hook id="actionSubmitAccountBefore">
+      <name>actionSubmitAccountBefore</name>
+      <title>Before customer account creation</title>
+      <description>This hook is called before a customer account creation</description>
+    </hook>
     <hook id="displayCustomerAccount">
       <name>displayCustomerAccount</name>
       <title>Customer account displayed in Front Office</title>
@@ -4528,6 +4533,11 @@
       <name>actionLanguageLinkParameters</name>
       <title>Add parameters to language link</title>
       <description>Allows modules to provide proper parameters for links in other languages.</description>
+    </hook>
+    <hook id="actionAfterLoadRoutes">
+      <name>actionAfterLoadRoutes</name>
+      <title>Triggers after loading routes</title>
+      <description>Allow modules to modify routes in any way or add their own multilanguage routes.</description>
     </hook>
   </entities>
 </entity_hook>

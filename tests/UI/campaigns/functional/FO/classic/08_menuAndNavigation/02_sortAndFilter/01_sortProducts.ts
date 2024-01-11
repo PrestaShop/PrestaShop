@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 import basicHelper from '@utils/basicHelper';
 
 // Import common tests
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import categoryPageFO from '@pages/FO/category';
 import {homePage} from '@pages/FO/home';
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
@@ -35,9 +33,6 @@ describe('FO - Menu and navigation : Sort products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfActiveProducts: number;
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -73,7 +68,7 @@ describe('FO - Menu and navigation : Sort products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfActiveProducts', baseContext);
 
       const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await productsPage.filterProducts(page, 'active', 'Active', 'select');
+      await productsPage.filterProducts(page, 'active', 'Yes', 'select');
 
       numberOfActiveProducts = await productsPage.getNumberOfProductsFromList(page);
       expect(numberOfActiveProducts).to.within(0, numberOfProducts);
@@ -209,7 +204,4 @@ describe('FO - Menu and navigation : Sort products', async () => {
       expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
   });
-
-  // Pre-condition: Enable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 });

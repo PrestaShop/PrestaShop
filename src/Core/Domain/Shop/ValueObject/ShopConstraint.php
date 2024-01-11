@@ -33,6 +33,13 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 class ShopConstraint
 {
     /**
+     * These are the legacy values used to define the shop context, kept here for backward compatibility
+     */
+    public const SHOP = 1;
+    public const SHOP_GROUP = 2;
+    public const ALL_SHOPS = 4;
+
+    /**
      * @var ShopId|null
      */
     protected $shopId;

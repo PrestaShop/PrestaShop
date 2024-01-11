@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Pack\Update;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackException;
@@ -91,7 +91,7 @@ class ProductPackUpdater
         $this->productPackRepository->removeAllProductsFromPack($packId);
 
         //reset cache_default_attribute
-        $pack->setDefaultAttribute(CombinationId::NO_COMBINATION);
+        $pack->setDefaultAttribute(NoCombinationId::NO_COMBINATION_ID);
 
         try {
             foreach ($productsForPacking as $productForPacking) {

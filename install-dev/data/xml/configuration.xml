@@ -59,6 +59,9 @@
   <configuration id="PS_DISPLAY_QTIES" name="PS_DISPLAY_QTIES">
     <value>1</value>
   </configuration>
+  <configuration id="PS_DISPLAY_AMOUNT_IN_CART" name="PS_DISPLAY_AMOUNT_IN_CART">
+    <value>1</value>
+  </configuration>
   <configuration id="PS_SHIPPING_HANDLING" name="PS_SHIPPING_HANDLING">
     <value>2</value>
   </configuration>
@@ -765,6 +768,9 @@ Country</value>
   <configuration id="PS_SMARTY_CONSOLE_KEY" name="PS_SMARTY_CONSOLE_KEY">
     <value>SMARTY_DEBUG</value>
   </configuration>
+  <configuration id="PS_USE_COMBINATION_IMAGE_IN_LISTING" name="PS_USE_COMBINATION_IMAGE_IN_LISTING">
+    <value>0</value>
+  </configuration>
   <configuration id="PS_ATTRIBUTE_ANCHOR_SEPARATOR" name="PS_ATTRIBUTE_ANCHOR_SEPARATOR">
     <value>-</value>
   </configuration>
@@ -875,6 +881,12 @@ Country</value>
     </configuration>
     <configuration id="PS_IMAGE_FORMAT" name="PS_IMAGE_FORMAT">
       <value>jpg</value>
+    </configuration>
+    <configuration id="PS_DEBUG_COOKIE_NAME" name="PS_DEBUG_COOKIE_NAME">
+      <value/>
+    </configuration>
+    <configuration id="PS_DEBUG_COOKIE_VALUE" name="PS_DEBUG_COOKIE_VALUE">
+      <value/>
     </configuration>
   </entities>
 </entity_configuration>

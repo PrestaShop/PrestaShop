@@ -135,7 +135,7 @@ class CartControllerCore extends FrontController
         $productQuantity = $updatedProduct['quantity'] ?? 0;
 
         if (!$this->errors) {
-            $presentedCart = $this->cart_presenter->present($this->context->cart);
+            $presentedCart = $this->cart_presenter->present($this->context->cart, true);
 
             // filter product output
             $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
@@ -537,7 +537,7 @@ class CartControllerCore extends FrontController
         CartRule::autoAddToCart();
 
         // Finally check that all other products are also available, but only if there was no previous error
-        if (empty($this->{$ErrorKey})) {
+        if ('add' !== $mode && empty($this->{$ErrorKey})) {
             $areProductsAvailable = $this->areProductsAvailable();
             if (true !== $areProductsAvailable) {
                 $this->{$ErrorKey}[] = $areProductsAvailable;
@@ -570,7 +570,7 @@ class CartControllerCore extends FrontController
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();
-        $presented_cart = $this->cart_presenter->present($this->context->cart);
+        $presented_cart = $this->cart_presenter->present($this->context->cart, true);
 
         if (count($presented_cart['products']) == 0) {
             $page['body_classes']['cart-empty'] = true;

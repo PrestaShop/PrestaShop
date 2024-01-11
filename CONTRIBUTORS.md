@@ -14,6 +14,7 @@ GitHub contributors:
 - Adonis Karavokyros
 - Adrien
 - Adrien Astier
+- Adrien Foulon
 - adviva
 - Agence CINS
 - Agnes
@@ -35,6 +36,7 @@ GitHub contributors:
 - Alexander Simonchik
 - Alexandra Even
 - Alexandre Alouit
+- Alexandre Bak
 - Alexandre Bru
 - Alexandre Debusschere
 - Alexandre Hellin
@@ -110,6 +112,7 @@ GitHub contributors:
 - Benjamin
 - Benjamin Dussouillez
 - Benjamin PONGY
+- Benoît Gross
 - bercik999
 - Bersam Karbasion
 - Berto Ferrero
@@ -244,6 +247,7 @@ GitHub contributors:
 - Dvir Julius
 - Dvir-Julius
 - e-gaulue
+- ecommerce-manager
 - edamart
 - Edouard
 - Edouard Gaulue
@@ -305,6 +309,7 @@ GitHub contributors:
 - Frédéric Benoist
 - Gabriel Arama
 - Gabriel Schwardy
+- Gabriel Tenita
 - Gabriele Manganello
 - Gaelle ITZKOVITZ
 - Gamesh
@@ -499,6 +504,7 @@ GitHub contributors:
 - Lucas Rolff
 - LucasC
 - Ludovic CHEVRAUX
+- Lunyyx
 - Luis David de la Fuente
 - Lukas Laurinaitis
 - Lyo Nick
@@ -614,6 +620,7 @@ GitHub contributors:
 - mplh
 - mRaigne
 - mrAKAR
+- mrkalchemy
 - mushroot
 - MustangZhong
 - nache
@@ -879,7 +886,7 @@ GitHub contributors:
 - Thomas L'huillier
 - Thomas Leguillant
 - Thomas Leviandier
-- Thomas LEONE
+- Thomas Leone
 - Thomas Nabord
 - Thomas Nares
 - Thomas Roux

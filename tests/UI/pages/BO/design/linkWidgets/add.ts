@@ -13,7 +13,7 @@ import type {Page} from 'playwright';
 class AddLinkBlock extends BOBasePage {
   public readonly pageTitle: string;
 
-  private readonly changeNamelangButton: string;
+  private readonly changeNameLangButton: string;
 
   private readonly changeNameLangSpan: (lang: string) => string;
 
@@ -45,8 +45,8 @@ class AddLinkBlock extends BOBasePage {
     this.pageTitle = 'Link List •';
 
     // Selectors
-    this.changeNamelangButton = '#form_link_block_block_name_dropdown';
-    this.changeNameLangSpan = (lang: string) => `div.dropdown-menu span[data-locale='${lang}']`;
+    this.changeNameLangButton = '#form_link_block_block_name_dropdown';
+    this.changeNameLangSpan = (lang: string) => `div.dropdown-menu.show span[data-locale='${lang}']`;
     this.nameInput = (id: number) => `#form_link_block_block_name_${id}`;
     this.hookSelect = '#form_link_block_id_hook';
     this.cmsPagesCheckbox = (id: number) => `#form_link_block_cms_${id} + i`;
@@ -67,12 +67,12 @@ class AddLinkBlock extends BOBasePage {
    */
   async changeLanguage(page: Page, lang: string): Promise<void> {
     await Promise.all([
-      page.click(this.changeNamelangButton),
-      this.waitForVisibleSelector(page, `${this.changeNamelangButton}[aria-expanded='false']`),
+      page.locator(this.changeNameLangButton).click(),
+      this.waitForVisibleSelector(page, `${this.changeNameLangButton}[aria-expanded='false']`),
     ]);
     await Promise.all([
-      page.click(this.changeNameLangSpan(lang)),
-      this.waitForVisibleSelector(page, `${this.changeNamelangButton}[aria-expanded='true']`),
+      page.locator(this.changeNameLangSpan(lang)).click(),
+      this.waitForVisibleSelector(page, `${this.changeNameLangButton}[aria-expanded='true']`),
     ]);
   }
 
@@ -108,7 +108,7 @@ class AddLinkBlock extends BOBasePage {
       }
       if (selector !== '') {
         /* eslint-disable no-loop-func */
-        await page.$eval(selector, (el: HTMLElement) => el.click());
+        await page.locator(selector).evaluate((el: HTMLElement) => el.click());
         /* eslint-enable no-loop-func */
       }
     }
@@ -141,7 +141,7 @@ class AddLinkBlock extends BOBasePage {
       }
       if (selector !== '') {
         /* eslint-disable no-loop-func */
-        await page.$eval(selector, (el: HTMLElement) => el.click());
+        await page.locator(selector).evaluate((el: HTMLElement) => el.click());
         /* eslint-enable no-loop-func */
       }
     }
@@ -180,7 +180,7 @@ class AddLinkBlock extends BOBasePage {
       }
       if (selector !== '') {
         /* eslint-disable no-loop-func */
-        await page.$eval(selector, (el: HTMLElement) => el.click());
+        await page.locator(selector).evaluate((el: HTMLElement) => el.click());
         /* eslint-enable no-loop-func */
       }
     }
@@ -204,7 +204,7 @@ class AddLinkBlock extends BOBasePage {
       await this.setValue(page, this.customTitleInput(i, 2), customPages[i - 1].name);
       await this.setValue(page, this.customUrlInput(i, 2), customPages[i - 1].url);
       // Add another custom page block
-      await page.click(this.addCustomBlockButton);
+      await page.locator(this.addCustomBlockButton).click();
     }
   }
 

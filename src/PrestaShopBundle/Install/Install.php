@@ -346,9 +346,16 @@ class Install extends AbstractInstall
         $schemaUpgrade = new UpgradeDatabase();
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
+        $schemaUpdateOutput = $output['prestashop:schema:update-without-foreign']['output'];
+        if ($this->isDebug && substr($schemaUpdateOutput, 2, 9) === '[WARNING]') {
+            preg_match('/\[WARNING]([\s\S]*?)Updating database schema/', $schemaUpdateOutput, $match);
+            $this->setError(explode("\n", $match[1]));
+
+            return false;
+        }
 
         if (0 !== $output['prestashop:schema:update-without-foreign']['exitCode']) {
-            $this->setError(explode("\n", $output['prestashop:schema:update-without-foreign']['output']));
+            $this->setError(explode("\n", $schemaUpdateOutput));
 
             return false;
         }

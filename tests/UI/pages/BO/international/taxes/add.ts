@@ -63,11 +63,11 @@ class AddTax extends BOBasePage {
    */
   async changeInputLanguage(page: Page, lang: string): Promise<void> {
     await Promise.all([
-      page.click(this.inputLangDropdownButton),
+      page.locator(this.inputLangDropdownButton).click(),
       this.waitForVisibleSelector(page, `${this.inputLangDropdownButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      page.click(this.inputLangChoiceSpan(lang)),
+      page.locator(this.inputLangChoiceSpan(lang)).click(),
       this.waitForVisibleSelector(page, `${this.inputLangDropdownButton}[aria-expanded='false']`),
     ]);
   }

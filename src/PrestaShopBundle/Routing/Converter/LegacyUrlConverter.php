@@ -73,14 +73,6 @@ final class LegacyUrlConverter
      */
     public function convertByParameters(array $parameters)
     {
-        //Tab parameter can be used as an alias for controller
-        if (!empty($parameters['tab'])) {
-            if (empty($parameters['controller'])) {
-                $parameters['controller'] = $parameters['tab'];
-            }
-            unset($parameters['tab']);
-        }
-
         if (empty($parameters['controller'])) {
             throw new ArgumentException('Missing required controller argument');
         }

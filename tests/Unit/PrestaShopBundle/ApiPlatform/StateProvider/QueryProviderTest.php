@@ -32,16 +32,19 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\Hook as HookQuery;
 use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
-use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
-use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberDenormalizer;
-use PrestaShopBundle\ApiPlatform\Normalizer\ObjectDenormalizer;
+use PrestaShopBundle\ApiPlatform\Exception\CQRSQueryNotFoundException;
+use PrestaShopBundle\ApiPlatform\Normalizer\CQRSApiNormalizer;
+use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberNormalizer;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 use PrestaShopBundle\ApiPlatform\Resources\FoundProduct as FoundProductDto;
 use PrestaShopBundle\ApiPlatform\Resources\Hook;
@@ -59,12 +62,16 @@ class QueryProviderTest extends TestCase
      */
     private DomainSerializer $serializer;
 
+    private LanguageContext $languageContext;
+
+    private ShopContext $shopContext;
+
     /**
      * Set up dependencies for HookStatusProvider
      */
     public function setUp(): void
     {
-        $denormalizers = new \ArrayIterator([new DecimalNumberDenormalizer(), new ObjectDenormalizer()]);
+        $denormalizers = new \ArrayIterator([new DecimalNumberNormalizer(), new CQRSApiNormalizer()]);
         $this->serializer = new DomainSerializer($denormalizers);
         $this->queryBus = $this->createMock(CommandBusInterface::class);
         $this->queryBus
@@ -81,14 +88,19 @@ class QueryProviderTest extends TestCase
 
                 throw new RuntimeException(sprintf('Query type %s was not expected in query bus mock', get_class($query)));
             });
+        $this->languageContext = $this->createMock(LanguageContext::class);
+        $this->languageContext->method('getId')->willReturn(42);
+        $this->shopContext = $this->createMock(ShopContext::class);
+        $this->shopContext->method('getShopConstraint')->willReturn(ShopConstraint::shop(1));
+        $this->shopContext->method('getId')->willReturn(1);
     }
 
     public function testProvideHookStatus(): void
     {
-        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer);
+        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer, $this->shopContext, $this->languageContext);
         $get = new Get();
         $get = $get
-            ->withExtraProperties(['query' => GetHookStatus::class])
+            ->withExtraProperties(['CQRSQuery' => GetHookStatus::class])
             ->withClass(Hook::class);
         /** @var Hook $hookStatus */
         $hookStatus = $hookStatusProvider->provide($get, ['id' => 1]);
@@ -100,10 +112,10 @@ class QueryProviderTest extends TestCase
 
     public function testProvideHook(): void
     {
-        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer);
+        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer, $this->shopContext, $this->languageContext);
         $get = new Get();
         $get = $get
-            ->withExtraProperties(['query' => GetHook::class])
+            ->withExtraProperties(['CQRSQuery' => GetHook::class])
             ->withClass(Hook::class);
         /** @var Hook $hook */
         $hook = $hookStatusProvider->provide($get, ['id' => 1]);
@@ -121,25 +133,25 @@ class QueryProviderTest extends TestCase
 
     public function testSearchProduct(): void
     {
-        $searchProductProvider = new QueryProvider($this->queryBus, $this->serializer);
+        $searchProductProvider = new QueryProvider($this->queryBus, $this->serializer, $this->shopContext, $this->languageContext);
         $get = new GetCollection();
         $get = $get
-            ->withExtraProperties(['query' => SearchProducts::class])
+            ->withExtraProperties(['CQRSQuery' => SearchProducts::class])
             ->withClass(FoundProductDto::class);
         $searchProducts = $searchProductProvider->provide($get, ['phrase' => 'mug', 'resultsLimit' => 10, 'isoCode' => 'EUR']);
         self::assertCount(1, $searchProducts);
 
-        $searchProductProvider = new QueryProvider($this->queryBus, $this->serializer);
+        $searchProductProvider = new QueryProvider($this->queryBus, $this->serializer, $this->shopContext, $this->languageContext);
         $searchProducts = $searchProductProvider->provide($get, ['phrase' => 'search with order id', 'resultsLimit' => 10, 'isoCode' => 'EUR'], ['filters' => ['orderId' => 1]]);
         self::assertCount(0, $searchProducts);
     }
 
     public function testProvideNoQueryThrowsException(): void
     {
-        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer);
+        $hookStatusProvider = new QueryProvider($this->queryBus, $this->serializer, $this->shopContext, $this->languageContext);
         $get = new Get();
 
-        $this->expectException(NoExtraPropertiesFoundException::class);
+        $this->expectException(CQRSQueryNotFoundException::class);
         $hookStatusProvider->provide($get, ['id' => 1]);
     }
 

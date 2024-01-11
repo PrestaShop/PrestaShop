@@ -239,6 +239,11 @@ class AdminCartRulesControllerCore extends AdminController
                 $_POST['gift_product_attribute'] = (int) Tools::getValue('ipa_' . $id_product);
             }
 
+            // Do not allow products with required customization
+            if (!empty($_POST['gift_product']) && count(Product::getRequiredCustomizableFieldsStatic((int) $_POST['gift_product']))) {
+                $this->errors[] = $this->trans('Product with required customization fields cannot be used as a gift.', [], 'Admin.Catalog.Notification');
+            }
+
             // Idiot-proof control
             if (strtotime(Tools::getValue('date_from')) > strtotime(Tools::getValue('date_to'))) {
                 $this->errors[] = $this->trans('The voucher cannot end before it begins.', [], 'Admin.Catalog.Notification');
@@ -278,7 +283,7 @@ class AdminCartRulesControllerCore extends AdminController
     }
 
     /**
-     * @param $current_object
+     * @param CartRule $current_object
      *
      * @return bool|void
      *
@@ -320,7 +325,7 @@ class AdminCartRulesControllerCore extends AdminController
     /**
      * @TODO Move this function into CartRule
      *
-     * @param ObjectModel $currentObject
+     * @param CartRule $currentObject
      *
      * @return bool|void
      *
@@ -634,9 +639,9 @@ class AdminCartRulesControllerCore extends AdminController
         }
     }
 
-    protected function searchProducts($search)
+    protected function searchProducts(string $searchString)
     {
-        if ($products = Product::searchByName((int) $this->context->language->id, $search)) {
+        if ($products = Product::searchByName((int) $this->context->language->id, $searchString)) {
             foreach ($products as &$product) {
                 $combinations = [];
                 $productObj = new Product((int) $product['id_product'], false, (int) $this->context->language->id);

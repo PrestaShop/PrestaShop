@@ -46,7 +46,6 @@
 
 {# Use bootstrap4 theme (from the Symfony framework) as default base #}
 {% use 'bootstrap_4_layout.html.twig' %}
-{% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/entity_search_input.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/multishop.html.twig' %}
@@ -1465,12 +1464,15 @@
 {% endblock %}
 
 {%- block accordion_widget -%}
-  <div class="accordion accordion-form" id="{{ form.vars.id }}">
+  {%- set attr = attr|merge({
+    class: (attr.class|default('') ~ ' accordion accordion-form')|trim,
+  }) -%}
+  <div {{ block('widget_attributes') }}>
     {% set firstChild = true %}
     {% for child in form %}
       {% if child.vars.compound %}
       {% set hasError = child.vars.valid != true %}
-      {% set isExpanded = firstChild and expand_first or (hasError and expand_on_error) %}
+      {% set isExpanded = firstChild and expand_first or (hasError and expand_on_error) or expand_all %}
       <div class="card">
         <div class="card-header" id="{{ child.vars.id }}_accordion_header">
           <h2 class="mb-0">
@@ -1481,7 +1483,10 @@
               data-target="#{{ child.vars.id }}_accordion"
               aria-expanded="{% if isExpanded %}true{% else %}false{% endif %}"
               aria-controls="{{ child.vars.id }}_accordion">
-              {{ child.vars.label }}
+              <span class="accordion-form-button-label">{{ child.vars.label }}</span>
+              {% if child.vars.label_subtitle is defined %}
+                <span class="accordion-form-button-sub-label">{{ child.vars.label_subtitle }}</span>
+              {% endif %}
               <i class="material-icons"></i>
             </button>
           </h2>
@@ -1515,7 +1520,8 @@
       <div class="{% if use_button_groups %}btn-group {% endif %}group-{{ group }}">
         {# Render inline actions #}
         {% set inlineButtonsLimit = form.vars.inline_buttons_limit %}
-        {% for action in form.children %}
+        {% for button in buttons %}
+          {% set action = attribute(form, button) %}
           {% if inlineButtonsLimit is same as(null) or loop.index <= inlineButtonsLimit %}
             {# Remove labels from inline elements if they are not forced #}
             {% if form.vars.use_inline_labels %}
@@ -1528,7 +1534,7 @@
         {% endfor %}
 
         {# Render remaining actions in dropdown #}
-        {% if inlineButtonsLimit is not same as(null) and form.children|length > inlineButtonsLimit %}
+        {% if inlineButtonsLimit is not same as(null) and buttons|length > inlineButtonsLimit %}
           <a id="{{ form.vars.id }}_dropdown" class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate"
              data-toggle="dropdown"
              aria-haspopup="true"
@@ -1536,7 +1542,9 @@
           >
           </a>
           <div class="dropdown-menu">
-            {% for action in form.children|slice(inlineButtonsLimit) %}
+            {% set remainingButtons = buttons|slice(inlineButtonsLimit) %}
+            {% for button in remainingButtons %}
+              {% set action = attribute(form, button) %}
               {{ form_widget(action, {'attr': {
                 'class': 'dropdown-item ' ~ action.vars.attr.class|default('')|trim
               }}) }}

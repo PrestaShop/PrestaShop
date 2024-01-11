@@ -42,7 +42,7 @@ export default class OrderStatusData {
     this.id = orderStatusToCreate.id || 0;
 
     /** @type {string} Name of the status (Max 32 characters) */
-    this.name = (orderStatusToCreate.name || `order_status_${faker.lorem.word({
+    this.name = orderStatusToCreate.name || (`order_status_${faker.lorem.word({
       length: {min: 1, max: 19},
     })}`).substring(0, 32);
 

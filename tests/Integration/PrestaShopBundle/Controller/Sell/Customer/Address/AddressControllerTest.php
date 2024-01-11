@@ -29,18 +29,16 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Customer\Address;
 
 use Country;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
 use Tests\Integration\PrestaShopBundle\Controller\FormGridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
+use Tests\Resources\Resetter\ConfigurationResetter;
 
 class AddressControllerTest extends FormGridControllerTestCase
 {
-    private $countryId;
-
-    private $backupCountry;
-
-    private $legacyContext;
+    private int $countryId;
 
     /**
      * {@inheritDoc}
@@ -49,13 +47,11 @@ class AddressControllerTest extends FormGridControllerTestCase
     {
         parent::setUp();
 
-        // We get the country ID for Lithuania, and we set this country in the context so the controller will
+        // We get the country ID for Lithuania, and we configure this country as the default one so the controller will
         // generate a form adapted to this country (especially regarding states selector)
-        $this->legacyContext = $this->client->getContainer()->get('prestashop.adapter.legacy.context');
-        $this->backupCountry = $this->legacyContext->getContext()->country;
-
         $this->countryId = Country::getByIso('LT');
-        $this->legacyContext->getContext()->country = new Country($this->countryId);
+        $configuration = $this->client->getContainer()->get(ConfigurationInterface::class);
+        $configuration->set('PS_COUNTRY_DEFAULT', $this->countryId);
     }
 
     /**
@@ -64,7 +60,7 @@ class AddressControllerTest extends FormGridControllerTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        $this->legacyContext->getContext()->country = $this->backupCountry;
+        ConfigurationResetter::resetConfiguration();
     }
 
     public function testIndex(): int

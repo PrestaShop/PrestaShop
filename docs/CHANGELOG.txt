@@ -24,6 +24,199 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.1.3 - (2023-12-13)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #34741: Backport v9 SymfonyCacheClearer (by @M0rgan01)
+    - #34606: Optimize product page (by @jolelievre)
+    - #34738: Remove friendly url alert, put codes to columns (by @Hlavtox)
+    - #34563: Update wording of add to cart from list setting (by @Hlavtox)
+    - GHSA-XGPM-Q3MQ-46RQ Some attribute not escaped in Validate::isCleanHTML method (by @matthieu-rolland)
+  - Bug fix:
+    - #34356: Fix arabic numbers displayed (by @boherm)
+    - #34699: Fix customer search in specific price PPV2 (by @M0rgan01)
+    - #34715: Fix combination search in PPV2 specific price (by @M0rgan01)
+    - #33945: [BC Break] Fix specific price datetime range (by @Hlavtox)
+    - #34625: Add hook "actionUpdateQuantity" in product v2 (by @M0rgan01)
+    - #34647: Add empty string check for price in Catalog price rules (by @M0rgan01)
+    - #34600: Remove unnecessary Jquery selector in SerpApp. (by @M0rgan01)
+    - #34537: Minimal quantity should be 1 at least, not 0! (by @ShaiMagal)
+    - #34450: Fix TaxRulesGroup try to update removed column (by @LameuleFR)
+    - #34438: Fix BO CSV import - broken functionality (by @ShaiMagal)
+    - #34441: Fixed SQL apostrophe (') incompatibility (by @Lunyyx)
+    - #34419: Allow unit price to be zero even when displayed (by @gbelorgey)
+    - #34343: Fix combination modal changes detection (by @tleon)
+    - #34351: Fix legacy page images (by @Hlavtox)
+    - #34162: Fix edit bulk quantity for stock page (by @boherm)
+    - #34023: Handle via javascript that the two fields for impact are synced, mean… (by @jolelievre)
+  - Refactoring:
+    - #34491: Improve error message on login page (by @Hlavtox)
+- Front Office:
+  - Improvement:
+    - #34812: Bump classic-theme to 2.1.2 (by @boherm)
+    - #34648: Early return from rule check (by @Hlavtox)
+    - GHSA-VR7M-R9VM-M4WF XSS can be stored in DB from "add a message form" in order detail page (by @matthieu-rolland)
+  - Bug fix:
+    - #34695: Better validate availability date (by @Hlavtox)
+    - #34689: Fix image legend not used (by @Hlavtox)
+    - #34317: Fix sorting by Relevance in search results (by @mrkalchemy)
+    - #34562: Do not allow products with required customization to be used as a gift (by @Hlavtox)
+    - #34487: Fix manufacturer name overwriting (by @Hlavtox)
+    - #34462: Improve front office date validation (by @Hlavtox)
+    - #34207: Don't check all product availability in cart on add to cart action (by @Oksydan)
+    - #34078: Fix URL with accented chars (by @M0rgan01)
+    - #33954: Fix undefined currency if cart is updated before currency is assigned to the context (by @Hlavtox)
+  - Refactoring:
+    - #34633: Update ps_shoppingcart (by @Hlavtox)
+    - #34443: Remove useless htaccess rule for not existing file retro-compat.css.php (by @ShaiMagal)
+- Core:
+  - Improvement:
+    - #34811: Exclude new routes for Security Annotation linter command (by @boherm)
+    - #34723: Updated PrestaShop Packages (by @github-actions[bot])
+    - #34678: [Gift message] allow more special characters, for example <> (by @ShaiMagal)
+    - #34632: Updated PrestaShop Packages (by @github-actions[bot])
+    - #34458: CO: improvement : Performance String Modifier (by @Shoprunners)
+    - #34529: New 12% VAT Czech Republic from 2024-01-01 (by @ShaiMagal)
+    - #34448: Validate smarty render calls (prevent errors from outdated themes) (by @ShaiMagal)
+    - #34452: Prevent Internal Server Error 500 - opcache_invalidate with restrict_api (by @ShaiMagal)
+    - #34158: Explicit error messages (by @Zudjo)
+    - #34435: Protect js folder from dangerous files (by @ShaiMagal)
+    - #34377: Add missing js events in CleanHtmlValidator (by @matthieu-rolland)
+    - #34380: Update module versions in composer.lock (PS 8.1.x) (by @matthieu-rolland)
+    - #34242: Change the APE field validation to match all formats (by @alexandrebak42)
+    - #34120: Bump Smarty to 4.3.4 (by @matks)
+    - #34084:  Update Changelog for 8.1.2 (by @jolelievre)
+  - Bug fix:
+    - #34523: Fix combination unit price math (by @the-ge)
+  - Refactoring:
+    - #34609: Better validate cookie length (by @Hlavtox)
+    - #34531: Update Address.php - small phpdoc edit (@return value) (by @ShaiMagal)
+    - #34439: Update retro-compat.js.php - prevent PHP Warning (by @ShaiMagal)
+    - #34444: Fix php warning webservice (by @ShaiMagal)
+    - #34436: Update jquery.no conflict.php - prevent E_NOTICE (by @ShaiMagal)
+- Tests:
+  - Improvement:
+    - #34773: Modify sanity tests workflow to use docker (by @jolelievre)
+  - Refactoring:
+    - #34759: CI: fix sanity tests on workflow (by @boubkerbribri)
+
+####################################
+#   v8.1.2 - (2023-09-27)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #33741: Introduce employee menu same page links (by @sowbiba)
+    - #33937: Bump 8.1.2 version (by @jolelievre)
+    - #33880: Replace help text by tooltip in delivery slips page (by @nicosomb)
+    - #33745: Introduce alternative search panels same page links (by @sowbiba)
+    - #33476: Add image helptext (by @Hlavtox)
+    - #33394: Add message when duplicating product (by @Hlavtox)
+    - #33296: Change translation key when enable/disable/delete product (by @mflasquin)
+    - #33276: Add file headers and bump some dependencies (by @mflasquin)
+    - GHSA-6jmf-2pfc-q9m7 Filter dashboard hooks in ajax method (by @Matthieu Rolland)
+    - GHSA-gvrg-62jp-rf7j Check user has view access before fetching module hooks (by @Matthieu Rolland)
+  - Bug fix:
+    - #34060: Fix image configuration (by @Hlavtox)
+    - #33909: Cannot add feature or cusotmization fields to virtual product (by @M0rgan01)
+    - #33771: Update classname regex to allow FQDN (by @gross-nvs)
+    - #33860: Add order by for attribute by position (by @jolelievre)
+    - #33778: Handle friendly url automatic update and automatic offline shop configurations (by @jolelievre)
+    - #33802: Fix uninstalling modules with deleted hooks. (by @Hlavtox)
+    - #33658: Fix: issue when clearing cache with opcache with enable_file_override (by @Tofandel)
+    - #33380: Improve reorder positions on grids (by @boherm)
+    - #33567: Fix visual issues new product page (by @boherm)
+    - #33660: Fix error in the module translation page (old translation system) (by @eternoendless)
+    - #33643: Do not attempt to rebuild modules list if missing data (by @matks)
+    - #33581: Fix modules from distribution api (by @Hlavtox)
+    - #33450: Style migrated customer threads properly (by @Hlavtox)
+    - #33495: Check if external carrier module exists (by @Hlavtox)
+    - #33428: Prevent checking nonsupported image formats (by @Hlavtox)
+    - #33458: Fix select for when multishop is not enabled (by @tleon)
+    - #33152: Generate image for store after uploading it (by @Hlavtox)
+    - #33234: Update module's information cache and add clear cache for doctrine (by @M0rgan01)
+- Front Office:
+  - New feature:
+    - #33873: Allow modules to provide language link params in correct languages (by @Hlavtox)
+    - #33632: Add useful email variables (by @Hlavtox)
+  - Improvement:
+    - #33844: Allow adding multilanguage routes, add comments (by @Hlavtox)
+  - Bug fix:
+    - #33964: Fix rounding of no pack price (by @Hlavtox)
+    - #33928: Provide rendered category footer (by @Hlavtox)
+    - #33978: Uniformise and improve cart stock protection (by @jolelievre)
+    - #33930: Cannot set specific price with currency filter (by @M0rgan01)
+    - #33885: Fix URL sanitization and duplicate language ID (by @Hlavtox)
+    - #33788: Add htaccess to protect templates dir (by @nicosomb)
+    - #33608: Fix tax detail in invoice (by @idnovate)
+    - #33387: Do not overwrite legend by empty value (by @Hlavtox)
+    - #33113: Add conditions for manufacturer fields (by @M0rgan01)
+  - Refactoring:
+    - #33961: Do not construct presenters that we already have from the parent (by @Hlavtox)
+- Core:
+  - Improvement:
+    - #34026: Update product comments in composer.lock (by @jolelievre)
+    - #33853: Updated PrestaShop Packages (by @github-actions[bot])
+    - #33407: Do not check for multiple image formats feature, add fallback (by @Hlavtox)
+    - #33817: Updated PrestaShop Packages (by @github-actions[bot])
+    - #33598: Updated PrestaShop Packages (by @github-actions[bot])
+    - #33515: Retry downloading language packs (by @Hlavtox)
+    - #33467: Updated PrestaShop Packages (by @github-actions[bot])
+    - #33433: Use proper limit for CMS page content (by @Hlavtox)
+  - Bug fix:
+    - #33894: Fix adding and deleting language entries from tables (by @Hlavtox)
+    - #33648: Add WebP and Avif to mod_expires (by @kpodemski)
+    - #33573: Fix dropExistingForeignKeys method when updating doctrine schema (by @Hlavtox)
+    - #GHSA-v4gr-v679-42p7:  (by @matthieu-rolland)
+    - #GHSA-2rf5-3fw8-qm47:  (by @matthieu-rolland)
+    - #GHSA-hpf4-v7v2-95p2:  (by @matthieu-rolland)
+    - #GHSA-m9r4-3fg7-pqm2:  (by @matthieu-rolland)
+    - #GHSA-75p5-jwx4-qw9h:  (by @matthieu-rolland)
+    - #GHSA-xw2r-f8xv-c8xp:  (by @matthieu-rolland)
+    - #GHSA-gf46-prm4-56pc:  (by @matthieu-rolland)
+    - #31637: Do not interfere with PDF files (by @Hlavtox)
+    - #33322: Delete data from product_carrier table after deleting product (by @Hlavtox)
+    - #33212: Prevent removing non restricted cart rules (by @Hlavtox)
+  - Refactoring:
+    - #33883: Comment hooks with special calls, fix extra chain (by @Hlavtox)
+    - #33907: Use softDelete method (by @Hlavtox)
+    - #33555: Remove duplicates from smarty.config.inc.php (by @SharakPL)
+    - #33436: Add some comments to Product class (by @Hlavtox)
+- Installer:
+  - Improvement:
+    - #34034: Update INSTALL.txt for 8.x (by @matks)
+    - #34007: Update default catalog 8.1.x (by @ps-jarvis)
+    - #33976: Update czech localization pack (by @Hlavtox)
+    - #33292: Add a check for key generation (by @Hlavtox)
+  - Bug fix:
+    - #34025: Add actionAfterLoadRoutes in hook.xml (by @jolelievre)
+    - #34018: Wording fixed for final export for 8.1.2 (by @jolelievre)
+    - #33784: Add missing wording and domains (by @Hlavtox)
+    - #33491: Add low_stock_threshold to fixtures (by @Hlavtox)
+- Web Services:
+  - Bug fix:
+    - #34014: Backport of 32884 / Fix Error Webservice combinations or categories on a blank schema (by @matks)
+    - #32885: Added www-authenticate: bearer if the access token is invalid (by @nicosomb)
+- Localization:
+  - Bug fix:
+    - #33807: Fixed $legacyKey in buildTranslationCatalogueFromLegacyFiles() (by @Amazzing)
+- Tests:
+  - Improvement:
+    - #33352: Functional Tests : Unskip test after #31572 is fixed (by @Progi1984)
+    - #33349: Functional Tests : Improved test after partial fix for #32265 (by @Progi1984)
+  - Bug fix:
+    - #33869: Nightly: Fixed `campaigns/productV2/functional/03_CRUDProductWithCombinations.ts` (by @Progi1984)
+    - #33789: Nightly `8.1.x` : Fixed `campaigns/productV2/functional/01_filterProducts.ts` (by @Progi1984)
+    - #33501: Nightly : 8.1.x - Fix random errors (by @Progi1984)
+    - #33326: Nightly : 8.1.x - Fixed Mocha Loader (by @Progi1984)
+  - Refactoring:
+    - #33708: UI Test: delete filter by position on pages and categories (by @boubkerbribri)
+    - #33679: Nightly: fix erreur on credit slip pagination test (by @boubkerbribri)
+    - #33631: Modules tests - Fix 'Modules > Faceted search > Uninstall and delete module'' (by @nesrineabdmouleh)
+
+####################################
 #   v8.1.1 - (2023-07-20)
 ####################################
 

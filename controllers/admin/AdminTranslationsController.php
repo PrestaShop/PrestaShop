@@ -288,7 +288,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return bool
      */
-    protected function checkDirAndCreate($dest)
+    protected function checkDirAndCreate(string $dest)
     {
         $bool = true;
 
@@ -315,7 +315,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @throws PrestaShopException
      */
-    protected function writeTranslationFile($override_file = false)
+    protected function writeTranslationFile(bool $override_file = false)
     {
         $type = Tools::toCamelCase($this->type_selected, true);
 
@@ -780,7 +780,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @throws PrestaShopException
      */
-    protected function findAndWriteTranslationsIntoFile($file_name, $files, $theme_name, $module_name, $dir = false)
+    protected function findAndWriteTranslationsIntoFile(string $file_name, array $files, string $theme_name, string $module_name, string|bool $dir = false)
     {
         // These static vars allow to use file to write just one time.
         static $cache_file = [];
@@ -892,7 +892,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @param string $module_name
      * @param string|bool $dir
      */
-    protected function findAndFillTranslations($files, $theme_name, $module_name, $dir = false)
+    protected function findAndFillTranslations(array $files, string $theme_name, string $module_name, string|bool $dir = false)
     {
         $name_var = (empty($this->translations_informations[$this->type_selected]['var']) ? false : $this->translations_informations[$this->type_selected]['var']);
 
@@ -1069,7 +1069,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return array
      */
-    protected function userParseFile($content, $type_translation, $type_file = false, $module_name = '')
+    protected function userParseFile(string $content, string $type_translation, string|bool $type_file = false, string $module_name = '')
     {
         switch ($type_translation) {
             case 'front':
@@ -1411,7 +1411,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @param bool|int $conf : id of confirmation message
      * @param bool $modify_translation : true if the user has clicked on the button "Modify translation"
      */
-    protected function redirect($save_and_stay = false, $conf = false, $modify_translation = false)
+    protected function redirect(bool $save_and_stay = false, bool|int $conf = false, bool $modify_translation = false)
     {
         $conf = !$conf ? 4 : $conf;
         $url_base = self::$currentIndex . '&token=' . $this->token . '&conf=' . $conf;
@@ -2277,7 +2277,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return string|false
      */
-    protected function getMailContent($dir, $file)
+    protected function getMailContent(string $dir, string $file)
     {
         $content = file_get_contents($dir . '/' . $file);
 
@@ -2303,8 +2303,14 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return string
      */
-    protected function displayMailContent($mails, $all_subject_mail, $obj_lang, $id_html, $title, $name_for_module = false)
-    {
+    protected function displayMailContent(
+        array $mails,
+        array $all_subject_mail,
+        Language $obj_lang,
+        string $id_html,
+        string $title,
+        string|bool $name_for_module = false
+    ) {
         $str_return = '';
         $group_name = 'mail';
         if (array_key_exists('group_name', $mails)) {
@@ -2421,8 +2427,13 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return string
      */
-    protected function displayMailBlockTxt($content, $lang, $mail_name, $group_name, $name_for_module = false)
-    {
+    protected function displayMailBlockTxt(
+        array $content,
+        string $lang,
+        string $mail_name,
+        string $group_name,
+        string|bool $name_for_module = false
+    ) {
         if (!empty($content)) {
             $text_content = Tools::htmlentitiesUTF8(stripslashes(strip_tags($content[$lang])));
         } else {
@@ -2450,8 +2461,14 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return string
      */
-    protected function displayMailBlockHtml($content, $lang, $url, $mail_name, $group_name, $name_for_module = false)
-    {
+    protected function displayMailBlockHtml(
+        array $content,
+        string $lang,
+        string $url,
+        string $mail_name,
+        string $group_name,
+        string|bool $name_for_module = false
+    ) {
         $title = [];
 
         if (!empty($content)) {
@@ -2467,8 +2484,13 @@ class AdminTranslationsControllerCore extends AdminController
                 </div>';
     }
 
-    protected function displayMailEditor($content, $lang, $mail_name, $group_name, $name_for_module = false)
-    {
+    protected function displayMailEditor(
+        array $content,
+        string $lang,
+        string $mail_name,
+        string $group_name,
+        string|bool $name_for_module = false
+    ) {
         $title = [];
 
         if (!empty($content)) {
@@ -2483,7 +2505,7 @@ class AdminTranslationsControllerCore extends AdminController
         return '<textarea class="rte-mail rte-mail-' . $mail_name . ' form-control" data-rte="' . $mail_name . '" name="' . $group_name . '[html][' . $name_for_module . $mail_name . ']">' . $html_content . '</textarea>';
     }
 
-    protected function cleanMailContent(&$content, $lang, &$title)
+    protected function cleanMailContent(array &$content, string $lang, array &$title)
     {
         if (stripos($content[$lang], '<body')) {
             $array_lang = $lang != 'en' ? ['en', $lang] : [$lang];
@@ -2572,7 +2594,7 @@ class AdminTranslationsControllerCore extends AdminController
         return $arr_modules;
     }
 
-    protected function getTinyMCEForMails($iso_lang)
+    protected function getTinyMCEForMails(string $iso_lang)
     {
         // TinyMCE
         $iso_tiny_mce = (Tools::file_exists_cache(_PS_ROOT_DIR_ . '/js/tiny_mce/langs/' . $iso_lang . '.js') ? $iso_lang : 'en');
@@ -2738,7 +2760,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return array : list of subjects of mails
      */
-    protected function getSubjectMail($dir, $file, $subject_mail)
+    protected function getSubjectMail(string $dir, string $file, array $subject_mail)
     {
         $dir = rtrim($dir, '/');
         // If is file and is not in ignore_folder
@@ -2777,7 +2799,7 @@ class AdminTranslationsControllerCore extends AdminController
         return $subject_mail;
     }
 
-    protected function writeSubjectTranslationFile($sub, $path)
+    protected function writeSubjectTranslationFile(array $sub, string $path)
     {
         if (!Tools::file_exists_cache(dirname($path))) {
             if (!mkdir(dirname($path), 0700)) {
@@ -2809,8 +2831,13 @@ class AdminTranslationsControllerCore extends AdminController
      * @param string $lang_file full path of translation file
      * @param bool $is_default
      */
-    protected function recursiveGetModuleFiles($path, &$array_files, $module_name, $lang_file, $is_default = false)
-    {
+    protected function recursiveGetModuleFiles(
+        string $path,
+        array &$array_files,
+        string $module_name,
+        string $lang_file,
+        bool $is_default = false
+    ) {
         $files_module = [];
         if (Tools::file_exists_cache($path)) {
             $files_module = scandir($path, SCANDIR_SORT_NONE);
@@ -2848,7 +2875,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return array
      */
-    protected function getAllModuleFiles($modules, $root_dir, $lang, $is_default = false)
+    protected function getAllModuleFiles(array $modules, string|null $root_dir, string $lang, bool $is_default = false)
     {
         $array_files = [];
         $initial_root_dir = $root_dir;
@@ -2951,7 +2978,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return array Array          Containing all datas needed for building the translation form
      */
-    protected function parsePdfClass($file_path, $file_type, $lang_array, $tab, $tabs_array, &$count_missing)
+    protected function parsePdfClass(string $file_path, string $file_type, array $lang_array, string $tab, array $tabs_array, array &$count_missing)
     {
         // Get content for this file
         $content = file_get_contents($file_path);
@@ -3100,9 +3127,8 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return bool
      */
-    protected function theme_exists($theme)
+    protected function theme_exists(string $theme)
     {
-        $theme_exists = false;
         foreach ($this->themes as $existing_theme) {
             /** @var Theme $existing_theme */
             if ($existing_theme->getName() == $theme) {
@@ -3146,7 +3172,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return array
      */
-    protected function getSubjectMailContent($directory)
+    protected function getSubjectMailContent(string $directory)
     {
         $subject_mail_content = [];
         if (Tools::file_exists_cache($directory . '/lang.php')) {

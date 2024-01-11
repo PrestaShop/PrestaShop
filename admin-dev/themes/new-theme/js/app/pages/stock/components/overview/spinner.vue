@@ -39,7 +39,7 @@
       :buttons="true"
       :hover-buttons="true"
       :value="getQuantity()"
-      @change="onChange"
+      @change="onChange($event)"
       @keyup="onKeyup($event)"
       @keydown="onKeydown($event)"
       @focus="focusIn"
@@ -89,11 +89,9 @@
         }
         return <string> this.value === '' ? '' : Number.parseInt(<string> this.value, 10);
       },
-      onChange(val: any): void {
-        if (val && isNumber(val)) {
-          this.value = val;
-          this.isEnabled = !!val;
-        }
+      onChange(event: Event): void {
+        this.value = parseInt((<HTMLInputElement>event.target).value, 10);
+        this.isEnabled = !!parseInt((<HTMLInputElement>event.target).value, 10);
       },
       deActivate(): void {
         this.isActive = false;

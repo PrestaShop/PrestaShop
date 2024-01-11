@@ -55,7 +55,7 @@ if (isset($_ENV['PS_FF_FRONT_CONTAINER_V2']) && filter_var($_ENV['PS_FF_FRONT_CO
 
     // Try to handle request
     try {
-        $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
+        $response = $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, false);
         $response->send();
         define('FRONT_LEGACY_CONTEXT', false);
         $kernel->terminate($request, $response);

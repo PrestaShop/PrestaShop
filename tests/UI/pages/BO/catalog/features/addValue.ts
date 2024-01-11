@@ -66,7 +66,7 @@ class AddValue extends BOBasePage {
 
     // Save value
     if (saveAndStay) {
-      await page.click(this.saveAndStayButton);
+      await page.locator(this.saveAndStayButton).click();
     } else {
       await this.clickAndWaitForURL(page, this.saveButton);
     }

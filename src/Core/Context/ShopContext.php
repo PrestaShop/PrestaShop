@@ -29,16 +29,26 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Context;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Model\ShopInterface;
 
 /**
- * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
+ * This context service gives access to all contextual data related to shop.
  */
 class ShopContext
 {
     public function __construct(
-        private readonly ShopConstraint $shopConstraint,
-        private readonly ShopInterface $shop
+        protected readonly ShopConstraint $shopConstraint,
+        protected int $id,
+        protected string $name,
+        protected int $shopGroupId,
+        protected int $categoryId,
+        protected string $themeName,
+        protected string $color,
+        protected string $physicalUri,
+        protected string $virtualUri,
+        protected string $domain,
+        protected string $domainSSL,
+        protected bool $active,
+        protected bool $secured,
     ) {
     }
 
@@ -47,8 +57,74 @@ class ShopContext
         return $this->shopConstraint;
     }
 
-    public function getShop(): ShopInterface
+    public function getId(): int
     {
-        return $this->shop;
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getShopGroupId(): int
+    {
+        return $this->shopGroupId;
+    }
+
+    public function getCategoryId(): int
+    {
+        return $this->categoryId;
+    }
+
+    public function getThemeName(): string
+    {
+        return $this->themeName;
+    }
+
+    public function getColor(): string
+    {
+        return $this->color;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function getPhysicalUri(): string
+    {
+        return $this->physicalUri;
+    }
+
+    public function getVirtualUri(): string
+    {
+        return $this->virtualUri;
+    }
+
+    public function getDomain(): string
+    {
+        return $this->domain;
+    }
+
+    public function getDomainSSL(): string
+    {
+        return $this->domainSSL;
+    }
+
+    public function getBaseURI(): string
+    {
+        return $this->physicalUri . $this->virtualUri;
+    }
+
+    public function getBaseURL(): string
+    {
+        if ($this->secured) {
+            $url = 'https://' . $this->domainSSL;
+        } else {
+            $url = 'http://' . $this->domain;
+        }
+
+        return $url . $this->getBaseURI();
     }
 }

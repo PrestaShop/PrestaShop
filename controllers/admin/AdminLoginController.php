@@ -53,7 +53,7 @@ class AdminLoginControllerCore extends AdminController
 
     public function setMedia($isNewTheme = false)
     {
-        $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.4.1.min.js');
+        $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.7.1.min.js');
         $this->addjqueryPlugin('validate');
         $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js');
         if ($this->context->language->is_rtl) {
@@ -63,6 +63,8 @@ class AdminLoginControllerCore extends AdminController
         $this->addJS(_PS_JS_DIR_ . 'vendor/spin.js');
         $this->addJS(_PS_JS_DIR_ . 'vendor/ladda.js');
         Media::addJsDef(['img_dir' => _PS_IMG_]);
+
+        // Error wordings, one_error is not used anymore
         Media::addJsDefL('one_error', $this->trans('There is one error.', [], 'Admin.Notifications.Error'));
         Media::addJsDefL('more_errors', $this->trans('There are several errors.', [], 'Admin.Notifications.Error'));
 

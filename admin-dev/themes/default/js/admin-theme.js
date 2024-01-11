@@ -496,7 +496,7 @@ $(() => {
     $.ajax({
       url: `index.php?controller=AdminCurrencies&token=${token}`,
       cache: false,
-      data: `ajax=1&action=cronjobLiveExchangeRate&tab=AdminCurrencies&enable=${enable}`,
+      data: `ajax=1&action=cronjobLiveExchangeRate&controller=AdminCurrencies&enable=${enable}`,
     });
   });
 

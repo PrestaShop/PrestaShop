@@ -122,14 +122,6 @@ class ImageFormatConfigurationTest extends TestCase
      */
     public function dataProviderGetGenerationFormats(): array
     {
-        // @todo - remove this in 9.0.0 or after the test is aware of the feature flag
-        return [
-            ['jpg,png,webp', ['jpg']],
-            ['jpg', ['jpg']],
-            ['png,avif', ['jpg']], // JPG fallback will be always added
-        ];
-
-        // @phpstan-ignore-next-line
         return [
             ['jpg,png,webp', ['jpg', 'png', 'webp']],
             ['jpg', ['jpg']],

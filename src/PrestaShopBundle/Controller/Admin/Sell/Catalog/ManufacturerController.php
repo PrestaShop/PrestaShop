@@ -587,8 +587,8 @@ class ManufacturerController extends FrameworkBundleAdminController
         $addressFormHandler = $this->getAddressFormHandler();
 
         $formData = [];
-        if ($request->request->has('manufacturer_address') && isset($request->request->get('manufacturer_address')['id_country'])) {
-            $formCountryId = (int) $request->request->get('manufacturer_address')['id_country'];
+        if ($request->request->has('manufacturer_address') && isset($request->request->all('manufacturer_address')['id_country'])) {
+            $formCountryId = (int) $request->request->all('manufacturer_address')['id_country'];
             $formData['id_country'] = $formCountryId;
         }
 
@@ -635,8 +635,8 @@ class ManufacturerController extends FrameworkBundleAdminController
         $addressFormHandler = $this->getAddressFormHandler();
 
         $formData = [];
-        if ($request->request->has('manufacturer_address') && isset($request->request->get('manufacturer_address')['id_country'])) {
-            $formCountryId = (int) $request->request->get('manufacturer_address')['id_country'];
+        if ($request->request->has('manufacturer_address') && isset($request->request->all('manufacturer_address')['id_country'])) {
+            $formCountryId = (int) $request->request->all('manufacturer_address')['id_country'];
             $formData['id_country'] = $formCountryId;
         }
 

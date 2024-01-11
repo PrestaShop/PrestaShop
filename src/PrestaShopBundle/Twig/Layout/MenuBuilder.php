@@ -38,6 +38,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MenuBuilder
 {
+    private ?Tab $currentTab = null;
+    /** @var array<int, Tab[]> */
+    private array $ancestorsTab = [];
+
     public function __construct(
         private readonly LegacyContext $context,
         private readonly RequestStack $requestStack,
@@ -50,6 +54,10 @@ class MenuBuilder
 
     public function getCurrentTab(): ?Tab
     {
+        if ($this->currentTab) {
+            return $this->currentTab;
+        }
+
         $tab = null;
         $routeName = $this->getRouteName();
         if (!empty($routeName)) {
@@ -63,12 +71,33 @@ class MenuBuilder
             }
         }
 
+        $this->currentTab = $tab;
+
         return $tab;
     }
 
+    public function getCurrentTabLevel(): int
+    {
+        $currentTab = $this->getCurrentTab();
+        if ($currentTab) {
+            $ancestorsTab = $this->getAncestorsTab($currentTab->getId());
+            if (!empty($ancestorsTab)) {
+                return count($ancestorsTab);
+            }
+        }
+
+        return 0;
+    }
+
+    /* @return Tab[] */
     public function getAncestorsTab(int $currentTabId): array
     {
-        return $this->tabRepository->getAncestors($currentTabId);
+        if (isset($this->ancestorsTab[$currentTabId])) {
+            return $this->ancestorsTab[$currentTabId];
+        }
+        $this->ancestorsTab[$currentTabId] = $this->tabRepository->getAncestors($currentTabId);
+
+        return $this->ancestorsTab[$currentTabId];
     }
 
     /**

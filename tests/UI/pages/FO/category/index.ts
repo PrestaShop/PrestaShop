@@ -39,6 +39,12 @@ class Category extends FOBasePage {
 
   private readonly valueToSortBy: (sortBy: string) => string;
 
+  private readonly sideBlockCategories: string;
+
+  private readonly sideBlockCategoriesItem: string;
+
+  private readonly sideBlockCategory: (text: string) => string;
+
   private readonly subCategoriesList: string;
 
   private readonly subCategoriesItem: (title: string) => string;
@@ -77,6 +83,16 @@ class Category extends FOBasePage {
 
   private readonly searchFiltersDropdown: (facetType: string) => string;
 
+  private readonly closeOneFilter: (row: number) => string;
+
+  private readonly searchFiltersSlider: string;
+
+  private readonly searchFilterPriceValues: string;
+
+  private readonly clearAllFiltersLink: string;
+
+  private readonly activeSearchFilters: string;
+
   private readonly wishlistModal: string;
 
   private readonly wishlistModalListItem: string;
@@ -105,6 +121,11 @@ class Category extends FOBasePage {
     this.sortByButton = `${this.sortByDiv} button.select-title`;
     this.valueToSortBy = (sortBy: string) => `${this.productListTop} .products-sort-order .dropdown-menu a[href*='${sortBy}']`;
 
+    // Categories SideBlock
+    this.sideBlockCategories = '.block-categories';
+    this.sideBlockCategoriesItem = `${this.sideBlockCategories} ul.category-sub-menu li`;
+    this.sideBlockCategory = (text: string) => `${this.sideBlockCategoriesItem} a:text("${text}")`;
+
     // SubCategories List
     this.subCategoriesList = '#subcategories ul.subcategories-list';
     this.subCategoriesItem = (title: string) => `${this.subCategoriesList} li a[title="${title}"]`;
@@ -114,7 +135,7 @@ class Category extends FOBasePage {
     this.productArticle = (number: number) => `${this.productList} .products div:nth-child(${number}) article`;
 
     this.productTitle = (number: number) => `${this.productArticle(number)} .product-title`;
-    this.productPrice = (number: number) => `${this.productArticle(number)} .product-price-and-shipping`;
+    this.productPrice = (number: number) => `${this.productArticle(number)} span.price`;
     this.productAttribute = (number: number, attribute: string) => `${this.productArticle(number)} .product-${attribute}`;
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = (number: number) => `${this.productArticle(number)} div.product-description`;
@@ -139,6 +160,11 @@ class Category extends FOBasePage {
       + 'input[type="checkbox"]';
     this.searchFiltersRadio = (facetType: string) => `${this.searchFilter(facetType)} label.facet-label input[type="radio"]`;
     this.searchFiltersDropdown = (facetType: string) => `${this.searchFilter(facetType)} .facet-dropdown`;
+    this.searchFiltersSlider = '.ui-slider-horizontal';
+    this.searchFilterPriceValues = '[id*=facet_label]';
+    this.clearAllFiltersLink = '#_desktop_search_filters_clear_all button.js-search-filters-clear-all';
+    this.activeSearchFilters = '#js-active-search-filters';
+    this.closeOneFilter = (row: number) => `#js-active-search-filters ul li:nth-child(${row}) a i`;
 
     // Wishlist
     this.wishlistModal = '.wishlist-add-to .wishlist-modal.show';
@@ -162,7 +188,7 @@ class Category extends FOBasePage {
    * @return {Promise<number>}
    */
   async getNumberOfProductsDisplayed(page: Page): Promise<number> {
-    return (await page.$$(this.productItemListDiv)).length;
+    return page.locator(this.productItemListDiv).count();
   }
 
   /**
@@ -283,6 +309,16 @@ class Category extends FOBasePage {
     await this.clickAndWaitForURL(page, this.paginationPrevious);
   }
 
+  /**
+   * Go to product page
+   * @param page {Page} Browser tab
+   * @param id {number} Index of product in list of products
+   * @returns {Promise<void>}
+   */
+  async goToProductPage(page: Page, id: number): Promise<void> {
+    await this.clickAndWaitForURL(page, this.productAttribute(id, 'thumbnail'));
+  }
+
   // Quick view methods
   /**
    * Click on Quick view Product
@@ -291,7 +327,7 @@ class Category extends FOBasePage {
    * @return {Promise<void>}
    */
   async quickViewProduct(page: Page, id: number): Promise<void> {
-    await page.hover(this.productImg(id));
+    await page.locator(this.productImg(id)).hover();
     let displayed: boolean = false;
 
     /* eslint-disable no-await-in-loop */
@@ -301,7 +337,7 @@ class Category extends FOBasePage {
       /* eslint-env browser */
       displayed = await page.evaluate(
         (selector) => {
-          const element: HTMLElement|null = document.querySelector(selector);
+          const element: HTMLElement | null = document.querySelector(selector);
 
           if (element === null) {
             return false;
@@ -315,7 +351,7 @@ class Category extends FOBasePage {
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.$eval(this.productQuickViewLink(id), (el: HTMLElement) => el.click()),
+      page.locator(this.productQuickViewLink(id)).evaluate((el: HTMLElement) => el.click()),
     ]);
   }
 
@@ -333,7 +369,7 @@ class Category extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async getQuickViewImageMain(page: Page): Promise<string|null> {
+  async getQuickViewImageMain(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, `${this.quickViewModalProductImageCover} source`, 'srcset');
   }
 
@@ -352,7 +388,7 @@ class Category extends FOBasePage {
    * @param name {string} Name of a category
    * @returns {Promise<string|null>}
    */
-  async getCategoryImageMain(page: Page, name: string): Promise<string|null> {
+  async getCategoryImageMain(page: Page, name: string): Promise<string | null> {
     return this.getAttributeContent(page, `${this.subCategoriesItem(name)} source`, 'srcset');
   }
 
@@ -362,7 +398,7 @@ class Category extends FOBasePage {
    * @param idProduct {number} ID of a product
    * @return {Promise<number|null>}
    */
-  async getNThChildFromIDProduct(page:Page, idProduct: number): Promise<number|null> {
+  async getNThChildFromIDProduct(page: Page, idProduct: number): Promise<number | null> {
     const productItemsLength = await this.getNumberOfProductsDisplayed(page);
 
     for (let idx: number = 1; idx <= productItemsLength; idx++) {
@@ -378,13 +414,47 @@ class Category extends FOBasePage {
     return null;
   }
 
+  ////////////////////////////
+  // Side Block : Categories
+  ////////////////////////////
+  /**
+   * Return if Side Block : Categories is visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async hasBlockCategories(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.sideBlockCategories, 1000);
+  }
+
+  /**
+   * Return if the number of categories in side block
+   * @param page {Page} Browser tab
+   * @return {Promise<number>}
+   */
+  async getNumBlockCategories(page: Page): Promise<number> {
+    return page.locator(this.sideBlockCategoriesItem).count();
+  }
+
+  /**
+   * Click on the category in side block
+   * @param page {Page} Browser tab
+   * @param categoryName {string}
+   * @return {Promise<void>}
+   */
+  async clickBlockCategory(page: Page, categoryName: string): Promise<void> {
+    await this.clickAndWaitForURL(page, this.sideBlockCategory(categoryName));
+  }
+
+  /////////////////////////
+  // Side Block : Filters
+  /////////////////////////
   /**
    * Return if search filters are visible
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
   async hasSearchFilters(page: Page): Promise<boolean> {
-    return page.$$eval(this.searchFilters, (all) => all.length !== 0);
+    return (await page.locator(this.searchFilters).count()) !== 0;
   }
 
   /**
@@ -394,7 +464,130 @@ class Category extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async isSearchFiltersCheckbox(page: Page, facetType: string): Promise<boolean> {
-    return page.$$eval(this.searchFiltersCheckbox(facetType), (all) => all.length !== 0);
+    return (await page.locator(this.searchFiltersCheckbox(facetType)).count()) !== 0;
+  }
+
+  /**
+   * Filter by checkbox
+   * @param page {Page} Browser tab
+   * @param facetType {string} Type of filter
+   * @param checkboxName {string} Checkbox name
+   * @param toEnable {boolean} True if we need to enable
+   * @return {Promise<void>}
+   */
+  async filterByCheckbox(page: Page, facetType: string, checkboxName: string, toEnable: boolean): Promise<void> {
+    await this.setChecked(
+      page,
+      `${this.searchFiltersCheckbox(facetType)}[data-search-url*=${checkboxName}]`,
+      toEnable,
+      true,
+    );
+    await page.waitForTimeout(2000);
+  }
+
+  /**
+   * Get active filters
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getActiveFilters(page: Page): Promise<string> {
+    return this.getTextContent(page, this.activeSearchFilters);
+  }
+
+  /**
+   * Get product href
+   * @param page {Page} Browser tab
+   * @param productRow {number} Product row
+   * @return {Promise<string>}
+   */
+  async getProductHref(page: Page, productRow: number): Promise<string> {
+    return this.getAttributeContent(page, `${this.productArticle(productRow)} div.thumbnail-top a`, 'href');
+  }
+
+  /**
+   * Get product price
+   * @param page {Page} Browser tab
+   * @param productRow {number} Product row
+   * @return {Promise<number>}
+   */
+  async getProductPrice(page: Page, productRow: number): Promise<number> {
+    return this.getNumberFromText(page, this.productPrice(productRow));
+  }
+
+  /**
+   * Clear all filters
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async clearAllFilters(page: Page): Promise<boolean> {
+    await page.locator(this.clearAllFiltersLink).click();
+
+    return this.elementNotVisible(page, this.activeSearchFilters, 2000);
+  }
+
+  /**
+   * Close filter
+   * @param page {Page} Browser tab
+   * @param row {number} Row of the filter
+   * @return {Promise<void>}
+   */
+  async closeFilter(page: Page, row: number): Promise<void> {
+    await page.locator(this.closeOneFilter(row)).click();
+  }
+
+  /**
+   * Is active filter not visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async isActiveFilterNotVisible(page: Page): Promise<boolean> {
+    return this.elementNotVisible(page, this.activeSearchFilters, 2000);
+  }
+
+  /**
+   * Get maximum price from slider
+   * @param page {Page} Browser tab
+   * @return {Promise<number>}
+   */
+  async getMaximumPrice(page: Page): Promise<number> {
+    const test = await this.getTextContent(page, this.searchFilterPriceValues);
+
+    return (parseInt(test.split('€')[2], 10));
+  }
+
+  /**
+   * Get minimum price from slider
+   * @param page {Page} Browser tab
+   * @return {Promise<number>}
+   */
+  async getMinimumPrice(page: Page): Promise<number> {
+    const test = await this.getTextContent(page, this.searchFilterPriceValues);
+
+    return (parseInt(test.split('€')[1], 10));
+  }
+
+  /**
+   * Filter by price
+   * @param page {Page} Browser tab
+   * @param minPrice {number} Minimum price in the slider
+   * @param maxPrice {number} Maximum price in the slider
+   * @param filterFrom {number} The minimum value to filter
+   * @param filterTo {number} The maximum value to filter
+   * @return {Promise<void>}
+   */
+  async filterByPrice(page: Page, minPrice: number, maxPrice: number, filterFrom: number, filterTo: number): Promise<void> {
+    const sliderTrack = page.locator(this.searchFiltersSlider);
+    const sliderOffsetWidth = await sliderTrack.evaluate((el) => el.getBoundingClientRect().width);
+    const pxOneEuro = sliderOffsetWidth / (maxPrice - minPrice);
+
+    await sliderTrack.hover({force: true, position: {x: ((filterFrom - minPrice) * pxOneEuro), y: 0}});
+    await page.mouse.down();
+    await page.mouse.up();
+    await page.waitForTimeout(2000);
+    await sliderTrack.hover({force: true, position: {x: (filterTo - minPrice) * pxOneEuro, y: 0}});
+    await page.mouse.down();
+    await page.mouse.up();
+    await page.waitForTimeout(2000);
   }
 
   /**
@@ -404,7 +597,7 @@ class Category extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async isSearchFilterRadio(page: Page, facetType: string): Promise<boolean> {
-    return page.$$eval(this.searchFiltersRadio(facetType), (all) => all.length !== 0);
+    return (await page.locator(this.searchFiltersRadio(facetType)).count()) !== 0;
   }
 
   /**
@@ -414,7 +607,7 @@ class Category extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async isSearchFilterDropdown(page: Page, facetType: string): Promise<boolean> {
-    return page.$$eval(this.searchFiltersDropdown(facetType), (all) => all.length !== 0);
+    return (await page.locator(this.searchFiltersDropdown(facetType)).count()) !== 0;
   }
 
   /**
@@ -424,16 +617,21 @@ class Category extends FOBasePage {
    * @returns Promise<string>
    */
   async addToWishList(page: Page, idxProduct: number): Promise<string> {
-    // Click on the heart
-    await page.click(this.productAddToWishlist(idxProduct));
-    // Wait for the modal
-    await this.elementVisible(page, this.wishlistModal, 2000);
-    // Click on the first wishlist
-    await page.click(this.wishlistModalListItem);
-    // Wait for the toast
-    await this.elementVisible(page, this.wishlistToast, 2000);
+    if (!(await this.isAddedToWishlist(page, idxProduct))) {
+      // Click on the heart
+      await page.locator(this.productAddToWishlist(idxProduct)).click();
+      // Wait for the modal
+      await this.elementVisible(page, this.wishlistModal, 3000);
+      // Click on the first wishlist
+      await page.locator(this.wishlistModalListItem).click();
+      // Wait for the toast
+      await this.elementVisible(page, this.wishlistToast, 3000);
 
-    return this.getTextContent(page, this.wishlistToast);
+      return this.getTextContent(page, this.wishlistToast);
+    }
+
+    // Already added
+    return this.messageAddedToWishlist;
   }
 
   /**
@@ -443,6 +641,8 @@ class Category extends FOBasePage {
    * @returns Promise<boolean>
    */
   async isAddedToWishlist(page: Page, idxProduct: number): Promise<boolean> {
+    await page.waitForTimeout(1000);
+
     return ((await this.getTextContent(page, this.productAddToWishlist(idxProduct))) === 'favorite');
   }
 }

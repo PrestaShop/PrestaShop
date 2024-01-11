@@ -369,11 +369,15 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             // Assign template vars related to the category + execute hooks related to the category
             $this->assignCategory();
+
             // Assign template vars related to the price and tax
             $this->assignPriceAndTax();
 
             // Assign attributes combinations to the template
             $this->assignAttributesCombinations();
+
+            // Add notification about this product being in cart
+            $this->addCartQuantityNotification();
 
             // Pack management
             $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : [];
@@ -410,7 +414,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 foreach ($accessories as &$accessory) {
                     $accessory = $presenter->present(
                         $presentationSettings,
-                        Product::getProductProperties($this->context->language->id, $accessory, $this->context),
+                        $assembler->assembleProduct($accessory),
                         $this->context->language
                     );
                 }
@@ -462,7 +466,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
                 'accessories' => $accessories,
                 'product' => $product_for_template,
-                'displayUnitPrice' => !empty($this->product->unity) && $this->product->unit_price > 0.000000,
+                'displayUnitPrice' => !empty($product_for_template['unit_price_tax_excluded']),
                 'product_manufacturer' => $productManufacturer,
                 'manufacturer_image_url' => $manufacturerImageUrl,
                 'product_brand_url' => $productBrandUrl,
@@ -561,6 +565,43 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
+     * Displays information, if the customer has this product in cart already.
+     */
+    protected function addCartQuantityNotification()
+    {
+        if ((bool) Configuration::get('PS_DISPLAY_AMOUNT_IN_CART') !== true) {
+            return;
+        }
+
+        // Get quantity of this product in cart, it will return an array with
+        // quantity of this single product and also quantity in packs
+        $quantities = $this->context->cart->getProductQuantityInAllVariants(
+            $this->id_product
+        );
+
+        // Render nice notifications so the user knows what is happening
+        if ($quantities['standalone_quantity'] > 0 && $quantities['pack_quantity'] > 0) {
+            $this->info[] = $this->trans(
+                'Your cart contains %1s of these products and another %2s of these are included in packs in your cart.',
+                [$quantities['standalone_quantity'], $quantities['pack_quantity']],
+                'Shop.Theme.Catalog'
+            );
+        } elseif ($quantities['standalone_quantity'] > 0) {
+            $this->info[] = $this->trans(
+                'Your cart contains %1s of these products.',
+                [$quantities['standalone_quantity']],
+                'Shop.Theme.Catalog'
+            );
+        } elseif ($quantities['pack_quantity'] > 0) {
+            $this->info[] = $this->trans(
+                '%1s of these products are included in packs in your cart.',
+                [$quantities['pack_quantity']],
+                'Shop.Theme.Catalog'
+            );
+        }
+    }
+
+    /**
      * Assign price and tax to the template.
      */
     protected function assignPriceAndTax()
@@ -604,7 +645,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float) $tax, $this->product->ecotax);
 
         $this->context->smarty->assign([
-            'no_tax' => Tax::excludeTaxeOption() || !$tax,
+            'no_tax' => !Configuration::get('PS_TAX') || !$tax,
             'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
             'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
         ]);
@@ -680,7 +721,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->combinations[$row['id_product_attribute']]['isbn'] = $row['isbn'];
                 $this->combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
                 $this->combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
-                if ($row['available_date'] != '0000-00-00' && Validate::isDate($row['available_date'])) {
+                if (!empty($row['available_date']) && $row['available_date'] != '0000-00-00' && Validate::isDate($row['available_date'])) {
                     $this->combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];
                     $this->combinations[$row['id_product_attribute']]['date_formatted'] = Tools::displayDate($row['available_date']);
                 } else {
@@ -1178,9 +1219,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $extraContentFinder = new ProductExtraContentFinder();
 
         $product = $this->objectPresenter->present($this->product);
-        $product['id_product'] = (int) $this->product->id;
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
-        $product['new'] = (int) $this->product->new;
         $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);

@@ -28,9 +28,9 @@ namespace PrestaShopBundle\Controller\Admin\Improve;
 
 use DateTime;
 use Db;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
@@ -48,6 +48,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Twig\Environment;
 
 /**
  * Responsible of "Improve > Modules > Modules & Services > Catalog / Manage" page display.
@@ -57,6 +59,13 @@ class ModuleController extends ModuleAbstractController
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
 
     public const MAX_MODULES_DISPLAYED = 6;
+
+    public function __construct(
+        private readonly Environment $twig,
+        private readonly ValidatorInterface $validator,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
 
     /**
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
@@ -79,12 +88,12 @@ class ModuleController extends ModuleAbstractController
 
         $categories = $this->getCategories($modulesProvider, $installedProducts);
         $bulkActions = [
-            'bulk-install' => $this->trans('Install', 'Admin.Actions'),
-            'bulk-uninstall' => $this->trans('Uninstall', 'Admin.Actions'),
-            'bulk-disable' => $this->trans('Disable', 'Admin.Actions'),
-            'bulk-enable' => $this->trans('Enable', 'Admin.Actions'),
-            'bulk-reset' => $this->trans('Reset', 'Admin.Actions'),
-            'bulk-delete' => $this->trans('Delete', 'Admin.Modules.Feature'),
+            'bulk-install' => $this->trans('Install', 'Admin.Modules.Actions'),
+            'bulk-uninstall' => $this->trans('Uninstall', 'Admin.Modules.Actions'),
+            'bulk-disable' => $this->trans('Disable', 'Admin.Modules.Actions'),
+            'bulk-enable' => $this->trans('Enable', 'Admin.Modules.Actions'),
+            'bulk-reset' => $this->trans('Reset', 'Admin.Modules.Actions'),
+            'bulk-delete' => $this->trans('Delete', 'Admin.Modules.Actions'),
         ];
 
         return $this->render(
@@ -131,7 +140,7 @@ class ModuleController extends ModuleAbstractController
         $moduleAccessedId = (int) $moduleAccessed->database->get('id');
 
         // Save history for this module
-        $moduleHistory = $this->getDoctrine()
+        $moduleHistory = $this->entityManager
             ->getRepository(ModuleHistory::class)
             ->findOneBy(
                 [
@@ -148,9 +157,8 @@ class ModuleController extends ModuleAbstractController
         $moduleHistory->setIdModule($moduleAccessedId);
         $moduleHistory->setDateUpd(new DateTime());
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($moduleHistory);
-        $em->flush();
+        $this->entityManager->persist($moduleHistory);
+        $this->entityManager->flush();
 
         return $this->redirect(
             $legacyUrlGenerator->generate(
@@ -276,7 +284,7 @@ class ModuleController extends ModuleAbstractController
 
             $modulePresenter = $this->get('prestashop.adapter.presenter.module');
             $collectionPresented = $modulePresenter->presentCollection($collectionWithActionUrls);
-            $response[$moduleName]['action_menu_html'] = $this->get('twig')->render(
+            $response[$moduleName]['action_menu_html'] = $this->twig->render(
                 '@PrestaShop/Admin/Module/Includes/action_menu.html.twig',
                 [
                     'module' => $collectionPresented[0],
@@ -367,7 +375,7 @@ class ModuleController extends ModuleAbstractController
                 ),
             ];
 
-            $violations = $this->get('validator')->validate($fileUploaded, $constraints);
+            $violations = $this->validator->validate($fileUploaded, $constraints);
             if (0 !== count($violations)) {
                 $violationsMessages = [];
                 foreach ($violations as $violation) {

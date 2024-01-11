@@ -41,6 +41,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
@@ -205,12 +206,14 @@ class ResponseBuilderTest extends TestCase
         $mockRequest->setMethod('POST');
         $mockRequest->request = new InputBag();
 
+        $requestStack = $this->createMock(RequestStack::class);
         $session = $this->createMock(Session::class);
         if (!$isValid) {
             $mockFlashBag = $this->createMock(FlashBagInterface::class);
             $mockFlashBag->method('add')->with('error', sprintf('%s: %s', self::ERROR_LABEL, self::ERROR_MESSAGE));
             $session->method('getFlashBag')->willReturn($mockFlashBag);
         }
+        $requestStack->method('getSession')->willReturn($session);
 
         $responseBuilder = new ResponseBuilder(
             $mockFilterFormFactory,
@@ -218,7 +221,7 @@ class ResponseBuilderTest extends TestCase
             $this->createMock(AdminFilterRepository::class),
             1,
             1,
-            $session
+            $requestStack
         );
 
         return $responseBuilder->buildSearchResponse(

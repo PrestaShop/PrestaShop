@@ -217,7 +217,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
     public function updatePositionAction(Request $request)
     {
         $positionsData = [
-            'positions' => $request->request->get('positions'),
+            'positions' => $request->request->all('positions'),
         ];
 
         $positionDefinition = $this->get('prestashop.core.grid.attribute_group.position_definition');

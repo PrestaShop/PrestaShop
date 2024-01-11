@@ -232,7 +232,7 @@ class AddStore extends BOBasePage {
         throw new Error(`Field ${name} was not found`);
     }
 
-    return page.$eval(selector, (node: HTMLSelectElement) => node.value);
+    return page.locator(selector).evaluate((node: HTMLSelectElement) => node.value);
   }
 
   /**

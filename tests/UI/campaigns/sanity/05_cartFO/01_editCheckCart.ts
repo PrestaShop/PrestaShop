@@ -2,14 +2,6 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {
-  setFeatureFlag,
-  resetNewProductPageAsDefault,
-} from '@commonTests/BO/advancedParameters/newFeatures';
-
-// Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 // Import FO pages
 import {cartPage} from '@pages/FO/cart';
 import {homePage} from '@pages/FO/home';
@@ -35,9 +27,6 @@ describe('FO - Cart : Check Cart in FO', async () => {
   let page: Page;
   let totalATI: number = 0;
   let itemsNumber: number = 0;
-
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -174,7 +163,4 @@ describe('FO - Cart : Check Cart in FO', async () => {
       expect(productsNumber).to.be.above(itemsNumber);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

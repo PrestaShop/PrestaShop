@@ -50,7 +50,7 @@ class BlockwishlistStatistics extends ModuleConfiguration {
    * @returns Promise<void>
    */
   async refreshStatistics(page: Page): Promise<void> {
-    await page.click(this.refreshStatsButton);
+    await page.locator(this.refreshStatsButton).click();
     await page.waitForTimeout(2000);
   }
 }

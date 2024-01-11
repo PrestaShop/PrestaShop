@@ -66,16 +66,28 @@ final class SecurityAnnotationLinterCommand extends Command
         'admin_common_reset_search',
         'admin_common_reset_search_by_filter_id',
         'admin_security_compromised',
-        'admin_get_ajax_categories',
-        'admin_product_list', // Back-office product page v1 has its own security system
-        'admin_product_bulk_action', // Back-office product page v1 has its own security system
-        'admin_product_unit_action', // Back-office product page v1 has its own security system
-        'admin_product_mass_edit_action', // Back-office product page v1 has its own security system
         'admin_import_data_configuration_index_redirect',
         'admin_country_states',
         'admin_mail_theme_save_configuration_deprecated', // Deprecated
         'admin_mail_theme_send_test_mail_deprecated',  // Deprecated
         'admin_mail_theme_send_test_module_mail_deprecated',  // Deprecated
+        'admin_category_simple_add_form',
+        'admin_feature_get_feature_values',
+        'admin_shops_search',
+        'admin_employees_toggle_navigation',
+        'admin_employees_change_form_language',
+        'admin_module_notification_count',
+        'admin_product_new',
+        'admin_product_form',
+        'admin_import_file_upload',
+        'admin_emails_send_test',
+        'admin_employees_edit',
+        'admin_currencies_update_live_exchange_rates',
+        'admin_module_manage_action',
+        'admin_module_manage_action_bulk',
+        'admin_module_manage_update_all',
+        'admin_module_import',
+        'admin_theme_customize_layouts',
     ];
 
     public function __construct(AdminRouteProvider $adminRouteProvider, SecurityAnnotationLinter $securityAnnotationLinter)

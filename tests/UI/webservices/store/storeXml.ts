@@ -45,7 +45,7 @@ export default class StoreXml extends BaseXml {
   public static getEltTextContent(
     xml: string,
     eltName: string,
-  ): string {
+  ): string|null {
     return xmlHelper.getNodeValue(xml, this.eltPath(eltName));
   }
 
@@ -59,7 +59,7 @@ export default class StoreXml extends BaseXml {
     xml: string,
     eltName: string,
     lang: string,
-  ): string {
+  ): string|null {
     return xmlHelper.getNodeValue(xml, this.eltLangPath(eltName, lang));
   }
 }

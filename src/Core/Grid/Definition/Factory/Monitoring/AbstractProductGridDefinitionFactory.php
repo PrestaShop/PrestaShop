@@ -106,7 +106,7 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     ->setOptions([
                         'field' => 'active',
                         'primary_field' => 'id_product',
-                        'route' => 'admin_product_toggle_status',
+                        'route' => 'admin_products_toggle_status_for_all_shops',
                         'route_param_name' => 'productId',
                     ])
             )
@@ -199,18 +199,17 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
                     ->setOptions([
-                        'route' => 'admin_product_form',
-                        'route_param_name' => 'id',
+                        'route' => 'admin_products_edit',
+                        'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                     ])
             )
             ->add(
                 $this->buildDeleteAction(
-                    'admin_product_unit_action',
-                    'id',
+                    'admin_products_delete_from_all_shops',
+                    'productId',
                     'id_product',
                     Request::METHOD_POST,
-                    ['action' => 'delete']
                 )
             );
     }

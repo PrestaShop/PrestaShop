@@ -13,6 +13,8 @@ import type {Frame, Page} from 'playwright';
 class CustomerBlock extends ViewOrderBasePage {
   private readonly customerInfoBlock: string;
 
+  private readonly customerIDStrong: string;
+
   private readonly ViewAllDetailsLink: string;
 
   private readonly customerEmailLink: string;
@@ -58,6 +60,7 @@ class CustomerBlock extends ViewOrderBasePage {
 
     // Customer block
     this.customerInfoBlock = '#customerInfo';
+    this.customerIDStrong = `${this.customerInfoBlock} .row h2 strong.text-muted`;
     this.ViewAllDetailsLink = '#viewFullDetails a';
     this.customerEmailLink = '#customerEmail a';
     this.validatedOrders = '#validatedOrders span.badge';
@@ -102,8 +105,20 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param page {Frame|Page} Browser tab
    * @returns {Promise<string>}
    */
-  getCustomerInfoBlock(page: Frame|Page): Promise<string> {
+  async getCustomerInfoBlock(page: Frame|Page): Promise<string> {
     return this.getTextContent(page, this.customerInfoBlock);
+  }
+
+  /**
+   * Get customer ID
+   * @param page {Frame|Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getCustomerID(page: Page): Promise<number> {
+    return parseInt(
+      (await this.getTextContent(page, this.customerIDStrong)).replace('#', ''),
+      10,
+    );
   }
 
   /**
@@ -240,7 +255,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @returns {Promise<void>}
    */
   async clickAddNewPrivateNote(page: Page): Promise<void> {
-    await page.click(this.addNewPrivateNoteLink);
+    await page.locator(this.addNewPrivateNoteLink).click();
     await this.waitForVisibleSelector(page, this.privateNoteTextarea);
   }
 
@@ -252,7 +267,7 @@ class CustomerBlock extends ViewOrderBasePage {
    */
   async setPrivateNote(page: Page, note: string): Promise<string> {
     await this.setValue(page, this.privateNoteTextarea, note);
-    await page.click(this.privateNoteSaveButton);
+    await page.locator(this.privateNoteSaveButton).click();
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Security\OAuth2\Repository;
 
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
+use PrestaShopBundle\Entity\ApiAccess;
 use PrestaShopBundle\Security\OAuth2\Entity\Client;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -43,20 +44,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class ClientRepository implements ClientRepositoryInterface
 {
-    /**
-     * @var UserProviderInterface
-     */
-    private $userProvider;
-
-    /**
-     * @var UserPasswordHasherInterface
-     */
-    private $passwordEncoder;
-
-    public function __construct(UserProviderInterface $userProvider, UserPasswordHasherInterface $passwordEncoder)
-    {
-        $this->userProvider = $userProvider;
-        $this->passwordEncoder = $passwordEncoder;
+    public function __construct(
+        private readonly UserProviderInterface $userProvider,
+        private readonly UserPasswordHasherInterface $passwordEncoder
+    ) {
     }
 
     public function getClientEntity($clientIdentifier): ?Client
@@ -69,6 +60,9 @@ class ClientRepository implements ClientRepositoryInterface
 
         $client = new Client();
         $client->setIdentifier($user->getUserIdentifier());
+        if ($user instanceof ApiAccess) {
+            $client->setLifetime($user->getLifetime());
+        }
 
         return $client;
     }

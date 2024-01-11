@@ -12,10 +12,16 @@ export default {
       case 'past':
         baseDate.setFullYear(baseDate.getFullYear() - 1);
         break;
-      case 'future':
-        baseDate.setFullYear(baseDate.getFullYear() + 1);
+      case 'yesterday':
+        baseDate.setDate(baseDate.getDate() - 1);
         break;
       case 'today':
+        break;
+      case 'tomorrow':
+        baseDate.setDate(baseDate.getDate() + 1);
+        break;
+      case 'future':
+        baseDate.setFullYear(baseDate.getFullYear() + 1);
         break;
 
       default:
@@ -58,27 +64,34 @@ export default {
    * Set dateTime format
    * @param format {string} Format of the date
    * @param dateTime {string} Date time to change format
+   * @param withTime {boolean} With Time
    * @returns {string}
    */
-  setDateFormat(format: string, dateTime: string): string {
+  setDateFormat(format: string, dateTime: string, withTime: boolean = true): string {
     const date = new Date(dateTime);
 
     const mm = (`0${date.getMonth() + 1}`).slice(-2); // Current month
     const dd = (`0${date.getDate()}`).slice(-2); // Current day
     const yyyy = date.getFullYear(); // Year
+    let data: string;
 
     switch (format) {
       case 'mm/dd/yyyy':
-        return `${mm}/${dd}/${yyyy} ${dateTime.slice(11, 20)}`;
+        data = `${mm}/${dd}/${yyyy}`;
+        break;
 
       case 'yyyy/mm/dd':
-        return `${yyyy}/${mm}/${dd} ${dateTime.slice(11, 20)}`;
+        data = `${yyyy}/${mm}/${dd}`;
+        break;
 
       case 'yyyy-mm-dd':
-        return `${date.toISOString().slice(0, 10)} ${dateTime.slice(11, 20)}`;
+        data = date.toISOString().slice(0, 10);
+        break;
 
       default:
         throw new Error(`The format ${format} is not handled by this helper yet`);
     }
+
+    return withTime ? `${data} ${dateTime.slice(11, 20)}` : data;
   },
 };

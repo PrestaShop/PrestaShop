@@ -24,9 +24,9 @@ const baseContext: string = 'functional_FO_hummingbird_headerAndFooter_changeLan
 
 /*
 Scenario:
-- Disable french language
+- Disable French language
 - Go to FO and check that there is only one language
-- Enable french language
+- Enable French language
 - Go to Fo and change language
  */
 describe('FO - Header and Footer : Change language', async () => {

@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class AdminControllerCore extends Controller
 {
@@ -1633,7 +1634,7 @@ class AdminControllerCore extends Controller
                     $back = self::$currentIndex . '&token=' . $this->token;
                 }
                 if (!Validate::isCleanHtml($back)) {
-                    die(Tools::displayError());
+                    die(Tools::displayError('Provided "back" parameter is invalid.'));
                 }
                 if (!$this->lite_display) {
                     $this->page_header_toolbar_btn['back'] = [
@@ -1706,7 +1707,7 @@ class AdminControllerCore extends Controller
                     $back = self::$currentIndex . '&token=' . $this->token;
                 }
                 if (!Validate::isCleanHtml($back)) {
-                    die(Tools::displayError());
+                    die(Tools::displayError('Provided "back" parameter is invalid.'));
                 }
                 if (!$this->lite_display) {
                     $this->toolbar_btn['cancel'] = [
@@ -1723,7 +1724,7 @@ class AdminControllerCore extends Controller
                     $back = self::$currentIndex . '&token=' . $this->token;
                 }
                 if (!Validate::isCleanHtml($back)) {
-                    die(Tools::displayError());
+                    die(Tools::displayError('Provided "back" parameter is invalid.'));
                 }
                 if (!$this->lite_display) {
                     $this->toolbar_btn['back'] = [
@@ -2502,7 +2503,7 @@ class AdminControllerCore extends Controller
                 $back = self::$currentIndex . '&token=' . $this->token;
             }
             if (!Validate::isCleanHtml($back)) {
-                die(Tools::displayError());
+                die(Tools::displayError('Provided "back" parameter is invalid.'));
             }
 
             $helper->back_url = $back;
@@ -2657,12 +2658,9 @@ class AdminControllerCore extends Controller
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/theme.css?v=' . _PS_VERSION_, 'all', 0);
 
             // add Jquery 3 and its migration script
-            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.5.1.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.7.1.min.js');
             $this->addJs(_PS_JS_DIR_ . 'jquery/bo-migrate-mute.min.js');
-            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-migrate-3.1.0.min.js');
-            // implement $.browser object and live method, that has been removed since jquery 1.9
-            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.browser-0.1.0.min.js');
-            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.live-polyfill-1.1.2.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-migrate-3.4.0.min.js');
 
             $this->addJqueryPlugin(['scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox']);
             $this->addJqueryPlugin('growl', null, false);
@@ -2685,7 +2683,7 @@ class AdminControllerCore extends Controller
             }
 
             $username = $this->get('prestashop.user_provider')->getUsername();
-            $token = $this->get('security.csrf.token_manager')
+            $token = $this->get(CsrfTokenManagerInterface::class)
                 ->getToken($username)
                 ->getValue();
 
@@ -4023,7 +4021,7 @@ class AdminControllerCore extends Controller
                 <title>PrestaShop Help</title>
                 <link href='//help.prestashop.com/css/help.css' rel='stylesheet'>
                 <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'>
-                <script src='" . _PS_JS_DIR_ . "jquery/jquery-1.11.0.min.js'></script>
+                <script src='" . _PS_JS_DIR_ . "jquery/jquery-3.7.1.min.js'></script>
                 <script src='" . _PS_JS_DIR_ . "admin.js'></script>
                 <script src='" . _PS_JS_DIR_ . "tools.js'></script>
                 <script>

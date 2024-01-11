@@ -96,6 +96,9 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
         $this->assertCustomerCanAccessDefaultGroup($command);
 
         $customer->add();
+        if (null !== $command->getGroupIds()) {
+            $customer->updateGroup($command->getGroupIds());
+        }
 
         return new CustomerId((int) $customer->id);
     }

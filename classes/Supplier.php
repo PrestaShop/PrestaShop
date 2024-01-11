@@ -301,7 +301,7 @@ class SupplierCore extends ObjectModel
         }
 
         if (!Validate::isOrderBy($orderBy) || !Validate::isOrderWay($orderWay)) {
-            die(Tools::displayError());
+            die(Tools::displayError('Invalid sorting parameters provided.'));
         }
 
         $sqlGroups = '';
@@ -408,7 +408,7 @@ class SupplierCore extends ObjectModel
             $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
         }
 
-        return Product::getProductsProperties($idLang, $result);
+        return $result;
     }
 
     /**

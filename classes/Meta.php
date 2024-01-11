@@ -252,11 +252,8 @@ class MetaCore extends ObjectModel
      *
      * @return bool
      */
-    public function deleteSelection($selection)
+    public function deleteSelection(array $selection)
     {
-        if (!is_array($selection)) {
-            die(Tools::displayError());
-        }
         $result = true;
         foreach ($selection as $id) {
             $this->id = (int) $id;

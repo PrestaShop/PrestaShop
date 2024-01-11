@@ -92,7 +92,7 @@ class OrderReturnCore extends ObjectModel
     {
         $order = new Order((int) $this->id_order);
         if (!Validate::isLoadedObject($order)) {
-            die(Tools::displayError());
+            die(Tools::displayError(sprintf('Order with ID "%s" could not be loaded.', $this->id_order)));
         }
         $products = $order->getProducts();
         /* Products already returned */
@@ -197,7 +197,7 @@ class OrderReturnCore extends ObjectModel
         $returns = Customization::getReturnedCustomizations($id_order);
         $order = new Order((int) $id_order);
         if (!Validate::isLoadedObject($order)) {
-            die(Tools::displayError());
+            die(Tools::displayError(sprintf('Order with ID "%s" could not be loaded.', $id_order)));
         }
         $products = $order->getProducts();
 

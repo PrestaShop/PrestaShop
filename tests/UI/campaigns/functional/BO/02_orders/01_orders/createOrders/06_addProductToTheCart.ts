@@ -11,15 +11,11 @@ import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/internatio
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
 import deleteNonOrderedShoppingCarts from '@commonTests/BO/orders/shoppingCarts';
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
+import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import stocksPage from '@pages/BO/catalog/stocks';
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
@@ -89,6 +85,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   // Variable used for available stock of customized product
   let availableStockCustomizedProduct: number = 0;
   let createProductMessage: string|null = '';
+  let updateProductMessage: string|null = '';
 
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
   // Constant used to add a prefix to created products
@@ -96,7 +93,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   // Data to create pack of products with minimum quantity = 2
   const packOfProducts: ProductData = new ProductData({
     name: `Pack of products ${prefixNewProduct}`,
-    type: 'Pack of products',
+    type: 'pack',
     pack: [
       {
         reference: 'demo_13',
@@ -118,7 +115,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   // Data to create product out of stock allowed
   const productOutOfStockAllowed: ProductData = new ProductData({
     name: `Out of stock allowed ${prefixNewProduct}`,
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: -12,
     minimumQuantity: 1,
@@ -128,7 +125,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   // Data to create product out of stock not allowed
   const productOutOfStockNotAllowed: ProductData = new ProductData({
     name: `Out of stock not allowed ${prefixNewProduct}`,
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: -15,
     minimumQuantity: 1,
@@ -138,7 +135,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   // Data to create product with specific price
   const productWithSpecificPrice: ProductData = new ProductData({
     name: `Product with specific price ${prefixNewProduct}`,
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: 20,
     specificPrice: {
@@ -151,7 +148,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   // Data to create product with ecotax
   const productWithEcoTax: ProductData = new ProductData({
     name: `Product with ecotax ${prefixNewProduct}`,
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: 20,
     minimumQuantity: 1,
@@ -160,7 +157,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   // Data to create product with cart rule
   const productWithCartRule: ProductData = new ProductData({
     name: `Product with cart rule ${prefixNewProduct}`,
-    type: 'Standard product',
+    type: 'standard',
     taxRule: 'No tax',
     quantity: 50,
     minimumQuantity: 1,
@@ -199,9 +196,6 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   // Pre-condition: Create currency
   createCurrencyTest(Currencies.mad, `${baseContext}_preTest_2`);
 
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
-
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -235,32 +229,70 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
       productWithEcoTax,
       productWithCartRule,
     ].forEach((product: ProductData, index: number) => {
-      it('should go to add product page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToAddProductPage${index}`, baseContext);
+      if (index === 0) {
+        it('should click on \'New product\' button and check new product modal', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `clickOnNewProductButton${index}`, baseContext);
 
-        if (index === 0) {
-          await productsPage.goToAddProductPage(page);
+          const isModalVisible = await productsPage.clickOnNewProductButton(page);
+          expect(isModalVisible).to.be.eq(true);
+        });
+
+        it(`should choose '${product.type} product'`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `chooseStandardProduct${index}`, baseContext);
+
+          await productsPage.selectProductType(page, product.type);
+
+          const pageTitle = await addProductPage.getPageTitle(page);
+          expect(pageTitle).to.contains(addProductPage.pageTitle);
+        });
+      }
+
+      it('should go to new product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToNewProductPage${index}`, baseContext);
+
+        if (index !== 0) {
+          await addProductPage.clickOnNewProductButton(page);
         } else {
-          await addProductPage.goToAddProductPage(page);
+          await productsPage.clickOnAddNewProduct(page);
         }
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);
       });
 
+      if (index !== 0) {
+        it(`should choose '${product.type} product'`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `chooseStandardProduct${index}`, baseContext);
+
+          await addProductPage.chooseProductType(page, product.type);
+
+          const pageTitle = await addProductPage.getPageTitle(page);
+          expect(pageTitle).to.contains(addProductPage.pageTitle);
+        });
+      }
+
       it(`create product '${product.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
+        createProductMessage = await addProductPage.setProduct(page, product);
+        expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+
+        // Add specific price
         if (product === productWithSpecificPrice) {
-          await addProductPage.createEditBasicProduct(page, product);
-          createProductMessage = await addProductPage.addSpecificPrices(page, productWithSpecificPrice.specificPrice);
-        } else {
-          createProductMessage = await addProductPage.setProduct(page, product);
+          await addProductPage.goToTab(page, 'pricing');
+          await pricingTab.clickOnAddSpecificPriceButton(page);
+
+          createProductMessage = await pricingTab.setSpecificPrice(page, productWithSpecificPrice.specificPrice);
+          expect(createProductMessage).to.equal(addProductPage.successfulCreationMessage);
         }
+        // Add eco tax
         if (product === productWithEcoTax) {
-          await addProductPage.addEcoTax(page, productWithEcoTax.ecoTax);
+          await addProductPage.goToTab(page, 'pricing');
+          await pricingTab.addEcoTax(page, productWithEcoTax.ecoTax);
+
+          updateProductMessage = await addProductPage.saveProduct(page);
+          expect(updateProductMessage).to.equal(addProductPage.successfulUpdateMessage);
         }
-        expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
     });
   });
@@ -674,7 +706,4 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
   // Post-condition: Delete cart rule
   deleteCartRuleTest(newCartRuleData.name, `${baseContext}_postTest_4`);
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

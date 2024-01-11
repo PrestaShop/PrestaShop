@@ -136,7 +136,7 @@ class Addresses extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await page.click(this.filterResetButton);
+      await page.locator(this.filterResetButton).click();
       await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
@@ -240,7 +240,7 @@ class Addresses extends BOBasePage {
   async deleteAddress(page: Page, row: number): Promise<string> {
     // Click on dropDown
     await Promise.all([
-      page.click(this.addressesListTableToggleDropDown(row)),
+      page.locator(this.addressesListTableToggleDropDown(row)).click(),
       this.waitForVisibleSelector(
         page,
         `${this.addressesListTableToggleDropDown(row)}[aria-expanded='true']`,
@@ -248,10 +248,10 @@ class Addresses extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.addressesListTableDeleteLink(row)),
+      page.locator(this.addressesListTableDeleteLink(row)).click(),
       this.waitForVisibleSelector(page, this.deleteAddressModal),
     ]);
-    await page.click(this.deleteAddressModalDeleteButton);
+    await page.locator(this.deleteAddressModalDeleteButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -263,20 +263,20 @@ class Addresses extends BOBasePage {
   async deleteAddressesBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
+      page.locator(this.selectAllRowsLabel).evaluate((el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionsToggleButton),
+      page.locator(this.bulkActionsToggleButton).click(),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.bulkActionsDeleteButton),
+      page.locator(this.bulkActionsDeleteButton).click(),
       this.waitForVisibleSelector(page, this.deleteAddressModal),
     ]);
-    await page.click(this.deleteAddressModalDeleteButton);
+    await page.locator(this.deleteAddressModalDeleteButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -363,7 +363,7 @@ class Addresses extends BOBasePage {
     await this.setCheckedWithIcon(page, this.requiredFieldCheckBox(id), valueWanted);
 
     // Save setting
-    await page.click(this.saveButton);
+    await page.locator(this.saveButton).click();
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

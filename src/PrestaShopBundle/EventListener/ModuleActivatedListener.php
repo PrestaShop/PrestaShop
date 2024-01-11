@@ -35,6 +35,7 @@ use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use ReflectionClass;
 use ReflectionObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\Routing\RouterInterface;
@@ -47,49 +48,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ModuleActivatedListener
 {
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * @var Reader
-     */
-    private $annotationReader;
-
-    /**
-     * @var ModuleRepository
-     */
-    private $moduleRepository;
-
-    /**
      * @param RouterInterface $router
      * @param TranslatorInterface $translator
-     * @param Session $session
+     * @param RequestStack $requestStack
      * @param Reader $annotationReader
      * @param ModuleRepository $moduleRepository
      */
     public function __construct(
-        RouterInterface $router,
-        TranslatorInterface $translator,
-        Session $session,
-        Reader $annotationReader,
-        ModuleRepository $moduleRepository
+        private readonly RouterInterface $router,
+        private readonly TranslatorInterface $translator,
+        private readonly RequestStack $requestStack,
+        private readonly Reader $annotationReader,
+        private readonly ModuleRepository $moduleRepository
     ) {
-        $this->router = $router;
-        $this->translator = $translator;
-        $this->session = $session;
-        $this->annotationReader = $annotationReader;
-        $this->moduleRepository = $moduleRepository;
     }
 
     /**
@@ -136,7 +107,9 @@ class ModuleActivatedListener
      */
     private function showNotificationMessage(ModuleActivated $moduleActivated)
     {
-        $this->session->getFlashBag()->add(
+        /** @var Session $session */
+        $session = $this->requestStack->getSession();
+        $session->getFlashBag()->add(
             'error',
             $this->translator->trans(
                 $moduleActivated->getMessage(),

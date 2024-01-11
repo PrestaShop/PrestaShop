@@ -227,16 +227,7 @@ class SEOType extends TranslatorAwareType
         $friendlyUrl = $this->router->generate('admin_metas_index') . '#meta_settings_set_up_urls_form';
         $productPreferencesUrl = $this->router->generate('admin_product_preferences') . '#configuration_fieldset_products';
 
-        if ($this->friendlyUrlEnabled) {
-            $alertMessages[] = sprintf(
-                '<strong>%s</strong> %s',
-                $this->trans('Friendly URLs are currently enabled.', 'Admin.Catalog.Notification'),
-                $this->trans('To disable it, go to [1]SEO and URLs[/1]', 'Admin.Catalog.Notification', [
-                    '[1]' => '<a target="_blank" href="' . $friendlyUrl . '">',
-                    '[/1]' => '</a>',
-                ])
-            );
-        } else {
+        if (!$this->friendlyUrlEnabled) {
             $alertMessages[] = sprintf(
                 '<strong>%s</strong> %s',
                 $this->trans('Friendly URLs are currently disabled.', 'Admin.Catalog.Notification'),

@@ -59,7 +59,6 @@ abstract class ApiTestCase extends WebTestCase
         self::$kernel = static::bootKernel();
         self::$client = self::$kernel->getContainer()->get('test.client');
         self::$client->setServerParameters([]);
-        self::$container = self::$client->getContainer();
         $this->router = self::getContainer()->get('router');
     }
 

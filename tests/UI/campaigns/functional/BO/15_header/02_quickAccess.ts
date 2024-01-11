@@ -3,20 +3,15 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import statsPage from '@pages/BO/stats';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import newCategoryPage from '@pages/BO/catalog/categories/add';
 import newVoucherPage from '@pages/BO/catalog/discounts/add';
-import newProductPage from '@pages/BO/catalog/products/add';
+import productsPage from '@pages/BO/catalog/products/';
 import ordersPage from '@pages/BO/orders';
 import quickAccessPage from '@pages/BO/quickAccess';
 import addNewQuickAccessPage from '@pages/BO/quickAccess/add';
@@ -40,9 +35,6 @@ describe('BO - Header : Quick access links', async () => {
     openNewWindow: true,
   });
 
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_enableNewProduct`);
-
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -59,20 +51,30 @@ describe('BO - Header : Quick access links', async () => {
     });
 
     [
-      {args: {pageName: 'Catalog evaluation', idLink: 1, pageTitle: statsPage.pageTitle}},
-      {args: {pageName: 'Installed modules', idLink: 2, pageTitle: moduleManagerPage.pageTitle}},
-      {args: {pageName: 'New category', idLink: 3, pageTitle: newCategoryPage.pageTitleCreate}},
-      {args: {pageName: 'New product', idLink: 4, pageTitle: newProductPage.pageTitle}},
-      {args: {pageName: 'Orders', idLink: 6, pageTitle: ordersPage.pageTitle}},
-      {args: {pageName: 'New voucher', idLink: 5, pageTitle: newVoucherPage.pageTitle}},
+      {args: {pageName: 'Catalog evaluation', pageTitle: statsPage.pageTitle}},
+      {args: {pageName: 'Installed modules', pageTitle: moduleManagerPage.pageTitle}},
+      {args: {pageName: 'New category', pageTitle: newCategoryPage.pageTitleCreate}},
+      {args: {pageName: 'New product', pageTitle: productsPage.pageTitle}},
+      {args: {pageName: 'Orders', pageTitle: ordersPage.pageTitle}},
+      {args: {pageName: 'New voucher', pageTitle: newVoucherPage.pageTitle}},
     ].forEach((test, index: number) => {
       it(`should check '${test.args.pageName}' link from Quick access`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkLink${index}`, baseContext);
 
-        await dashboardPage.quickAccessToPage(page, test.args.idLink);
+        if (test.args.pageName === 'New product') {
+          await dashboardPage.quickAccessToPageWithFrame(page, test.args.pageName);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.contains(test.args.pageTitle);
+          const isModalVisible = await productsPage.isNewProductModalVisibleInFrame(page);
+          expect(isModalVisible).to.be.equal(true);
+
+          const isModalNotVisible = await productsPage.closeNewProductModal(page);
+          expect(isModalNotVisible).to.be.equal(true);
+        } else {
+          await dashboardPage.quickAccessToPage(page, test.args.pageName);
+
+          const pageTitle = await dashboardPage.getPageTitle(page);
+          expect(pageTitle).to.contains(test.args.pageTitle);
+        }
       });
     });
 
@@ -121,7 +123,7 @@ describe('BO - Header : Quick access links', async () => {
     it('should check the new link from Quick access', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewLink', baseContext);
 
-      page = await dashboardPage.quickAccessToPageNewWindow(page, 4);
+      page = await dashboardPage.quickAccessToPageNewWindow(page, quickAccessLinkData.name);
 
       const pageTitle = await newCustomerPage.getPageTitle(page);
       expect(pageTitle).to.contains(newCustomerPage.pageTitleCreate);
@@ -152,7 +154,4 @@ describe('BO - Header : Quick access links', async () => {
       expect(textColumn).to.be.contains(quickAccessPage.successfulMultiDeleteMessage);
     });
   });
-
-  // Post-condition: Reset initial state
-  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

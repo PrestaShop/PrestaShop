@@ -91,7 +91,7 @@ class ModuleManagerBuilderTest extends TestCase
         }
 
         // Remove overrides
-        @unlink(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php');
+        @unlink(_PS_ROOT_DIR_ . '/override/controllers/admin/DummyAdminController.php');
         @unlink(_PS_ROOT_DIR_ . '/override/classes/Cart.php');
 
         // Reset modules folder
@@ -129,21 +129,29 @@ class ModuleManagerBuilderTest extends TestCase
          */
         $resource_path = dirname(__DIR__, 4) . '/Resources/modules_tests/override/';
 
+        $overrideCart = _PS_ROOT_DIR_ . '/override/classes/Cart.php';
         $actual_override_cart = file_get_contents(_PS_ROOT_DIR_ . '/override/classes/Cart.php');
         $expected_override_cart = file_get_contents($resource_path . '/Cart.php');
 
         $actual_override_cart = $this->cleanup($actual_override_cart);
         $expected_override_cart = $this->cleanup($expected_override_cart);
 
-        $this->assertEquals($expected_override_cart, $actual_override_cart);
+        $this->assertEquals(
+            $expected_override_cart,
+            $actual_override_cart,
+            'Cart.php file different'
+        );
 
-        $actual_override_admin_product = file_get_contents(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php');
-        $expected_override_admin_product = file_get_contents($resource_path . '/AdminProductsController.php');
+        $actual_override_admin_product = file_get_contents(_PS_ROOT_DIR_ . '/override/controllers/admin/DummyAdminController.php');
+        $expected_override_admin_product = file_get_contents($resource_path . '/DummyAdminController.php');
+
+        $actual_override_admin_product = $this->cleanup($actual_override_admin_product);
+        $expected_override_admin_product = $this->cleanup($expected_override_admin_product);
 
         $this->assertEquals(
-            $this->cleanup($expected_override_admin_product),
-            $this->cleanup($actual_override_admin_product),
-            'AdminProductsController.php file different'
+            $expected_override_admin_product,
+            $actual_override_admin_product,
+            'DummyAdminController.php file different'
         );
 
         // Then it checks that the overrides are removed once the modules are uninstalled.

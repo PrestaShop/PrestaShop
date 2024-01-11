@@ -114,11 +114,11 @@
     {% endif %}
 
     {% if orderForViewing.shipping.recycledPackaging %}
-      <span class="badge badge-success">{{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+      <span class="badge badge-success" data-badge="recyclable">{{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
     {% endif %}
 
     {% if orderForViewing.shipping.giftWrapping %}
-      <span class="badge badge-success">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+      <span class="badge badge-success" data-badge="gift">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
     {% endif %}
 
     {% if orderForViewing.shipping.giftMessage %}

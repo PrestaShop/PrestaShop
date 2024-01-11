@@ -102,7 +102,7 @@ class ModuleTest extends TestCase
         $overrides = $module->getOverrides();
 
         $this->assertContains('Cart', $overrides);
-        $this->assertContains('AdminProductsController', $overrides);
+        $this->assertContains('DummyAdminController', $overrides);
         $this->assertCount(2, $overrides);
 
         HelperModule::removeModule('pscsx3241');

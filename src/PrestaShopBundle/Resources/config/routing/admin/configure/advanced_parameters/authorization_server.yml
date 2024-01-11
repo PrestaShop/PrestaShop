@@ -20,6 +20,13 @@ admin_api_accesses_edit:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::editAction
     _legacy_controller: AdminAuthorizationServer
 
+admin_api_accesses_toggle_active:
+  path: /api-accesses/{apiAccessId}/toggle-active
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::toggleStatusAction
+    _legacy_controller: AdminAuthorizationServer
+
 admin_api_accesses_delete:
   path: /api-accesses/{apiAccessId}/delete
   methods: [ POST ]
@@ -27,9 +34,9 @@ admin_api_accesses_delete:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::deleteAction
     _legacy_controller: AdminAuthorizationServer
 
-admin_api_accesses_toggle_active:
-  path: /api-accesses/{apiAccessId}/toggle-active
+admin_api_accesses_regenerate_secret:
+  path: /api-accesses/{apiAccessId}/regenerate-secret
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::toggleActiveAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::regenerateSecretAction
     _legacy_controller: AdminAuthorizationServer

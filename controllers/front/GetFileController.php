@@ -171,7 +171,7 @@ class GetFileControllerCore extends FrontController
             // Admin can directly access to file
             $filename = Tools::getValue('file');
             if (!Validate::isSha1($filename)) {
-                die(Tools::displayError());
+                die(Tools::displayError('Filename is not a valid SHA1 checksum.'));
             }
             $file = _PS_DOWNLOAD_DIR_ . (string) preg_replace('/\.{2,}/', '.', $filename);
             $filename = ProductDownload::getFilenameFromFilename(Tools::getValue('file'));

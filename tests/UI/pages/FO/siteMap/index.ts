@@ -16,6 +16,8 @@ class SiteMapPage extends FOBasePage {
 
   private readonly suppliersPageLink: string;
 
+  private readonly bestSellersPageLink: string;
+
   private readonly brandsPageLink: string;
 
   private readonly categoryPageLink: (categoryIDd: number) => string;
@@ -33,6 +35,7 @@ class SiteMapPage extends FOBasePage {
     this.categoryNameSelect = (id: number) => `#category-page-${id}`;
     this.categoryPageNameSelect = (id: number) => `#cms-category-${id}`;
     this.suppliersPageLink = '#supplier-page';
+    this.bestSellersPageLink = '#best-sales-page';
     this.brandsPageLink = '#manufacturer-page';
     this.categoryPageLink = (categoryID: number) => `#category-page-${categoryID}`;
   }
@@ -75,8 +78,17 @@ class SiteMapPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isSuppliersLinkVisible(page: Page): Promise<boolean> {
+  async isSuppliersLinkVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.suppliersPageLink, 2000);
+  }
+
+  /**
+   * Is best sellers link visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isBestSellersLinkVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.bestSellersPageLink, 2000);
   }
 
   /**
@@ -84,7 +96,7 @@ class SiteMapPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isBrandsLinkVisible(page: Page): Promise<boolean> {
+  async isBrandsLinkVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.brandsPageLink, 2000);
   }
 

@@ -221,7 +221,6 @@ class LocaleTest extends TestCase
         return [
             'Invalid number' => ['foobar', 'EUR'],
             'Unknown currency' => [123456.789, 'USD'],
-            'Invalid currency' => [123456.789, 123],
         ];
     }
 }

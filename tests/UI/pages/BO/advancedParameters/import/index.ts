@@ -131,7 +131,7 @@ class Import extends BOBasePage {
    */
   async uploadImportFile(page: Page, fileType: string, filePath: string): Promise<string> {
     await this.selectByVisibleText(page, this.fileTypeSelector, fileType);
-    await page.setInputFiles(this.fileInputField, filePath);
+    await this.uploadFile(page, this.fileInputField, filePath);
 
     await page.waitForTimeout(2000);
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -226,7 +226,7 @@ class Import extends BOBasePage {
    * @return {Promise<string>}
    */
   async goToImportNextStep(page: Page): Promise<string> {
-    await page.click(this.nextStepButton);
+    await page.locator(this.nextStepButton).click();
 
     return this.getTextContent(page, this.importFileSecondStepPanelTitle);
   }
@@ -237,7 +237,7 @@ class Import extends BOBasePage {
    * @return {Promise<string>}
    */
   async startFileImport(page: Page): Promise<string> {
-    await page.click(this.importButton);
+    await page.locator(this.importButton).click();
 
     return this.getTextContent(page, this.importProgressModal);
   }

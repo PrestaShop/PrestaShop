@@ -75,7 +75,7 @@ class AddCategory extends BOBasePage {
    * @return {Promise<void>}
    */
   async selectAllGroups(page: Page): Promise<void> {
-    if (!(await page.isChecked(this.selectAllGroupAccessCheckbox))) {
+    if (!(await this.isChecked(page, this.selectAllGroupAccessCheckbox))) {
       const parentElement = await this.getParentElement(page, this.selectAllGroupAccessCheckbox);
 
       if (parentElement instanceof HTMLElement) {

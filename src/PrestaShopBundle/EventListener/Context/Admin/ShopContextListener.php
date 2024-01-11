@@ -28,11 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
+use PrestaShopBundle\EventListener\ExternalApiTrait;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
@@ -40,11 +44,14 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class ShopContextListener
 {
+    use ExternalApiTrait;
+
     public function __construct(
         private readonly ShopContextBuilder $shopContextBuilder,
         private readonly EmployeeContext $employeeContext,
         private readonly ShopConfigurationInterface $configuration,
-        private readonly LegacyContext $legacyContext
+        private readonly LegacyContext $legacyContext,
+        private readonly MultistoreFeature $multistoreFeature,
     ) {
     }
 
@@ -54,35 +61,69 @@ class ShopContextListener
         // either that or the listener itself should be configured in a way so that it only is used in BO context
         // because in FO we don't handle shop context the same way (there can be only one shop and no shop context
         // switching is possible)
-        if (!$event->isMainRequest()) {
+        if (!$event->isMainRequest() || $this->isExternalApiRequest($event->getRequest())) {
             return;
         }
 
-        $shopConstraint = ShopConstraint::allShops();
-        $cookieShopConstraint = $this->getShopConstraintFromCookie();
-        if ($cookieShopConstraint && $cookieShopConstraint->getShopGroupId()) {
-            // Check if the employee has permission on selected group if not fallback on single shop context with employee's default shop
-            if ($this->employeeContext->hasAuthorizationOnShopGroup($cookieShopConstraint->getShopGroupId()->getValue())) {
-                $shopConstraint = $cookieShopConstraint;
-            } elseif (!empty($this->employeeContext->getDefaultShopId())) {
-                $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
-            }
-        } elseif ($cookieShopConstraint && $cookieShopConstraint->getShopId()) {
-            // Check if employee has authorization on selected shop if not fallback on single shop context with employee's default shop
-            if ($this->employeeContext->hasAuthorizationOnShop($cookieShopConstraint->getShopId()->getValue())) {
-                $shopConstraint = $cookieShopConstraint;
-            } elseif (!empty($this->employeeContext->getDefaultShopId())) {
-                $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
-            }
+        $psSslEnabled = (bool) $this->configuration->get('PS_SSL_ENABLED', null, ShopConstraint::allShops());
+
+        $this->shopContextBuilder->setSecureMode($psSslEnabled && $event->getRequest()->isSecure());
+
+        $redirectResponse = $this->redirectShopContext($event);
+        if ($redirectResponse) {
+            $event->setResponse($redirectResponse);
+
+            return;
+        }
+
+        if (!$this->multistoreFeature->isUsed()) {
+            $shopConstraint = ShopConstraint::shop($this->getConfiguredDefaultShopId());
+        } else {
+            $shopConstraint = $this->getMultiShopConstraint();
         }
         $this->shopContextBuilder->setShopConstraint($shopConstraint);
 
         // In all cases a shop must be set for the context even if it's the default one
         if (!$shopConstraint->getShopId()) {
-            $this->shopContextBuilder->setShopId((int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops()));
+            $this->shopContextBuilder->setShopId($this->getConfiguredDefaultShopId());
         } else {
             $this->shopContextBuilder->setShopId($shopConstraint->getShopId()->getValue());
         }
+
+        // Set shop constraint easily accessible via request attribute
+        $event->getRequest()->attributes->set('shopConstraint', $shopConstraint);
+    }
+
+    private function getConfiguredDefaultShopId(): int
+    {
+        return (int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops());
+    }
+
+    private function getMultiShopConstraint(): ShopConstraint
+    {
+        $shopConstraint = ShopConstraint::allShops();
+        $cookieShopConstraint = $this->getShopConstraintFromCookie();
+        if ($cookieShopConstraint) {
+            if ($cookieShopConstraint->getShopGroupId()) {
+                // Check if the employee has permission on selected group if not fallback on single shop context with employee's default shop
+                if ($this->employeeContext->hasAuthorizationOnShopGroup($cookieShopConstraint->getShopGroupId()->getValue())) {
+                    $shopConstraint = $cookieShopConstraint;
+                } elseif (!empty($this->employeeContext->getDefaultShopId())) {
+                    $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
+                }
+            } elseif ($cookieShopConstraint->getShopId()) {
+                // Check if employee has authorization on selected shop if not fallback on single shop context with employee's default shop
+                if ($this->employeeContext->hasAuthorizationOnShop($cookieShopConstraint->getShopId()->getValue())) {
+                    $shopConstraint = $cookieShopConstraint;
+                } elseif (!empty($this->employeeContext->getDefaultShopId())) {
+                    $shopConstraint = ShopConstraint::shop($this->employeeContext->getDefaultShopId());
+                } else {
+                    $shopConstraint = ShopConstraint::shop($this->getConfiguredDefaultShopId());
+                }
+            }
+        }
+
+        return $shopConstraint;
     }
 
     /**
@@ -95,11 +136,12 @@ class ShopContextListener
      */
     private function getShopConstraintFromCookie(): ?ShopConstraint
     {
-        if (empty($this->legacyContext->getContext()->cookie->shopContext)) {
+        $shopContext = $this->legacyContext->getContext()->cookie->shopContext;
+        if (empty($shopContext)) {
             return null;
         }
 
-        $splitShopContext = explode('-', $this->legacyContext->getContext()->cookie->shopContext);
+        $splitShopContext = explode('-', $shopContext);
         if (count($splitShopContext) == 2) {
             $splitShopType = $splitShopContext[0];
             $splitShopValue = (int) $splitShopContext[1];
@@ -115,5 +157,37 @@ class ShopContextListener
         }
 
         return null;
+    }
+
+    /**
+     * Update cookie value and redirect to current url to refresh the context.
+     *
+     * @param RequestEvent $requestEvent
+     */
+    private function redirectShopContext(RequestEvent $requestEvent): ?RedirectResponse
+    {
+        if (!$this->multistoreFeature->isUsed()) {
+            return null;
+        }
+
+        $shopContextUrlParameter = $requestEvent->getRequest()->get('setShopContext');
+        if (empty($shopContextUrlParameter)) {
+            return null;
+        }
+
+        $cookie = $this->legacyContext->getContext()->cookie;
+        if ($cookie->shopContext === $shopContextUrlParameter) {
+            return null;
+        }
+
+        // Apply new shop context by saving it into the cookie and refreshing the current page
+        $cookie->shopContext = $shopContextUrlParameter;
+        $cookie->write();
+
+        // Redirect to same url but remove setShopContext and conf parameters
+        return new RedirectResponse(UrlCleaner::cleanUrl(
+            $requestEvent->getRequest()->getUri(),
+            ['setShopContext', 'conf']
+        ));
     }
 }

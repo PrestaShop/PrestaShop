@@ -102,7 +102,7 @@ class CustomerSettings extends BOBasePage {
         throw new Error(`${option} was not found`);
     }
     await this.setChecked(page, selector(toEnable ? 1 : 0));
-    await page.click(this.saveGeneralFormButton);
+    await page.locator(this.saveGeneralFormButton).click();
     await this.elementNotVisible(page, selector(!toEnable ? 1 : 0));
 
     return this.getAlertSuccessBlockParagraphContent(page);

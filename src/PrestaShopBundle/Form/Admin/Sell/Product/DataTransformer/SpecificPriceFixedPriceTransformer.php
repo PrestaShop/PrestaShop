@@ -44,7 +44,7 @@ class SpecificPriceFixedPriceTransformer implements DataTransformerInterface
      */
     private $numberTransformer;
 
-    public function __construct(int $scale = null, ?bool $grouping = false, ?int $roundingMode = NumberToLocalizedStringTransformer::ROUND_HALF_UP)
+    public function __construct(int $scale = null, ?bool $grouping = false, ?int $roundingMode = \NumberFormatter::ROUND_HALFUP)
     {
         $this->numberTransformer = new NumberToLocalizedStringTransformer($scale, $grouping, $roundingMode);
     }

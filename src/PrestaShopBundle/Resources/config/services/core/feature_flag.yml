@@ -2,6 +2,9 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
+  _instanceof:
+    PrestaShop\PrestaShop\Core\FeatureFlag\TypeLayerInterface:
+      tags: [ 'PrestaShop\PrestaShop\Core\FeatureFlag\TypeLayerInterface' ]
 
   PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface:
     alias: PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager
