@@ -4,12 +4,10 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 import bulkDeleteCategoriesTest from '@commonTests/BO/catalog/category';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
 import dashboardPage from '@pages/BO/dashboard';
@@ -43,9 +41,6 @@ describe('BO - Design - Image Settings - Check category image format', async () 
     coverImage: 'coverWEBP.webp',
     thumbnailImage: 'thumbWEBP.webp',
   });
-
-  // Pre-condition: Enable Multiple image formats
-  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, true, `${baseContext}_enableMultipleImageFormats`);
 
   // before and after functions
   before(async function () {
@@ -141,14 +136,12 @@ describe('BO - Design - Image Settings - Check category image format', async () 
     },
     {
       category: categoryDataWEBP,
-      extOriginal: 'jpg',
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/32408
-      // extOriginal: 'webp',
-      extGenerated: 'webp',
-      extImageType: 'jpg',
+      extOriginal: 'webp',
+      extGenerated: 'jpg',
+      extImageType: 'png',
     },
   ].forEach((arg: {category: CategoryData, extOriginal: string, extGenerated: string, extImageType: string}, index: number) => {
-    const argExtension: string = index === 2 ? arg.extGenerated : arg.extOriginal;
+    const argExtension: string = arg.extOriginal;
     describe(
       `Image Generation - Category - Image Format : ${argExtension.toUpperCase()}`,
       async () => {
@@ -224,9 +217,9 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.eq(true);
 
           const imageTypeJPG = await files.getFileType(pathImageJPG);
-          expect(imageTypeJPG).to.be.eq(arg.extOriginal);
+          expect(imageTypeJPG).to.be.eq(arg.extImageType);
 
-          // Check the cover image file
+          // Check the cover image file category_default jpg thumbnail is generated in proper format
           const pathImageCoverJPG: string = `${files.getRootPath()}/img/c/${idCategory}-category_default.jpg`;
 
           const fileExistsCoverJPG = await files.doesFileExist(pathImageCoverJPG);
@@ -243,18 +236,18 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
           expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
 
-          const imageTypeWEBP = await files.getImageType(pathImageWEBP);
+          const imageTypeWEBP = await files.getFileType(pathImageWEBP);
           expect(imageTypeWEBP).to.be.eq('webp');
           */
 
-          // Check the Menu image file
+          // Check the cover image file small_default jpg thumbnail is generated in proper format
           const pathImageMetaJPG: string = `${files.getRootPath()}/img/c/${idCategory}-small_default.jpg`;
 
           const fileExistsMetaJPG = await files.doesFileExist(pathImageMetaJPG);
           expect(fileExistsMetaJPG, `The file ${pathImageMetaJPG} doesn't exist!`).to.eq(true);
 
           const imageTypeMetaJPG = await files.getFileType(pathImageMetaJPG);
-          expect(imageTypeMetaJPG).to.be.eq(arg.extOriginal);
+          expect(imageTypeMetaJPG).to.be.eq(arg.extImageType);
 
           // @todo : https://github.com/PrestaShop/PrestaShop/issues/32404
           /*
@@ -264,7 +257,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
           expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
 
-          const imageTypeWEBP = await files.getImageType(pathImageWEBP);
+          const imageTypeWEBP = await files.getFileType(pathImageWEBP);
           expect(imageTypeWEBP).to.be.eq('webp');
           */
         });
@@ -324,7 +317,4 @@ describe('BO - Design - Image Settings - Check category image format', async () 
       `${baseContext}_removeProduct${arg.extension}`,
     );
   });
-
-  // Post-condition: Disable Multiple image formats
-  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, false, `${baseContext}_disableMultipleImageFormats`);
 });

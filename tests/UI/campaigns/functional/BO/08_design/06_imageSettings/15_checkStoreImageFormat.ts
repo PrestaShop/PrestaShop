@@ -4,11 +4,9 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 import contactPage from '@pages/BO/shopParameters/contact';
@@ -37,9 +35,6 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
   const storeDataPNG: StoreData = new StoreData({
     picture: 'picturePNG.png',
   });
-
-  // Pre-condition: Enable Multiple image formats
-  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, true, `${baseContext}_enableMultipleImageFormats`);
 
   // before and after functions
   before(async function () {
@@ -117,13 +112,15 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
       store: storeDataPNG,
       extOriginal: 'png',
       extGenerated: 'jpg',
+      extImageType: 'png',
     },
     {
       store: storeDataJPG,
       extOriginal: 'jpg',
       extGenerated: 'jpg',
+      extImageType: 'jpg',
     },
-  ].forEach((arg: {store: StoreData, extOriginal: string, extGenerated: string}, index: number) => {
+  ].forEach((arg: {store: StoreData, extOriginal: string, extGenerated: string, extImageType: string}, index: number) => {
     describe(`Image Generation - Store - Image Format : ${arg.extOriginal.toUpperCase()}`, async () => {
       if (index) {
         it('should go to BO', async function () {
@@ -202,11 +199,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         expect(fileExistsOrigJPG, `The file ${pathImageOrigJPG} doesn't exist!`).to.eq(true);
 
         const imageTypeOrigJPG = await files.getFileType(pathImageOrigJPG);
-
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/32527
-        if (arg.extOriginal !== 'png') {
-          expect(imageTypeOrigJPG).to.be.eq(arg.extOriginal);
-        }
+        expect(imageTypeOrigJPG).to.be.eq(arg.extImageType);
 
         // Check the imageFormat file
         const pathImageJPG: string = `${files.getRootPath()}/img/st/${idStore}-stores_default.jpg`;
@@ -336,7 +329,4 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
       });
     });
   });
-
-  // Post-condition: Disable Multiple image formats
-  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, false, `${baseContext}_disableMultipleImageFormats`);
 });

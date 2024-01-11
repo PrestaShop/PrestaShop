@@ -22,9 +22,6 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
     case featureFlagPage.featureFlagAuthorizationServer:
       title = 'Authorization server';
       break;
-    case featureFlagPage.featureFlagMultipleImageFormats:
-      title = 'Multiple image formats';
-      break;
     default:
       throw new Error(`The feature flag ${featureFlag} is not defined`);
   }

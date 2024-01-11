@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
 use PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
@@ -294,6 +295,9 @@ class AdminControllerTest extends TestCase
                 if ($param === FeatureFlagStateCheckerInterface::class) {
                     return $this->getMockedFeatureFlagStateCheckerInterface();
                 }
+                if ($param === ImageFormatConfiguration::class) {
+                    return $this->getMockedImageFormatConfiguration();
+                }
             });
 
         return $mockContainerBuilder;
@@ -382,6 +386,17 @@ class AdminControllerTest extends TestCase
         $mockFeatureFlagStateChecker->method('isEnabled')->willReturn(false);
 
         return $mockFeatureFlagStateChecker;
+    }
+
+    private function getMockedImageFormatConfiguration(): ImageFormatConfiguration
+    {
+        $mockImageFormatConfiguration = $this->getMockBuilder(ImageFormatConfiguration::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockImageFormatConfiguration->method('getGenerationFormats')->willReturn(['jpg']);
+
+        return $mockImageFormatConfiguration;
     }
 
     private function getMockNumberSpecification(): NumberSpecification

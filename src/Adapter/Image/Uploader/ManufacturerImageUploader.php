@@ -89,17 +89,12 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
 
                 foreach ($imageTypes as $imageType) {
                     foreach ($configuredImageFormats as $imageFormat) {
-                        // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
-                        // For webp and avif extensions, we want it to follow our command and ignore the original format.
-                        $forceFormat = ($imageFormat !== 'jpg');
-
                         $resized &= ImageManager::resize(
                             _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
                             _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '.' . $imageFormat,
                             (int) $imageType['width'],
                             (int) $imageType['height'],
-                            $imageFormat,
-                            $forceFormat
+                            $imageFormat
                         );
                     }
                 }
