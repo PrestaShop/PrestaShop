@@ -4628,7 +4628,8 @@ class AdminImportControllerCore extends AdminController
                     $doneCount += $this->aliasImport($offset, $limit, $validateOnly);
 
                     break;
-                case $this->entities[$import_type = $this->trans('Store contacts', [], 'Admin.Advparameters.Feature')]:
+                case $this->entities[$this->trans('Store contacts', [], 'Admin.Advparameters.Feature')]:
+                    $import_type = 'StoreContacts';
                     $doneCount += $this->storeContactImport($offset, $limit, $validateOnly);
                     $clearCache = true;
 
