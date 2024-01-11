@@ -30,33 +30,44 @@ use Dispatcher;
 use DOMDocument;
 use DOMXPath;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class LegacyController extends PrestaShopAdminController
 {
-    public function legacyPageAction(): Response
+    public function legacyPageAction(Request $request): Response
     {
-        $htmlContent = $this->getHtmlContent();
+        $dispatcherContent = $this->getDispatcherContent();
+        if ($request->get('ajax')) {
+            return new Response($dispatcherContent);
+        }
+
+        $htmlContent = $this->getHtmlContent($dispatcherContent);
 
         return $this->render('@PrestaShop/Admin/Layout/legacy_layout.html.twig', [
             'legacyContent' => $htmlContent,
         ]);
     }
 
-    private function getHtmlContent(): string
+    private function getDispatcherContent(): string
     {
         ob_start();
         Dispatcher::getInstance()->dispatch();
         $outPutHtml = ob_get_contents();
         ob_end_clean();
 
+        return $outPutHtml;
+    }
+
+    private function getHtmlContent(string $dispatcherContent): string
+    {
         $dom = new DOMDocument();
-        $dom->loadHTML($outPutHtml);
+        $dom->loadHTML($dispatcherContent);
 
         $xpath = new DOMXPath($dom);
         $elementNodeList = $xpath->query('//*[@id="content"]');
         if ($elementNodeList->count() === 0) {
-            throw new CoreException('Generated legacy html has no content found');
+            throw new CoreException('Generated legacy html has no content div found');
         }
 
         $content = '';
