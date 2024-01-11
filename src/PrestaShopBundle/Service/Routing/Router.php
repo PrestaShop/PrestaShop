@@ -27,9 +27,8 @@
 namespace PrestaShopBundle\Service\Routing;
 
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
-use PrestaShopBundle\Service\DataProvider\UserProvider;
+use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 /**
  * We extends Symfony Router in order to add a token to each url.
@@ -39,19 +38,9 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
 class Router extends BaseRouter
 {
     /**
-     * @var UserProvider
+     * @var UserTokenManager
      */
-    private $userProvider;
-
-    /**
-     * @var CsrfTokenManager
-     */
-    private $tokenManager;
-
-    /**
-     * @var array
-     */
-    private $tokens = [];
+    private $userTokenManager;
 
     /**
      * {@inheritdoc}
@@ -67,17 +56,12 @@ class Router extends BaseRouter
             return $url;
         }
 
-        return self::generateTokenizedUrl($url, $this->getUserToken());
+        return self::generateTokenizedUrl($url, $this->userTokenManager->getSymfonyToken());
     }
 
-    public function setTokenManager(CsrfTokenManager $tokenManager)
+    public function setUserTokenManager(UserTokenManager $userTokenManager)
     {
-        $this->tokenManager = $tokenManager;
-    }
-
-    public function setUserProvider(UserProvider $userProvider)
-    {
-        $this->userProvider = $userProvider;
+        $this->userTokenManager = $userTokenManager;
     }
 
     public static function generateTokenizedUrl($url, $token)
@@ -100,17 +84,5 @@ class Router extends BaseRouter
         }
 
         return $url;
-    }
-
-    protected function getUserToken(): string
-    {
-        $username = $this->userProvider->getUsername();
-
-        // Do not generate token each time we want to generate a route for a user
-        if (!isset($this->tokens[$username])) {
-            $this->tokens[$username] = $this->tokenManager->getToken($username)->getValue();
-        }
-
-        return $this->tokens[$username];
     }
 }

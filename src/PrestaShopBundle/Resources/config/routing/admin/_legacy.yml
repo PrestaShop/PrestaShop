@@ -1,10 +1,7 @@
 legacy_controller_route:
-  path: /legacy
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\CustomLegacyController::legacyPageAction
-
-attribute_symfony_layout_conditional_route:
   path: /
-  controller: PrestaShopBundle\Controller\Admin\CustomLegacyController::legacyPageAction
-  # Condition only when symfony layout is enabled and only for Attribute groups pages
-  condition: 'request.query.has("controller") and request.query.get("controller") in ["AdminAttributesGroups"] and "symfony_layout" in request.attributes.get("enabledFeatureFlags")'
+  controller: PrestaShopBundle\Controller\Admin\LegacyController::legacyPageAction
+  # Condition on the query parameter matching legacy query
+  # Condition only when symfony layout is enabled, for all controllers because we need to change the token management and it can't be done on a single controller
+  # @todo: In SF6 we can define a service to handle this condition, this should be preferred for more advanced condition based on parameters that could dynamically check the list of existing legacy controllers, and maybe check the feature flags from pages under migration
+  condition: 'request.query.has("controller") and "symfony_layout" in request.attributes.get("enabledFeatureFlags")'

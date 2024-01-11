@@ -29,23 +29,21 @@ namespace PrestaShopBundle\Controller\Admin;
 use Dispatcher;
 use DOMDocument;
 use DOMXPath;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Symfony\Component\HttpFoundation\Response;
 
-class CustomLegacyController extends PrestaShopAdminController
+class LegacyController extends PrestaShopAdminController
 {
-    public function legacyPageAction(Request $request, LegacyContext $legacyContext): Response
+    public function legacyPageAction(): Response
     {
-        $controllerName = $request->query->get('controller');
-        $htmlContent = $this->getHtmlContent($controllerName);
+        $htmlContent = $this->getHtmlContent();
 
         return $this->render('@PrestaShop/Admin/Layout/legacy_layout.html.twig', [
-            'legacy_render' => $htmlContent,
+            'legacyContent' => $htmlContent,
         ]);
     }
 
-    private function getHtmlContent(string $controllerName): string
+    private function getHtmlContent(): string
     {
         ob_start();
         Dispatcher::getInstance()->dispatch();
@@ -57,6 +55,9 @@ class CustomLegacyController extends PrestaShopAdminController
 
         $xpath = new DOMXPath($dom);
         $elementNodeList = $xpath->query('//*[@id="content"]');
+        if ($elementNodeList->count() === 0) {
+            throw new CoreException('Generated legacy html has no content found');
+        }
 
         $content = '';
         $elementNode = $elementNodeList->item(0);
