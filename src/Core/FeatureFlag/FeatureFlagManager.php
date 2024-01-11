@@ -32,10 +32,14 @@ use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Attribute\TaggedLocator;
+use Symfony\Contracts\Service\ResetInterface;
 
-class FeatureFlagManager implements FeatureFlagStateCheckerInterface
+class FeatureFlagManager implements FeatureFlagStateCheckerInterface, ResetInterface
 {
-    private $featureFlagStates = [];
+    /**
+     * @var array<string, bool>
+     */
+    private array $featureFlagStates = [];
 
     public function __construct(
         #[TaggedLocator(TypeLayerInterface::class, defaultIndexMethod: 'getTypeName')]
@@ -128,6 +132,11 @@ class FeatureFlagManager implements FeatureFlagStateCheckerInterface
     public function disable(string $featureFlagName): void
     {
         $this->getLayer($featureFlagName)->disable($featureFlagName);
+    }
+
+    public function reset()
+    {
+        $this->featureFlagStates = [];
     }
 
     /**
