@@ -55,7 +55,6 @@ describe('BO - orders : Update order status', async () => {
   let filePath: string | null;
   let orderId: number;
   let allEmails: MailDevEmail[];
-  let numberOfEmails: number;
   let mailListener: MailDev;
 
   const orderByCustomerData: OrderData = new OrderData({
