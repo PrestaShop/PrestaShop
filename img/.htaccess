@@ -4,7 +4,7 @@
     <Files "*.*">
         Deny From All
     </Files>
-    <Files ~ "(?i)^(.*\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)|index.php)$">
+    <Files ~ "(?i)^(.*\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)|index\.php)$">
         Allow from all
     </Files>
 </IfModule>
@@ -15,7 +15,7 @@
     <Files "*.*">
         Require all denied
     </Files>
-    <Files ~ "(?i)^(.*\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)|index.php)$">
+    <Files ~ "(?i)^(.*\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)|index\.php)$">
         Require all granted
     </Files>
 </IfModule>
