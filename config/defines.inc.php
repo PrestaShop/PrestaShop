@@ -174,34 +174,20 @@ define('_PS_STORE_IMG_DIR_', _PS_IMG_DIR_.'st/');
 define('_PS_SUPP_IMG_DIR_', _PS_IMG_DIR_.'su/');
 define('_PS_TMP_IMG_DIR_', _PS_IMG_DIR_.'tmp/');
 
-/* settings php */
+/* Settings php */
 define('_PS_TRANS_PATTERN_', '(.*[^\\\\])');
 
 /* Tax behavior */
-define('PS_PRODUCT_TAX', 0);
-define('PS_STATE_TAX', 1);
-define('PS_BOTH_TAX', 2);
-
 define('PS_TAX_EXC', 1);
 define('PS_TAX_INC', 0);
 
+/* Rounding */
 define('PS_ROUND_UP', 0);
 define('PS_ROUND_DOWN', 1);
 define('PS_ROUND_HALF_UP', 2);
 define('PS_ROUND_HALF_DOWN', 3);
 define('PS_ROUND_HALF_EVEN', 4);
 define('PS_ROUND_HALF_ODD', 5);
-
-/* Backward compatibility */
-define('PS_ROUND_HALF', PS_ROUND_HALF_UP);
-
-/* Carrier::getCarriers() filter */
-// these defines are DEPRECATED since 1.4.5 version
-define('PS_CARRIERS_ONLY', 1);
-define('CARRIERS_MODULE', 2);
-define('CARRIERS_MODULE_NEED_RANGE', 3);
-define('PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE', 4);
-define('ALL_CARRIERS', 5);
 
 /* SQL Replication management */
 define('_PS_USE_SQL_SLAVE_', false);

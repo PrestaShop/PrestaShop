@@ -25,8 +25,6 @@
  */
 global $smarty;
 
-use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
-
 $template_dirs = array(_PS_THEME_DIR_.'templates');
 $plugin_dirs = array(_PS_THEME_DIR_.'plugins');
 if (_PS_PARENT_THEME_DIR_ !== '') {

@@ -26,7 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Session\SessionHandler;
 
-/* Custom defines made by users */
+// Custom defines made by users
 if (is_file(__DIR__ . '/defines_custom.inc.php')) {
     include_once __DIR__ . '/defines_custom.inc.php';
 }
