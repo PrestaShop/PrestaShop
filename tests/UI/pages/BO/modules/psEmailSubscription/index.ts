@@ -16,6 +16,8 @@ class PsEmailSubscription extends ModuleConfiguration {
 
   private readonly sendConfirmationEmail: (toEnable: string) => string;
 
+  private readonly welcomeVoucherInput: string;
+
   private readonly saveSettingsForm: string;
 
   private readonly newsletterTable: string;
@@ -42,6 +44,7 @@ class PsEmailSubscription extends ModuleConfiguration {
     // Selectors in settings block
     this.sendVerificationEmail = (toEnable: string) => `#NW_VERIFICATION_EMAIL_${toEnable}`;
     this.sendConfirmationEmail = (toEnable: string) => `label[for='NW_CONFIRMATION_EMAIL_${toEnable}']`;
+    this.welcomeVoucherInput = '#NW_VOUCHER_CODE';
     this.saveSettingsForm = '#module_form_submit_btn';
 
     // Newsletter registrations table selectors
@@ -58,7 +61,7 @@ class PsEmailSubscription extends ModuleConfiguration {
    * Set send verification email
    * @param page {Page} Browser tab
    * @param toEnable {boolean} True if we need to enable send verification email
-   * @returns {Promise<number>}
+   * @returns {Promise<string>}
    */
   async setSendVerificationEmail(page: Page, toEnable: boolean): Promise<string> {
     await page.locator(this.sendVerificationEmail(toEnable ? 'on' : 'off')).click({force: true});
@@ -71,10 +74,23 @@ class PsEmailSubscription extends ModuleConfiguration {
    * Set send confirmation email
    * @param page {Page} Browser tab
    * @param toEnable {boolean} True if we need to enable send confirmation email
-   * @returns {Promise<number>}
+   * @returns {Promise<string>}
    */
   async setSendConfirmationEmail(page: Page, toEnable: boolean): Promise<string> {
     await page.locator(this.sendConfirmationEmail(toEnable ? 'on' : 'off')).click({force: true});
+    await this.clickAndWaitForLoadState(page, this.saveSettingsForm);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Set welcome voucher
+   * @param page {Page} Browser tab
+   * @param voucher {string} Value of voucher to set in the input
+   * @returns {Promise<string>}
+   */
+  async setWelcomeVoucher(page: Page, voucher: string): Promise<string> {
+    await this.setValue(page, this.welcomeVoucherInput, voucher);
     await this.clickAndWaitForLoadState(page, this.saveSettingsForm);
 
     return this.getAlertSuccessBlockContent(page);
