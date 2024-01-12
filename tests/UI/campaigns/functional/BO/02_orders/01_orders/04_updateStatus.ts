@@ -69,7 +69,7 @@ describe('BO - orders : Update order status', async () => {
   });
 
   // Pre-condition: Create order in FO
-  createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_2`);
+  createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
 
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_2`);
