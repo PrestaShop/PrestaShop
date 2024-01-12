@@ -279,6 +279,7 @@ class ReleaseCreator
             ->setFilesConstants()
             ->setupShopVersion()
             ->generateLicensesFile()
+            ->generateCachedirFiles()
             ->runComposerInstall()
             ->runBuildAssets()
             ->createPackage();
@@ -482,6 +483,40 @@ class ReleaseCreator
 
         if (!file_put_contents($this->tempProjectPath . '/LICENSES', $content)) {
             throw new BuildException('Unable to create LICENSES file.');
+        }
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
+
+        return $this;
+    }
+
+    /**
+     * Generate CACHEDIR.TAG files in some locations. This file is used in many applications
+     * to exclude directories from backups.
+     *
+     * @return $this
+     * @throws BuildException
+     */
+    protected function generateCachedirFiles()
+    {
+        $this->consoleWriter->displayText("Generating CACHEDIR.TAG files...", ConsoleWriter::COLOR_YELLOW);
+
+        // Prepare content of the file with the signature
+        $fileContent = 'Signature: 8a477f597d28d172789f06886806bc55
+# This file is a cache directory tag created by PrestaShop.
+# For information about cache directory tags, see:
+#	http://www.brynosaurus.com/cachedir/';
+
+        // Specify locations we want to create this file in
+        $fileLocations = [
+            '/img/tmp/',
+            '/var/cache/',
+        ];
+
+        foreach ($fileLocations as $fileLocation) {
+            $filePath = $this->tempProjectPath . $fileLocation . 'CACHEDIR.TAG';
+            if (!file_put_contents($filePath, $fileContent)) {
+                throw new BuildException('Unable to create ' . $filePath);
+            }
         }
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
