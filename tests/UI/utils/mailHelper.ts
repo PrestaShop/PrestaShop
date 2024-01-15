@@ -13,6 +13,7 @@ export default {
    */
   createMailListener(config = global.maildevConfig): MailDev {
     return new MailDev({
+      web: 1081,
       smtp: config.smtpPort,
       silent: config.silent,
     });
