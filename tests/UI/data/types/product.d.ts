@@ -76,7 +76,8 @@ type ProductCombination = {
 type ProductFeatures = {
   featureName: string,
   preDefinedValue?: string,
-  customizedValue?: string,
+  customizedValueEn?: string,
+  customizedValueFr?: string,
 }
 
 type ProductFiles = {
