@@ -2,10 +2,12 @@
 import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import pages
 // Import BO pages
@@ -26,12 +28,15 @@ import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import MailDevEmail from '@data/types/maildevEmail';
+import MailDev from 'maildev';
 
 const baseContext: string = 'functional_BO_orders_orders_updateStatus';
 
 /*
 Pre-condition:
 - Create order in FO, choose payment method bank wire payment
+- Setup SMTP parameters
 Scenario:
 - Go to BO orders page and change order status to 'Canceled'
 - Go to FO and check the new order status
@@ -41,12 +46,16 @@ Scenario:
 - Go to FO and check the new order status and the invoice
 - Go to BO orders page and change order status to 'Delivered'
 - Go to FO and check the new order status
+Post-condition:
+- Reset SMTP parameters
  */
 describe('BO - orders : Update order status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string|null;
+  let filePath: string | null;
   let orderId: number;
+  let allEmails: MailDevEmail[];
+  let mailListener: MailDev;
 
   const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
@@ -60,16 +69,32 @@ describe('BO - orders : Update order status', async () => {
   });
 
   // Pre-condition: Create order in FO
-  createOrderByCustomerTest(orderByCustomerData, baseContext);
+  createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
+
+  // Pre-Condition : Setup config SMTP
+  setupSmtpConfigTest(`${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Start listening to maildev server
+    mailListener = mailHelper.createMailListener();
+    mailHelper.startListener(mailListener);
+
+    // get all emails
+    // @ts-ignore
+    mailListener.getAllEmail((err: Error, emails: MailDevEmail[]) => {
+      allEmails = emails;
+    });
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+
+    // Stop listening to maildev server
+    mailHelper.stopListener(mailListener);
   });
 
   describe('Go to \'Orders > Orders\' page', async () => {
@@ -95,7 +120,7 @@ describe('BO - orders : Update order status', async () => {
 
       await ordersPage.resetFilter(page);
 
-      const result: string = await ordersPage.getTextColumn(page, 'id_order', 1);
+      const result = await ordersPage.getTextColumn(page, 'id_order', 1);
       orderId = parseInt(result, 10);
       expect(orderId).to.be.at.least(1);
     });
@@ -103,9 +128,9 @@ describe('BO - orders : Update order status', async () => {
 
   describe('Change orders status in BO then check it in FO', async () => {
     [
-      {args: {orderStatus: OrderStatuses.canceled}},
-      {args: {orderStatus: OrderStatuses.paymentAccepted}},
-      {args: {orderStatus: OrderStatuses.delivered}},
+      {args: {orderStatus: OrderStatuses.canceled, email: 'Canceled'}},
+      {args: {orderStatus: OrderStatuses.paymentAccepted, email: 'Payment accepted'}},
+      {args: {orderStatus: OrderStatuses.shipped, email: 'Shipped'}},
     ].forEach((test, index: number) => {
       describe(`Change orders status to '${test.args.orderStatus.name}' in BO`, async () => {
         it('should update order status', async function () {
@@ -120,6 +145,12 @@ describe('BO - orders : Update order status', async () => {
 
           const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
           expect(orderStatus, 'Order status was not updated').to.equal(test.args.orderStatus.name);
+        });
+
+        it('should check received email', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkEmail${index}`, baseContext);
+
+          expect(allEmails[allEmails.length - 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] ${test.args.email}`);
         });
 
         if (test.args.orderStatus.name === OrderStatuses.paymentAccepted.name) {
@@ -274,4 +305,7 @@ describe('BO - orders : Update order status', async () => {
       });
     });
   });
+
+  // Post-Condition : Reset SMTP config
+  resetSmtpConfigTest(`${baseContext}_postTest`);
 });
