@@ -190,8 +190,8 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
     it('should click on the link provided in the email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnProvidedLink', baseContext);
 
-      const link: RegExpMatchArray | null = allEmails[numberOfEmails].text.match(/http:\/\/.*emailsubscription[^\s]*/);
-      await foHomePage.goTo(page, link!.toString());
+      const link: string = allEmails[numberOfEmails].text.match(/https?:\/\/.*emailsubscription[^\s]*/)![0];
+      await foHomePage.goTo(page, link);
     });
 
     it('should check the success message', async function () {
