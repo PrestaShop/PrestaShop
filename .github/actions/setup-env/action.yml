@@ -70,6 +70,7 @@ runs:
       env:
         PS_ENABLE_SSL: ${{ (inputs.ENABLE_SSL == 'true') && '1' || '0' }}
         PS_INSTALL_AUTO: ${{ (inputs.INSTALL_AUTO == 'true') && '1' || '0' }}
+        PS_USE_DOCKER_MAILDEV: 0
         VERSION: ${{ inputs.PHP_VERSION }}-apache
         NODE_VERSION: ${{ inputs.NODE_VERSION }}
         URL_FO: ${{ (inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/' || 'https://localhost:8002/' }}
