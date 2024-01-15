@@ -246,7 +246,7 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
     it('should subscribe to newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeToNewsletter3', baseContext);
 
-      const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, 'hola2@prestashop.com');
+      const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, 'hola3@prestashop.com');
       expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.successSubscriptionMessage);
     });
 
