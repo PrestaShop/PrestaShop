@@ -2,9 +2,11 @@
 import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import pages
 // Import BO pages
@@ -20,30 +22,56 @@ import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import MailDevEmail from '@data/types/maildevEmail';
+import MailDev from 'maildev';
 
 const baseContext: string = 'functional_BO_customerService_customerService_respondToMessage';
 
 /*
-Send message by customer to customer service in FO
-Respond to message in BO
+Pre-condition:
+- Setup SMTP parameters
+Scenario:
+- Send message by customer to customer service in FO
+- Respond to message in BO
+- Check received email
+- Delete message
+Post-condition:
+- Reset SMTP parameters
  */
 describe('BO - Customer Service : Respond to message', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+  let newMail: MailDevEmail;
+  let mailListener: MailDev;
 
   const contactUsData: MessageData = new MessageData({subject: 'Customer service'});
   const answerMessage = 'My response';
+
+  // Pre-Condition : Setup config SMTP
+  setupSmtpConfigTest(baseContext);
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
+    // Start listening to maildev server
+    mailListener = mailHelper.createMailListener();
+    mailHelper.startListener(mailListener);
+
+    // Handle every new email
+    mailListener.on('new', (email: MailDevEmail) => {
+      newMail = email;
+    });
+
     await files.generateImage(`${contactUsData.fileName}.jpg`);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+
+    // Stop listening to maildev server
+    mailHelper.stopListener(mailListener);
 
     await files.deleteFile(`${contactUsData.fileName}.jpg`);
   });
@@ -120,6 +148,12 @@ describe('BO - Customer Service : Respond to message', async () => {
       const text = await viewPage.getOrdersAndMessagesTimeline(page);
       expect(text).to.contains(answerMessage);
     });
+
+    it('should check that the confirmation mail is in mailbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMail', baseContext);
+
+      expect(newMail.subject).to.contains(`[${global.INSTALL.SHOP_NAME}] An answer to your message`);
+    });
   });
 
   describe('BO : Delete the message', async () => {
@@ -143,4 +177,7 @@ describe('BO - Customer Service : Respond to message', async () => {
       expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
     });
   });
+
+  // Post-Condition : Reset SMTP config
+  resetSmtpConfigTest(baseContext);
 });
