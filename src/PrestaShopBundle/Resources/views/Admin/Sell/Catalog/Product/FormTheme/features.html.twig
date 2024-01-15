@@ -24,51 +24,103 @@
  *#}
 
 {%- block features_row -%}
-  <h3>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h3>
+  <div class="form-group">
+    <h3>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h3>
 
-  {{ form_errors(form) }}
+    {{ form_errors(form) }}
+    <div class="product-features-controls">
+      {{ form_widget(form.feature_id) }}
+      <div class="feature-value-spinner d-none">
+        <div class="spinner"></div>
+        {{ 'Loading feature values...'|trans({}, 'Admin.Catalog.Feature') }}
+      </div>
+      {{ form_widget(form.feature_value_id) }}
+      {{ form_widget(form.custom_value) }}
+      {{ form_widget(form.add_feature) }}
+    </div>
+    {# Manually add the external link block because we don't use form_row and this way it's under the whole block #}
+    {% with {external_link: form.feature_id.vars.external_link} %}
+      {{- block('form_external_link') -}}
+    {% endwith %}
+
+    {{- block('form_rows') -}}
+  </div>
+{%- endblock -%}
+
+{# Override feature collection template to remove the label and init the table #}
+{%- block feature_collection_row -%}
+  {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
+  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' table feature-values-table-collection')|trim }) -%}
+
+  {# Hide table if content is empty #}
+  {% if form.vars.value is empty %}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' d-none')|trim }) -%}
+  {% endif %}
+
+  <table {{ block('widget_attributes') }}>
+    <thead class="thead-default">
+    <tr>
+      <th>{{ 'Feature'|trans({}, 'Admin.Catalog.Feature') }}</th>
+      <th>{{ 'Feature value'|trans({}, 'Admin.Catalog.Feature') }}</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{- block('form_rows') -}}
+    </tbody>
+  </table>
+{%- endblock -%}
+
+{%- block feature_collection_item_row -%}
+  {# Feature inputs are rendered even if they are hidden types, and hidden via CSS, so their data is still submitted #}
+  {% set featureId = form.feature_id.vars.value %}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' product-feature-collection')|trim, 'feature-id': featureId}) -%}
+  {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
+  {%- set attr = attr|merge({'data-prototype': form_row(form.feature_values.vars.prototype), 'data-prototype-name': form.feature_values.vars.prototype.vars.name }) -%}
+  <tr {{ block('widget_attributes') }}>
+    <td colspan="3">
+      {{ form_widget(form.feature_id) }}
+      {{ form_widget(form.feature_name) }}
+    </td>
+  </tr>
+  {# The children of the collection are rendered as TR rows in the same table, we only pass the data from parent #}
   {{- block('form_rows') -}}
 {%- endblock -%}
 
 {%- block feature_value_row -%}
-  <div class="form-group row product-feature">
-    <div class="col-xl-3">
-      <fieldset class="form-group mb-0">
-        <label class="form-control-label">{{ form.feature_id.vars.label }}</label>
-        {{ form_widget(form.feature_id) }}
-        {{ form_errors(form.feature_id) }}
-      </fieldset>
-    </div>
-    <div class="col-xl-4">
-      <fieldset class="form-group mb-0">
-        <label class="form-control-label">{{ form.feature_value_id.vars.label }}</label>
-        {{ form_widget(form.feature_value_id) }}
-        {{ form_errors(form.feature_value_id) }}
-      </fieldset>
-    </div>
-    <div class="col-lg-11 col-xl-4">
-      <fieldset class="form-group mb-0">
-        <label class="form-control-label">{{ form.custom_value.vars.label }}</label>
-        {{ form_widget(form.custom_value_id) }}
-        {{ form_widget(form.custom_value) }}
-        {{ form_errors(form.custom_value) }}
-      </fieldset>
-    </div>
-    <div class="col-lg-1 col-xl-1">
+  {# Get feature values from the ancestor #}
+  {% set featureCollectionParent = form.parent.parent %}
+  {% set featureId = featureCollectionParent.feature_id.vars.value %}
+  {% set featureName = featureCollectionParent.feature_name.vars.value %}
+  <tr class="product-feature-value" feature-id="{{ featureId }}">
+    <td class="feature-column">
+      {{ featureName }}
+    </td>
+    <td>
+      {% if is_custom is null %}
+        {# Rendering the prototype we keep everything visible by default #}
+        {% set featureValueAttributes = {} %}
+        {% set customValueAttributes = {} %}
+      {% elseif is_custom %}
+        {# Hide feature value name when feature value is custom #}
+        {% set featureValueAttributes = {'row_attr': {'class': (form.feature_value_name.vars.row_attr.class|default('') ~ ' d-none')|trim}} %}
+        {% set customValueAttributes = {} %}
+      {% else %}
+        {# Hide custom inputs when feature value is not custom #}
+        {% set featureValueAttributes = {} %}
+        {% set customValueAttributes = {'row_attr': {'class': (form.custom_value.vars.row_attr.class|default('') ~ ' d-none')|trim}} %}
+      {% endif %}
+      {{ form_row(form.feature_value_name, form.feature_value_name.vars.attr|merge(featureValueAttributes)) }}
+      {{ form_row(form.custom_value, form.custom_value.vars.attr|merge(customValueAttributes)) }}
+      {{ form_row(form.feature_value_id) }}
+      {{ form_row(form.is_custom) }}
+    </td>
+    <td class="feature-actions">
       {{ form_widget(form.delete) }}
-    </div>
-  </div>
-{%- endblock -%}
 
-{# Override features collection template to remove the label and init the table #}
-{%- block collection_row -%}
-  {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
-  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-group row feature-values-collection')|trim }) -%}
-
-  <div {{ block('widget_attributes') }}>
-    <div class="col-sm">
-      {{- block('form_rows') -}}
-    </div>
-  </div>
+      {# Not ideal place but still we render the rest in case some inputs were added #}
+      {{ form_rest(form) }}
+    </td>
+  </tr>
 {%- endblock -%}

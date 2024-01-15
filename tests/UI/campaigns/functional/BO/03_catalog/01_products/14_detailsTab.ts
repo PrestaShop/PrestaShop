@@ -8,6 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
+import featuresPage from '@pages/BO/catalog/features';
 import createProductPage from '@pages/BO/catalog/products/add';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import productsPage from '@pages/BO/catalog/products';
@@ -18,6 +19,7 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import ProductData from '@data/faker/product';
+import {ProductFeatures} from '@data/types/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -51,7 +53,7 @@ describe('BO - Catalog - Products : Details tab', async () => {
         preDefinedValue: 'Cotton',
       }, {
         featureName: 'Composition',
-        customizedValue: 'Lorem Ipsum',
+        customizedValueEn: 'Lorem Ipsum',
       },
     ],
     files: [
@@ -86,6 +88,11 @@ describe('BO - Catalog - Products : Details tab', async () => {
       },
     ],
   });
+  // Product Feature only in French
+  const productFeaturesFr: ProductFeatures[] = [{
+    featureName: 'Composition',
+    customizedValueFr: 'Only in French',
+  }];
 
   // before and after functions
   before(async function () {
@@ -185,7 +192,7 @@ describe('BO - Catalog - Products : Details tab', async () => {
     it('should add 2 features', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstFeature', baseContext);
 
-      await detailsTab.setFeature(page, editProductData);
+      await detailsTab.setFeature(page, editProductData.features);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
@@ -209,7 +216,7 @@ describe('BO - Catalog - Products : Details tab', async () => {
       const productFeatures = await foProductPage.getProductFeaturesList(page);
       expect(productFeatures).to.eq(
         `Data sheet ${editProductData.features[0].featureName} ${editProductData.features[0].preDefinedValue}`
-        + ` ${editProductData.features[1].customizedValue}`);
+        + ` ${editProductData.features[1].customizedValueEn}`);
     });
 
     it('should go back to BO', async function () {
@@ -222,10 +229,39 @@ describe('BO - Catalog - Products : Details tab', async () => {
       expect(pageTitle).to.contains(createProductPage.pageTitle);
     });
 
+    it('should check the Features link', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkFeatureLink', baseContext);
+
+      await createProductPage.goToTab(page, 'details');
+      page = await detailsTab.clickonManageFeatures(page);
+
+      const pageTitle = await featuresPage.getPageTitle(page);
+      expect(pageTitle).to.contains(featuresPage.pageTitle);
+    });
+
+    it('should close the Features pages', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closeFeaturesTab', baseContext);
+
+      page = await filesPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await createProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(createProductPage.pageTitle);
+    });
+
+    it('should add a custom feature value only on French', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addCustomFeatureValueInFr', baseContext);
+
+      await detailsTab.setFeature(page, productFeaturesFr);
+      await createProductPage.clickOnSaveProductButton(page);
+
+      const message = await detailsTab.getAlertDangerBlockParagraphContent(page);
+      expect(message).to.eq(detailsTab.featureCustomValueNotDefaultLanguageMessage);
+    });
+
     it('should delete the created features', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFeatures', baseContext);
 
-      await detailsTab.deleteFeatures(page, editProductData);
+      await detailsTab.deleteFeatures(page, editProductData.features.concat(productFeaturesFr));
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);

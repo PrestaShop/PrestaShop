@@ -1,12 +1,13 @@
-import type {Page} from 'playwright';
-import {Frame} from 'playwright';
-import {expect} from 'chai';
-
-import type ProductData from '@data/faker/product';
-
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
 import createProductPage from '@pages/BO/catalog/products/add';
+
+// Import data
+import type ProductData from '@data/faker/product';
+import {ProductFeatures} from '@data/types/product';
+
+import type {Frame, Page} from 'playwright';
+import {expect} from 'chai';
 
 /**
  * Details tab on new product V2 page, contains functions that can be used on the page
@@ -14,6 +15,8 @@ import createProductPage from '@pages/BO/catalog/products/add';
  * @extends BOBasePage
  */
 class DetailsTab extends BOBasePage {
+  public readonly featureCustomValueNotDefaultLanguageMessage: string;
+
   private readonly detailsTabLink: string;
 
   private readonly productEAN13Input: string;
@@ -28,13 +31,17 @@ class DetailsTab extends BOBasePage {
 
   private readonly productConditionSelect: string;
 
-  private readonly addFeatureButton: string;
-
-  private readonly featureNameInput: string;
-
-  private readonly predefinedValueInput: string;
-
   private readonly confirmDeleteFeatureButton: string;
+
+  private readonly tableFeatures: string;
+
+  private readonly tableFeaturesRow: (nthChild: number) => string;
+
+  private readonly tableFeaturesCellAction: (nthChild: number) => string;
+
+  private readonly tableFeaturesBtnDelete: (nthChild: number) => string;
+
+  private readonly manageFeaturesLink: string;
 
   private readonly manageAllFilesLink: string;
 
@@ -66,19 +73,19 @@ class DetailsTab extends BOBasePage {
 
   private readonly deleteFileModal: string;
 
+  private readonly addFeatureFeatureSelect: string;
+
+  private readonly addFeatureValueSelect: string;
+
+  private readonly addFeatureValueButtonLang: string;
+
+  private readonly addFeatureValueSpanLang: (lang: string) => string;
+
+  private readonly addFeatureValueInputLang: (langId: number) => string;
+
+  private readonly addFeatureButton: string;
+
   private readonly deleteFeatureModal: string;
-
-  private readonly chooseFeatureSelect: (row: number) => string;
-
-  private readonly featureNameSelect: (row: number) => string;
-
-  private readonly choosePredefinedValueSelect: (row: number) => string;
-
-  private readonly predefinedValueSelect: (row: number) => string;
-
-  private readonly featureCustomizedValue: (row: number) => string;
-
-  private readonly deleteFeatureIcon: (row: number) => string;
 
   private readonly deleteFileIcon: (row: number) => string;
 
@@ -99,6 +106,9 @@ class DetailsTab extends BOBasePage {
   constructor() {
     super();
 
+    // Messages
+    this.featureCustomValueNotDefaultLanguageMessage = 'The field "Custom value" is required at least in your default language.';
+
     // Selectors in details tab
     // References section
     this.detailsTabLink = '#product_details-tab-nav';
@@ -108,20 +118,20 @@ class DetailsTab extends BOBasePage {
     this.productEAN13Input = '#product_details_references_ean_13';
     this.productISBNInput = '#product_details_references_isbn';
     // Features section
+    this.addFeatureFeatureSelect = '#product_details_features_feature_id';
+    this.addFeatureValueSelect = '#product_details_features_feature_value_id';
+    this.addFeatureValueButtonLang = '#product_details_features_custom_value_dropdown';
+    this.addFeatureValueSpanLang = (lang: string) => `${this.addFeatureValueButtonLang} + div.dropdown-menu.show`
+      + `> span[data-locale='${lang}']`;
+    this.addFeatureValueInputLang = (langId: number) => `#product_details_features_custom_value_${langId}`;
     this.addFeatureButton = '#product_details_features_add_feature';
-    this.chooseFeatureSelect = (row: number) => `#select2-product_details_features_feature_values_${row}_feature_id-container`;
-    this.featureNameInput = 'span.select2-container--open span.select2-search--dropdown input';
-    this.featureNameSelect = (row: number) => `#select2-product_details_features_feature_values_${row}_feature_id-results`
-      + ' .select2-results__option--highlighted';
-    this.choosePredefinedValueSelect = (row: number) => `#select2-product_details_features_feature_values_${row}_feature`
-      + '_value_id-container';
-    this.predefinedValueInput = 'span.select2-container--open span.select2-search--dropdown input';
-    this.predefinedValueSelect = (row: number) => `#select2-product_details_features_feature_values_${row}_feature_`
-      + 'value_id-results .select2-results__option--highlighted';
-    this.featureCustomizedValue = (row: number) => `#product_details_features_feature_values_${row}_custom_value_1`;
-    this.deleteFeatureIcon = (row: number) => `#product_details_features_feature_values_${row}_delete`;
     this.deleteFeatureModal = '#modal-confirm-delete-feature-value';
     this.confirmDeleteFeatureButton = `${this.deleteFeatureModal} div.modal-footer button.btn-confirm-submit`;
+    this.tableFeatures = '#product_details_features_feature_collection tbody';
+    this.tableFeaturesRow = (nthChild: number) => `${this.tableFeatures} tr:nth-child(${nthChild})`;
+    this.tableFeaturesCellAction = (nthChild: number) => `${this.tableFeaturesRow(nthChild)} td.feature-actions`;
+    this.tableFeaturesBtnDelete = (nthChild: number) => `${this.tableFeaturesCellAction(nthChild)} button`;
+    this.manageFeaturesLink = 'div.product-features-controls + div > a';
     // Attached files section
     this.manageAllFilesLink = '#product_details div.small.font-secondary a[href*=\'sell/attachments/\']';
     this.searchFileInput = '#product_details_attachments_attached_files_search_input';
@@ -220,38 +230,59 @@ class DetailsTab extends BOBasePage {
   /**
    * Set feature
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set on feature form
+   * @param productFeatures {ProductFeatures[]} Data to set on feature form
    * @returns {Promise<void>}
    */
-  async setFeature(page: Page, productData: ProductData): Promise<void> {
-    for (let i: number = 0; i < productData.features.length; i++) {
-      await page.locator(this.addFeatureButton).click();
-      await this.waitForSelectorAndClick(page, this.chooseFeatureSelect(i));
-      await this.setValue(page, this.featureNameInput, productData.features[i].featureName);
-      await this.waitForSelectorAndClick(page, this.featureNameSelect(i));
+  async setFeature(page: Page, productFeatures: ProductFeatures[]): Promise<void> {
+    for (let i: number = 0; i < productFeatures.length; i++) {
+      await this.selectByVisibleText(page, this.addFeatureFeatureSelect, productFeatures[i].featureName, true);
+      await this.waitForVisibleSelector(page, `${this.addFeatureValueSelect}:not([disabled])`);
 
-      if (productData.features[i].preDefinedValue) {
-        await this.waitForSelectorAndClick(page, this.choosePredefinedValueSelect(i));
-        await this.setValue(page, this.predefinedValueInput, productData.features[i].preDefinedValue!);
-        await this.waitForSelectorAndClick(page, this.predefinedValueSelect(i));
+      if (productFeatures[i].preDefinedValue) {
+        await this.selectByVisibleText(page, this.addFeatureValueSelect, productFeatures[i].preDefinedValue!, true);
       }
-      if (productData.features[i].customizedValue) {
-        await this.setValue(page, this.featureCustomizedValue(i), productData.features[i].customizedValue!);
+      if (productFeatures[i].customizedValueEn || productFeatures[i].customizedValueFr) {
+        await this.selectByValue(page, this.addFeatureValueSelect, -1, true);
+        if (productFeatures[i].customizedValueEn) {
+          await page.locator(this.addFeatureValueButtonLang).click();
+          await page.locator(this.addFeatureValueSpanLang('en')).click();
+          await this.waitForVisibleSelector(page, this.addFeatureValueInputLang(1));
+          await this.setValue(page, this.addFeatureValueInputLang(1), productFeatures[i].customizedValueEn!);
+        }
+        if (productFeatures[i].customizedValueFr) {
+          await page.locator(this.addFeatureValueButtonLang).click();
+          await page.locator(this.addFeatureValueSpanLang('fr')).click();
+          await this.waitForVisibleSelector(page, this.addFeatureValueInputLang(2));
+          await this.setValue(page, this.addFeatureValueInputLang(2), productFeatures[i].customizedValueFr!);
+        }
       }
+
+      await this.waitForVisibleSelector(page, `${this.addFeatureButton}:not([disabled])`);
+      await page.locator(this.addFeatureButton).click();
     }
   }
 
   /**
    * Delete all features
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to delete feature
+   * @param productFeatures {ProductFeatures[]} Data to delete feature
    * @returns {Promise<void>}
    */
-  async deleteFeatures(page: Page, productData: ProductData): Promise<void> {
-    for (let i: number = 0; i < productData.features.length; i++) {
-      await this.waitForSelectorAndClick(page, this.deleteFeatureIcon(i));
+  async deleteFeatures(page: Page, productFeatures: ProductFeatures[]): Promise<void> {
+    for (let i: number = 0; i < productFeatures.length; i++) {
+      // Why tr:nth-child(2) : It's one-based selector and the first row is hidden ?
+      await this.waitForSelectorAndClick(page, this.tableFeaturesBtnDelete(2));
       await this.waitForSelectorAndClick(page, this.confirmDeleteFeatureButton);
     }
+  }
+
+  /**
+   * Click on "Manage Features"
+   * @param page {Page} Browser tab
+   * @returns {Promise<Page>}
+   */
+  async clickonManageFeatures(page: Page): Promise<Page> {
+    return this.openLinkWithTargetBlank(page, this.manageFeaturesLink);
   }
 
   /**
@@ -288,7 +319,7 @@ class DetailsTab extends BOBasePage {
 
       await this.waitForVisibleSelector(page, this.createFileFrame);
 
-      const newFileFrame: Frame | null = await page.frame({name: 'modal-create-product-attachment-iframe'});
+      const newFileFrame: Frame | null = page.frame({name: 'modal-create-product-attachment-iframe'});
       expect(newFileFrame).to.not.eq(null);
 
       await this.setValue(newFileFrame!, this.fileNameInput, productData.files[i].fileName);

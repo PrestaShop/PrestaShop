@@ -28,69 +28,68 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Details;
 
-use PrestaShopBundle\Form\Admin\Type\FeatureChoiceType;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FeatureValueType extends TranslatorAwareType
 {
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        protected readonly EventSubscriberInterface $featureValueListener
-    ) {
-        parent::__construct($translator, $locales);
-    }
-
     /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('feature_id', FeatureChoiceType::class, [
-                'empty_data' => null,
-                'required' => false,
-                'placeholder' => $this->trans('Choose a feature', 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('Choose a feature', 'Admin.Catalog.Feature'),
-                    ]),
+            ->add('feature_value_id', HiddenType::class, [
+                'attr' => [
+                    'class' => 'feature-value-id',
                 ],
             ])
-            ->add('feature_value_id', ChoiceType::class, [
-                'empty_data' => 0,
-                'placeholder' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
-                'label' => $this->trans('Pre-defined value', 'Admin.Catalog.Feature'),
-                'invalid_message' => $this->trans('Choose a value or provide a customized one', 'Admin.Catalog.Feature'),
-                'disabled' => true,
-                'attr' => [
-                    'disabled' => true,
-                    'data-toggle' => 'select2',
-                    'class' => 'feature-value-selector',
+            ->add('feature_value_name', TextPreviewType::class, [
+                'row_attr' => [
+                    'class' => 'feature-value-preview',
                 ],
+                'attr' => [
+                    'class' => 'feature-value-name',
+                ],
+                'label' => false,
+            ])
+            ->add('is_custom', HiddenType::class, [
+                'attr' => [
+                    'class' => 'is-custom-feature-value',
+                ],
+                'required' => false,
+                'empty_data' => false,
             ])
             ->add('custom_value', TranslatableType::class, [
-                'label' => $this->trans('OR Customized value', 'Admin.Catalog.Feature'),
+                'label' => false,
                 'required' => false,
                 'type' => TextType::class,
-                'attr' => [
-                    'class' => 'custom-values',
+                'row_attr' => [
+                    'class' => 'custom-values-form-group',
                 ],
-            ])
-            ->add('custom_value_id', HiddenType::class, [
-                'required' => false,
-                'empty_data' => null,
-                'attr' => [
-                    'class' => 'custom-value-id',
+                'constraints' => [
+                    new DefaultLanguage([
+                        'message' => $this->trans(
+                            'The field %field_name% is required at least in your default language.',
+                            'Admin.Notifications.Error',
+                            [
+                                '%field_name%' => sprintf(
+                                    '"%s"',
+                                    $this->trans('Custom value', 'Admin.Catalog.Feature')
+                                ),
+                            ]
+                        ),
+                        'groups' => 'custom_value',
+                    ]),
                 ],
             ])
             ->add('delete', IconButtonType::class, [
@@ -106,9 +105,25 @@ class FeatureValueType extends TranslatorAwareType
                 ],
             ])
         ;
+    }
 
-        // This listeners register to PRE_SET_DATA and PRE_SUBMIT events to dynamically set the proper choices of the
-        // feature_value_id field
-        $builder->addEventSubscriber($this->featureValueListener);
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'validation_groups' => function (FormInterface $form): array {
+                $formData = $form->getData();
+
+                return !empty($formData['is_custom']) ? ['Default', 'custom_value'] : ['Default'];
+            },
+        ]);
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+        $formData = $form->getData();
+
+        // When data is null the prototype is being rendered so the input is not custom and is not not custom either (schrodinger custom input)
+        $view->vars['is_custom'] = null === $formData ? null : !empty($formData['is_custom']);
     }
 }
