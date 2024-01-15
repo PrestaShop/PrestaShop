@@ -987,23 +987,6 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then product :productName should be editable
-     */
-    public function productShouldBeEditable($productName)
-    {
-        $this->checkProductWithNameExists($productName);
-        $productId = (int) $this->getProductWithName($productName)->id;
-
-        $formBuilder = CommonFeatureContext::getContainer()->get('prestashop.core.form.identifiable_object.builder.edit_product_form_builder');
-
-        $productForm = $formBuilder->getFormFor($productId, [], [
-            'product_id' => $productId,
-            'shop_id' => (int) Configuration::get('PS_SHOP_DEFAULT'),
-            'method' => Request::METHOD_POST,
-        ]);
-    }
-
-    /**
      * @BeforeFeature @reset-product-price-cache
      *
      * Clear Product prices cache at each step in order to get fresh data
