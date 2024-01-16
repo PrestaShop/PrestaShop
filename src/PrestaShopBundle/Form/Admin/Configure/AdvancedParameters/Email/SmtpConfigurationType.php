@@ -65,6 +65,9 @@ class SmtpConfigurationType extends TranslatorAwareType
                 'empty_data' => '',
                 'label' => $this->trans('SMTP password', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Leave blank if not applicable.', 'Admin.Advparameters.Help'),
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                ]
             ])
             ->add('encryption', ChoiceType::class, [
                 'choices' => [
