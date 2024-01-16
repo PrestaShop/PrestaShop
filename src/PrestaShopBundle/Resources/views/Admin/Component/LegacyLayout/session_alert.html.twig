@@ -1,0 +1,100 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% if this.confirmationMessage is not empty %}
+<div class="bootstrap">
+  <div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ this.confirmationMessage }}
+  </div>
+</div>
+{% endif %}
+
+{% if this.errorMessage is not empty %}
+<div class="bootstrap">
+  <div class="alert alert-danger">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ this.errorMessage }}
+  </div>
+</div>
+{% endif %}
+
+{% if this.errors is not empty %}
+<div class="bootstrap">
+  <div class="alert alert-danger">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {% if this.errors|length == 1 %}
+      {{ this.errors|first }}
+    {% else %}
+      {{ 'There are %d errors.'|trans({'%d': this.errors|length}, 'Admin.Notifications.Error') }}
+      <br/>
+      <ol>
+        {% for error in this.errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+      </ol>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% if this.informations is not empty %}
+<div class="bootstrap">
+  <div class="alert alert-info">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <ul id="infos_block" class="list-unstyled">
+      {% for info in this.informations %}
+      <li>{{ info }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %}
+
+{% if this.confirmations is not empty %}
+<div class="bootstrap">
+  <div class="alert alert-success" style="display:block;">
+    {% for confirmation in this.confirmations %}
+    {{ confirmation }}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if this.warnings is not empty %}
+<div class="bootstrap">
+  <div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {% if this.warnings|length > 1%}
+    <h4>{{ 'There are %d warnings:'|trans({'%d': this.warnings|length}) }}</h4>
+    {% endif %}
+    <ul class="list-unstyled">
+      {% for warning in this.warnings %}
+      <li>{{ warning }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %}
