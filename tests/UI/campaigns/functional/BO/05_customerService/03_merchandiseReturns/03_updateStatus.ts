@@ -265,7 +265,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
         });
 
         it('should check the confirmation email subject', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'checkConfirmationEmail', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `checkConfirmationEmail${index}`, baseContext);
 
           numberOfEmails = allEmails.length;
           expect(allEmails[numberOfEmails - 1].subject)
@@ -273,7 +273,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
         });
 
         it('should check the confirmation email text', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'checkConfirmationEmailText', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `checkConfirmationEmailText${index}`, baseContext);
 
           numberOfEmails = allEmails.length;
           expect(allEmails[numberOfEmails - 1].text)
