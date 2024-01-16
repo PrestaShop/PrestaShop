@@ -69,6 +69,16 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                     return;
                 }
 
+                // Warmup prod environment only (not needed for dev since many things are dynamic)
+                $application = new Application($kernel);
+                $application->setAutoExit(false);
+                $input = new ArrayInput([
+                    'command' => 'cache:warmup',
+                    '--no-optional-warmers' => true,
+                    '--env' => 'prod',
+                    '--no-debug' => true,
+                ]);
+
                 $environments = ['prod', 'dev'];
                 foreach ($environments as $environment) {
                     try {
@@ -88,16 +98,6 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                         // Do nothing but at least does not break the loop nor function
                     }
                 }
-
-                // Warmup prod environment only (not needed for dev since many things are dynamic)
-                $application = new Application($kernel);
-                $application->setAutoExit(false);
-                $input = new ArrayInput([
-                    'command' => 'cache:warmup',
-                    '--no-optional-warmers' => true,
-                    '--env' => 'prod',
-                    '--no-debug' => true,
-                ]);
 
                 $output = new NullOutput();
                 $application->doRun($input, $output);
