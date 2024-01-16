@@ -73,4 +73,20 @@ export default {
     invoiceOn: false,
     emailTemplate: 'cashondelivery',
   }),
+  onBackorderNotPaid: new OrderStatusData({
+    id: 12,
+    name: 'On backorder (not paid)',
+    sendEmailOn: true,
+    deliveryOn: false,
+    invoiceOn: false,
+    emailTemplate: 'outofstock',
+  }),
+  onBackorderPaid: new OrderStatusData({
+    id: 9,
+    name: 'On backorder (paid)',
+    sendEmailOn: true,
+    deliveryOn: false,
+    invoiceOn: true,
+    emailTemplate: 'outofstock',
+  }),
 };
