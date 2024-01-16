@@ -53,6 +53,7 @@ Scenario
 - Create merchandise returns in FO
 - GO to BO > merchandise returns page > Edit
 - Test all return statuses
+- Check received emails
 Post-condition:
 - Deactivate merchandise returns
 - Reset SMTP config
