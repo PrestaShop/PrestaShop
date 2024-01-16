@@ -3,9 +3,12 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 import files from '@utils/files';
 import date from '@utils/date';
+import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {disableMerchandiseReturns, enableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import pages
 // Import BO pages
@@ -15,9 +18,6 @@ import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 // Import FO pages
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {myAccountPage} from '@pages/FO/myAccount';
@@ -26,15 +26,20 @@ import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
 
 // Import data
-import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
 import Addresses from '@data/demo/address';
+import OrderData from '@data/faker/order';
+import CustomerData from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+
+import MailDevEmail from '@data/types/maildevEmail';
+import MailDev from 'maildev';
+import {resetSmtpConfigTest, setupSmtpConfigTest} from "@commonTests/BO/advancedParameters/smtp";
 
 const baseContext: string = 'functional_BO_customerService_merchandiseReturns_updateStatus';
 
@@ -43,126 +48,72 @@ Pre-condition:
 - Create order in FO
 - Activate merchandise returns
 - Change the first order status in the list to shipped
+- Setup SMTP config
 Scenario
 - Create merchandise returns in FO
 - GO to BO > merchandise returns page > Edit
 - Test all return statuses
 Post-condition:
 - Deactivate merchandise returns
+- Reset SMTP config
  */
 describe('BO - Customer Service - Merchandise Returns : Update status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string|null;
+  let filePath: string | null;
   let returnID: number;
+  let allEmails: MailDevEmail[];
+  let numberOfEmails: number;
+  let mailListener: MailDev;
   const todayDate: string = date.getDateFormat('mm/dd/yyyy');
+  const orderData: OrderData = new OrderData({
+    customer: CustomerData.johnDoe,
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Start listening to maildev server
+    mailListener = mailHelper.createMailListener();
+    mailHelper.startListener(mailListener);
+
+    // get all emails
+    // @ts-ignore
+    mailListener.getAllEmail((err: Error, emails: MailDevEmail[]) => {
+      allEmails = emails;
+    });
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+
+    // Stop listening to maildev server
+    mailHelper.stopListener(mailListener);
   });
 
-  describe('PRE-TEST: Create order in FO', async () => {
-    it('should go to FO page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+  // Pre-condition: Enable merchandise returns
+  enableMerchandiseReturns(`${baseContext}_preTest_1`);
 
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+  // Pre-condition: Create order
+  createOrderByCustomerTest(orderData, `${baseContext}_preTest_2`);
 
-      const isHomePage = await homePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
-    });
+  // Pre-Condition : Setup config SMTP
+  setupSmtpConfigTest(`${baseContext}_preTest_3`);
 
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
-
-      await homePage.goToLoginPage(page);
-
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
-    });
-
-    it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
-
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
-
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
-    });
-
-    it('should add the first product to the cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
-
-      await foLoginPage.goToHomePage(page);
-
-      // Add first product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 1, 2);
-      await homePage.proceedToCheckout(page);
-
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.be.equal(2);
-    });
-
-    it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
-
-      await cartPage.clickOnProceedToCheckout(page);
-
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
-    });
-
-    it('should go to payment step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
-
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
-    });
-
-    it('should choose payment method and confirm the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
-
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-    });
-  });
-
-  describe('PRE-TEST: Enable merchandise returns', async () => {
+  describe('PRE-TEST: Change order status to \'Shipped\'', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.merchandiseReturnsLink,
-      );
-      await merchandiseReturnsPage.closeSfToolBar(page);
-
-      const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
-    });
-
-    it('should enable merchandise returns', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'enableReturns', baseContext);
-
-      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, true);
-      expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
-    });
-  });
-
-  describe('PRE-TEST: Change order status to \'Shipped\'', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -209,6 +160,16 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
 
       const isHomePage = await homePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
+    });
+
+    it('should login in FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
+
+      await homePage.goToLoginPage(page);
+      await foLoginPage.customerLogin(page, CustomerData.johnDoe);
+
+      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to account page', async function () {
@@ -300,6 +261,23 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
 
           const textResult = await editMerchandiseReturnsPage.setStatus(page, test.args.status, true);
           expect(textResult).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
+        });
+
+        it('should check the confirmation email subject', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'checkConfirmationEmail', baseContext);
+
+          numberOfEmails = allEmails.length;
+          expect(allEmails[numberOfEmails - 1].subject)
+            .to.equal(`[${global.INSTALL.SHOP_NAME}] Your order return status has changed`);
+        });
+
+        it('should check the confirmation email text', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'checkConfirmationEmailText', baseContext);
+
+          numberOfEmails = allEmails.length;
+          expect(allEmails[numberOfEmails - 1].text)
+            .to.contains('We have updated the progress on your return')
+            .and.to.contains(`the new status is: "${test.args.status}".`);
         });
 
         if (test.args.status === OrderReturnStatuses.waitingForPackage.name) {
@@ -400,12 +378,9 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
     });
   });
 
-  describe('POST-TEST: Disable merchandise returns', async () => {
-    it('should disable merchandise returns', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableReturns', baseContext);
+  // Post-condition: Disable merchandise returns
+  disableMerchandiseReturns(`${baseContext}_postTest_1`);
 
-      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, false);
-      expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
-    });
-  });
+  // Post-Condition : Reset SMTP config
+  resetSmtpConfigTest(`${baseContext}_postTest_2`);
 });
