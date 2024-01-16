@@ -16,6 +16,8 @@ class ProductsBlock extends ViewOrderBasePage {
 
   private readonly orderProductsTable: string;
 
+  private readonly generateVoucherCheckbox: string;
+
   private readonly returnProductButton: string;
 
   private readonly returnQuantityInput: (row: number) => string;
@@ -152,6 +154,7 @@ class ProductsBlock extends ViewOrderBasePage {
     // Return block
     this.returnQuantityInput = (row: number) => `[id*=cancel_product_quantity]:nth-child(${row})`;
     this.returnQuantityCheckbox = (row: number) => `tr:nth-child(${row}) div.cancel-product-selector i`;
+    this.generateVoucherCheckbox = '#orderProductsPanel div.refund-voucher i';
     this.returnProductButton = '#cancel_product_save';
 
     // Products table
@@ -749,8 +752,8 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param toEnable {boolean} True if we need to enable generate voucher
    * @returns {Promise<void>}
    */
-  async checkGenerateVoucher(page: Page, toEnable:boolean): Promise<void> {
-    await this.setChecked(page, '#orderProductsPanel div.refund-voucher i', toEnable, true);
+  async checkGenerateVoucher(page: Page, toEnable: boolean): Promise<void> {
+    await this.setChecked(page, this.generateVoucherCheckbox, toEnable, true);
   }
 
   /**
