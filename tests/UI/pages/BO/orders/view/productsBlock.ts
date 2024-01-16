@@ -571,7 +571,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @returns {Promise<boolean>}
    */
   async isRefundedColumnVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.refundProductColumn);
+    return this.elementVisible(page, this.refundProductColumn, 2000);
   }
 
   /**
@@ -741,6 +741,16 @@ class ProductsBlock extends ViewOrderBasePage {
    */
   async checkReturnedQuantity(page: Page, row: number = 1): Promise<void> {
     await this.setChecked(page, this.returnQuantityCheckbox(row), true, true);
+  }
+
+  /**
+   * Check generate voucher
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable generate voucher
+   * @returns {Promise<void>}
+   */
+  async checkGenerateVoucher(page: Page, toEnable:boolean): Promise<void> {
+    await this.setChecked(page, '#orderProductsPanel div.refund-voucher i', toEnable, true);
   }
 
   /**
