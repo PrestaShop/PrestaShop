@@ -170,7 +170,7 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
       expect(isColumnVisible).to.eq(true);
     });
 
-    it('should check the confirmation email', async function () {
+    it('should check the voucher email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkConfirmationEmail', baseContext);
 
       const orderReference = await orderPageTabListBlock.getOrderReference(page);
