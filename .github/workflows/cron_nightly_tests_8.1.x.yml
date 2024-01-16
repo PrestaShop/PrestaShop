@@ -17,4 +17,3 @@ jobs:
     secrets:
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
       GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
-      API_NIGHTLY_IMPORT_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}
