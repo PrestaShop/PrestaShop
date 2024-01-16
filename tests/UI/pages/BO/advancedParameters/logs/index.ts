@@ -43,6 +43,8 @@ class Logs extends BOBasePage {
 
   private readonly paginationPreviousLink: string;
 
+  private readonly severityLevelSelect: string;
+
   private readonly sendEmailToInput: string;
 
   private readonly saveButton: string;
@@ -82,6 +84,7 @@ class Logs extends BOBasePage {
     this.paginationPreviousLink = `${this.gridPanel} [data-role='previous-page-link']`;
 
     // Logs by email selectors
+    this.severityLevelSelect = '#form_logs_by_email';
     this.sendEmailToInput = '#form_logs_email_receivers';
     this.saveButton = '#main-div div.card-footer button';
   }
@@ -282,6 +285,19 @@ class Logs extends BOBasePage {
   }
 
   // Methods for logs by email form
+
+  /**
+   * Set minimum severity level
+   * @param page {Page} Browser tab
+   * @param severityLevel {string} Severity to select
+   * @returns {Promise<string>}
+   */
+  async setMinimumSeverityLevel(page: Page, severityLevel: string): Promise<string> {
+    await this.selectByVisibleText(page, this.severityLevelSelect, severityLevel);
+    await this.waitForSelectorAndClick(page, this.saveButton);
+
+    return this.getAlertBlockContent(page);
+  }
 
   /**
    * Set email
