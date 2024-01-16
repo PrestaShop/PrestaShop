@@ -8,6 +8,7 @@ import mailHelper from '@utils/mailHelper';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {disableMerchandiseReturns, enableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
+import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import pages
@@ -39,7 +40,6 @@ import type {BrowserContext, Page} from 'playwright';
 
 import MailDevEmail from '@data/types/maildevEmail';
 import MailDev from 'maildev';
-import {resetSmtpConfigTest, setupSmtpConfigTest} from "@commonTests/BO/advancedParameters/smtp";
 
 const baseContext: string = 'functional_BO_customerService_merchandiseReturns_updateStatus';
 
