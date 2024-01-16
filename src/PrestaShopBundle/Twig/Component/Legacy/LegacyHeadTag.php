@@ -28,31 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component\Legacy;
 
-use AdminController;
 use PrestaShopBundle\Twig\Component\HeadTag;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/LegacyLayout/head_tag.html.twig')]
 class LegacyHeadTag extends HeadTag
 {
-    /**
-     * Legacy controller build the meta title differently, so we match this for backward compatibility and so that the UI
-     * tests can run with their expected values.
-     *
-     * @return string
-     */
-    public function getMetaTitle(): string
+    use LegacyControllerTrait;
+
+    public function mount(string $metaTitle = ''): void
     {
-        $legacyMetaTitle = $this->getLegacyController()->getMetaTitle();
-        if (empty($legacyMetaTitle)) {
-            return parent::getMetaTitle();
-        }
-
-        if (is_array($legacyMetaTitle)) {
-            $legacyMetaTitle = strip_tags(implode(' ' . $this->configuration->get('PS_NAVIGATION_PIPE') . ' ', $legacyMetaTitle));
-        }
-
-        return $legacyMetaTitle;
+        parent::mount($this->getLegacyMetaTitle());
     }
 
     public function getControllerName(): string
@@ -81,16 +67,27 @@ class LegacyHeadTag extends HeadTag
     }
 
     /**
-     * For legacy pages rendered with the symfony layout we don't use the LegacyControllerContext which purpose is to replace
-     * the legacy controller for backward compatibility. In this case a real legacy controller is already accessible via the
-     * legacy context and should be preferred.
+     * Legacy controller builds the meta title differently, so we match this for backward compatibility and so that the UI
+     * tests can run with their expected values.
      *
-     * Its data, and especially the CSS, JS files and JS definitions are more likely to be up-to-date.
-     *
-     * @return AdminController
+     * @return string
      */
-    protected function getLegacyController(): AdminController
+    protected function getLegacyMetaTitle(): string
     {
-        return $this->context->getContext()->controller;
+        $legacyMetaTitle = $this->getLegacyController()->getMetaTitle();
+        if (empty($legacyMetaTitle)) {
+            $breadcrumbs = $this->menuBuilder->getBreadcrumbLinks();
+            if (empty($breadcrumbs)) {
+                return '';
+            } else {
+                return $breadcrumbs['tab']->name;
+            }
+        }
+
+        if (is_array($legacyMetaTitle)) {
+            $legacyMetaTitle = strip_tags(implode(' ' . $this->configuration->get('PS_NAVIGATION_PIPE') . ' ', $legacyMetaTitle));
+        }
+
+        return $legacyMetaTitle;
     }
 }
