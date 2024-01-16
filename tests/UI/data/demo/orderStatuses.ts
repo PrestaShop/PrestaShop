@@ -49,6 +49,14 @@ export default {
     invoiceOn: false,
     emailTemplate: 'order_canceled',
   }),
+  refunded: new OrderStatusData({
+    id: 7,
+    name: 'Refunded',
+    sendEmailOn: true,
+    deliveryOn: false,
+    invoiceOn: true,
+    emailTemplate: 'refund',
+  }),
   paymentError: new OrderStatusData({
     id: 8,
     name: 'Payment error',
