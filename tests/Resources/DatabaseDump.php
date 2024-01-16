@@ -135,8 +135,8 @@ class DatabaseDump
     {
         $this->checkDumpFile();
 
-        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
-        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+        $restoreCommand = $this->buildMySQLCommand([$this->databaseName]);
+        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2>&1';
         $this->exec($restoreCommand);
 
         // Clean EntityManager cache
@@ -163,8 +163,8 @@ class DatabaseDump
         }
 
         $dumpFile = $this->getTableDumpPath($tableName);
-        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
-        $restoreCommand .= ' < ' . escapeshellarg($dumpFile) . ' 2> /dev/null';
+        $restoreCommand = $this->buildMySQLCommand([$this->databaseName]);
+        $restoreCommand .= ' < ' . escapeshellarg($dumpFile) . ' 2>&1';
         $this->exec($restoreCommand);
     }
 
@@ -205,15 +205,40 @@ class DatabaseDump
     /**
      * Wrapper to easily build mysql commands: sets password, port, user.
      *
-     * @param string $executable
      * @param array $arguments
      *
      * @return string
      */
-    private function buildMySQLCommand($executable, array $arguments = []): string
+    private function buildMySQLCommand(array $arguments = []): string
+    {
+        $parts = array_merge($this->getDefaultParameters('mysql'), array_map('escapeshellarg', $arguments));
+
+        return implode(' ', $parts);
+    }
+
+    /**
+     * Wrapper to easily build mysql commands: sets password, port, user.
+     *
+     * @param array $arguments
+     *
+     * @return string
+     */
+    private function buildMySQLCommandDumpFile(string $dumpfile, array $arguments = []): string
+    {
+        $parts = array_merge($this->getDefaultParameters('mysqldump'), ['-r', escapeshellarg($dumpfile)]);
+
+        $parts = array_merge($parts, array_map('escapeshellarg', $arguments));
+
+        return implode(' ', $parts);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getDefaultParameters(string $executable): array
     {
         $parts = [
-            escapeshellarg($executable),
+            $executable,
             '-u', escapeshellarg($this->user),
             '-P', escapeshellarg($this->port),
             '-h', escapeshellarg($this->host),
@@ -223,9 +248,7 @@ class DatabaseDump
             $parts[] = '-p' . escapeshellarg($this->password);
         }
 
-        $parts = array_merge($parts, array_map('escapeshellarg', $arguments));
-
-        return implode(' ', $parts);
+        return $parts;
     }
 
     /**
@@ -244,7 +267,7 @@ class DatabaseDump
         exec($command, $output, $ret);
 
         if ($ret !== 0) {
-            throw new Exception(sprintf('Unable to exec command: `%s`, missing a binary?', $command));
+            throw new Exception(sprintf('Unable to exec command: `%s`, output : %s', $command, implode($output)));
         }
 
         return $output;
@@ -255,8 +278,8 @@ class DatabaseDump
      */
     private function dump(): void
     {
-        $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
-        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+        $dumpCommand = $this->buildMySQLCommandDumpFile($this->dumpFile, [$this->databaseName, '--complete-insert']);
+        $dumpCommand .= ' 2>&1';
         $this->exec($dumpCommand);
     }
 
@@ -271,9 +294,9 @@ class DatabaseDump
 
     private function dumpTable(string $table): void
     {
-        $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName, $table]);
         $tableDumpFile = $this->getTableDumpPath($table);
-        $dumpCommand .= ' > ' . escapeshellarg($tableDumpFile) . ' 2> /dev/null';
+        $dumpCommand = $this->buildMySQLCommandDumpFile($tableDumpFile, [$this->databaseName, $table, '--complete-insert']);
+        $dumpCommand .= ' 2>&1';
         $this->exec($dumpCommand);
 
         $checksum = $this->getTableChecksum($table);
