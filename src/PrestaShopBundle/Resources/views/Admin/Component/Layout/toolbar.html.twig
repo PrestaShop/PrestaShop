@@ -59,22 +59,28 @@
               {% if k != 'back' and k != 'modules-list' %}
                 {#TODO: REFACTOR ALL THIS THINGS#}
                 <a
-                  class="btn {% if btn.class is defined and btn.class %}{{ btn.class|escape }}{% else %}btn-primary{% endif %}{% if btn.target is defined and btn.target %} _blank{% endif %}{% if btn.disabled is defined and btn.disabled %} disabled auto-pointer-events{% endif %} pointer"{% if btn.href is defined %}
                   id="page-header-desc-{{ table|default('configuration') }}-{% if btn.imgclass is defined %}{{ btn.imgclass|escape }}{% else %}{{ k }}{% endif %}"
-                href="{{ btn.href|escape }}"{% endif %}
-                  title="{% if btn.help is defined %}{{ btn.help }}{% else %}{{ btn.desc|escape }}{% endif %}"{% if btn.js is defined and btn.js %}
-                  onclick="{{ btn.js }}" {% endif %}{% if btn.modal_target is defined and btn.modal_target %}
-                  data-target="{{ btn.modal_target }}"
-                  data-toggle="modal"{% endif %}{% if btn.help is defined %}
-                  data-toggle="pstooltip"
-                  data-placement="bottom"{% endif %}
+                  class="btn {% if btn.class is defined and btn.class %}{{ btn.class|escape }}{% else %}btn-primary{% endif %}{% if btn.target is defined and btn.target %} _blank{% endif %}{% if btn.disabled is defined and btn.disabled %} disabled auto-pointer-events{% endif %} pointer"
+                  {% if btn.href is defined %}
+                    href="{{ btn.href|escape }}"
+                  {% endif %}
+                  title="{% if btn.help is defined %}{{ btn.help }}{% else %}{{ btn.desc|escape }}{% endif %}"
+                  {% if btn.js is defined and btn.js %}onclick="{{ btn.js }}" {% endif %}
+                  {% if btn.modal_target is defined and btn.modal_target %}
+                    data-target="{{ btn.modal_target }}"
+                    data-toggle="modal"
+                  {% endif %}
+                  {% if btn.help is defined %}
+                    data-toggle="pstooltip"
+                    data-placement="bottom"
+                  {% endif %}
                   {% if btn.data_attributes is defined and btn.data_attributes %}
                     {% for attribute_name, attribute_value in btn.data_attributes %}
                       data-{{ attribute_name }}="{{ attribute_value }}"
                     {% endfor %}
                   {% endif %}
                 >
-                  {% if btn.icon is not empty %}<i class="material-icons">{{ btn.icon }}</i>{% endif %}
+                  {% if btn.icon is defined and btn.icon is not empty %}<i class="material-icons">{{ btn.icon }}</i>{% endif %}
                   {{ btn.desc|escape }}
                 </a>
               {% endif %}
@@ -159,7 +165,7 @@
     </div>
   {% endif %}
 
-  {% if layoutHeaderToolbarBtn is not empty %}
+  {% if layoutHeaderToolbarBtn is defined and layoutHeaderToolbarBtn is not empty %}
     <div class="btn-floating">
       <button class="btn btn-primary collapsed" data-toggle="collapse" data-target=".btn-floating-container"
               aria-expanded="false">
@@ -183,7 +189,7 @@
                 data-placement="bottom"{% endif %}
               >
                 {{ btn.desc|escape }}
-                {% if btn.icon is not empty %}<i class="material-icons">{{ btn.icon }}</i>{% endif %}
+                {% if btn.icon is defined and btn.icon is not empty %}<i class="material-icons">{{ btn.icon }}</i>{% endif %}
               </a>
             {% endif %}
           {% endfor %}
@@ -211,4 +217,3 @@
   {% endif %}
   {{ renderhook('displayDashboardTop') }}
 </div>
-
