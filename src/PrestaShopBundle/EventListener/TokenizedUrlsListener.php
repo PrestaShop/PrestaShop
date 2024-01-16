@@ -61,7 +61,8 @@ class TokenizedUrlsListener
         }
 
         $route = $request->get('_route');
-        $uri = $request->getUri();
+        // We don't use $request->getUri() because it adds an unwanted / on urls that include index.php
+        $uri = $request->getRequestUri();
 
         /*
          * every route prefixed by '_' won't be secured
@@ -73,6 +74,7 @@ class TokenizedUrlsListener
         if (!$this->userTokenManager->isTokenValid()) {
             // Remove _token if any
             $uri = UrlCleaner::cleanUrl($uri, ['_token', 'token']);
+            $uri = $request->getSchemeAndHttpHost() . $uri;
             $response = new RedirectResponse($this->router->generate('admin_security_compromised', ['uri' => urlencode($uri)]));
             $event->setResponse($response);
         }
