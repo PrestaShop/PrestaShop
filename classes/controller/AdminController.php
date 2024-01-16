@@ -2437,6 +2437,11 @@ class AdminControllerCore extends Controller
         return $this->meta_title;
     }
 
+    public function getDisplay(): ?string
+    {
+        return $this->display;
+    }
+
     /**
      * Override to render the view page.
      *

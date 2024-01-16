@@ -30,8 +30,7 @@
 <html lang="{{ ps.isoUser }}">
 <head>
   {% block header %}
-    {% set metaTitle = meta_title is defined ? meta_title : (layoutTitle is defined ? layoutTitle : '') %}
-    {{ component('LegacyHeadTag', { metaTitle: metaTitle }) }}
+    {{ component('LegacyHeadTag') }}
   {% endblock %}
 </head>
 
@@ -124,6 +123,17 @@
 
   <div id="main">
     <div id="content" class="bootstrap{% if ps.displayedWithTabs %} with-tabs{% endif %}">
+      {# Page header toolbar #}
+      {% if showContentHeader %}
+        {{ component('LegacyToolbar') }}
+      {% endif %}
+
+      {% block content_header %}
+        {% block session_alert %}
+          {{ component('LegacySessionAlert') }}
+        {% endblock %}
+      {% endblock %}
+
       {% block content %}
         {{ legacyContent|raw }}
       {% endblock %}
@@ -135,5 +145,11 @@
       {{ renderhook('displayBackOfficeFooter', {}) }}
     </div>
   </div>
+
+  {% if modals is not empty %}
+    <div class="bootstrap">
+      {{ modals|raw }}
+    </div>
+  {% endif %}
 </body>
 </html>
