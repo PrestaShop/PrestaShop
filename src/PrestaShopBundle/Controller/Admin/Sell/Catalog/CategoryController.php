@@ -902,6 +902,6 @@ class CategoryController extends FrameworkBundleAdminController
      */
     private function requestHasSearchParameters(Request $request)
     {
-        return !empty($request->query->get(CategoryGridDefinitionFactory::GRID_ID)['filters']);
+        return !empty($request->query->all()[CategoryGridDefinitionFactory::GRID_ID]['filters']);
     }
 }
