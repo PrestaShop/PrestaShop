@@ -65,6 +65,7 @@ class SmtpConfigurationType extends TranslatorAwareType
                 'empty_data' => '',
                 'label' => $this->trans('SMTP password', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Leave blank if not applicable.', 'Admin.Advparameters.Help'),
+                /* Some browsers (for example Google Chrome) are totally ignoring "off" value, so we use "new-password" - which is working well for this purpose */
                 'attr' => [
                     'autocomplete' => 'new-password',
                 ],
