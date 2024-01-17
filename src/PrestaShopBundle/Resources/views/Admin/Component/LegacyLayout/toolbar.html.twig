@@ -96,6 +96,13 @@
                 </li>
               {% endif %}
             {% endfor %}
+
+            <li>
+              <a class="toolbar_btn btn-help" href="{{ this.helpLink }}" title="{{ 'Help'|trans({}, 'Admin.Global') }}">
+                <i class="process-icon-help"></i>
+                <div>{{ 'Help'|trans({}, 'Admin.Global') }}</div>
+              </a>
+            </li>
           </ul>
         </div>
       </div>

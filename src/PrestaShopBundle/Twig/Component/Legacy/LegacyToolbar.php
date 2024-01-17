@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Twig\Component\Legacy;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Twig\Component\Toolbar;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
@@ -43,6 +45,8 @@ class LegacyToolbar extends Toolbar
         HookDispatcherInterface $hookDispatcher,
         MenuBuilder $menuBuilder,
         protected readonly LegacyContext $context,
+        protected readonly Documentation $helpDocumentation,
+        protected readonly LanguageContext $languageContext
     ) {
         parent::__construct($hookDispatcher, $menuBuilder);
     }
@@ -65,5 +69,10 @@ class LegacyToolbar extends Toolbar
     public function getTable(): string
     {
         return $this->getLegacyController()->table;
+    }
+
+    public function getHelpLink(): string
+    {
+        return urldecode($this->helpDocumentation->generateLink($this->getLegacyController()->controller_name, $this->languageContext->getIsoCode()));
     }
 }
