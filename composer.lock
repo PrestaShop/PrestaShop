@@ -6193,23 +6193,23 @@
         },
         {
             "name": "prestashop/ps_emailalerts",
-            "version": "v2.4.2",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_emailalerts.git",
-                "reference": "fa6011032236e48c8cdbc7ba64dd340d737d75ef"
+                "reference": "62fd97e7c9dcc21b5a9c547dc484ac1d3c191bfd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailalerts/zipball/fa6011032236e48c8cdbc7ba64dd340d737d75ef",
-                "reference": "fa6011032236e48c8cdbc7ba64dd340d737d75ef",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailalerts/zipball/62fd97e7c9dcc21b5a9c547dc484ac1d3c191bfd",
+                "reference": "62fd97e7c9dcc21b5a9c547dc484ac1d3c191bfd",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6"
+                "php": ">=7.1.3"
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "^3.16"
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
@@ -6225,9 +6225,9 @@
             "description": "PrestaShop module ps_emailalerts",
             "homepage": "https://github.com/PrestaShop/ps_emailalerts",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_emailalerts/tree/v2.4.2"
+                "source": "https://github.com/PrestaShop/ps_emailalerts/tree/v3.0.0"
             },
-            "time": "2023-09-02T00:56:29+00:00"
+            "time": "2024-01-10T11:22:50+00:00"
         },
         {
             "name": "prestashop/ps_emailsubscription",
