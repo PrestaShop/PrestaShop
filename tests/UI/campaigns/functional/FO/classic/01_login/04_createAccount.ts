@@ -25,7 +25,8 @@ const baseContext: string = 'functional_FO_classic_login_createAccount';
 describe('FO - Login : Create account', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let newMail: MailDevEmail;
+  let allEmails: MailDevEmail[];
+  let numberOfEmails: number;
   let mailListener: MailDev;
 
   const customerData: CustomerData = new CustomerData();
@@ -37,9 +38,11 @@ describe('FO - Login : Create account', async () => {
 
     mailListener = mailHelper.createMailListener();
     mailHelper.startListener(mailListener);
-    // Handle every new email
-    mailListener.on('new', (email: MailDevEmail) => {
-      newMail = email;
+
+    // get all emails
+    // @ts-ignore
+    mailListener.getAllEmail((err: Error, emails: MailDevEmail[]) => {
+      allEmails = emails;
     });
   });
 
@@ -49,7 +52,7 @@ describe('FO - Login : Create account', async () => {
   });
 
   // Pre-Condition : Setup config SMTP
-  setupSmtpConfigTest(`${baseContext}_preTest_1`);
+  setupSmtpConfigTest(`${baseContext}_preTest`);
 
   describe('FO - Login : Create account', async () => {
     it('should open the shop page', async function () {
@@ -98,7 +101,17 @@ describe('FO - Login : Create account', async () => {
     it('should check if welcome mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWelcomeMail', baseContext);
 
-      expect(newMail.subject).to.contains('Welcome!');
+      numberOfEmails = allEmails.length;
+      expect(numberOfEmails).to.equal(1);
+      expect(allEmails[numberOfEmails - 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Welcome!`);
+    });
+
+    it('should check the content of the email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEmailText', baseContext);
+
+      expect(allEmails[numberOfEmails - 1].text).to.contains(`Hi ${customerData.firstName} ${customerData.lastName}`)
+        .and.to.contains(`Thank you for creating a customer account at ${global.INSTALL.SHOP_NAME}.`)
+        .and.to.contains(`Email address: ${customerData.email}`);
     });
 
     it('should sign out from FO', async function () {
