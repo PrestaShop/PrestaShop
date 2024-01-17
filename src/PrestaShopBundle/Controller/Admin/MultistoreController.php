@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
 use PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -56,6 +57,7 @@ class MultistoreController extends FrameworkBundleAdminController
         private readonly ColorBrightnessCalculator $colorBrightnessCalculator,
         private readonly CustomizedConfigurationChecker $customizedConfigurationChecker,
         private readonly LegacyContext $legacyContext,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -271,7 +273,7 @@ class MultistoreController extends FrameworkBundleAdminController
         } else {
             // use ShopGroup object as the container for "all shops" context so that it can be used transparently in twig
             $currentContext = new ShopGroup();
-            $currentContext->setName($this->trans('All stores', 'Admin.Global'));
+            $currentContext->setName($this->translator->trans('All stores', [], 'Admin.Global'));
             $currentContext->setColor('');
         }
 
