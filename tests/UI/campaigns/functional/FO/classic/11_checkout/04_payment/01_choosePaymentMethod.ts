@@ -135,7 +135,7 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
       });
 
       it('should check if order and payment confirmation mails are in mailbox', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentMail', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `checkPaymentMail${index}`, baseContext);
 
         numberOfEmails = allEmails.length;
         expect(allEmails[numberOfEmails - 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Order confirmation`);
