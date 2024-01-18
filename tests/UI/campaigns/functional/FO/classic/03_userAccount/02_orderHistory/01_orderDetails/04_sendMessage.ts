@@ -1,9 +1,11 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import pages
 // Import BO pages
@@ -30,35 +32,62 @@ import Products from '@data/demo/products';
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 import type {BrowserContext, Page} from 'playwright';
+import MailDevEmail from '@data/types/maildevEmail';
+import MailDev from 'maildev';
 
 const baseContext: string = 'functional_FO_classic_userAccount_orderHistory_orderDetails_sendMessage';
 
 /*
-Go to FO and connect to an account
-Go to account page and Order history and details
-Select an order with an invoice
-Click on details
-Select a product and write a message
-Click to send
-Go to BO, Customers service, customers service, the message is displayed
+Pre-condition:
+- Setup SMTP config
+Scenario:
+- Go to FO and connect to an account
+- Go to account page and Order history and details
+- Select an order with an invoice
+- Click on details
+- Select a product and write a message
+- Click to send
+- Check received email
+- Go to BO, Customers service, customers service, the message is displayed
+Post-condition:
+- Reset SMTP config
  */
 
 describe('FO - Account : Send a message with an ordered product', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+  let allEmails: MailDevEmail[];
+  let numberOfEmails: number;
+  let mailListener: MailDev;
 
   const messageSend: string = faker.lorem.sentence().substring(0, 35).trim();
   const messageOption: string = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes[0].values[0]} `
     + `- Color: ${Products.demo_1.attributes[1].values[0]})`;
 
+  // Pre-Condition : Setup config SMTP
+  setupSmtpConfigTest(`${baseContext}_preTest`);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Start listening to maildev server
+    mailListener = mailHelper.createMailListener();
+    mailHelper.startListener(mailListener);
+
+    // get all emails
+    // @ts-ignore
+    mailListener.getAllEmail((err: Error, emails: MailDevEmail[]) => {
+      allEmails = emails;
+    });
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+
+    // Stop listening to maildev server
+    mailHelper.stopListener(mailListener);
   });
 
   describe('Create order in FO', async () => {
@@ -206,13 +235,23 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
-    it('Go to order details ', async function () {
+    it('should go to order details and add a comment', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
 
       await orderHistoryPage.goToDetailsPage(page);
 
       const successMessageText = await orderDetails.addAMessage(page, messageOption, messageSend);
       expect(successMessageText).to.equal(orderDetails.successMessageText);
+    });
+
+    it('should check the received email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEmail', baseContext);
+
+      numberOfEmails = allEmails.length;
+      expect(allEmails[numberOfEmails - 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Message from a customer`);
+      expect(allEmails[numberOfEmails - 1].text).to.contains('You have received a new message')
+        .and.to.contains(`Customer: ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName} (${Customers.johnDoe.email})`)
+        .and.to.contains(messageSend);
     });
   });
 
@@ -269,4 +308,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
     });
   });
+
+  // Post-Condition : Reset SMTP config
+  resetSmtpConfigTest(`${baseContext}_postTest`);
 });
