@@ -10,10 +10,11 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 // Import pages
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import emailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
+import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/home';
+import {emailSubscriptionPage} from '@pages/FO/emailSubscription';
 
 // Import data
 import Modules from '@data/demo/modules';
@@ -31,7 +32,11 @@ Pre-condition:
 Scenario
 - Enable send a confirmation email after registration
 - Go to FO and subscribe to newsletter
-- Check email
+- Check confirmation email
+- Enable send a verification email
+- Go to FO and subscribe to newsletter
+- Check verification email and click on the link
+- Check validation message and confirmation email
 - Disable send a confirmation email after registration
 - Go to FO and subscribe to newsletter
 - Check no received email
@@ -46,7 +51,7 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
   let mailListener: MailDev;
 
   // Pre-Condition : Setup config SMTP
-  setupSmtpConfigTest(`${baseContext}_preTest`);
+  setupSmtpConfigTest(baseContext);
 
   // before and after functions
   before(async function () {
@@ -102,15 +107,15 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
 
       await moduleManager.goToConfigurationPage(page, Modules.psEmailSubscription.tag);
 
-      const pageTitle = await emailSubscriptionPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailSubscriptionPage.pageTitle);
+      const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
+      expect(pageTitle).to.equal(psEmailSubscriptionPage.pageTitle);
     });
 
     it('should enable \'Send confirmation email\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableNewOrder', baseContext);
 
-      const successMessage = await emailSubscriptionPage.setSendConfirmationEmail(page, true);
-      expect(successMessage).to.contains(emailSubscriptionPage.updateSettingsSuccessMessage);
+      const successMessage = await psEmailSubscriptionPage.setSendConfirmationEmail(page, true);
+      expect(successMessage).to.contains(psEmailSubscriptionPage.updateSettingsSuccessMessage);
     });
   });
 
@@ -118,7 +123,7 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOToSubscribeToNewsletter', baseContext);
 
-      page = await emailSubscriptionPage.viewMyShop(page);
+      page = await psEmailSubscriptionPage.viewMyShop(page);
 
       const result = await foHomePage.isHomePage(page);
       expect(result).to.equal(true);
@@ -139,29 +144,29 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
     });
   });
 
-  describe(`BO: case 2 - Disable 'Send confirmation email' in the module '${Modules.psEmailSubscription.name}'`, async () => {
+  describe(`Enable 'Send verification email' in the module '${Modules.psEmailSubscription.name}'`, async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       page = await foHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await emailSubscriptionPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailSubscriptionPage.pageTitle);
+      const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
+      expect(pageTitle).to.equal(psEmailSubscriptionPage.pageTitle);
     });
 
-    it('should disable \'Send confirmation email\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableNewOrder', baseContext);
+    it('should enable \'Send verification email\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'enableConfirmationEmail', baseContext);
 
-      const successMessage = await emailSubscriptionPage.setSendConfirmationEmail(page, false);
-      expect(successMessage).to.contains(emailSubscriptionPage.updateSettingsSuccessMessage);
+      const successMessage = await psEmailSubscriptionPage.setSendVerificationEmail(page, true);
+      expect(successMessage).to.contains(psEmailSubscriptionPage.updateSettingsSuccessMessage);
     });
   });
 
-  describe('Go to FO to subscribe to the newsletter and check no confirmation email is sent', async () => {
+  describe('Go to FO to subscribe to the newsletter and check validation email', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOToSubscribeToNewsletter2', baseContext);
 
-      page = await emailSubscriptionPage.viewMyShop(page);
+      page = await psEmailSubscriptionPage.viewMyShop(page);
 
       const result = await foHomePage.isHomePage(page);
       expect(result).to.equal(true);
@@ -171,6 +176,77 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeToNewsletter2', baseContext);
 
       const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, 'hola@prestashop.com');
+      expect(newsletterSubscribeAlertMessage).to.contains('A verification email has been sent. Please check your inbox');
+    });
+
+    it('should check verification email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkVerificationEmail', baseContext);
+
+      const number = allEmails.length;
+      expect(number).to.equal(numberOfEmails + 1);
+      expect(allEmails[number - 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Email verification`);
+    });
+
+    it('should click on the link provided in the email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnProvidedLink', baseContext);
+
+      const link: string = allEmails[numberOfEmails].text.match(/https?:\/\/.*emailsubscription[^\s]*/)![0];
+      await foHomePage.goTo(page, link);
+    });
+
+    it('should check the success message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkSuccessMessage', baseContext);
+
+      const successMessage = await emailSubscriptionPage.getSuccessMessage(page);
+      expect(successMessage).to.equal(emailSubscriptionPage.emailRegistrationSuccessMessage);
+    });
+
+    it('should check the confirmation email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkConfirmationEmail2', baseContext);
+
+      expect(allEmails[numberOfEmails + 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Newsletter confirmation`);
+    });
+  });
+
+  describe(`BO: case 2 - Disable all options in the module '${Modules.psEmailSubscription.name}'`, async () => {
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
+
+      page = await foHomePage.closePage(browserContext, page, 0);
+
+      const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
+      expect(pageTitle).to.equal(psEmailSubscriptionPage.pageTitle);
+    });
+
+    it('should disable \'Send confirmation email\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableSendConfirmationEmail', baseContext);
+
+      const successMessage = await psEmailSubscriptionPage.setSendConfirmationEmail(page, false);
+      expect(successMessage).to.contains(psEmailSubscriptionPage.updateSettingsSuccessMessage);
+    });
+
+    it('should disable \'Send verification email\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableSendVerificationEmail', baseContext);
+
+      const successMessage = await psEmailSubscriptionPage.setSendVerificationEmail(page, false);
+      expect(successMessage).to.contains(psEmailSubscriptionPage.updateSettingsSuccessMessage);
+    });
+  });
+
+  describe('Go to FO to subscribe to the newsletter and check no confirmation email is sent', async () => {
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFOToSubscribeToNewsletter3', baseContext);
+
+      page = await psEmailSubscriptionPage.viewMyShop(page);
+
+      const result = await foHomePage.isHomePage(page);
+      expect(result).to.equal(true);
+    });
+
+    it('should subscribe to newsletter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'subscribeToNewsletter3', baseContext);
+
+      const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, 'hola3@prestashop.com');
       expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.successSubscriptionMessage);
     });
 
@@ -178,10 +254,10 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoConfirmationEmail', baseContext);
 
       const number = allEmails.length;
-      expect(number).to.equal(numberOfEmails);
+      expect(number).to.equal(numberOfEmails + 2);
     });
   });
 
   // Post-Condition : Reset SMTP config
-  resetSmtpConfigTest(`${baseContext}_postTest`);
+  resetSmtpConfigTest(baseContext);
 });
