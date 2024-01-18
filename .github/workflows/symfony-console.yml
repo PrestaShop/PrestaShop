@@ -1,0 +1,66 @@
+name: Symfony Console
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  symfony-console:
+    permissions:
+      contents: read  # for actions/checkout to fetch code
+    name: Symfony Console
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer Directory
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Composer Install
+        run: composer install --ansi --prefer-dist --no-interaction --no-progress
+
+      - name: Check bin/console can run without shop install and cache clear
+        run: |
+          ./bin/console
+          ./bin/console cache:clear --env=dev
+          ./bin/console cache:clear --env=prod
+          ./bin/console cache:clear --env=dev --no-warmup
+          ./bin/console cache:clear --env=prod --no-warmup
+
+      # Now install the shop
+      - name: Setup Environment
+        timeout-minutes: 15
+        uses: ./.github/actions/setup-env
+        with:
+          PHP_VERSION: 8.1
+          ENABLE_SSL: 'true'
+          INSTALL_AUTO: 'false'
+
+      # Retest the console after shop install
+      - name: Check bin/console and cache:clear can run after shop install
+        run: |
+          docker ps
+          docker exec prestashop_prestashop-git_1 php ./bin/console
+          docker exec prestashop_prestashop-git_1 php -d memory_limit=-1 ./bin/console cache:clear --env=dev
+          docker exec prestashop_prestashop-git_1 php -d memory_limit=-1 ./bin/console cache:clear --env=prod
+          docker exec prestashop_prestashop-git_1 php ./bin/console cache:clear --env=dev --no-warmup
+          docker exec prestashop_prestashop-git_1 php ./bin/console cache:clear --env=prod --no-warmup

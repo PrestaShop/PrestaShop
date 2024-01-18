@@ -55,6 +55,11 @@ if (!file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.yml') && !file_exists(_
 }
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
+// If this const is not defined others are likely to be absent but this one is the most likely to cause a fatal error,
+// the following initialization is going to fail, so we throw an exception early
+if (!defined('_DB_PREFIX_')) {
+    throw new PrestaShopException('Constant _DB_PREFIX_ not defined');
+}
 
 if (defined('_PS_CREATION_DATE_')) {
     $creationDate = _PS_CREATION_DATE_;
@@ -116,12 +121,25 @@ $context = Context::getContext();
 try {
     $context->shop = Shop::initialize();
 } catch (PrestaShopException $e) {
-    $e->displayMessage();
+    // In CLI command the Shop initialization is bound to fail when the shop is not installed, but we don't want to stop
+    // the process or this will break any Symfony command even a simple ./bin/console)
+    $e->displayMessage(!ToolsCore::isPHPCLI());
 }
-define('_THEME_NAME_', $context->shop->theme->getName());
-define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 
-define('__PS_BASE_URI__', $context->shop->getBaseURI());
+if ($context->shop) {
+    define('__PS_BASE_URI__', $context->shop->getBaseURI());
+} else {
+    define('__PS_BASE_URI__', '/');
+}
+
+if ($context->shop && $context->shop->theme) {
+    define('_THEME_NAME_', $context->shop->theme->getName());
+    define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
+} else {
+    // Not ideal fallback but on install when nothing else is available it does the job, better than not having these const at all
+    define('_THEME_NAME_', 'classic');
+    define('_PARENT_THEME_NAME_', '');
+}
 
 /* Include all defines related to base uri and theme name */
 require_once __DIR__ . '/defines_uri.inc.php';

@@ -14,10 +14,6 @@ services:
   PrestaShopBundle\Twig\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Twig/*"
 
-  PrestaShopBundle\Twig\LocaleExtension:
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
-
   PrestaShopBundle\Twig\Locator\ModuleTemplateLoader:
     arguments:
       - 'PrestaShop': ''
@@ -57,12 +53,7 @@ services:
       - { name: twig.extension }
 
   PrestaShopBundle\Twig\Extension\LocalizationExtension:
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
-      - "@prestashop.core.localization.locale.repository"
-      - '@=service("prestashop.adapter.legacy.context").getContext().language'
-      - '@=service("prestashop.adapter.legacy.context").getContext().currency'
+    autowire: true
 
   PrestaShopBundle\Twig\Extension\MultistoreComponentsExtension:
     arguments:

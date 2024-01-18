@@ -27,7 +27,6 @@ services:
       - '%prestashop.core.grid.definition.service_ids%'
       - '%prestashop.hook.option_form_hook_names%'
       - '%prestashop.core.form.identifiable_object.form_types%'
-      - '%kernel.project_dir%/install-dev/upgrade/sql/'
     tags:
       - 'console.command'
 

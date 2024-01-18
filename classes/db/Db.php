@@ -214,7 +214,7 @@ abstract class DbCore
         static $id = 0;
 
         // This MUST not be declared with the class members because some defines (like _DB_SERVER_) may not exist yet (the constructor can be called directly with params)
-        if (!self::$_servers) {
+        if (!self::$_servers && defined('_DB_SERVER_') && defined('_DB_USER_') && defined('_DB_PASSWD_') && defined('_DB_NAME_')) {
             self::$_servers = [
                 ['server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_], /* MySQL Master server */
             ];
@@ -233,6 +233,10 @@ abstract class DbCore
         }
 
         if (!isset(self::$instance[$id_server])) {
+            if (!isset(self::$_servers[$id_server])) {
+                throw new PrestaShopException('Database server configuration not found');
+            }
+
             $class = Db::getClass();
             self::$instance[$id_server] = new $class(
                 self::$_servers[$id_server]['server'],

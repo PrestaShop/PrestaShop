@@ -26,8 +26,29 @@
 
 use PrestaShopBundle\Install\Upgrade;
 
-$parametersFilepath = __DIR__  . '/parameters.php';
-$parameters = require $parametersFilepath;
+$parametersFilepath = __DIR__ . '/parameters.php';
+if (file_exists($parametersFilepath)) {
+    $parameters = require $parametersFilepath;
+} else {
+    // When no parameters file is present (before install) we define null values for mandatory parameters to avoid breaking the CI
+    $parameters = [
+        'parameters' => [
+            'secret' => 'secret',
+            'locale' => 'en',
+            'database_host' => '',
+            'database_port' => null,
+            'database_name' => '',
+            'database_user' => '',
+            'database_password' => '',
+            'database_prefix' => 'ps_',
+            'api_private_key' => null,
+            'api_public_key' => null,
+            'new_cookie_key' => null,
+            'ps_cache_enable' => null,
+            'ps_caching' => null,
+        ],
+    ];
+}
 
 if (!array_key_exists('parameters', $parameters)) {
     throw new \Exception('Missing "parameters" key in "parameters.php" configuration file');
@@ -55,7 +76,7 @@ if (isset($container) && $container instanceof \Symfony\Component\DependencyInje
     $adapters = [
         'array' => 'cache.adapter.array',
         'memcached' => 'cache.adapter.memcached',
-        'apcu' => 'cache.adapter.apcu'
+        'apcu' => 'cache.adapter.apcu',
     ];
 
     if (isset(

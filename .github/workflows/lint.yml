@@ -79,8 +79,8 @@ jobs:
       - name: Run Lint Yaml on `app`
         run: php bin/console lint:yaml app
 
-      - name: Run Lint Yaml on `src`
-        run: php bin/console lint:yaml src
+      - name: Run Lint Yaml on `src` tags are allowed
+        run: php bin/console lint:yaml src --parse-tags
 
       - name: Run Lint Yaml on `.t9n.yml`
         run: php bin/console lint:yaml .t9n.yml
