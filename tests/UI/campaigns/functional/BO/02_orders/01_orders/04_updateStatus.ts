@@ -129,6 +129,7 @@ describe('BO - orders : Update order status', async () => {
   describe('Change orders status in BO then check it in FO', async () => {
     [
       {args: {orderStatus: OrderStatuses.canceled, email: 'Canceled'}},
+      {args: {orderStatus: OrderStatuses.refunded, email: 'Refunded'}},
       {args: {orderStatus: OrderStatuses.onBackorderNotPaid, email: 'On backorder (not paid)'}},
       {args: {orderStatus: OrderStatuses.onBackorderPaid, email: 'On backorder (paid)'}},
       {args: {orderStatus: OrderStatuses.paymentAccepted, email: 'Payment accepted'}},
