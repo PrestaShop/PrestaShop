@@ -46,6 +46,19 @@ final class FolderThemeScanner
     private $baseThemeFolder;
 
     /**
+     * @var string
+     */
+    private $moduleDirectory;
+
+    /**
+     * @param string $moduleDirectory
+     */
+    public function __construct(string $moduleDirectory)
+    {
+        $this->moduleDirectory = $moduleDirectory;
+    }
+
+    /**
      * @param string $mailThemeFolder
      *
      * @return ThemeInterface|null
@@ -190,6 +203,14 @@ final class FolderThemeScanner
 
     private function getTemplatePath(SplFileInfo $fileInfo): string
     {
-        return '@MailThemes' . substr($fileInfo->getRealPath(), strlen($this->baseThemeFolder));
+        $realPath = $fileInfo->getRealPath();
+
+        // If the template comes from a module, we use the @Modules twig path instead of @MailThemes
+        if (str_contains($realPath, $this->moduleDirectory)) {
+            // We remove the start of the file path then we append @Modules before it.
+            return '@Modules' . substr($realPath, strpos($realPath, $this->moduleDirectory) + strlen($this->moduleDirectory));
+        }
+
+        return '@MailThemes' . substr($realPath, strlen($this->baseThemeFolder));
     }
 }
