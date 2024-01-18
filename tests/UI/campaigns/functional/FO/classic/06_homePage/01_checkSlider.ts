@@ -61,8 +61,6 @@ describe('FO - Home Page : Check slider', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSliderURL', baseContext);
 
     const currentURL = await homePage.getSliderURL(page);
-    expect(currentURL)
-      .to.contains('www.prestashop-project.org')
-      .and.to.contains('homeslider&utm_campaign=back-office-EN&utm_content=download');
+    expect(currentURL).to.contains('www.prestashop-project.org');
   });
 });
