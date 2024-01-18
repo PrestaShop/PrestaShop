@@ -46,9 +46,10 @@ Post-condition:
 describe('BO - Orders - View and edit order : Return an order', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let newMail: MailDevEmail;
+  let allEmails: MailDevEmail[];
+  let numberOfEmails: number;
   let mailListener: MailDev;
-  const creditSlipMailSubject: string = 'New credit slip regarding your order';
+  const creditSlipMailSubject: string = `[${global.INSTALL.SHOP_NAME}] New credit slip regarding your order`;
 
   // New order by customer data
   const orderByCustomerData: OrderData = new OrderData({
@@ -80,9 +81,10 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
     mailListener = mailHelper.createMailListener();
     mailHelper.startListener(mailListener);
 
-    // Handle every new email
-    mailListener.on('new', (email: MailDevEmail) => {
-      newMail = email;
+    // get all emails
+    // @ts-ignore
+    mailListener.getAllEmail((err: Error, emails: MailDevEmail[]) => {
+      allEmails = emails;
     });
   });
 
@@ -143,6 +145,12 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
 
       await orderPageTabListBlock.clickOnReturnProductsButton(page);
       await orderPageProductsBlock.checkReturnedQuantity(page);
+    });
+
+    it('should check generate a voucher checkbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateVoucher', baseContext);
+
+      await orderPageProductsBlock.checkGenerateVoucher(page, true);
 
       const successMessage = await orderPageProductsBlock.clickOnReturnProducts(page);
       expect(successMessage).to.eq('The product was successfully returned.');
@@ -162,10 +170,20 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
       expect(isColumnVisible).to.eq(true);
     });
 
+    it('should check the voucher email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkConfirmationEmail', baseContext);
+
+      const orderReference = await orderPageTabListBlock.getOrderReference(page);
+
+      numberOfEmails = allEmails.length;
+      expect(allEmails[numberOfEmails - 1].subject)
+        .to.equal(`[${global.INSTALL.SHOP_NAME}] New voucher for your order #${orderReference}`);
+    });
+
     it('should check if the return product mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMailIsInMailbox', baseContext);
 
-      expect(newMail.subject).to.contains(creditSlipMailSubject);
+      expect(allEmails[numberOfEmails - 2].subject).to.contains(creditSlipMailSubject);
     });
   });
 
