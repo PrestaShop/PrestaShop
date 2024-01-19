@@ -61,6 +61,6 @@ describe('FO - Home Page : Check slider', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSliderURL', baseContext);
 
     const currentURL = await homePage.getSliderURL(page);
-    expect(currentURL).to.contains('www.prestashop-project.org');
+    await expect(currentURL).to.contains('www.prestashop-project.org');
   });
 });

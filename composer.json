@@ -87,7 +87,7 @@
         "prestashop/ps_customtext": "^4",
         "prestashop/ps_dataprivacy": "^2.0",
         "prestashop/ps_distributionapiclient": "^1.0",
-        "prestashop/ps_emailalerts": "^2.3",
+        "prestashop/ps_emailalerts": "^3",
         "prestashop/ps_emailsubscription": "^2.7",
         "prestashop/ps_facetedsearch": "^3.2.1",
         "prestashop/ps_faviconnotificationbo": "^2",
