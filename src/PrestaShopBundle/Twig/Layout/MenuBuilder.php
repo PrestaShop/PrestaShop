@@ -210,6 +210,7 @@ class MenuBuilder
                 );
 
             case str_starts_with($action, 'add'):
+            case str_starts_with($action, 'new'):
                 return new MenuLink(
                     name: $this->translator->trans('Add', [], 'Admin.Actions'),
                     icon: 'icon-plus'
@@ -244,12 +245,45 @@ class MenuBuilder
 
     private function getLegacyAction(): ?string
     {
+        // Get action from legacy parameters set on the route when we are in a Symfony page
         $legacyParameters = $this->legacyParametersConverter->getParameters(
             $this->requestStack->getMainRequest()->attributes->all(),
             $this->requestStack->getMainRequest()->query->all()
         );
 
-        return $legacyParameters['action'] ?? null;
+        return $legacyParameters['action'] ?? $this->getLegacyActionFromQuery();
+    }
+
+    private function getLegacyActionFromQuery(): ?string
+    {
+        $request = $this->requestStack->getMainRequest();
+        $controllerTable = $this->context->getContext()->controller->table;
+        $objectIdentifier = 'id_' . $controllerTable;
+        $objectId = $request->query->get($objectIdentifier);
+
+        if ($request->query->has('deleteImage')) {
+            return 'delete_image';
+        } elseif ($request->query->has('delete' . $controllerTable)) {
+            return 'delete';
+        } elseif (($request->query->has('status' . $controllerTable) || $request->query->has('status'))) {
+            return 'status';
+        } elseif ($request->query->has('position')) {
+            return 'position';
+        } elseif ($request->query->has('add' . $controllerTable)) {
+            return 'new';
+        } elseif ($request->query->has('update' . $controllerTable) && $objectId) {
+            return 'edit';
+        } elseif ($request->query->has('view' . $controllerTable)) {
+            return 'view';
+        } elseif ($request->query->has('details' . $controllerTable)) {
+            return 'details';
+        } elseif ($request->query->has('export' . $controllerTable)) {
+            return 'export';
+        } elseif ($request->query->has('action') && !empty($request->query->get('action'))) {
+            return $request->query->get('action');
+        }
+
+        return null;
     }
 
     public function getLegacyControllerClassName(): ?string

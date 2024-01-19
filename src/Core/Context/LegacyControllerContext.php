@@ -101,6 +101,8 @@ class LegacyControllerContext
      */
     public array|Traversable $page_header_toolbar_btn = [];
 
+    public $table = 'configuration';
+
     /**
      * @param ContainerInterface $container Dependency container
      * @param string $controller_name Current controller name without suffix
