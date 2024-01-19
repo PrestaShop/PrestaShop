@@ -51,11 +51,13 @@ class PathExtension extends AbstractExtension
         return [
             new TwigFunction(
                 'legacy_path',
-                [$this, 'getLegacyPath']
+                [$this, 'getLegacyPath'],
+                ['is_safe' => ['html']]
             ),
             new TwigFunction(
                 'legacy_admin_token',
-                [$this, 'getLegacyAdminToken']
+                [$this, 'getLegacyAdminToken'],
+                ['is_safe' => ['html']]
             ),
         ];
     }
