@@ -31,7 +31,6 @@ namespace PrestaShopBundle\Twig\Component;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
@@ -65,12 +64,17 @@ class QuickAccess
     /**
      * Clean current Url
      */
-    protected ?string $currentUrl = null;
+    protected ?string $currentQuickAccessLink = null;
 
     /**
      * Current url title
      */
     protected ?string $currentUrlTitle = null;
+
+    /**
+     * Current url icon
+     */
+    protected ?string $currentUrlIcon = null;
 
     /**
      * Tokenized Urls cache
@@ -109,6 +113,9 @@ class QuickAccess
                 $quick['class'] = '';
                 $quick['link'] = $context->link->getQuickLink($quick['link']);
 
+                // Verify if we are currently on this page before the link is modifed.
+                $quick['active'] = $this->isCurrentPage($quick['link']);
+
                 // If this quick access is legacy
                 preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
                 if (isset($admin_tab[1])) {
@@ -131,9 +138,6 @@ class QuickAccess
 
                 // Preparation of the link to display in component view.
                 $quick['link'] = '/' . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
-
-                // Verify if we are currently on this page.
-                $quick['active'] = $this->isCurrentPage($quick['link']);
 
                 // Add token if needed
                 $quick['link'] = $this->getTokenizedUrl($quick['link']);
@@ -159,13 +163,16 @@ class QuickAccess
     /**
      * Get current clean url.
      */
-    public function getCleanCurrentUrl(): string
+    public function getCurrentQuickAccessLink(): string
     {
-        if (null === $this->currentUrl) {
-            $this->currentUrl = rtrim(UrlCleaner::cleanUrl($this->requestStack->getMainRequest()->getRequestUri(), ['_token', 'token']), '/');
+        if (null === $this->currentQuickAccessLink) {
+            $request = $this->requestStack->getMainRequest();
+            // We don't use $request->getUri() because it adds an unwanted / on urls that include index.php
+            $uri = $request->getSchemeAndHttpHost() . $request->getRequestUri();
+            $this->currentQuickAccessLink = $this->context->getContext()->link->getQuickLink($uri);
         }
 
-        return $this->currentUrl;
+        return $this->currentQuickAccessLink;
     }
 
     /**
@@ -174,18 +181,40 @@ class QuickAccess
     public function getCurrentUrlTitle(): string
     {
         if (null === $this->currentUrlTitle) {
-            $breadcrumbLinks = $this->menuBuilder->getBreadcrumbLinks();
-            if (isset($breadcrumbLinks['tab'])) {
-                $this->currentUrlTitle = $breadcrumbLinks['tab']->name;
-                if (isset($breadcrumbLinks['action'])) {
-                    $this->currentUrlTitle .= ' - ' . $breadcrumbLinks['action']->name;
-                }
-            } else {
-                $this->currentUrlTitle = '';
-            }
+            $this->fillCurrentUrlFields();
         }
 
         return $this->currentUrlTitle;
+    }
+
+    /**
+     * Get current title
+     */
+    public function getCurrentUrlIcon(): string
+    {
+        if (null === $this->currentUrlIcon) {
+            $this->fillCurrentUrlFields();
+        }
+
+        return $this->currentUrlIcon;
+    }
+
+    protected function fillCurrentUrlFields(): void
+    {
+        $breadcrumbLinks = $this->menuBuilder->getBreadcrumbLinks();
+        if (isset($breadcrumbLinks['tab'])) {
+            $this->currentUrlTitle = $breadcrumbLinks['tab']->name;
+            if (isset($breadcrumbLinks['action'])) {
+                $this->currentUrlTitle .= ' - ' . $breadcrumbLinks['action']->name;
+            }
+        } else {
+            $this->currentUrlTitle = '';
+        }
+        if (isset($breadcrumbLinks['container'])) {
+            $this->currentUrlIcon = $breadcrumbLinks['container']->icon ?? '';
+        } else {
+            $this->currentUrlIcon = '';
+        }
     }
 
     /**
@@ -221,6 +250,20 @@ class QuickAccess
      */
     protected function isCurrentPage(string $url): bool
     {
-        return 0 === strcasecmp($this->getCleanCurrentUrl(), rtrim($url, '/'));
+        // We don't compare the urls directly because they may have some small differences like ?addcartrule and ?addcartrule=
+        // are different string but what matters is that the parameters value match
+        $parsedUrl = parse_url($url);
+        $parsedCurrentUrl = parse_url($this->getCurrentQuickAccessLink());
+
+        $parsedUrlParameters = [];
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $parsedUrlParameters);
+        }
+        $parsedCurrentUrlParameters = [];
+        if (isset($parsedCurrentUrl['query'])) {
+            parse_str($parsedCurrentUrl['query'], $parsedCurrentUrlParameters);
+        }
+
+        return $parsedUrl['path'] === $parsedCurrentUrl['path'] && $parsedUrlParameters === $parsedCurrentUrlParameters;
     }
 }

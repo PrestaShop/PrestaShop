@@ -23,59 +23,45 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 <div id="header_quick" class="component">
-  <div class="dropdown">
+  <div class="dropdown" id="quick-access-container">
     <button
       id="quick_select"
       class="btn btn-link dropdown-toggle"
       data-toggle="dropdown"
-    >
-      {{ 'Quick Access'|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">arrow_drop_down</i>
-    </button>
+    >{{ 'Quick Access'|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">arrow_drop_down</i></button>
     <ul class="dropdown-menu">
       {% for quickAccess in this.quickAccesses %}
         <li class="quick-row-link{% if quickAccess.active %} active{% endif %}">
-          <a {% if quickAccess.class is defined %}class="{{ quickAccess.class|escape('html_attr') }}"{% endif %}
-             href="{{ quickAccess.link|escape('html_attr') }}"
-             {% if quickAccess.new_window %} target="_blank"{% endif %}>
-            {{ quickAccess.name|escape('html_attr') }}</a>
+          <a {% if quickAccess.class is defined %}class="{{ quickAccess.class }}"{% endif %}
+          href="{{ quickAccess.link }}" {% if quickAccess.new_window %}target="_blank"{% endif %}
+          data-item="{{ quickAccess.name }}"
+          >
+            {{ quickAccess.name }}
+          </a>
         </li>
       {% endfor %}
+
       <li class="divider"></li>
       {% if this.currentQuickAccess %}
-        <li>
-          <a id="quick-remove-link" href="javascript:void(0);" class="ajax-quick-link" data-method="remove"
-             data-quicklink-id="{{ this.currentQuickAccess.id_quick_access }}">
-            <i class="material-icons">remove_circle</i>
-            {{ 'Remove from QuickAccess'|trans({}, 'Admin.Navigation.Header') }}
-          </a>
-        </li>
+      <li>
+        <a id="quick-remove-link" href="javascript:void(0);" class="ajax-quick-link" data-method="remove"
+           data-quicklink-id="{{ this.currentQuickAccess.id_quick_access }}">
+          <i class="material-icons">remove_circle</i>
+          {{ 'Remove from Quick Access'|trans({}, 'Admin.Navigation.Header') }}
+        </a>
+      </li>
       {% else %}
-        <li>
-          <a id="quick-add-link" href="javascript:void(0);" class="ajax-quick-link" data-method="add">
-            <i class="material-icons">add_circle</i>
-            {{ 'Add current page to QuickAccess'|trans({}, 'Admin.Navigation.Header') }}
-          </a>
-        </li>
-
-        <a id="quick-add-link"
-           class="dropdown-item js-quick-link"
-           href="#"
-           data-rand="{{ random(1, 200) }}"
-           data-method="add"
-           data-url="{{ this.cleanCurrentUrl|escape('html_attr') }}"
-           data-post-link="{{ legacy_path('AdminQuickAccesses') }}"
-           data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')|escape('html_attr')}}"
-           data-link="{{ this.currentUrlTitle|escape('html_attr') }}"
-        >
+      <li>
+        <a id="quick-add-link" href="javascript:void(0);" class="ajax-quick-link" data-method="add">
           <i class="material-icons">add_circle</i>
           {{ 'Add current page to Quick Access'|trans({}, 'Admin.Actions') }}
         </a>
-
+      </li>
       {% endif %}
       <li>
         <a id="quick-manage-link" href="{{ legacy_path('AdminQuickAccesses') }}">
-          <i class="material-icons">settings</i>
-          {{ 'Manage quick accesses'|trans({}, 'Admin.Navigation.Header') }}
+        <i class="material-icons">settings</i>
+          {{ 'Manage your quick accesses'|trans({}, 'Admin.Navigation.Header') }}
         </a>
       </li>
     </ul>
@@ -90,7 +76,7 @@
       var method = $(this).data('method');
 
       if(method == 'add')
-        var name = prompt('{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header') }}', '{{ this.currentUrlTitle|escape('html_attr') }}');
+        var name = prompt('{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header') }}', '{{ this.currentUrlTitle }}');
 
       if(method == 'add' && name || method == 'remove')
       {
@@ -98,10 +84,11 @@
           type: 'POST',
           headers: { "cache-control": "no-cache" },
           async: false,
-          url: "{{ legacy_path('AdminQuickAccesses', {'action': 'GetUrl', 'rand': (random(1, 200)), 'ajax': 1}) }}" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
+          url: "{{ legacy_path('AdminQuickAccesses', {'action': 'GetUrl', 'rand': random(1, 200), 'ajax': 1}) }}" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
           data: {
-            "url": "{{ this.cleanCurrentUrl|escape('js') }}",
+            "url": "{{ this.currentQuickAccessLink|raw }}",
             "name": name,
+            "icon": "{{ this.currentUrlIcon }}"
           },
           dataType: "json",
           success: function(data) {
