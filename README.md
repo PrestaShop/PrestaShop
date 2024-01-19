@@ -17,7 +17,7 @@ PrestaShop is an Open Source e-commerce web application, committed to providing 
   <img src="https://user-images.githubusercontent.com/2137763/201319765-9157f702-4970-4258-8390-1187de2ad587.png" alt="PrestaShop 8.0 back office"/>
 </p>
 
-This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 8.0), please go to [the releases page][download].
+This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 8.1), please go to [the releases page][download].
 
 
 About the 'develop' branch
