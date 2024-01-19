@@ -43,6 +43,7 @@ if (file_exists($parametersFilepath)) {
             'database_prefix' => 'ps_',
             'api_private_key' => null,
             'api_public_key' => null,
+            'cookie_key' => '',
             'new_cookie_key' => null,
             'ps_cache_enable' => null,
             'ps_caching' => null,
