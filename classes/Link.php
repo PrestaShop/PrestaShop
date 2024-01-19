@@ -1386,7 +1386,7 @@ class LinkCore
             '#' . Context::getContext()->link->getBaseLink() . '#',
             '#' . basename(_PS_ADMIN_DIR_) . '/#',
             '/index.php/',
-            '/_?token=[a-zA-Z0-9\_]+/',
+            '/_?token=[^&]+/',
         ];
 
         // If __PS_BASE_URI__ = '/', it destroys urls when is 'product/new' or 'modules/manage' (vhost for example)
