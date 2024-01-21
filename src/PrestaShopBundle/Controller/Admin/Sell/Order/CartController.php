@@ -354,8 +354,8 @@ class CartController extends FrameworkBundleAdminController
         $quantity = $request->request->getInt('product_quantity');
         $combinationId = $request->request->getInt('combination_id');
 
-        $textCustomizations = $request->request->get('customizations') ?: [];
-        $fileCustomizations = $request->files->get('customizations') ?: [];
+        $textCustomizations = $request->request->all('customizations') ?: [];
+        $fileCustomizations = $request->files->all('customizations') ?: [];
 
         $customizations = $textCustomizations + $fileCustomizations;
 
