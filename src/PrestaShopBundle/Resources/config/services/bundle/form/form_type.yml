@@ -573,41 +573,54 @@ services:
     arguments:
       $featureChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
 
-  # Deprecated in 9.0.0
   form.type.sell.product.event_listener.categories_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
     public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   form.event_listener.add_disabling_switch_listener:
     alias: 'PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener'
     public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   form.type.sell.product.event_listener.product_type_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
     public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   form.event_listener.price_reduction:
     alias: 'PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
     public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   form.type.sell.product.toolbar_buttons_provider:
     alias: 'PrestaShopBundle\Form\Toolbar\ToolbarButtonsProviderInterface'
     public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   form.type.sell.product.event_listener.redirect_option_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
     public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   form.type.sell.product.event_listener.combination_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
     autowire: true

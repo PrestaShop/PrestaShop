@@ -17,7 +17,7 @@ admin_states_filter:
   path: /
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\CommonController:searchGridAction
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     _legacy_controller: AdminStates
     _legacy_link: AdminStates:submitFilterstate
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.state

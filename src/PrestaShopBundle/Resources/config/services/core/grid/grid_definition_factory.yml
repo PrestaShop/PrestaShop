@@ -427,4 +427,6 @@ services:
       - '@prestashop.core.hook.dispatcher'
     calls:
       - [ setTranslator, [ '@translator' ] ]
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0

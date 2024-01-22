@@ -74,19 +74,22 @@ services:
 
   prestashop.user_provider:
     alias: PrestaShopBundle\Service\DataProvider\UserProvider
-    deprecated: 'The "%alias_id%" service alias is deprecated since v9.0.'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
     public: true
 
   prestashop.router:
     class: PrestaShopBundle\Service\Routing\Router
     parent: 'router.default'
     public: true
+    arguments:
+      $container: '@service_container'
     calls:
       - [ 'setTokenManager', [ '@security.csrf.token_manager' ] ]
       - [ 'setUserProvider', [ '@PrestaShopBundle\Service\DataProvider\UserProvider' ] ]
 
-  prestashop.multistore.customized_configuration_checker:
-    class: PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker
+  PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker:
     arguments:
       - "@prestashop.adapter.legacy.configuration"
 

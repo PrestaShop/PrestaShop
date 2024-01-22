@@ -29,3 +29,6 @@ services:
 
   Symfony\Component\Security\Csrf\CsrfTokenManagerInterface:
     alias: security.csrf.token_manager
+
+  Psr\Container\ContainerInterface:
+    alias: service_container

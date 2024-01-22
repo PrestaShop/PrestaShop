@@ -24,28 +24,32 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\DependencyInjection;
+declare(strict_types=1);
 
-use Closure;
-use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
-use Symfony\Component\DependencyInjection\Exception\EnvNotFoundException;
+namespace Tests\Integration\Utility;
 
-final class RuntimeConstEnvVarProcessor implements EnvVarProcessorInterface
+use PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface;
+use PrestaShopBundle\Security\Admin\Employee;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+
+trait LoginTrait
 {
-    public function getEnv($prefix, $name, Closure $getEnv): mixed
+    protected function loginUser(KernelBrowser $kernelBrowser): void
     {
-        $exploded = explode(':', $name);
-        if (count($exploded) !== 2 || $exploded[0] !== 'runtime' || !defined($exploded[1])) {
-            throw new EnvNotFoundException($name);
-        }
+        $employeePermissionProvider = $kernelBrowser->getContainer()->get(EmployeePermissionProviderInterface::class);
+        $employeeId = 1;
 
-        return constant($exploded[1]);
-    }
+        $employee = new Employee(
+            (object) [
+                'email' => 'test@prestashop.com',
+                'id' => $employeeId,
+                'passwd' => '',
+            ]
+        );
+        $employee->setRoles(
+            array_merge(['ROLE_EMPLOYEE'], $employeePermissionProvider->getRoles($employeeId))
+        );
 
-    public static function getProvidedTypes(): array
-    {
-        return [
-            'const' => 'bool|int|float|string|array',
-        ];
+        $kernelBrowser->loginUser($employee);
     }
 }

@@ -31,10 +31,13 @@ namespace Tests\Integration\PrestaShopBundle\Routing\Converter;
 use Link;
 use PrestaShopBundle\Routing\Converter\Exception\AlreadyConvertedException;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
+use Tests\Integration\Utility\LoginTrait;
 use Tests\TestCase\SymfonyIntegrationTestCase;
 
 class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 {
+    use LoginTrait;
+
     /** @var Link|null */
     private $link;
 
@@ -419,6 +422,9 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 
     public function testRedirectionListenerWithoutLoop(): void
     {
+        $this->loginUser($this->client);
+        $this->client->disableReboot();
+
         $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . \Dispatcher::getInstance()->createUrl('AdminAdminPreferences');
         $this->client->request('GET', $legacyUrl);
         $response = $this->client->getResponse();

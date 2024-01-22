@@ -87,7 +87,7 @@ class Employee implements UserInterface, EquatableInterface, PasswordAuthenticat
      *
      * @return array
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }
@@ -178,7 +178,7 @@ class Employee implements UserInterface, EquatableInterface, PasswordAuthenticat
      *
      * @return bool
      */
-    public function isEqualTo(UserInterface $user)
+    public function isEqualTo(UserInterface $user): bool
     {
         if (!$user instanceof static) {
             return false;

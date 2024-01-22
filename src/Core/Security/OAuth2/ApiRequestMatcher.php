@@ -42,7 +42,7 @@ use Symfony\Component\HttpFoundation\RequestMatcherInterface;
  */
 class ApiRequestMatcher implements RequestMatcherInterface
 {
-    public function matches(Request $request)
+    public function matches(Request $request): bool
     {
         return in_array(
             $request->attributes->get('_controller'),

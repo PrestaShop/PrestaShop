@@ -18,7 +18,9 @@ services:
 
   prestashop.adapter.form.choice_provider.gender_by_id_choice_provider:
     alias: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider'
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider:
     autowire: true
@@ -27,7 +29,9 @@ services:
 
   prestashop.adapter.form.choice_provider.group_by_id_choice_provider:
     alias: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider'
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.adapter.form.choice_provider.risk_by_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\RiskByIdChoiceProvider'
@@ -110,8 +114,12 @@ services:
   # deprecated
   prestashop.adapter.form.choice_provider.shop_tree_choice_provider:
     alias: PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopTreeChoiceProvider
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.adapter.form.choice_provider.features_choice_provider:
     alias: PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0

@@ -36,9 +36,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Tests\Integration\Utility\LoginTrait;
 
 class DeliveryControllerTest extends WebTestCase
 {
+    use LoginTrait;
     /**
      * @var KernelBrowser
      */
@@ -72,6 +74,7 @@ class DeliveryControllerTest extends WebTestCase
             ->will($this->returnValueMap($values));
 
         $this->client = self::createClient();
+        $this->loginUser($this->client);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
         $this->router = self::$kernel->getContainer()->get('router');
         $this->tokenManager = self::$kernel->getContainer()->get('security.csrf.token_manager');
@@ -109,7 +112,7 @@ class DeliveryControllerTest extends WebTestCase
             Response::HTTP_OK,
             $response->getStatusCode()
         );
-        $this->assertStringContainsString('This value is not valid.', $response->getContent());
+        $this->assertStringContainsString('Please enter a number.', $response->getContent());
     }
 
     public function testSlipActionWithValidData(): void

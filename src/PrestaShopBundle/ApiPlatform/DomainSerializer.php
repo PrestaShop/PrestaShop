@@ -195,9 +195,11 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
      */
     protected function mapNormalizedData(&$normalizedData, array $normalizationMapping): void
     {
-        foreach ($normalizationMapping as $originPath => $targetPath) {
-            if ($this->propertyAccessor->isReadable($normalizedData, $originPath) && $this->propertyAccessor->isWritable($normalizedData, $targetPath)) {
-                $this->propertyAccessor->setValue($normalizedData, $targetPath, $this->propertyAccessor->getValue($normalizedData, $originPath));
+        if (null !== $normalizedData) {
+            foreach ($normalizationMapping as $originPath => $targetPath) {
+                if ($this->propertyAccessor->isReadable($normalizedData, $originPath) && $this->propertyAccessor->isWritable($normalizedData, $targetPath)) {
+                    $this->propertyAccessor->setValue($normalizedData, $targetPath, $this->propertyAccessor->getValue($normalizedData, $originPath));
+                }
             }
         }
     }

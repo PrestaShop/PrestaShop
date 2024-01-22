@@ -24,7 +24,9 @@ services:
 
   prestashop.core.query.doctrine_search_criteria_applicator:
     alias: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   # Grid position updater
   PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory:

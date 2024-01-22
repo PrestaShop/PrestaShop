@@ -28,8 +28,18 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
+use Tests\Integration\Utility\LoginTrait;
+
 class TranslationControllerTest extends ApiTestCase
 {
+    use LoginTrait;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->loginUser(self::$client);
+    }
+
     /**
      * @dataProvider getBadLocales
      *
@@ -242,6 +252,8 @@ class TranslationControllerTest extends ApiTestCase
 
     private function assertErrorResponseOnTranslationEditionWithData(): void
     {
+        self::$client->disableReboot();
+
         $editTranslationRoute = $this->router->generate(
             'api_translation_value_edit',
             ['locale' => 'en-US', 'domain' => 'AdminActions']
@@ -295,6 +307,8 @@ class TranslationControllerTest extends ApiTestCase
 
     private function assertErrorResponseOnTranslationResetWithData(): void
     {
+        self::$client->disableReboot();
+
         $resetTranslationRoute = $this->router->generate(
             'api_translation_value_reset',
             ['locale' => 'en-US', 'domain' => 'AdminActions']

@@ -32,10 +32,13 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Tests\Integration\Utility\LoginTrait;
 use WebserviceKey;
 
 class WebserviceControllerTest extends WebTestCase
 {
+    use LoginTrait;
+
     /**
      * @var KernelBrowser
      */
@@ -54,6 +57,7 @@ class WebserviceControllerTest extends WebTestCase
         parent::setUp();
 
         $this->client = self::createClient();
+        $this->loginUser($this->client);
         $this->router = self::$kernel->getContainer()->get('router');
 
         $this->webserviceKey = new WebserviceKey();
@@ -93,11 +97,13 @@ class WebserviceControllerTest extends WebTestCase
         $this->webserviceKey->active = $actual;
         $this->webserviceKey->save();
 
+        $route = $this->router->generate(
+            'admin_webservice_keys_bulk_enable'
+        );
+
         $this->client->request(
             'POST',
-            $this->router->generate(
-                'admin_webservice_keys_bulk_enable'
-            ),
+            $route,
             [
                 'webservice_key_bulk_action' => [
                     $this->webserviceKey->id,

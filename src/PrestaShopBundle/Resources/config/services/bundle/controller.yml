@@ -8,6 +8,7 @@ services:
     calls:
       - [ setLogger, [ '@logger' ] ]
       - [ setContainer, [ '@service_container' ] ]
+      - [ setAuthorizationChecker, [ '@security.authorization_checker' ] ]
 
   # Every single controller should be loaded here, except the legacy ones, and some misplaced files are also excluded.
   PrestaShopBundle\Controller\:
@@ -99,13 +100,7 @@ services:
 
   prestashop.core.admin.multistore:
     class: PrestaShopBundle\Controller\Admin\MultistoreController
-    parent: PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController
     public: true
     lazy: true
-    properties:
-      multiStoreFeature: "@prestashop.adapter.multistore_feature"
-      multiStoreContext: "@prestashop.adapter.shop.context"
-      entityManager: "@doctrine.orm.entity_manager"
-      productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-    calls:
-      - [ setContainer, [ '@service_container' ] ]
+    autoconfigure: true
+    autowire: true

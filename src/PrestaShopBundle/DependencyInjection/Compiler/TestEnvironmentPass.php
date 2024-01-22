@@ -24,28 +24,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\DependencyInjection;
+namespace PrestaShopBundle\DependencyInjection\Compiler;
 
-use Closure;
-use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
-use Symfony\Component\DependencyInjection\Exception\EnvNotFoundException;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-final class RuntimeConstEnvVarProcessor implements EnvVarProcessorInterface
+/**
+ * Used to configure services specifically for the test environment.
+ */
+class TestEnvironmentPass implements CompilerPassInterface
 {
-    public function getEnv($prefix, $name, Closure $getEnv): mixed
+    /**
+     * {@inheritdoc}
+     */
+    public function process(ContainerBuilder $container)
     {
-        $exploded = explode(':', $name);
-        if (count($exploded) !== 2 || $exploded[0] !== 'runtime' || !defined($exploded[1])) {
-            throw new EnvNotFoundException($name);
+        $env = $container->getParameter('kernel.environment');
+
+        if ('test' === $env) {
+            // see https://symfony.com/doc/current/testing.html#multiple-requests-in-one-test
+            $container->getDefinition('security.token_storage')->clearTag('kernel.reset');
+            $container->getDefinition('doctrine')->clearTag('kernel.reset');
         }
-
-        return constant($exploded[1]);
-    }
-
-    public static function getProvidedTypes(): array
-    {
-        return [
-            'const' => 'bool|int|float|string|array',
-        ];
     }
 }

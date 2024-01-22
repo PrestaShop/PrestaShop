@@ -33,9 +33,12 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Tests\Integration\Utility\LoginTrait;
 
 class GeolocationControllerTest extends WebTestCase
 {
+    use LoginTrait;
+
     /**
      * @var KernelBrowser
      */
@@ -65,6 +68,7 @@ class GeolocationControllerTest extends WebTestCase
             ->will($this->returnValueMap($values));
 
         $this->client = self::createClient();
+        $this->loginUser($this->client);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
         $this->router = self::$kernel->getContainer()->get('router');
     }

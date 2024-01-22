@@ -80,6 +80,8 @@ class StockManagementControllerTest extends ApiTestCase
 
     public function testItShouldReturnBadRequestResponseOnInvalidPaginationParams(): void
     {
+        self::$client->disableReboot();
+
         $routes = [
             $this->router->generate('api_stock_list_products', []),
             $this->router->generate('api_stock_list_movements', []),

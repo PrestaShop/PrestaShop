@@ -89,7 +89,7 @@ class CQRSApiNormalizer extends ObjectNormalizer
         ];
     }
 
-    protected function extractAttributes(object $object, string $format = null, array $context = [])
+    protected function extractAttributes(object $object, string $format = null, array $context = []): array
     {
         $attributes = parent::extractAttributes($object, $format, $context);
 
@@ -123,7 +123,7 @@ class CQRSApiNormalizer extends ObjectNormalizer
         return $attributes;
     }
 
-    protected function getAttributeValue(object $object, string $attribute, string $format = null, array $context = [])
+    protected function getAttributeValue(object $object, string $attribute, string $format = null, array $context = []): mixed
     {
         $attributeValue = parent::getAttributeValue($object, $attribute, $format, $context);
         // Value objects are not returned as is, the value itself is returned
