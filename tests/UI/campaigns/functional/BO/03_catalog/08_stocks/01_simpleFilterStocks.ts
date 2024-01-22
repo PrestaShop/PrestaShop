@@ -62,7 +62,7 @@ describe('BO - Catalog - Stocks : Simple filter stocks', async () => {
   // Filter products by name, reference, supplier
   describe('Filter products by name, reference and supplier', async () => {
     [
-      {args: {testIdentifier: 'filterName', filterBy: 'name', filterValue: Products.demo_1.name}},
+      {args: {testIdentifier: 'filterName', filterBy: 'product_name', filterValue: Products.demo_1.name}},
       {args: {testIdentifier: 'filterReference', filterBy: 'reference', filterValue: Products.demo_1.reference}},
       {args: {testIdentifier: 'filterSupplier', filterBy: 'supplier', filterValue: Suppliers.fashionSupplier.name}},
     ].forEach((test) => {
