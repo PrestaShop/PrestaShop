@@ -31,18 +31,26 @@ namespace PrestaShopBundle\Twig\Component;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
+use PrestaShopBundle\Twig\Layout\MenuLink;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/toolbar.html.twig')]
 class Toolbar
 {
-    public array $toolbarBtn;
-    public string $title;
-    public bool|string $helpLink;
-    public bool $enableSidebar;
-    public int $currentTabLevel = 0;
-    public array $navigationTabs = [];
-    public array $breadcrumbs;
+    protected string $title = '';
+    protected string $helpLink = '';
+    protected bool $sidebarEnabled = true;
+    protected int $currentTabLevel = 0;
+
+    /**
+     * @var array<int, MenuLink>
+     */
+    protected array $navigationTabs = [];
+
+    /**
+     * @var array<string, MenuLink>
+     */
+    protected array $breadcrumbs = [];
 
     public function __construct(
         protected readonly HookDispatcherInterface $hookDispatcher,
@@ -50,12 +58,12 @@ class Toolbar
     ) {
     }
 
-    public function mount(string $layoutTitle): void
+    public function mount(string $layoutTitle, string $helpLink, bool $enableSidebar): void
     {
+        $this->sidebarEnabled = $enableSidebar;
+        $this->helpLink = $helpLink;
         $tab = $this->menuBuilder->getCurrentTab();
-        if (null === $tab) {
-            $this->breadcrumbs = [];
-        } else {
+        if (null !== $tab) {
             $tabs = [];
             $tabs[] = $tab;
             $ancestorsTab = $this->menuBuilder->getAncestorsTab($tab->getId());
@@ -69,13 +77,43 @@ class Toolbar
             }
 
             $this->setBreadcrumbs($tab, $ancestorsTab, $tabs);
-            $this->setTitle($layoutTitle);
         }
+        $this->setTitle($layoutTitle);
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getCurrentTabLevel(): int
+    {
+        return $this->currentTabLevel;
+    }
+
+    public function getBreadcrumbs(): array
+    {
+        return $this->breadcrumbs;
+    }
+
+    public function getNavigationTabs(): array
+    {
+        return $this->navigationTabs;
+    }
+
+    public function isSidebarEnabled(): bool
+    {
+        return $this->sidebarEnabled;
+    }
+
+    public function getHelpLink(): string
+    {
+        return $this->helpLink;
     }
 
     protected function setTitle(string $layoutTitle): void
     {
-        if (empty($layoutTitle)) {
+        if (empty($layoutTitle) && isset($this->breadcrumbs['tab'])) {
             $this->title = $this->breadcrumbs['tab']->name;
         } else {
             $this->title = $layoutTitle;

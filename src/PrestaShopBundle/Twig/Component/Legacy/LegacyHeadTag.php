@@ -75,6 +75,10 @@ class LegacyHeadTag extends HeadTag
     protected function getLegacyMetaTitle(): string
     {
         $legacyMetaTitle = $this->getLegacyController()->getMetaTitle();
+        if (empty($legacyMetaTitle) && !empty($this->getLegacyController()->getToolbarTitle())) {
+            $legacyMetaTitle = $this->getLegacyController()->getToolbarTitle();
+        }
+
         if (empty($legacyMetaTitle)) {
             $breadcrumbs = $this->menuBuilder->getBreadcrumbLinks();
             if (empty($breadcrumbs)) {

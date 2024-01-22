@@ -141,8 +141,7 @@
 {% if showContentHeader %}
   {% component Toolbar with {
     layoutTitle: layoutTitle|default,
-    toolbarBtn: toolbarBtn|default({}),
-    helpLink: help_link|default(false),
+    helpLink: help_link|default(''),
     enableSidebar: enableSidebar|default(false)
   } %}
     {% block pageTitle %}{{ block(outerBlocks.pageTitle) ?: parent() }}{% endblock %}

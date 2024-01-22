@@ -52,13 +52,19 @@ class LegacyToolbar extends Toolbar
     }
 
     /**
-     * No layoutTitle parameter is passed from the legacy layout.
+     * No parameters are passed to this component but we must respect the method signature.
      *
      * @param string $layoutTitle
+     * @param string $helpLink
+     * @param bool $enableSidebar
      */
-    public function mount(string $layoutTitle = ''): void
+    public function mount(string $layoutTitle = '', string $helpLink = '', bool $enableSidebar = false): void
     {
-        parent::mount($layoutTitle);
+        parent::mount(
+            $layoutTitle,
+            urldecode($this->helpDocumentation->generateLink($this->getLegacyController()->controller_name, $this->languageContext->getIsoCode())),
+            $enableSidebar
+        );
     }
 
     public function getLayoutHeaderToolbarBtn(): array
@@ -69,10 +75,5 @@ class LegacyToolbar extends Toolbar
     public function getTable(): string
     {
         return $this->getLegacyController()->table;
-    }
-
-    public function getHelpLink(): string
-    {
-        return urldecode($this->helpDocumentation->generateLink($this->getLegacyController()->controller_name, $this->languageContext->getIsoCode()));
     }
 }

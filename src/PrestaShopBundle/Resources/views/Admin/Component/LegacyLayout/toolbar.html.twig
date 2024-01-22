@@ -23,23 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 <div class="bootstrap">
-  <div class="page-head {% if currentTabLevel >= 3 %}with-tabs{% endif %}">
+  <div class="page-head {% if this.currentTabLevel >= 3 %}with-tabs{% endif %}">
     <div class="wrapper clearfix">
       {% block pageBreadcrumb %}
       <ul class="breadcrumb page-breadcrumb">
         {# Container #}
-        {% if breadcrumbs.container is defined and breadcrumbs.container.name != '' %}
+        {% if this.breadcrumbs.container is defined and this.breadcrumbs.container.name != '' %}
         <li class="breadcrumb-container">
-          {{ breadcrumbs.container.name|escape }}
+          {{ this.breadcrumbs.container.name|escape }}
         </li>
         {% endif %}
 
         {# Current Tab #}
-        {% if breadcrumbs.tab is defined and breadcrumbs.tab.name != '' %}
+        {% if this.breadcrumbs.tab is defined and this.breadcrumbs.tab.name != '' %}
         <li class="breadcrumb-current">
-          {% if breadcrumbs.tab.href != '' %}<a href="{{ breadcrumbs.tab.href|escape }}">{% endif %}
-            {{ breadcrumbs.tab.name|escape }}
-          {% if breadcrumbs.tab.href != '' %}</a>{% endif %}
+          {% if this.breadcrumbs.tab.href != '' %}<a href="{{ this.breadcrumbs.tab.href|escape }}">{% endif %}
+            {{ this.breadcrumbs.tab.name|escape }}
+          {% if this.breadcrumbs.tab.href != '' %}</a>{% endif %}
         </li>
         {% endif %}
       </ul>
@@ -55,7 +55,7 @@
              title="{{ backButton.desc }}"{% if backButton.js is defined and backButton.js is not empty %} onclick="{{ backButton.js }}"{% endif %}>
           </a>
         {% endif %}
-        {{ title|e }}
+        {{ this.title|e }}
       </h1>
       {% endblock %}
 
@@ -109,10 +109,10 @@
       {% endblock %}
   </div>
 
-    {% if currentTabLevel >= 3 %}
+    {% if this.currentTabLevel >= 3 %}
     <div class="page-head-tabs" id="head_tabs">
       <ul class="nav">
-        {% for tab in navigationTabs %}
+        {% for tab in this.navigationTabs %}
           {% if tab.attributes.active %}
           <li>
             <a

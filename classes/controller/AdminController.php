@@ -2437,6 +2437,11 @@ class AdminControllerCore extends Controller
         return $this->meta_title;
     }
 
+    public function getToolbarTitle(): array
+    {
+        return $this->toolbar_title;
+    }
+
     public function getDisplay(): ?string
     {
         return $this->display;

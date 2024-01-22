@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use PrestaShopBundle\Twig\Layout\SmartyVariablesFiller;
-use Smarty;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
