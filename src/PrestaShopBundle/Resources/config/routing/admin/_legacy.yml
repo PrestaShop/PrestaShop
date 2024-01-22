@@ -4,4 +4,4 @@ legacy_controller_route:
   # Condition on the query parameter matching legacy query, except for AdminLogin which must remain accessible so ignoring it prevents having to handle multiple exceptions to ignore security on it
   # Condition only when symfony layout is enabled, for all controllers because we need to change the token management and it can't be done on a single controller
   # @todo: In SF6 we can define a service to handle this condition, this should be preferred for more advanced condition based on parameters that could dynamically check the list of existing legacy controllers, and maybe check the feature flags from pages under migration
-  condition: 'request.query.has("controller") and request.query.get("controller") != "AdminLogin" and "symfony_layout" in request.attributes.get("enabledFeatureFlags")'
+  condition: '(request.query.has("controller") or request.request.has("controller")) and request.query.get("controller") != "AdminLogin" and request.request.get("controller") != "AdminLogin" and "symfony_layout" in request.attributes.get("enabledFeatureFlags")'

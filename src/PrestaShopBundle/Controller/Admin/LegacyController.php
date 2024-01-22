@@ -192,7 +192,7 @@ class LegacyController extends PrestaShopAdminController
 
     protected function getDispatcherParameters(Request $request): array
     {
-        $queryController = $request->query->get('controller');
+        $queryController = $request->get('controller');
         $this->dispatchHookWithParameters('actionDispatcherBefore', ['controller_type' => Dispatcher::FC_ADMIN]);
 
         $tab = $this->tabRepository->findOneByClassName($queryController);

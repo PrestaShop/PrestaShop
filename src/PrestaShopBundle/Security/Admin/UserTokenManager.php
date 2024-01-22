@@ -85,7 +85,9 @@ class UserTokenManager
         }
 
         // Legacy urls use token instead of _token as the URL parameter, so it's a valid alternative but only when symfony layout is enabled
-        if ($symfonyLayoutEnabled && $request->query->has('token') && $this->isCsrfTokenValid($request->query->get('token'))) {
+        // Token can be posted via GET or POST parameters
+        $legacyRequestToken = $request->get('token');
+        if ($symfonyLayoutEnabled && !empty($legacyRequestToken) && $this->isCsrfTokenValid($legacyRequestToken)) {
             return true;
         }
 
@@ -101,15 +103,17 @@ class UserTokenManager
 
     private function isLegacyTokenValid(Request $request): bool
     {
-        if (!$request->query->has('token') || !$request->query->has('controller')) {
+        // Token and controllers can be posted via GET or POST parameters
+        $legacyRequestToken = $request->get('token');
+        $controllerName = $request->get('controller');
+        if (empty($legacyRequestToken) || empty($controllerName)) {
             return false;
         }
 
         $employeeId = (int) $this->employeeContext->getEmployee()?->getId();
         $currentTabId = $this->menuBuilder->getCurrentTab()?->getId();
-        $controllerName = $request->query->get('controller');
         $expectedLegacyTokenValue = $this->hashing->hash($controllerName . $currentTabId . $employeeId, $this->cookieKey);
 
-        return $expectedLegacyTokenValue === $request->query->get('token');
+        return $expectedLegacyTokenValue === $legacyRequestToken;
     }
 }
