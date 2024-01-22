@@ -40,6 +40,8 @@ class Stocks extends BOBasePage {
 
   private readonly productRow: (row: number) => string;
 
+  private readonly productRowIdColumn: (row: number) => string;
+
   private readonly productRowNameColumn: (row: number) => string;
 
   private readonly productRowReferenceColumn: (row: number) => string;
@@ -86,6 +88,12 @@ class Stocks extends BOBasePage {
 
   private readonly paginationListItemLink: (id: number) => string;
 
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add currency page
@@ -119,6 +127,7 @@ class Stocks extends BOBasePage {
     this.productList = 'table.table';
     this.productRows = `${this.productList} tbody tr`;
     this.productRow = (row: number) => `${this.productRows}:nth-child(${row})`;
+    this.productRowIdColumn = (row: number) => `${this.productRow(row)} td[data-role=product-id]`;
     this.productRowNameColumn = (row: number) => `${this.productRow(row)} td[data-role=product-name]`;
     this.productRowReferenceColumn = (row: number) => `${this.productRow(row)} td[data-role=product-reference]`;
     this.productRowSupplierColumn = (row: number) => `${this.productRow(row)} td[data-role=product-supplier-name]`;
@@ -147,6 +156,11 @@ class Stocks extends BOBasePage {
     this.filterCategoryCollapseButton = `${this.filterCategoryDiv} button:nth-child(2)`;
     this.filterCategoryTreeItems = (category: string) => `${this.filterCategoryDiv} div.ps-tree-items[label='${category}']`;
     this.filterCategoryCheckBoxDiv = (category: string) => `${this.filterCategoryTreeItems(category)} .md-checkbox`;
+
+    // Sort Selectors
+    this.tableHead = `${this.productList} thead`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination
     this.paginationList = 'nav ul.pagination';
@@ -223,13 +237,61 @@ class Stocks extends BOBasePage {
    * Paginate to a product page
    * @param page {Page} Browser tab
    * @param pageNumber {number} Value of page to go
-   * @return {Promise<void>}
+   * @return {Promise<number>}
    */
-  async paginateTo(page: Page, pageNumber: number = 1): Promise<void> {
+  async paginateTo(page: Page, pageNumber: number = 1): Promise<number> {
     await page.locator(this.paginationListItemLink(pageNumber)).click();
     if (await this.elementVisible(page, this.productListLoading, 1000)) {
       await this.waitForHiddenSelector(page, this.productListLoading);
     }
+
+    return this.getNumberFromText(page, `${this.paginationListItem}.active`);
+  }
+
+  /**
+   * Get content from all rows and all pages
+   * @param page {Page} Browser tab
+   * @param column {string} Column name to get all rows content
+   * @return {Promise<Array<string>>}
+   */
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
+    await this.waitForHiddenSelector(page, this.productListLoading);
+    const numberOfPages = await this.getProductsPagesLength(page);
+    const allRowsContentTable: string[] = [];
+
+    for (let j = 1; j <= numberOfPages; j++) {
+      await this.paginateTo(page, j);
+      const rowsNumber = await this.getNumberOfProductsFromList(page);
+
+      for (let i = 1; i <= rowsNumber; i++) {
+        const rowContent = await this.getTextColumnFromTableStocks(page, i, column);
+        allRowsContentTable.push(rowContent);
+      }
+    }
+    await this.paginateTo(page, 1);
+
+    return allRowsContentTable;
+  }
+
+  /**
+   * Sort table by clicking on column name
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
+    await this.waitForHiddenSelector(page, this.productListLoading);
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i: number = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.waitForSelectorAndClick(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForHiddenSelector(page, this.productListLoading);
   }
 
   /**
@@ -272,8 +334,10 @@ class Stocks extends BOBasePage {
    */
   async getTextColumnFromTableStocks(page: Page, row: number, column: string): Promise<string> {
     switch (column) {
-      case 'name':
-        return this.getTextContent(page, this.productRowNameColumn(row));
+      case 'product_id':
+        return this.getTextContent(page, this.productRowIdColumn(row));
+      case 'product_name':
+        return (await this.getTextContent(page, this.productRowNameColumn(row))).split(' - ')[0];
       case 'reference':
         return this.getTextContent(page, this.productRowReferenceColumn(row));
       case 'supplier':
