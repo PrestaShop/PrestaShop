@@ -196,11 +196,9 @@ class LegacyController extends PrestaShopAdminController
         $this->dispatchHookWithParameters('actionDispatcherBefore', ['controller_type' => Dispatcher::FC_ADMIN]);
 
         $tab = $this->tabRepository->findOneByClassName($queryController);
-        if (!$tab) {
-            throw new CoreException(sprintf('Could not find tab for controller %s', $queryController));
-        }
+        $isModule = $tab && !empty($tab->getModule());
 
-        if (!empty($tab->getModule())) {
+        if ($isModule) {
             $moduleName = $tab->getModule();
             $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . $moduleName . '/controllers/admin/');
             if (!isset($controllers[strtolower($queryController)])) {
@@ -242,7 +240,7 @@ class LegacyController extends PrestaShopAdminController
         return [
             'controller_type' => Dispatcher::FC_ADMIN,
             'controller_class' => $controllerClass,
-            'is_module' => !empty($tab->getModule()),
+            'is_module' => $isModule,
         ];
     }
 }
