@@ -32,6 +32,11 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * Admin Middleware security
+ *
+ * The listener behavior was removed in the tests in favor of the LoginTrait trait,
+ * to avoid necessarily having to have an employee in the context,
+ * which could have side effects on some test scenarios and also follow the
+ * official symfony method for authentication in a test environment.
  */
 class AdapterSecurityAdmin
 {
