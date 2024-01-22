@@ -314,11 +314,11 @@ class CartCore extends ObjectModel
     public function updateAddressId($id_address, $id_address_new)
     {
         $to_update = false;
-        if (!isset($this->id_address_invoice) || $this->id_address_invoice == $id_address) {
+        if (empty($this->id_address_invoice) || $this->id_address_invoice == $id_address) {
             $to_update = true;
             $this->id_address_invoice = $id_address_new;
         }
-        if (!isset($this->id_address_delivery) || $this->id_address_delivery == $id_address) {
+        if (empty($this->id_address_delivery) || $this->id_address_delivery == $id_address) {
             $to_update = true;
             $this->id_address_delivery = $id_address_new;
         }
@@ -347,7 +347,7 @@ class CartCore extends ObjectModel
      */
     public function updateDeliveryAddressId(int $currentAddressId, int $newAddressId)
     {
-        if (!isset($this->id_address_delivery) || (int) $this->id_address_delivery === $currentAddressId) {
+        if (empty($this->id_address_delivery) || (int) $this->id_address_delivery === $currentAddressId) {
             $this->id_address_delivery = $newAddressId;
             $this->update();
         }

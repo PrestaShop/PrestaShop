@@ -108,7 +108,7 @@ class AddressCore extends ObjectModel
     /** @var array Country IDs cache */
     protected static $_idCountries = [];
 
-    /** @var array<int, bool> Store if an adress ID exists */
+    /** @var array<int, bool> Store if an adress ID exists. Please note that soft-deleted address also belongs to this cache. */
     protected static $addressExists = [];
 
     /**
@@ -241,33 +241,58 @@ class AddressCore extends ObjectModel
             Customer::resetAddressCache($this->id_customer, $this->id);
         }
 
-        if (!$this->isUsed()) {
-            $this->deleteCartAddress();
+        /*
+         * Deleting an address can go two ways.
+         *
+         * 1) If the address is used in an order, we will only soft-delete it. This means mark it with a flag,
+         *    hide it everywhere and prevent anyone using it. We must absolutely retain all the business data
+         *    for the order.
+         * 2) If it's not used, we can safely delete the address.
+         */
 
-            // Update the cache
+        // First step is to unlink this address from all NON-ORDERED carts.
+        $this->deleteCartAddress();
+
+        // Second step - check if the address has been used in some order.
+        if (!$this->isUsed()) {
+            // If NO, we can safely delete it.
             if (isset(static::$addressExists[$this->id])) {
                 static::$addressExists[$this->id] = false;
             }
 
             return parent::delete();
         } else {
+            // If YES, we only soft delete it and keep it in the database.
             return $this->softDelete();
         }
     }
 
     /**
-     * removes the address from carts using it, to avoid errors on not existing address
+     * Removes the address from all non ordered carts using it,
+     * to avoid errors on not existing address.
      */
     protected function deleteCartAddress()
     {
-        // keep pending carts, but unlink it from current address
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
-                    SET id_address_delivery = 0
-                    WHERE id_address_delivery = ' . $this->id;
+        // Reset it from all delivery addresses
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
+            LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
+            SET c.id_address_delivery = 0
+            WHERE c.id_address_delivery = ' . $this->id . ' AND o.id_order IS NULL';
         Db::getInstance()->execute($sql);
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
-                    SET id_address_invoice = 0
-                    WHERE id_address_invoice = ' . $this->id;
+
+        // Reset it from all invoice addresses
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
+            LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
+            SET c.id_address_invoice = 0
+            WHERE c.id_address_invoice = ' . $this->id . ' AND o.id_order IS NULL';
+        Db::getInstance()->execute($sql);
+
+        // Reset it from all products in cart. Please do not merge this up develop (v9)
+        // branch, as id_address_delivery is not used anymore.
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart_product cp
+            LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON cp.id_cart = o.id_cart
+            SET cp.id_address_delivery = 0
+            WHERE cp.id_address_delivery = ' . $this->id . ' AND o.id_order IS NULL';
         Db::getInstance()->execute($sql);
     }
 
@@ -449,7 +474,8 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Specify if an address is already in base.
+     * Specify if an address is already in database.
+     * Please note that a soft-deleted address also counts as existing.
      *
      * @param int $id_address Address id
      * @param bool $useCache Use Cache for optimizing queries
