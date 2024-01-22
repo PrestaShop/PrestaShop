@@ -148,7 +148,7 @@ You can discuss about e-commerce, help other merchants and get help, and contrib
 
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
 
-[available-features]: https://www.prestashop.com/en/online-store-builder
+[available-features]: https://prestashop.com/create-online-store/
 [download]: https://github.com/PrestaShop/PrestaShop/releases
 [forums]: https://www.prestashop.com/forums/
 [ghdiscussions]: https://github.com/PrestaShop/PrestaShop/discussions
