@@ -101,8 +101,6 @@ class LegacyControllerContext
      */
     public array|Traversable $page_header_toolbar_btn = [];
 
-    public $table = 'configuration';
-
     /**
      * @param ContainerInterface $container Dependency container
      * @param string $controller_name Current controller name without suffix
@@ -125,7 +123,8 @@ class LegacyControllerContext
         public int $id,
         public ?string $token,
         public string $override_folder,
-        public string $currentIndex
+        public string $currentIndex,
+        public string $table,
     ) {
         $this->php_self = $this->controller_name;
     }

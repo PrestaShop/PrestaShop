@@ -90,6 +90,7 @@ class SmartyVariablesFiller
             'shop_group' => $this->legacyContext->getContext()->shop->getGroup(),
             'iso' => $this->templateVariables->getIsoUser(),
             'class_name' => $this->legacyControllerContext->className,
+            'table' => $this->legacyControllerContext->table,
             'version' => $this->templateVariables->getVersion(),
             'link' => $this->legacyContext->getContext()->link,
             'controller_name' => $this->legacyControllerContext->controller_name,

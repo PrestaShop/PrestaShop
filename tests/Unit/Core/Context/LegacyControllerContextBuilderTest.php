@@ -54,7 +54,7 @@ class LegacyControllerContextBuilderTest extends TestCase
      * @param string $expectedCurrentIndex
      * @param ?string $redirectionUrl
      */
-    public function testBuild(string $controllerName, string $expectedControllerName, ?string $className, int $multishopContext, string $expectedCurrentIndex, string $redirectionUrl = null): void
+    public function testBuild(string $controllerName, string $expectedControllerName, ?string $className, int $multishopContext, string $expectedCurrentIndex, string $expectedTable, string $redirectionUrl = null): void
     {
         $builder = new LegacyControllerContextBuilder(
             $this->mockEmployeeContext(),
@@ -77,6 +77,7 @@ class LegacyControllerContextBuilderTest extends TestCase
         $this->assertEquals(10, $legacyController->id);
         $this->assertEquals($multishopContext, $legacyController->multishop_context);
         $this->assertEquals($expectedCurrentIndex, $legacyController->currentIndex);
+        $this->assertEquals($expectedTable, $legacyController->table);
     }
 
     public function getControllerValues(): iterable
@@ -87,6 +88,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             'Cart',
             ShopConstraint::ALL_SHOPS,
             'index.php?controller=AdminCarts',
+            'cart',
         ];
 
         yield 'AdminCarts default behaviour with redirection url' => [
@@ -95,6 +97,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             'Cart',
             ShopConstraint::ALL_SHOPS,
             'index.php?controller=AdminCarts&back=index.php%3Fcontroller%3DAdminOrder',
+            'cart',
             'index.php?controller=AdminOrder',
         ];
 
@@ -104,6 +107,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             'Profile',
             ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
             'index.php?controller=AdminAccess',
+            'access',
         ];
 
         yield 'AdminCarrierWizard special classname' => [
@@ -112,6 +116,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             'Carrier',
             ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
             'index.php?controller=AdminCarrierWizard',
+            'carrier',
         ];
 
         yield 'AdminImages special classname' => [
@@ -120,6 +125,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             'ImageType',
             ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
             'index.php?controller=AdminImages',
+            'image_type',
         ];
 
         yield 'AdminReturn special classname' => [
@@ -128,6 +134,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             'OrderReturn',
             ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
             'index.php?controller=AdminReturn',
+            'order_return',
         ];
 
         yield 'AdminSearchConf special classname' => [
@@ -136,6 +143,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             'Alias',
             ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
             'index.php?controller=AdminSearchConf',
+            'alias',
         ];
 
         yield 'AdminConfigureFaviconBo special classname' => [
@@ -144,6 +152,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             'Configuration',
             ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
             'index.php?controller=AdminConfigureFaviconBo',
+            'configuration',
         ];
 
         yield 'AdminController default fallback for symfony routes without associated legacy controller' => [
@@ -152,6 +161,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             null,
             ShopConstraint::ALL_SHOPS | ShopConstraint::SHOP_GROUP | ShopConstraint::SHOP,
             'index.php?controller=Admin',
+            'configuration',
         ];
 
         yield 'AdminCartsController with Controller prefix' => [
@@ -160,6 +170,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             'Cart',
             ShopConstraint::ALL_SHOPS,
             'index.php?controller=AdminCarts',
+            'cart',
         ];
 
         yield 'AdminCartsControllerOverride with ControllerOverride prefix' => [
@@ -168,6 +179,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             'Cart',
             ShopConstraint::ALL_SHOPS,
             'index.php?controller=AdminCarts',
+            'cart',
         ];
     }
 
