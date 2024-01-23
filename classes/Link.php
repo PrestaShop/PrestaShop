@@ -1110,7 +1110,9 @@ class LinkCore
      * Create a simple link.
      *
      * @param string $controller
-     * @param bool|null $ssl
+     * @param bool|null $ssl Controls what protocol will be used in the link. Pass null to automatically determine the variant.
+     *                       Pass false if you want to specifically generate HTTP variant of the link.
+     *                       Passing true is useless and is the same as null, it will automatically default to HTTP if SSL not enabled.
      * @param int|null $idLang
      * @param string|array|null $request
      * @param bool $requestUrlEncode Use URL encode
@@ -1121,7 +1123,7 @@ class LinkCore
      */
     public function getPageLink($controller, $ssl = null, $idLang = null, $request = null, $requestUrlEncode = false, $idShop = null, $relativeProtocol = false)
     {
-        //If $controller contains '&' char, it means that $controller contains request data and must be parsed first
+        // If $controller contains '&' char, it means that $controller contains request data and must be parsed first
         $p = strpos($controller, '&');
         if ($p !== false) {
             $request = substr($controller, $p + 1);
@@ -1129,12 +1131,13 @@ class LinkCore
             $controller = substr($controller, 0, $p);
         }
 
+        // Fallback of older variants of calls to this method, that include .php in the name of the controller
         $controller = Tools::strReplaceFirst('.php', '', $controller);
         if (!$idLang) {
             $idLang = (int) Context::getContext()->language->id;
         }
 
-        //need to be unset because getModuleLink need those params when rewrite is enable
+        // Need to be unset because getModuleLink need those params when rewrite is enable
         if (is_array($request)) {
             if (isset($request['module'])) {
                 unset($request['module']);
