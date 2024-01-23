@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Resources\CustomerGroup;
+use PrestaShopBundle\ApiPlatform\Resources\Product;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class DomainSerializerTest extends KernelTestCase
@@ -54,6 +55,13 @@ class DomainSerializerTest extends KernelTestCase
     {
         $serializer = self::getContainer()->get(DomainSerializer::class);
         self::assertEquals($denormalizedObject, $serializer->denormalize($dataToDenormalize, get_class($denormalizedObject), null, [DomainSerializer::NORMALIZATION_MAPPING => $normalizationMapping]));
+    }
+
+    public function testDenormalizeWithEmptyValues(): void
+    {
+        $serializer = self::getContainer()->get(DomainSerializer::class);
+        $value = $serializer->denormalize(null, 'PrestaShopBundle\ApiPlatform\Resources\Product', null, []);
+        self::assertEquals(new Product(), $value);
     }
 
     public function getExpectedDenormalizedData()
@@ -216,6 +224,13 @@ class DomainSerializerTest extends KernelTestCase
     {
         $serializer = self::getContainer()->get(DomainSerializer::class);
         self::assertEquals($expectedNormalizedData, $serializer->normalize($dataToNormalize, null, [DomainSerializer::NORMALIZATION_MAPPING => $normalizationMapping]));
+    }
+
+    public function testNormalizeWithEmptyValues(): void
+    {
+        $serializer = self::getContainer()->get(DomainSerializer::class);
+        $value = $serializer->normalize(null, null, []);
+        self::assertNull($value);
     }
 
     public function getNormalizationData(): iterable
