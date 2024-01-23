@@ -80,7 +80,7 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
         expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
 
         const textColumn = await stocksPage.getTextColumnFromTableStocks(page, 1, 'product_name');
-        expect(textColumn).to.contains(productStock.name);
+        expect(productStock.name).to.contains(textColumn);
 
         // Get physical and available quantities of product
         productStock.stocks = {
