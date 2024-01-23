@@ -214,9 +214,8 @@ class ApiAccess implements UserInterface, PasswordAuthenticatedUserInterface
         return null;
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
-        return null;
     }
 
     public function getUsername(): string

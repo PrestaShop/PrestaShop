@@ -176,6 +176,10 @@ class UpdateEUTaxruleGroupsCommand extends Command
                     'from-eu-tax-group' => 'virtual',
                 ], ['eu-tax-group']);
 
+                if (null === $tax) {
+                    return 1;
+                }
+
                 $this->addTaxRule($taxRulesGroup, $tax, $foreignFile['iso_code_country']);
 
                 ++$taxId;
@@ -199,16 +203,18 @@ class UpdateEUTaxruleGroupsCommand extends Command
         return 0;
     }
 
-    protected function addTax(SimpleXMLElement $taxes, SimpleXMLElement $tax, array $attributesToUpdate = [], array $attributesToRemove = [])
+    protected function addTax(SimpleXMLElement $taxes, SimpleXMLElement $tax, array $attributesToUpdate = [], array $attributesToRemove = []): ?SimpleXMLElement
     {
-        $newTax = new SimpleXMLElement('<tax/>');
-
         $taxRulesGroups = $taxes->xpath('//taxRulesGroup[1]');
         $insertBefore = $taxRulesGroups[0] ?? false;
 
         if (!$insertBefore) {
-            return $this->output->writeln("<error>Could not find any `taxRulesGroup`, don't know where to append the tax.");
+            $this->output->writeln("<error>Could not find any `taxRulesGroup`, don't know where to append the tax.</error>");
+
+            return null;
         }
+
+        $newTax = new SimpleXMLElement('<tax/>');
 
         /**
          * Add the `tax` node before the first `taxRulesGroup`.
