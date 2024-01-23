@@ -1592,17 +1592,17 @@ class FrontControllerCore extends Controller
             ];
             foreach ($p as $page_name) {
                 $index = str_replace('-', '_', $page_name);
-                $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
+                $pages[$index] = $this->context->link->getPageLink($page_name);
             }
             $pages['brands'] = $pages['manufacturer'];
-            $pages['register'] = $this->context->link->getPageLink('registration', true);
-            $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
+            $pages['register'] = $this->context->link->getPageLink('registration');
+            $pages['order_login'] = $this->context->link->getPageLink('order', null, null, ['login' => '1']);
             $urls['pages'] = $pages;
 
             $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
 
             $urls['actions'] = [
-                'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
+                'logout' => $this->context->link->getPageLink('index', null, null, 'mylogout'),
             ];
 
             $imageRetriever = new ImageRetriever($this->context->link);
@@ -1866,7 +1866,7 @@ class FrontControllerCore extends Controller
 
         $breadcrumb['links'][] = [
             'title' => $this->getTranslator()->trans('Home', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('index', true),
+            'url' => $this->context->link->getPageLink('index'),
         ];
 
         return $breadcrumb;
@@ -1886,7 +1886,7 @@ class FrontControllerCore extends Controller
     {
         return [
             'title' => $this->getTranslator()->trans('Your account', [], 'Shop.Theme.Customeraccount'),
-            'url' => $this->context->link->getPageLink('my-account', true),
+            'url' => $this->context->link->getPageLink('my-account'),
         ];
     }
 

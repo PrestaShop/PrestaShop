@@ -48,7 +48,7 @@ class ContactControllerCore extends FrontController
 
         $breadcrumb['links'][] = [
             'title' => $this->getTranslator()->trans('Contact us', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('contact', true),
+            'url' => $this->context->link->getPageLink('contact'),
         ];
 
         return $breadcrumb;
@@ -59,6 +59,6 @@ class ContactControllerCore extends FrontController
      */
     public function getCanonicalURL()
     {
-        return $this->context->link->getPageLink('contact', true);
+        return $this->context->link->getPageLink('contact');
     }
 }

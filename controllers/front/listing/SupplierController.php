@@ -227,7 +227,7 @@ class SupplierControllerCore extends ProductListingFrontController
 
         $breadcrumb['links'][] = [
             'title' => $this->trans('All suppliers', [], 'Shop.Theme.Catalog'),
-            'url' => $this->context->link->getPageLink('supplier', true),
+            'url' => $this->context->link->getPageLink('supplier'),
         ];
 
         if (!empty($this->supplier)) {

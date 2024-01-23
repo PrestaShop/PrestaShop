@@ -47,6 +47,6 @@ class IndexControllerCore extends FrontController
      */
     public function getCanonicalURL()
     {
-        return $this->context->link->getPageLink('index', true);
+        return $this->context->link->getPageLink('index');
     }
 }

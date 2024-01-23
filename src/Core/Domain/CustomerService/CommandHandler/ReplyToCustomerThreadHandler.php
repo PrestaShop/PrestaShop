@@ -127,7 +127,7 @@ class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandlerInterf
         $params = [
             '{reply}' => Tools::nl2br($customerMessage->message),
             '{link}' => Tools::url(
-                $this->context->link->getPageLink('contact', true, null, null, false, $customerThread->id_shop),
+                $this->context->link->getPageLink('contact', null, null, null, false, $customerThread->id_shop),
                 'id_customer_thread=' . (int) $customerThread->id . '&token=' . $customerThread->token
             ),
             '{firstname}' => $customer->firstname,

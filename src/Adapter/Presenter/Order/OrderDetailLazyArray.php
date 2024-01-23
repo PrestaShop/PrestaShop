@@ -113,7 +113,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
      */
     public function getDetailsUrl()
     {
-        return $this->context->link->getPageLink('order-detail', true, null, 'id_order=' . $this->order->id);
+        return $this->context->link->getPageLink('order-detail', null, null, 'id_order=' . $this->order->id);
     }
 
     /**

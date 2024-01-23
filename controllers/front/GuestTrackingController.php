@@ -192,4 +192,3 @@ class GuestTrackingControllerCore extends FrontController
         return $this->context->link->getPageLink('guest-tracking');
     }
 }
-
