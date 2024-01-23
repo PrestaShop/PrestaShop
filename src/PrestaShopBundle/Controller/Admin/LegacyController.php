@@ -39,6 +39,24 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Tools;
 
+/**
+ * This controller acts as a wrapper around a legacy controller, it executes the core logic of an AdminController
+ * instance, most of the init methods are called to stay the closest possible to the original behaviour. Some methods
+ * have been voluntarily stripped (meaning they will not be executed) because they mostly handle the logic of the layout
+ * rendering (menu, toolbar, ...).
+ *
+ * All the layout logic is already handled by the Symfony layout and its internal components, so we don't need to execute
+ * it twice.
+ *
+ * So this controller gets back the central content of an AdminController after it's been run and displayed and integrate it
+ * in the legacy layout that is based on the same Symfony layout as migrated page, but it still uses the templates JS and CSS
+ * from the default theme.
+ *
+ * There are cases where this approach may not work, mostly when the legacy controllers relies on die or exit methods (which is a
+ * bad practice). So far the use cases tested work fine, even the use of the header function in legacy code still works correctly.
+ * But if the legacy controller exits too soon then we can't get the content and return a Symfony response which may result in
+ * unexpected side effects.
+ */
 class LegacyController extends PrestaShopAdminController
 {
     public function __construct(
@@ -73,9 +91,6 @@ class LegacyController extends PrestaShopAdminController
             return $this->redirect($adminController->getRedirectAfter());
         }
 
-        // Init content only when no redirection needed
-        $adminController->initContent();
-
         $smarty = $this->legacyContext->getSmarty();
         $smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'default/template/');
 
@@ -104,8 +119,9 @@ class LegacyController extends PrestaShopAdminController
      */
     protected function renderPageContent(AdminController $adminController): Response
     {
-        $smarty = $this->legacyContext->getSmarty();
+        $adminController->initContent();
 
+        $smarty = $this->legacyContext->getSmarty();
         $templateDirectories = $smarty->getTemplateDir() ?: [];
         $controllerDisplay = $adminController->getDisplay();
         if (!empty($controllerDisplay)) {
@@ -142,6 +158,9 @@ class LegacyController extends PrestaShopAdminController
     /**
      * This part mimics how AdminController renders ajax content
      *
+     * Many ajax controllers directly echo their content so in this case we prefer catching the output of the legacy controller,
+     * it is then returned as a proper Symfony response.
+     *
      * @param AdminController $adminController
      * @param string $action
      *
@@ -149,18 +168,45 @@ class LegacyController extends PrestaShopAdminController
      */
     protected function renderAjaxController(AdminController $adminController, string $action): Response
     {
+        ob_start();
+        // In this case, initContent must be executed after ob_start because it can already echo some output
+        $adminController->initContent();
         if (!empty($action) && method_exists($adminController, 'displayAjax' . $action)) {
             $adminController->{'displayAjax' . $action}();
         } elseif (method_exists($adminController, 'displayAjax')) {
             $adminController->displayAjax();
         }
+        $outputContent = ob_get_clean();
 
-        return new Response($adminController->content);
+        // The output of the controller is either directly echoed or it can be properly appended in AdminController::content
+        // it depends on the implementation of the controllers.
+        if (!empty($outputContent) && !empty($adminController->content)) {
+            // Sometimes they are both done and are equal, in which case we only return one content to avoid duplicates.
+            if ($outputContent === $adminController->content) {
+                $responseContent = $outputContent;
+            } else {
+                // In case both contents are present and are different we concatenate them, first the echoed output and then the controller
+                // one since it is displayed last by smarty in the original workflow
+                // This concatenation approach is theoretical and naive and was not tested because of the lack of use cases, so it may need
+                // to be improved in the future
+                $responseContent = $outputContent . $adminController->content;
+            }
+        } elseif (!empty($outputContent)) {
+            $responseContent = $outputContent;
+        } elseif (!empty($adminController->content)) {
+            $responseContent = $adminController->content;
+        } else {
+            $responseContent = '';
+        }
+
+        return new Response($responseContent);
     }
 
     /**
      * This mimics the first part of AdminController::run initialize the controller and its sub contents before actually displaying it,
      * it was stripped from the part already handled by the Symfony layout
+     *
+     * Note: some legacy controllers may already use die at this point (to echo content and finish the process) when postProcess is called.
      *
      * @param array $dispatcherHookParameters
      *
