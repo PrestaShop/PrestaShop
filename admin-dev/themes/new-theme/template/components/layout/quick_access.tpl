@@ -28,13 +28,15 @@
     {l s='Quick Access' d='Admin.Navigation.Header'}
   </button>
   <div class="dropdown-menu">
-    {foreach $quick_access as $quick}
-      <a class="dropdown-item quick-row-link {if isset($quick.class)}{$quick.class}{/if}{if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access} active{/if}"
-         href="{$quick.link|escape:'html':'UTF-8'}"
-        {if $quick.new_window} target="_blank"{/if}
-         data-item="{$quick.name}"
-      >{$quick.name}</a>
-    {/foreach}
+    {if $quick_access}
+      {foreach $quick_access as $quick}
+        <a class="dropdown-item quick-row-link {if isset($quick.class)}{$quick.class}{/if}{if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access} active{/if}"
+           href="{$quick.link|escape:'html':'UTF-8'}"
+          {if $quick.new_window} target="_blank"{/if}
+           data-item="{$quick.name}"
+        >{$quick.name}</a>
+      {/foreach}
+    {/if}
     <div class="dropdown-divider"></div>
     {if isset($matchQuickLink)}
       <a id="quick-remove-link"
