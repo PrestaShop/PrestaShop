@@ -19,15 +19,15 @@ PrestaShop is an Open Source e-commerce web application, committed to providing 
 
 This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 8.1), please go to [the releases page][download].
 
+The first stable version of PrestaShop 8.0 was released on October 26th, 2022.  
+The first stable version of PrestaShop 8.1 was released on June 26th, 2023. Further updates have been released since then. Learn more about it on [the Build devblog](https://build.prestashop-project.org/tag/8.1/).
 
-About the 'develop' branch
+About the `develop` branch
 --------
 
-The 'develop' branch of this repository contains the work in progress source code for the next version of PrestaShop.
+The `develop` branch of this repository contains the work in progress source code for the next version of PrestaShop. Currently, the next version will be PrestaShop 9.0.
 
 For more information on our branch system, read our guide on [installing PrestaShop for development][install-guide-dev].
-
-The first stable version of PrestaShop 8.0, was released on October 26th, 2022. Further updates have been released since then. Learn more about it on [the Build devblog](https://build.prestashop-project.org/tag/8.0/).
 
 Server configuration
 --------
