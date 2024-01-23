@@ -77,26 +77,85 @@ final class BackUrlRedirectResponseListener
         }
 
         $backUrl = $this->backUrlProvider->getBackUrl($currentRequest);
-
-        if ($backUrl && !$this->isRequestUrlEqualToResponseUrl($currentRequest, $originalResponse)) {
-            $backUrlResponse = $originalResponse->setTargetUrl($backUrl);
-            $event->setResponse($backUrlResponse);
+        if (
+            // No back url nothing to change
+            empty($backUrl)
+            // Redirect to the current url(save and stay) nothing to change
+            || $this->areUrlsEquals($currentRequest->getRequestUri(), $originalResponse->getTargetUrl(), $currentRequest)
+            // If back url is the same as the target (query parameters are ignored) nothing to change
+            || $this->areUrlsEquals($backUrl, $originalResponse->getTargetUrl(), $currentRequest)
+        ) {
+            return;
         }
+
+        $backUrlResponse = $originalResponse->setTargetUrl($backUrl);
+        $event->setResponse($backUrlResponse);
     }
 
     /**
      * Compares if request url is equal to response url - in such case the back url should not work since the action
      * is supposed to be kept on the same url . E.g "save and stay" button click.
      *
-     * @param Request $currentRequest
-     * @param RedirectResponse $originalResponse
-     *
      * @return bool
      */
-    private function isRequestUrlEqualToResponseUrl(
-        Request $currentRequest,
-        RedirectResponse $originalResponse
+    private function areUrlsEquals(
+        string $urlA,
+        string $urlB,
+        Request $request
     ) {
-        return $currentRequest->getRequestUri() === $originalResponse->getTargetUrl();
+        $parsedUrlA = parse_url($urlA);
+        $parsedUrlB = parse_url($urlB);
+
+        // Some URls may be relative, so we fill the missing part based on current request
+        $missingParts = [
+            'scheme' => $request->getScheme(),
+            'host' => $request->getHost(),
+            'port' => $request->getPort(),
+            'user' => $request->getUser(),
+            'pass' => $request->getPassword(),
+            'path' => $request->getPathInfo(),
+        ];
+        foreach ($missingParts as $checkedPart => $missingValue) {
+            if (empty($parsedUrlA[$checkedPart])) {
+                $parsedUrlA[$checkedPart] = $missingValue;
+            }
+            if (empty($parsedUrlB[$checkedPart])) {
+                $parsedUrlB[$checkedPart] = $missingValue;
+            }
+        }
+
+        // We don't check all the parts of the url, we omit the query and fragment part so if query parameters are different
+        // the URLs are considered equal, this mostly allows appending some query parameter in redirection like &conf=4 used
+        // by legacy pages to display alert messages
+        foreach (['scheme', 'host', 'port', 'user', 'pass', 'path'] as $checkedPart) {
+            if (($parsedUrlA[$checkedPart] ?? '') !== ($parsedUrlB[$checkedPart] ?? '')) {
+                return false;
+            }
+        }
+
+        // Now compare parameters, additional parameters are ignored but different values for same parameter means the url is not equal
+        if (isset($parsedUrlA['query'], $parsedUrlB['query'])) {
+            $parametersA = [];
+            parse_str($parsedUrlA['query'], $parametersA);
+            $parametersB = [];
+            parse_str($parsedUrlB['query'], $parametersB);
+            unset($parametersA['token'], $parametersB['token']);
+            $allParameters = array_unique(array_merge(array_keys($parametersA), array_keys($parametersB)));
+            $ignoredParameters = ['conf'];
+            foreach ($allParameters as $parameterName) {
+                // Some parameters can be modified and it's ok
+                if (in_array($parameterName, $ignoredParameters)) {
+                    continue;
+                }
+                if (!isset($parametersA[$parameterName]) || !isset($parametersB[$parameterName])) {
+                    continue;
+                }
+                if ($parametersA[$parameterName] !== $parametersB[$parameterName]) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

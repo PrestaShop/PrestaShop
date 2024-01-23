@@ -87,8 +87,15 @@ class LegacyController extends PrestaShopAdminController
             // After each request the cookie must be written to save its modified state during AdminController workflow
             // See Controller::smartyOutputContent
             $this->legacyContext->getContext()->cookie->write();
+            $redirectAfter = $adminController->getRedirectAfter();
 
-            return $this->redirect($adminController->getRedirectAfter());
+            // In case redirect url is purely relative (starts with index.php) we transform it into an absolute one
+            // this avoids unexpected redirection by the BackUrlRedirectResponseListener
+            if (str_starts_with($redirectAfter, 'index.php')) {
+                $redirectAfter = rtrim($request->getSchemeAndHttpHost() . $request->getBasePath(), '/') . '/' . $redirectAfter;
+            }
+
+            return $this->redirect($redirectAfter);
         }
 
         $smarty = $this->legacyContext->getSmarty();
