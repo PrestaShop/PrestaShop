@@ -253,4 +253,18 @@ class CmsControllerCore extends FrontController
     {
         return $this->cms_category;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL()
+    {
+        if (Validate::isLoadedObject($this->cms)) {
+            return $this->context->link->getCMSLink($this->cms, $this->cms->link_rewrite, $this->ssl);
+        } elseif (Validate::isLoadedObject($this->cms_category)) {
+            return $this->context->link->getCMSCategoryLink($this->cms_category);
+        }
+
+        return '';
+    }
 }

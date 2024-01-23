@@ -236,4 +236,12 @@ class SitemapControllerCore extends FrontController
 
         return $breadcrumb;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL()
+    {
+        return $this->context->link->getPageLink('sitemap', true);
+    }
 }

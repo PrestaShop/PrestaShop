@@ -53,4 +53,12 @@ class ContactControllerCore extends FrontController
 
         return $breadcrumb;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL()
+    {
+        return $this->context->link->getPageLink('contact', true);
+    }
 }
