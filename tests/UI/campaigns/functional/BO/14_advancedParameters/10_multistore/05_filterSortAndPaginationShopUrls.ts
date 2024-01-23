@@ -106,7 +106,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   describe('Filter shop table', async () => {
     [
       {args: {filterBy: 'id_shop_url', filterValue: '10', filterType: 'input'}},
-      {args: {filterBy: 's!name', filterValue: 'PrestaShop', filterType: 'input'}},
+      {args: {filterBy: 's!name', filterValue: global.INSTALL.SHOP_NAME, filterType: 'input'}},
       {args: {filterBy: 'url', filterValue: 'ToDelete10', filterType: 'input'}},
       {args: {filterBy: 'main', filterValue: 'Yes', filterType: 'select'}, expected: 'Enabled'},
       {args: {filterBy: 'active', filterValue: 'Yes', filterType: 'select'}, expected: 'Enabled'},

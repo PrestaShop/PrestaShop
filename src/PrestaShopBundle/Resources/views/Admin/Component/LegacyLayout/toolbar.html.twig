@@ -88,7 +88,7 @@
                     {% endif %}
                     data-role="page-header-desc-{{ this.table }}-link"
                   >
-                    <i class="{% if btn.icon is defined and btn.icon is not empty %}{{ btn.icon|escape }}{% else %}process-icon-{% if btn.imgclass is defined %}{{ btn.imgclass|escape }}{% else %}{{ k }}{% endif %}{% endif %}{% if btn.class %} {{ btn.class|escape }}{% endif %}"></i>
+                    <i class="{% if btn.icon is defined and btn.icon is not empty %}{{ btn.icon|escape }}{% else %}process-icon-{% if btn.imgclass is defined %}{{ btn.imgclass|escape }}{% else %}{{ k }}{% endif %}{% endif %}{% if btn.class is defined %} {{ btn.class|escape }}{% endif %}"></i>
                     <div{% if btn.force_desc is defined and btn.force_desc == true %} class="locked"{% endif %}>
                       {{ btn.desc|escape }}
                     </div>
