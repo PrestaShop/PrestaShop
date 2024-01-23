@@ -73,8 +73,24 @@ describe('BO - Catalog - Stocks : Sort and pagination', async () => {
 
   describe('Sort stock table', async () => {
     const sortTests = [
-      {args: {testIdentifier: 'sortByIdDesc', sortBy: 'product_id', sortDirection: 'desc', isNumber: true}},
-      {args: {testIdentifier: 'sortByIdAsc', sortBy: 'product_id', sortDirection: 'asc', isNumber: true}},
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdDesc',
+            sortBy: 'product_id',
+            sortDirection: 'desc',
+            isNumber: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdAsc',
+            sortBy: 'product_id',
+            sortDirection: 'asc',
+            isNumber: true,
+          },
+      },
       {args: {testIdentifier: 'sortByProductNameAsc', sortBy: 'product_name', sortDirection: 'asc'}},
       {args: {testIdentifier: 'sortByProductNameDesc', sortBy: 'product_name', sortDirection: 'desc'}},
       {args: {testIdentifier: 'sortByReferenceAsc', sortBy: 'reference', sortDirection: 'asc'}},
