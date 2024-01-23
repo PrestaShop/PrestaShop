@@ -98,6 +98,10 @@ class LegacyController extends PrestaShopAdminController
             return $this->redirect($redirectAfter);
         }
 
+        // Force disabling cache control like it's done in initHeader usually (we use header function instead of Response attributes
+        // in case the process is forced to exit early, without returning a Symfony response)
+        header('Cache-Control: no-store, no-cache');
+
         $smarty = $this->legacyContext->getSmarty();
         $smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'default/template/');
 
