@@ -39,7 +39,7 @@ class Translator extends BaseTranslator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function addResource($format, $resource, $locale, $domain = null)
+    public function addResource($format, $resource, $locale, $domain = null): void
     {
         parent::addResource($format, $resource, $locale, $domain);
         parent::addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
