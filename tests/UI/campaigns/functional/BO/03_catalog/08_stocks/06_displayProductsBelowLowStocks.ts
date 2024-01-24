@@ -83,7 +83,7 @@ describe('BO - Catalog - Stocks : Display products below low stock level first',
   });
 
   it('should check that the second product is displayed first', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProductsInList', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkSecondProductIsDisplayedFirst', baseContext);
 
     const productName = await stocksPage.getTextColumnFromTableStocks(page, 1, 'product_name');
     expect(productName).to.contain('Hummingbird notebook');
