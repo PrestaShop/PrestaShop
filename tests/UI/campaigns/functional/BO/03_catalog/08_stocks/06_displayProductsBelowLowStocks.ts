@@ -26,6 +26,7 @@ describe('BO - Catalog - Stocks : Display products below low stock level first',
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfProducts: number = 0;
+  let productQuantity: number;
 
   // before and after functions
   before(async function () {
@@ -62,11 +63,17 @@ describe('BO - Catalog - Stocks : Display products below low stock level first',
     expect(numberOfProducts).to.be.above(0);
   });
 
+  it('should get the quantity of the second product in the list', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'getQuantityOfSecondProduct', baseContext);
+
+    productQuantity = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 2, 'available'),10);
+  });
+
   it('should update the second product quantity to -300', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateProductQuantity', baseContext);
 
     // Update Quantity and check successful message
-    const updateMessage = await stocksPage.updateRowQuantityWithInput(page, 2, -300);
+    const updateMessage = await stocksPage.updateRowQuantityWithInput(page, 2, -productQuantity);
     expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
 
     // Check physical and available quantities of product after update
