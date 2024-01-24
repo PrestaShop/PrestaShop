@@ -10,7 +10,11 @@ import type {Page} from 'playwright';
 class ThemeAndLogo extends themeAndLogoBasePage {
   public readonly pageTitle: string;
 
+  public readonly successExportMessage: string;
+
   private readonly addNewThemeButton: string;
+
+  private readonly exportCurrentThemeButton: string;
 
   private readonly themeCardContainer: string;
 
@@ -30,7 +34,10 @@ class ThemeAndLogo extends themeAndLogoBasePage {
     super();
 
     this.pageTitle = `Theme & Logo • ${global.INSTALL.SHOP_NAME}`;
+    this.successExportMessage = 'Your theme has been correctly exported:';
+
     this.addNewThemeButton = '#page-header-desc-configuration-add';
+    this.exportCurrentThemeButton = '#page-header-desc-configuration-export';
     this.themeCardContainer = '#themes-logo-page .theme-card-container';
     this.useSpecificThemeButton = (name: string) => `${this.themeCardContainer}[data-role="${name}"] `
       + 'button.js-display-use-theme-modal';
@@ -38,6 +45,17 @@ class ThemeAndLogo extends themeAndLogoBasePage {
       + 'button.js-display-delete-theme-modal';
     this.removeThemeModalDialog = '#delete_theme_modal .modal-dialog';
     this.removeThemeModalDialogYesButton = `${this.removeThemeModalDialog} .js-submit-delete-theme`;
+  }
+
+  /**
+   * Export current theme button
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async exportCurrentTheme(page: Page): Promise<string> {
+    await this.clickAndWaitForLoadState(page, this.exportCurrentThemeButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
