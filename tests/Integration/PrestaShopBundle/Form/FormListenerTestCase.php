@@ -74,7 +74,7 @@ class FormListenerTestCase extends KernelTestCase
      */
     protected function createForm(string $type, array $options = [], $data = null): FormInterface
     {
-        return self::$kernel->getContainer()->get('form.factory')->create($type, $data, $options);
+        return self::getContainer()->get('form.factory')->create($type, $data, $options);
     }
 
     /**

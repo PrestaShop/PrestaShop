@@ -85,6 +85,6 @@ abstract class AbstractFormTester extends KernelTestCase
      */
     protected function getFormFactory(): FormFactoryInterface
     {
-        return self::$kernel->getContainer()->get('form.factory');
+        return self::getContainer()->get('form.factory');
     }
 }
