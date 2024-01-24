@@ -2,11 +2,6 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.crypto.hashing:
-    class: PrestaShop\PrestaShop\Core\Crypto\Hashing
-
-  PrestaShop\PrestaShop\Core\Security\Hashing: ~
-
   prestashop.core.security.folder_guard.vendor:
     class: 'PrestaShop\PrestaShop\Core\Security\HtaccessFolderGuard'
     arguments:

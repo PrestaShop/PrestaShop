@@ -163,7 +163,7 @@ services:
     calls:
       - method: setTabRepository
         arguments:
-          - '@prestashop.core.admin.tab.repository'
+          - '@PrestaShopBundle\Entity\Repository\TabRepository'
 
   prestashop.admin.order_preferences.general.form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'

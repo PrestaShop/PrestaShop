@@ -2,12 +2,6 @@ services:
   _defaults:
     public: true
 
-  PrestaShopBundle\Entity\Repository\TabRepository:
-    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
-    public: false
-    arguments:
-      - PrestaShopBundle\Entity\Tab
-
   prestashop.core.admin.tab.repository:
     alias: PrestaShopBundle\Entity\Repository\TabRepository
     deprecated:
@@ -132,12 +126,6 @@ services:
     arguments:
       - "@doctrine.dbal.default_connection"
       - "%database_prefix%"
-
-  PrestaShopBundle\Entity\Repository\FeatureFlagRepository:
-    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
-    arguments:
-      - PrestaShopBundle\Entity\FeatureFlag
-    lazy: true
 
   PrestaShopBundle\Entity\Repository\ApiAccessRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]

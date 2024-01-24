@@ -1,2 +1,14 @@
 imports:
-    - { resource: ../common.yml }
+  - { resource: ../common.yml }
+
+services:
+  _defaults:
+    public: true
+
+  # Special definition for legacy environments since they don't initialize the request stack, which is a dependency for the feature flag checker
+  Symfony\Component\HttpFoundation\RequestStack:
+    factory: [ 'PrestaShopBundle\Http\RequestStackFactory', 'buildRequestStack' ]
+    lazy: true
+
+  request_stack:
+    alias: Symfony\Component\HttpFoundation\RequestStack

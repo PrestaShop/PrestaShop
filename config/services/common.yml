@@ -6,6 +6,7 @@ imports:
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/adapter/data_provider_common.yml }
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/adapter/common.yml }
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/core/common.yml }
+    - { resource: ../../src/PrestaShopBundle/Resources/config/services/bundle/common.yml }
 
 services:
     _defaults:
