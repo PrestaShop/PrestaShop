@@ -94,6 +94,8 @@ class Stocks extends BOBasePage {
 
   private readonly sortColumnSpanButton: (column: string) => string;
 
+  private readonly displayProductsBelowLowOfStockCheckbox: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add currency page
@@ -157,6 +159,9 @@ class Stocks extends BOBasePage {
     this.filterCategoryTreeItems = (category: string) => `${this.filterCategoryDiv} div.ps-tree-items[label='${category}']`;
     this.filterCategoryCheckBoxDiv = (category: string) => `${this.filterCategoryTreeItems(category)} .md-checkbox`;
 
+    // Display product below low of stock
+    this.displayProductsBelowLowOfStockCheckbox = '#low-filter +i';
+
     // Sort Selectors
     this.tableHead = `${this.productList} thead`;
     this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
@@ -196,7 +201,7 @@ class Stocks extends BOBasePage {
     // If pagination that return number of products in this page
     const pagesLength = await this.getProductsPagesLength(page);
 
-    if (pagesLength === 0) {
+    if (pagesLength === 1) {
       return page.locator(this.productRows).count();
     }
     // Get number of products in all pages
@@ -230,7 +235,10 @@ class Stocks extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getProductsPagesLength(page: Page): Promise<number> {
-    return page.locator(this.paginationListItem).count();
+    if (await this.elementVisible(page, this.paginationListItem, 1000)) {
+      return page.locator(this.paginationListItem).count();
+    }
+    return 1;
   }
 
   /**
@@ -260,7 +268,9 @@ class Stocks extends BOBasePage {
     const allRowsContentTable: string[] = [];
 
     for (let j = 1; j <= numberOfPages; j++) {
-      await this.paginateTo(page, j);
+      if (numberOfPages > 1) {
+        await this.paginateTo(page, j);
+      }
       const rowsNumber = await this.getNumberOfProductsFromList(page);
 
       for (let i = 1; i <= rowsNumber; i++) {
@@ -268,7 +278,9 @@ class Stocks extends BOBasePage {
         allRowsContentTable.push(rowContent);
       }
     }
-    await this.paginateTo(page, 1);
+    if (numberOfPages > 1) {
+      await this.paginateTo(page, 1);
+    }
 
     return allRowsContentTable;
   }
@@ -323,6 +335,16 @@ class Stocks extends BOBasePage {
     if (await this.elementVisible(page, this.productListLoading, 1000)) {
       await this.waitForHiddenSelector(page, this.productListLoading);
     }
+  }
+
+  /**
+   * Is product low stock
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @return {Promise<boolean>}
+   */
+  async isProductLowStock(page: Page, row: number): Promise<boolean> {
+    return this.elementVisible(page, `${this.productRow(row)}.low-stock`, 1000);
   }
 
   /**
@@ -436,15 +458,17 @@ class Stocks extends BOBasePage {
   }
 
   /**
-   * Filter stocks by product's category
+   * Check/Uncheck product's categories
    * @param page {Page} Browser tab
-   * @param category {string} Category name to set on filter input
+   * @param category {string[]} List of categories name to check on filter input
    * @return {Promise<void>}
    */
-  async filterByCategory(page: Page, category: string): Promise<void> {
+  async filterByCategory(page: Page, category: string[]): Promise<void> {
     await this.openCloseAdvancedFilter(page);
-    await page.locator(this.filterCategoryExpandButton).click();
-    await page.locator(this.filterCategoryCheckBoxDiv(category)).click();
+    await page.locator(this.filterCategoryExpandButton).first().click();
+    for (let i: number = 0; i < category.length; i++) {
+      await page.locator(this.filterCategoryCheckBoxDiv(category[i])).first().click();
+    }
     await this.waitForHiddenSelector(page, this.productListLoading);
     await page.locator(this.filterCategoryCollapseButton).click();
     await this.openCloseAdvancedFilter(page, false);
@@ -461,6 +485,16 @@ class Stocks extends BOBasePage {
       page.locator(this.advancedFiltersButton).click(),
       this.waitForVisibleSelector(page, `${this.advancedFiltersButton}[aria-expanded='${toOpen.toString()}']`),
     ]);
+  }
+
+  /**
+   * Set display product below low of stock
+   * @param page {Page} Browser tab
+   * @param toCheck {boolean} True if we need to enable display product below low of stock
+   * @return {Promise<void>}
+   */
+  async setDisplayProductsBelowLowOfStock(page: Page, toCheck: boolean): Promise<void> {
+    await this.setChecked(page, this.displayProductsBelowLowOfStockCheckbox, toCheck, true);
   }
 
   /**

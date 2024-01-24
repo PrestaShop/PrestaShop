@@ -13,6 +13,7 @@ type CategoryCreator = {
   coverImage?: string
   thumbnailImage?: string
   children?: CategoryData[]
+  products?: string[]
 };
 
 type CategoryFilter = {

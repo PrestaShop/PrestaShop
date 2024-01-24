@@ -6,6 +6,7 @@ const category4: CategoryData = new CategoryData({
   description: 'T-shirts, sweaters, hoodies and men\'s accessories.',
   position: 1,
   displayed: true,
+  products: ['demo_1'],
 });
 const category5: CategoryData = new CategoryData({
   id: 5,
@@ -14,6 +15,7 @@ const category5: CategoryData = new CategoryData({
     + 'for every style.',
   position: 2,
   displayed: true,
+  products: ['demo_3'],
 });
 const category7: CategoryData = new CategoryData({
   id: 7,
@@ -21,6 +23,7 @@ const category7: CategoryData = new CategoryData({
   description: 'Notebooks, agendas, office accessories and more.',
   position: 1,
   displayed: true,
+  products: ['demo_8', 'demo_9', 'demo_10'],
 });
 const category8: CategoryData = new CategoryData({
   id: 8,
@@ -28,6 +31,7 @@ const category8: CategoryData = new CategoryData({
   description: 'Details matter! Liven up your interior with our selection of home accessories.',
   position: 2,
   displayed: true,
+  products: ['demo_11', 'demo_12', 'demo_13', 'demo_14', 'demo_15', 'demo_16', 'demo_17', 'demo_21'],
 });
 
 export default {
@@ -50,6 +54,7 @@ export default {
       category4,
       category5,
     ],
+    products: category4.products.concat(category5.products),
   }),
   men: category4,
   women: category5,
@@ -63,6 +68,7 @@ export default {
       category7,
       category8,
     ],
+    products: category7.products.concat(category8.products),
   }),
   stationery: category7,
   homeAccessories: category8,
@@ -72,5 +78,6 @@ export default {
     description: 'Framed poster and vector images',
     position: 3,
     displayed: true,
+    products: ['demo_5', 'demo_6', 'demo_7', 'demo_18', 'demo_19', 'demo_20'],
   }),
 };

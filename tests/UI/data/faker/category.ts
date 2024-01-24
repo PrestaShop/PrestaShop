@@ -25,11 +25,13 @@ export default class CategoryData {
 
   public readonly groupAccess: GroupData;
 
-  public readonly coverImage: string|null;
+  public readonly coverImage: string | null;
 
-  public readonly thumbnailImage: string|null;
+  public readonly thumbnailImage: string | null;
 
   public readonly children: CategoryData[];
+
+  public readonly products: string[];
 
   /**
    * Constructor for class CategoryData
@@ -69,5 +71,8 @@ export default class CategoryData {
 
     /** @type {CategoryData[]} Category thumbnail of the category */
     this.children = categoryToCreate.children || [];
+
+    /** @type {string[]} Products of the category */
+    this.products = categoryToCreate.products || [];
   }
 }
