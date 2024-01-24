@@ -114,19 +114,12 @@ class EditMerchandiseReturns extends BOBasePage {
    * Delete product
    * @param page {Page} Browser tab
    * @param row {number} Row in products table
-   * @param understandTheRisk {boolean} True if you need to click on understand the risk button
    * @returns {Promise<string>}
    */
-  async deleteProduct(page: Page, row: number = 1, understandTheRisk: boolean = true): Promise<string> {
+  async deleteProduct(page: Page, row: number = 1): Promise<string> {
     await this.clickAndWaitForURL(page, this.productsTableDeleteColumn(row));
-    if (understandTheRisk) {
-      await this.clickAndWaitForURL(page, this.continueButton);
 
-      return this.getTextContent(page, this.alertBlock);
-    }
-    await this.clickAndWaitForURL(page, this.cancelButton);
-
-    return this.getPageTitle(page);
+    return this.getTextContent(page, this.alertBlock);
   }
 }
 
