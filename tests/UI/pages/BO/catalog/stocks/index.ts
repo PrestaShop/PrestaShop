@@ -60,6 +60,8 @@ class Stocks extends BOBasePage {
 
   private readonly productRowQuantityUpdateButton: (row: number) => string;
 
+  private readonly productRowQuantityUpDownButton: (row: number, direction: string) => string;
+
   private readonly productListLoading: string;
 
   private readonly filtersContainerDiv: string;
@@ -95,6 +97,8 @@ class Stocks extends BOBasePage {
   private readonly sortColumnSpanButton: (column: string) => string;
 
   private readonly displayProductsBelowLowOfStockCheckbox: string;
+
+  private readonly applyQuantityButton: string;
 
   /**
    * @constructs
@@ -141,6 +145,8 @@ class Stocks extends BOBasePage {
     this.productRowQuantityColumn = (row: number) => `${this.productRow(row)} td[data-role=update-quantity]`;
     this.productRowQuantityColumnInput = (row: number) => `${this.productRowQuantityColumn(row)} div.edit-qty input`;
     this.productRowQuantityUpdateButton = (row: number) => `${this.productRowQuantityColumn(row)} button.check-button`;
+    this.productRowQuantityUpDownButton = (row: number, direction: string) => `#app tr:nth-child(${row})`
+      + ` td.qty-spinner span.ps-number-${direction}`;
 
     // loader
     this.productListLoading = `${this.productRows} td:nth-child(1) div.ps-loader`;
@@ -161,6 +167,8 @@ class Stocks extends BOBasePage {
 
     // Display product below low of stock
     this.displayProductsBelowLowOfStockCheckbox = '#low-filter +i';
+    // Apply quantity button
+    this.applyQuantityButton = '#app div.row.product-actions button.update-qty';
 
     // Sort Selectors
     this.tableHead = `${this.productList} thead`;
@@ -458,8 +466,13 @@ class Stocks extends BOBasePage {
     return textContent;
   }
 
+  /**
+   * Click on apply new quantity button
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
   async clickOnApplyNewQuantity(page: Page): Promise<string> {
-    await page.locator('#app div.row.product-actions button.update-qty').click();
+    await page.locator(this.applyQuantityButton).click();
 
     // Wait for alert-Box after update quantity and close alert-Box
     await this.waitForVisibleSelector(page, this.alertBoxTextSpan);

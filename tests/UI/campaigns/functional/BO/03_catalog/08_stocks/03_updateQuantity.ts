@@ -62,9 +62,6 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
     expect(numberOfProducts).to.be.above(0);
   });
 
-  /*
-  Add/Subtract stocks quantity of product by writing in input
-   */
   [
     {args: {action: 'add', updateValue: 5}},
     {args: {action: 'subtract', updateValue: -5}},
@@ -121,9 +118,6 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
     });
   });
 
-  /*
-  Add/Subtract stocks quantity of product by using the arrow up/down buttons
- */
   [
     {args: {action: 'add', updateValue: 5, direction: 'up'}},
     {args: {action: 'subtract', updateValue: -5, direction: 'down'}},
@@ -184,9 +178,6 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
     });
   });
 
-  /*
- Add/Subtract stocks quantity of product by using the arrow up/down buttons and by writing in input
-*/
   describe('Update quantity by using the number up/down and by writing in input', async () => {
     it('should add quantity of the first product by using the arrow up/down buttons', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityUp', baseContext);
