@@ -91,51 +91,14 @@ class QuickAccessCore extends ObjectModel
             return false;
         }
 
-        $context = Context::getContext();
-        foreach ($quickAccess as $index => $quick) {
-            // first, clean url to have a real quickLink
-            $quick['link'] = $context->link->getQuickLink($quick['link']);
-            $tokenString = $idEmployee;
-
-            if ('../' === $quick['link'] && Shop::getContext() == Shop::CONTEXT_SHOP) {
-                $url = $context->shop->getBaseURL();
-                if (!$url) {
-                    unset($quickAccess[$index]);
-
-                    continue;
-                }
-                $quickAccess[$index]['link'] = $url;
-            } else {
-                preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
-                if (isset($admin_tab[1])) {
-                    if (strpos($admin_tab[1], '&')) {
-                        $admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
-                    }
-                    $quick_access[$index]['target'] = $admin_tab[1];
-
-                    $tokenString = $admin_tab[1] . (int) Tab::getIdFromClassName($admin_tab[1]) . $idEmployee;
-                }
-                $quickAccess[$index]['link'] = $context->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
-                if ($quick['link'] === self::NEW_PRODUCT_LINK || $quick['link'] === self::NEW_PRODUCT_V2_LINK) {
-                    if (!Access::isGranted('ROLE_MOD_TAB_ADMINPRODUCTS_CREATE', $context->employee->id_profile)) {
-                        // if employee has no access, we don't show product creation link,
-                        // because it causes modal-related issues in product v2
-                        unset($quickAccess[$index]);
-                        continue;
-                    }
-                    // We create new product v2 modal popup link
-                    $quickAccess[$index]['link'] = $context->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . self::NEW_PRODUCT_V2_LINK;
-                    $quickAccess[$index]['class'] = 'new-product-button';
-                }
-            }
-
-            if (false === strpos($quickAccess[$index]['link'], 'token')) {
-                $separator = strpos($quickAccess[$index]['link'], '?') ? '&' : '?';
-                $quickAccess[$index]['link'] .= $separator . 'token=' . Tools::getAdminToken($tokenString);
-            }
+        $container = \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance();
+        if (!$container) {
+            return false;
         }
 
-        return $quickAccess;
+        $quickAccessGenerator = $container->get(\PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessGenerator::class);
+
+        return $quickAccessGenerator->getTokenizedQuickAccesses();
     }
 
     /**

@@ -38,18 +38,18 @@
         >{{ quickAccess.name }}</a>
       {% endfor %}
       <div class="dropdown-divider"></div>
-      {% if this.currentQuickAccess %}
+      {% if this.activeQuickAccess %}
         <a id="quick-remove-link"
            class="dropdown-item js-quick-link"
            href="#"
            data-method="remove"
-           data-quicklink-id="{{ this.currentQuickAccess.id_quick_access }}"
+           data-quicklink-id="{{ this.activeQuickAccess.id_quick_access }}"
            data-rand="{{ random(1, 200) }}"
-           data-icon="{{ this.currentUrlIcon }}"
-           data-url="{{ this.currentQuickAccessLink }}"
+           data-icon="{{ this.currentPageIcon }}"
+           data-url="{{ this.activeQuickAccess.link }}"
            data-post-link="{{ legacy_path('AdminQuickAccesses') }}"
            data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header') }}"
-           data-link="{{ this.currentQuickAccess.name }}"
+           data-link="{{ this.activeQuickAccess.name }}"
         >
           <i class="material-icons">remove_circle_outline</i>
           {{ 'Remove from Quick Access'|trans({}, 'Admin.Navigation.Header') }}
@@ -60,11 +60,11 @@
            href="#"
            data-rand="{{ random(1, 200) }}"
            data-method="add"
-           data-icon="{{ this.currentUrlIcon }}"
-           data-url="{{ this.currentQuickAccessLink }}"
+           data-icon="{{ this.currentPageIcon }}"
+           data-url="{{ this.currentPageQuickAccessLink }}"
            data-post-link="{{ legacy_path('AdminQuickAccesses') }}"
            data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header')}}"
-           data-link="{{ this.currentUrlTitle }}"
+           data-link="{{ this.currentPageTitle }}"
         >
           <i class="material-icons">add_circle</i>
           {{ 'Add current page to Quick Access'|trans({}, 'Admin.Actions') }}
