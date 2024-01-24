@@ -1,3 +1,10 @@
+parameters:
+  # All admin context listeners should be executed before the router listener, this way even if no symfony route is found they context are initialized
+  # and can be used in admin legacy pages as well (router listener priority is 32)
+  employee_listener_priority: 35
+  language_listener_priority: 34
+  default_listener_priority: 33
+
 services:
   _defaults:
     public: false
@@ -7,22 +14,27 @@ services:
   # Employee context must have a higher priority because Shop and Language depend on it
   PrestaShopBundle\EventListener\Context\Admin\EmployeeContextListener:
     tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%employee_listener_priority%' }
 
   # Language depends on Employee so its priority is lower, however it has higher priority than Currency and Country because they depend on Language
   PrestaShopBundle\EventListener\Context\Admin\LanguageContextListener:
     tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 15 }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%language_listener_priority%' }
 
   PrestaShopBundle\EventListener\Context\Admin\ShopContextListener:
     tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%default_listener_priority%' }
 
   PrestaShopBundle\EventListener\Context\Admin\CurrencyContextListener:
     tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%default_listener_priority%' }
 
   PrestaShopBundle\EventListener\Context\Admin\CountryContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%default_listener_priority%' }
+
+  # This listener must run after the router listener since it's based on the request attributes that are defined by the router
+  PrestaShopBundle\EventListener\Context\Admin\LegacyControllerContextListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
@@ -31,10 +43,6 @@ services:
       $legacyBuilders: !tagged_iterator core.legacy_context_builder
     tags:
       - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
-
-  PrestaShopBundle\EventListener\Context\Admin\LegacyControllerContextListener:
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
   # These listeners are used in the API context
 
