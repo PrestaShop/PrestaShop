@@ -131,8 +131,8 @@ describe('BO - Catalog - Stocks : Display products below low stock level first',
   });
 
   // @todo : https://github.com/PrestaShop/PrestaShop/issues/33681
-  it.skip('should check that the products are sorted by ID des', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkProductSortedByIDAsc', baseContext);
+  it.skip('should check that the products are sorted by ID desc', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkProductSortedByIDDesc', baseContext);
 
     const table = await stocksPage.getAllRowsColumnContent(page, 'product_id');
 
