@@ -1,6 +1,7 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import basicHelper from '@utils/basicHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -9,15 +10,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import stocksPage from '@pages/BO/catalog/stocks';
 
-// Import data
-import Products from '@data/demo/products';
-import Suppliers from '@data/demo/suppliers';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import stock from "@commonTests/BO/catalog/stock";
-import movementsPage from "@pages/BO/catalog/stocks/movements";
-import basicHelper from "@utils/basicHelper";
 
 const baseContext: string = 'functional_BO_catalog_stocks_displayProductsBelowLowStocks';
 
@@ -66,7 +60,7 @@ describe('BO - Catalog - Stocks : Display products below low stock level first',
   it('should get the quantity of the second product in the list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getQuantityOfSecondProduct', baseContext);
 
-    productQuantity = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 2, 'available'),10);
+    productQuantity = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 2, 'available'), 10);
   });
 
   it('should update the second product quantity to -300', async function () {
