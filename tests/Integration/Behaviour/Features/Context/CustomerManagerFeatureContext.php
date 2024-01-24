@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
+use Symfony\Component\Serializer\SerializerInterface;
 use Tests\Integration\Behaviour\Features\Context\Util\DataComparator;
 use Tests\Integration\Behaviour\Features\Context\Util\DataTransfer;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -270,7 +271,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         /** @var EditableCustomer $result */
         $result = $queryBus->handle(new GetCustomerForEditing($this->customerRegistry[$customerReference]));
 
-        $serializer = CommonFeatureContext::getContainer()->get('serializer');
+        $serializer = CommonFeatureContext::getContainer()->get(SerializerInterface::class);
         $realData = $serializer->normalize($result);
 
         DataComparator::assertDataSetsAreIdentical($expectedData, $realData);
