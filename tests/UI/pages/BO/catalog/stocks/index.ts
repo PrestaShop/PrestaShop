@@ -390,6 +390,17 @@ class Stocks extends BOBasePage {
   }
 
   /**
+   * set Stock value by setting input value
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param quantity {number} Value to add/subtract from quantity
+   * @returns {Promise<string>}
+   */
+  async setQuantityWithInput(page: Page, row: number, quantity: number): Promise<void> {
+    await this.setValue(page, this.productRowQuantityColumnInput(row), quantity);
+  }
+
+  /**
    * Update Stock value by setting input value
    * @param page {Page} Browser tab
    * @param row {number} Row on table
@@ -397,10 +408,58 @@ class Stocks extends BOBasePage {
    * @returns {Promise<string>}
    */
   async updateRowQuantityWithInput(page: Page, row: number, quantity: number): Promise<string> {
-    await this.setValue(page, this.productRowQuantityColumnInput(row), quantity);
+    await this.setQuantityWithInput(page, row, quantity);
 
     // Wait for check button before click
     await this.waitForSelectorAndClick(page, this.productRowQuantityUpdateButton(row));
+
+    // Wait for alert-Box after update quantity and close alert-Box
+    await this.waitForVisibleSelector(page, this.alertBoxTextSpan);
+    const textContent = await this.getTextContent(page, this.alertBoxTextSpan);
+    await page.locator(this.alertBoxButtonClose).click();
+
+    return textContent;
+  }
+
+  /**
+   * Update Stock value arrow up down
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param quantity {number} Value to add/subtract from quantity
+   * @param direction {string} Direction to click on
+   * @returns {Promise<string>}
+   */
+  async setQuantityByArrowUpDown(page: Page, row: number, quantity: number, direction: string): Promise<void> {
+    await page.locator(`#app tr:nth-child(${row}) td.qty-spinner span.ps-number-${direction}`).hover();
+
+    for (let i = 1; i <= Math.abs(quantity); i++) {
+      await page.locator(`#app tr:nth-child(${row}) td.qty-spinner span.ps-number-${direction}`).click();
+    }
+  }
+
+  /**
+   * Update row quantity value arrow up down
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param quantity {number} Value to add/subtract from quantity
+   * @param direction {string} Direction to click on
+   * @returns {Promise<string>}
+   */
+  async updateRowQuantityWithArrowUpDownButtons(page: Page, row: number, quantity: number, direction: string): Promise<string> {
+    await this.setQuantityByArrowUpDown(page, row, quantity, direction);
+    // Wait for check button before click
+    await this.waitForSelectorAndClick(page, this.productRowQuantityUpdateButton(row));
+
+    // Wait for alert-Box after update quantity and close alert-Box
+    await this.waitForVisibleSelector(page, this.alertBoxTextSpan);
+    const textContent = await this.getTextContent(page, this.alertBoxTextSpan);
+    await page.locator(this.alertBoxButtonClose).click();
+
+    return textContent;
+  }
+
+  async clickOnApplyNewQuantity(page: Page): Promise<string> {
+    await page.locator('#app div.row.product-actions button.update-qty').click();
 
     // Wait for alert-Box after update quantity and close alert-Box
     await this.waitForVisibleSelector(page, this.alertBoxTextSpan);
