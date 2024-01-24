@@ -13,7 +13,7 @@ import stocksPage from '@pages/BO/catalog/stocks';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_stocks_displayProductsBelowLowStocks';
+const baseContext: string = 'functional_BO_catalog_stocks_displayProductsBelowLowStock';
 
 // Simple filter stocks
 describe('BO - Catalog - Stocks : Display products below low stock level first', async () => {
