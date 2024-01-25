@@ -47,3 +47,6 @@ services:
 
     security.csrf.token_storage:
       class: Tests\Integration\Utility\CsrfTokenStorage
+
+    Symfony\Component\Serializer\SerializerInterface:
+      alias: serializer

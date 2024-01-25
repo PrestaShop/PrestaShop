@@ -35,6 +35,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Tests\Integration\Utility\ContextMockerTrait;
 
 class SessionRenewerTest extends KernelTestCase
@@ -58,7 +59,7 @@ class SessionRenewerTest extends KernelTestCase
         $clearableTokenStorage = $this->getContainer()->get('security.csrf.token_storage');
         $this->sessionRenewer = new SessionRenewer($clearableTokenStorage, $requestStack);
 
-        $this->sessionTokenManager = $this->getContainer()->get('security.csrf.token_manager');
+        $this->sessionTokenManager = $this->getContainer()->get(CsrfTokenManagerInterface::class);
     }
 
     public function testRenew(): void

@@ -32,7 +32,7 @@ services:
 
   # We set this alias so that we can override it in test environment (to avoid memory limit crashes)
   prestashop.bundle.routing.converter.cache:
-    alias: Symfony\Component\Cache\Adapter\AdapterInterface
+    alias: cache.system
 
   prestashop.bundle.routing.converter.cache_provider:
     class: 'PrestaShopBundle\Routing\Converter\CacheProvider'
