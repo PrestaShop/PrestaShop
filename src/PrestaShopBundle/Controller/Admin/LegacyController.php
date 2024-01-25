@@ -37,7 +37,7 @@ use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use PrestaShopBundle\Twig\Layout\SmartyVariablesFiller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tools;
+use function Symfony\Component\String\u;
 
 /**
  * This controller acts as a wrapper around a legacy controller, it executes the core logic of an AdminController
@@ -112,7 +112,7 @@ class LegacyController extends PrestaShopAdminController
 
         $isAjaxRequest = (bool) $request->get('ajax');
         if ($isAjaxRequest) {
-            $response = $this->renderAjaxController($adminController, Tools::toCamelCase($request->get('action')));
+            $response = $this->renderAjaxController($adminController, u($request->get('action'))->camel());
         } else {
             $response = $this->renderPageContent($adminController);
         }
@@ -146,8 +146,8 @@ class LegacyController extends PrestaShopAdminController
             // Check if action template has been overridden
             foreach ($templateDirectories as $templateDirectory) {
                 if (file_exists($templateDirectory . DIRECTORY_SEPARATOR . $actionTemplate) && $controllerDisplay != 'view' && $controllerDisplay != 'options') {
-                    if (method_exists($this, $controllerDisplay . Tools::toCamelCase($adminController->className))) {
-                        $this->{$controllerDisplay . Tools::toCamelCase($adminController->className)}();
+                    if (method_exists($this, $controllerDisplay . u($adminController->className)->camel())) {
+                        $this->{$controllerDisplay . u($adminController->className)->camel()}();
                     }
                     $smarty->assign('content', $smarty->fetch($actionTemplate));
 

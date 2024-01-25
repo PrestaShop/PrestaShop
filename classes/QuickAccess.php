@@ -39,16 +39,6 @@ class QuickAccessCore extends ObjectModel
     public $new_window;
 
     /**
-     * link to new product creation form
-     */
-    private const NEW_PRODUCT_LINK = 'index.php/sell/catalog/products/new';
-
-    /**
-     * link to new product creation form for product v2
-     */
-    private const NEW_PRODUCT_V2_LINK = 'index.php/sell/catalog/products/create';
-
-    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [

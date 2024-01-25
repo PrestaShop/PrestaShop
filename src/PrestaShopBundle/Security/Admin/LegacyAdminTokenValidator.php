@@ -34,14 +34,12 @@ use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Security\Hashing;
 use PrestaShopBundle\Entity\Repository\TabRepository;
-use Symfony\Bundle\FrameworkBundle\Session\ServiceSessionFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionFactory;
-use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorageFactory;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
-use Tools;
 
 /**
  * This service is used to validate the query token in legacy context, especially for Frontend.
@@ -109,10 +107,7 @@ class LegacyAdminTokenValidator
      */
     private function buildCsrfTokenManager(): CsrfTokenManager
     {
-        $sessionStorage = new NativeSessionStorage();
-        $sessionStorageFactory = new ServiceSessionFactory($sessionStorage);
-
-        $sessionFactory = new SessionFactory($this->requestStack, $sessionStorageFactory);
+        $sessionFactory = new SessionFactory($this->requestStack, new NativeSessionStorageFactory());
         $session = $sessionFactory->createSession();
         $this->requestStack->getMainRequest()->setSession($session);
 
@@ -136,7 +131,7 @@ class LegacyAdminTokenValidator
             return $employeeId;
         }
 
-        return Tools::getValue('id_employee', null);
+        return $this->requestStack->getMainRequest()->get('id_employee', null);
     }
 
     private function getControllerName(?string $controllerName): ?string
@@ -145,7 +140,7 @@ class LegacyAdminTokenValidator
             return $controllerName;
         }
 
-        return Tools::getValue('controller', null);
+        return $this->requestStack->getMainRequest()->get('controller', null);
     }
 
     private function getAdminToken(?string $adminToken): ?string
@@ -155,14 +150,14 @@ class LegacyAdminTokenValidator
         }
 
         // Legacy admin token is passed via token parameter
-        $token = Tools::getValue('token', null);
+        $token = $this->requestStack->getMainRequest()->get('token', null);
         if (null === $token) {
             // Symfony CSRF token is passed via _token parameter
-            $token = Tools::getValue('_token', null);
+            $token = $this->requestStack->getMainRequest()->get('_token', null);
         }
         if (null === $token) {
             // Frontend token (used for preview mode mostly) is passed via adtoken parameter
-            $token = Tools::getValue('adtoken', null);
+            $token = $this->requestStack->getMainRequest()->get('adtoken', null);
         }
 
         return $token;

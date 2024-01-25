@@ -845,7 +845,7 @@ class AdminControllerCore extends Controller
             $this->container = $this->buildContainer();
         }
         $tokenManager = $this->getContainer()->get(UserTokenManager::class);
-        if ($tokenManager && $tokenManager->isTokenValid()) {
+        if ($tokenManager !== null && $tokenManager->isTokenValid()) {
             return true;
         }
 
