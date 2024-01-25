@@ -20,7 +20,7 @@ export default {
   psEmailAlerts: new ModuleData({
     tag: 'ps_emailalerts',
     name: 'Mail alerts',
-    releaseZip: 'https://github.com/PrestaShop/ps_emailalerts/releases/download/v2.4.2/ps_emailalerts.zip',
+    releaseZip: 'https://github.com/PrestaShop/ps_emailalerts/releases/download/v3.0.0/ps_emailalerts.zip',
   }),
   psEmailSubscription: new ModuleData({
     tag: 'ps_emailsubscription',
