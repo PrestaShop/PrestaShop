@@ -39,11 +39,4 @@ interface FeatureFlagStateCheckerInterface
      * Retrieve if the feature flag is enabled.
      */
     public function isDisabled(string $featureFlagName): bool;
-
-    /**
-     * Returns the list of all enabled feature flags by name.
-     *
-     * @return string[]
-     */
-    public function getEnabledFeatureFlags(): array;
 }

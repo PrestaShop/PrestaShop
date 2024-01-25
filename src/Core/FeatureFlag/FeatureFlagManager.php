@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 
-use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Attribute\TaggedLocator;
@@ -46,24 +45,6 @@ class FeatureFlagManager implements FeatureFlagStateCheckerInterface, ResetInter
         private readonly ContainerInterface $locator,
         private readonly FeatureFlagRepository $featureFlagRepository,
     ) {
-    }
-
-    /**
-     * Returns the list of all enabled feature flags by name.
-     *
-     * @return string[]
-     */
-    public function getEnabledFeatureFlags(): array
-    {
-        $enabledFeatureFlags = [];
-        /** @var FeatureFlag $featureFlag */
-        foreach ($this->featureFlagRepository->findAll() as $featureFlag) {
-            if ($this->isEnabled($featureFlag->getName())) {
-                $enabledFeatureFlags[] = $featureFlag->getName();
-            }
-        }
-
-        return $enabledFeatureFlags;
     }
 
     /**
