@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a8be96e6bc1b9807f8210d627cd14707",
+    "content-hash": "29ee1d1b42f703d1b338d13e6251375d",
     "packages": [
         {
             "name": "api-platform/core",
@@ -4806,7 +4806,7 @@
         },
         {
             "name": "prestashop/autoload",
-            "version": "dev-main",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/autoload.git",
@@ -4829,7 +4829,6 @@
                 "phpstan/phpstan": "^1.8.10",
                 "phpunit/phpunit": "~8.5.30|^9.5"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -4852,7 +4851,7 @@
             ],
             "description": "PrestaShop legacy autoloading",
             "support": {
-                "source": "https://github.com/PrestaShop/autoload/tree/main"
+                "source": "https://github.com/PrestaShop/autoload/tree/v1.0.2"
             },
             "time": "2024-01-05T16:00:42+00:00"
         },
@@ -7802,7 +7801,7 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "dev-master",
+            "version": "v6.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
@@ -7829,7 +7828,6 @@
                 "symfony/symfony": "^6.0",
                 "symfony/translation": "^3.4 || ^4.4 || ^5.0 || ^6.0"
             },
-            "default-branch": true,
             "type": "bundle",
             "autoload": {
                 "psr-4": {
@@ -7858,7 +7856,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PrestaShop/TranslationToolsBundle/issues",
-                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/master"
+                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v6.0.1"
             },
             "time": "2024-01-05T15:58:25+00:00"
         },
@@ -18030,10 +18028,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "prestashop/autoload": 20,
         "prestashop/classic": 20,
-        "prestashop/ps_apiresources": 20,
-        "prestashop/translationtools-bundle": 20
+        "prestashop/ps_apiresources": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
