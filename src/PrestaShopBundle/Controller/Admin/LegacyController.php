@@ -32,11 +32,11 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopBundle\Entity\Repository\TabRepository;
+use PrestaShopBundle\Routing\LegacyRouterChecker;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use PrestaShopBundle\Twig\Layout\SmartyVariablesFiller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Tools;
 
 /**
@@ -79,7 +79,12 @@ class LegacyController extends PrestaShopAdminController
      */
     public function legacyPageAction(Request $request): Response
     {
-        $dispatcherHookParameters = $this->getDispatcherParameters($request);
+        // These parameters have already been set as request attributes by LegacyRouterChecker
+        $dispatcherHookParameters = [
+            'controller_type' => Dispatcher::FC_ADMIN,
+            'controller_class' => $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_CLASS_ATTRIBUTE),
+            'is_module' => $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE),
+        ];
 
         $adminController = $this->initController($dispatcherHookParameters);
         // Redirect if necessary after post process
@@ -244,59 +249,5 @@ class LegacyController extends PrestaShopAdminController
         $adminController->postProcess();
 
         return $adminController;
-    }
-
-    protected function getDispatcherParameters(Request $request): array
-    {
-        $queryController = $request->get('controller');
-        $this->dispatchHookWithParameters('actionDispatcherBefore', ['controller_type' => Dispatcher::FC_ADMIN]);
-
-        $tab = $this->tabRepository->findOneByClassName($queryController);
-        $isModule = $tab && !empty($tab->getModule());
-
-        if ($isModule) {
-            $moduleName = $tab->getModule();
-            $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . $moduleName . '/controllers/admin/');
-            if (!isset($controllers[strtolower($queryController)])) {
-                throw new RouteNotFoundException(sprintf('Unknown controller %s', $queryController));
-            } else {
-                $controllerName = $controllers[strtolower($queryController)];
-                // Controllers in modules can be named AdminXXX.php or AdminXXXController.php
-                include_once _PS_MODULE_DIR_ . "{$moduleName}/controllers/admin/$controllerName.php";
-                if (file_exists(
-                    _PS_OVERRIDE_DIR_ . "modules/{$moduleName}/controllers/admin/$controllerName.php"
-                )) {
-                    include_once _PS_OVERRIDE_DIR_ . "modules/{$moduleName}/controllers/admin/$controllerName.php";
-                    $controllerClass = $controllerName . (
-                        strpos($controllerName, 'Controller') ? 'Override' : 'ControllerOverride'
-                        );
-                } else {
-                    $controllerClass = $controllerName . (
-                        strpos($controllerName, 'Controller') ? '' : 'Controller'
-                        );
-                }
-            }
-        } else {
-            $controllers = Dispatcher::getControllers(
-                [
-                    _PS_ADMIN_CONTROLLER_DIR_,
-                    _PS_OVERRIDE_DIR_ . 'controllers/admin/',
-                ]
-            );
-
-            // Controller not found, previously the legacy Dispatcher rendered the first child if present which doesn't make sense.
-            // It's clearer to actually return a not found exception
-            if (!isset($controllers[strtolower($queryController)])) {
-                throw new RouteNotFoundException(sprintf('Unknown controller %s', $queryController));
-            }
-
-            $controllerClass = $controllers[strtolower($queryController)];
-        }
-
-        return [
-            'controller_type' => Dispatcher::FC_ADMIN,
-            'controller_class' => $controllerClass,
-            'is_module' => $isModule,
-        ];
     }
 }

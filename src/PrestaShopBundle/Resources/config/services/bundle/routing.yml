@@ -64,3 +64,8 @@ services:
     class: 'PrestaShopBundle\Routing\Linter\AdminRouteProvider'
     arguments:
       - '@router'
+
+  PrestaShopBundle\Routing\LegacyRouterChecker:
+    autoconfigure: true
+    autowire: true
+    public: false
