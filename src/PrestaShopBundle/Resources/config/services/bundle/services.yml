@@ -116,7 +116,6 @@ services:
     autowire: true
 
   PrestaShopBundle\Security\Admin\UserTokenManager:
-    public: true
     autowire: true
     arguments:
       $cookieKey: '%cookie_key%'

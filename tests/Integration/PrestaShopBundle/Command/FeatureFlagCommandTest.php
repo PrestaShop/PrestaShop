@@ -61,8 +61,10 @@ class FeatureFlagCommandTest extends KernelTestCase
     public function testList(): void
     {
         $kernel = self::bootKernel();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $kernel->getContainer()->get('doctrine.orm.entity_manager');
         /** @var FeatureFlagRepository $featureFlagRepository */
-        $featureFlagRepository = $kernel->getContainer()->get(FeatureFlagRepository::class);
+        $featureFlagRepository = $entityManager->getRepository(FeatureFlag::class);
         $featureFlagStateChecker = $kernel->getContainer()->get(FeatureFlagStateCheckerInterface::class);
         $featureFlags = $featureFlagRepository->findAll();
         /** @var FeatureFlag $featureFlag */

@@ -39,6 +39,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
+/**
+ * This service centralizes the generation and validation of the admin query token to avoid duplicating code and rely
+ * on a single homogeneous implementation in the whole back office. It can generate symfony CSRF tokens (not legacy
+ * ones so far because not needed but it could) and validate both legacy and CSRF tokens.
+ */
 class UserTokenManager
 {
     /**
