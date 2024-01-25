@@ -123,7 +123,7 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
 
       await stocksPage.filterByStatus(page, 'disabled');
 
-      const textColumn = await stocksPage.getTextColumnFromTableStocks(page, 1, 'name');
+      const textColumn = await stocksPage.getTextColumnFromTableStocks(page, 1, 'product_name');
       expect(textColumn).to.contains(productData.name);
     });
   });

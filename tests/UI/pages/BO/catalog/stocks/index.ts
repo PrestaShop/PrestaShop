@@ -40,6 +40,8 @@ class Stocks extends BOBasePage {
 
   private readonly productRow: (row: number) => string;
 
+  private readonly productRowIdColumn: (row: number) => string;
+
   private readonly productRowNameColumn: (row: number) => string;
 
   private readonly productRowReferenceColumn: (row: number) => string;
@@ -57,6 +59,8 @@ class Stocks extends BOBasePage {
   private readonly productRowQuantityColumnInput: (row: number) => string;
 
   private readonly productRowQuantityUpdateButton: (row: number) => string;
+
+  private readonly productRowQuantityUpDownButton: (row: number, direction: string) => string;
 
   private readonly productListLoading: string;
 
@@ -85,6 +89,16 @@ class Stocks extends BOBasePage {
   private readonly paginationListItem: string;
 
   private readonly paginationListItemLink: (id: number) => string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly displayProductsBelowLowOfStockCheckbox: string;
+
+  private readonly applyQuantityButton: string;
 
   /**
    * @constructs
@@ -119,6 +133,7 @@ class Stocks extends BOBasePage {
     this.productList = 'table.table';
     this.productRows = `${this.productList} tbody tr`;
     this.productRow = (row: number) => `${this.productRows}:nth-child(${row})`;
+    this.productRowIdColumn = (row: number) => `${this.productRow(row)} td[data-role=product-id]`;
     this.productRowNameColumn = (row: number) => `${this.productRow(row)} td[data-role=product-name]`;
     this.productRowReferenceColumn = (row: number) => `${this.productRow(row)} td[data-role=product-reference]`;
     this.productRowSupplierColumn = (row: number) => `${this.productRow(row)} td[data-role=product-supplier-name]`;
@@ -130,6 +145,8 @@ class Stocks extends BOBasePage {
     this.productRowQuantityColumn = (row: number) => `${this.productRow(row)} td[data-role=update-quantity]`;
     this.productRowQuantityColumnInput = (row: number) => `${this.productRowQuantityColumn(row)} div.edit-qty input`;
     this.productRowQuantityUpdateButton = (row: number) => `${this.productRowQuantityColumn(row)} button.check-button`;
+    this.productRowQuantityUpDownButton = (row: number, direction: string) => `#app tr:nth-child(${row})`
+      + ` td.qty-spinner span.ps-number-${direction}`;
 
     // loader
     this.productListLoading = `${this.productRows} td:nth-child(1) div.ps-loader`;
@@ -147,6 +164,16 @@ class Stocks extends BOBasePage {
     this.filterCategoryCollapseButton = `${this.filterCategoryDiv} button:nth-child(2)`;
     this.filterCategoryTreeItems = (category: string) => `${this.filterCategoryDiv} div.ps-tree-items[label='${category}']`;
     this.filterCategoryCheckBoxDiv = (category: string) => `${this.filterCategoryTreeItems(category)} .md-checkbox`;
+
+    // Display product below low of stock
+    this.displayProductsBelowLowOfStockCheckbox = '#low-filter +i';
+    // Apply quantity button
+    this.applyQuantityButton = '#app div.row.product-actions button.update-qty';
+
+    // Sort Selectors
+    this.tableHead = `${this.productList} thead`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination
     this.paginationList = 'nav ul.pagination';
@@ -182,7 +209,7 @@ class Stocks extends BOBasePage {
     // If pagination that return number of products in this page
     const pagesLength = await this.getProductsPagesLength(page);
 
-    if (pagesLength === 0) {
+    if (pagesLength === 1) {
       return page.locator(this.productRows).count();
     }
     // Get number of products in all pages
@@ -216,20 +243,75 @@ class Stocks extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getProductsPagesLength(page: Page): Promise<number> {
-    return page.locator(this.paginationListItem).count();
+    if (await this.elementVisible(page, this.paginationListItem, 1000)) {
+      return page.locator(this.paginationListItem).count();
+    }
+    return 1;
   }
 
   /**
    * Paginate to a product page
    * @param page {Page} Browser tab
    * @param pageNumber {number} Value of page to go
-   * @return {Promise<void>}
+   * @return {Promise<number>}
    */
-  async paginateTo(page: Page, pageNumber: number = 1): Promise<void> {
+  async paginateTo(page: Page, pageNumber: number = 1): Promise<number> {
     await page.locator(this.paginationListItemLink(pageNumber)).click();
     if (await this.elementVisible(page, this.productListLoading, 1000)) {
       await this.waitForHiddenSelector(page, this.productListLoading);
     }
+
+    return this.getNumberFromText(page, `${this.paginationListItem}.active`);
+  }
+
+  /**
+   * Get content from all rows and all pages
+   * @param page {Page} Browser tab
+   * @param column {string} Column name to get all rows content
+   * @return {Promise<Array<string>>}
+   */
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
+    await this.waitForHiddenSelector(page, this.productListLoading);
+    const numberOfPages = await this.getProductsPagesLength(page);
+    const allRowsContentTable: string[] = [];
+
+    for (let j = 1; j <= numberOfPages; j++) {
+      if (numberOfPages > 1) {
+        await this.paginateTo(page, j);
+      }
+      const rowsNumber = await this.getNumberOfProductsFromList(page);
+
+      for (let i = 1; i <= rowsNumber; i++) {
+        const rowContent = await this.getTextColumnFromTableStocks(page, i, column);
+        allRowsContentTable.push(rowContent);
+      }
+    }
+    if (numberOfPages > 1) {
+      await this.paginateTo(page, 1);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /**
+   * Sort table by clicking on column name
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
+    await this.waitForHiddenSelector(page, this.productListLoading);
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i: number = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.waitForSelectorAndClick(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForHiddenSelector(page, this.productListLoading);
   }
 
   /**
@@ -264,6 +346,16 @@ class Stocks extends BOBasePage {
   }
 
   /**
+   * Is product low stock
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @return {Promise<boolean>}
+   */
+  async isProductLowStock(page: Page, row: number): Promise<boolean> {
+    return this.elementVisible(page, `${this.productRow(row)}.low-stock`, 1000);
+  }
+
+  /**
    * Get text from column in table
    * @param page {Page} Browser tab
    * @param row {number} Row on table
@@ -272,8 +364,10 @@ class Stocks extends BOBasePage {
    */
   async getTextColumnFromTableStocks(page: Page, row: number, column: string): Promise<string> {
     switch (column) {
-      case 'name':
-        return this.getTextContent(page, this.productRowNameColumn(row));
+      case 'product_id':
+        return this.getTextContent(page, this.productRowIdColumn(row));
+      case 'product_name':
+        return (await this.getTextContent(page, this.productRowNameColumn(row))).split(' - ')[0];
       case 'reference':
         return this.getTextContent(page, this.productRowReferenceColumn(row));
       case 'supplier':
@@ -304,6 +398,17 @@ class Stocks extends BOBasePage {
   }
 
   /**
+   * set Stock value by setting input value
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param quantity {number} Value to add/subtract from quantity
+   * @returns {Promise<string>}
+   */
+  async setQuantityWithInput(page: Page, row: number, quantity: number): Promise<void> {
+    await this.setValue(page, this.productRowQuantityColumnInput(row), quantity);
+  }
+
+  /**
    * Update Stock value by setting input value
    * @param page {Page} Browser tab
    * @param row {number} Row on table
@@ -311,10 +416,63 @@ class Stocks extends BOBasePage {
    * @returns {Promise<string>}
    */
   async updateRowQuantityWithInput(page: Page, row: number, quantity: number): Promise<string> {
-    await this.setValue(page, this.productRowQuantityColumnInput(row), quantity);
+    await this.setQuantityWithInput(page, row, quantity);
 
     // Wait for check button before click
     await this.waitForSelectorAndClick(page, this.productRowQuantityUpdateButton(row));
+
+    // Wait for alert-Box after update quantity and close alert-Box
+    await this.waitForVisibleSelector(page, this.alertBoxTextSpan);
+    const textContent = await this.getTextContent(page, this.alertBoxTextSpan);
+    await page.locator(this.alertBoxButtonClose).click();
+
+    return textContent;
+  }
+
+  /**
+   * Update Stock value arrow up down
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param quantity {number} Value to add/subtract from quantity
+   * @param direction {string} Direction to click on
+   * @returns {Promise<string>}
+   */
+  async setQuantityByArrowUpDown(page: Page, row: number, quantity: number, direction: string): Promise<void> {
+    await page.locator(`#app tr:nth-child(${row}) td.qty-spinner span.ps-number-${direction}`).hover();
+
+    for (let i = 1; i <= Math.abs(quantity); i++) {
+      await page.locator(`#app tr:nth-child(${row}) td.qty-spinner span.ps-number-${direction}`).click();
+    }
+  }
+
+  /**
+   * Update row quantity value arrow up down
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param quantity {number} Value to add/subtract from quantity
+   * @param direction {string} Direction to click on
+   * @returns {Promise<string>}
+   */
+  async updateRowQuantityWithArrowUpDownButtons(page: Page, row: number, quantity: number, direction: string): Promise<string> {
+    await this.setQuantityByArrowUpDown(page, row, quantity, direction);
+    // Wait for check button before click
+    await this.waitForSelectorAndClick(page, this.productRowQuantityUpdateButton(row));
+
+    // Wait for alert-Box after update quantity and close alert-Box
+    await this.waitForVisibleSelector(page, this.alertBoxTextSpan);
+    const textContent = await this.getTextContent(page, this.alertBoxTextSpan);
+    await page.locator(this.alertBoxButtonClose).click();
+
+    return textContent;
+  }
+
+  /**
+   * Click on apply new quantity button
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async clickOnApplyNewQuantity(page: Page): Promise<string> {
+    await page.locator(this.applyQuantityButton).click();
 
     // Wait for alert-Box after update quantity and close alert-Box
     await this.waitForVisibleSelector(page, this.alertBoxTextSpan);
@@ -372,15 +530,17 @@ class Stocks extends BOBasePage {
   }
 
   /**
-   * Filter stocks by product's category
+   * Check/Uncheck product's categories
    * @param page {Page} Browser tab
-   * @param category {string} Category name to set on filter input
+   * @param category {string[]} List of categories name to check on filter input
    * @return {Promise<void>}
    */
-  async filterByCategory(page: Page, category: string): Promise<void> {
+  async filterByCategory(page: Page, category: string[]): Promise<void> {
     await this.openCloseAdvancedFilter(page);
-    await page.locator(this.filterCategoryExpandButton).click();
-    await page.locator(this.filterCategoryCheckBoxDiv(category)).click();
+    await page.locator(this.filterCategoryExpandButton).first().click();
+    for (let i: number = 0; i < category.length; i++) {
+      await page.locator(this.filterCategoryCheckBoxDiv(category[i])).first().click();
+    }
     await this.waitForHiddenSelector(page, this.productListLoading);
     await page.locator(this.filterCategoryCollapseButton).click();
     await this.openCloseAdvancedFilter(page, false);
@@ -397,6 +557,16 @@ class Stocks extends BOBasePage {
       page.locator(this.advancedFiltersButton).click(),
       this.waitForVisibleSelector(page, `${this.advancedFiltersButton}[aria-expanded='${toOpen.toString()}']`),
     ]);
+  }
+
+  /**
+   * Set display product below low of stock
+   * @param page {Page} Browser tab
+   * @param toCheck {boolean} True if we need to enable display product below low of stock
+   * @return {Promise<void>}
+   */
+  async setDisplayProductsBelowLowOfStock(page: Page, toCheck: boolean): Promise<void> {
+    await this.setChecked(page, this.displayProductsBelowLowOfStockCheckbox, toCheck, true);
   }
 
   /**

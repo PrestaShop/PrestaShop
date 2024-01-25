@@ -73,7 +73,7 @@ describe('BO - Catalog - Stocks : Bulk edit quantity', async () => {
       expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
 
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
-        const textColumn = await stocksPage.getTextColumnFromTableStocks(page, i, 'name');
+        const textColumn = await stocksPage.getTextColumnFromTableStocks(page, i, 'product_name');
         expect(textColumn).to.contains(Products.demo_8.name);
 
         // Get physical and available quantities of product
