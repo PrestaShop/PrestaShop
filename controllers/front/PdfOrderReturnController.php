@@ -42,7 +42,12 @@ class PdfOrderReturnControllerCore extends FrontController
         $from_admin = (Tools::getValue('adtoken') == Tools::getAdminToken('AdminReturn' . (int) Tab::getIdFromClassName('AdminReturn') . (int) Tools::getValue('id_employee')));
 
         if (!$from_admin && !$this->context->customer->isLogged()) {
-            Tools::redirect('index.php?controller=authentication&back=order-follow');
+            Tools::redirect($this->context->link->getPageLink(
+                'authentication',
+                null,
+                null,
+                ['back' => 'order-follow']
+            ));
         }
 
         if (Tools::getValue('id_order_return') && Validate::isUnsignedId(Tools::getValue('id_order_return'))) {

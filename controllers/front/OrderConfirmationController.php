@@ -286,7 +286,17 @@ class OrderConfirmationControllerCore extends FrontController
         // note the id_module parameter with value -1
         // it acts as a marker for the module check to use "free_payment"
         // for the check
-        Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int) $cart->id . '&id_module=-1&id_order=' . (int) $order->currentOrder . '&key=' . $cart->secure_key);
+        Tools::redirect($this->context->link->getPageLink(
+            'order-confirmation',
+            null,
+            null,
+            [
+                'id_cart' => (int) $cart->id,
+                'id_module' => '-1',
+                'id_order' => (int) $order->currentOrder,
+                'key' => $cart->secure_key,
+            ]
+        ));
     }
 
     public function getBreadcrumbLinks()

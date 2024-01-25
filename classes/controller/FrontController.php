@@ -276,7 +276,12 @@ class FrontControllerCore extends Controller
 
         // Redirect user to login page, if the controller requires authentication
         if ($this->auth && !$this->context->customer->isLogged()) {
-            Tools::redirect('index.php?controller=authentication' . ($this->authRedirection ? '&back=' . $this->authRedirection : ''));
+            Tools::redirect($this->context->link->getPageLink(
+                'authentication',
+                null,
+                null,
+                $this->authRedirection ? ['back' => $this->authRedirection] : null
+            ));
         }
 
         // If the theme is missing, we need to throw an Exception

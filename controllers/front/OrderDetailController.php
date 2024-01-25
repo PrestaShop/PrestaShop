@@ -137,7 +137,15 @@ class OrderDetailControllerCore extends FrontController
                         );
                     }
 
-                    Tools::redirect('index.php?controller=order-detail&id_order=' . $idOrder . '&messagesent');
+                    Tools::redirect($this->context->link->getPageLink(
+                        'order-detail',
+                        null,
+                        null,
+                        [
+                            'id_order' => $idOrder,
+                            'messagesent' => 1,
+                        ]
+                    ));
                 } else {
                     $this->redirect_after = '404';
                     $this->redirect();
