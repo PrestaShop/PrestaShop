@@ -75,7 +75,7 @@ npm run test:functional:BO:orders
 | Parameter   | Description                                                       |
 |-------------|-------------------------------------------------------------------|
 | SMTP_SERVER | The smtp server address for maildev (default to **`172.20.0.4`**) |
-| SMTP_PORT   | The smtp port for maildev (default to **`1025`**)                 |
+| SMTP_PORT   | The smtp port for maildev (default to **`1026`**)                 |
 
 ### Keycloak parameters
 
