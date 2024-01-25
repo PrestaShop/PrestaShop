@@ -31,6 +31,8 @@ namespace Tests\Unit\PrestaShopBundle\ApiPlatform\StateProvider;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\Module\APIResources\ApiPlatform\Resources\FoundProduct as FoundProductDto;
+use PrestaShop\Module\APIResources\ApiPlatform\Resources\Hook;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
@@ -46,8 +48,6 @@ use PrestaShopBundle\ApiPlatform\Exception\CQRSQueryNotFoundException;
 use PrestaShopBundle\ApiPlatform\Normalizer\CQRSApiNormalizer;
 use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberNormalizer;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
-use PrestaShopBundle\ApiPlatform\Resources\FoundProduct as FoundProductDto;
-use PrestaShopBundle\ApiPlatform\Resources\Hook;
 use RuntimeException;
 
 class QueryProviderTest extends TestCase
