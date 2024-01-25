@@ -112,6 +112,37 @@ describe('BO - Catalog - Stocks : Bulk edit quantity', async () => {
         }
       });
     });
+  });
+
+  describe('Bulk edit quantity by using the arrow up/down', async () => {
+    [
+      {args: {action: 'add', updateValue: 5, direction: 'up'}},
+      {args: {action: 'subtract', updateValue: -5, direction: 'down'}},
+    ].forEach((test) => {
+      it(`should ${test.args.action} quantity by using the arrow up/down`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}ToQuantities2`, baseContext);
+
+        // Update quantity and check successful message
+        const updateMessage = await stocksPage.bulkEditQuantityWithArrowUpDownButtons(page,
+          test.args.updateValue,
+          test.args.direction,
+        );
+        expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
+
+        const numberOfProductsInList = await stocksPage.getNumberOfProductsFromList(page);
+
+        // Check physical and available quantities of product after update
+        for (let i = 1; i <= numberOfProductsInList; i++) {
+          const quantityToCheck = await stocksPage.getStockQuantityForProduct(page, i);
+
+          expect(quantityToCheck.physical).to.be.equal(stocks[`product${i}`].physical + test.args.updateValue);
+          stocks[`product${i}`].physical = quantityToCheck.physical;
+
+          expect(quantityToCheck.available).to.be.equal(stocks[`product${i}`].available + test.args.updateValue);
+          stocks[`product${i}`].available = quantityToCheck.available;
+        }
+      });
+    });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterEditQuantities', baseContext);
