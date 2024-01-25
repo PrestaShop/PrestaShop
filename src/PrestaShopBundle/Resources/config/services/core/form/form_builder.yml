@@ -135,7 +135,7 @@ services:
       - 'PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType'
       - '@prestashop.core.form.identifiable_object.data_provider.feature_form_data_provider'
 
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeFormBuilder:
+  prestashop.core.form.identifiable_object.builder.attribute_form_builder:
     autowire: true
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]

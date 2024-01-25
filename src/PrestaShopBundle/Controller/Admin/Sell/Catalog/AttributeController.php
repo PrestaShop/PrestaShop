@@ -142,8 +142,8 @@ class AttributeController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request, int $attributeGroupId): Response
     {
-        $attributeFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeFormBuilder');
-        $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeFormHandler');
+        $attributeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.attribute_form_builder');
+        $attributeFormHandler = $this->get('prestashop.core.form.identifiable_object.attribute_form_handler');
 
         $attributeForm = $attributeFormBuilder->getForm([], ['attribute_group' => $attributeGroupId]);
         $attributeForm->handleRequest($request);
@@ -183,8 +183,8 @@ class AttributeController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $attributeId, int $attributeGroupId): Response
     {
-        $attributeFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeFormBuilder');
-        $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeFormHandler');
+        $attributeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.attribute_form_builder');
+        $attributeFormHandler = $this->get('prestashop.core.form.identifiable_object.attribute_form_handler');
 
         $attributeForm = $attributeFormBuilder->getFormFor($attributeId, [], ['attribute_group' => $attributeGroupId])
             ->handleRequest($request);

@@ -118,7 +118,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureFormDataHandler'
 
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeFormHandler:
+  prestashop.core.form.identifiable_object.attribute_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
     arguments:
