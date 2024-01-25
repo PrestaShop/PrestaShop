@@ -137,6 +137,7 @@ class LegacyController extends PrestaShopAdminController
     {
         $adminController->initContent();
 
+        // This code checks if a special template exist for the rendered admin controller with the current action
         $smarty = $this->legacyContext->getSmarty();
         $templateDirectories = $smarty->getTemplateDir() ?: [];
         $controllerDisplay = $adminController->getDisplay();
@@ -146,8 +147,9 @@ class LegacyController extends PrestaShopAdminController
             // Check if action template has been overridden
             foreach ($templateDirectories as $templateDirectory) {
                 if (file_exists($templateDirectory . DIRECTORY_SEPARATOR . $actionTemplate) && $controllerDisplay != 'view' && $controllerDisplay != 'options') {
-                    if (method_exists($this, $controllerDisplay . u($adminController->className)->camel())) {
-                        $this->{$controllerDisplay . u($adminController->className)->camel()}();
+                    // Check if special method exists for this class and action (rg: viewProduct, deleteCategory, ...) and execute it if present
+                    if (method_exists($adminController, $controllerDisplay . u($adminController->className)->camel())) {
+                        $adminController->{$controllerDisplay . u($adminController->className)->camel()}();
                     }
                     $smarty->assign('content', $smarty->fetch($actionTemplate));
 
