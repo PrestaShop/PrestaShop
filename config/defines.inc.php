@@ -24,11 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-/* Debug only */
+/*
+ * Debug mode
+ *
+ * Change this to true to enable the display of notices and deprecations during development.
+ * It's strongly recommended to use this mode when developing modules and themes, to avoid any hidden issues.
+ * Don't forget to disable debug mode in production - produces a significant performance hit.
+ * The code below can be also managed by settings in backoffice. The interface hardcodes the value into this file.
+ */
 if (!defined('_PS_MODE_DEV_')) {
     define('_PS_MODE_DEV_', true);
 }
-/* Compatibility warning */
 if (!defined('_PS_DISPLAY_COMPATIBILITY_WARNING_')) {
     define('_PS_DISPLAY_COMPATIBILITY_WARNING_', true);
 }
@@ -51,14 +57,18 @@ if (_PS_MODE_DEV_ === true) {
     define('_PS_DEBUG_SQL_', false);
 }
 
+/*
+ * Debug profiler
+ *
+ * Enabling this will display performance related information under each page and help you find
+ * performance bottlenecks.
+ * The code below can be also managed by settings in backoffice. The interface hardcodes the value into this file.
+ */
 if (!defined('_PS_DEBUG_PROFILING_')) {
     define('_PS_DEBUG_PROFILING_', false);
 }
 if (!defined('_PS_MODE_DEMO_')) {
     define('_PS_MODE_DEMO_', false);
-}
-if (!defined('_PS_SMARTY_CACHING_TYPE_')) {
-    define('_PS_SMARTY_CACHING_TYPE_', 'filesystem');
 }
 if (!defined('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_')) {
     define('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_', false);
@@ -164,27 +174,14 @@ define('_PS_STORE_IMG_DIR_', _PS_IMG_DIR_.'st/');
 define('_PS_SUPP_IMG_DIR_', _PS_IMG_DIR_.'su/');
 define('_PS_TMP_IMG_DIR_', _PS_IMG_DIR_.'tmp/');
 
-/* settings php */
+/* Settings php */
 define('_PS_TRANS_PATTERN_', '(.*[^\\\\])');
-define('_PS_MIN_TIME_GENERATE_PASSWD_', '360');
-
-if (!defined('_PS_MAGIC_QUOTES_GPC_')) {
-    define('_PS_MAGIC_QUOTES_GPC_', false);
-}
-
-define('_CAN_LOAD_FILES_', 1);
-
-/* Order statuses
-Order statuses have been moved into config.inc.php file for backward compatibility reasons */
 
 /* Tax behavior */
-define('PS_PRODUCT_TAX', 0);
-define('PS_STATE_TAX', 1);
-define('PS_BOTH_TAX', 2);
-
 define('PS_TAX_EXC', 1);
 define('PS_TAX_INC', 0);
 
+/* Rounding */
 define('PS_ROUND_UP', 0);
 define('PS_ROUND_DOWN', 1);
 define('PS_ROUND_HALF_UP', 2);
@@ -192,41 +189,22 @@ define('PS_ROUND_HALF_DOWN', 3);
 define('PS_ROUND_HALF_EVEN', 4);
 define('PS_ROUND_HALF_ODD', 5);
 
-/* Backward compatibility */
-define('PS_ROUND_HALF', PS_ROUND_HALF_UP);
-
-/* Carrier::getCarriers() filter */
-// these defines are DEPRECATED since 1.4.5 version
-define('PS_CARRIERS_ONLY', 1);
-define('CARRIERS_MODULE', 2);
-define('CARRIERS_MODULE_NEED_RANGE', 3);
-define('PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE', 4);
-define('ALL_CARRIERS', 5);
-
 /* SQL Replication management */
 define('_PS_USE_SQL_SLAVE_', false);
 
 /* PS Technical configuration */
 define('_PS_ADMIN_PROFILE_', 1);
 
-/* Stock Movement */
-define('_STOCK_MOVEMENT_ORDER_REASON_', 3);
-define('_STOCK_MOVEMENT_MISSING_REASON_', 4);
-
+/* Cache */
 define('_PS_CACHEFS_DIRECTORY_', _PS_ROOT_DIR_.'/cache/cachefs/');
 
 /* Geolocation */
 define('_PS_GEOLOCATION_NO_CATALOG_', 0);
 define('_PS_GEOLOCATION_NO_ORDER_', 1);
 
-define('MIN_PASSWD_LENGTH', 8);
-
+/* Smarty */
 define('_PS_SMARTY_NO_COMPILE_', 0);
 define('_PS_SMARTY_CHECK_COMPILE_', 1);
 define('_PS_SMARTY_FORCE_COMPILE_', 2);
-
-define('_PS_SMARTY_CONSOLE_CLOSE_', 0);
-define('_PS_SMARTY_CONSOLE_OPEN_BY_URL_', 1);
-define('_PS_SMARTY_CONSOLE_OPEN_', 2);
 
 define('_PS_CACHE_CA_CERT_FILE_', _PS_CACHE_DIR_.'cacert.pem');
