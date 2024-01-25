@@ -183,4 +183,12 @@ class GuestTrackingControllerCore extends FrontController
 
         return $breadcrumbLinks;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL()
+    {
+        return $this->context->link->getPageLink('guest-tracking');
+    }
 }

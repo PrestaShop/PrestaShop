@@ -45,7 +45,7 @@ class MyAccountControllerCore extends FrontController
         * @deprecated since 1.7.8
         */
         $this->context->smarty->assign([
-            'logout_url' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
+            'logout_url' => $this->context->link->getPageLink('index', null, null, 'mylogout'),
         ]);
 
         parent::initContent();

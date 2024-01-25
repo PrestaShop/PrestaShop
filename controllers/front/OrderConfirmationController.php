@@ -85,7 +85,7 @@ class OrderConfirmationControllerCore extends FrontController
         // This data is kept only for backward compatibility purposes
         $this->reference = (string) $this->order->reference;
 
-        $redirectLink = $this->context->link->getPageLink('history', $this->ssl);
+        $redirectLink = $this->context->link->getPageLink('history');
 
         // The confirmation link must contain a unique order secure key matching the key saved in database,
         // this prevents user to view other customer's order confirmations

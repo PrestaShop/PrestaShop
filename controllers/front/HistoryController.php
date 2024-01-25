@@ -95,7 +95,7 @@ class HistoryControllerCore extends FrontController
                 'secure_key' => (!$context->customer->isLogged()) ? $order->secure_key : null,
             ];
 
-            $url_to_invoice = $context->link->getPageLink('pdf-invoice', true, null, $params);
+            $url_to_invoice = $context->link->getPageLink('pdf-invoice', null, null, $params);
         }
 
         return $url_to_invoice;
@@ -117,7 +117,7 @@ class HistoryControllerCore extends FrontController
                 'submitReorder' => 1,
                 'id_order' => (int) $id_order,
             ];
-            $url_to_reorder = $context->link->getPageLink('order', true, null, $params);
+            $url_to_reorder = $context->link->getPageLink('order', null, null, $params);
         }
 
         return $url_to_reorder;
