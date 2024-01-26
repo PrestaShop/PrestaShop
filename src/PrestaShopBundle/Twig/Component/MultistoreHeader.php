@@ -43,21 +43,21 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/multistore_header.html.twig')]
 class MultistoreHeader
 {
-    private bool $isMultistoreUsed;
-    private string $contextColor = '';
-    private string $contextName = '';
-    private array $groupList = [];
-    private Link $link;
+    protected bool $isMultistoreUsed;
+    protected string $contextColor = '';
+    protected string $contextName = '';
+    protected array $groupList = [];
+    protected Link $link;
 
     public function __construct(
-        private readonly MultistoreFeature $multistoreFeature, //todo removed internal using ?
-        private readonly ColorBrightnessCalculator $colorBrightnessCalculator,
-        private readonly EntityManagerInterface $entityManager,
-        private readonly LegacyContext $legacyContext,
-        private readonly TranslatorInterface $translator,
-        private readonly MenuBuilder $menuBuilder,
-        private readonly ShopContext $shopContext,
-        private readonly array $controllersLockedToAllShopContext
+        protected readonly MultistoreFeature $multistoreFeature, //todo removed internal using ?
+        protected readonly ColorBrightnessCalculator $colorBrightnessCalculator,
+        protected readonly EntityManagerInterface $entityManager,
+        protected readonly LegacyContext $legacyContext,
+        protected readonly TranslatorInterface $translator,
+        protected readonly MenuBuilder $menuBuilder,
+        protected readonly ShopContext $shopContext,
+        protected readonly array $controllersLockedToAllShopContext
     ) {
     }
 

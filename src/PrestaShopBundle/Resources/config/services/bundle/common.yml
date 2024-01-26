@@ -1,0 +1,16 @@
+# Common service from bundle that are needed in Admin and in Front (like some Entity repositories)
+services:
+  _defaults:
+    public: false
+
+  PrestaShopBundle\Entity\Repository\FeatureFlagRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\FeatureFlag
+    lazy: true
+
+  PrestaShopBundle\Entity\Repository\TabRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\Tab
+    lazy: true

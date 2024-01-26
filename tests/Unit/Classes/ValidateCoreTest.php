@@ -138,6 +138,25 @@ class ValidateCoreTest extends TestCase
         $this->assertSame($expected, Validate::isArrayWithIds($input));
     }
 
+    /**
+     * @dataProvider isUrlDataProvider
+     *
+     * @param bool $expected
+     * @param string $url
+     */
+    public function testIsUrl(bool $expected, string $url): void
+    {
+        $this->assertEquals($expected, Validate::isUrl($url));
+    }
+
+    public function isUrlDataProvider(): iterable
+    {
+        yield 'test quick access link' => [
+            true,
+            'index.php?controller=AdminCartRules&addcart_rule',
+        ];
+    }
+
     public function isIp2LongDataProvider()
     {
         return [

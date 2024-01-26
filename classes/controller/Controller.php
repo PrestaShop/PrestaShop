@@ -433,6 +433,11 @@ abstract class ControllerCore
         $this->redirect_after = $url;
     }
 
+    public function getRedirectAfter(): ?string
+    {
+        return $this->redirect_after;
+    }
+
     /**
      * Adds a new stylesheet(s) to the page header.
      *

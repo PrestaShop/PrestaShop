@@ -23,6 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+use PrestaShopBundle\Security\Admin\LegacyAdminTokenValidator;
+
 class CmsControllerCore extends FrontController
 {
     public const CMS_CASE_PAGE = 1;
@@ -77,10 +79,16 @@ class CmsControllerCore extends FrontController
         $this->canonicalRedirection();
 
         if (Validate::isLoadedObject($this->cms)) {
-            $adtoken = Tools::getAdminToken('AdminCmsContent' . (int) Tab::getIdFromClassName('AdminCmsContent') . (int) Tools::getValue('id_employee'));
-            if (!$this->cms->isAssociatedToShop() || !$this->cms->active && Tools::getValue('adtoken') != $adtoken) {
+            if (!$this->cms->isAssociatedToShop()) {
                 $this->redirect_after = '404';
                 $this->redirect();
+            } elseif (!$this->cms->active) {
+                $adminTokenValidator = $this->getContainer()->get(LegacyAdminTokenValidator::class);
+                $isAdminTokenValid = $adminTokenValidator->isTokenValid('AdminCmsContent', (int) Tools::getValue('id_employee'), Tools::getValue('adtoken'));
+                if (!$isAdminTokenValid) {
+                    $this->redirect_after = '404';
+                    $this->redirect();
+                }
             } else {
                 $this->assignCase = self::CMS_CASE_PAGE;
             }

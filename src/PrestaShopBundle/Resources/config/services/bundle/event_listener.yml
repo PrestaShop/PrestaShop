@@ -23,7 +23,7 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-  # Priority 40 to be called before the RouterListener
+  # Priority 40 to be called before the RouterListener (which has priority 32)
   prestashop.legacy_url_listener:
     class: PrestaShopBundle\EventListener\LegacyUrlListener
     arguments:

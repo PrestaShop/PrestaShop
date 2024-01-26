@@ -86,8 +86,7 @@ services:
     arguments:
       $container: '@service_container'
     calls:
-      - [ 'setTokenManager', [ '@security.csrf.token_manager' ] ]
-      - [ 'setUserProvider', [ '@PrestaShopBundle\Service\DataProvider\UserProvider' ] ]
+      - [ 'setUserTokenManager', [ '@PrestaShopBundle\Security\Admin\UserTokenManager' ] ]
 
   PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker:
     arguments:
@@ -115,6 +114,11 @@ services:
     arguments:
       $storage: "@security.csrf.token_storage"
     autowire: true
+
+  PrestaShopBundle\Security\Admin\UserTokenManager:
+    autowire: true
+    arguments:
+      $cookieKey: '%cookie_key%'
 
   PrestaShopBundle\Service\Database\TransactionManager:
     public: false

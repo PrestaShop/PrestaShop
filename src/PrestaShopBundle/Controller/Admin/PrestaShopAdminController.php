@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -40,6 +41,7 @@ class PrestaShopAdminController extends AbstractController
     {
         return parent::getSubscribedServices() + [
             CommandBusInterface::class => CommandBusInterface::class,
+            HookDispatcherInterface::class => HookDispatcherInterface::class,
         ];
     }
 
@@ -49,5 +51,10 @@ class PrestaShopAdminController extends AbstractController
     protected function dispatchCommand(mixed $command): void
     {
         $this->container->get(CommandBusInterface::class)->handle($command);
+    }
+
+    protected function dispatchHookWithParameters(string $hookName, array $parameters = []): void
+    {
+        $this->container->get(HookDispatcherInterface::class)->dispatchWithParameters($hookName, $parameters);
     }
 }

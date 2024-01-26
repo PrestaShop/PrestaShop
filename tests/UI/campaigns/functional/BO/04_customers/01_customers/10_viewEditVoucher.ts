@@ -121,7 +121,7 @@ describe('BO - Customers - Customers : View/edit voucher', async () => {
       await viewCustomerPage.goToPage(page, 'Vouchers');
 
       const pageTitle = await editRulesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(editRulesPage.pageTitle);
+      expect(pageTitle).to.contains(editRulesPage.editPageTitle);
     });
 
     it('should update the created cart rule', async function () {

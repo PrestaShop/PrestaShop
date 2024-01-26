@@ -34,14 +34,14 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/search_form.html.twig')]
 class SearchForm
 {
-    private const BO_QUERY_PARAM = 'bo_query';
-    private const BO_SEARCH_TYPE_PARAM = 'bo_search_type';
+    protected const BO_QUERY_PARAM = 'bo_query';
+    protected const BO_SEARCH_TYPE_PARAM = 'bo_search_type';
 
     public string $boQuery;
     public bool $showClearBtn;
     public int $searchType;
 
-    public function __construct(private readonly RequestStack $requestStack)
+    public function __construct(protected readonly RequestStack $requestStack)
     {
     }
 

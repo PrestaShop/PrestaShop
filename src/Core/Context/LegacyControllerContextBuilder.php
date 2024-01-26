@@ -66,6 +66,7 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
         $overrideFolder = Tools::toUnderscoreCase(substr($this->controllerName, 5)) . '/';
         $controllerType = 'admin';
         $className = $this->getClassName($this->controllerName);
+        $table = $this->getTableFromClassName($this->controllerName);
 
         $legacyControllerContext = new LegacyControllerContext(
             $this->container,
@@ -77,6 +78,7 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
             $token,
             $overrideFolder,
             $this->getCurrentIndex(),
+            $table,
         );
 
         $this->_legacyControllerContext = $legacyControllerContext;
@@ -156,6 +158,24 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
                     return null;
                 }
         }
+    }
+
+    private function getTableFromClassName(?string $controllerName): string
+    {
+        // Handle special use cases that don't follow the usual rules
+        switch ($controllerName) {
+            case 'AdminAccess':
+                return 'access';
+        }
+
+        $objectClassName = $this->getClassName($controllerName);
+        if (empty($objectClassName) || !class_exists($objectClassName) || !property_exists($objectClassName, 'definition')) {
+            return 'configuration';
+        }
+
+        $definition = $objectClassName::$definition;
+
+        return $definition['table'] ?? 'configuration';
     }
 
     private function getTabId(string $controllerName): int

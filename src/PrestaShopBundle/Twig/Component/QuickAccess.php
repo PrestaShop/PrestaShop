@@ -28,63 +28,43 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
-use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Service\DataProvider\UserProvider;
+use PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessGenerator;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/quick_access.html.twig')]
 class QuickAccess
 {
     /**
-     * link to new product creation form
-     */
-    private const NEW_PRODUCT_LINK = 'index.php/sell/catalog/products/new';
-
-    /**
-     * link to new product creation form for product v2
-     */
-    private const NEW_PRODUCT_V2_LINK = 'index.php/sell/catalog/products/create';
-
-    /**
      * List of Quick Accesses to display
      */
-    private array|null $quickAccesses = null;
+    protected array|null $quickAccesses = null;
 
     /**
-     * Current Quick access by current request uri
+     * Active Quick access based on current request uri
      */
-    private array|false|null $currentQuickAccess = null;
+    protected array|false|null $activeQuickAccess = null;
 
     /**
      * Clean current Url
      */
-    private ?string $currentUrl = null;
+    protected ?string $currentPageQuickAccessLink = null;
 
     /**
-     * Current url title
+     * Current page title
      */
-    private ?string $currentUrlTitle = null;
+    protected ?string $currentPageTitle = null;
 
     /**
-     * Tokenized Urls cache
+     * Current page icon
      */
-    private array $tokenizedUrls = [];
+    protected ?string $currentPageIcon = null;
 
     public function __construct(
-        private readonly LegacyContext $context,
-        private readonly QuickAccessRepositoryInterface $quickAccessRepository,
-        private readonly TabRepository $tabRepository,
-        private readonly CsrfTokenManagerInterface $tokenManager,
-        private readonly UserProvider $userProvider,
-        private readonly RequestStack $requestStack,
-        private readonly MenuBuilder $menuBuilder
+        protected readonly RequestStack $requestStack,
+        protected readonly MenuBuilder $menuBuilder,
+        protected readonly QuickAccessGenerator $quickAccessGenerator,
     ) {
     }
 
@@ -94,49 +74,14 @@ class QuickAccess
     public function getQuickAccesses(): array
     {
         if (null === $this->quickAccesses) {
-            // Get context
-            $context = $this->context->getContext();
-
-            // Get language and employee ids
-            $languageId = new LanguageId($context->employee->id_lang);
-
             // Retrieve all quick accesses
-            $quickAccesses = $this->quickAccessRepository->fetchAll($languageId);
+            $quickAccesses = $this->quickAccessGenerator->getTokenizedQuickAccesses();
 
             // Prepare quick accesses to render the component view properly.
             foreach ($quickAccesses as $index => &$quick) {
-                // Initialise our Quick Access
-                $quick['class'] = '';
-                $quick['link'] = $context->link->getQuickLink($quick['link']);
-
-                // If this quick access is legacy
-                preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
-                if (isset($admin_tab[1])) {
-                    if (strpos($admin_tab[1], '&')) {
-                        $admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
-                    }
-                }
-                // Let's build our url
-                if ($quick['link'] === self::NEW_PRODUCT_LINK || $quick['link'] === self::NEW_PRODUCT_V2_LINK) {
-                    if (!in_array('ROLE_MOD_TAB_ADMINPRODUCTS_CREATE', $this->userProvider->getUser()->getRoles())) {
-                        // if employee has no access, we don't show product creation link,
-                        // because it causes modal-related issues in product v2
-                        unset($quickAccesses[$index]);
-                        continue;
-                    }
-                    // We create new product v2 modal popup link
-                    $quick['link'] = self::NEW_PRODUCT_V2_LINK;
-                    $quick['class'] = 'new-product-button';
-                }
-
-                // Preparation of the link to display in component view.
-                $quick['link'] = '/' . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
-
-                // Verify if we are currently on this page.
-                $quick['active'] = $this->isCurrentPage($quick['link']);
-
-                // Add token if needed
-                $quick['link'] = $this->getTokenizedUrl($quick['link']);
+                // Verify if the link matches with the current page
+                $cleanLink = $this->quickAccessGenerator->cleanQuickLink($quick['link']);
+                $quick['active'] = $this->isCurrentPage($cleanLink);
             }
             $this->quickAccesses = $quickAccesses;
         }
@@ -147,80 +92,91 @@ class QuickAccess
     /**
      * Retrieve and prepare quick accesses data for twig view
      */
-    public function getCurrentQuickAccess(): array|false
+    public function getActiveQuickAccess(): array|false
     {
-        if (null === $this->currentQuickAccess) {
-            $this->currentQuickAccess = current(array_filter($this->getQuickAccesses(), fn ($data) => $data['active']));
+        if (null === $this->activeQuickAccess) {
+            $this->activeQuickAccess = current(array_filter($this->getQuickAccesses(), fn ($data) => $data['active']));
         }
 
-        return $this->currentQuickAccess;
+        return $this->activeQuickAccess;
     }
 
     /**
      * Get current clean url.
      */
-    public function getCleanCurrentUrl(): string
+    public function getCurrentPageQuickAccessLink(): string
     {
-        if (null === $this->currentUrl) {
-            $this->currentUrl = rtrim(UrlCleaner::cleanUrl($this->requestStack->getMainRequest()->getRequestUri(), ['_token', 'token']), '/');
+        if (null === $this->currentPageQuickAccessLink) {
+            $request = $this->requestStack->getMainRequest();
+            // We don't use $request->getUri() because it adds an unwanted / on urls that include index.php
+            $uri = $request->getSchemeAndHttpHost() . $request->getRequestUri();
+            $this->currentPageQuickAccessLink = $this->quickAccessGenerator->cleanQuickLink($uri);
         }
 
-        return $this->currentUrl;
+        return $this->currentPageQuickAccessLink;
     }
 
     /**
      * Get current title
      */
-    public function getCurrentUrlTitle(): string
+    public function getCurrentPageTitle(): string
     {
-        if (null === $this->currentUrlTitle) {
-            $breadcrumbLinks = $this->menuBuilder->getBreadcrumbLinks();
-            if (isset($breadcrumbLinks['tab'])) {
-                $this->currentUrlTitle = $breadcrumbLinks['tab']->name;
-                if (isset($breadcrumbLinks['action'])) {
-                    $this->currentUrlTitle .= ' - ' . $breadcrumbLinks['action']->name;
-                }
-            } else {
-                $this->currentUrlTitle = '';
-            }
+        if (null === $this->currentPageTitle) {
+            $this->fillCurrentUrlFields();
         }
 
-        return $this->currentUrlTitle;
+        return $this->currentPageTitle;
     }
 
     /**
-     * Get url tokenized
+     * Get current title
      */
-    private function getTokenizedUrl(string $baseUrl): string
+    public function getCurrentPageIcon(): string
     {
-        if (!in_array($baseUrl, $this->tokenizedUrls)) {
-            $url = $baseUrl;
-
-            // Define separator and if the url is legacy or symfony.
-            $separator = strpos($url, '?') ? '&' : '?';
-            preg_match('/controller=(\w*)/', $url, $admin_tab);
-
-            // If legacy link
-            if (isset($admin_tab[1]) && !str_contains('token', $url)) {
-                $token = $admin_tab[1] . $this->tabRepository->findOneIdByClassName($admin_tab[1]) . $this->context->getContext()->employee->id;
-                $url .= $separator . 'token=' . \Tools::getAdminToken($token);
-            }
-
-            // If symfony link
-            if (!isset($admin_tab[1]) && !str_contains('_token', $url)) {
-                $url .= $separator . '_token=' . $this->tokenManager->getToken($this->userProvider->getUsername())->getValue();
-            }
-            $this->tokenizedUrls[$baseUrl] = $url;
+        if (null === $this->currentPageIcon) {
+            $this->fillCurrentUrlFields();
         }
 
-        return $this->tokenizedUrls[$baseUrl];
+        return $this->currentPageIcon;
+    }
+
+    protected function fillCurrentUrlFields(): void
+    {
+        $breadcrumbLinks = $this->menuBuilder->getBreadcrumbLinks();
+        if (isset($breadcrumbLinks['tab'])) {
+            $this->currentPageTitle = $breadcrumbLinks['tab']->name;
+            if (isset($breadcrumbLinks['action'])) {
+                $this->currentPageTitle .= ' - ' . $breadcrumbLinks['action']->name;
+            }
+        } else {
+            $this->currentPageTitle = '';
+        }
+        if (isset($breadcrumbLinks['container'])) {
+            $this->currentPageIcon = $breadcrumbLinks['container']->icon ?? '';
+        } else {
+            $this->currentPageIcon = '';
+        }
     }
 
     /**
      * Return true if the current page is the quick access url
      */
-    private function isCurrentPage(string $url): bool
+    protected function isCurrentPage(string $url): bool
     {
-        return 0 === strcasecmp($this->getCleanCurrentUrl(), rtrim($url, '/'));
+        // We don't compare the urls directly because they may have some small differences like ?addcartrule and ?addcartrule=
+        // are different string but what matters is that the parameters value match
+        $parsedUrl = parse_url($url);
+        $parsedCurrentUrl = parse_url($this->getCurrentPageQuickAccessLink());
+
+        $parsedUrlParameters = [];
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $parsedUrlParameters);
+        }
+        $parsedCurrentUrlParameters = [];
+        if (isset($parsedCurrentUrl['query'])) {
+            parse_str($parsedCurrentUrl['query'], $parsedCurrentUrlParameters);
+        }
+
+        return $parsedUrl['path'] === $parsedCurrentUrl['path'] && $parsedUrlParameters === $parsedCurrentUrlParameters;
     }
 }

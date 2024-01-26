@@ -10,10 +10,17 @@ services:
     alias: PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager
     public: true
 
-  PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager: ~
-  PrestaShop\PrestaShop\Core\FeatureFlag\Layer\EnvLayer: ~
-  PrestaShop\PrestaShop\Core\FeatureFlag\Layer\DbLayer: ~
+  # Feature flag are used to change some behaviour dynamically so they should be lazy by default so that the services are only
+  # initialized at the last moment, especially since they are also used in Frontend
+  PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager:
+    lazy: true
+  PrestaShop\PrestaShop\Core\FeatureFlag\Layer\EnvLayer:
+    lazy: true
+  PrestaShop\PrestaShop\Core\FeatureFlag\Layer\DbLayer:
+    lazy: true
   PrestaShop\PrestaShop\Core\FeatureFlag\Layer\DotEnvLayer:
     arguments:
       $rootDir: !php/const _PS_ROOT_DIR_
-  PrestaShop\PrestaShop\Core\FeatureFlag\Layer\QueryLayer: ~
+    lazy: true
+  PrestaShop\PrestaShop\Core\FeatureFlag\Layer\QueryLayer:
+    lazy: true

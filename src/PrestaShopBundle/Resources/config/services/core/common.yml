@@ -1,6 +1,12 @@
 imports:
   - { resource: ./circuit_breaker.yml }
+  - { resource: ./feature_flag.yml }
 
 services:
   PrestaShop\PrestaShop\Core\EnvironmentInterface:
     alias: prestashop.adapter.environment
+
+  prestashop.core.crypto.hashing:
+    class: PrestaShop\PrestaShop\Core\Crypto\Hashing
+
+  PrestaShop\PrestaShop\Core\Security\Hashing: ~

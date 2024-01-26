@@ -161,5 +161,41 @@ class UrlCleanerTest extends TestCase
             ['setShopContext'],
             'http://usr:pss@example.com:81/mypath/myfile.html?form[toto][field]=test&b[6]=3&team[players][0]=42&team[players][1]=51#myfragment',
         ];
+
+        yield 'clean url with action without value, the action parameter at the end must remain without value' => [
+            'index.php?controller=AdminCartRules&addcart_rule',
+            [],
+            '/index.php?controller=AdminCartRules&addcart_rule',
+        ];
+
+        yield 'clean url with action without value, the action parameter in the middle must remain without value' => [
+            '/index.php?controller=AdminCartRules&addcart_rule&titi=tata',
+            [],
+            '/index.php?controller=AdminCartRules&addcart_rule&titi=tata',
+        ];
+
+        yield 'clean url with action without value, the action parameter at the beginning must remain without value' => [
+            '/index.php?addcart_rule&controller=AdminCartRules&titi=tata',
+            [],
+            '/index.php?addcart_rule&controller=AdminCartRules&titi=tata',
+        ];
+
+        yield 'clean url with action with empty value, the action parameter in the middle must remain with empty value' => [
+            'index.php?controller=AdminCartRules&addcart_rule=&titi=tata',
+            [],
+            '/index.php?controller=AdminCartRules&addcart_rule=&titi=tata',
+        ];
+
+        yield 'clean url with action with empty value, the action parameter at the end must remain with empty value' => [
+            'index.php?controller=AdminCartRules&addcart_rule=',
+            [],
+            '/index.php?controller=AdminCartRules&addcart_rule=',
+        ];
+
+        yield 'clean url with action with empty value, the action parameter at the beginnin must remain with empty value' => [
+            'index.php?addcart_rule=&controller=AdminCartRules&titi=tata',
+            [],
+            '/index.php?addcart_rule=&controller=AdminCartRules&titi=tata',
+        ];
     }
 }

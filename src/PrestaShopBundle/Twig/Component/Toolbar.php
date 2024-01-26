@@ -31,31 +31,39 @@ namespace PrestaShopBundle\Twig\Component;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
+use PrestaShopBundle\Twig\Layout\MenuLink;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/toolbar.html.twig')]
 class Toolbar
 {
-    public array $toolbarBtn;
-    public string $title;
-    public bool|string $helpLink;
-    public bool $enableSidebar;
-    public int $currentTabLevel = 0;
-    public array $navigationTabs = [];
-    public array $breadcrumbs;
+    protected string $title = '';
+    protected string $helpLink = '';
+    protected bool $sidebarEnabled = true;
+    protected int $currentTabLevel = 0;
+
+    /**
+     * @var array<int, MenuLink>
+     */
+    protected array $navigationTabs = [];
+
+    /**
+     * @var array<string, MenuLink>
+     */
+    protected array $breadcrumbs = [];
 
     public function __construct(
-        private readonly HookDispatcherInterface $hookDispatcher,
-        private readonly MenuBuilder $menuBuilder,
+        protected readonly HookDispatcherInterface $hookDispatcher,
+        protected readonly MenuBuilder $menuBuilder,
     ) {
     }
 
-    public function mount(string $layoutTitle): void
+    public function mount(string $layoutTitle, string $helpLink, bool $enableSidebar): void
     {
+        $this->sidebarEnabled = $enableSidebar;
+        $this->helpLink = $helpLink;
         $tab = $this->menuBuilder->getCurrentTab();
-        if (null === $tab) {
-            $this->breadcrumbs = [];
-        } else {
+        if (null !== $tab) {
             $tabs = [];
             $tabs[] = $tab;
             $ancestorsTab = $this->menuBuilder->getAncestorsTab($tab->getId());
@@ -69,20 +77,50 @@ class Toolbar
             }
 
             $this->setBreadcrumbs($tab, $ancestorsTab, $tabs);
-            $this->setTitle($layoutTitle);
         }
+        $this->setTitle($layoutTitle);
     }
 
-    private function setTitle(string $layoutTitle): void
+    public function getTitle(): string
     {
-        if (empty($layoutTitle)) {
+        return $this->title;
+    }
+
+    public function getCurrentTabLevel(): int
+    {
+        return $this->currentTabLevel;
+    }
+
+    public function getBreadcrumbs(): array
+    {
+        return $this->breadcrumbs;
+    }
+
+    public function getNavigationTabs(): array
+    {
+        return $this->navigationTabs;
+    }
+
+    public function isSidebarEnabled(): bool
+    {
+        return $this->sidebarEnabled;
+    }
+
+    public function getHelpLink(): string
+    {
+        return $this->helpLink;
+    }
+
+    protected function setTitle(string $layoutTitle): void
+    {
+        if (empty($layoutTitle) && isset($this->breadcrumbs['tab'])) {
             $this->title = $this->breadcrumbs['tab']->name;
         } else {
             $this->title = $layoutTitle;
         }
     }
 
-    private function setBreadcrumbs(Tab $tab, array $ancestorsTab, array $tabs): void
+    protected function setBreadcrumbs(Tab $tab, array $ancestorsTab, array $tabs): void
     {
         $this->breadcrumbs = $this->menuBuilder->convertTabsToBreadcrumbLinks($tab, $ancestorsTab);
         $this->hookDispatcher->dispatchWithParameters('actionAdminBreadcrumbModifier', ['tabs' => $tabs, 'breadcrumb' => &$this->breadcrumbs]);

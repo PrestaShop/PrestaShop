@@ -37,3 +37,5 @@ services:
 
   prestashop.adapter.context_state_manager:
     alias: PrestaShop\PrestaShop\Adapter\ContextStateManager
+
+  PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository: ~

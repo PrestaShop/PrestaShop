@@ -72,7 +72,8 @@ class ContextStateManagerTest extends ContextStateTestCase
             20,
             'token',
             'override_folder/',
-            'index.php?controller=AdminProducts'
+            'index.php?controller=AdminProducts',
+            'product'
         );
 
         $this->legacyControllerContext2 = new LegacyControllerContext(
@@ -84,7 +85,8 @@ class ContextStateManagerTest extends ContextStateTestCase
             10,
             'token',
             'override_folder/',
-            'index.php?controller=AdminCarts'
+            'index.php?controller=AdminCarts',
+            'cart'
         );
     }
 

@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    autowire: true
+
+  PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessGenerator:
+    # Is used in legacy code so needs to be public
+    public: true
+    arguments:
+      $cookieKey: '%cookie_key%'

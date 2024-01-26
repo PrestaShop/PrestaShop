@@ -263,10 +263,7 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
   });
 
   describe('BO : Delete products from merchandise return', async () => {
-    [
-      {args: {understandTheRisk: false, button: 'Take me out of here!'}},
-      {args: {understandTheRisk: true, button: 'I understand the risks and I really want to display this page'}},
-    ].forEach((test, index: number) => {
+    [1, 2].forEach((index: number) => {
       it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToMerchandiseReturnsPage${index}`, baseContext);
 
@@ -289,26 +286,15 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
         expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
       });
 
-      it(`should delete the first returned product and click on '${test.args.button}'`, async function () {
+      it('should delete the first returned product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteFirstProduct${index}`, baseContext);
 
-        const text = await editMerchandiseReturnsPage.deleteProduct(page, 1, test.args.understandTheRisk);
+        const successMessage = await editMerchandiseReturnsPage.deleteProduct(page, 1);
+        expect(successMessage).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
 
-        if (test.args.understandTheRisk) {
-          expect(text).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
-        } else {
-          expect(text).to.eq(dashboardPage.pageTitle);
-        }
+        const pageTitle = await editMerchandiseReturnsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
       });
-    });
-
-    it('should go to edit merchandise returns page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditReturnsPage3', baseContext);
-
-      await merchandiseReturnsPage.goToMerchandiseReturnPage(page);
-
-      const pageTitle = await editMerchandiseReturnsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
     });
 
     it('should try to delete the last returned product and check the error message', async function () {

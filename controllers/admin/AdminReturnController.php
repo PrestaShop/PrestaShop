@@ -236,7 +236,7 @@ class AdminReturnControllerCore extends AdminController
                         }
                         if ((int) ($orderReturn->countProduct()) > 1) {
                             if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int) (Tools::getValue('id_customization', 0)))) {
-                                Tools::redirectAdmin(self::$currentIndex . '&conf=4token=' . $this->token);
+                                Tools::redirectAdmin(self::$currentIndex . '&updateorder_return&id_order_return=' . $id_order_return . '&conf=4&token=' . $this->token);
                             } else {
                                 $this->errors[] = $this->trans('An error occurred while deleting the details of your order return.', [], 'Admin.Orderscustomers.Notification');
                             }

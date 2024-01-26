@@ -31,9 +31,15 @@ namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Attribute\TaggedLocator;
+use Symfony\Contracts\Service\ResetInterface;
 
-class FeatureFlagManager implements FeatureFlagStateCheckerInterface
+class FeatureFlagManager implements FeatureFlagStateCheckerInterface, ResetInterface
 {
+    /**
+     * @var array<string, bool>
+     */
+    private array $featureFlagStates = [];
+
     public function __construct(
         #[TaggedLocator(TypeLayerInterface::class, defaultIndexMethod: 'getTypeName')]
         private readonly ContainerInterface $locator,
@@ -82,7 +88,7 @@ class FeatureFlagManager implements FeatureFlagStateCheckerInterface
      */
     public function isEnabled(string $featureFlagName): bool
     {
-        return $this->getLayer($featureFlagName)->isEnabled($featureFlagName);
+        return $this->getFeatureFlagState($featureFlagName);
     }
 
     /**
@@ -107,5 +113,27 @@ class FeatureFlagManager implements FeatureFlagStateCheckerInterface
     public function disable(string $featureFlagName): void
     {
         $this->getLayer($featureFlagName)->disable($featureFlagName);
+    }
+
+    public function reset()
+    {
+        $this->featureFlagStates = [];
+    }
+
+    /**
+     * Cache each feature flag state to avoid useless multiple queries per request, maybe one day it would be worth
+     * adding an actual cache layer over this, which would cache values in filesystem cache.
+     *
+     * @param string $featureFlagName
+     *
+     * @return bool
+     */
+    private function getFeatureFlagState(string $featureFlagName): bool
+    {
+        if (!isset($this->featureFlagStates[$featureFlagName])) {
+            $this->featureFlagStates[$featureFlagName] = $this->getLayer($featureFlagName)->isEnabled($featureFlagName);
+        }
+
+        return $this->featureFlagStates[$featureFlagName];
     }
 }

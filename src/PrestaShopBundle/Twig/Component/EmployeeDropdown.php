@@ -40,8 +40,8 @@ class EmployeeDropdown
     public ?ActionsBarButtonsCollection $displayBackOfficeEmployeeMenu = null;
 
     public function __construct(
-        private readonly HookDispatcherInterface $hookDispatcher,
-        private readonly EmployeeContext $employeeContext
+        protected readonly HookDispatcherInterface $hookDispatcher,
+        protected readonly EmployeeContext $employeeContext
     ) {
     }
 

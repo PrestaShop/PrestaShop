@@ -123,7 +123,8 @@ class LegacyControllerContext
         public int $id,
         public ?string $token,
         public string $override_folder,
-        public string $currentIndex
+        public string $currentIndex,
+        public string $table,
     ) {
         $this->php_self = $this->controller_name;
     }

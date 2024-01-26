@@ -1,0 +1,4 @@
+admin_legacy_controller_route:
+  path: /
+  controller: PrestaShopBundle\Controller\Admin\LegacyController::legacyPageAction
+  condition: 'service("PrestaShopBundle\\Routing\\LegacyRouterChecker").check(request)'

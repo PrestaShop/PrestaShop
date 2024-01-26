@@ -28,7 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -84,16 +86,14 @@ class Admin
      * If not logged in, redirect to admin home page.
      *
      * @param RequestEvent $event
-     *
-     * @return bool or redirect
      */
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         if (
             $this->security->getUser() !== null
             || $event->getRequest()->get('_controller') === AccessTokenController::class
         ) {
-            return true;
+            return;
         }
 
         //if employee loggdin in legacy context, authenticate him into sf2 security context
@@ -102,28 +102,27 @@ class Admin
             $token = new UsernamePasswordToken($user, 'admin', $user->getRoles());
             $this->securityTokenStorage->setToken($token);
 
-            return true;
+            return;
         }
 
         // in case of exception handler sub request, avoid infinite redirection
         if ($event->getRequestType() === HttpKernelInterface::SUB_REQUEST
             && $event->getRequest()->attributes->has('exception')
         ) {
-            return true;
+            return;
         }
 
         //employee not logged in
         $event->stopPropagation();
 
-        //if http request - add 403 error
-        $request = Request::createFromGlobals();
-        if ($request->isXmlHttpRequest()) {
-            header('HTTP/1.1 403 Forbidden');
-            exit();
+        // If an ajax request is being performed the redirection is not relevant, instead simply return a forbidden response
+        if ($event->getRequest()->isXmlHttpRequest()) {
+            $event->setResponse(new Response('', Response::HTTP_FORBIDDEN));
+
+            return;
         }
 
-        //redirect to admin home page
-        header('Location: ' . $this->context->getAdminLink('', false));
-        exit();
+        // Redirect to admin home page
+        $event->setResponse(new RedirectResponse($this->context->getAdminLink('', false)));
     }
 }

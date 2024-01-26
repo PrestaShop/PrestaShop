@@ -30,7 +30,7 @@
 {% endif %}
 
 <a class="{{ class }} grid-{{ action.name|lower|replace({' ': '-'}) }}-row-link"
-   href="{{ getAdminLink('AdminCartRules', true, {'id_cart_rule': record[action.options.id_cart_rule], 'addcart_rule': 1, 'back': app.request.uri}) }}"
+   href="{{ getAdminLink('AdminCartRules', true, {'id_cart_rule': record[action.options.id_cart_rule], 'updatecart_rule': 1, 'back': app.request.uri}) }}"
   {% if attributes.tooltip_name %}
     data-toggle="pstooltip"
     data-placement="top"

@@ -55,13 +55,24 @@ class SmartyVariablesFiller
 
     public function fill(string $title, string $metaTitle, bool $liteDisplay): void
     {
+        $this->legacyContext->getSmarty()->assign(array_merge($this->getDefaultVariables(), [
+            'title' => $title,
+            'meta_title' => $metaTitle,
+            'lite_display' => $liteDisplay,
+        ]));
+    }
+
+    public function fillDefault(): void
+    {
+        $this->legacyContext->getSmarty()->assign($this->getDefaultVariables());
+    }
+
+    protected function getDefaultVariables(): array
+    {
         $smartyVariables = [
             'maintenance_mode' => $this->templateVariables->isMaintenanceEnabled(),
             'maintenance_allow_admins' => $this->templateVariables->isFrontOfficeAccessibleForAdmins(),
             'debug_mode' => $this->templateVariables->isDebugMode(),
-            'title' => $title,
-            'meta_title' => $metaTitle,
-            'lite_display' => $liteDisplay,
             'img_dir' => $this->templateVariables->getBaseUrl() . 'img/',
             'baseAdminUrl' => $this->templateVariables->getBaseUrl() . basename(_PS_ADMIN_DIR_) . '/',
             'base_url' => $this->templateVariables->getBaseUrl(),
@@ -79,6 +90,7 @@ class SmartyVariablesFiller
             'shop_group' => $this->legacyContext->getContext()->shop->getGroup(),
             'iso' => $this->templateVariables->getIsoUser(),
             'class_name' => $this->legacyControllerContext->className,
+            'table' => $this->legacyControllerContext->table,
             'version' => $this->templateVariables->getVersion(),
             'link' => $this->legacyContext->getContext()->link,
             'controller_name' => $this->legacyControllerContext->controller_name,
@@ -104,6 +116,6 @@ class SmartyVariablesFiller
             'current' => $smartyVariables['currentIndex'],
         ];
 
-        $this->legacyContext->getSmarty()->assign(array_merge($smartyVariables, $smartyVariablesAlias));
+        return array_merge($smartyVariables, $smartyVariablesAlias);
     }
 }

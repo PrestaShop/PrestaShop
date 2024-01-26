@@ -26,18 +26,14 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
-use PrestaShopBundle\Service\DataProvider\UserProvider;
+use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\CS\Tokenizer\Token;
-use Tools;
 
 /**
  * Each Symfony url is automatically tokenized to avoid CSRF fails using XSS failures.
@@ -47,10 +43,8 @@ use Tools;
 class TokenizedUrlsListener
 {
     public function __construct(
-        private readonly CsrfTokenManagerInterface $tokenManager,
         private readonly RouterInterface $router,
-        private readonly LegacyContext $legacyContext,
-        private readonly UserProvider $userProvider
+        private readonly UserTokenManager $userTokenManager,
     ) {
     }
 
@@ -62,42 +56,25 @@ class TokenizedUrlsListener
             return;
         }
 
-        if (!$event->isMainRequest()) {
+        if (!$event->isMainRequest() || !($event instanceof RequestEvent)) {
             return;
         }
 
         $route = $request->get('_route');
-        $uri = $request->getUri();
 
         /*
          * every route prefixed by '_' won't be secured
          */
-        if (
-            str_starts_with($route, '_') ||
-            str_starts_with($route, 'api_')
-        ) {
+        if (str_starts_with($route, '_') || str_starts_with($route, 'api_')) {
             return;
         }
 
-        /*
-         * every uri which contains 'token' should use the old validation system
-         */
-        if ($request->query->has('token')) {
-            if (0 == strcasecmp(Tools::getAdminToken((string) $this->legacyContext->getContext()->employee->id), $request->query->get('token'))) {
-                return;
-            }
-        }
-
-        $token = false;
-        if ($request->query->has('_token')) {
-            $token = new CsrfToken($this->userProvider->getUsername(), $request->query->get('_token'));
-        } elseif (isset($request->query->all('form')['_token'])) {
-            $token = new CsrfToken('form', $request->query->all('form')['_token']);
-        }
-
-        if ((false === $token || !$this->tokenManager->isTokenValid($token)) && $event instanceof RequestEvent) {
-            // Remove _token if any
-            $uri = UrlCleaner::cleanUrl($uri, ['_token']);
+        if (!$this->userTokenManager->isTokenValid()) {
+            // We don't use $request->getUri() because it adds an unwanted / on urls that include index.php
+            $uri = $request->getRequestUri();
+            // Remove _token/token if any
+            $uri = UrlCleaner::cleanUrl($uri, ['_token', 'token']);
+            $uri = $request->getSchemeAndHttpHost() . $uri;
             $response = new RedirectResponse($this->router->generate('admin_security_compromised', ['uri' => urlencode($uri)]));
             $event->setResponse($response);
         }
