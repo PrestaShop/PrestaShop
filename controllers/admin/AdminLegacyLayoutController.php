@@ -1,9 +1,5 @@
 <?php
 
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
-use PrestaShopBundle\Bridge\Helper\AddFlashMessage;
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -236,17 +232,5 @@ class AdminLegacyLayoutControllerCore extends AdminController
         parent::display();
         $this->outPutHtml = ob_get_contents();
         ob_end_clean();
-
-        // We push notifications from the legacy controller but only in migrated page for now (that's why it is done here and ont in AdminController)
-        // and of course only if the Symfony layout is enabled This will mostly be useful when legacy pages are rendered by Symfony layout
-        if ($this->get(FeatureFlagStateCheckerInterface::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)) {
-            foreach (['errors', 'warnings', 'informations', 'confirmations'] as $type) {
-                /** @var AddFlashMessage $addFlashMessage */
-                $addFlashMessage = $this->get(AddFlashMessage::class);
-                foreach ($this->$type as $message) {
-                    $addFlashMessage->addMessage($type, $message);
-                }
-            }
-        }
     }
 }

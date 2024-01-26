@@ -6,13 +6,6 @@ admin_features_index:
     _legacy_controller: AdminFeatures
     _legacy_link: AdminFeatures
 
-admin_features_horizontal_index:
-  path: /horizontal
-  methods: [ GET, POST ]
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\HorizontalFeatureController::indexAction
-    _legacy_controller: AdminFeatures
-
 admin_features_search:
   path: /
   methods: [ POST ]
