@@ -9,15 +9,15 @@
 <title>{% if this.metaTitle %}{{ this.metaTitle }} • {% endif %}{{ this.shopName }}</title>
 
 <script type="text/javascript">
-  var help_class_name = '{{ this.controllerName|e('js') }}';
-  var iso_user = '{{ this.isoUser|e('js') }}';
+  var help_class_name = '{{ this.controllerName }}';
+  var iso_user = '{{ this.isoUser }}';
   var lang_is_rtl = '{{ this.langIsRtl|intCast }}';
-  var full_language_code = '{{ this.fullLanguageCode|e('js') }}';
-  var full_cldr_language_code = '{{ this.fullCldrLanguageCode|e('js') }}';
-  var country_iso_code = '{{ this.countryIsoCode|e('js') }}';
-  var _PS_VERSION_ = '{{ this.psVersion|e('js') }}';
+  var full_language_code = '{{ this.fullLanguageCode }}';
+  var full_cldr_language_code = '{{ this.fullCldrLanguageCode }}';
+  var country_iso_code = '{{ this.countryIsoCode }}';
+  var _PS_VERSION_ = '{{ this.psVersion }}';
   var roundMode = {{ this.roundMode|intCast }};
-  var youEditFieldFor = '{{ this.editForLabel|e('js') }}';
+  var youEditFieldFor = '{{ this.editForLabel }}';
   var new_order_msg = '{{ 'A new order has been placed on your store.'|trans({}, 'Admin.Navigation.Header') }}';
   var order_number_msg = '{{ 'Order number:'|trans({}, 'Admin.Navigation.Header') }} ';
   var total_msg = '{{ 'Total:'|trans({}, 'Admin.Global') }} ';
@@ -27,14 +27,14 @@
   var customer_name_msg = '{{ 'Customer name:'|trans({}, 'Admin.Navigation.Header') }} ';
   var new_msg = '{{ 'A new message was posted on your store.'|trans({}, 'Admin.Navigation.Header') }}';
   var see_msg = '{{ 'Read this message'|trans({}, 'Admin.Navigation.Header') }}';
-  var token = '{{ this.legacyToken|e('js') }}';
-  var currentIndex = '{{ this.currentIndex|e('js') }}';
-  var employee_token = '{{ this.employeeToken|e('js') }}';
+  var token = '{{ this.legacyToken }}';
+  var currentIndex = '{{ this.currentIndex }}';
+  var employee_token = '{{ this.employeeToken }}';
   var choose_language_translate = '{{ 'Choose language:'|trans({}, 'Admin.Actions') }}';
   var default_language = '{{ this.defaultLanguage|intCast }}';
-  var admin_modules_link = '{{ path('admin_module_manage')|e('js')}}';
-  var admin_notification_get_link = '{{ path('admin_common_notifications')|e('js') }}';
-  var admin_notification_push_link = adminNotificationPushLink = '{{ path('admin_common_notifications_ack')|e('js') }}';
+  var admin_modules_link = '{{ path('admin_module_manage')}}';
+  var admin_notification_get_link = '{{ path('admin_common_notifications') }}';
+  var admin_notification_push_link = adminNotificationPushLink = '{{ path('admin_common_notifications_ack') }}';
   var update_success_msg = '{{ 'Update successful'|trans({}, 'Admin.Notifications.Success') }}';
   var search_product_msg = '{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}';
 </script>
