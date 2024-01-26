@@ -489,7 +489,7 @@ class Stocks extends BOBasePage {
    * Bulk edit quantity by using the arrow up/down
    * @param page {Page} Browser tab
    * @param quantity {number} Value of quantity to set on input
-   *  @param direction {string} Direction to click on
+   * @param direction {string} Direction to click on
    * @returns {Promise<string>}
    */
   async bulkEditQuantityWithArrowUpDownButtons(page: Page, quantity: number, direction: string): Promise<string> {
