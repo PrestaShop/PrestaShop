@@ -31,6 +31,8 @@ namespace PrestaShopBundle\EventListener\Context\Admin;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 use PrestaShopBundle\EventListener\ExternalApiTrait;
+use PrestaShopBundle\Security\Admin\Employee;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
@@ -42,7 +44,8 @@ class EmployeeContextListener
 
     public function __construct(
         private readonly EmployeeContextBuilder $employeeContextBuilder,
-        private readonly LegacyContext $legacyContext
+        private readonly LegacyContext $legacyContext,
+        private readonly Security $security,
     ) {
     }
 
@@ -54,6 +57,8 @@ class EmployeeContextListener
 
         if (!empty($this->legacyContext->getContext()->cookie->id_employee)) {
             $this->employeeContextBuilder->setEmployeeId((int) $this->legacyContext->getContext()->cookie->id_employee);
+        } elseif ($this->security->getUser() instanceof Employee) {
+            $this->employeeContextBuilder->setEmployeeId($this->security->getUser()->getId());
         }
     }
 }
