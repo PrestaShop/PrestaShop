@@ -26,29 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Exception;
+namespace PrestaShop\PrestaShop\Core\Form\ErrorMessage;
 
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-
-/** @deprecated and will be removed in 9.0 */
-class InvalidConfigurationDataErrorCollection extends AbstractTypedCollection
+/** Configuration error specific to administration page */
+class AdministrationConfigurationError extends AbstractConfigurationError
 {
-    public function __construct()
-    {
-        parent::__construct();
-        @trigger_error(
-            sprintf(
-                'The %s class is deprecated since version 8.1 and will be removed in 9. Use the %s class instead.',
-                __CLASS__,
-                ConfigurationErrorCollection::class
-            ),
-            E_USER_DEPRECATED
-        );
-    }
-
-    protected function getType(): string
-    {
-        return InvalidConfigurationDataError::class;
-    }
+    public const ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED = 1;
+    public const ERROR_COOKIE_SAMESITE_NONE = 2;
 }

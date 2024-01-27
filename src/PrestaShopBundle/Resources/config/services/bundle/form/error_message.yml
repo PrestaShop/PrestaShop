@@ -1,0 +1,20 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+
+  PrestaShopBundle\Form\ErrorMessage\LabelProvider:
+
+  PrestaShopBundle\Form\ErrorMessage\Factory\ConfigurationErrorFactory:
+    public: true
+    arguments:
+      - !tagged core.configuration_error_factory
+
+  PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorMessageProvider:
+    arguments:
+      $langRepository: '@prestashop.core.admin.lang.repository'
+    tags: [ 'core.configuration_error_factory' ]
+
+  PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorMessageProvider:
+    arguments:
+    tags: [ 'core.configuration_error_factory' ]

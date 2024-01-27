@@ -26,12 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Exception;
+namespace PrestaShop\PrestaShop\Core\Form\ErrorMessage;
 
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\CommonConfigurationError;
-
-/** @deprecated and will be removed in 9.0 */
-class InvalidConfigurationDataError
+/**
+ * Abstract configuration error that contains main fields for the error.
+ * The errors extending it are mostly needed to store constants for specific errors or
+ * to be recognized in ConfigurationErrorMessage providers
+ */
+class AbstractConfigurationError implements ConfigurationErrorInterface
 {
     /**
      * @var int
@@ -44,30 +46,13 @@ class InvalidConfigurationDataError
     private $fieldName;
 
     /**
-     * @var int|null
-     */
-    private $languageId;
-
-    /**
-     * InvalidConfigurationDataError constructor.
-     *
      * @param int $errorCode
      * @param string $fieldName
-     * @param int|null $languageId
      */
-    public function __construct(int $errorCode, string $fieldName, ?int $languageId = null)
+    public function __construct(int $errorCode, string $fieldName)
     {
-        @trigger_error(
-            sprintf(
-                'The %s class is deprecated since version 8.1 and will be removed in 9. Use the %s class instead.',
-                __CLASS__,
-                CommonConfigurationError::class
-            ),
-            E_USER_DEPRECATED
-        );
         $this->errorCode = $errorCode;
         $this->fieldName = $fieldName;
-        $this->languageId = $languageId;
     }
 
     /**
@@ -84,13 +69,5 @@ class InvalidConfigurationDataError
     public function getFieldName(): string
     {
         return $this->fieldName;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getLanguageId(): ?int
-    {
-        return $this->languageId;
     }
 }

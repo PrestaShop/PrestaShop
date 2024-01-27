@@ -28,27 +28,32 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Exception;
 
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
+use Throwable;
 
-/** @deprecated and will be removed in 9.0 */
-class InvalidConfigurationDataErrorCollection extends AbstractTypedCollection
+/**
+ * Exception thrown in case error happens in data provider validation
+ * should be caught in the controller and configurationErrors used to display errors
+ */
+class FormDataProviderException extends DomainException
 {
-    public function __construct()
+    /**
+     * @var ConfigurationErrorCollection
+     */
+    private $configurationErrors;
+
+    public function __construct($message = '', $code = 0, Throwable $previous = null, ?ConfigurationErrorCollection $configurationErrors = null)
     {
-        parent::__construct();
-        @trigger_error(
-            sprintf(
-                'The %s class is deprecated since version 8.1 and will be removed in 9. Use the %s class instead.',
-                __CLASS__,
-                ConfigurationErrorCollection::class
-            ),
-            E_USER_DEPRECATED
-        );
+        parent::__construct($message, $code, $previous);
+        $this->configurationErrors = $configurationErrors ?: new ConfigurationErrorCollection();
     }
 
-    protected function getType(): string
+    /**
+     * @return ConfigurationErrorCollection
+     */
+    public function getInvalidConfigurationDataErrors(): ConfigurationErrorCollection
     {
-        return InvalidConfigurationDataError::class;
+        return $this->configurationErrors;
     }
 }

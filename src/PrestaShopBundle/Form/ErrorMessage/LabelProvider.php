@@ -26,29 +26,29 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Exception;
+namespace PrestaShopBundle\Form\ErrorMessage;
 
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
+use Symfony\Component\Form\FormInterface;
 
-/** @deprecated and will be removed in 9.0 */
-class InvalidConfigurationDataErrorCollection extends AbstractTypedCollection
+/** Responsible for finding what label is used for certain field in the form */
+class LabelProvider
 {
-    public function __construct()
+    /**
+     * @param FormInterface $form
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    public function getLabel(FormInterface $form, string $fieldName): string
     {
-        parent::__construct();
-        @trigger_error(
-            sprintf(
-                'The %s class is deprecated since version 8.1 and will be removed in 9. Use the %s class instead.',
-                __CLASS__,
-                ConfigurationErrorCollection::class
-            ),
-            E_USER_DEPRECATED
-        );
-    }
+        $view = $form->createView();
+        foreach ($view->children as $child) {
+            if (isset($child->vars['name']) && $fieldName === $child->vars['name']) {
+                return $child->vars['label'] ?? $fieldName;
+            }
+        }
 
-    protected function getType(): string
-    {
-        return InvalidConfigurationDataError::class;
+        /* If label not found return $fieldName as fallback */
+        return $fieldName;
     }
 }

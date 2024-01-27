@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Form\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use Throwable;
 
+/** @deprecated and will be removed in 9.0 */
 class DataProviderException extends DomainException
 {
     /**
@@ -40,6 +41,14 @@ class DataProviderException extends DomainException
 
     public function __construct($message = '', $code = 0, Throwable $previous = null, ?InvalidConfigurationDataErrorCollection $InvalidConfigurationDataErrors = null)
     {
+        @trigger_error(
+            sprintf(
+                'The %s class is deprecated since version 8.1 and will be removed in 9. Use the %s class instead.',
+                __CLASS__,
+                FormDataProviderException::class
+            ),
+            E_USER_DEPRECATED
+        );
         parent::__construct($message, $code, $previous);
         $this->InvalidConfigurationDataErrors = $InvalidConfigurationDataErrors ?: new InvalidConfigurationDataErrorCollection();
     }
