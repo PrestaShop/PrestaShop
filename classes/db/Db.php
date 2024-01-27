@@ -58,6 +58,9 @@ abstract class DbCore
     /** @var PDO|mysqli|resource|null Resource link */
     protected $link;
 
+    /** @var int Transactions depth level */
+    protected $transactionsDepth = 0;
+
     /** @var PDOStatement|mysqli_result|resource|bool SQL cached result */
     protected $result;
 
@@ -201,6 +204,38 @@ abstract class DbCore
      * @return string
      */
     abstract public function getBestEngine();
+
+    /**
+     * Initiate a new transaction.
+     *
+     * @return bool
+     */
+    abstract protected function _beginTransaction(): bool;
+
+    /**
+     * Set a named savepoint that transaction can be rolled back to.
+     *
+     * @param string $name Name of savepoint to set
+     *
+     * @return bool
+     */
+    abstract protected function _savepoint($name): bool;
+
+    /**
+     * Commit a transaction.
+     *
+     * @return bool
+     */
+    abstract protected function _commit(): bool;
+
+    /**
+     * Rollback a transaction.
+     *
+     * @param string $name Optional savepoint to rollback to
+     *
+     * @return bool
+     */
+    abstract protected function _rollback($name = null): bool;
 
     /**
      * Returns database object instance.
@@ -361,6 +396,87 @@ abstract class DbCore
         if ($this->link) {
             $this->disconnect();
         }
+    }
+
+    /**
+     * Initiate a new transaction.
+     *
+     * @return bool
+     */
+    public function beginTransaction(): bool
+    {
+        if ($this->transactionsDepth == 0) {
+            if ($this->_beginTransaction()) {
+                ++$this->transactionsDepth;
+
+                return true;
+            }
+        } elseif ($this->transactionsDepth > 0) {
+            if ($this->_savepoint('depth' . ($this->transactionsDepth + 1))) {
+                ++$this->transactionsDepth;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Commit a transaction.
+     *
+     * @return bool
+     */
+    public function commit(): bool
+    {
+        if ($this->transactionsDepth == 0) {
+            return false;
+        } elseif ($this->transactionsDepth > 1) {
+            --$this->transactionsDepth;
+
+            return true;
+        } elseif ($this->_commit()) {
+            --$this->transactionsDepth;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Rollback a transaction.
+     *
+     * @return bool
+     */
+    public function rollback(): bool
+    {
+        if ($this->transactionsDepth == 0) {
+            return false;
+        } elseif ($this->transactionsDepth > 1) {
+            if ($this->_rollback('depth' . $this->transactionsDepth)) {
+                --$this->transactionsDepth;
+
+                return true;
+            }
+        } elseif ($this->_rollback()) {
+            --$this->transactionsDepth;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get depth of transactions nesting. Value 0 means there is no ongoing
+     * transaction. Values higher than 1 mean being in a nested transaction.
+     *
+     * @return int
+     */
+    public function getTransactionsDepth(): int
+    {
+        return $this->transactionsDepth;
     }
 
     /**

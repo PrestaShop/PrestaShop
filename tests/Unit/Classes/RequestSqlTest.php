@@ -112,6 +112,34 @@ namespace {
         public function getBestEngine()
         {
         }
+
+        /* @phpstan-ignore-next-line */
+        public function _beginTransaction(): bool
+        {
+            /* @phpstan-ignore-next-line */
+            return true;
+        }
+
+        /* @phpstan-ignore-next-line */
+        public function _savepoint($name): bool
+        {
+            /* @phpstan-ignore-next-line */
+            return true;
+        }
+
+        /* @phpstan-ignore-next-line */
+        public function _commit(): bool
+        {
+            /* @phpstan-ignore-next-line */
+            return true;
+        }
+
+        /* @phpstan-ignore-next-line */
+        public function _rollback($name = null): bool
+        {
+            /* @phpstan-ignore-next-line */
+            return true;
+        }
     }
 }
 

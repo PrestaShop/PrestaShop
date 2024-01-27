@@ -391,6 +391,50 @@ class DbMySQLiCore extends Db
     }
 
     /**
+     * Initiate a new transaction.
+     *
+     * @return bool
+     */
+    protected function _beginTransaction(): bool
+    {
+        return $this->link->begin_transaction();
+    }
+
+    /**
+     * Set a named savepoint that transaction can be rolled back to.
+     *
+     * @param string $name Name of savepoint to set
+     *
+     * @return bool
+     */
+    protected function _savepoint($name): bool
+    {
+        return $this->link->savepoint($name);
+    }
+
+    /**
+     * Commit a transaction.
+     *
+     * @return bool
+     */
+    protected function _commit(): bool
+    {
+        return $this->link->commit();
+    }
+
+    /**
+     * Rollback a transaction.
+     *
+     * @param string $name Optional savepoint to rollback to
+     *
+     * @return bool
+     */
+    protected function _rollback($name = null): bool
+    {
+        return $this->link->rollback(0, $name);
+    }
+
+    /**
      * Tries to connect to the database and create a table (checking creation privileges).
      *
      * @param string $server
