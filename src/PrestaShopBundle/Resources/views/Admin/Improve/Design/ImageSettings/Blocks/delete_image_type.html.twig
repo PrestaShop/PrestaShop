@@ -1,0 +1,58 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
+  'id': grid.id ~ '_grid_delete_image_type_modal',
+  'title': "Are you sure you want to delete this image setting?"|trans({}, 'Admin.Design.Feature'),
+  'closable': true,
+  'closeLabel': "Cancel"|trans({}, 'Admin.Actions'),
+  'actions': [{
+    'type': 'button',
+    'label': "Delete"|trans({}, 'Admin.Actions'),
+    'class': 'btn btn-danger btn-lg js-submit-delete-image-type',
+  }],
+} %}
+  {% block content %}
+    <div class="modal-body">
+      <p>{{ 'If you delete this image format, the theme won\'t be able to use it anymore. This will result in a degraded experience on your front office.'|trans({}, 'Admin.Design.Notification') }}</p>
+      {{ form_start(deleteImageTypeForm) }}
+      <div class="form-wrapper w-100 p-0 mt-4">
+        {% block delete_image_type_form %}
+          <div class="d-flex align-items-center">
+            <div class="bold">
+              {{ form_label(deleteImageTypeForm.delete_images_files_too, null, {'label_attr': {'class': 'm-0'}}) }}
+            </div>
+            <div class="col-sm">
+              {{ form_widget(deleteImageTypeForm.delete_images_files_too) }}
+            </div>
+          </div>
+
+          {{ form_rest(deleteImageTypeForm) }}
+        {% endblock %}
+      </div>
+      {{ form_end(deleteImageTypeForm) }}
+    </div>
+  {% endblock %}
+{% endembed %}
