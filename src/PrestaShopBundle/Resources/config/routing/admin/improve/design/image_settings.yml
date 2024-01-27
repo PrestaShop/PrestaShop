@@ -1,0 +1,81 @@
+admin_image_settings_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::indexAction'
+    _legacy_controller: AdminImages
+    _legacy_link: AdminImages
+    _legacy_feature_flag: image_settings
+
+admin_image_settings_filter:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::searchGridAction'
+    _legacy_controller: AdminImages
+    _legacy_link: AdminImages
+    _legacy_feature_flag: image_settings
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ImageTypeGridDefinitionFactory
+    redirectRoute: admin_image_settings_index
+
+admin_image_settings_save_settings:
+  path: /save-settings
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::saveSettingsAction'
+    _legacy_controller: AdminImages
+    _legacy_link: AdminImages
+    _legacy_feature_flag: image_settings
+
+admin_image_settings_regenerate_thumbnails:
+  path: /regenerate-thumbnails
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::regenerateThumbnailsAction'
+    _legacy_controller: AdminImages
+    _legacy_link: AdminImages
+    _legacy_feature_flag: image_settings
+
+admin_image_settings_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::createAction'
+    _legacy_controller: AdminImages
+    _legacy_link: AdminImages
+    _legacy_feature_flag: image_settings
+
+admin_image_settings_edit:
+  path: /{imageTypeId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::editAction'
+    _legacy_controller: AdminImages
+    _legacy_link: AdminImages
+    _legacy_parameters:
+      id_image_type: imageTypeId
+    _legacy_feature_flag: image_settings
+  requirements:
+    imageTypeId: \d+
+
+admin_image_settings_delete:
+  path: /{imageTypeId}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::deleteAction'
+    _legacy_controller: AdminImages
+    _legacy_link: AdminImages
+    _legacy_parameters:
+      id_image_type: imageTypeId
+    _legacy_feature_flag: image_settings
+  requirements:
+    imageTypeId: \d+
+
+admin_image_settings_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::bulkDeleteAction'
+    _legacy_controller: AdminImages
+    _legacy_link: AdminImages
+    _legacy_feature_flag: image_settings
