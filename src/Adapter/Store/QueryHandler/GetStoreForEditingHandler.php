@@ -34,18 +34,36 @@ use PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler\GetStoreForEditingHandl
 use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler\GetStoreForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
+use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
+use Symfony\Component\Form\DataTransformerInterface;
 
 #[AsQueryHandler]
 class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
 {
     /**
+     * @var DataTransformerInterface
+     */
+    private $stringArrayToIntegerArrayDataTransformer;
+
+    /**
      * @var StoreRepository
      */
     private $storeRepository;
 
-    public function __construct(StoreRepository $storeRepository)
+    public function __construct(StoreRepository $storeRepository, DataTransformerInterface $stringArrayToIntegerArrayDataTransformer)
     {
         $this->storeRepository = $storeRepository;
+        $this->stringArrayToIntegerArrayDataTransformer = $stringArrayToIntegerArrayDataTransformer;
     }
 
     /**
@@ -61,10 +79,28 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
             if (0 >= $store->id) {
                 throw new StoreNotFoundException(sprintf('Store object with id %d was not found', $query->getStoreId()->getValue()));
             }
-        } catch (PrestaShopException $e) {
+        } catch (\PrestaShopException $e) {
             throw new StoreException(sprintf('An unexpected error occurred when retrieving store with id %d', $query->getStoreId()->getValue()), 0, $e);
         }
 
-        return new StoreForEditing($store->id, $store->active);
+        return new StoreForEditing(
+            new StoreId($store->id),
+            new CountryId($store->id_country),
+            new StateId($store->id_state),
+            $store->name,
+            $store->address1,
+            $store->address2,
+            $store->postcode,
+            $store->city,
+            $store->latitude,
+            $store->longitude,
+            $store->hours,
+            $store->phone,
+            $store->fax,
+            $store->note,
+            $store->email,
+            $store->active,
+            $this->stringArrayToIntegerArrayDataTransformer->reverseTransform($store->getAssociatedShops()),
+        );
     }
 }

@@ -58,6 +58,13 @@ services:
       - '@PrestaShopBundle\Form\DataTransformer\StringArrayToIntegerArrayDataTransformer'
       - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
 
+  prestashop.core.form.identifiable_object.data_provider.store_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\StoreFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@PrestaShopBundle\Form\DataTransformer\StringArrayToIntegerArrayDataTransformer'
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+
   prestashop.core.form.identifiable_object.data_provider.cms_page_category_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CmsPageCategoryFormDataProvider'
     arguments:

@@ -1,6 +1,6 @@
 admin_stores_index:
   path: /
-  methods: [ GET ]
+  methods: GET
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::indexAction'
     _legacy_controller: AdminStores
@@ -31,9 +31,18 @@ admin_stores_toggle_status:
   requirements:
     storeId: \d+
 
+admin_stores_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::createAction'
+    _legacy_controller: AdminStores
+    # @todo; uncomment legacy link when page is fully migrated and ready to be displayed by default
+    #_legacy_link: AdminStores:createstore
+
 admin_stores_delete:
   path: /{storeId}/delete
-  methods: [ POST, DELETE ]
+  methods: [ DELETE ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::deleteAction'
     _legacy_controller: AdminStores
@@ -46,7 +55,7 @@ admin_stores_delete:
 
 admin_stores_bulk_delete:
   path: /bulk-delete
-  methods: [ POST, DELETE ]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::bulkDeleteAction'
     _legacy_controller: AdminStores

@@ -64,6 +64,12 @@ services:
     arguments:
       - '@prestashop.core.form.identifiable_object.data_handler.contact_form_data_handler'
 
+  prestashop.core.form.identifiable_object.handler.store_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
+    arguments:
+      - '@prestashop.core.form.identifiable_object.data_handler.store_form_data_handler'
+
   prestashop.core.form.identifiable_object.handler.cms_page_category_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]

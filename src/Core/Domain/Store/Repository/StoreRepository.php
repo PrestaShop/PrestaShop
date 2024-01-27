@@ -66,17 +66,17 @@ class StoreRepository extends AbstractObjectModelRepository
     /**
      * @param StoreId $storeId
      *
-     * @return Store
+     * @return \Store
      *
      * @throws CoreException
      * @throws StoreNotFoundException
      */
-    public function get(StoreId $storeId): Store
+    public function get(StoreId $storeId): \Store
     {
-        /** @var Store $store */
+        /** @var \Store $store */
         $store = $this->getObjectModel(
             $storeId->getValue(),
-            Store::class,
+            \Store::class,
             StoreNotFoundException::class
         );
 
@@ -84,11 +84,11 @@ class StoreRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param Store $store
+     * @param \Store $store
      * @param array $propertiesToUpdate
      * @param int $errorCode
      */
-    public function partialUpdate(Store $store, array $propertiesToUpdate, int $errorCode): void
+    public function partialUpdate(\Store $store, array $propertiesToUpdate, int $errorCode): void
     {
         $this->partiallyUpdateObjectModel(
             $store,
