@@ -336,3 +336,10 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApiAccessType'
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApiAccessFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.image_type_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageTypeType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ImageTypeFormDataProvider'

@@ -163,6 +163,8 @@ class TypedRegexValidator extends ConstraintValidator
                 }
 
                 return '/^[_a-zA-Z0-9\-]+$/';
+            case TypedRegex::TYPE_IMAGE_TYPE_NAME:
+                return '/^[a-zA-Z0-9_ -]+$/';
             default:
                 $definedTypes = implode(', ', array_values((new ReflectionClass(TypedRegex::class))->getConstants()));
                 throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, $definedTypes));

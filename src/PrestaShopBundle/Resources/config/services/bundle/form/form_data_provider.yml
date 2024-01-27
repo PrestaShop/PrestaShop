@@ -293,3 +293,9 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\FormDataProvider'
     arguments:
       - '@prestashop.adapter.security.password_policy.configuration'
+
+  prestashop.admin.improve.design.image_settings.form_data_provider:
+    class: 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageSettingsFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@prestashop.core.command_bus'
