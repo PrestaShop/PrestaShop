@@ -254,6 +254,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "composer-normalize": [
+            "composer normalize --no-check-lock"
+        ],
         "create-release": "@php tools/build/CreateRelease.php",
         "create-test-db": [
             "@php ./tests/bin/create-test-db.php",
@@ -273,6 +276,10 @@
             "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml",
             "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit-isolated.xml"
         ],
+        "phpstan": [
+            "Composer\\Config::disableProcessTimeout",
+            "make phpstan"
+        ],
         "restore-test-db": [
             "@php ./tests/bin/restore-test-db.php"
         ],
@@ -289,9 +296,11 @@
         ]
     },
     "scripts-descriptions": {
+        "composer-normalize": "Normalize composer.json file, CI will check this",
         "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information.",
         "create-test-db": "Create a Database for testing purposes",
         "create-test-table-dumps": "Create a dump of each table in the Database for testing purposes",
+        "phpstan": "Run PHPStan for the project",
         "restore-test-db": "Restore the whole DB in a single dump",
         "restore-test-tables": "Restore all tables one by one, only when they have been modified",
         "test-all": "Launch all PHPUnit test suites"
