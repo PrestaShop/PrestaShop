@@ -143,13 +143,17 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     }
 
     /**
-     * Update Multishop context for only one shop group.
-     *
-     * @param int $id Shop id to set in the current context
+     * Update Multishop context to global context
      */
-    public function setAllContext($id)
+    public function setAllContext($id = null)
     {
-        Shop::setContext(Shop::CONTEXT_ALL, $id);
+        if (null !== $id) {
+            @trigger_error(
+                'The parameter $id is deprecated since version 8.0.0 and will be removed in the next major version.',
+                E_USER_DEPRECATED
+            );
+        }
+        Shop::setContext(Shop::CONTEXT_ALL);
     }
 
     public function getContextShopGroup()
