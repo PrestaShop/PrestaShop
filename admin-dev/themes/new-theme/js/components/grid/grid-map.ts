@@ -52,6 +52,9 @@ export default {
     linkRowActionClickableFirst:
       '.js-link-row-action[data-clickable-row=1]:first',
     clickableTd: 'td.clickable',
+    imageTypeDeleteAction: '.js-delete-image-type-row-action',
+    deleteImageTypeModal: (id: string): string => `#${id}_grid_delete_image_type_modal`,
+    submitDeleteImageType: '.js-submit-delete-image-type',
   },
   actions: {
     showQuery: '.js-common_show_query-grid-action',
