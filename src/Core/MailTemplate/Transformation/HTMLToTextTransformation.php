@@ -47,6 +47,12 @@ class HTMLToTextTransformation extends AbstractTransformation
      */
     public function apply($templateContent, array $templateVariables)
     {
+        // The input could be in HTML or raw text. If it is HTML it starts with <!DOCTYPE
+        // As heuristic we interpret the first character and skip transformation if this looks
+        // like text already.
+        if (strlen($templateContent) > 0 && substr($templateContent, 0, 1) != '<') {
+            return $templateContent;
+        }
         $templateContent = Html2Text::convert($templateContent, ['ignore_errors' => true]);
         if (PHP_EOL != $templateContent[strlen($templateContent) - 1]) {
             $templateContent .= PHP_EOL;
