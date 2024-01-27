@@ -28,38 +28,35 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
-use Context;
-use Hook;
 use OrderInvoice;
-use PDF;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
+use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorSingleObjectInterface;
+use PrestaShop\PrestaShop\Core\PDF\Template\PDFTemplateFactory;
+use PrestaShop\PrestaShop\Core\PDF\Template\PDFTemplateInvoiceSmarty;
+use PrestaShop\PrestaShop\Core\PDF\Template\PDFTemplateRenderer;
 use RuntimeException;
 use Validate;
 
 /**
- * Generates invoice by invoice ID.
- */
-final class InvoicePdfGenerator implements PDFGeneratorInterface
+ * Generates invoice by invoice ID. */
+final class InvoicePdfGenerator implements PDFGeneratorSingleObjectInterface
 {
+    public function __construct(
+        private readonly PDFTemplateFactory  $templateFactory,
+        private readonly PDFTemplateRenderer $pdfTemplateRenderer,
+    ) {
+    }
     /**
      * {@inheritdoc}
      */
-    public function generatePDF(array $invoiceId): void
+    public function generatePDF(int $objectId): void
     {
-        if (count($invoiceId) !== 1) {
-            throw new CoreException(sprintf('"%s" supports generating PDF for single invoice only.', self::class));
-        }
+        $orderInvoice = new OrderInvoice($objectId);
 
-        $invoiceId = reset($invoiceId);
-        $orderInvoice = new OrderInvoice((int) $invoiceId);
         if (!Validate::isLoadedObject($orderInvoice)) {
             throw new RuntimeException('The invoice cannot be found within your database.');
         }
 
-        Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => [$orderInvoice]]);
-
-        $pdf = new PDF($orderInvoice, PDF::TEMPLATE_INVOICE, Context::getContext()->smarty);
-        $pdf->render();
+        $template = $this->templateFactory->getTemplate(PDFTemplateInvoiceSmarty::TEMPLATE_NAME, ['invoice' => $orderInvoice]);
+        $this->pdfTemplateRenderer->render($template);
     }
 }

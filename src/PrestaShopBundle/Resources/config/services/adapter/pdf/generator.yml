@@ -2,6 +2,9 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Adapter\PDF\InvoicePdfGenerator:
+    autowire: true
+
   prestashop.adapter.pdf.generator.invoice:
     class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
     arguments:
@@ -29,6 +32,3 @@ services:
     arguments:
       - '%database_prefix%'
       - '@doctrine.dbal.default_connection'
-
-  prestashop.adapter.pdf.generator.single_invoice:
-    class: PrestaShop\PrestaShop\Adapter\PDF\InvoicePdfGenerator

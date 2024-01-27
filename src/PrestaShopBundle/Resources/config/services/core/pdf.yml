@@ -1,0 +1,23 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+
+  PrestaShop\PrestaShop\Core\PDF\PDFRenderer:
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getLanguage().is_rtl"
+      - "@=service('prestashop.adapter.legacy.context').getLanguage().iso_code"
+
+  PrestaShop\PrestaShop\Core\PDF\SmartyFactory:
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getSmarty()"
+
+  PrestaShop\PrestaShop\Core\PDF\Template\PDFTemplateRenderer:
+
+  PrestaShop\PrestaShop\Core\PDF\Template\PDFTemplateFactory:
+    arguments:
+      $templates: !tagged core.pdf_template
+
+  PrestaShop\PrestaShop\Core\PDF\Template\PDFTemplateInvoiceSmarty:
+    tags:
+      - { name: core.pdf_template }

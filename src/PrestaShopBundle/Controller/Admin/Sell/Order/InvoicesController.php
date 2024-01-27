@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Adapter\PDF\InvoicePdfGenerator;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -150,9 +151,9 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @param int $invoiceId
      */
-    public function generatePdfByIdAction(int $invoiceId)
+    public function generatePdfByIdAction(int $invoiceId): void
     {
-        $this->get('prestashop.adapter.pdf.generator.single_invoice')->generatePDF([$invoiceId]);
+        $this->get(InvoicePdfGenerator::class)->generatePDF($invoiceId);
 
         // When using legacy generator,
         // we want to be sure that displaying PDF is the last thing this controller will do
