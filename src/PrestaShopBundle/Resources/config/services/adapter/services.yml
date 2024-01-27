@@ -116,3 +116,6 @@ services:
 
   prestashop.adapter.file.robots_text_file_generator:
     class: 'PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'
+
+  PrestaShop\PrestaShop\Adapter\ImageThumbnailsRegenerator:
+    autowire: true
