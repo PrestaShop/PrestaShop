@@ -6499,16 +6499,16 @@
         },
         {
             "name": "prestashop/ps_distributionapiclient",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_distributionapiclient.git",
-                "reference": "f1d479ff7a4b94657883b988a4b21498460806c1"
+                "reference": "4db438b616fb26b9281607db436e60f382fb2391"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_distributionapiclient/zipball/f1d479ff7a4b94657883b988a4b21498460806c1",
-                "reference": "f1d479ff7a4b94657883b988a4b21498460806c1",
+                "url": "https://api.github.com/repos/PrestaShop/ps_distributionapiclient/zipball/4db438b616fb26b9281607db436e60f382fb2391",
+                "reference": "4db438b616fb26b9281607db436e60f382fb2391",
                 "shasum": ""
             },
             "require": {
@@ -6544,9 +6544,9 @@
             "homepage": "https://github.com/PrestaShop/ps_distributionapiclient",
             "support": {
                 "issues": "https://github.com/PrestaShop/ps_distributionapiclient/issues",
-                "source": "https://github.com/PrestaShop/ps_distributionapiclient/tree/v1.1.0"
+                "source": "https://github.com/PrestaShop/ps_distributionapiclient/tree/v1.1.1"
             },
-            "time": "2023-03-23T16:51:38+00:00"
+            "time": "2024-01-19T16:20:17+00:00"
         },
         {
             "name": "prestashop/ps_emailalerts",
