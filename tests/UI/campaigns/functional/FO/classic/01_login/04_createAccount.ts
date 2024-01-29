@@ -8,9 +8,9 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-import {createAccountPage} from '@pages/FO/myAccount/add';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage} from '@pages/FO/classic/login';
+import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 // Import data
 import CustomerData from '@data/faker/customer';

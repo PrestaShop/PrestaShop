@@ -1,5 +1,5 @@
 // Import FO pages
-import {TermsAndConditionsOfUsePage} from '@pages/FO/termsAndConditionsOfUse/index';
+import {TermsAndConditionsOfUsePage} from '@pages/FO/classic/termsAndConditionsOfUse/index';
 
 /**
  * @class

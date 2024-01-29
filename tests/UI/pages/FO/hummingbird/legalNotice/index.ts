@@ -1,5 +1,5 @@
 // Import FO pages
-import {LegalNoticePage} from '@pages/FO/legalNotice/index';
+import {LegalNoticePage} from '@pages/FO/classic/legalNotice/index';
 
 /**
  * Contact Us page, contains functions that can be used on the page

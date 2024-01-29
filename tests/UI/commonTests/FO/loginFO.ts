@@ -2,8 +2,8 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {loginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
+import {loginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
 
 // Import data
 import type CustomerData from '@data/faker/customer';

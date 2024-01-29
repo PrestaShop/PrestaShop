@@ -10,7 +10,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import localizationPage from '@pages/BO/international/localization';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
+import {homePage} from '@pages/FO/classic/home';
 
 // Import Data
 import Languages from '@data/demo/languages';

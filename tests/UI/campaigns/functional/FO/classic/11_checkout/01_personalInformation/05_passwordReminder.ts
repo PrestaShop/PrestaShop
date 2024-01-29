@@ -9,12 +9,12 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {createAccountTest} from '@commonTests/FO/account';
 
 // Import pages
-import {homePage} from '@pages/FO/home';
-import productPage from '@pages/FO/product';
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import {passwordReminderPage} from '@pages/FO/passwordReminder';
-import {myAccountPage} from '@pages/FO/myAccount';
+import {homePage} from '@pages/FO/classic/home';
+import productPage from '@pages/FO/classic/product';
+import {cartPage} from '@pages/FO/classic/cart';
+import checkoutPage from '@pages/FO/classic/checkout';
+import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
 
 // Import data
 import CustomerData from '@data/faker/customer';

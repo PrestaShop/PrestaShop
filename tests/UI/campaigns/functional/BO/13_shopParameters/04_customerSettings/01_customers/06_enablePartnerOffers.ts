@@ -12,9 +12,9 @@ import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage as loginFOPage} from '@pages/FO/login';
-import {createAccountPage} from '@pages/FO/myAccount/add';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage as loginFOPage} from '@pages/FO/classic/login';
+import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

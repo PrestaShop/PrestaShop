@@ -1,5 +1,5 @@
 // Import FO pages
-import {MyAccountPage} from '@pages/FO/myAccount/index';
+import {MyAccountPage} from '@pages/FO/classic/myAccount/index';
 
 /**
  * My account page, contains functions that can be used on the page

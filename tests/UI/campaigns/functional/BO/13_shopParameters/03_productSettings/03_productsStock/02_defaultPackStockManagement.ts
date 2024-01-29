@@ -11,13 +11,13 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/home';
-import foProductPage from '@pages/FO/product';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {searchResultsPage} from '@pages/FO/searchResults';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
+import foProductPage from '@pages/FO/classic/product';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {cartPage} from '@pages/FO/classic/cart';
+import checkoutPage from '@pages/FO/classic/checkout';
+import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
 import Customers from '@data/demo/customers';

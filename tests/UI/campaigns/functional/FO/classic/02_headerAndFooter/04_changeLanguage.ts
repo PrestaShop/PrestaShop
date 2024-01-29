@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import languagesPage from '@pages/BO/international/languages';
 import localizationPage from '@pages/BO/international/localization';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
+import {homePage} from '@pages/FO/classic/home';
 
 // Import data
 import Languages from '@data/demo/languages';

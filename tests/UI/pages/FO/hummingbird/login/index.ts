@@ -1,5 +1,5 @@
 // Import pages
-import {LoginPage} from '@pages/FO/login';
+import {LoginPage} from '@pages/FO/classic/login';
 
 /**
  * Login page, contains functions that can be used on the page

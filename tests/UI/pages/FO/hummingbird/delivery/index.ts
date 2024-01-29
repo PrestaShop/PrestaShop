@@ -1,5 +1,5 @@
 // Import FO pages
-import {DeliveryPage} from '@pages/FO/delivery/index';
+import {DeliveryPage} from '@pages/FO/classic/delivery/index';
 
 /**
  * Contact Us page, contains functions that can be used on the page

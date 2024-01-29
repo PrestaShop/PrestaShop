@@ -12,7 +12,7 @@ import localizationPage from '@pages/BO/international/localization';
 import translationsPage from '@pages/BO/international/translations';
 import languagesPage from '@pages/BO/international/languages';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
+import {homePage} from '@pages/FO/classic/home';
 
 // Import data
 import Languages from '@data/demo/languages';

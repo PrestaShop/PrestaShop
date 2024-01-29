@@ -13,8 +13,8 @@ import addCategoryPage from '@pages/BO/catalog/categories/add';
 import dashboardPage from '@pages/BO/dashboard';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import categoryPage from '@pages/FO/category';
+import {homePage} from '@pages/FO/classic/home';
+import categoryPage from '@pages/FO/classic/category';
 
 // Import data
 import CategoryData from '@data/faker/category';

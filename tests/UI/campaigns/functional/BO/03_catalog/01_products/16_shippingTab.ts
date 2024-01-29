@@ -14,9 +14,9 @@ import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 // Import FO pages
-import foProductPage from '@pages/FO/product';
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
+import foProductPage from '@pages/FO/classic/product';
+import {cartPage} from '@pages/FO/classic/cart';
+import checkoutPage from '@pages/FO/classic/checkout';
 
 // Import data
 import ProductData from '@data/faker/product';

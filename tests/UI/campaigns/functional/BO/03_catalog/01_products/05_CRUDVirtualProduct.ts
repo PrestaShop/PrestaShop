@@ -14,14 +14,14 @@ import dashboardPage from '@pages/BO/dashboard';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import productsPage from '@pages/BO/catalog/products';
 import ordersPage from '@pages/BO/orders';
-import {homePage} from '@pages/FO/home';
-import foProductPage from '@pages/FO/product';
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
+import {homePage} from '@pages/FO/classic/home';
+import foProductPage from '@pages/FO/classic/product';
+import {cartPage} from '@pages/FO/classic/cart';
+import checkoutPage from '@pages/FO/classic/checkout';
+import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
+import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';

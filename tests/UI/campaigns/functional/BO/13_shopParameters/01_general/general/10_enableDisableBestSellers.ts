@@ -10,8 +10,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import generalPage from '@pages/BO/shopParameters/general';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {siteMapPage} from '@pages/FO/siteMap';
+import {homePage} from '@pages/FO/classic/home';
+import {siteMapPage} from '@pages/FO/classic/siteMap';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

@@ -3,8 +3,8 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/cart';
-import {homePage} from '@pages/FO/home';
+import {cartPage} from '@pages/FO/classic/cart';
+import {homePage} from '@pages/FO/classic/home';
 
 // Import commonTests
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';

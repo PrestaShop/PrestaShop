@@ -1,5 +1,5 @@
 // Import FO pages
-import {CreditSlipPage} from '@pages/FO/myAccount/creditSlips';
+import {CreditSlipPage} from '@pages/FO/classic/myAccount/creditSlips';
 
 /**
  * @class

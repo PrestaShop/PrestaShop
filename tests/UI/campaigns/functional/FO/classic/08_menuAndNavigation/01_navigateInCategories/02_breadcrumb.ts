@@ -3,8 +3,8 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import pages
-import {homePage} from '@pages/FO/home';
-import categoryPage from '@pages/FO/category';
+import {homePage} from '@pages/FO/classic/home';
+import categoryPage from '@pages/FO/classic/category';
 
 // Import data
 import Categories from '@data/demo/categories';

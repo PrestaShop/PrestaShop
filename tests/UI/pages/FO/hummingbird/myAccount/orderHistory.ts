@@ -1,5 +1,5 @@
 // Import FO pages
-import {OrderHistoryPage} from '@pages/FO/myAccount/orderHistory';
+import {OrderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 /**
  * @class

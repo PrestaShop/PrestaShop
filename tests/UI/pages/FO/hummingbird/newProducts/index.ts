@@ -1,5 +1,5 @@
 // Import FO pages
-import {NewProductsPage} from '@pages/FO/newProducts/index';
+import {NewProductsPage} from '@pages/FO/classic/newProducts/index';
 
 /**
  * @class

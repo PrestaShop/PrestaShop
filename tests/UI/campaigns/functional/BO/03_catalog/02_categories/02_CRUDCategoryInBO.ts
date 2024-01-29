@@ -12,9 +12,9 @@ import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import categoryPage from '@pages/FO/category';
-import {homePage as foHomePage} from '@pages/FO/home';
-import {siteMapPage} from '@pages/FO/siteMap';
+import categoryPage from '@pages/FO/classic/category';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
+import {siteMapPage} from '@pages/FO/classic/siteMap';
 
 // Import data
 import CategoryData from '@data/faker/category';

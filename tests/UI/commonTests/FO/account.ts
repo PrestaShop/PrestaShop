@@ -3,12 +3,12 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {createAccountPage as foCreateAccountPage} from '@pages/FO/myAccount/add';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {addressesPage} from '@pages/FO/myAccount/addresses';
-import {addAddressPage} from '@pages/FO/myAccount/addAddress';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
+import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

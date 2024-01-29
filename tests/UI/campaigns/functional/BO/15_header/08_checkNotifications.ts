@@ -9,11 +9,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
-import orderDetails from '@pages/FO/myAccount/orderDetails';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
+import orderDetails from '@pages/FO/classic/myAccount/orderDetails';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import viewOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';

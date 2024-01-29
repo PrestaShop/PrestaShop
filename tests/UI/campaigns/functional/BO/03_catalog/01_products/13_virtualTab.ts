@@ -15,14 +15,14 @@ import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab'
 import productSettings from '@pages/BO/shopParameters/productSettings';
 
 // Import FO pages
-import foProductPage from '@pages/FO/product';
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {homePage} from '@pages/FO/home';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
+import foProductPage from '@pages/FO/classic/product';
+import {cartPage} from '@pages/FO/classic/cart';
+import checkoutPage from '@pages/FO/classic/checkout';
+import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {homePage} from '@pages/FO/classic/home';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
+import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
 import ProductData from '@data/faker/product';

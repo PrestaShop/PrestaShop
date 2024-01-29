@@ -1,5 +1,5 @@
 // Import FO pages
-import {AddAddressPage} from '@pages/FO/myAccount/addAddress';
+import {AddAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
 /**
  * @class

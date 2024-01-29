@@ -10,11 +10,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 import addressesPage from '@pages/BO/customers/addresses';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {addressesPage as foAddressesPage} from '@pages/FO/myAccount/addresses';
-import {addAddressPage} from '@pages/FO/myAccount/addAddress';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import {addressesPage as foAddressesPage} from '@pages/FO/classic/myAccount/addresses';
+import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
 // Import data
 import Customers from '@data/demo/customers';

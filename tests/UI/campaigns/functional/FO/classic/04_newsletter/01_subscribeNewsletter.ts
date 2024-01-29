@@ -12,10 +12,10 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {accountIdentityPage} from '@pages/FO/myAccount/identity';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 
 // Import data
 import Customers from '@data/demo/customers';

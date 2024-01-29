@@ -12,10 +12,10 @@ import boDashboardPage from '@pages/BO/dashboard';
 import boProductsPage from '@pages/BO/catalog/products';
 import boAddProductPage from '@pages/BO/catalog/products/add';
 // FO
-import {homePage} from '@pages/FO/home';
-import {searchResultsPage} from '@pages/FO/searchResults';
-import productPage from '@pages/FO/product';
-import {cartPage} from '@pages/FO/cart';
+import {homePage} from '@pages/FO/classic/home';
+import {searchResultsPage} from '@pages/FO/classic/searchResults';
+import productPage from '@pages/FO/classic/product';
+import {cartPage} from '@pages/FO/classic/cart';
 
 // Import data
 import Products from '@data/demo/products';

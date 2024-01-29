@@ -1,5 +1,5 @@
 // Import FO pages
-import {PricesDropPage} from '@pages/FO/pricesDrop/index';
+import {PricesDropPage} from '@pages/FO/classic/pricesDrop/index';
 
 /**
  * @class

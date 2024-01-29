@@ -3,8 +3,8 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {contactUsPage} from '@pages/FO/contactUs';
-import {homePage} from '@pages/FO/home';
+import {contactUsPage} from '@pages/FO/classic/contactUs';
+import {homePage} from '@pages/FO/classic/home';
 
 // Import data
 import Employees from '@data/demo/employees';

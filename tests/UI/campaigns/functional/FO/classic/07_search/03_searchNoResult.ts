@@ -3,8 +3,8 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import pages
-import {homePage} from '@pages/FO/home';
-import {searchResultsPage} from '@pages/FO/searchResults';
+import {homePage} from '@pages/FO/classic/home';
+import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

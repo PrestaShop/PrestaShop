@@ -13,11 +13,11 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import foVouchersPage from '@pages/FO/myAccount/vouchers';
-import {cartPage} from '@pages/FO/cart';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import foVouchersPage from '@pages/FO/classic/myAccount/vouchers';
+import {cartPage} from '@pages/FO/classic/cart';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';

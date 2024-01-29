@@ -1,5 +1,5 @@
 // Import FO pages
-import {BestSalesPage} from '@pages/FO/bestSales/index';
+import {BestSalesPage} from '@pages/FO/classic/bestSales/index';
 
 /**
  * Contact Us page, contains functions that can be used on the page

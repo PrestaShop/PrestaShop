@@ -14,9 +14,9 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {searchResultsPage} from '@pages/FO/searchResults';
-import productPage from '@pages/FO/product';
+import {homePage} from '@pages/FO/classic/home';
+import {searchResultsPage} from '@pages/FO/classic/searchResults';
+import productPage from '@pages/FO/classic/product';
 
 // Import data
 import ProductData from '@data/faker/product';

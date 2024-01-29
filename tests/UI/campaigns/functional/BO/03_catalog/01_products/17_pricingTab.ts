@@ -14,7 +14,7 @@ import createCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPrice
 import cartRulesPage from '@pages/BO/catalog/discounts';
 
 // Import FO pages
-import foProductPage from '@pages/FO/product';
+import foProductPage from '@pages/FO/classic/product';
 import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
 
 // Import data

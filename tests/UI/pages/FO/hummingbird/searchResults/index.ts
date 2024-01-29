@@ -1,5 +1,5 @@
 // Import FO pages
-import {SearchResultsPage} from '@pages/FO/searchResults';
+import {SearchResultsPage} from '@pages/FO/classic/searchResults';
 
 /**
  * Password Reminder page, contains functions that can be used on the page

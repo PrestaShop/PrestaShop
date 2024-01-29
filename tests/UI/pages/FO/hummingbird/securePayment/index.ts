@@ -1,5 +1,5 @@
 // Import FO pages
-import {SecurePaymentPage} from '@pages/FO/securePayment/index';
+import {SecurePaymentPage} from '@pages/FO/classic/securePayment/index';
 
 /**
  * @class

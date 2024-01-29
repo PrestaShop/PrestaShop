@@ -1,5 +1,5 @@
 // Import FO pages
-import {CartPage} from '@pages/FO/cart/index';
+import {CartPage} from '@pages/FO/classic/cart/index';
 
 /**
  * Cart page, contains functions that can be used on the page

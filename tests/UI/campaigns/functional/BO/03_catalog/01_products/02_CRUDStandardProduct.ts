@@ -11,7 +11,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import productsPage from '@pages/BO/catalog/products';
-import foProductPage from '@pages/FO/product';
+import foProductPage from '@pages/FO/classic/product';
 
 // Import data
 import ProductData from '@data/faker/product';

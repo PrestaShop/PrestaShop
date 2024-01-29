@@ -1,5 +1,5 @@
 // Import FO pages
-import {AboutUsPage} from '@pages/FO/aboutUs/index';
+import {AboutUsPage} from '@pages/FO/classic/aboutUs/index';
 
 /**
  * Contact Us page, contains functions that can be used on the page

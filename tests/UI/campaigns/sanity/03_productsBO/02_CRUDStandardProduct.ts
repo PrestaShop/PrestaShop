@@ -11,7 +11,7 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import foProductPage from '@pages/FO/product';
+import foProductPage from '@pages/FO/classic/product';
 
 // Import data
 import ProductData from '@data/faker/product';

@@ -3,10 +3,10 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import pages
-import categoryPageFO from '@pages/FO/category';
-import {homePage} from '@pages/FO/home';
-import {pricesDropPage} from '@pages/FO/pricesDrop';
-import {newProductsPage} from '@pages/FO/newProducts';
+import categoryPageFO from '@pages/FO/classic/category';
+import {homePage} from '@pages/FO/classic/home';
+import {pricesDropPage} from '@pages/FO/classic/pricesDrop';
+import {newProductsPage} from '@pages/FO/classic/newProducts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

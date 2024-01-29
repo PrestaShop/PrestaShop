@@ -20,11 +20,11 @@ import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {creditSlipPage} from '@pages/FO/myAccount/creditSlips';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import {creditSlipPage} from '@pages/FO/classic/myAccount/creditSlips';
+import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';

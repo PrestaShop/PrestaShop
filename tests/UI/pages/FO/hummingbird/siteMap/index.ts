@@ -1,5 +1,5 @@
 // Import FO pages
-import {SiteMapPage} from '@pages/FO/siteMap/index';
+import {SiteMapPage} from '@pages/FO/classic/siteMap/index';
 
 /**
  * @class
