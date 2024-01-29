@@ -1,73 +1,28 @@
-version: '2.1'
-
-volumes:
-  db-data:
-    name: db-data
-  vendor:
-    name: vendor
-  var:
-    name: var
-
+version: '3'
 services:
   mysql:
-    image: mysql:8
-    ports:
-      - "3306:3306"
-    volumes:
-      - db-data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: prestashop
-      MYSQL_DATABASE: prestashop
+    container_name: some-mysql
+    image: mysql:5.7
     restart: unless-stopped
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:19.0.3
     environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
-    command:
-      - start-dev
-    ports:
-      - "8003:8080"
-
-  prestashop-git:
-    hostname: ${PS_HOSTNAME:-localhost}
-    build:
-      dockerfile: .docker/Dockerfile
-      context: .
-      args:
-        - VERSION=${VERSION:-8.1-apache}
-        - USER_ID=${USER_ID:-1000}
-        - GROUP_ID=${GROUP_ID:-1000}
-        - NODE_VERSION=${NODE_VERSION:-16.20.1}
-    environment:
-      DISABLE_MAKE: ${DISABLE_MAKE:-0}
-      PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
-      DB_PASSWD: ${DB_PASSWD:-prestashop}
-      DB_NAME: ${DB_NAME:-prestashop}
-      DB_SERVER: ${DB_SERVER:-mysql}
-      DB_PREFIX: ${DB_PREFIX:-ps_}
-      PS_DOMAIN: ${PS_DOMAIN:-localhost:8001}
-      PS_FOLDER_INSTALL: ${PS_FOLDER_INSTALL:-install-dev}
-      PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
-      PS_COUNTRY: ${PS_COUNTRY:-fr}
-      PS_LANGUAGE: ${PS_LANGUAGE:-en}
-      PS_DEV_MODE: ${PS_DEV_MODE:-1}
-      PS_ENABLE_SSL: ${PS_ENABLE_SSL:-0}
-      PS_ERASE_DB: ${PS_ERASE_DB:-0}
-      PS_USE_DOCKER_MAILDEV: ${PS_USE_DOCKER_MAILDEV:-1}
-      ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
-      ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
-    command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
-    ports:
-      - "8001:80"
-      - "8002:443"
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: prestashop
+    networks:
+      - prestashop_network
+  prestashop:
+    container_name: prestashop
+    image: prestashop/prestashop:latest # Latest stable version of the PrestaShop, to see all available images go to ...
+    restart: unless-stopped
     depends_on:
       - mysql
-    volumes:
-      - ./:/var/www/html:delegated
-
-  maildev:
-    image: 'maildev/maildev'
     ports:
-      - "1080:1080"
+      - 8080:80
+    environment:
+      DB_SERVER: some-mysql
+      DB_NAME: prestashop
+      DB_USER: root
+      DB_PASSWD: admin
+    networks:
+      - prestashop_network
+networks:
+    prestashop_network:
