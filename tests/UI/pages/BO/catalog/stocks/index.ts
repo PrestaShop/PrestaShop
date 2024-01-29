@@ -32,6 +32,8 @@ class Stocks extends BOBasePage {
 
   private readonly bulkEditQuantityInput: string;
 
+  private readonly bulkEditQuantityUpDownButtons: (direction: string) => string;
+
   private readonly applyNewQuantityButton: string;
 
   private readonly productList: string;
@@ -129,6 +131,7 @@ class Stocks extends BOBasePage {
     // Bulk actions
     this.selectAllCheckbox = '#bulk-action + i';
     this.bulkEditQuantityInput = 'div.bulk-qty input';
+    this.bulkEditQuantityUpDownButtons = (direction: string) => `#app div.row.product-actions span.ps-number-${direction}`;
     this.applyNewQuantityButton = 'button.update-qty';
     this.productList = 'table.table';
     this.productRows = `${this.productList} tbody tr`;
@@ -438,10 +441,10 @@ class Stocks extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setQuantityByArrowUpDown(page: Page, row: number, quantity: number, direction: string): Promise<void> {
-    await page.locator(`#app tr:nth-child(${row}) td.qty-spinner span.ps-number-${direction}`).hover();
+    await page.locator(this.productRowQuantityUpDownButton(row, direction)).hover();
 
     for (let i = 1; i <= Math.abs(quantity); i++) {
-      await page.locator(`#app tr:nth-child(${row}) td.qty-spinner span.ps-number-${direction}`).click();
+      await page.locator(this.productRowQuantityUpDownButton(row, direction)).click();
     }
   }
 
@@ -473,6 +476,32 @@ class Stocks extends BOBasePage {
    */
   async clickOnApplyNewQuantity(page: Page): Promise<string> {
     await page.locator(this.applyQuantityButton).click();
+
+    // Wait for alert-Box after update quantity and close alert-Box
+    await this.waitForVisibleSelector(page, this.alertBoxTextSpan);
+    const textContent = await this.getTextContent(page, this.alertBoxTextSpan);
+    await page.locator(this.alertBoxButtonClose).click();
+
+    return textContent;
+  }
+
+  /**
+   * Bulk edit quantity by using the arrow up/down
+   * @param page {Page} Browser tab
+   * @param quantity {number} Value of quantity to set on input
+   * @param direction {string} Direction to click on
+   * @returns {Promise<string>}
+   */
+  async bulkEditQuantityWithArrowUpDownButtons(page: Page, quantity: number, direction: string): Promise<string> {
+    // Select All products
+    await page.locator(this.selectAllCheckbox).evaluate((el: HTMLElement) => el.click());
+    await page.locator(this.bulkEditQuantityUpDownButtons(direction)).hover();
+
+    for (let i = 1; i <= Math.abs(quantity); i++) {
+      await page.locator(this.bulkEditQuantityUpDownButtons(direction)).click();
+    }
+    // Wait for check button before click
+    await page.locator(this.applyNewQuantityButton).click();
 
     // Wait for alert-Box after update quantity and close alert-Box
     await this.waitForVisibleSelector(page, this.alertBoxTextSpan);
