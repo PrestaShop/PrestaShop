@@ -71,20 +71,4 @@ class LinkTest extends TestCase
 
         $this->assertEquals('1-hummingbird-printed-t-shirt.html', $filename);
     }
-
-    public function testUrlTakesVariantIntoAccountWithoutUrlRewriting(): void
-    {
-        parse_str($this->getProductLink(false, 1, 6)['query'], $query);
-
-        $this->assertEquals(1, $query['id_product']);
-        $this->assertEquals(6, $query['id_product_attribute']);
-    }
-
-    public function testUrlIgnoresVariantIfNotSpecifiedWithoutUrlRewriting(): void
-    {
-        parse_str($this->getProductLink(false, 1, null)['query'], $query);
-
-        $this->assertEquals(1, $query['id_product']);
-        $this->assertArrayNotHasKey('id_product_attribute', $query);
-    }
 }

@@ -908,7 +908,7 @@ class DispatcherCore
      *
      * @param string $route_id Name the route
      * @param int $id_lang
-     * @param array $params
+     * @param array|null $params
      * @param bool $force_routes Unused, has no effect
      * @param string $anchor Optional anchor to add at the end of this url
      * @param null $id_shop
@@ -920,7 +920,7 @@ class DispatcherCore
     public function createUrl(
         $route_id,
         $id_lang = null,
-        array $params = [],
+        ?array $params = [],
         $force_routes = false,
         $anchor = '',
         $id_shop = null
