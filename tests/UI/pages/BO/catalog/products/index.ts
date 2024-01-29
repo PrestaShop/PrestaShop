@@ -451,7 +451,7 @@ class Products extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToProductPage(page: Page, row: number = 1): Promise<void> {
-    await this.waitForSelectorAndClick(page, this.productsListTableColumnName(row));
+    await this.clickAndWaitForURL(page, this.productsListTableColumnName(row));
   }
 
   // Bulk delete products functions
