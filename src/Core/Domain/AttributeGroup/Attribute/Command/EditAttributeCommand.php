@@ -49,7 +49,7 @@ class EditAttributeCommand
     /**
      * @var int[]
      */
-    private ?array $shopAssociation;
+    private ?array $associatedShopIds;
 
     /**
      * @param int $attributeId
@@ -115,12 +115,12 @@ class EditAttributeCommand
      */
     public function getAssociatedShopIds(): ?array
     {
-        return $this->shopAssociation;
+        return $this->associatedShopIds;
     }
 
-    public function setAssociatedShopIds(array $shopAssociation): self
+    public function setAssociatedShopIds(array $associatedShopIds): self
     {
-        $this->shopAssociation = $shopAssociation;
+        $this->associatedShopIds = $associatedShopIds;
 
         return $this;
     }

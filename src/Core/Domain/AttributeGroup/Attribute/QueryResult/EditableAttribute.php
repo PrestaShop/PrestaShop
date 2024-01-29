@@ -33,38 +33,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult
  */
 class EditableAttribute
 {
-    private int $attributeId;
-
-    private int $attributeGroupId;
-
-    private array $value;
-
-    private string $color;
-
-    /**
-     * @var int[]
-     */
-    private array $shopAssociationIds;
-
-    /**
-     * @param int $attributeId
-     * @param int $attributeGroupId
-     * @param array $value
-     * @param string $color
-     * @param int[] $shopAssociationIds
-     */
     public function __construct(
-        int $attributeId,
-        int $attributeGroupId,
-        array $value,
-        string $color,
-        array $shopAssociationIds
+        private readonly int $attributeId,
+        private readonly int $attributeGroupId,
+        private readonly array $value,
+        private readonly string $color,
+        private readonly array $shopAssociationIds
     ) {
-        $this->attributeId = $attributeId;
-        $this->attributeGroupId = $attributeGroupId;
-        $this->value = $value;
-        $this->color = $color;
-        $this->shopAssociationIds = $shopAssociationIds;
     }
 
     public function getAttributeId(): int

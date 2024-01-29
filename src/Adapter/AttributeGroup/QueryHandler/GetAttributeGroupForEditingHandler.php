@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
-use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler\GetAttributeGroupForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\EditableAttributeGroup;
@@ -43,12 +42,9 @@ final class GetAttributeGroupForEditingHandler implements GetAttributeGroupForEd
 {
     private AttributeGroupRepository $attributeGroupRepository;
 
-    private ShopContext $shopContext;
-
-    public function __construct(AttributeGroupRepository $attributeGroupRepository, ShopContext $shopContext)
+    public function __construct(AttributeGroupRepository $attributeGroupRepository)
     {
         $this->attributeGroupRepository = $attributeGroupRepository;
-        $this->shopContext = $shopContext;
     }
 
     /**

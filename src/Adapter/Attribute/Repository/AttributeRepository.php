@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Attribute\Repository;
 
+use Attribute;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\CannotAddAttributeException;
@@ -41,14 +42,14 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use ProductAttribute;
 use RuntimeException;
 
 /**
  * Provides access to attribute data source
  */
-class AttributeRepository extends AbstractObjectModelRepository
+class AttributeRepository extends AbstractMultiShopObjectModelRepository
 {
     private Connection $connection;
 
@@ -91,9 +92,13 @@ class AttributeRepository extends AbstractObjectModelRepository
      */
     public function add(ProductAttribute $attribute): AttributeId
     {
-        $id = $this->addObjectModel($attribute, CannotAddAttributeException::class);
+        $attributeId = $this->addObjectModelToShops(
+            $attribute,
+            array_map(fn (int $shopId) => new ShopId($shopId), $attribute->id_shop_list),
+            CannotAddAttributeException::class
+        );
 
-        return new AttributeId($id);
+        return new AttributeId($attributeId);
     }
 
     /**
@@ -112,6 +117,11 @@ class AttributeRepository extends AbstractObjectModelRepository
     public function partialUpdate(ProductAttribute $attribute, array $propertiesToUpdate, int $errorCode = 0): void
     {
         $this->partiallyUpdateObjectModel($attribute, $propertiesToUpdate, CannotUpdateAttributeException::class, $errorCode);
+        $this->updateObjectModelShopAssociations(
+            (int) $attribute->id,
+            Attribute::class,
+            $attribute->id_shop_list
+        );
     }
 
     /**
