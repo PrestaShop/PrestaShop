@@ -44,7 +44,6 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
      * @var array<int, string>
      */
     private const CONFIGURATION_FIELDS = [
-        'friendly_url',
         'accented_url',
         'canonical_url_redirection',
         'disable_apache_multiview',

@@ -70,8 +70,6 @@ class SeoAndUrls extends BOBasePage {
 
   private readonly paginationPreviousLink: string;
 
-  private readonly friendlyUrlToggleInput: (toggle: number) => string;
-
   private readonly accentedUrlToggleInput: (toggle: number) => string;
 
   private readonly saveSeoAndUrlFormButton: string;
@@ -140,7 +138,6 @@ class SeoAndUrls extends BOBasePage {
     this.paginationPreviousLink = `${this.gridPanel} [data-role='previous-page-link']`;
 
     // Set up URL form
-    this.friendlyUrlToggleInput = (toggle: number) => `#meta_settings_set_up_urls_form_friendly_url_${toggle}`;
     this.accentedUrlToggleInput = (toggle: number) => `#meta_settings_set_up_urls_form_accented_url_${toggle}`;
     this.saveSeoAndUrlFormButton = '#form-set-up-urls-save-button';
 
@@ -382,21 +379,6 @@ class SeoAndUrls extends BOBasePage {
     await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
-  }
-
-  /* Form methods */
-  /**
-   * Enable/disable friendly url
-   * @param page {Page} Browser tab
-   * @param toEnable {boolean} True to enable and false to disable
-   * @return {Promise<string>}
-   */
-  async enableDisableFriendlyURL(page: Page, toEnable: boolean = true): Promise<string> {
-    await this.setChecked(page, this.friendlyUrlToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForLoadState(page, this.saveSeoAndUrlFormButton);
-    await this.elementNotVisible(page, this.friendlyUrlToggleInput(!toEnable ? 1 : 0), 2000);
-
-    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
