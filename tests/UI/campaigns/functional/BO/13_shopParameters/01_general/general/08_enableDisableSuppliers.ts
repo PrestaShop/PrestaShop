@@ -71,34 +71,36 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
         expect(result).to.contains(generalPage.successfulUpdateMessage);
       });
 
-      it('should go to \'Brands & Suppliers\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToBrandsPage_${index}`, baseContext);
+      if (test.args.action === 'Disable') {
+        it('should go to \'Brands & Suppliers\' page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToBrandsPage_${index}`, baseContext);
 
-        await generalPage.goToSubMenu(
-          page,
-          generalPage.catalogParentLink,
-          generalPage.brandsAndSuppliersLink,
-        );
+          await generalPage.goToSubMenu(
+            page,
+            generalPage.catalogParentLink,
+            generalPage.brandsAndSuppliersLink,
+          );
 
-        const pageTitle = await brandsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(brandsPage.pageTitle);
-      });
+          const pageTitle = await brandsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(brandsPage.pageTitle);
+        });
 
-      it('should go to \'Suppliers\' tab', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToSuppliersTab_${index}`, baseContext);
+        it('should go to \'Suppliers\' tab', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToSuppliersTab_${index}`, baseContext);
 
-        await brandsPage.goToSubTabSuppliers(page);
+          await brandsPage.goToSubTabSuppliers(page);
 
-        const pageTitle = await suppliersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(suppliersPage.pageTitle);
-      });
+          const pageTitle = await suppliersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(suppliersPage.pageTitle);
+        });
 
-      it(`should check that the message alert contains '${test.args.action}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkAlertContains_${test.args.action}`, baseContext);
+        it(`should check that the message alert contains '${test.args.action}'`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkAlertContains_${test.args.action}`, baseContext);
 
-        const text = await suppliersPage.getAlertInfoBlockParagraphContent(page);
-        expect(text).to.contains(test.args.action.toLowerCase());
-      });
+          const text = await suppliersPage.getAlertInfoBlockParagraphContent(page);
+          expect(text).to.contains(test.args.action.toLowerCase());
+        });
+      }
 
       it('should go to FO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToFO_${test.args.action}`, baseContext);
@@ -124,14 +126,16 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
         expect(exist).to.be.equal(test.args.exist);
       });
 
-      it('should go back to BO', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goBackToBo_${test.args.action}`, baseContext);
+      if (test.args.action === 'Enable') {
+        it('should go back to BO', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goBackToBo_${test.args.action}`, baseContext);
 
-        page = await siteMapPage.closePage(browserContext, page, 0);
+          page = await siteMapPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await suppliersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(suppliersPage.pageTitle);
-      });
+          const pageTitle = await generalPage.getPageTitle(page);
+          expect(pageTitle).to.contains(generalPage.pageTitle);
+        });
+      }
     });
   });
 });
