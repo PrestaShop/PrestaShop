@@ -103,11 +103,6 @@ class SetUpUrlType extends TranslatorAwareType
         }
 
         $builder
-            ->add('friendly_url', SwitchType::class, [
-                'label' => $this->trans('Friendly URL', 'Admin.Global'),
-                'help' => $friendlyUrlHelp,
-                'multistore_configuration_key' => 'PS_REWRITING_SETTINGS',
-            ])
             ->add('accented_url', SwitchType::class, [
                 'label' => $this->trans('Accented URL', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(

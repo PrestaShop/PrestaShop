@@ -17,9 +17,6 @@
   <configuration id="PS_COUNTRY_DEFAULT" name="PS_COUNTRY_DEFAULT">
     <value>8</value>
   </configuration>
-  <configuration id="PS_REWRITING_SETTINGS" name="PS_REWRITING_SETTINGS">
-    <value>0</value>
-  </configuration>
   <configuration id="PS_ORDER_OUT_OF_STOCK" name="PS_ORDER_OUT_OF_STOCK">
     <value>0</value>
   </configuration>

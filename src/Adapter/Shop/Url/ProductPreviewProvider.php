@@ -44,19 +44,12 @@ class ProductPreviewProvider implements UrlProviderInterface
      */
     protected $employeeId;
 
-    /**
-     * @var bool
-     */
-    private $urlRewritingIsEnabled;
-
     public function __construct(
         Link $link,
-        bool $urlRewritingIsEnabled,
         int $employeeId
     ) {
         $this->link = $link;
         $this->employeeId = $employeeId;
-        $this->urlRewritingIsEnabled = $urlRewritingIsEnabled;
     }
 
     /**
@@ -77,8 +70,7 @@ class ProductPreviewProvider implements UrlProviderInterface
             null,
             null,
             $shopId,
-            null,
-            $this->urlRewritingIsEnabled
+            null
         );
 
         if (!$active) {

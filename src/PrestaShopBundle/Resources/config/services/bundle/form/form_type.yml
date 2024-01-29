@@ -467,7 +467,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType:
     arguments:
-      $friendlyUrlEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_REWRITING_SETTINGS')"
       $forceFriendlyUrl: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FORCE_FRIENDLY_PRODUCT')"
 
   PrestaShopBundle\Form\Admin\Sell\Product\SEO\RedirectOptionType:

@@ -37,9 +37,7 @@ class Tools extends ToolsCore
             }
             if (strpos($url, 'index.php?controller=') === 0) {
                 $url = substr($url, strlen('index.php?controller='));
-                if (Configuration::get('PS_REWRITING_SETTINGS')) {
-                    $url = static::strReplaceFirst('&', '?', $url);
-                }
+                $url = static::strReplaceFirst('&', '?', $url);
             }
 
             $explode = explode('?', $url);

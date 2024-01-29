@@ -810,9 +810,6 @@ class Install extends AbstractInstall
         Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION', $data['smtp_encryption']);
         Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT', $data['smtp_port']);
 
-        // Set default rewriting settings
-        Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', $data['rewrite_engine']);
-
         $groups = Group::getGroups((int) Configuration::get('PS_LANG_DEFAULT'));
         $groups_default = Db::getInstance()->executeS('SELECT `name` FROM ' . _DB_PREFIX_ . 'configuration WHERE `name` LIKE "PS_%_GROUP" ORDER BY `id_configuration`');
         foreach ($groups_default as &$group_default) {
@@ -912,10 +909,6 @@ class Install extends AbstractInstall
         foreach ($contacts as $contact) {
             $contact->email = $data['admin_email'];
             $contact->update();
-        }
-
-        if (!@Tools::generateHtaccess(null, $data['rewrite_engine'])) {
-            Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', 0);
         }
 
         Tools::generateRobotsFile();

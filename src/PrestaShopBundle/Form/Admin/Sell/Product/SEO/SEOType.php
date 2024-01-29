@@ -53,11 +53,6 @@ class SEOType extends TranslatorAwareType
     /**
      * @var bool
      */
-    private $friendlyUrlEnabled;
-
-    /**
-     * @var bool
-     */
     private $forceFriendlyUrl;
 
     /**
@@ -74,7 +69,6 @@ class SEOType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param RouterInterface $router
-     * @param bool $friendlyUrlEnabled
      * @param bool $forceFriendlyUrl
      * @param LegacyContext $legacyContext
      */
@@ -82,14 +76,12 @@ class SEOType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         RouterInterface $router,
-        bool $friendlyUrlEnabled,
         bool $forceFriendlyUrl,
         LegacyContext $legacyContext,
         ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
-        $this->friendlyUrlEnabled = $friendlyUrlEnabled;
         $this->forceFriendlyUrl = $forceFriendlyUrl;
         $this->legacyContext = $legacyContext;
         $this->configuration = $configuration;
@@ -227,16 +219,6 @@ class SEOType extends TranslatorAwareType
         $friendlyUrl = $this->router->generate('admin_metas_index') . '#meta_settings_set_up_urls_form';
         $productPreferencesUrl = $this->router->generate('admin_product_preferences') . '#configuration_fieldset_products';
 
-        if (!$this->friendlyUrlEnabled) {
-            $alertMessages[] = sprintf(
-                '<strong>%s</strong> %s',
-                $this->trans('Friendly URLs are currently disabled.', 'Admin.Catalog.Notification'),
-                $this->trans('To enable it, go to [1]SEO and URLs[/1]', 'Admin.Catalog.Notification', [
-                    '[1]' => '<a target="_blank" href="' . $friendlyUrl . '">',
-                    '[/1]' => '</a>',
-                ])
-            );
-        }
         if ($this->forceFriendlyUrl) {
             $alertMessages[] = sprintf(
                 '<strong>%s</strong> %s',

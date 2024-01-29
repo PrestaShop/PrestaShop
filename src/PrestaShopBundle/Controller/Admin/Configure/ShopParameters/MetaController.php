@@ -67,12 +67,7 @@ class MetaController extends FrameworkBundleAdminController
         $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->getConfiguration()->getBoolean('PS_REWRITING_SETTINGS');
-
-        $urlSchemaForm = null;
-        if ($isRewriteSettingEnabled) {
-            $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
-        }
+        $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
 
         return $this->doRenderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
     }
@@ -237,12 +232,7 @@ class MetaController extends FrameworkBundleAdminController
 
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->getConfiguration()->getBoolean('PS_REWRITING_SETTINGS');
-
-        $urlSchemaForm = null;
-        if ($isRewriteSettingEnabled) {
-            $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
-        }
+        $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
 
         return $this->doRenderForm($request, $filters, $formProcessResult, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
     }
@@ -270,12 +260,7 @@ class MetaController extends FrameworkBundleAdminController
 
         $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->getConfiguration()->getBoolean('PS_REWRITING_SETTINGS');
-
-        $urlSchemaForm = null;
-        if ($isRewriteSettingEnabled) {
-            $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
-        }
+        $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
 
         return $this->doRenderForm($request, $filters, $setUpUrlsForm, $formProcessResult, $seoOptionsForm, $urlSchemaForm);
     }
@@ -331,12 +316,7 @@ class MetaController extends FrameworkBundleAdminController
 
         $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->getConfiguration()->getBoolean('PS_REWRITING_SETTINGS');
-
-        $urlSchemaForm = null;
-        if ($isRewriteSettingEnabled) {
-            $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
-        }
+        $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
 
         return $this->doRenderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $formProcessResult, $urlSchemaForm);
     }

@@ -143,9 +143,9 @@ class DispatcherCore
     ];
 
     /**
-     * @var bool If true, use routes to build URL (mod rewrite must be activated)
+     * @var bool This used to be a switch to control friendly URLs. Since 9.0, they are always active.
      */
-    protected $use_routes = false;
+    protected $use_routes = true;
 
     protected $multilang_activated = false;
 
@@ -214,8 +214,6 @@ class DispatcherCore
     protected function __construct(SymfonyRequest $request = null)
     {
         $this->setRequest($request);
-
-        $this->use_routes = (bool) Configuration::get('PS_REWRITING_SETTINGS');
 
         // Select right front controller
         if (defined('_PS_ADMIN_DIR_')) {
@@ -539,10 +537,7 @@ class DispatcherCore
         }
 
         // If there are several languages, set $_GET['isolang'] and remove the language part from the request URI
-        if (
-            $this->use_routes &&
-            $isMultiLanguageActivated &&
-            preg_match('#^/([a-z]{2})(?:/.*)?$#', $requestUri, $matches)
+        if ($isMultiLanguageActivated && preg_match('#^/([a-z]{2})(?:/.*)?$#', $requestUri, $matches)
         ) {
             $_GET['isolang'] = $matches[1];
             $requestUri = substr($requestUri, 3);
@@ -624,60 +619,58 @@ class DispatcherCore
             }
         }
 
-        if ($this->use_routes) {
-            /*
-             * Step 4 - Load multilanguage routes from meta table. These are static routes for pages like /bestsellers that configurable
-             * in SEO & URL section in the backoffice and don't use any parameters or keywords.
-             */
-            $sql = 'SELECT m.page, ml.url_rewrite, ml.id_lang
-					FROM `' . _DB_PREFIX_ . 'meta` m
-					LEFT JOIN `' . _DB_PREFIX_ . 'meta_lang` ml ON (m.id_meta = ml.id_meta' . Shop::addSqlRestrictionOnLang('ml', (int) $id_shop) . ')
-					ORDER BY LENGTH(ml.url_rewrite) DESC';
-            if ($results = Db::getInstance()->executeS($sql)) {
-                foreach ($results as $row) {
-                    if ($row['url_rewrite']) {
-                        $this->addRoute(
-                            $row['page'],
-                            $row['url_rewrite'],
-                            $row['page'],
-                            $row['id_lang'],
-                            [],
-                            [],
-                            $id_shop
-                        );
-                    }
+        /*
+            * Step 4 - Load multilanguage routes from meta table. These are static routes for pages like /bestsellers that configurable
+            * in SEO & URL section in the backoffice and don't use any parameters or keywords.
+            */
+        $sql = 'SELECT m.page, ml.url_rewrite, ml.id_lang
+                FROM `' . _DB_PREFIX_ . 'meta` m
+                LEFT JOIN `' . _DB_PREFIX_ . 'meta_lang` ml ON (m.id_meta = ml.id_meta' . Shop::addSqlRestrictionOnLang('ml', (int) $id_shop) . ')
+                ORDER BY LENGTH(ml.url_rewrite) DESC';
+        if ($results = Db::getInstance()->executeS($sql)) {
+            foreach ($results as $row) {
+                if ($row['url_rewrite']) {
+                    $this->addRoute(
+                        $row['page'],
+                        $row['url_rewrite'],
+                        $row['page'],
+                        $row['id_lang'],
+                        [],
+                        [],
+                        $id_shop
+                    );
                 }
             }
+        }
 
-            // Set default empty route if no empty route (that's weird I know).
-            // Should probably be set as default value in the constructor in 9.0.0.
-            if (!$this->empty_route) {
-                $this->empty_route = [
-                    'routeID' => 'index',
-                    'rule' => '',
-                    'controller' => 'index',
-                ];
-            }
+        // Set default empty route if no empty route (that's weird I know).
+        // Should probably be set as default value in the constructor in 9.0.0.
+        if (!$this->empty_route) {
+            $this->empty_route = [
+                'routeID' => 'index',
+                'rule' => '',
+                'controller' => 'index',
+            ];
+        }
 
-            /*
-             * Step 5 - Custom routes set in ps_configurations. Those are configured product, category,
-             * cms etc. rules that you can configure in SEO & URL section in the backoffice.
-             *
-             * Beware that these routes are not multilanguage, they will be the same for each language of the shop.
-             * It probably would not be difficult to make them multilanguage, if route was stored in configuration
-             * for each language.
-             */
-            foreach ($this->default_routes as $route_id => $route_data) {
-                if ($custom_route = Configuration::get('PS_ROUTE_' . $route_id, null, null, $id_shop)) {
-                    $route = $this->computeRoute(
-                        $custom_route,
-                        $route_data['controller'],
-                        $route_data['keywords'],
-                        isset($route_data['params']) ? $route_data['params'] : []
-                    );
-                    foreach ($language_ids as $id_lang) {
-                        $this->routes[$id_shop][$id_lang][$route_id] = $route;
-                    }
+        /*
+            * Step 5 - Custom routes set in ps_configurations. Those are configured product, category,
+            * cms etc. rules that you can configure in SEO & URL section in the backoffice.
+            *
+            * Beware that these routes are not multilanguage, they will be the same for each language of the shop.
+            * It probably would not be difficult to make them multilanguage, if route was stored in configuration
+            * for each language.
+            */
+        foreach ($this->default_routes as $route_id => $route_data) {
+            if ($custom_route = Configuration::get('PS_ROUTE_' . $route_id, null, null, $id_shop)) {
+                $route = $this->computeRoute(
+                    $custom_route,
+                    $route_data['controller'],
+                    $route_data['keywords'],
+                    isset($route_data['params']) ? $route_data['params'] : []
+                );
+                foreach ($language_ids as $id_lang) {
+                    $this->routes[$id_shop][$id_lang][$route_id] = $route;
                 }
             }
         }
@@ -916,7 +909,7 @@ class DispatcherCore
      * @param string $route_id Name the route
      * @param int $id_lang
      * @param array $params
-     * @param bool $force_routes
+     * @param bool $force_routes Unused, has no effect
      * @param string $anchor Optional anchor to add at the end of this url
      * @param null $id_shop
      *
@@ -945,9 +938,8 @@ class DispatcherCore
 
         if (!isset($this->routes[$id_shop][$id_lang][$route_id])) {
             $query = http_build_query($params, '', '&');
-            $index_link = $this->use_routes ? '' : 'index.php';
 
-            return ($route_id == 'index') ? $index_link . (($query) ? '?' . $query : '') :
+            return ($route_id == 'index') ? (($query) ? '?' . $query : '') :
                 ((trim($route_id) == '') ? '' : 'index.php?controller=' . $route_id) . (($query) ? '&' . $query : '') . $anchor;
         }
         $route = $this->routes[$id_shop][$id_lang][$route_id];
@@ -967,62 +959,35 @@ class DispatcherCore
         }
 
         // Build an url which match a route
-        if ($this->use_routes || $force_routes) {
-            $url = $route['rule'];
-            $add_param = [];
+        $url = $route['rule'];
+        $add_param = [];
 
-            foreach ($params as $key => $value) {
-                if (!isset($route['keywords'][$key])) {
-                    if (!isset($this->default_routes[$route_id]['keywords'][$key])) {
-                        $add_param[$key] = $value;
-                    }
-                } else {
-                    if ($params[$key]) {
-                        $parameter = $params[$key];
-                        if (is_array($parameter)) {
-                            if (array_key_exists($id_lang, $parameter)) {
-                                $parameter = $parameter[$id_lang];
-                            } else {
-                                // made the choice to return the first element of the array
-                                $parameter = reset($parameter);
-                            }
+        foreach ($params as $key => $value) {
+            if (!isset($route['keywords'][$key])) {
+                if (!isset($this->default_routes[$route_id]['keywords'][$key])) {
+                    $add_param[$key] = $value;
+                }
+            } else {
+                if ($params[$key]) {
+                    $parameter = $params[$key];
+                    if (is_array($parameter)) {
+                        if (array_key_exists($id_lang, $parameter)) {
+                            $parameter = $parameter[$id_lang];
+                        } else {
+                            // made the choice to return the first element of the array
+                            $parameter = reset($parameter);
                         }
-                        $replace = $route['keywords'][$key]['prepend'] . $parameter . $route['keywords'][$key]['append'];
-                    } else {
-                        $replace = '';
                     }
-                    $url = preg_replace('#\{([^{}]*:)?' . $key . '(:[^{}]*)?\}#', $replace, $url);
+                    $replace = $route['keywords'][$key]['prepend'] . $parameter . $route['keywords'][$key]['append'];
+                } else {
+                    $replace = '';
                 }
+                $url = preg_replace('#\{([^{}]*:)?' . $key . '(:[^{}]*)?\}#', $replace, $url);
             }
-            $url = preg_replace('#\{([^{}]*:)?[a-z0-9_]+?(:[^{}]*)?\}#', '', $url);
-            if (count($add_param)) {
-                $url .= '?' . http_build_query($add_param, '', '&');
-            }
-        } else {
-            // Build a classic url index.php?controller=foo&...
-            $add_params = [];
-            foreach ($params as $key => $value) {
-                if (!isset($route['keywords'][$key]) && !isset($this->default_routes[$route_id]['keywords'][$key])) {
-                    $add_params[$key] = $value;
-                }
-            }
-
-            // Add controller to parameters if not present
-            if (!empty($route['controller'])) {
-                $query_params['controller'] = $route['controller'];
-            }
-
-            // Build final parameters, add language if needed
-            $urlParams = array_merge($add_params, $query_params);
-
-            // If multilanguage is activated, we add proper language ID, overwriting
-            // the previous one if it was provided
-            if ($this->multilang_activated) {
-                $urlParams['id_lang'] = (int) $id_lang;
-            }
-
-            // Build the final URL
-            $url = 'index.php?' . http_build_query($urlParams, '', '&');
+        }
+        $url = preg_replace('#\{([^{}]*:)?[a-z0-9_]+?(:[^{}]*)?\}#', '', $url);
+        if (count($add_param)) {
+            $url .= '?' . http_build_query($add_param, '', '&');
         }
 
         return $url . $anchor;
@@ -1069,7 +1034,7 @@ class DispatcherCore
         }
 
         // Use routes ? (for url rewriting)
-        if ($this->use_routes && !$controller && !defined('_PS_ADMIN_DIR_')) {
+        if (!$controller && !defined('_PS_ADMIN_DIR_')) {
             if (!$this->request_uri) {
                 return strtolower($this->controller_not_found);
             }

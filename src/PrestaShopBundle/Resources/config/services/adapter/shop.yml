@@ -42,7 +42,6 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\ProductPreviewProvider'
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getContext().link"
-      - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_REWRITING_SETTINGS")'
       - '@=service("prestashop.adapter.legacy.context").getContext().employee.id'
 
   prestashop.adapter.shop.query_handler.get_logos_paths_handler:

@@ -39,6 +39,6 @@ class LinkProxyCore
 
     public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false, $relative_protocol = false, $add_anchor = false, $extra_params = [])
     {
-        return $this->link->getProductLink($product, $alias, $category, $ean13, $id_lang, $id_shop, $ipa, $force_routes, $relative_protocol, $add_anchor, $extra_params);
+        return $this->link->getProductLink($product, $alias, $category, $ean13, $id_lang, $id_shop, $ipa, null, $relative_protocol, $add_anchor, $extra_params);
     }
 }

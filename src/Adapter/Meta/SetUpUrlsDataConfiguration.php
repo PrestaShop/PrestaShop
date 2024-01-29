@@ -86,7 +86,6 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'friendly_url' => (bool) $this->configuration->get('PS_REWRITING_SETTINGS', false, $shopConstraint),
             'accented_url' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL', false, $shopConstraint),
             'canonical_url_redirection' => (int) $this->configuration->get('PS_CANONICAL_REDIRECT', 0, $shopConstraint),
             'disable_apache_multiview' => (bool) $this->configuration->get('PS_HTACCESS_DISABLE_MULTIVIEWS', false, $shopConstraint),
@@ -104,15 +103,12 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
         if ($this->validateConfiguration($configuration)) {
             $shopConstraint = $this->getShopConstraint();
 
-            $this->updateConfigurationValue('PS_REWRITING_SETTINGS', 'friendly_url', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_ALLOW_ACCENTED_CHARS_URL', 'accented_url', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_CANONICAL_REDIRECT', 'canonical_url_redirection', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_HTACCESS_DISABLE_MULTIVIEWS', 'disable_apache_multiview', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_HTACCESS_DISABLE_MODSEC', 'disable_apache_mod_security', $configuration, $shopConstraint);
 
             if (!$this->htaccessFileGenerator->generateFile($configuration['disable_apache_multiview'])) {
-                $this->updateConfigurationValue('PS_REWRITING_SETTINGS', 'friendly_url', ['friendly_url' => false], $shopConstraint);
-
                 $errorMessage = $this->translator
                     ->trans(
                         'Before being able to use this tool, you need to:',
@@ -150,7 +146,6 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
     {
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
-            ->setAllowedTypes('friendly_url', 'bool')
             ->setAllowedTypes('accented_url', 'bool')
             ->setAllowedTypes('canonical_url_redirection', 'int')
             ->setAllowedTypes('disable_apache_multiview', 'bool')

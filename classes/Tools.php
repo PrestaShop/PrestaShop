@@ -152,9 +152,7 @@ class ToolsCore
             }
             if (strpos($url, 'index.php?controller=') === 0) {
                 $url = substr($url, strlen('index.php?controller='));
-                if (Configuration::get('PS_REWRITING_SETTINGS')) {
-                    $url = Tools::strReplaceFirst('&', '?', $url);
-                }
+                $url = Tools::strReplaceFirst('&', '?', $url);
             }
 
             $explode = explode('?', $url);
@@ -2243,47 +2241,35 @@ class ToolsCore
                 // upload folder
                 fwrite($write_fd, 'RewriteRule ^upload/.+$ %{ENV:REWRITEBASE}index.php [QSA,L]' . "\n\n");
 
-                if (!$rewrite_settings) {
-                    $rewrite_settings = (int) Configuration::get('PS_REWRITING_SETTINGS', null, null, (int) $uri['id_shop']);
-                }
-
                 $domain_rewrite_cond = 'RewriteCond %{HTTP_HOST} ^' . $domain . '$' . PHP_EOL;
                 // Rewrite virtual multishop uri
                 if ($uri['virtual']) {
-                    if (!$rewrite_settings) {
-                        fwrite($write_fd, $media_domains);
-                        fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^' . trim($uri['virtual'], '/') . '/?$ ' . $uri['physical'] . $uri['virtual'] . "index.php [L,R]\n");
-                    } else {
-                        fwrite($write_fd, $media_domains);
-                        fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^' . trim($uri['virtual'], '/') . '$ ' . $uri['physical'] . $uri['virtual'] . " [L,R]\n");
-                    }
+                    fwrite($write_fd, $media_domains);
+                    fwrite($write_fd, $domain_rewrite_cond);
+                    fwrite($write_fd, 'RewriteRule ^' . trim($uri['virtual'], '/') . '$ ' . $uri['physical'] . $uri['virtual'] . " [L,R]\n");
                     fwrite($write_fd, $media_domains);
                     fwrite($write_fd, $domain_rewrite_cond);
                     fwrite($write_fd, 'RewriteRule ^' . ltrim($uri['virtual'], '/') . '(.*) ' . $uri['physical'] . "$1 [L]\n\n");
                 }
 
-                if ($rewrite_settings) {
-                    // Compatibility with the old image filesystem
-                    fwrite($write_fd, "# Images\n");
+                // Compatibility with the old image filesystem
+                fwrite($write_fd, "# Images\n");
 
-                    // Rewrite product images < 10 millions
-                    $path_components = [];
-                    for ($i = 1; $i <= 7; ++$i) {
-                        $path_components[] = '$' . ($i + 1); // paths start on 2
-                        $path = implode('/', $path_components);
-                        fwrite($write_fd, $media_domains);
-                        fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^(' . str_repeat('([\d])', $i) . '(?:\-[\w-]*)?)/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/' . $path . '/$1$' . ($i + 2) . " [L]\n");
-                    }
+                // Rewrite product images < 10 millions
+                $path_components = [];
+                for ($i = 1; $i <= 7; ++$i) {
+                    $path_components[] = '$' . ($i + 1); // paths start on 2
+                    $path = implode('/', $path_components);
                     fwrite($write_fd, $media_domains);
                     fwrite($write_fd, $domain_rewrite_cond);
-                    fwrite($write_fd, 'RewriteRule ^c/([\d]+)(\-[\.*\w-]*)/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/c/$1$2$3 [L]' . PHP_EOL);
-                    fwrite($write_fd, $media_domains);
-                    fwrite($write_fd, $domain_rewrite_cond);
-                    fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[\d]+)?/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/c/$1$2$3 [L]' . PHP_EOL);
+                    fwrite($write_fd, 'RewriteRule ^(' . str_repeat('([\d])', $i) . '(?:\-[\w-]*)?)/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/' . $path . '/$1$' . ($i + 2) . " [L]\n");
                 }
+                fwrite($write_fd, $media_domains);
+                fwrite($write_fd, $domain_rewrite_cond);
+                fwrite($write_fd, 'RewriteRule ^c/([\d]+)(\-[\.*\w-]*)/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/c/$1$2$3 [L]' . PHP_EOL);
+                fwrite($write_fd, $media_domains);
+                fwrite($write_fd, $domain_rewrite_cond);
+                fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[\d]+)?/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/c/$1$2$3 [L]' . PHP_EOL);
 
                 fwrite($write_fd, "# AlphaImageLoader for IE and fancybox\n");
                 if (Shop::isFeatureActive()) {
@@ -2292,20 +2278,18 @@ class ToolsCore
                 fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ %{ENV:REWRITEBASE}js/jquery/plugins/fancybox/images/$1.$2 [L]' . PHP_EOL);
             }
             // Redirections to dispatcher
-            if ($rewrite_settings) {
-                fwrite($write_fd, "\n# Dispatcher\n");
-                fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\n");
-                fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -l [OR]\n");
-                fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -d\n");
-                if (Shop::isFeatureActive()) {
-                    fwrite($write_fd, $domain_rewrite_cond);
-                }
-                fwrite($write_fd, "RewriteRule ^.*$ - [NC,L]\n");
-                if (Shop::isFeatureActive()) {
-                    fwrite($write_fd, $domain_rewrite_cond);
-                }
-                fwrite($write_fd, "RewriteRule ^.*\$ %{ENV:REWRITEBASE}index.php [NC,L]\n");
+            fwrite($write_fd, "\n# Dispatcher\n");
+            fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\n");
+            fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -l [OR]\n");
+            fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -d\n");
+            if (Shop::isFeatureActive()) {
+                fwrite($write_fd, $domain_rewrite_cond);
             }
+            fwrite($write_fd, "RewriteRule ^.*$ - [NC,L]\n");
+            if (Shop::isFeatureActive()) {
+                fwrite($write_fd, $domain_rewrite_cond);
+            }
+            fwrite($write_fd, "RewriteRule ^.*\$ %{ENV:REWRITEBASE}index.php [NC,L]\n");
         }
 
         fwrite($write_fd, "</IfModule>\n\n");
@@ -2557,16 +2541,14 @@ FileETag none
 
         // Rewrite files
         $tab['Files'] = [];
-        if (Configuration::get('PS_REWRITING_SETTINGS')) {
-            $sql = 'SELECT DISTINCT ml.url_rewrite, l.iso_code
-                FROM ' . _DB_PREFIX_ . 'meta m
-                INNER JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON ml.id_meta = m.id_meta
-                INNER JOIN ' . _DB_PREFIX_ . 'lang l ON l.id_lang = ml.id_lang
-                WHERE l.active = 1 AND m.page IN (\'' . implode('\', \'', $disallow_controllers) . '\')';
-            if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
-                foreach ($results as $row) {
-                    $tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
-                }
+        $sql = 'SELECT DISTINCT ml.url_rewrite, l.iso_code
+            FROM ' . _DB_PREFIX_ . 'meta m
+            INNER JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON ml.id_meta = m.id_meta
+            INNER JOIN ' . _DB_PREFIX_ . 'lang l ON l.id_lang = ml.id_lang
+            WHERE l.active = 1 AND m.page IN (\'' . implode('\', \'', $disallow_controllers) . '\')';
+        if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
+            foreach ($results as $row) {
+                $tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
             }
         }
 
