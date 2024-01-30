@@ -1,5 +1,5 @@
 // Import pages
-import FOBasePage from '@pages/FO/classic/FObasePage';
+import FOBasePage from '@pages/FO/FObasePage';
 
 // Import data
 import type CustomerData from '@data/faker/customer';

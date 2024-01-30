@@ -1,5 +1,5 @@
 // Import FO Pages
-import FOBasePage from '@pages/FO/classic/FObasePage';
+import FOBasePage from '@pages/FO/FObasePage';
 
 // Import data
 import CartProductDetails from '@data/types/cart';

@@ -1,4 +1,4 @@
-import FOBasePage from '@pages/FO/classic/FObasePage';
+import FOBasePage from '@pages/FO/FObasePage';
 
 import ProductReviewData from '@data/faker/productReview';
 import {

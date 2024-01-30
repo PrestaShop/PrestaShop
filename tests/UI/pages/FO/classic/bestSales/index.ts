@@ -1,4 +1,4 @@
-import FOBasePage from '@pages/FO/classic/FObasePage';
+import FOBasePage from '@pages/FO/FObasePage';
 
 /**
  * Best sales page, contains functions that can be used on the page

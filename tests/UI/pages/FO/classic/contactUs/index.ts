@@ -1,5 +1,5 @@
 // Import FO pages
-import FOBasePage from '@pages/FO/classic/FObasePage';
+import FOBasePage from '@pages/FO/FObasePage';
 
 // Import data
 import type MessageData from '@data/faker/message';

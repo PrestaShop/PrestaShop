@@ -1,5 +1,5 @@
 // Import pages
-import FOBasePage from '@pages/FO/classic/FObasePage';
+import FOBasePage from '@pages/FO/FObasePage';
 
 import type {Page} from 'playwright';
 
