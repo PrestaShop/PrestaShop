@@ -1057,7 +1057,7 @@ class FrontControllerCore extends Controller
         ];
         $params = array_merge($default_params, $params);
 
-        if (Tools::hasMediaServer() && !Configuration::get('PS_CSS_THEME_CACHE') && !$params["inline"]) {
+        if (Tools::hasMediaServer() && !Configuration::get('PS_CSS_THEME_CACHE') && !$params['inline']) {
             $relativePath = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath)
                 . ($this->stylesheetManager->getFullPath($relativePath) ?? $relativePath);
             $params['server'] = 'remote';
