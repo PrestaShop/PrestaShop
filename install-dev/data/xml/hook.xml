@@ -4514,5 +4514,25 @@
       <title>Triggers after loading routes</title>
       <description>Allow modules to modify routes in any way or add their own multilanguage routes.</description>
     </hook>
+    <hook id="actionSubmitAccountBefore">
+      <name>actionSubmitAccountBefore</name>
+      <title>Triggers before customer registers</title>
+      <description>Triggers after submitting registration form, before the registration process itself. Allows to modify result of this action.</description>
+    </hook>
+    <hook id="actionAuthenticationBefore">
+      <name>actionAuthenticationBefore</name>
+      <title>Triggers before customer logs in</title>
+      <description>Triggers after successful validation of login form, before the login process itself.</description>
+    </hook>
+    <hook id="actionCartUpdateQuantityBefore">
+      <name>actionCartUpdateQuantityBefore</name>
+      <title>Triggers before product is added to cart</title>
+      <description>Allows responding to add to cart events.</description>
+    </hook>
+    <hook id="actionAjaxDieBefore">
+      <name>actionAjaxDieBefore</name>
+      <title>Triggers when returning AJAX response</title>
+      <description>Allows to modify AJAX response of controllers using ajaxRender method.</description>
+    </hook>
   </entities>
 </entity_hook>
