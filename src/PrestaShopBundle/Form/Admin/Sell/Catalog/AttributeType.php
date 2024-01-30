@@ -98,6 +98,7 @@ class AttributeType extends TranslatorAwareType
                     new ShopId($this->shopContext->getId()),
                     new LanguageId($this->languageContext->getId())
                 ),
+                'data' => $attributeGroupId,
             ])
             ->add('value', TranslatableType::class, [
                 'type' => TextType::class,
