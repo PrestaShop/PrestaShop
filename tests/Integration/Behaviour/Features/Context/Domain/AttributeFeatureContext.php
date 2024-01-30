@@ -91,7 +91,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         $attributeGroupId = $this->referenceToId($data['attribute_group']);
         Assert::assertEquals($data['value'], $attribute->getValue());
         Assert::assertEquals($data['color'], $attribute->getColor());
-        Assert::assertEquals($attributeGroupId, $attribute->getAttributeGroupId()->getValue());
+        Assert::assertEquals($attributeGroupId, $attribute->getAttributeGroupId());
     }
 
     /**
@@ -135,13 +135,10 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         array $localizedValue,
         string $color
     ): void {
-        $command = new EditAttributeCommand(
-            $attributeId,
-            $attributeGroupId,
-            $localizedValue,
-            $color,
-            [$this->defaultShopId]
-        );
+        $command = new EditAttributeCommand($attributeId);
+        $command->setAttributeGroupId($attributeGroupId);
+        $command->setLocalizedValue($localizedValue);
+        $command->setColor($color);
 
         $this->getCommandBus()->handle($command);
     }

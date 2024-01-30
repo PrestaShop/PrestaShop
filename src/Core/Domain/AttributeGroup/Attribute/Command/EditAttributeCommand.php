@@ -72,7 +72,7 @@ class EditAttributeCommand
 
     public function getAttributeGroupId(): ?AttributeGroupId
     {
-        return $this->attributeGroupId;
+        return $this->attributeGroupId ?? null;
     }
 
     public function setAttributeGroupId(int $attributeGroupId): self
@@ -84,7 +84,7 @@ class EditAttributeCommand
 
     public function getLocalizedValue(): ?array
     {
-        return $this->localizedValue;
+        return $this->localizedValue ?? null;
     }
 
     public function setLocalizedValue(array $localizedValue): self
@@ -100,7 +100,7 @@ class EditAttributeCommand
      */
     public function getColor(): ?string
     {
-        return $this->color;
+        return $this->color ?? null;
     }
 
     public function setColor(string $color): self
@@ -115,7 +115,7 @@ class EditAttributeCommand
      */
     public function getAssociatedShopIds(): ?array
     {
-        return $this->associatedShopIds;
+        return $this->associatedShopIds ?? null;
     }
 
     public function setAssociatedShopIds(array $associatedShopIds): self

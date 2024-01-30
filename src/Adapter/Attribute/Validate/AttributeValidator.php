@@ -66,5 +66,4 @@ class AttributeValidator extends AbstractObjectModelValidator
             $this->shopRepository->assertShopExists(new ShopId((int) $shopId));
         }
     }
-
 }

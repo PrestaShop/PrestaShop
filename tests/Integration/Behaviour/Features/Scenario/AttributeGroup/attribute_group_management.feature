@@ -12,13 +12,17 @@ Feature: Attribute group management
     And language "fr" with locale "fr-FR" exists
     And language with iso code "en" is the default one
     And I create attribute group "attributeGroup1" with specified properties:
-      | name        | Color        |
-      | public_name | Public color |
-      | type        | color        |
+      | name[en-US]        | Color          |
+      | name[fr-FR]        | Couleur        |
+      | public_name[en-US] | Public Color   |
+      | public_name[fr-FR] | Public couleur |
+      | type               | color          |
     And I create attribute group "attributeGroup2" with specified properties:
-      | name        | Color2       |
-      | public_name | Public color |
-      | type        | color        |
+      | name[en-US]        | Color2          |
+      | name[fr-FR]        | Couleur2        |
+      | public_name[en-US] | Public Color 2   |
+      | public_name[fr-FR] | Public couleur 2 |
+      | type               | color          |
 
   Scenario: Adding new attribute
     And I create attribute "attribute1" with specified properties:
