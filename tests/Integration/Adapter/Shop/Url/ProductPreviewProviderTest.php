@@ -44,7 +44,7 @@ class ProductPreviewProviderTest extends TestCase
             ->with($productId)
             ->willReturn($expectedUrlActive)
         ;
-        $provider = new ProductPreviewProvider($linkMock, true, $employeeId);
+        $provider = new ProductPreviewProvider($linkMock, $employeeId);
         $generatedUrlActive = $provider->getUrl($productId, true);
         $this->assertEquals($expectedUrlActive, $generatedUrlActive);
 
@@ -54,7 +54,7 @@ class ProductPreviewProviderTest extends TestCase
             ->with($productId)
             ->willReturn($expectedUrlInactive)
         ;
-        $provider = new ProductPreviewProvider($linkMock, true, $employeeId);
+        $provider = new ProductPreviewProvider($linkMock, $employeeId);
         $generatedUrlInactive = $provider->getUrl($productId, false);
         $urlParts = parse_url($generatedUrlInactive);
         parse_str($urlParts['query'], $queryParts);

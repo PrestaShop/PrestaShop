@@ -909,7 +909,7 @@ class DispatcherCore
      * @param string $route_id Name the route
      * @param int $id_lang
      * @param array|null $params
-     * @param bool $force_routes Unused, has no effect
+     * @param bool|null $force_routes Unused, has no effect
      * @param string $anchor Optional anchor to add at the end of this url
      * @param null $id_shop
      *
@@ -921,7 +921,7 @@ class DispatcherCore
         $route_id,
         $id_lang = null,
         ?array $params = [],
-        $force_routes = false,
+        ?bool $force_routes = false,
         $anchor = '',
         $id_shop = null
     ) {
@@ -1033,7 +1033,6 @@ class DispatcherCore
             $controller = false;
         }
 
-        // Use routes ? (for url rewriting)
         if (!$controller && !defined('_PS_ADMIN_DIR_')) {
             if (!$this->request_uri) {
                 return strtolower($this->controller_not_found);
