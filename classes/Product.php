@@ -6887,11 +6887,11 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        // result is indexed by recordset order and not position. positions start at index 1 so we need an empty element
-        array_unshift($result, null);
         foreach ($result as &$value) {
             $value = $value['id_product'];
         }
+        // result is indexed by recordset order and not position. positions start at index 1 so we need an empty element
+        array_unshift($result, null);
 
         $current_position = $this->getWsPositionInCategory();
 
