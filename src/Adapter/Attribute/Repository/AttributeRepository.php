@@ -94,7 +94,7 @@ class AttributeRepository extends AbstractMultiShopObjectModelRepository
     {
         $attributeId = $this->addObjectModelToShops(
             $attribute,
-            array_map(fn (int $shopId) => new ShopId($shopId), $attribute->id_shop_list),
+            array_map(fn (int $shopId) => new ShopId((int) $shopId), $attribute->id_shop_list),
             CannotAddAttributeException::class
         );
 
@@ -119,7 +119,7 @@ class AttributeRepository extends AbstractMultiShopObjectModelRepository
         $this->partiallyUpdateObjectModel($attribute, $propertiesToUpdate, CannotUpdateAttributeException::class, $errorCode);
         $this->updateObjectModelShopAssociations(
             (int) $attribute->id,
-            Attribute::class,
+            ProductAttribute::class,
             $attribute->id_shop_list
         );
     }

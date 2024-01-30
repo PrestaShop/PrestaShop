@@ -79,6 +79,11 @@ final class EditAttributeHandler extends AbstractObjectModelHandler implements E
             $propertiesToUpdate[] = 'id_attribute_group';
         }
 
+        if (null !== $command->getAssociatedShopIds()) {
+            $attribute->id_shop_list = $command->getAssociatedShopIds();
+            $propertiesToUpdate[] = 'id_shop_list';
+        }
+
         $this->attributeValidator->validate($attribute);
         $this->attributeRepository->partialUpdate($attribute, $propertiesToUpdate);
     }

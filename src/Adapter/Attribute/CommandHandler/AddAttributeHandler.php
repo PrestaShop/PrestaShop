@@ -61,6 +61,7 @@ final class AddAttributeHandler extends AbstractObjectModelHandler implements Ad
         $attribute = new ProductAttribute();
 
         $attribute->name = $command->getLocalizedNames();
+        $attribute->id_shop_list = $command->getAssociatedShopIds();
 
         if (!empty($command->getColor())) {
             $attribute->color = $command->getColor();

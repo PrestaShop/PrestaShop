@@ -63,7 +63,7 @@ class AttributeValidator extends AbstractObjectModelValidator
     private function validateShopsExists(array $shopIds): void
     {
         foreach ($shopIds as $shopId) {
-            $this->shopRepository->assertShopExists(new ShopId($shopId));
+            $this->shopRepository->assertShopExists(new ShopId((int) $shopId));
         }
     }
 
