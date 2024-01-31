@@ -40,11 +40,9 @@ use ProductAttribute;
  */
 class AttributeValidator extends AbstractObjectModelValidator
 {
-    private ShopRepository $shopRepository;
-
-    public function __construct(ShopRepository $shopRepository)
-    {
-        $this->shopRepository = $shopRepository;
+    public function __construct(
+        private ShopRepository $shopRepository
+    ) {
     }
 
     /**

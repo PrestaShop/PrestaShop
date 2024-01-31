@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Adapter\Domain\LocalizedObjectModelTrait;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
@@ -41,18 +40,14 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\Attri
  * Handles editing of attribute groups using legacy logic.
  */
 #[AsCommandHandler]
-final class EditAttributeHandler extends AbstractObjectModelHandler implements EditAttributeHandlerInterface
+class EditAttributeHandler  implements EditAttributeHandlerInterface
 {
     use LocalizedObjectModelTrait;
 
-    private AttributeRepository $attributeRepository;
-
-    private AttributeValidator $attributeValidator;
-
-    public function __construct(AttributeRepository $attributeRepository, AttributeValidator $attributeValidator)
-    {
-        $this->attributeRepository = $attributeRepository;
-        $this->attributeValidator = $attributeValidator;
+    public function __construct(
+        private AttributeRepository $attributeRepository,
+        private AttributeValidator $attributeValidator
+    ) {
     }
 
     /**
