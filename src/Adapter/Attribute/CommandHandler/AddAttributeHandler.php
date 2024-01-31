@@ -42,14 +42,10 @@ use ProductAttribute;
 #[AsCommandHandler]
 class AddAttributeHandler implements AddAttributeHandlerInterface
 {
-    private AttributeRepository $attributeRepository;
-
-    private AttributeValidator $attributeValidator;
-
-    public function __construct(AttributeRepository $attributeRepository, AttributeValidator $attributeValidator)
-    {
-        $this->attributeRepository = $attributeRepository;
-        $this->attributeValidator = $attributeValidator;
+    public function __construct(
+        private readonly AttributeRepository $attributeRepository,
+        private readonly AttributeValidator $attributeValidator,
+    ) {
     }
 
     /**
