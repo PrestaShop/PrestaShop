@@ -81,7 +81,7 @@ class BackupOptionsType extends TranslatorAwareType
         );
 
         $builder
-            ->add('backup_all', SwitchType::class, [
+            ->add('ignore_stats', SwitchType::class, [
                 'label' => $this->trans('Ignore statistics tables', 'Admin.Advparameters.Feature'),
                 'help' => $backupAllHelp,
             ])
