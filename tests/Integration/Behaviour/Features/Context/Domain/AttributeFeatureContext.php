@@ -53,7 +53,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         $attributeGroupId = $this->referenceToId($properties['attribute_group']);
         $attributeId = $this->createAttributeUsingCommand(
             $attributeGroupId,
-            $properties['value'],
+            $properties['name'],
             $properties['color'],
             $this->referencesToIds($properties['shopIds'])
         );
