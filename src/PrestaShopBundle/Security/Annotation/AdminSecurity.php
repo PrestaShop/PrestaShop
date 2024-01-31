@@ -26,109 +26,178 @@
 
 namespace PrestaShopBundle\Security\Annotation;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Attribute;
+use RuntimeException;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 /**
- * Improves the existing Security annotation, adding:
- * `domain`: to translate the sent message using a PrestaShop domain;
- * `redirectRoute`: to select the route for redirection;
- * `url`: only available in 1.7.x, to redirect to legacy pages;.
+ * Attribute and annotation based on the IsGranted attribute, adding information for redirection
+ * Use of annotation is deprecated
  *
  * @Annotation
  */
-class AdminSecurity extends Security
+#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
+class AdminSecurity
 {
     /**
-     * The translation domain for the message.
-     *
-     * @var string
+     * Sets the first argument that will be passed to isGranted().
      */
-    protected $domain = 'Admin.Notifications.Error';
+    protected string|Expression $attribute;
+
+    /**
+     * If set, will throw HttpKernel's HttpException with the given $statusCode.
+     * If null, Security\Core's AccessDeniedException will be used.
+     */
+    protected ?int $statusCode = null;
+
+    /**
+     * If set, will add the exception code to thrown exception.
+     */
+    protected ?int $exceptionCode = null;
 
     /**
      * The route for the redirection.
      *
      * @todo: Once the onboarding page is migrated, set default to his route name.
-     *
-     * @var string|null
      */
-    protected $redirectRoute;
+    protected ?string $redirectRoute = null;
+
+    // The translation domain for the message.
+    protected string $domain = 'Admin.Notifications.Error';
 
     /**
      * @deprecated once the back office is migrated, rely only on route.
      * The url for the redirection
-     *
-     * @return string
      */
-    protected $url = 'admin_domain';
+    protected string $url = 'admin_domain';
 
     /**
-     * The route params which are used together to generate the redirect route.
-     *
-     * @var array
+     * The message of the exception - has a nice default if not set.
      */
-    protected $redirectQueryParamsToKeep = [];
+    protected string $message = 'Access Denied.';
+
+    // The route params which are used together to generate the redirect route.
+    protected array $redirectQueryParamsToKeep = [];
 
     /**
-     * @return string
+     * @param array|string $data
      */
-    public function getDomain()
+    public function __construct(
+        $data = [],
+        string $message = null,
+        string $domain = null,
+        string $url = null,
+        array $redirectQueryParamsToKeep = null,
+        ?int $statusCode = null,
+        ?int $exceptionCode = null,
+        ?string $redirectRoute = null,
+    ) {
+        $values = [];
+        if (is_string($data)) {
+            $values['attribute'] = $data;
+        } else {
+            $values = $data;
+        }
+
+        $values['message'] = $values['message'] ?? $message ?? $this->message;
+        $values['domain'] = $values['domain'] ?? $domain ?? $this->domain;
+        $values['url'] = $values['url'] ?? $url ?? $this->url;
+        $values['redirectQueryParamsToKeep'] = $values['redirectQueryParamsToKeep'] ?? $redirectQueryParamsToKeep ?? $this->redirectQueryParamsToKeep;
+
+        $values['statusCode'] = $values['statusCode'] ?? $statusCode;
+        $values['exceptionCode'] = $values['exceptionCode'] ?? $exceptionCode;
+        $values['redirectRoute'] = $values['redirectRoute'] ?? $redirectRoute;
+
+        foreach ($values as $k => $v) {
+            if (!method_exists($this, $name = 'set' . $k)) {
+                throw new RuntimeException(sprintf('Unknown key "%s" for annotation "@%s".', $k, static::class));
+            }
+
+            $this->$name($v);
+        }
+    }
+
+    public function getAttribute(): Expression|string
+    {
+        return $this->attribute;
+    }
+
+    public function setAttribute(Expression|string $attribute): void
+    {
+        $this->attribute = $attribute;
+    }
+
+    public function setValue(Expression|string $expression): void
+    {
+        $this->setAttribute($expression);
+    }
+
+    public function getMessage(): string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(string $message): void
+    {
+        $this->message = $message;
+    }
+
+    public function getStatusCode(): ?int
+    {
+        return $this->statusCode;
+    }
+
+    public function setStatusCode(?int $statusCode): void
+    {
+        $this->statusCode = $statusCode;
+    }
+
+    public function getExceptionCode(): ?int
+    {
+        return $this->exceptionCode;
+    }
+
+    public function setExceptionCode(?int $exceptionCode): void
+    {
+        $this->exceptionCode = $exceptionCode;
+    }
+
+    public function getDomain(): string
     {
         return $this->domain;
     }
 
-    /**
-     * @param string $domain the translation domain name
-     */
-    public function setDomain($domain)
+    public function setDomain(string $domain): void
     {
         $this->domain = $domain;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getRedirectRoute()
+    public function getRedirectRoute(): ?string
     {
         return $this->redirectRoute;
     }
 
-    /**
-     * @param string $redirectRoute the route used for redirection
-     */
-    public function setRedirectRoute($redirectRoute)
+    public function setRedirectRoute(?string $redirectRoute): void
     {
         $this->redirectRoute = $redirectRoute;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
 
-    /**
-     * @param string $url the url used for redirection
-     */
-    public function setUrl($url)
+    public function setUrl(string $url): void
     {
         $this->url = $url;
     }
 
-    /**
-     * @return array
-     */
-    public function getRedirectQueryParamsToKeep()
+    public function getRedirectQueryParamsToKeep(): array
     {
         return $this->redirectQueryParamsToKeep;
     }
 
-    /**
-     * @param array $redirectQueryParamsToKeep
-     */
-    public function setRedirectQueryParamsToKeep($redirectQueryParamsToKeep)
+    public function setRedirectQueryParamsToKeep(array $redirectQueryParamsToKeep): void
     {
         $this->redirectQueryParamsToKeep = $redirectQueryParamsToKeep;
     }
