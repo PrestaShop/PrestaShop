@@ -461,6 +461,7 @@ default:
             paths:
               - "%paths.base%/Features/Scenario/AttributeGroup"
             contexts:
+              - Tests\Integration\Behaviour\Features\Context\AttributeFeatureContext
               - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
               - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext

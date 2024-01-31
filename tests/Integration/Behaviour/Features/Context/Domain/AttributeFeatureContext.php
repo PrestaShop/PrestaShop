@@ -51,7 +51,6 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         $properties = $this->localizeByRows($node);
 
         $attributeGroupId = $this->referenceToId($properties['attribute_group']);
-
         try {
             $attributeId = $this->createAttributeUsingCommand(
                 $attributeGroupId,
@@ -61,7 +60,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
             );
 
             $this->getSharedStorage()->set($reference, $attributeId->getValue());
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setLastException($e);
         }
     }

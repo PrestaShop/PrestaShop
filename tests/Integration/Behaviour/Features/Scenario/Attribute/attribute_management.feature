@@ -16,12 +16,16 @@ Feature: Attribute group management
     And I add a shop "shop3" with name "test_shop3" and color "red" for the group "default_shop_group"
     And I add a shop "shop4" with name "test_shop4" and color "red" for the group "default_shop_group"
     And I create attribute group "attributeGroup1" with specified properties:
-      | name        | Color        |
-      | public_name | Public color |
+      | name[en-US] | Color        |
+      | name[fr-FR] | Couleur   |
+      | public_name[en-US] | Public color   |
+      | public_name[fr-FR] | Couleur public |
       | type        | color        |
     And I create attribute group "attributeGroup2" with specified properties:
-      | name        | Color2       |
-      | public_name | Public color |
+      | name[en-US] | Color        |
+      | name[fr-FR] | Couleur   |
+      | public_name[en-US] | Public color   |
+      | public_name[fr-FR] | Couleur public |
       | type        | color        |
 
   Scenario: Adding new attribute
