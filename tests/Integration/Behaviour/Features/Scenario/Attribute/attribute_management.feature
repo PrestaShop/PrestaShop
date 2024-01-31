@@ -51,6 +51,14 @@ Feature: Attribute group management
       | color           | #44DB6B         |
       | shopIds         | shop4           |
 
+  Scenario: Adding new attribute with invalid color
+    When I create attribute "attribute2" with invalid color I should get an exception:
+      | attribute_group | attributeGroup1 |
+      | value[en-US]    | Color           |
+      | value[fr-FR]    | Couleur         |
+      | color           | wrong_color     |
+      | shopIds         | shop1,shop2,shop4 |
+
   Scenario: Deleting attribute
     When I delete attribute "attribute1"
     Then attribute "attribute1" should be deleted

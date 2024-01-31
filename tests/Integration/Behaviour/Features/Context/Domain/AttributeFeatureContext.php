@@ -62,6 +62,37 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I create attribute :reference with invalid color I should get an exception:
+     */
+    public function createAttributeWithInvalidColor(string $reference, TableNode $node): void
+    {
+        $caughtException = null;
+        $properties = $this->localizeByRows($node);
+        $attributeGroupId = $this->referenceToId($properties['attribute_group']);
+
+        try {
+            $this->createAttributeUsingCommand(
+                $attributeGroupId,
+                $properties['value'],
+                $properties['color'],
+                $this->referencesToIds($properties['shopIds'])
+            );
+        } catch (AttributeConstraintException $e) {
+            $caughtException = $e;
+        }
+
+        Assert::assertNotNull(
+            $caughtException,
+            sprintf('Creating an attribute with invalid color %s should trigger an exception', $properties['color'])
+        );
+        Assert::assertEquals(
+            $caughtException->getCode(),
+            AttributeConstraintException::INVALID_COLOR,
+            sprintf('The thrown exception for an invalid color should have the code %d', AttributeConstraintException::INVALID_COLOR)
+        );
+    }
+
+    /**
      * @When I edit attribute :reference with specified properties:
      */
     public function editAttribute(string $reference, TableNode $node): void
