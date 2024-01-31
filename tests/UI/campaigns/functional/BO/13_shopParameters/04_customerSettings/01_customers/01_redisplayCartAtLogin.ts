@@ -12,8 +12,8 @@ import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage as loginFOPage} from '@pages/FO/login';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage as loginFOPage} from '@pages/FO/classic/login';
 
 // Import data
 import Customers from '@data/demo/customers';

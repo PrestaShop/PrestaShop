@@ -11,11 +11,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import {contactUsPage} from '@pages/FO/contactUs';
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import gdprPersonalDataPage from '@pages/FO/myAccount/gdprPersonalData';
+import {contactUsPage} from '@pages/FO/classic/contactUs';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import gdprPersonalDataPage from '@pages/FO/classic/myAccount/gdprPersonalData';
 
 // Import demo data
 import Customers from '@data/demo/customers';

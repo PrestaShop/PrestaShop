@@ -15,9 +15,9 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 import contactFormPage from '@pages/BO/modules/contactForm';
 // Import FO pages
-import {contactUsPage} from '@pages/FO/contactUs';
-import {homePage as foHomePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
+import {contactUsPage} from '@pages/FO/classic/contactUs';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
 // Import data
 import Customers from '@data/demo/customers';

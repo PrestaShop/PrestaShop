@@ -3,11 +3,11 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/cart';
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-import productPage from '@pages/FO/product';
-import checkoutPage from '@pages/FO/checkout';
+import {cartPage} from '@pages/FO/classic/cart';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage} from '@pages/FO/classic/login';
+import productPage from '@pages/FO/classic/product';
+import checkoutPage from '@pages/FO/classic/checkout';
 
 // Import data
 import Products from '@data/demo/products';

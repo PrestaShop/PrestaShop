@@ -10,10 +10,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
-import productPage from '@pages/FO/product';
-import {homePage} from '@pages/FO/home';
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
+import productPage from '@pages/FO/classic/product';
+import {homePage} from '@pages/FO/classic/home';
+import {cartPage} from '@pages/FO/classic/cart';
+import checkoutPage from '@pages/FO/classic/checkout';
 
 // Import data
 import Customers from '@data/demo/customers';

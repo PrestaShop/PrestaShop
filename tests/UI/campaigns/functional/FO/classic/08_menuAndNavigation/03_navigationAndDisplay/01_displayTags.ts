@@ -13,9 +13,9 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-import {homePage} from '@pages/FO/home';
-import {searchResultsPage} from '@pages/FO/searchResults';
-import productPage from '@pages/FO/product';
+import {homePage} from '@pages/FO/classic/home';
+import {searchResultsPage} from '@pages/FO/classic/searchResults';
+import productPage from '@pages/FO/classic/product';
 
 // Import data
 import Products from '@data/demo/products';

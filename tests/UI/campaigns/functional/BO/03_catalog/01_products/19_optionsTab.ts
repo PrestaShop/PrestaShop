@@ -13,10 +13,10 @@ import productsPage from '@pages/BO/catalog/products';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 // Import FO pages
-import foProductPage from '@pages/FO/product';
-import {searchResultsPage} from '@pages/FO/searchResults';
-import categoryPageFO from '@pages/FO/category';
-import {homePage} from '@pages/FO/home';
+import foProductPage from '@pages/FO/classic/product';
+import {searchResultsPage} from '@pages/FO/classic/searchResults';
+import categoryPageFO from '@pages/FO/classic/category';
+import {homePage} from '@pages/FO/classic/home';
 
 // Import data
 import ProductData from '@data/faker/product';

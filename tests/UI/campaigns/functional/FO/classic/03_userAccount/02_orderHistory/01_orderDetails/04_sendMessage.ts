@@ -13,15 +13,15 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {homePage as foHomePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import orderDetails from '@pages/FO/myAccount/orderDetails';
-import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
-import productPage from '@pages/FO/product';
+import {cartPage} from '@pages/FO/classic/cart';
+import checkoutPage from '@pages/FO/classic/checkout';
+import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import orderDetails from '@pages/FO/classic/myAccount/orderDetails';
+import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
+import productPage from '@pages/FO/classic/product';
 
 // Import data
 import Customers from '@data/demo/customers';

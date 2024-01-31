@@ -13,12 +13,12 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import productPage from '@pages/FO/product';
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
+import {homePage} from '@pages/FO/classic/home';
+import productPage from '@pages/FO/classic/product';
+import {cartPage} from '@pages/FO/classic/cart';
+import checkoutPage from '@pages/FO/classic/checkout';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
 import Customers from '@data/demo/customers';

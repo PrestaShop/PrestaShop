@@ -15,7 +15,7 @@ import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageMessagesBlock from '@pages/BO/orders/view/messagesBlock';
 // Import FO pages
-import checkoutPage from '@pages/FO/checkout';
+import checkoutPage from '@pages/FO/classic/checkout';
 
 // Import data
 import Carriers from '@data/demo/carriers';

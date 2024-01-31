@@ -7,10 +7,10 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/account';
 
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {accountIdentityPage} from '@pages/FO/myAccount/identity';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 
 // Import data
 import CustomerData from '@data/faker/customer';

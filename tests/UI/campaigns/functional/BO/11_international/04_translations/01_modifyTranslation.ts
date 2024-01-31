@@ -18,9 +18,9 @@ import storesPage from '@pages/BO/shopParameters/stores';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 // Import FO pages classic theme
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {createAccountPage as foCreateAccountPage} from '@pages/FO/myAccount/add';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 
 // Import FO pages hummingbird theme
 import homePageHummingbird from '@pages/FO/hummingbird/home';

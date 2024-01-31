@@ -1,5 +1,5 @@
 // Import FO pages
-import {PasswordReminderPage} from '@pages/FO/passwordReminder/index';
+import {PasswordReminderPage} from '@pages/FO/classic/passwordReminder/index';
 
 /**
  * Password Reminder page, contains functions that can be used on the page

@@ -6,8 +6,8 @@ import testContext from '@utils/testContext';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import categoryPage from '@pages/FO/category';
+import {homePage} from '@pages/FO/classic/home';
+import categoryPage from '@pages/FO/classic/category';
 
 // Import data
 import Products from '@data/demo/products';

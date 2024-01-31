@@ -13,7 +13,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import emailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/home';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 // Import data
 import Modules from '@data/demo/modules';

@@ -14,10 +14,10 @@ import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import countriesPage from '@pages/BO/international/locations/countries';
 // Import FO pages
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import {homePage as foHomePage} from '@pages/FO/home';
-import foProductPage from '@pages/FO/product';
+import {cartPage} from '@pages/FO/classic/cart';
+import checkoutPage from '@pages/FO/classic/checkout';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
+import foProductPage from '@pages/FO/classic/product';
 
 // Import data
 import Countries from '@data/demo/countries';

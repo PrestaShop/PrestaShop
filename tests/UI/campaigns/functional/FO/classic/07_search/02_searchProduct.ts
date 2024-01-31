@@ -3,9 +3,9 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import productPage from '@pages/FO/product';
-import {searchResultsPage} from '@pages/FO/searchResults';
+import {homePage} from '@pages/FO/classic/home';
+import productPage from '@pages/FO/classic/product';
+import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
 import Products from '@data/demo/products';

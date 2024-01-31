@@ -13,7 +13,7 @@ import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import seoTab from '@pages/BO/catalog/products/add/seoTab';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/home';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 // Import data
 import ProductData from '@data/faker/product';

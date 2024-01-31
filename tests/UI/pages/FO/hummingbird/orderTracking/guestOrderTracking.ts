@@ -1,5 +1,5 @@
 // Import FO pages
-import {GuestOrderTrackingPage} from '@pages/FO/orderTracking/guestOrderTracking';
+import {GuestOrderTrackingPage} from '@pages/FO/classic/orderTracking/guestOrderTracking';
 
 /**
  * @class

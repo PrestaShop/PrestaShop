@@ -12,11 +12,11 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {homePage as foHomePage} from '@pages/FO/home';
-import foProductPage from '@pages/FO/product';
+import {cartPage} from '@pages/FO/classic/cart';
+import checkoutPage from '@pages/FO/classic/checkout';
+import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
+import foProductPage from '@pages/FO/classic/product';
 
 // Import data
 import Customers from '@data/demo/customers';

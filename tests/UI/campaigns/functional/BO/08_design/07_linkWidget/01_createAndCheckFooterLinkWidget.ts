@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import linkWidgetsPage from '@pages/BO/design/linkWidgets';
 import addLinkWidgetPage from '@pages/BO/design/linkWidgets/add';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/home';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 // Import data
 import LinkWidgets from '@data/demo/linkWidgets';

@@ -16,12 +16,12 @@ import ordersPage from '@pages/BO/orders';
 import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import foMerchandiseReturnsPage from '@pages/FO/classic/myAccount/merchandiseReturns';
+import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 // Import data

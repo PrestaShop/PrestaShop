@@ -12,9 +12,9 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import productPage from '@pages/FO/product';
-import {searchResultsPage} from '@pages/FO/searchResults';
+import {homePage} from '@pages/FO/classic/home';
+import productPage from '@pages/FO/classic/product';
+import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
 import ProductData from '@data/faker/product';

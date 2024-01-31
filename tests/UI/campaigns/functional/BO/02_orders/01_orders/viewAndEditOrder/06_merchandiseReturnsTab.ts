@@ -15,12 +15,12 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import foMerchandiseReturnsPage from '@pages/FO/classic/myAccount/merchandiseReturns';
+import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
 import Customers from '@data/demo/customers';

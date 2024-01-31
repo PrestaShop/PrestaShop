@@ -7,8 +7,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import {homePage} from '@pages/FO/home';
-import categoryPageFO from '@pages/FO/category';
+import {homePage} from '@pages/FO/classic/home';
+import categoryPageFO from '@pages/FO/classic/category';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {expect} from 'chai';

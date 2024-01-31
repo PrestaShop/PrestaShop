@@ -17,9 +17,9 @@ import emailPage from '@pages/BO/advancedParameters/email';
 import customersPage from '@pages/BO/customers';
 
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage as loginFOPage} from '@pages/FO/login';
-import {createAccountPage} from '@pages/FO/myAccount/add';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage as loginFOPage} from '@pages/FO/classic/login';
+import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 // Import data
 import CustomerData from '@data/faker/customer';

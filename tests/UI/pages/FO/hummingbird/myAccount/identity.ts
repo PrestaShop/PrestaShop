@@ -1,5 +1,5 @@
 // Import FO pages
-import {AccountIdentityPage} from '@pages/FO/myAccount/identity';
+import {AccountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 
 /**
  * @class

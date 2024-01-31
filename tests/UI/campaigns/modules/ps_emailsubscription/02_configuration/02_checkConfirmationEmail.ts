@@ -13,8 +13,8 @@ import dashboardPage from '@pages/BO/dashboard';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/home';
-import {emailSubscriptionPage} from '@pages/FO/emailSubscription';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
+import {emailSubscriptionPage} from '@pages/FO/classic/emailSubscription';
 
 // Import data
 import Modules from '@data/demo/modules';

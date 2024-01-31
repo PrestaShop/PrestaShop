@@ -14,10 +14,10 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
 import Customers from '@data/demo/customers';

@@ -12,9 +12,9 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import {contactUsPage} from '@pages/FO/contactUs';
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
+import {contactUsPage} from '@pages/FO/classic/contactUs';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
 // Import data
 import Customers from '@data/demo/customers';

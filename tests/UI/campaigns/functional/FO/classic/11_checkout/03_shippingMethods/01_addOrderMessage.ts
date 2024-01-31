@@ -3,15 +3,15 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-import productPage from '@pages/FO/product';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
+import {cartPage} from '@pages/FO/classic/cart';
+import checkoutPage from '@pages/FO/classic/checkout';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage} from '@pages/FO/classic/login';
+import productPage from '@pages/FO/classic/product';
+import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
+import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
 import Carriers from '@data/demo/carriers';

@@ -11,8 +11,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 // Import FO pages
-import categoryPage from '@pages/FO/category';
-import {homePage} from '@pages/FO/home';
+import categoryPage from '@pages/FO/classic/category';
+import {homePage} from '@pages/FO/classic/home';
 
 // Import data
 import Categories from '@data/demo/categories';

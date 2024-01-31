@@ -10,9 +10,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import productPage from '@pages/FO/product';
-import {searchResultsPage} from '@pages/FO/searchResults';
+import {homePage} from '@pages/FO/classic/home';
+import productPage from '@pages/FO/classic/product';
+import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
 import Products from '@data/demo/products';

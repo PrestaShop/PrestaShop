@@ -14,11 +14,11 @@ import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import {orderHistoryPage} from '@pages/FO/myAccount/orderHistory';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
 import Customers from '@data/demo/customers';

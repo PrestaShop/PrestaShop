@@ -8,14 +8,14 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/account';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {addAddressPage} from '@pages/FO/myAccount/addAddress';
-import {addressesPage} from '@pages/FO/myAccount/addresses';
-import productPage from '@pages/FO/product';
+import {cartPage} from '@pages/FO/classic/cart';
+import checkoutPage from '@pages/FO/classic/checkout';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage} from '@pages/FO/classic/login';
+import {myAccountPage} from '@pages/FO/classic/myAccount';
+import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
+import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
+import productPage from '@pages/FO/classic/product';
 
 // Import data
 import Products from '@data/demo/products';

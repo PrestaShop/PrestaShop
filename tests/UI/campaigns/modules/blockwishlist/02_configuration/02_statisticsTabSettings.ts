@@ -12,9 +12,9 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 import blockwishlistPage from '@pages/BO/modules/blockwishlist';
 import blockwishlistStatisticsPage from '@pages/BO/modules/blockwishlist/statistics';
 // Import FO pages
-import categoryPage from '@pages/FO/category';
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
+import categoryPage from '@pages/FO/classic/category';
+import {homePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
 // Import data
 import Customers from '@data/demo/customers';

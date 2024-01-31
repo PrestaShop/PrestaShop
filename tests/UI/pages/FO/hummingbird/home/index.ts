@@ -1,6 +1,6 @@
 import {Page} from 'playwright';
 // Import FO Pages
-import {HomePage} from '@pages/FO/home';
+import {HomePage} from '@pages/FO/classic/home';
 
 /**
  * Home page, contains functions that can be used on the page

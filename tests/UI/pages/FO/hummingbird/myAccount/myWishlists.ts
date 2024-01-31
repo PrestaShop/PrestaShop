@@ -1,5 +1,5 @@
 // Import FO pages
-import {MyWishlistsPage} from '@pages/FO/myAccount/myWishlists';
+import {MyWishlistsPage} from '@pages/FO/classic/myAccount/myWishlists';
 
 /**
  * @class

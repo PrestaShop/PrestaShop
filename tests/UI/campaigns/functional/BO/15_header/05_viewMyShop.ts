@@ -9,7 +9,7 @@ import testContext from '@utils/testContext';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import {homePage as foHomePage} from '@pages/FO/home';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 const baseContext: string = 'functional_BO_header_viewMyShop';
 

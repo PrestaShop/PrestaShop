@@ -13,8 +13,8 @@ import contactPage from '@pages/BO/shopParameters/contact';
 import storesPage from '@pages/BO/shopParameters/stores';
 import createStoresPage from '@pages/BO/shopParameters/stores/add';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {storesPage as storePage} from '@pages/FO/stores';
+import {homePage} from '@pages/FO/classic/home';
+import {storesPage as storePage} from '@pages/FO/classic/stores';
 
 // Import data
 import StoreData from '@data/faker/store';

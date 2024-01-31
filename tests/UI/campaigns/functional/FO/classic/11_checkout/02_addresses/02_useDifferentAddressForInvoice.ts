@@ -12,11 +12,11 @@ import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/home';
-import foProductPage from '@pages/FO/product';
-import {cartPage} from '@pages/FO/cart';
-import foCheckoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
+import foProductPage from '@pages/FO/classic/product';
+import {cartPage} from '@pages/FO/classic/cart';
+import foCheckoutPage from '@pages/FO/classic/checkout';
+import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
 import PaymentMethods from '@data/demo/paymentMethods';

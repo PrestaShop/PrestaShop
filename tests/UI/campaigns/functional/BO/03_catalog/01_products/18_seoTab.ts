@@ -12,9 +12,9 @@ import seoTab from '@pages/BO/catalog/products/add/seoTab';
 import productsPage from '@pages/BO/catalog/products';
 
 // Import FO pages
-import foProductPage from '@pages/FO/product';
-import {searchResultsPage} from '@pages/FO/searchResults';
-import categoryPageFO from '@pages/FO/category';
+import foProductPage from '@pages/FO/classic/product';
+import {searchResultsPage} from '@pages/FO/classic/searchResults';
+import categoryPageFO from '@pages/FO/classic/category';
 
 // Import data
 import Products from '@data/demo/products';

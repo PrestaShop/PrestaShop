@@ -11,7 +11,7 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
 // Import FO pages
-import foProductPage from '@pages/FO/product';
+import foProductPage from '@pages/FO/classic/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';

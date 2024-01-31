@@ -13,9 +13,9 @@ import productsPage from '@pages/BO/catalog/products';
 import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 // Import FO pages
-import categoryPage from '@pages/FO/category';
-import {homePage} from '@pages/FO/home';
-import foProductPage from '@pages/FO/product';
+import categoryPage from '@pages/FO/classic/category';
+import {homePage} from '@pages/FO/classic/home';
+import foProductPage from '@pages/FO/classic/product';
 
 // Import data
 import Modules from '@data/demo/modules';

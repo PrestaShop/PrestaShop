@@ -12,9 +12,9 @@ import addPagePage from '@pages/BO/design/pages/add';
 import pagesPage from '@pages/BO/design/pages';
 import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 // Import FO pages
-import cmsPage from '@pages/FO/cms';
-import {homePage as foHomePage} from '@pages/FO/home';
-import {siteMapPage} from '@pages/FO/siteMap';
+import cmsPage from '@pages/FO/classic/cms';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
+import {siteMapPage} from '@pages/FO/classic/siteMap';
 
 // Import data
 import CMSCategoryData from '@data/faker/CMScategory';

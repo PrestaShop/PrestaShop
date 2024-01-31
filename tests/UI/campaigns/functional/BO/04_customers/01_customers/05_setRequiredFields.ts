@@ -10,9 +10,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 import customersPage from '@pages/BO/customers';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {createAccountPage as foCreateAccountPage} from '@pages/FO/myAccount/add';
+import {homePage as foHomePage} from '@pages/FO/classic/home';
+import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

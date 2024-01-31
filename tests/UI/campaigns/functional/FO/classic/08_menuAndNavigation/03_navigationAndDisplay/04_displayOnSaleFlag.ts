@@ -10,7 +10,7 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import addProductPage from '@pages/BO/catalog/products/add';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
-import productPage from '@pages/FO/product';
+import productPage from '@pages/FO/classic/product';
 
 // Import data
 import ProductData from '@data/faker/product';

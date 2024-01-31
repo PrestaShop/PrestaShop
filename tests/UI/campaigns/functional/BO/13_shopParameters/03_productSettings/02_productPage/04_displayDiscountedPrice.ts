@@ -13,8 +13,8 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
 import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import productPage from '@pages/FO/product';
+import {homePage} from '@pages/FO/classic/home';
+import productPage from '@pages/FO/classic/product';
 
 // Import data
 import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
