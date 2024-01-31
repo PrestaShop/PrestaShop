@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler\AddAttributeHandlerInterface;
@@ -41,7 +40,7 @@ use ProductAttribute;
  * Handles adding of attribute value using legacy logic.
  */
 #[AsCommandHandler]
-final class AddAttributeHandler extends AbstractObjectModelHandler implements AddAttributeHandlerInterface
+class AddAttributeHandler implements AddAttributeHandlerInterface
 {
     private AttributeRepository $attributeRepository;
 
