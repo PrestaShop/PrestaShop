@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\Attri
  * Handles editing of attribute groups using legacy logic.
  */
 #[AsCommandHandler]
-class EditAttributeHandler  implements EditAttributeHandlerInterface
+class EditAttributeHandler implements EditAttributeHandlerInterface
 {
     use LocalizedObjectModelTrait;
 
