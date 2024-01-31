@@ -42,7 +42,7 @@ class EditAttributeCommand
 
     private ?AttributeGroupId $attributeGroupId;
 
-    private ?array $localizedValue;
+    private ?array $localizedNames;
 
     private ?string $color;
 
@@ -82,15 +82,15 @@ class EditAttributeCommand
         return $this;
     }
 
-    public function getLocalizedValue(): ?array
+    public function getLocalizedNames(): ?array
     {
-        return $this->localizedValue ?? null;
+        return $this->localizedNames ?? null;
     }
 
-    public function setLocalizedValue(array $localizedValue): self
+    public function setLocalizedNames(array $localizedNames): self
     {
-        $this->assertValuesAreValid($localizedValue);
-        $this->localizedValue = $localizedValue;
+        $this->assertValuesAreValid($localizedNames);
+        $this->localizedNames = $localizedNames;
 
         return $this;
     }

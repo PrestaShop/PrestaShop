@@ -172,7 +172,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
     ): void {
         $command = new EditAttributeCommand($attributeId);
         $command->setAttributeGroupId($attributeGroupId);
-        $command->setLocalizedValue($localizedValue);
+        $command->setLocalizedNames($localizedValue);
         $command->setColor($color);
         $command->setAssociatedShopIds($shopIds);
 

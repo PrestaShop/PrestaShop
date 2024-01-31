@@ -74,7 +74,7 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
     {
         $updateCommand = new EditAttributeCommand($id);
         $updateCommand->setAttributeGroupId($data['attribute_group'])
-            ->setLocalizedValue($data['value'])
+            ->setLocalizedNames($data['value'])
             ->setColor($data['color'])
             ->setAssociatedShopIds($data['shop_association']);
 

@@ -63,9 +63,9 @@ final class EditAttributeHandler extends AbstractObjectModelHandler implements E
         $attribute = $this->attributeRepository->get(new AttributeId($command->getAttributeId()->getValue()));
         $propertiesToUpdate = [];
 
-        if (null !== $command->getLocalizedValue()) {
-            $attribute->name = $command->getLocalizedValue();
-            $this->fillLocalizedValues($attribute, 'name', $command->getLocalizedValue(), $propertiesToUpdate);
+        if (null !== $command->getLocalizedNames()) {
+            $attribute->name = $command->getLocalizedNames();
+            $this->fillLocalizedValues($attribute, 'name', $command->getLocalizedNames(), $propertiesToUpdate);
         }
 
         if (null !== $command->getColor()) {
