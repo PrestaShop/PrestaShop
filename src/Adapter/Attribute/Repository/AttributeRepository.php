@@ -101,19 +101,6 @@ class AttributeRepository extends AbstractMultiShopObjectModelRepository
         return new AttributeId($attributeId);
     }
 
-    /**
-     * @param ProductAttribute $attribute
-     * @param int $errorCode
-     *
-     * @return void
-     *
-     * @throws CoreException
-     */
-    public function update(ProductAttribute $attribute, int $errorCode = 0): void
-    {
-        $this->updateObjectModel($attribute, CannotUpdateAttributeException::class, $errorCode);
-    }
-
     public function partialUpdate(ProductAttribute $attribute, array $propertiesToUpdate, int $errorCode = 0): void
     {
         $this->partiallyUpdateObjectModel($attribute, $propertiesToUpdate, CannotUpdateAttributeException::class, $errorCode);
