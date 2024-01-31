@@ -608,16 +608,6 @@ class HelperListCore extends Helper
 
         $href = $this->currentIndex . '&' . $this->identifier . '=' . $id . '&delete' . $this->table . '&token=' . ($token != null ? $token : $this->token);
 
-        switch ($this->currentIndex) {
-            case 'index.php?controller=AdminProducts':
-                if ($this->identifier == 'id_product') {
-                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);
-                }
-
-                break;
-            default:
-        }
-
         $data = [
             $this->identifier => $id,
             'href' => $href,

@@ -55,7 +55,7 @@
 					<div>{l s='Back' d='Admin.Global'}</div>
 				</a>
 			</li>
-			{if isset($trad_link)}
+			{if !empty($translateLinks)}
 			<li>
 				<a id="desc-module-translate" data-toggle="modal" data-target="#moduleTradLangSelect" class="toolbar_btn" href="#" title="{l s='Translate'}">
 					<i class="process-icon-flag"></i>
