@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
-use AttributeGroup;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
@@ -152,7 +151,6 @@ class AttributeType extends TranslatorAwareType
         $groups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint);
         $return = [];
 
-        /** @var AttributeGroup $group */
         foreach ($groups as $group) {
             $return[sprintf('%s (%d)', $group->name[$languageId->getValue()], $group->id)] = $group->id;
         }

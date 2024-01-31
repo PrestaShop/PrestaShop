@@ -11,6 +11,10 @@ Feature: Attribute group management
     And language "en" with locale "en-US" exists
     And language "fr" with locale "fr-FR" exists
     And language with iso code "en" is the default one
+    And shop group "default_shop_group" with name "Default" exists
+    And I add a shop "shop2" with name "test_shop2" and color "blue" for the group "default_shop_group"
+    And I add a shop "shop3" with name "test_shop3" and color "red" for the group "default_shop_group"
+    And I add a shop "shop4" with name "test_shop4" and color "red" for the group "default_shop_group"
     And I create attribute group "attributeGroup1" with specified properties:
       | name        | Color        |
       | public_name | Public color |
@@ -26,22 +30,26 @@ Feature: Attribute group management
       | value[en-US]    | Color           |
       | value[fr-FR]    | Couleur         |
       | color           | #44DB6A         |
+      | shopIds         | shop1,shop2,shop4 |
     Then attribute "attribute1" should have the following properties:
       | attribute_group | attributeGroup1 |
       | value[en-US]    | Color           |
       | value[fr-FR]    | Couleur         |
       | color           | #44DB6A         |
+      | shopIds         | shop1,shop2,shop4 |
   Scenario: Editing attribute
     When I edit attribute "attribute1" with specified properties:
       | attribute_group | attributeGroup2 |
       | value[en-US]    | Colores         |
       | value[fr-FR]    | Couleures       |
       | color           | #44DB6B         |
+      | shopIds         | shop4           |
     Then attribute "attribute1" should have the following properties:
       | attribute_group | attributeGroup2 |
       | value[en-US]    | Colores         |
       | value[fr-FR]    | Couleures       |
       | color           | #44DB6B         |
+      | shopIds         | shop4           |
 
   Scenario: Deleting attribute
     When I delete attribute "attribute1"

@@ -60,7 +60,7 @@ class AddAttributeCommand
      * @param int $attributeGroupId
      * @param array $localizedValue
      * @param string $color
-     * @param int[] $shopAssociation
+     * @param int[] $associatedShopIds
      *
      * @throws AttributeConstraintException
      */

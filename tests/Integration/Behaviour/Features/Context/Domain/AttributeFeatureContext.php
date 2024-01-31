@@ -39,29 +39,24 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query\GetAttribut
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult\EditableAttribute;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 
 class AttributeFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default shop id from configs
-     */
-    private $defaultShopId;
-
-    public function __construct()
-    {
-        $this->defaultShopId = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_DEFAULT');
-    }
-
     /**
      * @When I create attribute :reference with specified properties:
      */
     public function createAttribute(string $reference, TableNode $node): void
     {
         $properties = $this->localizeByRows($node);
+
         $attributeGroupId = $this->referenceToId($properties['attribute_group']);
-        $attributeId = $this->createAttributeUsingCommand($attributeGroupId, $properties['value'], $properties['color']);
+        $attributeId = $this->createAttributeUsingCommand(
+            $attributeGroupId,
+            $properties['value'],
+            $properties['color'],
+            $this->referencesToIds($properties['shopIds'])
+        );
 
         $this->getSharedStorage()->set($reference, $attributeId->getValue());
     }
@@ -75,7 +70,13 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
 
         $attributeId = $this->referenceToId($reference);
         $attributeGroupId = $this->referenceToId($properties['attribute_group']);
-        $this->editAttributeUsingCommand($attributeId, $attributeGroupId, $properties['value'], $properties['color']);
+        $this->editAttributeUsingCommand(
+            $attributeId,
+            $attributeGroupId,
+            $properties['value'],
+            $properties['color'],
+            $this->referencesToIds($properties['shopIds'])
+        );
     }
 
     /**
@@ -92,6 +93,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         Assert::assertEquals($data['value'], $attribute->getValue());
         Assert::assertEquals($data['color'], $attribute->getColor());
         Assert::assertEquals($attributeGroupId, $attribute->getAttributeGroupId());
+        Assert::assertEquals($this->referencesToIds($data['shopIds']), $attribute->getAssociatedShopIds());
     }
 
     /**
@@ -106,13 +108,14 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
     private function createAttributeUsingCommand(
         int $attributeGroupId,
         array $localizedValues,
-        string $color
+        string $color,
+        array $shopIds
     ): AttributeId {
         $command = new AddAttributeCommand(
             $attributeGroupId,
             $localizedValues,
             $color,
-            [$this->defaultShopId]
+            $shopIds
         );
 
         return $this->getCommandBus()->handle($command);
@@ -133,12 +136,14 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         int $attributeId,
         int $attributeGroupId,
         array $localizedValue,
-        string $color
+        string $color,
+        array $shopIds
     ): void {
         $command = new EditAttributeCommand($attributeId);
         $command->setAttributeGroupId($attributeGroupId);
         $command->setLocalizedValue($localizedValue);
         $command->setColor($color);
+        $command->setAssociatedShopIds($shopIds);
 
         $this->getCommandBus()->handle($command);
     }

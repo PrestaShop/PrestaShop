@@ -65,7 +65,6 @@ final class EditAttributeHandler extends AbstractObjectModelHandler implements E
 
         if (null !== $command->getLocalizedValue()) {
             $attribute->name = $command->getLocalizedValue();
-            //$propertiesToUpdate['name'] = array_keys($command->getLocalizedValue());
             $this->fillLocalizedValues($attribute, 'name', $command->getLocalizedValue(), $propertiesToUpdate);
         }
 
