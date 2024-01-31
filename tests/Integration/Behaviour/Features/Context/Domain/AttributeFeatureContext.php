@@ -73,7 +73,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->createAttributeUsingCommand(
                 $attributeGroupId,
-                $properties['value'],
+                $properties['name'],
                 $properties['color'],
                 $this->referencesToIds($properties['shopIds'])
             );
@@ -104,7 +104,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         $this->editAttributeUsingCommand(
             $attributeId,
             $attributeGroupId,
-            $properties['value'],
+            $properties['name'],
             $properties['color'],
             $this->referencesToIds($properties['shopIds'])
         );
@@ -121,7 +121,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         $attribute = $this->getAttribute($reference);
         $data = $this->localizeByRows($tableNode);
         $attributeGroupId = $this->referenceToId($data['attribute_group']);
-        Assert::assertEquals($data['value'], $attribute->getValue());
+        Assert::assertEquals($data['name'], $attribute->getValue());
         Assert::assertEquals($data['color'], $attribute->getColor());
         Assert::assertEquals($attributeGroupId, $attribute->getAttributeGroupId());
         Assert::assertEquals($this->referencesToIds($data['shopIds']), $attribute->getAssociatedShopIds());

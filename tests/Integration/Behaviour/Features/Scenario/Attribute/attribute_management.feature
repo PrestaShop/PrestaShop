@@ -27,35 +27,35 @@ Feature: Attribute group management
   Scenario: Adding new attribute
     And I create attribute "attribute1" with specified properties:
       | attribute_group | attributeGroup1 |
-      | value[en-US]    | Color           |
-      | value[fr-FR]    | Couleur         |
+      | name[en-US]    | Color           |
+      | name[fr-FR]    | Couleur         |
       | color           | #44DB6A         |
       | shopIds         | shop1,shop2,shop4 |
     Then attribute "attribute1" should have the following properties:
       | attribute_group | attributeGroup1 |
-      | value[en-US]    | Color           |
-      | value[fr-FR]    | Couleur         |
+      | name[en-US]    | Color           |
+      | name[fr-FR]    | Couleur         |
       | color           | #44DB6A         |
       | shopIds         | shop1,shop2,shop4 |
   Scenario: Editing attribute
     When I edit attribute "attribute1" with specified properties:
       | attribute_group | attributeGroup2 |
-      | value[en-US]    | Colores         |
-      | value[fr-FR]    | Couleures       |
+      | name[en-US]    | Colores         |
+      | name[fr-FR]    | Couleures       |
       | color           | #44DB6B         |
       | shopIds         | shop4           |
     Then attribute "attribute1" should have the following properties:
       | attribute_group | attributeGroup2 |
-      | value[en-US]    | Colores         |
-      | value[fr-FR]    | Couleures       |
+      | name[en-US]    | Colores         |
+      | name[fr-FR]    | Couleures       |
       | color           | #44DB6B         |
       | shopIds         | shop4           |
 
   Scenario: Adding new attribute with invalid color
     When I create attribute "attribute2" with invalid color I should get an exception:
       | attribute_group | attributeGroup1 |
-      | value[en-US]    | Color           |
-      | value[fr-FR]    | Couleur         |
+      | name[en-US]    | Color           |
+      | name[fr-FR]    | Couleur         |
       | color           | wrong_color     |
       | shopIds         | shop1,shop2,shop4 |
 
