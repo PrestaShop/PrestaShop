@@ -52,12 +52,13 @@ Feature: Attribute group management
       | shopIds         | shop4           |
 
   Scenario: Adding new attribute with invalid color
-    When I create attribute "attribute2" with invalid color I should get an exception:
+    When I create attribute "attribute2" with specified properties:
       | attribute_group | attributeGroup1 |
       | name[en-US]    | Color           |
       | name[fr-FR]    | Couleur         |
       | color           | wrong_color     |
       | shopIds         | shop1,shop2,shop4 |
+    Then I should get an error that color value is invalid
 
   Scenario: Deleting attribute
     When I delete attribute "attribute1"

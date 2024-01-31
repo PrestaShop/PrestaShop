@@ -51,44 +51,29 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         $properties = $this->localizeByRows($node);
 
         $attributeGroupId = $this->referenceToId($properties['attribute_group']);
-        $attributeId = $this->createAttributeUsingCommand(
-            $attributeGroupId,
-            $properties['name'],
-            $properties['color'],
-            $this->referencesToIds($properties['shopIds'])
-        );
-
-        $this->getSharedStorage()->set($reference, $attributeId->getValue());
-    }
-
-    /**
-     * @When I create attribute :reference with invalid color I should get an exception:
-     */
-    public function createAttributeWithInvalidColor(string $reference, TableNode $node): void
-    {
-        $caughtException = null;
-        $properties = $this->localizeByRows($node);
-        $attributeGroupId = $this->referenceToId($properties['attribute_group']);
 
         try {
-            $this->createAttributeUsingCommand(
+            $attributeId = $this->createAttributeUsingCommand(
                 $attributeGroupId,
                 $properties['name'],
                 $properties['color'],
                 $this->referencesToIds($properties['shopIds'])
             );
-        } catch (AttributeConstraintException $e) {
-            $caughtException = $e;
-        }
 
-        Assert::assertNotNull(
-            $caughtException,
-            sprintf('Creating an attribute with invalid color %s should trigger an exception', $properties['color'])
-        );
-        Assert::assertEquals(
-            $caughtException->getCode(),
-            AttributeConstraintException::INVALID_COLOR,
-            sprintf('The thrown exception for an invalid color should have the code %d', AttributeConstraintException::INVALID_COLOR)
+            $this->getSharedStorage()->set($reference, $attributeId->getValue());
+        } catch(\Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get an error that color value is invalid
+     */
+    public function IShouldGetAnInvalidColorError(): void
+    {
+        $this->assertLastErrorIs(
+            AttributeConstraintException::class,
+            AttributeConstraintException::INVALID_COLOR
         );
     }
 
