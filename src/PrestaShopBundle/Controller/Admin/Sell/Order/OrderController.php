@@ -137,13 +137,12 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Shows list of orders
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param OrderFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, OrderFilters $filters)
     {
         $orderKpiFactory = $this->get('prestashop.core.kpi_row.factory.orders');
@@ -194,12 +193,11 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Places an order from BO
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function placeAction(Request $request)
     {
         $summaryForm = $this->createForm(CartSummaryType::class);
@@ -229,12 +227,11 @@ class OrderController extends FrameworkBundleAdminController
      * Whole page dynamics are on javascript side.
      * To load specific cart pass cartId to url query params (handled by javascript)
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(Request $request)
     {
         /** @var ShopContext $shopContextChecker */
@@ -274,12 +271,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function searchAction(Request $request)
     {
         /** @var ResponseBuilder $responseBuilder */
@@ -296,10 +292,9 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Generates invoice PDF for given order
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function generateInvoicePdfAction($orderId)
     {
         $this->get('prestashop.adapter.pdf.order_invoice_pdf_generator')->generatePDF([$orderId]);
@@ -312,10 +307,9 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Generates delivery slip PDF for given order
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function generateDeliverySlipPdfAction($orderId)
     {
         $this->get('prestashop.adapter.pdf.delivery_slip_pdf_generator')->generatePDF([$orderId]);
@@ -328,10 +322,9 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function changeOrdersStatusAction(Request $request)
     {
         $changeOrdersStatusForm = $this->createForm(ChangeOrdersStatusType::class);
@@ -355,12 +348,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param OrderFilters $filters
      *
      * @return CsvResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function exportAction(OrderFilters $filters)
     {
         $isB2bEnabled = $this->getConfiguration()->get('PS_B2B_ENABLE');
@@ -413,13 +405,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function viewAction(int $orderId, Request $request): Response
     {
         try {
@@ -583,18 +574,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function partialRefundAction(int $orderId, Request $request)
     {
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
@@ -621,15 +606,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
     public function standardRefundAction(int $orderId, Request $request)
     {
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
@@ -656,15 +638,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
     public function returnProductAction(int $orderId, Request $request)
     {
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
@@ -711,13 +690,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function addProductAction(int $orderId, Request $request): Response
     {
         /** @var OrderForViewing $orderForViewing */
@@ -800,12 +778,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getProductPricesAction(int $orderId): Response
     {
         try {
@@ -836,10 +813,9 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getInvoicesAction(int $orderId)
     {
         /** @var ConfigurableFormChoiceProviderInterface $choiceProvider */
@@ -856,10 +832,9 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getDocumentsAction(int $orderId)
     {
         /** @var OrderForViewing $orderForViewing */
@@ -874,10 +849,9 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getShippingAction(int $orderId)
     {
         /** @var OrderForViewing $orderForViewing */
@@ -892,18 +866,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function updateShippingAction(int $orderId, Request $request): RedirectResponse
     {
         $form = $this->createForm(UpdateOrderShippingType::class, [], [
@@ -944,18 +912,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminOrders')",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param int $orderCartRuleId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function removeCartRuleAction(int $orderId, int $orderCartRuleId): RedirectResponse
     {
         $this->getCommandBus()->handle(
@@ -970,19 +932,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminOrders')",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param int $orderInvoiceId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function updateInvoiceNoteAction(int $orderId, int $orderInvoiceId, Request $request): RedirectResponse
     {
         try {
@@ -1004,14 +960,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      * @param int $orderDetailId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function updateProductAction(int $orderId, int $orderDetailId, Request $request): Response
     {
         try {
@@ -1063,18 +1018,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminOrders')",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function addCartRuleAction(int $orderId, Request $request): RedirectResponse
     {
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
@@ -1117,10 +1066,9 @@ class OrderController extends FrameworkBundleAdminController
      * @param int $orderId
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function updateStatusAction(int $orderId, Request $request): RedirectResponse
     {
         $form = $this->formFactory->createNamed(
@@ -1153,10 +1101,9 @@ class OrderController extends FrameworkBundleAdminController
      * @param int $orderId
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function updateStatusFromListAction(int $orderId, Request $request): RedirectResponse
     {
         $this->handleOrderStatusUpdate($orderId, $request->request->getInt('value'));
@@ -1165,18 +1112,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminOrders')",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function addPaymentAction(int $orderId, Request $request): RedirectResponse
     {
         $form = $this->createForm(OrderPaymentType::class, [], [
@@ -1219,12 +1160,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param int $orderId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function previewAction(int $orderId): JsonResponse
     {
         try {
@@ -1249,12 +1189,11 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Duplicates cart from specified order
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $orderId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function duplicateOrderCartAction(int $orderId)
     {
         $cartId = $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId))->getValue();
@@ -1268,19 +1207,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      * @param int $orderId
      *
      * @return Response
      */
     #[DemoRestricted(redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'])]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function sendMessageAction(Request $request, int $orderId): Response
     {
         $orderMessageForm = $this->createForm(OrderMessageType::class);
@@ -1343,17 +1276,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminOrders')",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function changeCustomerAddressAction(Request $request): RedirectResponse
     {
         $orderId = $request->query->get('orderId');
@@ -1399,18 +1326,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function changeCurrencyAction(int $orderId, Request $request): RedirectResponse
     {
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class);
@@ -1440,19 +1361,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminOrders')",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param int $orderStatusId
      * @param int $orderHistoryId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function resendEmailAction(int $orderId, int $orderStatusId, int $orderHistoryId): RedirectResponse
     {
         try {
@@ -1474,13 +1389,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      * @param int $orderDetailId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function deleteProductAction(int $orderId, int $orderDetailId): JsonResponse
     {
         try {
@@ -1498,12 +1412,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getDiscountsAction(int $orderId): Response
     {
         /** @var OrderForViewing $orderForViewing */
@@ -1516,12 +1429,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getPricesAction(int $orderId): JsonResponse
     {
         /** @var OrderForViewing $orderForViewing */
@@ -1540,12 +1452,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getPaymentsAction(int $orderId): Response
     {
         try {
@@ -1565,12 +1476,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getProductsListAction(int $orderId): Response
     {
         /** @var OrderForViewing $orderForViewing */
@@ -1613,17 +1523,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to generate this."
-     * )
-     *
      * Generates invoice for given order
      *
      * @param int $orderId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to generate this.')]
     public function generateInvoiceAction(int $orderId): RedirectResponse
     {
         try {
@@ -1642,12 +1548,11 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Sends email with process order link to customer
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function sendProcessOrderEmailAction(Request $request): JsonResponse
     {
         try {
@@ -1665,18 +1570,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function cancellationAction(int $orderId, Request $request)
     {
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
@@ -1702,12 +1601,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function configureProductPaginationAction(Request $request): JsonResponse
     {
         $numPerPage = (int) $request->request->get('numPerPage');
@@ -1730,13 +1628,12 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Method for downloading customization picture
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param int $orderId
      * @param string $value
      *
      * @return BinaryFileResponse|RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function displayCustomizationImageAction(int $orderId, string $value)
     {
         $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
@@ -1768,16 +1665,12 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Set order internal note.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_index"
-     * )
-     *
      * @param mixed $orderId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function setInternalNoteAction($orderId, Request $request)
     {
         $internalNoteForm = $this->createForm(InternalNoteType::class);
@@ -1814,15 +1707,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to perform this search."
-     * )
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to perform this search.')]
     public function searchProductsAction(Request $request): JsonResponse
     {
         try {

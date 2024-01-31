@@ -51,14 +51,11 @@ class PositionsController extends FrameworkBundleAdminController
     /**
      * Display hooks positions.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
-     *     message="Access denied.")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function indexAction(Request $request): Response
     {
         $isSingleShopContext = $this->get('prestashop.adapter.shop.context')->isSingleShopContext();
@@ -150,12 +147,11 @@ class PositionsController extends FrameworkBundleAdminController
     /**
      * Unhook module.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="Access denied.")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message: 'Access denied.')]
     public function unhookAction(Request $request)
     {
         $validateAdapter = $this->get('prestashop.adapter.validate');
@@ -247,12 +243,11 @@ class PositionsController extends FrameworkBundleAdminController
     /**
      * Toggle hook status
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="Access denied.")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message: 'Access denied.')]
     public function toggleStatusAction(Request $request)
     {
         $hookId = (int) $request->request->get('hookId');

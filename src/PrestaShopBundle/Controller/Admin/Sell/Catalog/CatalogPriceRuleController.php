@@ -62,13 +62,12 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Displays catalog price rule listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param CatalogPriceRuleFilters $catalogPriceRuleFilters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
         CatalogPriceRuleFilters $catalogPriceRuleFilters
@@ -86,12 +85,11 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Retrieves catalog prices rules for product.
      *
-     * @AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminSpecificPriceRule')")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminSpecificPriceRule')")]
     public function listForProductAction(Request $request, int $productId): JsonResponse
     {
         $catalogPriceRuleList = $this->getQueryBus()->handle(
@@ -114,12 +112,11 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Provides filters functionality.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function searchAction(Request $request)
     {
         /** @var ResponseBuilder $responseBuilder */
@@ -136,13 +133,12 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Deletes catalog price rule
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_catalog_price_rules_index")
-     *
      * @param int|string $catalogPriceRuleId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_catalog_price_rules_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_catalog_price_rules_index')]
     public function deleteAction($catalogPriceRuleId)
     {
         try {
@@ -161,13 +157,12 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Deletes catalogPriceRules on bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_catalog_price_rules_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_catalog_price_rules_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_catalog_price_rules_index')]
     public function bulkDeleteAction(Request $request)
     {
         $catalogPriceRuleIds = $this->getBulkCatalogPriceRulesFromRequest($request);
@@ -188,12 +183,11 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Show & process catalog price rule creation.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(Request $request): Response
     {
         $catalogPriceRuleForm = $this->getFormBuilder()->getForm();
@@ -221,13 +215,12 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Show & process catalog price rule editing.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $catalogPriceRuleId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function editAction(Request $request, int $catalogPriceRuleId): Response
     {
         $catalogPriceRuleId = (int) $catalogPriceRuleId;

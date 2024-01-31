@@ -47,13 +47,12 @@ class ContactsController extends FrameworkBundleAdminController
     /**
      * Shows page content.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param ContactFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, ContactFilters $filters)
     {
         $contactGridFactory = $this->get('prestashop.core.grid.factory.contacts');
@@ -80,16 +79,11 @@ class ContactsController extends FrameworkBundleAdminController
     /**
      * Display the Contact creation form.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_contacts_index",
-     *     message="You do not have permission to add this."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_contacts_index', message: 'You do not have permission to add this.')]
     public function createAction(Request $request)
     {
         $contactFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.contact_form_builder');
@@ -126,17 +120,12 @@ class ContactsController extends FrameworkBundleAdminController
     /**
      * Display the contact edit form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_contacts_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $contactId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_contacts_index', message: 'You do not have permission to edit this.')]
     public function editAction($contactId, Request $request)
     {
         $contactFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.contact_form_builder');
@@ -177,17 +166,12 @@ class ContactsController extends FrameworkBundleAdminController
     /**
      * Delete a contact.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_contacts_index",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param int $contactId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_contacts_index', message: 'You do not have permission to delete this.')]
     public function deleteAction($contactId)
     {
         $contactDeleter = $this->get('prestashop.adapter.contact.deleter');
@@ -207,17 +191,12 @@ class ContactsController extends FrameworkBundleAdminController
     /**
      * Bulk delete contacts.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_contacts_index",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_contacts_index', message: 'You do not have permission to delete this.')]
     public function deleteBulkAction(Request $request)
     {
         $contactIds = $request->request->all('contact_bulk');

@@ -49,16 +49,12 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Show backup page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
-     *           message="You do not have permission to update this.",
-     *          redirectRoute="admin_products_index"
-     * )
-     *
      * @param Request $request
      * @param BackupFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_products_index')]
     public function indexAction(Request $request, BackupFilters $filters)
     {
         $backupForm = $this->getBackupFormHandler()->getForm();
@@ -98,14 +94,13 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Show file download view.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param string $downloadFileName
      *
      * @return Response
      */
     #[DemoRestricted(redirectRoute: 'admin_backups_index')]
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function downloadViewAction(Request $request, $downloadFileName)
     {
         $backup = new Backup($downloadFileName);
@@ -124,13 +119,12 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Return a backup content as a download.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param string $downloadFileName
      *
      * @return BinaryFileResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_backup')]
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function downloadContentAction($downloadFileName)
     {
         $backup = new Backup($downloadFileName);
@@ -141,17 +135,12 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process backup options saving.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *          message="You do not have permission to update this.",
-     *          redirectRoute="admin_backups_index"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_backups_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_backups_index')]
     public function saveOptionsAction(Request $request)
     {
         $backupFormHandler = $this->getBackupFormHandler();
@@ -175,14 +164,10 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Create new backup.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))",
-     *          message="You do not have permission to create this.",
-     *          redirectRoute="admin_backups_index"
-     * )
-     *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_backups_index')]
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.', redirectRoute: 'admin_backups_index')]
     public function createAction()
     {
         try {
@@ -216,16 +201,12 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process backup file deletion.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
-     *          message="You do not have permission to delete this.",
-     *          redirectRoute="admin_backups_index"
-     * )
-     *
      * @param string $deleteFileName
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_backups_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_backups_index')]
     public function deleteAction($deleteFileName)
     {
         $backup = new Backup($deleteFileName);
@@ -252,16 +233,12 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process bulk backup deletion.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
-     *          message="You do not have permission to delete this.",
-     *          redirectRoute="admin_backups_index"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_backups_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_backups_index')]
     public function bulkDeleteAction(Request $request)
     {
         $backupsToDelete = $request->request->all('backup_backup_bulk_file_names');

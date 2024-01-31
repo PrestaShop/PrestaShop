@@ -47,10 +47,9 @@ class StoreController extends FrameworkBundleAdminController
     use BulkActionsTrait;
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
         StoreFilters $storeFilters
@@ -74,12 +73,11 @@ class StoreController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $storeId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function toggleStatusAction(int $storeId): Response
     {
         try {
@@ -92,14 +90,12 @@ class StoreController extends FrameworkBundleAdminController
     }
 
 //    public function bulkEnableStoreAction():
-
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param int $storeId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function deleteAction(int $storeId): Response
     {
         try {
@@ -112,12 +108,11 @@ class StoreController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function bulkDeleteAction(Request $request): Response
     {
         try {
@@ -130,24 +125,22 @@ class StoreController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function bulkEnableAction(Request $request): RedirectResponse
     {
         return $this->bulkUpdateStatus($request, true);
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function bulkDisableAction(Request $request): RedirectResponse
     {
         return $this->bulkUpdateStatus($request, false);

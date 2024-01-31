@@ -42,15 +42,11 @@ class DeliveryController extends FrameworkBundleAdminController
     /**
      * Main page for Delivery slips.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
-     *     message="Access denied."
-     * )
-     *
      * @param Request $request
      *
      * @return Response|RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function slipAction(Request $request): Response
     {
         /** @var FormHandlerInterface $formHandler */
@@ -89,15 +85,11 @@ class DeliveryController extends FrameworkBundleAdminController
     /**
      * Delivery slips PDF generator.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
-     *     message="Access denied."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function generatePdfAction(Request $request)
     {
         /** @var FormHandlerInterface $formHandler */

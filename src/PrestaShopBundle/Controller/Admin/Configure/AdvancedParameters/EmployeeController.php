@@ -74,13 +74,12 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Show employees list & options page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param EmployeeFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, EmployeeFilters $filters)
     {
         $employeeOptionsFormHandler = $this->get('prestashop.admin.employee_options.form_handler');
@@ -113,15 +112,12 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Save employee options.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
     public function saveOptionsAction(Request $request)
     {
         $employeeOptionsFormHandler = $this->get('prestashop.admin.employee_options.form_handler');
@@ -146,13 +142,12 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Toggle given employee status.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_employees_index")
-     *
      * @param int $employeeId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_employees_index')]
     public function toggleStatusAction($employeeId)
     {
         try {
@@ -172,13 +167,12 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Bulk enables employee status action.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function bulkStatusEnableAction(Request $request)
     {
         $employeeIds = $request->request->all('employee_employee_bulk');
@@ -202,13 +196,12 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Bulk disables employee status action.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function bulkStatusDisableAction(Request $request)
     {
         $employeeIds = $request->request->all('employee_employee_bulk');
@@ -232,13 +225,12 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Delete employee.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param int $employeeId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function deleteAction($employeeId)
     {
         try {
@@ -255,13 +247,12 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Delete employees in bulk actions.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function bulkDeleteAction(Request $request)
     {
         $employeeIds = $request->request->all('employee_employee_bulk');
@@ -283,13 +274,12 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Show employee creation form page and handle it's submit.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(Request $request)
     {
         $employeeForm = $this->getEmployeeFormBuilder()->getForm();
@@ -461,15 +451,11 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Get tabs which are accessible for given profile.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_employees_index"
-     * )
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_employees_index')]
     public function getAccessibleTabsAction(Request $request)
     {
         $profileId = $request->query->get('profileId');

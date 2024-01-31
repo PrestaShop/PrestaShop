@@ -58,13 +58,12 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Show all zones.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param ZoneFilters $zoneFilters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, ZoneFilters $zoneFilters): Response
     {
         $zoneGridFactory = $this->get('prestashop.core.grid.factory.zone');
@@ -81,12 +80,11 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Provides filters functionality.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function searchAction(Request $request): RedirectResponse
     {
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
@@ -102,16 +100,11 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Show "Add new" zone form and handles its submit.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_zones_index",
-     *     message="You need permission to create new zone."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index', message: 'You need permission to create new zone.')]
     public function createAction(Request $request): Response
     {
         $zoneFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.zone_form_builder');
@@ -143,17 +136,12 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Displays zone edit for and handles its submit.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_zones_index",
-     *     message="You need permission to edit this."
-     * )
-     *
      * @param int $zoneId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index', message: 'You need permission to edit this.')]
     public function editAction(int $zoneId, Request $request): Response
     {
         try {
@@ -203,17 +191,12 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Deletes zone.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_zones_index",
-     *     message="You need permission to delete this."
-     * )
-     *
      * @param int $zoneId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_zones_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index', message: 'You need permission to delete this.')]
     public function deleteAction(int $zoneId): RedirectResponse
     {
         try {
@@ -231,17 +214,12 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Toggles zone active status.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_zones_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $zoneId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_zones_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index', message: 'You do not have permission to edit this.')]
     public function toggleStatusAction(int $zoneId): RedirectResponse
     {
         try {
@@ -260,13 +238,12 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Deletes zones in bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_zones_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_zones_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $zoneIds = $this->getBulkZonesFromRequest($request);
@@ -288,17 +265,13 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Bulk toggles zones status.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_zones_index",
-     * )
-     *
      * @param string $status
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_zones_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index')]
     public function bulkToggleStatus(string $status, Request $request): RedirectResponse
     {
         $status = $status === 'enable';

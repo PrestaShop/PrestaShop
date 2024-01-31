@@ -64,13 +64,12 @@ use Symfony\Component\HttpFoundation\Response;
 class CartController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param int $cartId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function viewAction(Request $request, $cartId)
     {
         try {
@@ -103,12 +102,11 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Gets requested cart information
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $cartId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function getInfoAction(int $cartId)
     {
         try {
@@ -129,12 +127,11 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Creates empty cart
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function createAction(Request $request): JsonResponse
     {
         try {
@@ -153,13 +150,12 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Changes the cart address information
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $cartId
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function editAddressesAction(int $cartId, Request $request): JsonResponse
     {
         $invoiceAddressId = $request->request->getInt('invoiceAddressId');
@@ -182,13 +178,12 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $cartId
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function editCurrencyAction(int $cartId, Request $request): JsonResponse
     {
         try {
@@ -207,13 +202,12 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $cartId
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function editLanguageAction(int $cartId, Request $request): JsonResponse
     {
         try {
@@ -232,13 +226,12 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function editCarrierAction(Request $request, int $cartId): JsonResponse
     {
         try {
@@ -258,13 +251,12 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param int $cartId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function updateDeliverySettingsAction(Request $request, int $cartId)
     {
         $configuration = $this->getConfiguration();
@@ -292,13 +284,12 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Adds cart rule to cart
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function addCartRuleAction(Request $request, int $cartId): JsonResponse
     {
         $cartRuleId = $request->request->getInt('cartRuleId');
@@ -317,13 +308,12 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Deletes cart rule from cart
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $cartId
      * @param int $cartRuleId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function deleteCartRuleAction(int $cartId, int $cartRuleId)
     {
         try {
@@ -341,13 +331,12 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Adds product to cart
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function addProductAction(Request $request, int $cartId): JsonResponse
     {
         $productId = $request->request->getInt('product_id');
@@ -383,14 +372,13 @@ class CartController extends FrameworkBundleAdminController
      * Modifying a price for a product in the cart is actually performed by using generated specific prices,
      * that are used only for this cart and this product.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      * @param int $productId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function editProductPriceAction(Request $request, int $cartId, int $productId): JsonResponse
     {
         $commandBus = $this->getCommandBus();
@@ -418,14 +406,13 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Changes product in cart quantity
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      * @param int $productId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function editProductQuantityAction(Request $request, int $cartId, int $productId)
     {
         try {
@@ -458,13 +445,12 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Deletes product from cart
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function deleteProductAction(Request $request, int $cartId): JsonResponse
     {
         try {

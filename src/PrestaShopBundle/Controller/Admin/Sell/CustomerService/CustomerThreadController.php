@@ -57,13 +57,12 @@ class CustomerThreadController extends FrameworkBundleAdminController
     /**
      * Show list of customer threads
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param CustomerThreadFilter $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, CustomerThreadFilter $filters): Response
     {
         $customerThreadGridFactory = $this->get('prestashop.core.grid.factory.customer_thread');
@@ -80,17 +79,12 @@ class CustomerThreadController extends FrameworkBundleAdminController
     /**
      * View customer thread
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     message="You do not have permission to view this.",
-     *     redirectRoute="admin_customer_threads_index"
-     * )
-     *
      * @param Request $request
      * @param int $customerThreadId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to view this.', redirectRoute: 'admin_customer_threads_index')]
     public function viewAction(Request $request, int $customerThreadId)
     {
         /** @var CustomerThreadView $customerThreadView */
@@ -124,17 +118,12 @@ class CustomerThreadController extends FrameworkBundleAdminController
     /**
      * Reply to customer thread
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.",
-     *     redirectRoute="admin_customer_threads_index"
-     * )
-     *
      * @param Request $request
      * @param int $customerThreadId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_customer_threads_index')]
     public function replyAction(Request $request, $customerThreadId)
     {
         $replyToCustomerThreadForm = $this->createForm(ReplyToCustomerThreadType::class);
@@ -184,17 +173,12 @@ class CustomerThreadController extends FrameworkBundleAdminController
     /**
      * Update customer thread status
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.",
-     *     redirectRoute="admin_customer_threads_index"
-     * )
-     *
      * @param int $customerThreadId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_customer_threads_index')]
     public function updateStatusFromViewAction(int $customerThreadId, Request $request)
     {
         $this->handleCustomerThreadStatusUpdate($customerThreadId, $request->request->get('newStatus'));
@@ -210,10 +194,9 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * @param int $customerThreadId
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_customer_threads")
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads')]
     public function updateStatusFromListAction(int $customerThreadId, Request $request): RedirectResponse
     {
         $this->handleCustomerThreadStatusUpdate($customerThreadId, $request->request->get('value'));
@@ -224,17 +207,12 @@ class CustomerThreadController extends FrameworkBundleAdminController
     /**
      * Forward customer thread to another employee
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.",
-     *     redirectRoute="admin_customer_threads_index"
-     * )
-     *
      * @param Request $request
      * @param int $customerThreadId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_customer_threads_index')]
     public function forwardAction(Request $request, $customerThreadId)
     {
         $forwardCustomerThreadForm = $this->createForm(ForwardCustomerThreadType::class);
@@ -307,15 +285,11 @@ class CustomerThreadController extends FrameworkBundleAdminController
     /**
      * Delete customer thread
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customer_threads"
-     * )
-     *
      * @param int $customerThreadId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads')]
     public function deleteAction(int $customerThreadId): RedirectResponse
     {
         try {
@@ -333,15 +307,11 @@ class CustomerThreadController extends FrameworkBundleAdminController
     /**
      * Bulk delete customer thread
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customer_threads"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $customerThreadId = $this->getBulkCustomerThreadsFromRequest($request);

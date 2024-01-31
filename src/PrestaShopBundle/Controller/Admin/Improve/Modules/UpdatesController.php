@@ -35,10 +35,9 @@ use Symfony\Component\HttpFoundation\Response;
 class UpdatesController extends ModuleAbstractController
 {
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction()
     {
         $moduleList = $this->getModuleRepository()->getUpgradableModules();

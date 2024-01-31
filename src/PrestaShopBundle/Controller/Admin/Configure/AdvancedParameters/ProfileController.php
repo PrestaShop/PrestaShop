@@ -56,12 +56,11 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Show profiles listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param ProfileFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(ProfileFilters $filters)
     {
         $profilesGridFactory = $this->get('prestashop.core.grid.factory.profiles');
@@ -92,12 +91,11 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Used for applying filtering actions.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.profile');
@@ -119,13 +117,12 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Show profile's create page
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
     #[DemoRestricted(redirectRoute: 'admin_profiles_index')]
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(Request $request)
     {
         $form = $this->get('prestashop.core.form.identifiable_object.builder.profile_form_builder')->getForm();
@@ -160,17 +157,13 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Shows profile edit form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $profileId
      * @param Request $request
      *
      * @return Response
      */
     #[DemoRestricted(redirectRoute: 'admin_profiles_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.')]
     public function editAction($profileId, Request $request)
     {
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.profile_form_handler');
@@ -224,16 +217,12 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Delete a profile.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $profileId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_profiles_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.')]
     public function deleteAction($profileId)
     {
         try {
@@ -252,16 +241,12 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Bulk delete profiles.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_profiles_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.')]
     public function bulkDeleteAction(Request $request)
     {
         $profileIds = $request->request->all('profile_bulk');

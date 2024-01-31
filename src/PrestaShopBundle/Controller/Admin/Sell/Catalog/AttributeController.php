@@ -53,17 +53,13 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Displays Attribute groups > attributes page
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attributes_index",
-     *     redirectQueryParamsToKeep={"attributeGroupId"}
-     * )
-     *
      * @param Request $request
      * @param int|string $attributeGroupId
      * @param AttributeFilters $attributeFilters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_attributes_index', redirectQueryParamsToKeep: ['attributeGroupId'])]
     public function indexAction(Request $request, $attributeGroupId, AttributeFilters $attributeFilters)
     {
         try {
@@ -93,16 +89,12 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Updates attributes positioning order
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attributes_index",
-     *     redirectQueryParamsToKeep={"attributeGroupId"}
-     * )
-     *
      * @param Request $request
      * @param int $attributeGroupId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_attributes_index', redirectQueryParamsToKeep: ['attributeGroupId'])]
     public function updatePositionAction(Request $request, int $attributeGroupId)
     {
         $positionsData = [
@@ -130,16 +122,7 @@ class AttributeController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     message="You do not have permission to create this."
-     * )
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.')]
     public function createAction(Request $request, int $attributeGroupId): Response
     {
         $attributeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.attribute_form_builder');
@@ -170,17 +153,7 @@ class AttributeController extends FrameworkBundleAdminController
         );
     }
 
-    /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this."
-     * )
-     *
-     * @param int $attributeId
-     * @param int $attributeGroupId
-     *
-     * @return Response
-     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
     public function editAction(Request $request, int $attributeId, int $attributeGroupId): Response
     {
         $attributeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.attribute_form_builder');
@@ -221,16 +194,12 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Deletes attribute
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attributes_index",
-     *     redirectQueryParamsToKeep={"attributeGroupId"}
-     * )
-     *
      * @param int $attributeGroupId
      * @param int $attributeId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_attributes_index', redirectQueryParamsToKeep: ['attributeGroupId'])]
     public function deleteAction(int $attributeGroupId, int $attributeId)
     {
         try {
@@ -251,16 +220,12 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Deletes multiple attributes by provided ids from request
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attributes_index",
-     *     redirectQueryParamsToKeep={"attributeGroupId"}
-     * )
-     *
      * @param int $attributeGroupId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_attributes_index', redirectQueryParamsToKeep: ['attributeGroupId'])]
     public function bulkDeleteAction(int $attributeGroupId, Request $request)
     {
         try {

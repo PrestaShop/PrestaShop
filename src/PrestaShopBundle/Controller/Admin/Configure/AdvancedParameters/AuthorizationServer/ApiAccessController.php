@@ -57,10 +57,9 @@ use Symfony\Component\HttpFoundation\Response;
 class ApiAccessController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(ApiAccessFilters $apiAccessesFilters): Response
     {
         $apiAccessGridFactory = $this->get('prestashop.core.grid.factory.api_access');
@@ -74,9 +73,7 @@ class ApiAccessController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute="admin_api_accesses_index")
-     */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_api_accesses_index')]
     public function createAction(Request $request): Response
     {
         $apiAccessForm = $this->getFormBuilder()->getForm();
@@ -122,9 +119,7 @@ class ApiAccessController extends FrameworkBundleAdminController
         $this->addFlash('client_secret', $secret);
     }
 
-    /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_api_accesses_index")
-     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_accesses_index')]
     public function editAction(Request $request, int $apiAccessId): Response
     {
         $apiAccessForm = $this->getFormBuilder()->getFormFor($apiAccessId);
@@ -150,9 +145,7 @@ class ApiAccessController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_api_accesses_edit")
-     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_accesses_edit')]
     public function regenerateSecretAction(Request $request, int $apiAccessId): Response
     {
         try {
@@ -169,12 +162,11 @@ class ApiAccessController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_api_accesses_index")
-     *
      * @param int $apiAccessId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_accesses_index')]
     public function toggleStatusAction(int $apiAccessId): JsonResponse
     {
         /** @var EditableApiAccess $apiAccess */
@@ -198,12 +190,11 @@ class ApiAccessController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.", redirectRoute="admin_api_accesses_index")
-     *
      * @param int $apiAccessId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_api_accesses_index')]
     public function deleteAction(int $apiAccessId): Response
     {
         try {

@@ -42,13 +42,12 @@ class MaintenanceController extends FrameworkBundleAdminController
     public const CONTROLLER_NAME = 'AdminMaintenance';
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param FormInterface $form
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, FormInterface $form = null)
     {
         if (null === $form) {
@@ -70,14 +69,10 @@ class MaintenanceController extends FrameworkBundleAdminController
     /**
      * @param Request $request
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_maintenance")
-     *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_maintenance')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_maintenance')]
     public function processFormAction(Request $request)
     {
         $redirectResponse = $this->redirectToRoute('admin_maintenance');

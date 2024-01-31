@@ -53,9 +53,7 @@ class FeatureController extends FrameworkBundleAdminController
 {
     use BulkActionsTrait;
 
-    /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, FeatureFilters $filters): Response
     {
         $featureGridFactory = $this->get('prestashop.core.grid.grid_factory.feature');
@@ -92,12 +90,11 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * Create feature action.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(Request $request): Response
     {
         if (!$this->isFeatureEnabled()) {
@@ -134,13 +131,12 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * Edit feature action.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $featureId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function editAction(int $featureId, Request $request): Response
     {
         try {
@@ -183,12 +179,11 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param FeatureFilters $filters
      *
      * @return CsvResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function exportAction(FeatureFilters $filters): CsvResponse
     {
         $filters = new FeatureFilters($filters->getShopConstraint(), ['limit' => null] + $filters->all());
@@ -221,12 +216,11 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param int $featureId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function deleteAction(int $featureId): Response
     {
         try {
@@ -241,12 +235,11 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function bulkDeleteAction(Request $request): Response
     {
         try {

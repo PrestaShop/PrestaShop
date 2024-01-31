@@ -65,13 +65,12 @@ class ImageController extends FrameworkBundleAdminController
     /**
      * Retrieves images for all shops, but the cover (which is multi-shop compatable) is retrieved based on $shopId
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     *
      * @param int $productId
      * @param int $shopId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
     public function getImagesForShopAction(int $productId, int $shopId): JsonResponse
     {
         /** @var ProductImage[] $images */
@@ -84,12 +83,11 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to red or update this.")
-     *
      * @param int $productId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to red or update this.')]
     public function productShopImagesAction(int $productId, Request $request): JsonResponse
     {
         if ($request->isMethod(Request::METHOD_POST)) {
@@ -115,12 +113,11 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
     public function addImageAction(Request $request): JsonResponse
     {
         $imageForm = $this->getProductImageFormBuilder()->getForm();
@@ -150,13 +147,12 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     *
      * @param Request $request
      * @param int $productImageId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
     public function updateImageAction(Request $request, int $productImageId): JsonResponse
     {
         $imageForm = $this->getProductImageFormBuilder()->getFormFor($productImageId, [], [
@@ -183,12 +179,11 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     *
      * @param int $productImageId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
     public function deleteImageAction(int $productImageId): JsonResponse
     {
         try {

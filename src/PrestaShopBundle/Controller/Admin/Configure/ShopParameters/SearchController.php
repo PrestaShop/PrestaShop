@@ -46,13 +46,12 @@ class SearchController extends FrameworkBundleAdminController
     /**
      * Shows index Search page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param AliasFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, AliasFilters $filters): Response
     {
         $aliasGridFactory = $this->get('prestashop.core.grid.factory.alias');
@@ -71,12 +70,11 @@ class SearchController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function searchAliasesForAssociationAction(Request $request): JsonResponse
     {
         try {
@@ -106,7 +104,7 @@ class SearchController extends FrameworkBundleAdminController
     private function getErrorMessage(Exception $e): string
     {
         return $this->getFallbackErrorMessage(
-            get_class($e),
+            $e::class,
             $e->getCode(),
             $e->getMessage()
         );

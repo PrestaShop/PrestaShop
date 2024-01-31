@@ -62,12 +62,11 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Show mail theme settings and generation page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
@@ -92,12 +91,11 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Manage generation form post and generate mails.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function generateMailsAction(Request $request)
     {
         $generateThemeMailsForm = $this->createForm(GenerateMailsType::class);
@@ -181,14 +179,13 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Save mail theme configuration
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      *
      * @throws \Exception
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function saveConfigurationAction(Request $request)
     {
         /** @var FormHandlerInterface $formHandler */
@@ -223,8 +220,6 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Preview the list of layouts for a defined theme
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param string $theme
      *
@@ -232,6 +227,7 @@ class MailThemeController extends FrameworkBundleAdminController
      *
      * @throws InvalidArgumentException
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function previewThemeAction(Request $request, $theme)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
@@ -260,8 +256,6 @@ class MailThemeController extends FrameworkBundleAdminController
      * These modifications will be performed in a future release so for now we can only send test emails
      * with the current email theme using generated static files.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param string $theme
      * @param string $layout
      * @param string $locale
@@ -271,6 +265,7 @@ class MailThemeController extends FrameworkBundleAdminController
      *
      * @throws InvalidArgumentException
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function sendTestMailAction($theme, $layout, $locale, $module = '')
     {
         if ($this->getConfiguration()->get('PS_MAIL_THEME') !== $theme) {
@@ -353,15 +348,11 @@ class MailThemeController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this."
-     * )
-     *
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
     public function translateBodyAction(Request $request)
     {
         $translateMailsBodyForm = $this->createForm(TranslateMailsBodyType::class);
@@ -395,8 +386,6 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Preview a mail layout from a defined theme
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param string $theme
      * @param string $layout
      * @param string $type
@@ -408,6 +397,7 @@ class MailThemeController extends FrameworkBundleAdminController
      * @throws FileNotFoundException
      * @throws InvalidArgumentException
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function previewLayoutAction($theme, $layout, $type, $locale, $module = '')
     {
         $renderedLayout = $this->renderLayout($theme, $layout, $type, $locale, $module);
@@ -418,8 +408,6 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Display the raw source of a theme layout (mainly useful for developers/integrators)
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param string $theme
      * @param string $layout
      * @param string $type
@@ -431,6 +419,7 @@ class MailThemeController extends FrameworkBundleAdminController
      * @throws FileNotFoundException
      * @throws InvalidArgumentException
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function rawLayoutAction($theme, $layout, $type, $locale, $module = '')
     {
         $renderedLayout = $this->renderLayout($theme, $layout, $type, $locale, $module);

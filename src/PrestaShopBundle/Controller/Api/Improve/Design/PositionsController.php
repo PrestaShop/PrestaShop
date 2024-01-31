@@ -36,12 +36,11 @@ class PositionsController extends ApiController
     /**
      * Update positions.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function updateAction(Request $request)
     {
         $moduleId = $request->request->getInt('moduleId');

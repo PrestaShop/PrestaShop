@@ -41,10 +41,9 @@ use Symfony\Component\HttpFoundation\Response;
 class FeatureFlagController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function indexAction(Request $request): Response
     {
         $stableFormHandler = $this->get('prestashop.admin.feature_flags.stable_form_handler');

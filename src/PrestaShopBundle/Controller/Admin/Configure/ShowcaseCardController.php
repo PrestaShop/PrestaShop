@@ -50,13 +50,10 @@ class ShowcaseCardController extends FrameworkBundleAdminController
      *
      * @see ShowcaseCard
      *
-     * @AdminSecurity(
-     *     "is_granted('create', 'CONFIGURE') && is_granted('update', 'CONFIGURE')"
-     * )
-     *
      * @return JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_metas_index')]
+    #[AdminSecurity("is_granted('create', 'CONFIGURE') && is_granted('update', 'CONFIGURE')")]
     public function closeShowcaseCardAction(Request $request)
     {
         // check prerequisites

@@ -68,13 +68,12 @@ class CombinationController extends FrameworkBundleAdminController
     private const COMBINATIONS_PAGINATION_OPTIONS = [ProductCombinationFilters::LIST_LIMIT, 20, 50, 100];
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param int $combinationId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function editAction(Request $request, int $combinationId): Response
     {
         $liteDisplaying = $request->query->has('liteDisplaying');
@@ -112,13 +111,12 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param string $languageCode
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function searchCombinationsForAssociationAction(
         Request $request,
         string $languageCode
@@ -162,8 +160,6 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param int $productId
      * @param int|null $shopId
@@ -171,6 +167,7 @@ class CombinationController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function searchProductCombinationsAction(
         Request $request,
         int $productId,
@@ -216,12 +213,11 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $productId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function bulkEditFormAction(Request $request, int $productId): Response
     {
         $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getForm([], [
@@ -239,13 +235,12 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param int $productId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function bulkEditAction(Request $request, int $productId): JsonResponse
     {
         $combinationIds = $request->request->get('combinationIds');
@@ -302,8 +297,6 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', 'AdminProducts')")
-     *
      * Note: role must be hard coded because there is no route associated to this action therefore not
      * _legacy_controller request parameter.
      *
@@ -315,6 +308,7 @@ class CombinationController extends FrameworkBundleAdminController
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', 'AdminProducts')")]
     public function paginatedListAction(int $productId): Response
     {
         $combinationsForm = $this->getCombinationListFormBuilder()->getForm();
@@ -332,13 +326,12 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param int $productId
      * @param int|null $shopId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function getAttributeGroupsAction(int $productId, ?int $shopId): JsonResponse
     {
         /** @var AttributeGroup[] $attributeGroups */
@@ -351,12 +344,11 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param int|null $shopId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function getAllAttributeGroupsAction(?int $shopId): JsonResponse
     {
         /** @var AttributeGroup[] $attributeGroups */
@@ -368,13 +360,12 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param int $productId
      * @param ProductCombinationFilters $combinationFilters
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function getListAction(int $productId, ProductCombinationFilters $combinationFilters): JsonResponse
     {
         $combinationsList = $this->getQueryBus()->handle(new GetEditableCombinationsList(
@@ -392,13 +383,12 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $productId
      * @param ProductCombinationFilters $filters
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function getCombinationIdsAction(int $productId, ProductCombinationFilters $filters): JsonResponse
     {
         $combinationIds = $this->getQueryBus()->handle(new GetCombinationIds(
@@ -417,13 +407,12 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param int $combinationId
      * @param int|null $shopId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function deleteAction(int $combinationId, ?int $shopId): JsonResponse
     {
         try {
@@ -443,14 +432,13 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param int $productId
      * @param int|null $shopId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function bulkDeleteAction(Request $request, int $productId, ?int $shopId): JsonResponse
     {
         $combinationIds = $request->request->get('combinationIds');
@@ -504,13 +492,12 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $productId
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function updateCombinationFromListingAction(int $productId, Request $request): JsonResponse
     {
         $combinationsListForm = $this->getCombinationListFormBuilder()->getForm([], [
@@ -544,16 +531,13 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))"
-     * )
-     *
      * @param int $productId
      * @param int|null $shopId
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))")]
     public function generateCombinationsAction(int $productId, ?int $shopId, Request $request): JsonResponse
     {
         $requestAttributeGroups = $request->request->all('attributes');

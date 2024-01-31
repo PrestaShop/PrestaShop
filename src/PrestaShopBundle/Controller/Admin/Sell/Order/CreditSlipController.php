@@ -48,13 +48,12 @@ class CreditSlipController extends FrameworkBundleAdminController
     /**
      * Show credit slips listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param CreditSlipFilters $creditSlipFilters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
         CreditSlipFilters $creditSlipFilters
@@ -96,12 +95,11 @@ class CreditSlipController extends FrameworkBundleAdminController
     /**
      * Generates PDF of requested credit slip by provided id
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param int $creditSlipId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function generatePdfAction($creditSlipId)
     {
         try {
@@ -118,12 +116,11 @@ class CreditSlipController extends FrameworkBundleAdminController
     /**
      * Generates PDF of credit slips found by requested date range
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function generatePdfByDateAction(Request $request)
     {
         $pdfByDateForm = $this->createForm(GeneratePdfByDateType::class, [], ['method' => Request::METHOD_GET]);

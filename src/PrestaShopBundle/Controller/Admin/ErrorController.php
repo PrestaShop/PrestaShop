@@ -39,14 +39,11 @@ class ErrorController extends PrestaShopAdminController
     /**
      * Enables debug mode from error page (500 for example)
      *
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminPerformance') && is_granted('create', 'AdminPerformance') && is_granted('delete', 'AdminPerformance')"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminPerformance') && is_granted('create', 'AdminPerformance') && is_granted('delete', 'AdminPerformance')")]
     public function enableDebugModeAction(Request $request): RedirectResponse
     {
         $this->dispatchCommand(new SwitchDebugModeCommand(true));

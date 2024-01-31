@@ -54,13 +54,12 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * Show taxes page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param TaxFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, TaxFilters $filters)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
@@ -80,16 +79,12 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * Process tax options configuration form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_taxes_index"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_taxes_index')]
     public function saveOptionsAction(Request $request)
     {
         $taxOptionsFormHandler = $this->getTaxOptionsFormHandler();
@@ -113,15 +108,11 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_taxes_index",
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_taxes_index')]
     public function createAction(Request $request)
     {
         $taxFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.tax_form_handler');
@@ -169,16 +160,12 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * Handles tax edit
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_taxes_index",
-     * )
-     *
      * @param Request $request
      * @param int $taxId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_taxes_index')]
     public function editAction(Request $request, $taxId)
     {
         $taxFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.tax_form_handler');
@@ -233,16 +220,12 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * Deletes tax.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_taxes_index",
-     * )
-     *
      * @param int $taxId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_taxes_index')]
     public function deleteAction($taxId)
     {
         try {
@@ -262,14 +245,10 @@ class TaxController extends FrameworkBundleAdminController
      *
      * @param int $taxId
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_taxes_index",
-     * )
-     *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_taxes_index')]
     public function toggleStatusAction($taxId)
     {
         try {
@@ -292,14 +271,10 @@ class TaxController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_taxes_index",
-     * )
-     *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_taxes_index')]
     public function bulkEnableStatusAction(Request $request)
     {
         $taxIds = $request->request->all('tax_bulk');
@@ -321,14 +296,10 @@ class TaxController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_taxes_index",
-     * )
-     *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_taxes_index')]
     public function bulkDisableStatusAction(Request $request)
     {
         $taxIds = $request->request->all('tax_bulk');
@@ -350,14 +321,10 @@ class TaxController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_taxes_index",
-     * )
-     *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_taxes_index')]
     public function bulkDeleteAction(Request $request)
     {
         $taxIds = $request->request->all('tax_bulk');

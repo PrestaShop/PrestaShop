@@ -50,9 +50,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 {
     private const UNSPECIFIED_VALUE_FORMAT = '--';
 
-    /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function listAction(Request $request, int $productId): JsonResponse
     {
         /** @var SpecificPriceList $specificPricesList */
@@ -74,10 +72,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(Request $request, int $productId): Response
     {
         $form = $this->getFormBuilder()->getForm(['product_id' => $productId]);
@@ -106,10 +103,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function editAction(Request $request, int $specificPriceId): Response
     {
         $form = $this->getFormBuilder()->getFormFor($specificPriceId);
@@ -137,13 +133,12 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param int $specificPriceId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function deleteAction(Request $request, int $specificPriceId): JsonResponse
     {
         try {

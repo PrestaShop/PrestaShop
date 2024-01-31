@@ -53,13 +53,12 @@ class CountryController extends FrameworkBundleAdminController
     /**
      * Show countries listing page
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param CountryFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, CountryFilters $filters): Response
     {
         $countryGridFactory = $this->get('prestashop.core.grid.factory.country');
@@ -76,16 +75,11 @@ class CountryController extends FrameworkBundleAdminController
     /**
      * Show "Add new" country form and handles its submit.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_countries_index",
-     *     message="You need permission to create new country."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index', message: 'You need permission to create new country.')]
     public function createAction(Request $request): Response
     {
         $countryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.country_form_builder');
@@ -117,17 +111,12 @@ class CountryController extends FrameworkBundleAdminController
     /**
      * Displays country edit form and handles its submit.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_countries_index",
-     *     message="You need permission to edit this."
-     * )
-     *
      * @param int $countryId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index', message: 'You need permission to edit this.')]
     public function editAction(int $countryId, Request $request): Response
     {
         try {
@@ -167,17 +156,12 @@ class CountryController extends FrameworkBundleAdminController
     /**
      * Deletes country.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_countries_index",
-     *     message="You need permission to delete this."
-     * )
-     *
      * @param int $countryId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_countries_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index', message: 'You need permission to delete this.')]
     public function deleteAction(int $countryId): RedirectResponse
     {
         try {

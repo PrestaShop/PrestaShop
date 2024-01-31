@@ -72,15 +72,11 @@ class ThemeController extends AbstractAdminController
     /**
      * Show main themes page.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.')]
     public function indexAction(Request $request)
     {
         $themeProvider = $this->get('prestashop.core.addon.theme.theme_provider');
@@ -111,13 +107,12 @@ class ThemeController extends AbstractAdminController
     /**
      * Upload shop logos.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_themes_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index')]
     public function uploadLogosAction(Request $request)
     {
         $logosUploadForm = $this->getLogosUploadForm();
@@ -149,15 +144,10 @@ class ThemeController extends AbstractAdminController
     /**
      * Export current theme.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to view this."
-     * )
-     *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to view this.')]
     public function exportAction()
     {
         $themeProvider = $this->get('prestashop.core.addon.theme.theme_provider');
@@ -180,17 +170,12 @@ class ThemeController extends AbstractAdminController
     /**
      * Import new theme.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to add this."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to add this.')]
     public function importAction(Request $request)
     {
         $importThemeForm = $this->createForm(ImportThemeType::class);
@@ -243,17 +228,12 @@ class ThemeController extends AbstractAdminController
     /**
      * Enable selected theme.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param string $themeName
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to edit this.')]
     public function enableAction($themeName)
     {
         try {
@@ -277,17 +257,12 @@ class ThemeController extends AbstractAdminController
     /**
      * Delete selected theme.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param string $themeName
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to delete this.')]
     public function deleteAction($themeName)
     {
         try {
@@ -309,17 +284,12 @@ class ThemeController extends AbstractAdminController
     /**
      * Adapts selected theme to RTL languages.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to edit this.')]
     public function adaptToRTLLanguagesAction(Request $request)
     {
         $form = $this->getAdaptThemeToRtlLanguageForm();
@@ -354,17 +324,12 @@ class ThemeController extends AbstractAdminController
     /**
      * Reset theme's page layouts.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param string $themeName
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to edit this.')]
     public function resetLayoutsAction($themeName)
     {
         $this->getCommandBus()->handle(new ResetThemeLayoutsCommand(new ThemeName($themeName)));

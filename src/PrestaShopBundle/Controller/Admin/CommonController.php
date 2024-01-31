@@ -305,10 +305,9 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $redirectRoute
      * @param array $redirectQueryParamsToKeep
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function searchGridAction(
         Request $request,
         $gridDefinitionFactoryServiceId,
@@ -358,12 +357,11 @@ class CommonController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function updatePositionAction(Request $request): RedirectResponse
     {
         $positionsData = [

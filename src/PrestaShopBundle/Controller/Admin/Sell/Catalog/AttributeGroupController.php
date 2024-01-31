@@ -51,13 +51,12 @@ class AttributeGroupController extends FrameworkBundleAdminController
     /**
      * Displays Attribute groups page
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param AttributeGroupFilters $attributeGroupFilters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, AttributeGroupFilters $attributeGroupFilters)
     {
         $attributeGroupGridFactory = $this->get('prestashop.core.grid.factory.attribute_group');
@@ -78,15 +77,11 @@ class AttributeGroupController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     message="You do not have permission to create this."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.')]
     public function createAction(Request $request): Response
     {
         $attributeGroupFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeGroupFormBuilder');
@@ -117,15 +112,11 @@ class AttributeGroupController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this."
-     * )
-     *
      * @param int $attributeGroupId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
     public function editAction(Request $request, int $attributeGroupId): Response
     {
         $attributeGroupFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeGroupFormBuilder');
@@ -165,16 +156,11 @@ class AttributeGroupController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     message="You do not have permission to export this."
-     * )
-
-     *
      * @param AttributeGroupFilters $filters
      *
      * @return CsvResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to export this.')]
     public function exportAction(AttributeGroupFilters $filters): CsvResponse
     {
         $filters = new AttributeGroupFilters(['limit' => null] + $filters->all());
@@ -206,14 +192,11 @@ class AttributeGroupController extends FrameworkBundleAdminController
     /**
      * Updates attribute groups positioning order
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attribute_groups_index"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_attribute_groups_index')]
     public function updatePositionAction(Request $request)
     {
         $positionsData = [
@@ -241,14 +224,11 @@ class AttributeGroupController extends FrameworkBundleAdminController
     /**
      * Deletes attribute group
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attribute_groups_index",
-     * )
-     *
      * @param int $attributeGroupId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_attribute_groups_index')]
     public function deleteAction($attributeGroupId)
     {
         try {
@@ -267,14 +247,11 @@ class AttributeGroupController extends FrameworkBundleAdminController
     /**
      * Deletes multiple attribute groups by provided ids from request
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attribute_groups_index",
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_attribute_groups_index')]
     public function bulkDeleteAction(Request $request)
     {
         try {

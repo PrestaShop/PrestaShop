@@ -58,9 +58,7 @@ class FeatureValueController extends FrameworkBundleAdminController
      */
     private const SAVE_AND_ADD_BUTTON_NAME = 'save-and-add-new';
 
-    /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(int $featureId, Request $request, FeatureValueFilters $filters): Response
     {
         $featureValueGridFactory = $this->get(FeatureValueGridFactory::class);
@@ -90,12 +88,11 @@ class FeatureValueController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(Request $request): Response
     {
         $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
@@ -138,14 +135,13 @@ class FeatureValueController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $featureId
      * @param int $featureValueId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function editAction(int $featureId, int $featureValueId, Request $request): Response
     {
         $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
@@ -186,12 +182,11 @@ class FeatureValueController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param FeatureValueFilters $filters
      *
      * @return CsvResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function exportAction(FeatureValueFilters $filters): CsvResponse
     {
         $filtersParameters = $filters->all();
@@ -223,13 +218,12 @@ class FeatureValueController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param int $featureId
      * @param int $featureValueId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function deleteAction(int $featureId, int $featureValueId): Response
     {
         try {
@@ -246,13 +240,12 @@ class FeatureValueController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param int $featureId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function bulkDeleteAction(int $featureId, Request $request): Response
     {
         try {
@@ -271,12 +264,11 @@ class FeatureValueController extends FrameworkBundleAdminController
     /**
      * Get all values for a given feature.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('read', 'AdminProducts')")
-     *
      * @param int $featureId The feature Id
      *
      * @return JsonResponse features list
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('read', 'AdminProducts')")]
     public function getFeatureValuesAction($featureId)
     {
         if ($featureId == 0) {
