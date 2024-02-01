@@ -4544,5 +4544,10 @@
       <title>Triggers after loading routes</title>
       <description>Allow modules to modify routes in any way or add their own multilanguage routes.</description>
     </hook>
+    <hook id="actionPresentObject">
+      <name>actionPresentObject</name>
+      <title>Object Presenter</title>
+      <description>This hook is called before a object is presented</description>
+    </hook>
   </entities>
 </entity_hook>
