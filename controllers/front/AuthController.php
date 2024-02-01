@@ -111,4 +111,12 @@ class AuthControllerCore extends FrontController
 
         return $breadcrumb;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL()
+    {
+        return $this->context->link->getPageLink('authentication');
+    }
 }

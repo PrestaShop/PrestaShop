@@ -65,8 +65,8 @@ class OrderSlipControllerCore extends FrontController
             $credit_slips[$order_slip['id_order_slip']]['order_number'] = $this->trans('#%id%', ['%id%' => $order_slip['id_order']], 'Shop.Theme.Customeraccount');
             $credit_slips[$order_slip['id_order_slip']]['order_reference'] = $order->reference;
             $credit_slips[$order_slip['id_order_slip']]['credit_slip_date'] = Tools::displayDate($order_slip['date_add'], false);
-            $credit_slips[$order_slip['id_order_slip']]['url'] = $this->context->link->getPageLink('pdf-order-slip', true, null, 'id_order_slip=' . (int) $order_slip['id_order_slip']);
-            $credit_slips[$order_slip['id_order_slip']]['order_url_details'] = $this->context->link->getPageLink('order-detail', true, null, 'id_order=' . (int) $order_slip['id_order']);
+            $credit_slips[$order_slip['id_order_slip']]['url'] = $this->context->link->getPageLink('pdf-order-slip', null, null, 'id_order_slip=' . (int) $order_slip['id_order_slip']);
+            $credit_slips[$order_slip['id_order_slip']]['order_url_details'] = $this->context->link->getPageLink('order-detail', null, null, 'id_order=' . (int) $order_slip['id_order']);
         }
 
         return $credit_slips;

@@ -601,7 +601,7 @@ class CartPresenter implements PresenterInterface
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
-                true,
+                null,
                 null,
                 [
                     'deleteDiscount' => $cartVoucher['id_cart_rule'],

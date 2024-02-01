@@ -1299,7 +1299,7 @@ class CustomerCore extends ObjectModel
             );
             $vars['{url}'] = Context::getContext()->link->getPageLink(
                 'password',
-                true,
+                null,
                 null,
                 sprintf(
                     'token=%s&id_customer=%s&reset_token=%s',
