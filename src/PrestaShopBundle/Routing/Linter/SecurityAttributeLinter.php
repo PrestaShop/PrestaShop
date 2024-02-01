@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Routing\Linter;
 
-use Doctrine\Common\Annotations\Reader;
 use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use ReflectionMethod;
@@ -35,31 +34,17 @@ use Symfony\Component\Routing\Route;
 /**
  * Checks if SecurityAnnotation is configured for route's controller action
  */
-final class SecurityAnnotationLinter implements RouteLinterInterface
+final class SecurityAttributeLinter implements RouteLinterInterface
 {
     /**
-     * @var Reader
-     */
-    private $annotationReader;
-
-    /**
-     * @param Reader $annotationReader
-     */
-    public function __construct(Reader $annotationReader)
-    {
-        $this->annotationReader = $annotationReader;
-    }
-
-    /**
-     * @param string $routeName
      * @param Route $route
      *
-     * @return AdminSecurity
+     * @return AdminSecurity[]
      *
      * @throws \ReflectionException
      * @throws LinterException
      */
-    public function getRouteSecurityAnnotation($routeName, Route $route)
+    public function getRouteSecurityAttributes(Route $route)
     {
         $controllerAndMethod = $this->extractControllerAndMethodNamesFromRoute($route);
 
@@ -72,13 +57,13 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
             $controllerAndMethod['method']
         );
 
-        $annotation = $this->annotationReader->getMethodAnnotation($reflection, AdminSecurity::class);
+        $attributes = $reflection->getAttributes(AdminSecurity::class);
 
-        if (null === $annotation) {
-            throw new LinterException(sprintf('"%s:%s" does not have AdminSecurity annotation configured', $controllerAndMethod['controller'], $controllerAndMethod['method']));
+        if (count($attributes) == 0) {
+            throw new LinterException(sprintf('"%s:%s" does not have AdminSecurity attribute configured', $controllerAndMethod['controller'], $controllerAndMethod['method']));
         }
 
-        return $annotation;
+        return array_map(fn ($value): AdminSecurity => $value->newInstance(), $attributes);
     }
 
     /**
@@ -86,7 +71,7 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
      */
     public function lint($routeName, Route $route)
     {
-        $this->getRouteSecurityAnnotation($routeName, $route);
+        $this->getRouteSecurityAttributes($route);
     }
 
     /**

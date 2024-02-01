@@ -27,7 +27,7 @@
 namespace Tests\Integration\PrestaShopBundle\Routing\Linter;
 
 use PrestaShopBundle\Routing\Linter\Exception\LinterException;
-use PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter;
+use PrestaShopBundle\Routing\Linter\SecurityAttributeLinter;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Routing\Route;
 use Tests\Resources\Controller\TestController;
@@ -35,7 +35,7 @@ use Tests\Resources\Controller\TestController;
 class SecurityAnnotationLinterTest extends KernelTestCase
 {
     /**
-     * @var SecurityAnnotationLinter
+     * @var SecurityAttributeLinter
      */
     private $securityAnnotationLinter;
 

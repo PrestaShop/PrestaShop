@@ -34,9 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TestController
 {
-    /**
-     * @AdminSecurity()
-     */
+    #[AdminSecurity('test')]
     public function indexAction()
     {
         return new Response();

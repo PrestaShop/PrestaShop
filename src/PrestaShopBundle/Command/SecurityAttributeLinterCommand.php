@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Command;
 
 use PrestaShopBundle\Routing\Linter\AdminRouteProvider;
 use PrestaShopBundle\Routing\Linter\Exception\LinterException;
-use PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter;
+use PrestaShopBundle\Routing\Linter\SecurityAttributeLinter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,11 +37,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Routing\Route;
 
 /**
- * Checks if all admin routes have @AdminSecurity configured
+ * Checks if all admin routes have #[AdminSecurity] configured
  *
  * @see \PrestaShopBundle\Security\Annotation\AdminSecurity
  */
-final class SecurityAnnotationLinterCommand extends Command
+final class SecurityAttributeLinterCommand extends Command
 {
     public const ACTION_LIST_ALL = 'list';
     public const ACTION_FIND_MISSING = 'find-missing';
@@ -51,9 +51,9 @@ final class SecurityAnnotationLinterCommand extends Command
     private $adminRouteProvider;
 
     /**
-     * @var SecurityAnnotationLinter
+     * @var SecurityAttributeLinter
      */
-    private $securityAnnotationLinter;
+    private $securityAttributeLinter;
 
     /**
      * @var array
@@ -90,11 +90,11 @@ final class SecurityAnnotationLinterCommand extends Command
         'admin_theme_customize_layouts',
     ];
 
-    public function __construct(AdminRouteProvider $adminRouteProvider, SecurityAnnotationLinter $securityAnnotationLinter)
+    public function __construct(AdminRouteProvider $adminRouteProvider, SecurityAttributeLinter $securityAttributeLinter)
     {
         parent::__construct();
         $this->adminRouteProvider = $adminRouteProvider;
-        $this->securityAnnotationLinter = $securityAnnotationLinter;
+        $this->securityAttributeLinter = $securityAttributeLinter;
     }
 
     /**
@@ -141,7 +141,7 @@ final class SecurityAnnotationLinterCommand extends Command
         );
 
         $this
-            ->setName('prestashop:linter:security-annotation')
+            ->setName('prestashop:linter:security-attribute')
             ->setDescription($description)
             ->addArgument('action', InputArgument::REQUIRED, $actionDescription);
     }
@@ -166,7 +166,7 @@ final class SecurityAnnotationLinterCommand extends Command
                 $this->listAllRoutesAndRelatedPermissions($input, $output);
                 break;
             case self::ACTION_FIND_MISSING:
-                $this->findRoutesWithMissingSecurityAnnotations($input, $output);
+                $this->findRoutesWithMissingSecurityAttributes($input, $output);
                 break;
 
             default:
@@ -187,13 +187,16 @@ final class SecurityAnnotationLinterCommand extends Command
         foreach ($this->adminRouteProvider->getRoutes() as $routeName => $route) {
             /* @var Route $route */
             try {
-                $annotation = $this->securityAnnotationLinter->getRouteSecurityAnnotation($routeName, $route);
-                $listing[] = [
-                    $route->getDefault('_controller'),
-                    implode(', ', $route->getMethods()),
-                    'Yes',
-                    self::parseExpression($annotation->getExpression()),
-                ];
+                $attributes = $this->securityAttributeLinter->getRouteSecurityAttributes($route);
+
+                foreach ($attributes as $attribute) {
+                    $listing[] = [
+                        $route->getDefault('_controller'),
+                        implode(', ', $route->getMethods()),
+                        'Yes',
+                        self::parseExpression($attribute->getAttribute()),
+                    ];
+                }
             } catch (LinterException $e) {
                 $listing[] = [
                     $route->getDefault('_controller'),
@@ -214,7 +217,7 @@ final class SecurityAnnotationLinterCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    private function findRoutesWithMissingSecurityAnnotations(InputInterface $input, OutputInterface $output)
+    private function findRoutesWithMissingSecurityAttributes(InputInterface $input, OutputInterface $output): void
     {
         $notConfiguredRoutes = [];
 
@@ -224,7 +227,7 @@ final class SecurityAnnotationLinterCommand extends Command
                 continue;
             }
             try {
-                $this->securityAnnotationLinter->lint($routeName, $route);
+                $this->securityAttributeLinter->lint($routeName, $route);
             } catch (LinterException $e) {
                 $notConfiguredRoutes[] = $routeName;
             }
@@ -234,7 +237,7 @@ final class SecurityAnnotationLinterCommand extends Command
 
         if (!empty($notConfiguredRoutes)) {
             $io->warning(sprintf(
-                '%s routes are not configured with @AdminSecurity annotation:',
+                '%s routes are not configured with #[AdminSecurity] attribute:',
                 count($notConfiguredRoutes)
             ));
             $io->listing($notConfiguredRoutes);
@@ -242,6 +245,6 @@ final class SecurityAnnotationLinterCommand extends Command
             return;
         }
 
-        $io->success('All admin routes are secured with @AdminSecurity.');
+        $io->success('All admin routes are secured with #[AdminSecurity].');
     }
 }
