@@ -115,7 +115,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         $attribute = $this->getAttribute($reference);
         $data = $this->localizeByRows($tableNode);
         if (isset($data['name'])) {
-            Assert::assertEquals($data['name'], $attribute->getValue());
+            Assert::assertEquals($data['name'], $attribute->getLocalizedNames());
         }
         if (isset($data['color'])) {
             Assert::assertEquals($data['color'], $attribute->getColor());

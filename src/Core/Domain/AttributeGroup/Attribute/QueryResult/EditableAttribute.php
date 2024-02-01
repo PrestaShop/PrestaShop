@@ -36,7 +36,7 @@ class EditableAttribute
     public function __construct(
         private readonly int $attributeId,
         private readonly int $attributeGroupId,
-        private readonly array $value,
+        private readonly array $localizedNames,
         private readonly string $color,
         private readonly array $shopAssociationIds
     ) {
@@ -52,9 +52,9 @@ class EditableAttribute
         return $this->attributeGroupId;
     }
 
-    public function getValue(): array
+    public function getLocalizedNames(): array
     {
-        return $this->value;
+        return $this->localizedNames;
     }
 
     public function getColor(): string

@@ -55,7 +55,7 @@ class AttributeFormDataProvider implements FormDataProviderInterface
 
         return [
             'attribute_group' => $editableAttribute->getAttributeGroupId(),
-            'value' => $editableAttribute->getValue(),
+            'name' => $editableAttribute->getLocalizedNames(),
             'color' => $editableAttribute->getColor(),
             'shop_association' => $editableAttribute->getAssociatedShopIds(),
         ];

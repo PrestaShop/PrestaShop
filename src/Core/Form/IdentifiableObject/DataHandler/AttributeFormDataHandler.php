@@ -59,7 +59,7 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
         /** @var AttributeId $attributeId */
         $attributeId = $this->commandBus->handle(new AddAttributeCommand(
             $data['attribute_group'],
-            $data['value'],
+            $data['name'],
             $data['color'] ?? '',
             $data['shop_association'] ?? []
         ));
@@ -74,7 +74,7 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
     {
         $updateCommand = new EditAttributeCommand($id);
         $updateCommand->setAttributeGroupId($data['attribute_group'])
-            ->setLocalizedNames($data['value'])
+            ->setLocalizedNames($data['name'])
             ->setColor($data['color'])
             ->setAssociatedShopIds($data['shop_association']);
 

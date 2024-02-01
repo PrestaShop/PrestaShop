@@ -190,7 +190,7 @@ class AttributeController extends FrameworkBundleAdminController
             ->handleRequest($request);
 
         $formData = $attributeForm->getData();
-        $attributeName = $formData['value'][$this->getContextLangId()] ?? reset($formData['value']);
+        $attributeName = $formData['name'][$this->getContextLangId()] ?? reset($formData['name']);
 
         try {
             $handlerResult = $attributeFormHandler->handleFor($attributeId, $attributeForm);

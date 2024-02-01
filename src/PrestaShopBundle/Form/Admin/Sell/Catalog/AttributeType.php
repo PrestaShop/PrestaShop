@@ -99,9 +99,9 @@ class AttributeType extends TranslatorAwareType
                 ),
                 'data' => $attributeGroupId,
             ])
-            ->add('value', TranslatableType::class, [
+            ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
-                'label' => $this->trans('Value', 'Admin.Global'),
+                'label' => $this->trans('Name', 'Admin.Global'),
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
