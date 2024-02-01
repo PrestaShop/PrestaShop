@@ -95,7 +95,7 @@ final class CustomerViewedProductGridDefinitionFactory extends AbstractGridDefin
                     ->setName($this->trans('Name', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'product_name',
-                        'route' => 'admin_products_v2_preview',
+                        'route' => 'admin_products_preview',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                     ])
