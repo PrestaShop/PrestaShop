@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\Attribu
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query\GetAttributeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult\EditableAttribute;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 
 class AttributeFeatureContext extends AbstractDomainFeatureContext
@@ -82,16 +81,27 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
     public function editAttribute(string $reference, TableNode $node): void
     {
         $properties = $this->localizeByRows($node);
-
         $attributeId = $this->referenceToId($reference);
-        $attributeGroupId = $this->referenceToId($properties['attribute_group']);
-        $this->editAttributeUsingCommand(
-            $attributeId,
-            $attributeGroupId,
-            $properties['name'],
-            $properties['color'],
-            $this->referencesToIds($properties['shopIds'])
-        );
+
+        $command = new EditAttributeCommand($attributeId);
+        if (isset($properties['attribute_group'])) {
+            $command->setAttributeGroupId($this->referenceToId($properties['attribute_group']));
+        }
+        if (isset($properties['name'])) {
+            $command->setLocalizedNames($properties['name']);
+        }
+        if (isset($properties['color'])) {
+            $command->setColor($properties['color']);
+        }
+        if (isset($properties['shopIds'])) {
+            $command->setAssociatedShopIds($this->referencesToIds($properties['shopIds']));
+        }
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (AttributeConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -104,11 +114,18 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
     {
         $attribute = $this->getAttribute($reference);
         $data = $this->localizeByRows($tableNode);
-        $attributeGroupId = $this->referenceToId($data['attribute_group']);
-        Assert::assertEquals($data['name'], $attribute->getValue());
-        Assert::assertEquals($data['color'], $attribute->getColor());
-        Assert::assertEquals($attributeGroupId, $attribute->getAttributeGroupId());
-        Assert::assertEquals($this->referencesToIds($data['shopIds']), $attribute->getAssociatedShopIds());
+        if (isset($data['name'])) {
+            Assert::assertEquals($data['name'], $attribute->getValue());
+        }
+        if (isset($data['color'])) {
+            Assert::assertEquals($data['color'], $attribute->getColor());
+        }
+        if (isset($data['attribute_group'])) {
+            Assert::assertEquals($this->referenceToId($data['attribute_group']), $attribute->getAttributeGroupId());
+        }
+        if (isset($data['shopIds'])) {
+            Assert::assertEquals($this->referencesToIds($data['shopIds']), $attribute->getAssociatedShopIds());
+        }
     }
 
     /**
@@ -134,33 +151,6 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         );
 
         return $this->getCommandBus()->handle($command);
-    }
-
-    /**
-     * @param int $attributeId
-     * @param int $attributeGroupId
-     * @param array $localizedValue
-     * @param string $color
-     *
-     * @return void
-     *
-     * @throws AttributeGroupConstraintException
-     * @throws AttributeConstraintException
-     */
-    private function editAttributeUsingCommand(
-        int $attributeId,
-        int $attributeGroupId,
-        array $localizedValue,
-        string $color,
-        array $shopIds
-    ): void {
-        $command = new EditAttributeCommand($attributeId);
-        $command->setAttributeGroupId($attributeGroupId);
-        $command->setLocalizedNames($localizedValue);
-        $command->setColor($color);
-        $command->setAssociatedShopIds($shopIds);
-
-        $this->getCommandBus()->handle($command);
     }
 
     /**
