@@ -655,9 +655,14 @@ abstract class ModuleCore implements ModuleInterface
         static::$modules_cache[$module->name]['upgrade']['upgraded_from'] = $module->database_version;
         // Check the version of the module with the registered one and look if any upgrade file exist
         if (Tools::version_compare($module->version, $module->database_version, '>')) {
+            /*
+             * $old_version variable is saved on purpose here, because calling Module::getInstanceByName will wipe
+             * the $module->database_version information from the object.
+             */
+            $old_version = $module->database_version;
             $module = Module::getInstanceByName($module->name);
             if ($module instanceof Module) {
-                return $module->loadUpgradeVersionList($module->name, $module->version, $module->database_version);
+                return $module->loadUpgradeVersionList($module->name, $module->version, $old_version);
             }
         }
 
@@ -709,6 +714,14 @@ abstract class ModuleCore implements ModuleInterface
                         continue;
                     }
 
+                    /*
+                     * @TODO
+                     *
+                     * Some more verifications should be done here, because some faulty modules could use
+                     * filenames with dashes instead of dots, or non-standard versioning, breaking the process.
+                     *
+                     * Example - install-1-1.php
+                     */
                     $file_version = basename($tab[1], '.php');
                     // Compare version, if minor than actual, we need to upgrade the module
                     if (count($tab) == 2 &&
