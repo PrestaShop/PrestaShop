@@ -26,12 +26,14 @@
 
 namespace PrestaShopBundle\Security\Annotation;
 
+use PrestaShopBundle\Security\Attribute\AdminSecurity as AdminSecurityAttribute;
+
 /**
  * Annotation based on the AdminSecurity attribute
  *
  * @deprecated
  * @Annotation
  */
-class AdminSecurity extends \PrestaShopBundle\Security\Attribute\AdminSecurity
+class AdminSecurity extends AdminSecurityAttribute
 {
 }

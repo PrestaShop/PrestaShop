@@ -40,6 +40,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Security layer for annotations and AdminSecurity attributes.
+ * It is based on Symfony's IsGrantedListener, we have adapted it for the use of our own AdminSecurity attribute,
+ * itself based on IsGranted attribute
  */
 class AdminSecurityListener
 {

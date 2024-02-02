@@ -54,6 +54,9 @@ class AccessDeniedListener
     ) {
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function onKernelException(ExceptionEvent $event)
     {
         if (!$event->isMainRequest()
@@ -64,6 +67,11 @@ class AccessDeniedListener
 
         $controllerName = $event->getRequest()->attributes->get('_controller');
         [$controller, $method] = explode('::', $controllerName, 2);
+
+        if (empty($controller) || !class_exists($controller) || !method_exists($controller, $method)) {
+            return;
+        }
+
         $reflectionMethod = new ReflectionMethod($controller, $method);
 
         $attributes = $reflectionMethod->getAttributes(AdminSecurityAttribute::class);
