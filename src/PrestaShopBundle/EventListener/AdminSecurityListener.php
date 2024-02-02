@@ -26,8 +26,9 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Doctrine\Common\Annotations\Reader;
+use PrestaShopBundle\Security\Annotation\AdminSecurity as AdminSecurityAnnotation;
+use PrestaShopBundle\Security\Attribute\AdminSecurity as AdminSecurityAttribute;
 use ReflectionException;
 use ReflectionObject;
 use Symfony\Component\ExpressionLanguage\Expression;
@@ -43,8 +44,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class AdminSecurityListener
 {
     public function __construct(
-        private readonly AuthorizationCheckerInterface $authChecker)
-    {
+        private readonly AuthorizationCheckerInterface $authChecker,
+        private readonly Reader $annotationReader,
+    ) {
     }
 
     /**
@@ -64,14 +66,12 @@ class AdminSecurityListener
 
         /** @var object $controllerObject */
         [$controllerObject, $methodName] = $controller;
-
-        $annotationReader = new AnnotationReader();
         $reflectionController = new ReflectionObject($controllerObject);
 
         $reflectionMethod = $reflectionController->getMethod($methodName);
 
         // attributes management
-        $attributes = $reflectionMethod->getAttributes(AdminSecurity::class);
+        $attributes = $reflectionMethod->getAttributes(AdminSecurityAttribute::class);
 
         if (!empty($attributes)) {
             foreach ($attributes as $attribute) {
@@ -80,7 +80,7 @@ class AdminSecurityListener
         }
 
         // annotation management
-        $annotation = $annotationReader->getMethodAnnotation($reflectionMethod, AdminSecurity::class);
+        $annotation = $this->annotationReader->getMethodAnnotation($reflectionMethod, AdminSecurityAnnotation::class);
 
         if ($annotation != null) {
             trigger_deprecation('prestashop/prestashop', '9.0', 'AdminSecurity annotation is deprecated, use attribute instead.');
@@ -89,7 +89,7 @@ class AdminSecurityListener
         }
     }
 
-    private function isGranted(AdminSecurity $adminSecurity, Request $request): void
+    private function isGranted(AdminSecurityAttribute $adminSecurity, Request $request): void
     {
         $attribute = $adminSecurity->getAttribute();
 

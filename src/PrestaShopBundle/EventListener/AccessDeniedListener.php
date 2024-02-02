@@ -26,7 +26,10 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Doctrine\Common\Annotations\Reader;
+use PrestaShopBundle\Security\Annotation\AdminSecurity as AdminSecurityAnnotation;
+use PrestaShopBundle\Security\Attribute\AdminSecurity as AdminSecurityAttribute;
+use ReflectionMethod;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,41 +50,56 @@ class AccessDeniedListener
         private readonly RouterInterface $router,
         private readonly TranslatorInterface $translator,
         private readonly RequestStack $requestStack,
+        private readonly Reader $annotationReader,
     ) {
     }
 
-    /**
-     * @param ExceptionEvent $event
-     */
     public function onKernelException(ExceptionEvent $event)
     {
         if (!$event->isMainRequest()
             || !$event->getThrowable() instanceof AccessDeniedException
-            || !$securityConfigurations = $event->getRequest()->attributes->get('_security')
         ) {
             return;
         }
 
-        foreach ($securityConfigurations as $securityConfiguration) {
-            if ($securityConfiguration instanceof AdminSecurity) {
-                $event->allowCustomResponseCode();
+        $controllerName = $event->getRequest()->attributes->get('_controller');
+        [$controller, $method] = explode('::', $controllerName, 2);
+        $reflectionMethod = new ReflectionMethod($controller, $method);
 
-                $event->setResponse(
-                    $this->getAccessDeniedResponse($event->getRequest(), $securityConfiguration)
-                );
+        $attributes = $reflectionMethod->getAttributes(AdminSecurityAttribute::class);
 
-                return;
+        if (!empty($attributes)) {
+            foreach ($attributes as $attribute) {
+                /** @var AdminSecurityAttribute $adminSecurity */
+                $adminSecurity = $attribute->newInstance();
+                if (null != $adminSecurity->getRedirectRoute()) {
+                    $event->allowCustomResponseCode();
+
+                    $event->setResponse(
+                        $this->getAccessDeniedResponse($event->getRequest(), $adminSecurity)
+                    );
+
+                    return;
+                }
             }
+        }
+
+        // annotation management
+        $annotation = $this->annotationReader->getMethodAnnotation($reflectionMethod, AdminSecurityAnnotation::class);
+
+        if ($annotation != null) {
+            $event->allowCustomResponseCode();
+
+            $event->setResponse(
+                $this->getAccessDeniedResponse($event->getRequest(), $annotation)
+            );
         }
     }
 
     /**
-     * @param Request $request
-     * @param AdminSecurity $adminSecurity
-     *
      * @return Response
      */
-    private function getAccessDeniedResponse(Request $request, AdminSecurity $adminSecurity)
+    private function getAccessDeniedResponse(Request $request, AdminSecurityAttribute $adminSecurity)
     {
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse([
@@ -98,15 +116,8 @@ class AccessDeniedListener
         );
     }
 
-    /**
-     * Compute the url for the redirection.
-     *
-     * @param AdminSecurity $adminSecurity
-     * @param Request $request
-     *
-     * @return string
-     */
-    private function computeRedirectionUrl(AdminSecurity $adminSecurity, Request $request)
+    // Compute the url for the redirection.
+    private function computeRedirectionUrl(AdminSecurityAttribute $adminSecurity, Request $request): string
     {
         $route = $adminSecurity->getRedirectRoute();
 
@@ -123,15 +134,8 @@ class AccessDeniedListener
         return $adminSecurity->getUrl();
     }
 
-    /**
-     * Gets query parameters by comparing them to the current request attributes.
-     *
-     * @param array $queryParametersToKeep
-     * @param Request $request
-     *
-     * @return array
-     */
-    private function getQueryParamsFromRequestQuery(array $queryParametersToKeep, Request $request)
+    // Gets query parameters by comparing them to the current request attributes.
+    private function getQueryParamsFromRequestQuery(array $queryParametersToKeep, Request $request): array
     {
         $result = [];
 
@@ -145,12 +149,7 @@ class AccessDeniedListener
         return $result;
     }
 
-    /**
-     * @param AdminSecurity $adminSecurity
-     *
-     * @return string
-     */
-    private function getErrorMessage(AdminSecurity $adminSecurity)
+    private function getErrorMessage(AdminSecurityAttribute $adminSecurity): string
     {
         return $this->translator->trans(
             $adminSecurity->getMessage(),

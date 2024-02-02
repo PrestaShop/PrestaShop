@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Security\Annotation;
+namespace PrestaShopBundle\Security\Attribute;
 
 /**
  * Forbid access to the page if Demonstration mode is enabled.
