@@ -572,7 +572,7 @@ class Stocks extends BOBasePage {
     }
     await this.waitForHiddenSelector(page, this.productListLoading);
     await page.locator(this.filterCategoryCollapseButton).click();
-    await this.openCloseAdvancedFilter(page, false);
+    await page.locator(this.advancedFiltersButton).click();
   }
 
   /**
