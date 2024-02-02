@@ -21,8 +21,8 @@ import stocksPage from '@pages/BO/catalog/stocks';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
 import foProductPage from '@pages/FO/classic/product';
 

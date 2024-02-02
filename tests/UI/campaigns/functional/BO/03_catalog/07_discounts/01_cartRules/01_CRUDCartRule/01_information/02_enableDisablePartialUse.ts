@@ -13,10 +13,10 @@ import dashboardPage from '@pages/BO/dashboard';
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import foProductPage from '@pages/FO/classic/product';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import foVouchersPage from '@pages/FO/classic/myAccount/vouchers';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 
 // Import data
 import Products from '@data/demo/products';

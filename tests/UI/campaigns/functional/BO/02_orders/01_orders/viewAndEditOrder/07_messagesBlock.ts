@@ -14,7 +14,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageMessagesBlock from '@pages/BO/orders/view/messagesBlock';
 // Import FO pages
-import foOrderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {orderConfirmationPage as foOrderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';

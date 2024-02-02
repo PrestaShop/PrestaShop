@@ -11,8 +11,8 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 

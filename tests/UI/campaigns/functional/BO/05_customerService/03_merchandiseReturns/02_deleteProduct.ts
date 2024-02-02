@@ -14,8 +14,8 @@ import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';

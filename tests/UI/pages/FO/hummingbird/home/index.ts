@@ -27,6 +27,10 @@ class Home extends HomePage {
     this.productArticle = (number: number) => `#content section.featured-products div.container div article:nth-child(${number})`;
     this.addToCartIcon = (number: number) => `${this.productArticle(number)} button[data-button-action='add-to-cart']`;
     this.productAddToWishlist = (number: number) => `${this.productArticle(number)} button.wishlist-button-add`;
+
+    // Block Cart Modal
+    this.cartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-footer-actions a`;
+
     // Wishlist modal
     this.wishlistModal = '.wishlist-add-to .wishlist-modal.show';
     this.wishlistModalTitle = '.wishlist-modal.show p.modal-title';

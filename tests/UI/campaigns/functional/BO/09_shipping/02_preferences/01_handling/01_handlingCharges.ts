@@ -17,7 +17,7 @@ import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import productPage from '@pages/FO/classic/product';

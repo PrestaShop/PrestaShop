@@ -16,9 +16,9 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import {homePage} from '@pages/FO/classic/home';
 import productPage from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
 import Customers from '@data/demo/customers';

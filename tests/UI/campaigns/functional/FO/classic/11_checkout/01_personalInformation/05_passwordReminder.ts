@@ -12,7 +12,7 @@ import {createAccountTest} from '@commonTests/FO/account';
 import {homePage} from '@pages/FO/classic/home';
 import productPage from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 

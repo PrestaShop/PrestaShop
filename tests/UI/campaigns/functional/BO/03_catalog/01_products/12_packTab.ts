@@ -18,8 +18,8 @@ import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import foProductPage from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
 import Customers from '@data/demo/customers';

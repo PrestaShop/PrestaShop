@@ -7,7 +7,7 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import productPage from '@pages/FO/classic/product';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 
 // Import data
 import Products from '@data/demo/products';

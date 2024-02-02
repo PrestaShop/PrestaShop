@@ -4,11 +4,11 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import productPage from '@pages/FO/classic/product';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
