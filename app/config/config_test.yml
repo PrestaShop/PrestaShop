@@ -17,6 +17,9 @@ framework:
     storage_factory_id: session.storage.factory.mock_file
   profiler:
     collect: false
+  router:
+    resource: "%kernel.project_dir%/app/config/routing_test.yml"
+    strict_requirements: ~
 
 web_profiler:
   toolbar: '%use_debug_toolbar%'
