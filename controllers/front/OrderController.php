@@ -354,7 +354,7 @@ class OrderControllerCore extends FrontController
             return false;
         }
 
-        $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
+        $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite);
 
         $termsAndConditions = new TermsAndConditions();
         $termsAndConditions

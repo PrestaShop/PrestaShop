@@ -137,10 +137,10 @@ final class MailPreviewVariablesBuilder
         $templateVars['{lastname}'] = $employeeData['lastname'];
         $templateVars['{email}'] = $employeeData['email'];
         $templateVars['{shop_name}'] = $this->context->shop->name;
-        $templateVars['{shop_url}'] = $this->context->link->getPageLink('index', true);
-        $templateVars['{my_account_url}'] = $this->context->link->getPageLink('my-account', true);
-        $templateVars['{guest_tracking_url}'] = $this->context->link->getPageLink('guest-tracking', true);
-        $templateVars['{history_url}'] = $this->context->link->getPageLink('history', true);
+        $templateVars['{shop_url}'] = $this->context->link->getPageLink('index');
+        $templateVars['{my_account_url}'] = $this->context->link->getPageLink('my-account');
+        $templateVars['{guest_tracking_url}'] = $this->context->link->getPageLink('guest-tracking');
+        $templateVars['{history_url}'] = $this->context->link->getPageLink('history');
         $templateVars['{color}'] = $this->configuration->get('PS_MAIL_COLOR');
         $templateVars = array_merge($templateVars, $this->buildOrderVariables($mailLayout));
 

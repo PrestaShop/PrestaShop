@@ -533,7 +533,7 @@ class MailCore extends ObjectModel
             $templateVars['{shop_name}'] = Tools::safeOutput($configuration['PS_SHOP_NAME']);
             $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink(
                 'index',
-                true,
+                null,
                 $idLang,
                 null,
                 false,
@@ -541,7 +541,7 @@ class MailCore extends ObjectModel
             );
             $templateVars['{my_account_url}'] = Context::getContext()->link->getPageLink(
                 'my-account',
-                true,
+                null,
                 $idLang,
                 null,
                 false,
@@ -549,7 +549,7 @@ class MailCore extends ObjectModel
             );
             $templateVars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink(
                 'guest-tracking',
-                true,
+                null,
                 $idLang,
                 null,
                 false,
@@ -557,7 +557,7 @@ class MailCore extends ObjectModel
             );
             $templateVars['{history_url}'] = Context::getContext()->link->getPageLink(
                 'history',
-                true,
+                null,
                 $idLang,
                 null,
                 false,
@@ -565,7 +565,7 @@ class MailCore extends ObjectModel
             );
             $templateVars['{order_slip_url}'] = Context::getContext()->link->getPageLink(
                 'order-slip',
-                true,
+                null,
                 $idLang,
                 null,
                 false,

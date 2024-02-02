@@ -97,7 +97,7 @@ class NewProductsControllerCore extends ProductListingFrontController
 
         $breadcrumb['links'][] = [
             'title' => $this->trans('New products', [], 'Shop.Theme.Catalog'),
-            'url' => $this->context->link->getPageLink('new-products', true),
+            'url' => $this->context->link->getPageLink('new-products'),
         ];
 
         return $breadcrumb;

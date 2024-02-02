@@ -242,7 +242,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
         $breadcrumb = parent::getBreadcrumbLinks();
         $breadcrumb['links'][] = [
             'title' => $this->getTranslator()->trans('Brands', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('manufacturer', true),
+            'url' => $this->context->link->getPageLink('manufacturer'),
         ];
 
         if (!empty($this->manufacturer)) {
