@@ -55,7 +55,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintE
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageSizeException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\Shop;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

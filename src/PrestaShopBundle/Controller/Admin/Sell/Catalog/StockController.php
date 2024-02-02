@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 
 /**
  * Admin controller for the Stock pages.

@@ -32,7 +32,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Routing\Route;
 use Tests\Resources\Controller\TestController;
 
-class SecurityAnnotationLinterTest extends KernelTestCase
+class SecurityAttributeLinterTest extends KernelTestCase
 {
     /**
      * @var SecurityAttributeLinter

@@ -36,8 +36,8 @@ use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\Uplo
 use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CreditSlipFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\GeneratePdfByDateType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

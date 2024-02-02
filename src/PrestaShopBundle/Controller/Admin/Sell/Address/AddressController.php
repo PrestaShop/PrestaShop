@@ -57,7 +57,7 @@ use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

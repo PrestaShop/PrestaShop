@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Api\Improve\Design;
 
 use PrestaShopBundle\Controller\Api\ApiController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 

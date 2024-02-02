@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Routing\Linter;
 
 use PrestaShopBundle\Routing\Linter\Exception\LinterException;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use ReflectionMethod;
 use Symfony\Component\Routing\Route;
 

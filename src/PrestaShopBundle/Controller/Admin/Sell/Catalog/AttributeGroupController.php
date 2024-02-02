@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeGroupFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

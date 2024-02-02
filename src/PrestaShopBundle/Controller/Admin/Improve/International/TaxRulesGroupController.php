@@ -45,7 +45,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxRuleFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxRulesGroupFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

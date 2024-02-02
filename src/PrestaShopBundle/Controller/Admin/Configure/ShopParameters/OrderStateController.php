@@ -46,7 +46,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinition
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnStatesFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderStatesFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

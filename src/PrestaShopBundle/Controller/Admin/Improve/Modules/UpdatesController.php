@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

@@ -37,7 +37,7 @@ use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\TranslatorInterface;

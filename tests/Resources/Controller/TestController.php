@@ -26,11 +26,11 @@
 
 namespace Tests\Resources\Controller;
 
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class is used to test @AdminSecurity annotation linter
+ * Class is used to test #[AdminSecurity()] attribute linter
  */
 class TestController
 {

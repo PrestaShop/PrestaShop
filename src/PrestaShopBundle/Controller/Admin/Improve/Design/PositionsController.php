@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookUpdateHookException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

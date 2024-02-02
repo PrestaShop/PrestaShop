@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\CustomerThreadFilter;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
 use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

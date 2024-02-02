@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Security\Admin\Employee;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use ReflectionClass;

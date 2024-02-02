@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\JsonResponse;

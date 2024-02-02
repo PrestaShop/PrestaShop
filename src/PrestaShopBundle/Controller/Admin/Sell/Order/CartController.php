@@ -56,7 +56,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\PackOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

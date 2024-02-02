@@ -39,7 +39,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Checks if all admin routes have #[AdminSecurity] configured
  *
- * @see \PrestaShopBundle\Security\Annotation\AdminSecurity
+ * @see \PrestaShopBundle\Security\Attribute\AdminSecurity
  */
 final class SecurityAttributeLinterCommand extends Command
 {

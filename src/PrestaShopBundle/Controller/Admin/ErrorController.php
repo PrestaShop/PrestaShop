@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 

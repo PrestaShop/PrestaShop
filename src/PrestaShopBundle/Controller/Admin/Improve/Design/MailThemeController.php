@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailVariablesTransfor
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;

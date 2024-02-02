@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

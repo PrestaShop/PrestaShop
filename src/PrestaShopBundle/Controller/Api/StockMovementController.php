@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Controller\Api;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
 use PrestaShopBundle\Entity\Repository\StockMovementRepository;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;

@@ -44,8 +44,8 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintE
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
