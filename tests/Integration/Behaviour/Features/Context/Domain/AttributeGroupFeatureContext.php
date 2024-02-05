@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForE
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\EditableAttributeGroup;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
@@ -55,9 +54,14 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     public function createAttributeGroup(string $reference, TableNode $node): void
     {
         $data = $this->localizeByRows($node);
+        $command = new AddAttributeGroupCommand(
+            $data['name'],
+            $data['public_name'],
+            $data['type'],
+            $this->referencesToIds($data['shopIds'])
+        );
 
-        $attributeGroupId = $this->createAttributeGroupUsingCommand($data['name'], $data['public_name'], $data['type']);
-
+        $attributeGroupId = $this->getCommandBus()->handle($command);
         $this->getSharedStorage()->set($reference, $attributeGroupId->getValue());
     }
 
@@ -69,7 +73,48 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
         $attributeGroupId = $this->referenceToId($reference);
         $data = $this->localizeByRows($node);
 
-        $this->editAttributeGroupUsingCommand($attributeGroupId, $data['name'], $data['public_name'], $data['type']);
+        try {
+            $command = new EditAttributeGroupCommand($attributeGroupId);
+            if (isset($data['name'])) {
+                $command->setLocalizedNames($data['name']);
+            }
+            if (isset($data['public_name'])) {
+                $command->setLocalizedPublicNames($data['public_name']);
+            }
+            if (isset($data['type'])) {
+                $command->setType($data['type']);
+            }
+            if (isset($data['shopIds'])) {
+                $command->setAssociatedShopIds($this->referencesToIds($data['shopIds']));
+            }
+
+            $this->getCommandBus()->handle($command);
+        } catch (AttributeGroupConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get an error that attribute group field :fieldName value is invalid
+     */
+    public function IShouldGetAnInvalidFieldError(string $fieldName): void
+    {
+        $code = match ($fieldName) {
+            'name' => AttributeGroupConstraintException::INVALID_NAME,
+            'public_name' => AttributeGroupConstraintException::INVALID_PUBLIC_NAME,
+            'type' => AttributeGroupConstraintException::INVALID_TYPE,
+            default => throw new \RuntimeException('Unknown field ' . $fieldName),
+        };
+        $exception = match ($fieldName) {
+            'name', 'public_name' => AttributeGroupConstraintException::class,
+            'type' => InvalidAttributeGroupTypeException::class,
+            default => throw new \RuntimeException('Unknown field ' . $fieldName),
+        };
+
+        $this->assertLastErrorIs(
+            $exception,
+            $code
+        );
     }
 
     /**
@@ -109,9 +154,18 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
         $attributeGroup = $this->getAttributeGroup($reference);
         $data = $this->localizeByRows($tableNode);
 
-        Assert::assertEquals($data['name'], $attributeGroup->getName());
-        Assert::assertEquals($data['public_name'], $attributeGroup->getPublicName());
-        Assert::assertEquals($data['type'], $attributeGroup->getType());
+        if (isset($data['name'])) {
+            Assert::assertEquals($data['name'], $attributeGroup->getName());
+        }
+        if (isset($data['public_name'])) {
+            Assert::assertEquals($data['public_name'], $attributeGroup->getPublicName());
+        }
+        if (isset($data['type'])) {
+            Assert::assertEquals($data['type'], $attributeGroup->getType());
+        }
+        if (isset($data['shopIds'])) {
+            Assert::assertEquals($this->referencesToIds($data['shopIds']), $attributeGroup->getAssociatedShopIds());
+        }
     }
 
     /**
@@ -495,56 +549,6 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
             $expectedId = $this->getSharedStorage()->get($attributesDatum['reference']);
             Assert::assertEquals($expectedId, $attribute->getAttributeId());
         }
-    }
-
-    /**
-     * @param array<int, string> $localizedNames
-     * @param array<int, string> $localizedPublicNames
-     * @param string $type
-     *
-     * @return AttributeGroupId
-     *
-     * @throws AttributeGroupConstraintException
-     * @throws InvalidAttributeGroupTypeException
-     */
-    private function createAttributeGroupUsingCommand(array $localizedNames, array $localizedPublicNames, string $type): AttributeGroupId
-    {
-        $command = new AddAttributeGroupCommand(
-            $localizedNames,
-            $localizedPublicNames,
-            $type,
-            [$this->getDefaultShopId()]
-        );
-
-        return $this->getCommandBus()->handle($command);
-    }
-
-    /**
-     * @param int $attributeGroupId
-     * @param array<int, string> $localizedNames
-     * @param array<int, string> $localizedPublicNames
-     * @param string $type
-     *
-     * @return void
-     *
-     * @throws AttributeGroupConstraintException
-     * @throws InvalidAttributeGroupTypeException
-     */
-    private function editAttributeGroupUsingCommand(
-        int $attributeGroupId,
-        array $localizedNames,
-        array $localizedPublicNames,
-        string $type
-    ): void {
-        $command = new EditAttributeGroupCommand(
-            $attributeGroupId,
-            $localizedNames,
-            $localizedPublicNames,
-            $type,
-            [$this->getDefaultShopId()]
-        );
-
-        $this->getCommandBus()->handle($command);
     }
 
     /**

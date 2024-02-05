@@ -63,6 +63,7 @@ class ShopContextBuilderTest extends TestCase
         $this->assertEquals($shop->domain, $shopContext->getDomain());
         $this->assertEquals($shop->domain_ssl, $shopContext->getDomainSSL());
         $this->assertEquals($shop->active, $shopContext->isActive());
+        $this->assertEquals([1, 3], $shopContext->getAssociatedShopIds());
     }
 
     public function testNoShopId(): void
@@ -115,6 +116,10 @@ class ShopContextBuilderTest extends TestCase
         $repository
             ->method('get')
             ->willReturn($shop ?: $this->mockShop())
+        ;
+        $repository
+            ->method('getAssociatedShopIds')
+            ->willReturn([1, 3])
         ;
 
         return $repository;

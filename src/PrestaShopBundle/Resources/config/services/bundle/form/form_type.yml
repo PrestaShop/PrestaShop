@@ -351,7 +351,17 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType: ~
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureValueType: ~
-  PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeGroupType: ~
+  PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeGroupType:
+    arguments:
+      $multistoreFeature: '@prestashop.adapter.multistore_feature'
+
+  PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeType:
+    public: true
+    arguments:
+      $attributeGroupRepository: '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
+      $multistoreFeature: '@prestashop.adapter.multistore_feature'
+    tags:
+      - { name: form.type }
 
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType:
     arguments:

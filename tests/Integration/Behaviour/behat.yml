@@ -326,15 +326,6 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
-        attribute_group:
-          paths:
-            - "%paths.base%/Features/Scenario/AttributeGroup"
-          contexts:
-            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
-            - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
         order_message:
             paths:
                 - "%paths.base%/Features/Scenario/OrderMessage"
@@ -459,12 +450,22 @@ default:
                 - "%paths.base%/Features/Scenario/Attribute"
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\AttributeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\AttributeGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+        attribute_group:
+            paths:
+              - "%paths.base%/Features/Scenario/AttributeGroup"
+            contexts:
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+              - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
         search_engine:
             paths:
                 - "%paths.base%/Features/Scenario/SearchEngine"

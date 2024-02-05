@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\Repository;
 
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use Shop;
@@ -107,5 +108,30 @@ class ShopRepository extends AbstractObjectModelRepository
             'shop',
             ShopNotFoundException::class
         );
+    }
+
+    public function getAssociatedShopIds(ShopConstraint $shopConstraint): array
+    {
+        if ($shopConstraint->getShopId()) {
+            return [$shopConstraint->getShopId()->getValue()];
+        }
+
+        $qb = $this
+            ->connection
+            ->createQueryBuilder()
+            ->select('s.id_shop')
+            ->from($this->dbPrefix . 'shop', 's')
+        ;
+
+        if ($shopConstraint->getShopGroupId()) {
+            $qb
+                ->andWhere('s.id_shop_group = :shopGroupId')
+                ->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue())
+            ;
+        }
+
+        $result = $qb->executeQuery()->fetchAllAssociative();
+
+        return array_map(fn (array $shopRow) => (int) $shopRow['id_shop'], $result);
     }
 }

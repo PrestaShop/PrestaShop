@@ -45,7 +45,7 @@ class AddAttributeGroupCommand
     /**
      * @var int[]
      */
-    private $shopAssociation;
+    private $associatedShopIds;
 
     /**
      * @var array
@@ -61,13 +61,17 @@ class AddAttributeGroupCommand
      * @param string[] $localizedNames
      * @param array $localizedPublicNames
      * @param string $type
-     * @param int[] $shopAssociation
+     * @param int[] $associatedShopIds
      *
      * @throws AttributeGroupConstraintException
      * @throws InvalidAttributeGroupTypeException
      */
-    public function __construct(array $localizedNames, array $localizedPublicNames, string $type, array $shopAssociation)
-    {
+    public function __construct(
+        array $localizedNames,
+        array $localizedPublicNames,
+        string $type,
+        array $associatedShopIds,
+    ) {
         $this->assertNamesAreValid(
             $localizedNames,
             'Attribute name cannot be empty',
@@ -82,7 +86,7 @@ class AddAttributeGroupCommand
         $this->localizedNames = $localizedNames;
         $this->localizedPublicNames = $localizedPublicNames;
         $this->type = new AttributeGroupType($type);
-        $this->shopAssociation = $shopAssociation;
+        $this->associatedShopIds = $associatedShopIds;
     }
 
     /**
@@ -112,9 +116,9 @@ class AddAttributeGroupCommand
     /**
      * @return int[]
      */
-    public function getShopAssociation(): array
+    public function getAssociatedShopIds(): array
     {
-        return $this->shopAssociation;
+        return $this->associatedShopIds;
     }
 
     /**

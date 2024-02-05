@@ -116,10 +116,10 @@ final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinit
                 'field' => 'id_attribute',
             ])
             )
-            ->add((new DataColumn('value'))
-            ->setName($this->trans('Value', [], 'Admin.Global'))
+            ->add((new DataColumn('name'))
+            ->setName($this->trans('Name', [], 'Admin.Global'))
             ->setOptions([
-                'field' => 'value',
+                'field' => 'name',
             ])
         );
 
@@ -194,6 +194,16 @@ final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinit
                 ],
             ])
             )
+            ->add((new LinkGridAction('export'))
+            ->setName($this->trans('Export', [], 'Admin.Actions'))
+            ->setIcon('cloud_download')
+            ->setOptions([
+                'route' => 'admin_attribute_export',
+                'route_params' => [
+                    'attributeGroupId' => $this->attributeGroupId,
+                ],
+            ])
+            )
             ->add((new SimpleGridAction('common_refresh_list'))
             ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
             ->setIcon('refresh')
@@ -224,14 +234,14 @@ final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinit
             ])
             ->setAssociatedColumn('id_attribute')
             )
-            ->add((new Filter('value', TextType::class))
+            ->add((new Filter('name', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
-                    'placeholder' => $this->trans('Search value', [], 'Admin.Actions'),
+                    'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
                 ],
             ])
-            ->setAssociatedColumn('value')
+            ->setAssociatedColumn('name')
             )
             ->add((new Filter('position', ReorderPositionsButtonType::class))
             ->setAssociatedColumn('position')

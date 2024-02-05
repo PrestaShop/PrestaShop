@@ -118,6 +118,9 @@ services:
     autowire: true
     public: false
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttributeFormDataHandler:
+    autowire: true
+
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureValueFormDataHandler:
     autowire: true
     public: false

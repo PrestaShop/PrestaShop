@@ -45,6 +45,7 @@ module.exports = {
     api_access_form: './js/pages/api-access/form',
     attachment: './js/pages/attachment',
     attribute: './js/pages/attribute',
+    attribute_form: './js/pages/attribute/form',
     attribute_group: './js/pages/attribute-group',
     attribute_group_form: './js/pages/attribute-group/form',
     authorization_server: './js/pages/authorization-server',

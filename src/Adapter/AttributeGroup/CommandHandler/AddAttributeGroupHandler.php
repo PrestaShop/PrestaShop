@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler;
 
 use AttributeGroup;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\Validate\AttributeGroupValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\AddAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler\AddAttributeGroupHandlerInterface;
@@ -40,16 +40,12 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupI
  * Handles adding of attribute groups using legacy logic.
  */
 #[AsCommandHandler]
-final class AddAttributeGroupHandler extends AbstractObjectModelHandler implements AddAttributeGroupHandlerInterface
+final class AddAttributeGroupHandler implements AddAttributeGroupHandlerInterface
 {
-    /**
-     * @var AttributeGroupRepository
-     */
-    private $attributeGroupRepository;
-
-    public function __construct(AttributeGroupRepository $attributeGroupRepository)
-    {
-        $this->attributeGroupRepository = $attributeGroupRepository;
+    public function __construct(
+        private AttributeGroupRepository $attributeGroupRepository,
+        private AttributeGroupValidator $validator
+    ) {
     }
 
     /**
@@ -62,10 +58,10 @@ final class AddAttributeGroupHandler extends AbstractObjectModelHandler implemen
         $attributeGroup->name = $command->getLocalizedNames();
         $attributeGroup->public_name = $command->getLocalizedPublicNames();
         $attributeGroup->group_type = $command->getType()->getValue();
+        $attributeGroup->id_shop_list = $command->getAssociatedShopIds();
 
+        $this->validator->validate($attributeGroup);
         $id = $this->attributeGroupRepository->add($attributeGroup);
-
-        $this->associateWithShops($attributeGroup, $command->getShopAssociation());
 
         return $id;
     }

@@ -216,6 +216,20 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             'g-1',
         ];
 
+        yield 'initially single shop, redirect to all shops' => [
+            '',
+            's-1',
+            true,
+            '',
+        ];
+
+        yield 'initially group shop, redirect to all shops' => [
+            '',
+            'g-1',
+            true,
+            '',
+        ];
+
         yield 'initially all shops, redirect to shop group' => [
             'g-1',
             '',
