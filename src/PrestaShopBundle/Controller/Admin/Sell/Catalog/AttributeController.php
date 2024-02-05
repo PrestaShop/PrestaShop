@@ -320,7 +320,7 @@ class AttributeController extends FrameworkBundleAdminController
             $dataToPush = [];
             $dataToPush['id_attribute'] = $record['id_attribute'];
             $dataToPush['id_attribute_group'] = $record['id_attribute_group'];
-            $dataToPush['value'] = $record['value'];
+            $dataToPush['name'] = $record['name'];
             if (!empty($record['color'])) {
                 $dataToPush['color'] = $record['color'];
                 $hasColor = true;
@@ -332,7 +332,7 @@ class AttributeController extends FrameworkBundleAdminController
         $headers = [];
         $headers['id_attribute'] = $this->trans('ID', 'Admin.Global');
         $headers['id_attribute_group'] = $this->trans('Attribute Group ID', 'Admin.Global');
-        $headers['value'] = $this->trans('Value', 'Admin.Global');
+        $headers['name'] = $this->trans('Name', 'Admin.Global');
         if ($hasColor) {
             $headers['color'] = $this->trans('Color', 'Admin.Global');
         }
