@@ -56,28 +56,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class AttributeType extends TranslatorAwareType
 {
-    private AttributeGroupRepository $attributeGroupRepository;
-
-    private FeatureInterface $multistoreFeature;
-
-    private ShopContext $shopContext;
-
-    private LanguageContext $languageContext;
-
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        AttributeGroupRepository $attributeGroupRepository,
-        ShopContext $shopContext,
-        LanguageContext $languageContext,
-        FeatureInterface $multistoreFeature
+        protected AttributeGroupRepository $attributeGroupRepository,
+        protected ShopContext $shopContext,
+        protected LanguageContext $languageContext,
+        protected FeatureInterface $multistoreFeature
     ) {
         parent::__construct($translator, $locales);
-
-        $this->attributeGroupRepository = $attributeGroupRepository;
-        $this->shopContext = $shopContext;
-        $this->languageContext = $languageContext;
-        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**

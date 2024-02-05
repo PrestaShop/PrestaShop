@@ -72,13 +72,13 @@ final class AttributeGroupFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        /* @var AttributeGroupId $attributeGroupId */
-        $this->commandBus->handle(new EditAttributeGroupCommand(
-            (int) $id,
-            $data['name'],
-            $data['public_name'],
-            $data['group_type'],
-            $data['shop_association']
-        ));
+        $command = new EditAttributeGroupCommand((int) $id);
+        $command
+            ->setLocalizedNames($data['name'])
+            ->setLocalizedPublicNames($data['public_name'])
+            ->setType($data['group_type'])
+            ->setAssociatedShopIds($data['shop_association'])
+        ;
+        $this->commandBus->handle($command);
     }
 }

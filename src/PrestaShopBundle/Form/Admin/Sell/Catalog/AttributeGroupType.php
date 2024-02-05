@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType as GroupType;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -46,13 +47,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class AttributeGroupType extends TranslatorAwareType
 {
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     */
     public function __construct(
         TranslatorInterface $translator,
-        array $locales
+        array $locales,
+        protected FeatureInterface $multistoreFeature
     ) {
         parent::__construct($translator, $locales);
     }
@@ -99,7 +97,11 @@ class AttributeGroupType extends TranslatorAwareType
                     $this->trans('Radio buttons', 'Admin.Global') => GroupType::ATTRIBUTE_GROUP_TYPE_RADIO,
                     $this->trans('Color or texture', 'Admin.Catalog.Feature') => GroupType::ATTRIBUTE_GROUP_TYPE_COLOR,
                 ],
-            ])->add('shop_association', ShopChoiceTreeType::class, [
+            ])
+        ;
+
+        if ($this->multistoreFeature->isUsed()) {
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
                 'label' => $this->trans('Shop association', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [
@@ -110,6 +112,7 @@ class AttributeGroupType extends TranslatorAwareType
                     ]),
                 ],
             ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

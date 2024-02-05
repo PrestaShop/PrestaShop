@@ -29,23 +29,16 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query\GetAttributeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult\EditableAttribute;
 
 class AttributeFormDataProvider implements FormDataProviderInterface
 {
-    /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
-    /**
-     * @param CommandBusInterface $queryBus
-     */
     public function __construct(
-        CommandBusInterface $queryBus
+        private CommandBusInterface $queryBus,
+        private ShopContext $shopContext,
     ) {
-        $this->queryBus = $queryBus;
     }
 
     public function getData($id)
@@ -63,6 +56,8 @@ class AttributeFormDataProvider implements FormDataProviderInterface
 
     public function getDefaultData()
     {
-        return [];
+        return [
+            'shop_association' => $this->shopContext->getAssociatedShopIds(),
+        ];
     }
 }

@@ -29,24 +29,17 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\EditableAttributeGroup;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType;
 
 class AttributeGroupFormDataProvider implements FormDataProviderInterface
 {
-    /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
-    /**
-     * @param CommandBusInterface $queryBus
-     */
     public function __construct(
-        CommandBusInterface $queryBus
+        private CommandBusInterface $queryBus,
+        private ShopContext $shopContext,
     ) {
-        $this->queryBus = $queryBus;
     }
 
     /**
@@ -72,6 +65,7 @@ class AttributeGroupFormDataProvider implements FormDataProviderInterface
     {
         return [
             'group_type' => AttributeGroupType::ATTRIBUTE_GROUP_TYPE_SELECT,
+            'shop_association' => $this->shopContext->getAssociatedShopIds(),
         ];
     }
 }
