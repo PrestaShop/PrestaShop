@@ -165,7 +165,7 @@ jobs:
       ENABLE_SSL: ${{ ((matrix.BRANCH == '8.0.x') || (matrix.BRANCH == '1.7.8.x')) && 'false' || 'true' }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
@@ -224,7 +224,7 @@ jobs:
       COMBINED_REPORT_DIR: 'combined_reports'  # Where to store the combined report
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
@@ -236,7 +236,7 @@ jobs:
           path: ${{ env.REPORTS_DIR }}
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.NODE_VERSION }}
 
