@@ -49,6 +49,7 @@ class ShopContext
         protected string $domainSSL,
         protected bool $active,
         protected bool $secured,
+        protected array $associatedShopIds
     ) {
     }
 
@@ -126,5 +127,13 @@ class ShopContext
         }
 
         return $url . $this->getBaseURI();
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAssociatedShopIds(): array
+    {
+        return $this->associatedShopIds;
     }
 }

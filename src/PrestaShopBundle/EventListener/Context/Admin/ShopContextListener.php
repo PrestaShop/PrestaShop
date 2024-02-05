@@ -170,8 +170,8 @@ class ShopContextListener
             return null;
         }
 
-        $shopContextUrlParameter = $requestEvent->getRequest()->get('setShopContext');
-        if (empty($shopContextUrlParameter)) {
+        $shopContextUrlParameter = $requestEvent->getRequest()->get('setShopContext', null);
+        if (null === $shopContextUrlParameter) {
             return null;
         }
 
