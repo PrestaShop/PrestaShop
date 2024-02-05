@@ -26,6 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
 
-class InvalidAttributeGroupTypeException extends AttributeGroupException
+use Throwable;
+
+class InvalidAttributeGroupTypeException extends AttributeGroupConstraintException
 {
+    public function __construct(string $message = '', int $code = self::INVALID_TYPE, ?Throwable $previous = null)
+    {
+        parent::__construct($message, $code ?: self::INVALID_TYPE, $previous);
+    }
 }

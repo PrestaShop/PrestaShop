@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Adapter\Domain\LocalizedObjectModelTrait;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler\EditAttributeHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 
 /**
  * Handles editing of attribute groups using legacy logic.
@@ -55,11 +54,10 @@ class EditAttributeHandler implements EditAttributeHandlerInterface
      */
     public function handle(EditAttributeCommand $command): void
     {
-        $attribute = $this->attributeRepository->get(new AttributeId($command->getAttributeId()->getValue()));
+        $attribute = $this->attributeRepository->get($command->getAttributeId());
         $propertiesToUpdate = [];
 
         if (null !== $command->getLocalizedNames()) {
-            $attribute->name = $command->getLocalizedNames();
             $this->fillLocalizedValues($attribute, 'name', $command->getLocalizedNames(), $propertiesToUpdate);
         }
 

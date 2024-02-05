@@ -29,7 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\Validate\AttributeGroupValidator;
+use PrestaShop\PrestaShop\Adapter\Domain\LocalizedObjectModelTrait;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler\EditAttributeGroupHandlerInterface;
@@ -38,13 +39,14 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler\EditAttribut
  * Handles editing of attribute groups using legacy logic.
  */
 #[AsCommandHandler]
-final class EditAttributeGroupHandler extends AbstractObjectModelHandler implements EditAttributeGroupHandlerInterface
+final class EditAttributeGroupHandler implements EditAttributeGroupHandlerInterface
 {
-    private AttributeGroupRepository $attributeGroupRepository;
+    use LocalizedObjectModelTrait;
 
-    public function __construct(AttributeGroupRepository $attributeGroupRepository)
-    {
-        $this->attributeGroupRepository = $attributeGroupRepository;
+    public function __construct(
+        private AttributeGroupRepository $attributeGroupRepository,
+        private AttributeGroupValidator $validator,
+    ) {
     }
 
     /**
@@ -53,13 +55,24 @@ final class EditAttributeGroupHandler extends AbstractObjectModelHandler impleme
     public function handle(EditAttributeGroupCommand $command): void
     {
         $attributeGroup = $this->attributeGroupRepository->get($command->getAttributeGroupId());
+        $propertiesToUpdate = [];
 
-        $attributeGroup->name = $command->getLocalizedNames();
-        $attributeGroup->public_name = $command->getLocalizedPublicNames();
-        $attributeGroup->group_type = $command->getType()->getValue();
+        if (null !== $command->getLocalizedNames()) {
+            $this->fillLocalizedValues($attributeGroup, 'name', $command->getLocalizedNames(), $propertiesToUpdate);
+        }
+        if (null !== $command->getLocalizedPublicNames()) {
+            $this->fillLocalizedValues($attributeGroup, 'public_name', $command->getLocalizedPublicNames(), $propertiesToUpdate);
+        }
+        if (null !== $command->getType()) {
+            $propertiesToUpdate[] = 'group_type';
+            $attributeGroup->group_type = $command->getType()->getValue();
+        }
+        if (null !== $command->getAssociatedShopIds()) {
+            $attributeGroup->id_shop_list = $command->getAssociatedShopIds();
+            $propertiesToUpdate[] = 'id_shop_list';
+        }
 
-        $this->attributeGroupRepository->update($attributeGroup);
-
-        $this->associateWithShops($attributeGroup, $command->getShopAssociation());
+        $this->validator->validate($attributeGroup);
+        $this->attributeGroupRepository->partialUpdate($attributeGroup, $propertiesToUpdate);
     }
 }

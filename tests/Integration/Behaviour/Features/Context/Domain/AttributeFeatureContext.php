@@ -65,13 +65,19 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get an error that color value is invalid
+     * @Then I should get an error that attribute field :fieldName value is invalid
      */
-    public function IShouldGetAnInvalidColorError(): void
+    public function IShouldGetAnInvalidColorError(string $fieldName): void
     {
+        $errorCode = match ($fieldName) {
+            'color' => AttributeConstraintException::INVALID_COLOR,
+            'name' => AttributeConstraintException::INVALID_NAME,
+            default => throw new \RuntimeException('Unknown field ' . $fieldName),
+        };
+
         $this->assertLastErrorIs(
             AttributeConstraintException::class,
-            AttributeConstraintException::INVALID_COLOR
+            $errorCode
         );
     }
 

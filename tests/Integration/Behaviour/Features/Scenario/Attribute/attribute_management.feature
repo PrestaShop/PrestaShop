@@ -16,17 +16,19 @@ Feature: Attribute group management
     And I add a shop "shop3" with name "test_shop3" and color "red" for the group "default_shop_group"
     And I add a shop "shop4" with name "test_shop4" and color "red" for the group "default_shop_group"
     And I create attribute group "attributeGroup1" with specified properties:
-      | name[en-US]        | Color            |
-      | name[fr-FR]        | Couleur          |
-      | public_name[en-US] | Public color     |
-      | public_name[fr-FR] | Couleur publique |
-      | type               | color            |
+      | name[en-US]        | Color                   |
+      | name[fr-FR]        | Couleur                 |
+      | public_name[en-US] | Public color            |
+      | public_name[fr-FR] | Couleur publique        |
+      | type               | color                   |
+      | shopIds            | shop1,shop2,shop3,shop4 |
     And I create attribute group "attributeGroup2" with specified properties:
-      | name[en-US]        | Color            |
-      | name[fr-FR]        | Couleur          |
-      | public_name[en-US] | Public color     |
-      | public_name[fr-FR] | Couleur publique |
-      | type               | color            |
+      | name[en-US]        | Color                   |
+      | name[fr-FR]        | Couleur                 |
+      | public_name[en-US] | Public color            |
+      | public_name[fr-FR] | Couleur publique        |
+      | type               | color                   |
+      | shopIds            | shop1,shop2,shop3,shop4 |
 
   Scenario: Adding new attribute
     And I create attribute "attribute1" with specified properties:
@@ -81,7 +83,10 @@ Feature: Attribute group management
     # Edit attribute with invalid color results with an exception and data is not modified
     When I edit attribute "attribute1" with specified properties:
       | color | wrong_color |
-    Then I should get an error that color value is invalid
+    Then I should get an error that attribute field color value is invalid
+    When I edit attribute "attribute1" with specified properties:
+      | name[fr-FR] | Couleur< |
+    Then I should get an error that attribute field name value is invalid
     And attribute "attribute1" should have the following properties:
       | attribute_group | attributeGroup1 |
       | name[en-US]     | Color           |
@@ -96,7 +101,7 @@ Feature: Attribute group management
       | name[fr-FR]     | Couleur           |
       | color           | wrong_color       |
       | shopIds         | shop1,shop2,shop4 |
-    Then I should get an error that color value is invalid
+    Then I should get an error that attribute field color value is invalid
 
   Scenario: Deleting attribute
     When I delete attribute "attribute1"
