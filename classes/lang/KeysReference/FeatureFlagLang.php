@@ -24,10 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// Legacy link feature flags
-trans('Attribute groups', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated attribute page.', 'Admin.Advparameters.Help');
-
 // Authorization server feature flag
 trans('Authorization server', 'Admin.Advparameters.Feature');
 trans('Enable or disable the authorization server page.', 'Admin.Advparameters.Help');
@@ -75,9 +71,6 @@ trans('Enable or disable the migrated customer threads page.', 'Admin.Advparamet
 // Order states feature flag
 trans('Order states', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated order states page.', 'Admin.Advparameters.Help');
-
-trans('Features', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated features page.', 'Admin.Advparameters.Help');
 
 trans('Symfony layout', 'Admin.Advparameters.Feature');
 trans('Enable / Disable symfony layout (in opposition to legacy layout).', 'Admin.Advparameters.Help');
