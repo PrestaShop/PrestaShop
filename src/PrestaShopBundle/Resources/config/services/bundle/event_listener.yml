@@ -56,11 +56,6 @@ services:
     autowire: true
     autoconfigure: true
 
-  PrestaShopBundle\EventListener\ModuleActivatedListener:
-    autowire: true
-    tags:
-      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
-
   prestashop.bundle.event_listener.filter_category_search_criteria:
     class: PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener
     arguments:
