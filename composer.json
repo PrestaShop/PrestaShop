@@ -127,7 +127,6 @@
         "prestashop/statssearch": "^2",
         "prestashop/statsstock": "^2",
         "prestashop/translationtools-bundle": "^6.0.1",
-        "sensio/framework-extra-bundle": "^6.2",
         "smarty/smarty": "^4.3.1",
         "soundasleep/html2text": "^2.1.0",
         "symfony/asset": "6.4.*",
