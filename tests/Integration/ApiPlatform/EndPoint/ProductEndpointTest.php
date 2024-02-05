@@ -67,10 +67,11 @@ class ProductEndpointTest extends ApiTestCase
      * @param string $method
      * @param string $uri
      */
-    public function testProtectedEndpoints(string $method, string $uri): void
+    public function testProtectedEndpoints(string $method, string $uri, string $contentType = 'application/json'): void
     {
+        $options['headers']['content-type'] = $contentType;
         // Check that endpoints are not accessible without a proper Bearer token
-        $client = static::createClient();
+        $client = static::createClient([], $options);
         $response = $client->request($method, $uri);
         self::assertResponseStatusCodeSame(401);
 
@@ -98,6 +99,7 @@ class ProductEndpointTest extends ApiTestCase
         yield 'update endpoint' => [
             'PATCH',
             '/api/product/1',
+            'application/merge-patch+json',
         ];
     }
 
@@ -160,6 +162,9 @@ class ProductEndpointTest extends ApiTestCase
         // Update product with partial data, even multilang fields can be updated language by language
         $response = $client->request('PATCH', '/api/product/' . $productId, [
             'auth_bearer' => $bearerToken,
+            'headers' => [
+                'content-type' => 'application/merge-patch+json',
+            ],
             'json' => [
                 'names' => [
                     self::$frenchLangId => 'nouveau nom',
@@ -197,6 +202,9 @@ class ProductEndpointTest extends ApiTestCase
         // Update product with partial data, only name default language the other names are not impacted
         $response = $client->request('PATCH', '/api/product/' . $productId, [
             'auth_bearer' => $bearerToken,
+            'headers' => [
+                'content-type' => 'application/merge-patch+json',
+            ],
             'json' => [
                 'names' => [
                     self::EN_LANG_ID => 'new product name',

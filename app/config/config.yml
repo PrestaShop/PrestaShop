@@ -115,14 +115,12 @@ api_platform:
   enable_swagger: true
   enable_swagger_ui: true
   formats:
-    json:
-      mime_types: [ 'application/json' ]
+    json: [ 'application/json' ]
     # Allow this format for other API endpoint than native endpoint (by default we will use json)
-    jsonld:
-      mime_types: [ 'application/ld+json' ]
+    jsonld: [ 'application/ld+json' ]
+  docs_formats:
     # This is used to allow using the Swagger UI in HTML presentation
-    html:
-      mime_types: [ 'text/html' ]
+    html: [ 'text/html' ]
   mapping:
     paths:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
@@ -131,4 +129,3 @@ api_platform:
       JWT:
         name: Authorization
         type: header
-  metadata_backward_compatibility_layer: false

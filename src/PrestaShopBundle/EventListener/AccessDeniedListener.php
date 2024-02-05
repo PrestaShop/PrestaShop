@@ -64,6 +64,7 @@ class AccessDeniedListener
         }
 
         $controllerName = $event->getRequest()->attributes->get('_controller');
+
         [$controller, $method] = explode('::', $controllerName, 2);
 
         if (empty($controller) || !class_exists($controller) || !method_exists($controller, $method)) {

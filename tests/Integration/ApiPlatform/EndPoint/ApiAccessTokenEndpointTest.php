@@ -49,7 +49,21 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
         parent::tearDownAfterClass();
     }
 
-    public function testApiAccessToken(): void
+    public function getContentType(): iterable
+    {
+        yield 'form-urlencoded' => [
+            'application/x-www-form-urlencoded',
+        ];
+
+        yield 'multipart' => [
+            'multipart/form-data',
+        ];
+    }
+
+    /**
+     * @dataProvider getContentType
+     */
+    public function testApiAccessToken(string $contentType): void
     {
         $client = static::createClient();
         $parameters = ['parameters' => [
@@ -62,7 +76,12 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'customer_group_read',
             ],
         ]];
-        $options = ['extra' => $parameters];
+        $options = [
+            'extra' => $parameters,
+            'headers' => [
+                'content-type' => $contentType,
+            ],
+        ];
         $response = $client->request('POST', '/api/oauth2/token', $options);
         $token = json_decode($response->getContent())->access_token;
         $decodedToken = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $token)[1]))));
@@ -97,7 +116,12 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'non_existent_scope',
             ],
         ]];
-        $options = ['extra' => $parameters];
+        $options = [
+            'extra' => $parameters,
+            'headers' => [
+                'content-type' => 'application/x-www-form-urlencoded',
+            ],
+        ];
         $response = $client->request('POST', '/api/oauth2/token', $options);
         $this->assertEquals(400, $response->getInfo('http_code'));
         $decodedResponse = json_decode($response->getContent(false), true);
@@ -121,7 +145,12 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'customer_group_write',
             ],
         ]];
-        $options = ['extra' => $parameters];
+        $options = [
+            'extra' => $parameters,
+            'headers' => [
+                'content-type' => 'application/x-www-form-urlencoded',
+            ],
+        ];
         $response = $client->request('POST', '/api/oauth2/token', $options);
         $this->assertEquals(401, $response->getInfo('http_code'));
         $decodedResponse = json_decode($response->getContent(false), true);
