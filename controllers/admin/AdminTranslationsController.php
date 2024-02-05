@@ -1909,7 +1909,7 @@ class AdminTranslationsControllerCore extends AdminController
 
                     // Adding list, form, option in Helper Translations
                     $list_prefix_key = ['AdminHelpers', 'AdminList', 'AdminView', 'AdminOptions', 'AdminForm',
-                        'AdminCalendar', 'AdminTree', 'AdminUploader', 'AdminDataviz', 'AdminKpi', 'AdminModule_list', 'AdminModulesList',
+                        'AdminCalendar', 'AdminTree', 'AdminUploader', 'AdminKpi', 'AdminModule_list', 'AdminModulesList',
                     ];
                     if (in_array($prefix_key, $list_prefix_key)) {
                         $prefix_key = 'Helper';
