@@ -134,6 +134,7 @@
         "symfony/cache": "6.4.*",
         "symfony/config": "6.4.*",
         "symfony/console": "6.4.*",
+        "symfony/debug-bundle": "6.4.*",
         "symfony/dependency-injection": "6.4.*",
         "symfony/doctrine-bridge": "6.4.*",
         "symfony/doctrine-messenger": "6.4.*",
@@ -178,6 +179,7 @@
         "symfony/var-dumper": "6.4.*",
         "symfony/var-exporter": "6.4.*",
         "symfony/web-link": "6.4.*",
+        "symfony/web-profiler-bundle": "6.4.*",
         "symfony/yaml": "6.4.*",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
@@ -198,10 +200,8 @@
         "spaze/phpstan-disallowed-calls": "^2.10",
         "symfony/browser-kit": "6.4.*",
         "symfony/css-selector": "6.4.*",
-        "symfony/debug-bundle": "6.4.*",
         "symfony/phpunit-bridge": "6.4.*",
-        "symfony/stopwatch": "6.4.*",
-        "symfony/web-profiler-bundle": "6.4.*"
+        "symfony/stopwatch": "6.4.*"
     },
     "config": {
         "allow-plugins": {
