@@ -29,6 +29,7 @@ namespace PrestaShopBundle\EventListener;
 use Doctrine\Common\Annotations\Reader;
 use PrestaShopBundle\Security\Annotation\AdminSecurity as AdminSecurityAnnotation;
 use PrestaShopBundle\Security\Attribute\AdminSecurity as AdminSecurityAttribute;
+use ReflectionClass;
 use ReflectionMethod;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -54,9 +55,6 @@ class AccessDeniedListener
     ) {
     }
 
-    /**
-     * @throws \ReflectionException
-     */
     public function onKernelException(ExceptionEvent $event)
     {
         if (!$event->isMainRequest()
@@ -77,19 +75,19 @@ class AccessDeniedListener
         $attributes = $reflectionMethod->getAttributes(AdminSecurityAttribute::class);
 
         if (!empty($attributes)) {
-            foreach ($attributes as $attribute) {
-                /** @var AdminSecurityAttribute $adminSecurity */
-                $adminSecurity = $attribute->newInstance();
-                if (null != $adminSecurity->getRedirectRoute()) {
-                    $event->allowCustomResponseCode();
+            $this->handleAttributes($attributes, $event);
 
-                    $event->setResponse(
-                        $this->getAccessDeniedResponse($event->getRequest(), $adminSecurity)
-                    );
+            return;
+        }
 
-                    return;
-                }
-            }
+        $reflectionClass = new ReflectionClass($controller);
+
+        $attributes = $reflectionClass->getAttributes(AdminSecurityAttribute::class);
+
+        if (!empty($attributes)) {
+            $this->handleAttributes($attributes, $event);
+
+            return;
         }
 
         // annotation management
@@ -164,5 +162,21 @@ class AccessDeniedListener
             [],
             $adminSecurity->getDomain()
         );
+    }
+
+    public function handleAttributes(array $attributes, ExceptionEvent $event): void
+    {
+        foreach ($attributes as $attribute) {
+            /** @var AdminSecurityAttribute $adminSecurity */
+            $adminSecurity = $attribute->newInstance();
+            if (null != $adminSecurity->getRedirectRoute()) {
+                $event->allowCustomResponseCode();
+
+                $event->setResponse(
+                    $this->getAccessDeniedResponse($event->getRequest(), $adminSecurity)
+                );
+                break;
+            }
+        }
     }
 }

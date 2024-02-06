@@ -73,7 +73,9 @@ class AdminSecurityListener
         $reflectionMethod = $reflectionController->getMethod($methodName);
 
         // attributes management
-        $attributes = $reflectionMethod->getAttributes(AdminSecurityAttribute::class);
+        $classAttributes = $reflectionController->getAttributes(AdminSecurityAttribute::class);
+        $methodAttributes = $reflectionMethod->getAttributes(AdminSecurityAttribute::class);
+        $attributes = array_merge($classAttributes, $methodAttributes);
 
         if (!empty($attributes)) {
             foreach ($attributes as $attribute) {
