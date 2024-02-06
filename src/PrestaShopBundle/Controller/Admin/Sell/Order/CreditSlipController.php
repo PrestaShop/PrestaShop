@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CreditSlipFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\GeneratePdfByDateType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -48,13 +48,12 @@ class CreditSlipController extends FrameworkBundleAdminController
     /**
      * Show credit slips listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param CreditSlipFilters $creditSlipFilters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
         CreditSlipFilters $creditSlipFilters
@@ -96,12 +95,11 @@ class CreditSlipController extends FrameworkBundleAdminController
     /**
      * Generates PDF of requested credit slip by provided id
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param int $creditSlipId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function generatePdfAction($creditSlipId)
     {
         try {
@@ -118,12 +116,11 @@ class CreditSlipController extends FrameworkBundleAdminController
     /**
      * Generates PDF of credit slips found by requested date range
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function generatePdfByDateAction(Request $request)
     {
         $pdfByDateForm = $this->createForm(GeneratePdfByDateType::class, [], ['method' => Request::METHOD_GET]);

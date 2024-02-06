@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\UpdateOrderReturnExc
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,16 +47,12 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     /**
      * Render merchandise returns grid and options.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_merchandise_returns_index"
-     * )
-     *
      * @param Request $request
      * @param MerchandiseReturnFilters $filters
      *
      * @return Response|RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_merchandise_returns_index')]
     public function indexAction(Request $request, MerchandiseReturnFilters $filters): Response
     {
         $gridFactory = $this->get('prestashop.core.grid.factory.merchandise_return');
@@ -88,16 +84,12 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     /**
      * Edit existing order return
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_merchandise_returns_index"
-     * )
-     *
      * @param int $orderReturnId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_merchandise_returns_index')]
     public function editAction(int $orderReturnId, Request $request): Response
     {
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.order_return_form_builder');

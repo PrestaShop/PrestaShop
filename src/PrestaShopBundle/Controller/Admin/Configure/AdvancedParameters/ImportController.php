@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -52,10 +52,9 @@ class ImportController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @return array|RedirectResponse|Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function importAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
@@ -164,13 +163,12 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Delete import file.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_import')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_import')]
     public function deleteAction(Request $request)
     {
         $filename = $request->query->get('filename', $request->query->get('csvfilename'));
@@ -185,16 +183,12 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Download import file from history.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.", redirectRoute="admin_import"
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
     #[DemoRestricted(redirectRoute: 'admin_import')]
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_import')]
     public function downloadAction(Request $request)
     {
         if ($filename = $request->query->get('filename')) {
@@ -212,12 +206,11 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Download import sample file.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_import")
-     *
      * @param string $sampleName
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_import')]
     public function downloadSampleAction($sampleName)
     {
         $sampleFileProvider = $this->get('prestashop.core.import.sample.file_provider');
@@ -236,15 +229,11 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Get available entity fields.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_import"
-     * )
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_import')]
     public function getAvailableEntityFieldsAction(Request $request)
     {
         $fieldsProviderFinder = $this->get('prestashop.core.import.fields_provider_finder');
@@ -262,16 +251,12 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Process the import.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_import"
-     * )
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_import')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_import')]
     public function processImportAction(Request $request)
     {
         $errors = [];

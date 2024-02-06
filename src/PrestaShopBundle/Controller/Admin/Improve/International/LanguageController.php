@@ -44,8 +44,8 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintE
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,13 +58,12 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Show languages listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param LanguageFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, LanguageFilters $filters)
     {
         $languageGridFactory = $this->get('prestashop.core.grid.factory.language');
@@ -86,12 +85,11 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Show language creation form page and handle its submit.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(Request $request)
     {
         $languageFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.language_form_handler');
@@ -123,13 +121,12 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Show language edit form page and handle its submit.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $languageId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function editAction($languageId, Request $request)
     {
         $languageFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.language_form_handler');
@@ -189,13 +186,12 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Deletes language
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
-     *
      * @param int $languageId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_languages_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_languages_index')]
     public function deleteAction($languageId)
     {
         try {
@@ -212,13 +208,12 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Deletes languages in bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_languages_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_languages_index')]
     public function bulkDeleteAction(Request $request)
     {
         $languageIds = $this->getBulkLanguagesFromRequest($request);
@@ -240,13 +235,12 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Toggles language status
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
-     *
      * @param int $languageId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_languages_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_languages_index')]
     public function toggleStatusAction($languageId)
     {
         try {
@@ -272,14 +266,13 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Toggles languages status in bulk action
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
-     *
      * @param Request $request
      * @param string $status
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_languages_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_languages_index')]
     public function bulkToggleStatusAction(Request $request, $status)
     {
         $languageIds = $this->getBulkLanguagesFromRequest($request);

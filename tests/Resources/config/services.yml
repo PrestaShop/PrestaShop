@@ -2,6 +2,11 @@ services:
     _defaults:
         public: true
 
+    Tests\Resources\Controller\:
+      resource: "%kernel.project_dir%/tests/Resources/Controller/*"
+      autoconfigure: true
+      autowire: true
+
     prestashop.bundle.routing.converter.cache:
         class: Symfony\Component\Cache\Adapter\ArrayAdapter
 

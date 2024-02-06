@@ -49,7 +49,7 @@ services:
       - '%kernel.environment%'
 
   prestashop.bundle.routing.linter.security_annotation_linter:
-    class: 'PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter'
+    class: 'PrestaShopBundle\Routing\Linter\SecurityAttributeLinter'
     arguments:
       - '@annotation_reader'
     public: true

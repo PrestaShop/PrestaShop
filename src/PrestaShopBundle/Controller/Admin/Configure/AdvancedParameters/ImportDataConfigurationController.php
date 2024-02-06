@@ -29,8 +29,8 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Import\Exception\UnreadableFileException;
 use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use SplFileInfo;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -45,13 +45,12 @@ class ImportDataConfigurationController extends FrameworkBundleAdminController
     /**
      * Shows import data page where the configuration of importable data and the final step of import is handled.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse|Response
      */
     #[DemoRestricted(redirectRoute: 'admin_import')]
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request)
     {
         $importDirectory = $this->get('prestashop.core.import.dir');
@@ -98,13 +97,12 @@ class ImportDataConfigurationController extends FrameworkBundleAdminController
     /**
      * Create import data match configuration.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_import')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_import')]
     public function createAction(Request $request)
     {
         $formHandler = $this->get('prestashop.admin.import_data_configuration.form_handler');
@@ -135,13 +133,12 @@ class ImportDataConfigurationController extends FrameworkBundleAdminController
     /**
      * Delete import data match configuration.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_import')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_import')]
     public function deleteAction(Request $request)
     {
         $importMatchRepository = $this->get('prestashop.core.admin.import_match.repository');
@@ -153,15 +150,11 @@ class ImportDataConfigurationController extends FrameworkBundleAdminController
     /**
      * Get import data match configuration.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_import"
-     * )
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_import')]
     public function getAction(Request $request)
     {
         $importMatchRepository = $this->get('prestashop.core.admin.import_match.repository');

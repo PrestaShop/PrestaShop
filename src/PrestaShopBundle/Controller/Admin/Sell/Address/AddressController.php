@@ -57,7 +57,7 @@ use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,13 +71,12 @@ class AddressController extends FrameworkBundleAdminController
     /**
      * Show addresses listing page
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param AddressFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, AddressFilters $filters): Response
     {
         $addressGridFactory = $this->get('prestashop.core.grid.grid_factory.address');
@@ -96,17 +95,13 @@ class AddressController extends FrameworkBundleAdminController
     /**
      * Process addresses required fields configuration form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_addresses_index"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      *
      * @throws Exception
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_addresses_index')]
     public function saveRequiredFieldsAction(Request $request): RedirectResponse
     {
         $addressRequiredFieldsForm = $this->getRequiredFieldsForm();
@@ -129,12 +124,11 @@ class AddressController extends FrameworkBundleAdminController
     /**
      * Deletes address
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_addresses_index")
-     *
      * @param int $addressId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_addresses_index')]
     public function deleteAction(Request $request, int $addressId): RedirectResponse
     {
         try {
@@ -155,16 +149,11 @@ class AddressController extends FrameworkBundleAdminController
     /**
      * Delete addresses in bulk action.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_addresses_index",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_addresses_index', message: 'You do not have permission to delete this.')]
     public function deleteBulkAction(Request $request): RedirectResponse
     {
         $addressIds = $this->getBulkAddressesFromRequest($request);
@@ -227,16 +216,11 @@ class AddressController extends FrameworkBundleAdminController
     /**
      * Show "Add new" form and handle form submit.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_addresses_index",
-     *     message="You do not have permission to create this."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_addresses_index', message: 'You do not have permission to create this.')]
     public function createAction(Request $request): Response
     {
         $addressFormBuilder = $this->get(
@@ -318,16 +302,12 @@ class AddressController extends FrameworkBundleAdminController
     /**
      * Handles edit form rendering and submission
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_addresses_index"
-     * )
-     *
      * @param int $addressId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_addresses_index')]
     public function editAction(int $addressId, Request $request): Response
     {
         try {
@@ -394,17 +374,13 @@ class AddressController extends FrameworkBundleAdminController
     /**
      * Handles edit form rendering and submission for order address
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_index"
-     * )
-     *
      * @param int $orderId
      * @param string $addressType
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function editOrderAddressAction(int $orderId, string $addressType, Request $request): Response
     {
         // @todo: don't rely on Order ObjectModel, use a Adapter DataProvider
@@ -495,17 +471,13 @@ class AddressController extends FrameworkBundleAdminController
     /**
      * Handles edit form rendering and submission for cart address
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_index"
-     * )
-     *
      * @param int $cartId
      * @param string $addressType
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function editCartAddressAction(int $cartId, string $addressType, Request $request): Response
     {
         // @todo: don't rely on Cart ObjectModel, use a Adapter DataProvider

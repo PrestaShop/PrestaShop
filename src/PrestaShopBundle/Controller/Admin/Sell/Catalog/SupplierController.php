@@ -53,8 +53,8 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintE
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,13 +68,12 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Show suppliers listing.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param SupplierFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, SupplierFilters $filters)
     {
         $supplierGridFactory = $this->get('prestashop.core.grid.factory.supplier');
@@ -95,16 +94,11 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Displays supplier creation form and handles form submit which creates new supplier.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_suppliers_index",
-     *     message="You do not have permission to add this."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to add this.')]
     public function createAction(Request $request)
     {
         $formData = [];
@@ -138,17 +132,12 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Deletes supplier.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_suppliers_index",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param int $supplierId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to delete this.')]
     public function deleteAction($supplierId)
     {
         try {
@@ -168,17 +157,12 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Bulk deletion of suppliers.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_suppliers_index",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to delete this.')]
     public function bulkDeleteAction(Request $request)
     {
         $suppliersToDelete = $request->request->all('supplier_bulk');
@@ -206,17 +190,12 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Bulk disables supplier statuses.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_suppliers_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to edit this.')]
     public function bulkDisableAction(Request $request)
     {
         $suppliersToDisable = $request->request->all('supplier_bulk');
@@ -243,17 +222,12 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Bulk enables supplier statuses.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_suppliers_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to edit this.')]
     public function bulkEnableAction(Request $request)
     {
         $suppliersToEnable = $request->request->all('supplier_bulk');
@@ -280,17 +254,12 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Displays edit supplier form and submits form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_suppliers_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      * @param int $supplierId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to edit this.')]
     public function editAction(Request $request, $supplierId)
     {
         $formData = [];
@@ -340,17 +309,12 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Toggles supplier active status.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_suppliers_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $supplierId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to edit this.')]
     public function toggleStatusAction($supplierId)
     {
         try {
@@ -370,13 +334,12 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Views supplier products information.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param int $supplierId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function viewAction(Request $request, $supplierId)
     {
         try {
@@ -411,12 +374,11 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Exports to csv visible suppliers list data.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param SupplierFilters $filters
      *
      * @return CsvResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function exportAction(SupplierFilters $filters)
     {
         $filters = new SupplierFilters(['limit' => null] + $filters->all());
@@ -451,18 +413,12 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Deletes supplier logo image.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_suppliers_edit",
-     *     redirectQueryParamsToKeep={"supplierId"}
-     * )
-     *
      * @param Request $request
      * @param int $supplierId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_suppliers_edit', redirectQueryParamsToKeep: ['supplierId'])]
     public function deleteLogoImageAction(Request $request, int $supplierId): RedirectResponse
     {
         if (!$this->isCsrfTokenValid('delete-logo-thumbnail', $request->request->get('_csrf_token'))) {

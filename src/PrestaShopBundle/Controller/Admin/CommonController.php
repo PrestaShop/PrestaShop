@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Security\Admin\Employee;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use ReflectionClass;
@@ -305,10 +305,9 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $redirectRoute
      * @param array $redirectQueryParamsToKeep
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function searchGridAction(
         Request $request,
         $gridDefinitionFactoryServiceId,
@@ -358,12 +357,11 @@ class CommonController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function updatePositionAction(Request $request): RedirectResponse
     {
         $positionsData = [

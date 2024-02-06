@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,12 +38,11 @@ use Symfony\Component\HttpFoundation\Response;
 class SystemInformationController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function indexAction(Request $request): Response
     {
         $legacyController = $request->get('_legacy_controller');
@@ -66,10 +65,9 @@ class SystemInformationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function displayCheckFilesAction()
     {
         return new JsonResponse($this->getRequiredFilesChecker()->getListOfUpdatedFiles());

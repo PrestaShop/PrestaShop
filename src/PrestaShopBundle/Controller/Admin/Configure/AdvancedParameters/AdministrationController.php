@@ -36,8 +36,8 @@ use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\Uplo
 use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,10 +52,9 @@ class AdministrationController extends FrameworkBundleAdminController
     /**
      * Show Administration page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function indexAction()
     {
         $generalForm = $this->getGeneralFormHandler()->getForm();
@@ -81,16 +80,12 @@ class AdministrationController extends FrameworkBundleAdminController
     /**
      * Process the Administration general configuration form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.",
-     *     redirectRoute="admin_administration")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_administration')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_administration')]
     public function processGeneralFormAction(Request $request)
     {
         return $this->processForm(
@@ -103,16 +98,12 @@ class AdministrationController extends FrameworkBundleAdminController
     /**
      * Process the Administration upload quota configuration form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.",
-     *     redirectRoute="admin_administration")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_administration')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_administration')]
     public function processUploadQuotaFormAction(Request $request)
     {
         return $this->processForm(
@@ -125,17 +116,12 @@ class AdministrationController extends FrameworkBundleAdminController
     /**
      * Process the Administration notifications configuration form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.",
-     *     redirectRoute="admin_administration"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_administration')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_administration')]
     public function processNotificationsFormAction(Request $request)
     {
         return $this->processForm(

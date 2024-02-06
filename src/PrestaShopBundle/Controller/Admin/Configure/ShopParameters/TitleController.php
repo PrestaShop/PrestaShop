@@ -37,8 +37,8 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\TitleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,13 +51,12 @@ class TitleController extends FrameworkBundleAdminController
     /**
      * Show customer titles page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @param Request $request
      * @param TitleFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function indexAction(Request $request, TitleFilters $filters): Response
     {
         $titleGridFactory = $this->get('prestashop.core.grid.factory.title');
@@ -74,16 +73,11 @@ class TitleController extends FrameworkBundleAdminController
     /**
      * Displays and handles title form.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_title_index",
-     *     message="You need permission to create this."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_title_index', message: 'You need permission to create this.')]
     public function createAction(Request $request): Response
     {
         $titleForm = $this->getFormBuilder()->getForm();
@@ -110,17 +104,12 @@ class TitleController extends FrameworkBundleAdminController
     /**
      * Displays title form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_title_index",
-     *     message="You need permission to edit this."
-     * )
-     *
      * @param int $titleId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_title_index', message: 'You need permission to edit this.')]
     public function editAction(int $titleId, Request $request): Response
     {
         $titleForm = null;
@@ -159,17 +148,12 @@ class TitleController extends FrameworkBundleAdminController
     /**
      * Deletes title.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_title_index",
-     *     message="You need permission to delete this."
-     * )
-     *
      * @param int $titleId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_title_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_title_index', message: 'You need permission to delete this.')]
     public function deleteAction(int $titleId): RedirectResponse
     {
         try {
@@ -188,13 +172,12 @@ class TitleController extends FrameworkBundleAdminController
     /**
      * Deletes titles in bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_title_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_title_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_title_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $titleIds = $this->getBulkTitlesFromRequest($request);

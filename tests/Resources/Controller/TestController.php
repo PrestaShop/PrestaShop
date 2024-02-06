@@ -26,28 +26,41 @@
 
 namespace Tests\Resources\Controller;
 
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * Class is used to test @AdminSecurity annotation linter
+ * Class is used to test #[AdminSecurity()] attribute linter
  */
-class TestController
+#[Route('/tests')]
+class TestController extends AbstractController
 {
-    /**
-     * @AdminSecurity()
-     */
+    #[AdminSecurity(new Expression('is_granted("ROLE_UNKNOWN")'))]
+    #[Route('/', name: 'test_index')]
     public function indexAction()
     {
         return new Response();
     }
 
+    #[Route('/create', name: 'test_create')]
     public function createAction()
     {
         return new Response();
     }
 
+    #[AdminSecurity(new Expression('is_granted("ROLE_EMPLOYEE")'))]
+    #[Route('/something-complex', name: 'test_something_complex')]
     public function doSomethingComplexAction()
+    {
+        return new Response('ComplexAction');
+    }
+
+    #[AdminSecurity(new Expression('is_granted("ROLE_UNKNOWN")'), redirectRoute: 'test_something_complex')]
+    #[Route('/test-redirect', name: 'test_redirect')]
+    public function doRedirectIfForbidden(): Response
     {
         return new Response();
     }

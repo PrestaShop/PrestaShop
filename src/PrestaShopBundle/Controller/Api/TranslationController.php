@@ -37,7 +37,7 @@ use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\TranslatorInterface;
@@ -57,12 +57,11 @@ class TranslationController extends ApiController
     /**
      * Show translations for 1 domain & 1 locale given & 1 theme given (optional).
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function listDomainTranslationAction(Request $request): JsonResponse
     {
         try {
@@ -121,12 +120,11 @@ class TranslationController extends ApiController
     /**
      * Show tree for translation page with some params.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function listTreeAction(Request $request)
     {
         try {
@@ -170,12 +168,11 @@ class TranslationController extends ApiController
     /**
      * Route to edit translation.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) or is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) or is_granted('update', request.get('_legacy_controller'))")]
     public function translationEditAction(Request $request)
     {
         try {
@@ -228,12 +225,11 @@ class TranslationController extends ApiController
     /**
      * Route to reset translation.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) or is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) or is_granted('update', request.get('_legacy_controller'))")]
     public function translationResetAction(Request $request)
     {
         try {

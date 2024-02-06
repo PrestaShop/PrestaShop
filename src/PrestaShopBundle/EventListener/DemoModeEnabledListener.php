@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\EventListener;
 
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

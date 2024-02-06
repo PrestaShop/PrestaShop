@@ -46,7 +46,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinition
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnStatesFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderStatesFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,10 +57,9 @@ use Symfony\Component\HttpFoundation\Response;
 class OrderStateController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
         OrderStatesFilters $orderStatesFilters,
@@ -88,10 +87,9 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Process Grid search.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function searchGridAction(Request $request)
     {
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
@@ -115,10 +113,9 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Show order_state create form & handle processing of it.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(Request $request)
     {
         $orderStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_state_form_builder')->getForm();
@@ -162,10 +159,9 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Show order_state edit form & handle processing of it.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function editAction(int $orderStateId, Request $request)
     {
         $orderStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_state_form_builder')->getFormFor($orderStateId);
@@ -217,10 +213,9 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Show order return state create form & handle processing of it.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createOrderReturnStateAction(Request $request)
     {
         $orderReturnStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_return_state_form_builder')->getForm();
@@ -256,10 +251,9 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Show order return state edit form & handle processing of it.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function editOrderReturnStateAction(int $orderReturnStateId, Request $request)
     {
         $orderReturnStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_return_state_form_builder')->getFormFor($orderReturnStateId);
@@ -304,12 +298,11 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Deletes order return state
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_order_states")
-     *
      * @param int $orderReturnStateId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states')]
     public function deleteOrderReturnStateAction(Request $request, int $orderReturnStateId): RedirectResponse
     {
         try {
@@ -330,16 +323,11 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Delete order return states in bulk action.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_order_states",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to delete this.')]
     public function deleteOrderReturnStateBulkAction(Request $request): RedirectResponse
     {
         $orderReturnStateIds = $this->getBulkOrderReturnStatesFromRequest($request);
@@ -360,16 +348,11 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Toggle order state delivery option.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_order_states",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderStateId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to edit this.')]
     public function toggleDeliveryAction($orderStateId)
     {
         try {
@@ -395,16 +378,11 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Toggle order state invoice option.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_order_states",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderStateId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to edit this.')]
     public function toggleInvoiceAction($orderStateId)
     {
         try {
@@ -430,16 +408,11 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Toggle order state send_email option.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_order_states",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderStateId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to edit this.')]
     public function toggleSendEmailAction($orderStateId)
     {
         try {
@@ -465,12 +438,11 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Deletes order state
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_order_states")
-     *
      * @param int $orderStateId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states')]
     public function deleteAction(Request $request, int $orderStateId): RedirectResponse
     {
         try {
@@ -491,16 +463,11 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Delete order states in bulk action.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_order_states",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to delete this.')]
     public function deleteBulkAction(Request $request): RedirectResponse
     {
         $orderStateIds = $this->getBulkOrderStatesFromRequest($request);

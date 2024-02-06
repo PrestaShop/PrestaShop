@@ -48,8 +48,8 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformati
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,9 +60,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AttachmentController extends FrameworkBundleAdminController
 {
-    /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, AttachmentFilters $filters): Response
     {
         $attachmentGridFactory = $this->get('prestashop.core.grid.factory.attachment');
@@ -79,14 +77,9 @@ class AttachmentController extends FrameworkBundleAdminController
     /**
      * Show "Add new" form and handle form submit.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attachments_index",
-     *     message="You do not have permission to create this."
-     * )
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_attachments_index', message: 'You do not have permission to create this.')]
     public function createAction(Request $request)
     {
         $attachmentFormBuilder = $this->get(
@@ -133,16 +126,11 @@ class AttachmentController extends FrameworkBundleAdminController
     /**
      * Show & process attachment editing.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attachments_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $attachmentId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_attachments_index', message: 'You do not have permission to edit this.')]
     public function editAction($attachmentId, Request $request)
     {
         try {
@@ -199,13 +187,8 @@ class AttachmentController extends FrameworkBundleAdminController
 
     /**
      * View attachment.
-     *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attachments_index",
-     *     message="You do not have permission to edit this."
-     * )
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_attachments_index', message: 'You do not have permission to edit this.')]
     public function viewAction(int $attachmentId): Response
     {
         try {
@@ -222,10 +205,9 @@ class AttachmentController extends FrameworkBundleAdminController
 
     /**
      * Deletes attachment
-     *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_attachments_index")
      */
     #[DemoRestricted(redirectRoute: 'admin_attachments_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_attachments_index')]
     public function deleteAction(int $attachmentId): RedirectResponse
     {
         try {
@@ -243,13 +225,8 @@ class AttachmentController extends FrameworkBundleAdminController
 
     /**
      * Delete attachments in bulk action.
-     *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attachments_index",
-     *     message="You do not have permission to delete this."
-     * )
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_attachments_index', message: 'You do not have permission to delete this.')]
     public function deleteBulkAction(Request $request): RedirectResponse
     {
         $attachmentIds = $this->getBulkAttachmentsFromRequest($request);
@@ -268,12 +245,11 @@ class AttachmentController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")
-     *
      * @param int $attachmentId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")]
     public function getAttachmentInfoAction(int $attachmentId): JsonResponse
     {
         $attachmentInfo = $this->getQueryBus()->handle(new GetAttachmentInformation($attachmentId));
@@ -282,12 +258,11 @@ class AttachmentController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")
-     *
      * @param string $searchPhrase
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")]
     public function searchAction(string $searchPhrase): JsonResponse
     {
         try {
