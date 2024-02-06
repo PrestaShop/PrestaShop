@@ -47,6 +47,8 @@ class StockMvt
     private $idStockMvt;
 
     /**
+     * Reference to entry in ps_stock_available table to which the movement is related
+     *
      * @var int
      *
      * @ORM\Column(name="id_stock", type="integer", nullable=false)
@@ -59,13 +61,6 @@ class StockMvt
      * @ORM\Column(name="id_order", type="integer", nullable=true)
      */
     private $idOrder;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id_supply_order", type="integer", nullable=true, options={"default":0})
-     */
-    private $idSupplyOrder = 0;
 
     /**
      * @var int
@@ -116,38 +111,16 @@ class StockMvt
      */
     private $sign = 1;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="price_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":"0.000000"})
-     */
-    private $priceTe = '0.000000';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="last_wa", type="decimal", precision=20, scale=6, nullable=true, options={"default":"0.000000"})
-     */
-    private $lastWa = '0.000000';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="current_wa", type="decimal", precision=20, scale=6, nullable=true, options={"default":"0.000000"})
-     */
-    private $currentWa = '0.000000';
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="referer", type="bigint", nullable=true)
-     */
-    private $referer;
-
     public function __construct()
     {
         $configuration = new Configuration();
-        $this->setIdStockMvtReason($this->getSign() >= 1 ? $configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION'));
+
+        // Default movement reason in case nothing else was provided
+        $this->setIdStockMvtReason(
+            $this->getSign() >= 1 ?
+            $configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') :
+            $configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')
+        );
     }
 
     /**
@@ -206,30 +179,6 @@ class StockMvt
     public function getIdOrder()
     {
         return $this->idOrder;
-    }
-
-    /**
-     * Set idSupplyOrder.
-     *
-     * @param int $idSupplyOrder
-     *
-     * @return StockMvt
-     */
-    public function setIdSupplyOrder($idSupplyOrder)
-    {
-        $this->idSupplyOrder = $idSupplyOrder;
-
-        return $this;
-    }
-
-    /**
-     * Get idSupplyOrder.
-     *
-     * @return int
-     */
-    public function getIdSupplyOrder()
-    {
-        return $this->idSupplyOrder;
     }
 
     /**
@@ -398,101 +347,5 @@ class StockMvt
     public function getSign()
     {
         return $this->sign;
-    }
-
-    /**
-     * Set priceTe.
-     *
-     * @param string $priceTe
-     *
-     * @return StockMvt
-     */
-    public function setPriceTe($priceTe)
-    {
-        $this->priceTe = $priceTe;
-
-        return $this;
-    }
-
-    /**
-     * Get priceTe.
-     *
-     * @return string
-     */
-    public function getPriceTe()
-    {
-        return $this->priceTe;
-    }
-
-    /**
-     * Set lastWa.
-     *
-     * @param string $lastWa
-     *
-     * @return StockMvt
-     */
-    public function setLastWa($lastWa)
-    {
-        $this->lastWa = $lastWa;
-
-        return $this;
-    }
-
-    /**
-     * Get lastWa.
-     *
-     * @return string
-     */
-    public function getLastWa()
-    {
-        return $this->lastWa;
-    }
-
-    /**
-     * Set currentWa.
-     *
-     * @param string $currentWa
-     *
-     * @return StockMvt
-     */
-    public function setCurrentWa($currentWa)
-    {
-        $this->currentWa = $currentWa;
-
-        return $this;
-    }
-
-    /**
-     * Get currentWa.
-     *
-     * @return string
-     */
-    public function getCurrentWa()
-    {
-        return $this->currentWa;
-    }
-
-    /**
-     * Set referer.
-     *
-     * @param int $referer
-     *
-     * @return StockMvt
-     */
-    public function setReferer($referer)
-    {
-        $this->referer = $referer;
-
-        return $this;
-    }
-
-    /**
-     * Get referer.
-     *
-     * @return int
-     */
-    public function getReferer()
-    {
-        return $this->referer;
     }
 }
