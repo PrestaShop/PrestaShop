@@ -1,8 +1,11 @@
 name: UI tests code checks
 
 on:
+  push:
+    paths:
+      - 'tests/UI/**'
+      - '.github/workflows/ui_tests_code_checks.yml'
   pull_request:
-    types: [ opened, reopened, synchronize, edited ]
     paths:
       - 'tests/UI/**'
       - '.github/workflows/ui_tests_code_checks.yml'
@@ -26,16 +29,16 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright/
           key: ${{ runner.os }}-browsers
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -51,16 +54,16 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright/
           key: ${{ runner.os }}-browsers
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -76,16 +79,16 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright/
           key: ${{ runner.os }}-browsers
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
