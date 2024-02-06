@@ -1109,7 +1109,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * @deprecated 1.7 This function shouldn't be used, use $this->registerStylesheet() instead
+     * @deprecated since 1.7 This function shouldn't be used, use $this->registerStylesheet() instead
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
     {
@@ -1130,7 +1130,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->unregisterStylesheet() instead
+     * @deprecated since 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->unregisterStylesheet() instead
      */
     public function removeCSS($css_uri, $css_media_type = 'all', $check_path = true)
     {
@@ -1151,7 +1151,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() instead
+     * @deprecated since 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() instead
      */
     public function addJS($js_uri, $check_path = true)
     {
@@ -1172,7 +1172,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->unregisterJavascript() instead
+     * @deprecated since 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->unregisterJavascript() instead
      */
     public function removeJS($js_uri, $check_path = true)
     {

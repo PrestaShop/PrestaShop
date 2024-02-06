@@ -230,7 +230,7 @@ class Install extends AbstractInstall
         );
 
         $settings_content = "<?php\n";
-        $settings_content .= '//@deprecated 1.7';
+        $settings_content .= '//@deprecated since 1.7';
 
         if (!file_put_contents(_PS_ROOT_DIR_ . '/' . $this->settingsFile, $settings_content)) {
             $this->setError($this->translator->trans('Cannot write settings file', [], 'Install'));

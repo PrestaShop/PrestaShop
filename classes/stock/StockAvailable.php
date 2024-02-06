@@ -50,14 +50,6 @@ class StockAvailableCore extends ObjectModel
     public $quantity = 0;
 
     /**
-     * @deprecated since 1.7.8 and will be removed in future version.
-     * This property was only relevant to advanced stock management and that feature is not maintained anymore.
-     *
-     * @var bool determine if the available stock value depends on physical stock
-     */
-    public $depends_on_stock = false;
-
-    /**
      * Determine if a product is out of stock - it was previously in Product class
      *  - O Deny orders
      *  - 1 Allow orders
@@ -82,7 +74,6 @@ class StockAvailableCore extends ObjectModel
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true, 'range' => ['min' => StockSettings::INT_32_MAX_NEGATIVE, 'max' => StockSettings::INT_32_MAX_POSITIVE]],
-            'depends_on_stock' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
             'out_of_stock' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
             'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
         ],
@@ -712,12 +703,11 @@ class StockAvailableCore extends ObjectModel
 				id_shop,
 				id_shop_group,
 				quantity,
-				depends_on_stock,
 				out_of_stock,
 				location
 			)
 			(
-				SELECT id_product, id_product_attribute, ' . (int) $dst_shop_id . ', 0, quantity, depends_on_stock, out_of_stock, location
+				SELECT id_product, id_product_attribute, ' . (int) $dst_shop_id . ', 0, quantity, out_of_stock, location
 				FROM ' . _DB_PREFIX_ . 'stock_available
 				WHERE id_shop = ' . (int) $src_shop_id .
             ')';

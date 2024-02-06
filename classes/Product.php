@@ -39,13 +39,6 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 class ProductCore extends ObjectModel
 {
-    /**
-     * @var string Tax name
-     *
-     * @deprecated Since 1.4
-     */
-    public $tax_name = 'deprecated';
-
     /** @var float Tax rate */
     public $tax_rate;
 
@@ -253,32 +246,9 @@ class ProductCore extends ObjectModel
     public $state = self::STATE_SAVED;
 
     /**
-     * @var float Base price of the product
-     *
-     * @deprecated 1.6.0.13
-     */
-    public $base_price;
-
-    /**
      * @var int|null TaxRulesGroup identifier
      */
     public $id_tax_rules_group;
-
-    /**
-     * @var int
-     *          We keep this variable for retrocompatibility for themes
-     *
-     * @deprecated 1.5.0
-     */
-    public $id_color_default = 0;
-
-    /**
-     * @deprecated since 1.7.8 and will be removed in future version.
-     * This property was only relevant to advanced stock management and that feature is not maintained anymore.
-     *
-     * @var bool Tells if the product uses the advanced stock management
-     */
-    public $advanced_stock_management = false;
 
     /**
      * @deprecated since 1.7.8 and will be removed in future version.
@@ -290,14 +260,6 @@ class ProductCore extends ObjectModel
      *          - 2 Use global setting
      */
     public $out_of_stock = OutOfStockType::OUT_OF_STOCK_DEFAULT;
-
-    /**
-     * @deprecated since 1.7.8 and will be removed in future version.
-     * This property was only relevant to advanced stock management and that feature is not maintained anymore.
-     *
-     * @var bool|null
-     */
-    public $depends_on_stock = false;
 
     /**
      * @var bool
@@ -508,7 +470,7 @@ class ProductCore extends ObjectModel
             'unit_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
             /*
              * Only the DB field is deprecated because unit_price is the new reference, we need to keep the class field though
-             * @deprecated in 8.0 this DB column will be removed in a future version
+             * @deprecated since 8.0 this DB column will be removed in a future version
              */
             'unit_price_ratio' => ['type' => self::TYPE_FLOAT, 'shop' => true],
             'additional_shipping_cost' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
@@ -526,7 +488,6 @@ class ProductCore extends ObjectModel
             'indexed' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'visibility' => ['type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isProductVisibility', 'values' => ['both', 'catalog', 'search', 'none'], 'default' => 'both'],
             'cache_default_attribute' => ['type' => self::TYPE_INT, 'shop' => true],
-            'advanced_stock_management' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'],
             'pack_stock_type' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'],
@@ -732,9 +693,6 @@ class ProductCore extends ObjectModel
             $this->tax_rate = $this->getTaxesRate(new Address($address));
 
             $this->new = $this->isNew();
-
-            // Keep base price
-            $this->base_price = $this->price;
 
             $this->price = Product::getPriceStatic((int) $this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
             $this->tags = Tag::getProductTags((int) $this->id);

@@ -3672,33 +3672,6 @@ class AdminImportControllerCore extends AdminController
         }
     }
 
-    /**
-     * @since 1.5.0
-     * @deprecated Since 9.0 and will be removed in 10.0
-     */
-    public function supplyOrdersImport($offset = false, $limit = false, $validateOnly = false)
-    {
-        @trigger_error(sprintf(
-            '%s is deprecated since 9.0 and will be removed in 10.0.',
-            __METHOD__
-        ), E_USER_DEPRECATED);
-
-        return 0;
-    }
-
-    /**
-     * @deprecated Since 9.0 and will be removed in 10.0
-     */
-    public function supplyOrdersDetailsImport($offset = false, $limit = false, &$crossStepsVariables = false, $validateOnly = false)
-    {
-        @trigger_error(sprintf(
-            '%s is deprecated since 9.0 and will be removed in 10.0.',
-            __METHOD__
-        ), E_USER_DEPRECATED);
-
-        return 0;
-    }
-
     public function utf8EncodeArray($array)
     {
         return is_array($array) ? array_map('utf8_encode', $array) : utf8_encode($array);
@@ -3841,7 +3814,6 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_group_reduction_cache`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_sale`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_supplier`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock_available`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock_mvt`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'customization`');

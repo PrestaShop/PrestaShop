@@ -59,11 +59,6 @@ class StockMvt
     private ?int $idOrder;
 
     /**
-     * @ORM\Column(name="id_supply_order", type="integer", nullable=true, options={"default":0})
-     */
-    private ?int $idSupplyOrder = 0;
-
-    /**
      * @ORM\Column(name="id_stock_mvt_reason", type="integer", nullable=false)
      */
     private int $idStockMvtReason;
@@ -100,30 +95,16 @@ class StockMvt
      */
     private int $sign = 1;
 
-    /**
-     * @ORM\Column(name="price_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":"0.000000"})
-     */
-    private ?string $priceTe = '0.000000';
-
-    /**
-     * @ORM\Column(name="last_wa", type="decimal", precision=20, scale=6, nullable=true, options={"default":"0.000000"})
-     */
-    private ?string $lastWa = '0.000000';
-
-    /**
-     * @ORM\Column(name="current_wa", type="decimal", precision=20, scale=6, nullable=true, options={"default":"0.000000"})
-     */
-    private ?string $currentWa = '0.000000';
-
-    /**
-     * @ORM\Column(name="referer", type="bigint", nullable=true)
-     */
-    private ?int $referer;
-
     public function __construct()
     {
         $configuration = new Configuration();
-        $this->setIdStockMvtReason($this->getSign() >= 1 ? $configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION'));
+
+        // Default movement reason in case nothing else was provided
+        $this->setIdStockMvtReason(
+            $this->getSign() >= 1 ?
+            $configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') :
+            $configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')
+        );    
     }
 
     public function getIdStockMvt(): int
@@ -153,18 +134,6 @@ class StockMvt
     public function getIdOrder(): ?int
     {
         return $this->idOrder;
-    }
-
-    public function setIdSupplyOrder(?int $idSupplyOrder): static
-    {
-        $this->idSupplyOrder = $idSupplyOrder;
-
-        return $this;
-    }
-
-    public function getIdSupplyOrder(): ?int
-    {
-        return $this->idSupplyOrder;
     }
 
     public function setIdStockMvtReason(int $idStockMvtReason): static
@@ -249,53 +218,5 @@ class StockMvt
     public function getSign(): int
     {
         return $this->sign;
-    }
-
-    public function setPriceTe(?string $priceTe): static
-    {
-        $this->priceTe = $priceTe;
-
-        return $this;
-    }
-
-    public function getPriceTe(): ?string
-    {
-        return $this->priceTe;
-    }
-
-    public function setLastWa(?string $lastWa): static
-    {
-        $this->lastWa = $lastWa;
-
-        return $this;
-    }
-
-    public function getLastWa(): ?string
-    {
-        return $this->lastWa;
-    }
-
-    public function setCurrentWa(?string $currentWa): static
-    {
-        $this->currentWa = $currentWa;
-
-        return $this;
-    }
-
-    public function getCurrentWa(): ?string
-    {
-        return $this->currentWa;
-    }
-
-    public function setReferer(?int $referer): static
-    {
-        $this->referer = $referer;
-
-        return $this;
-    }
-
-    public function getReferer(): ?int
-    {
-        return $this->referer;
     }
 }

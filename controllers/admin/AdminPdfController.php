@@ -182,18 +182,6 @@ class AdminPdfControllerCore extends AdminController
         $this->generatePDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP);
     }
 
-    /**
-     * @deprecated Since 9.0 and will be removed in 10.0
-     */
-    public function processGenerateSupplyOrderFormPDF()
-    {
-        @trigger_error(sprintf(
-            '%s is deprecated since 9.0 and will be removed in 10.0.',
-            __METHOD__
-        ), E_USER_DEPRECATED);
-        die;
-    }
-
     public function generateDeliverySlipPDFByIdOrderInvoice($id_order_invoice)
     {
         $order_invoice = new OrderInvoice((int) $id_order_invoice);

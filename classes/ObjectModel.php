@@ -86,14 +86,14 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     protected static $fieldsRequiredDatabase = null;
 
     /**
-     * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
+     * @deprecated since 1.5.0.1 Define property using $definition['table'] property instead.
      *
      * @var string
      */
     protected $table;
 
     /**
-     * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
+     * @deprecated since 1.5.0.1 Define property using $definition['table'] property instead.
      *
      * @var string
      */
@@ -1233,15 +1233,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                     if (isset($data['copy_post']) && !$data['copy_post']) {
                         continue;
                     }
-                    if ($field == 'passwd') {
-                        /** @var PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-                        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-                        if ($value = Tools::getValue($field)) {
-                            $this->{$field} = $crypto->hash($value, _COOKIE_KEY_);
-                        }
-                    } else {
-                        $this->{$field} = $value;
-                    }
+                    $this->{$field} = $value;
                 }
             }
         }

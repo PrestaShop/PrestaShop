@@ -144,14 +144,6 @@ class ConfigurationCore extends ObjectModel
     }
 
     /**
-     * @deprecated 8.0.0 Use resetStaticCache method instead.
-     */
-    public static function clearConfigurationCacheForTesting()
-    {
-        self::resetStaticCache();
-    }
-
-    /**
      * WARNING: For testing only. Do NOT rely on this method, it may be removed at any time.
      *
      * @todo Delegate static calls from Configuration to an instance
