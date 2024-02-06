@@ -86,6 +86,7 @@ class PDFGeneratorCore extends TCPDF
         'lt' => 'dejavusans',
         'lv' => 'dejavusans',
         'tr' => 'dejavusans',
+        'ro' => 'dejavusans',
         'ko' => 'cid0kr',
         'zh' => 'cid0cs',
         'tw' => 'cid0cs',
