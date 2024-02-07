@@ -14,7 +14,7 @@ import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules
 import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
@@ -149,24 +149,24 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
 
       await homePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
     });
 
     it('should check the existence of the unit value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkUnitValue${index}`, baseContext);
 
-      const columnTitle = await productPage.getDiscountColumnTitle(page);
+      const columnTitle = await foProductPage.getDiscountColumnTitle(page);
       expect(columnTitle).to.equal(test.args.textColumnToCheck);
 
-      const columnValue = await productPage.getDiscountValue(page);
+      const columnValue = await foProductPage.getDiscountValue(page);
       expect(columnValue).to.equal(test.args.valueToCheck);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-      page = await productPage.closePage(browserContext, page, 0);
+      page = await foProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);

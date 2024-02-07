@@ -15,7 +15,7 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import attributesPage from '@pages/BO/catalog/attributes';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
-import foProductPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import ProductData from '@data/faker/product';

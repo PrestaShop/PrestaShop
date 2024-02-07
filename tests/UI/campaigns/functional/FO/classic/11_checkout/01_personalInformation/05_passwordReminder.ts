@@ -10,7 +10,7 @@ import {createAccountTest} from '@commonTests/FO/account';
 
 // Import pages
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
@@ -94,7 +94,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await homePage.goToProductPage(page, 1);
-      await productPage.addProductToTheCart(page, 1);
+      await foProductPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -181,7 +181,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
       await homePage.goToProductPage(page, 1);
-      await productPage.addProductToTheCart(page, 1);
+      await foProductPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);

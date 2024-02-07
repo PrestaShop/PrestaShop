@@ -13,7 +13,7 @@ import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRul
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Products from '@data/demo/products';
@@ -129,7 +129,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
 
       await homePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
@@ -137,30 +137,30 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscount_1', baseContext);
 
       // Check quantity for discount value
-      const quantityDiscountValue = await productPage.getQuantityDiscountValue(page);
+      const quantityDiscountValue = await foProductPage.getQuantityDiscountValue(page);
       expect(quantityDiscountValue).to.equal(newCatalogPriceRuleData.fromQuantity);
 
       // Check unit discount value
-      const unitDiscountValue = await productPage.getDiscountValue(page);
+      const unitDiscountValue = await foProductPage.getDiscountValue(page);
       expect(unitDiscountValue).to.equal(`€${newCatalogPriceRuleData.reduction}.00`);
 
       // Check discount percentage
-      let columnValue = await productPage.getDiscountPercentage(page);
+      let columnValue = await foProductPage.getDiscountPercentage(page);
       expect(columnValue).to.equal(defaultDiscount);
 
       // Check final price
-      let finalPrice = await productPage.getProductInformation(page);
+      let finalPrice = await foProductPage.getProductInformation(page);
       expect(finalPrice.price).to.equal(productPrice);
 
       // Set quantity of the product
-      await productPage.setQuantity(page, newCatalogPriceRuleData.fromQuantity);
+      await foProductPage.setQuantity(page, newCatalogPriceRuleData.fromQuantity);
 
       // Check discount value
-      columnValue = await productPage.getDiscountAmount(page);
+      columnValue = await foProductPage.getDiscountAmount(page);
       expect(columnValue).to.equal(discountAmountForNewDiscount);
 
       // Check final price
-      finalPrice = await productPage.getProductInformation(page);
+      finalPrice = await foProductPage.getProductInformation(page);
       expect(finalPrice.price).to.equal(priceAfterNewDiscount);
     });
   });
@@ -170,7 +170,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBoToUpdate', baseContext);
 
-      page = await productPage.closePage(browserContext, page, 0);
+      page = await foProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await catalogPriceRulesPage.getPageTitle(page);
       expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
@@ -207,7 +207,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
 
       await homePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
@@ -215,30 +215,30 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCatalogPriceRule', baseContext);
 
       // Check quantity for discount value
-      const quantityDiscountValue = await productPage.getQuantityDiscountValue(page);
+      const quantityDiscountValue = await foProductPage.getQuantityDiscountValue(page);
       expect(quantityDiscountValue).to.equal(editCatalogPriceRuleData.fromQuantity);
 
       // Check unit discount value
-      const unitDiscountValue = await productPage.getDiscountValue(page);
+      const unitDiscountValue = await foProductPage.getDiscountValue(page);
       expect(unitDiscountValue).to.equal(`€${editCatalogPriceRuleData.reduction}.00`);
 
       // Check discount percentage
-      let columnValue = await productPage.getDiscountPercentage(page);
+      let columnValue = await foProductPage.getDiscountPercentage(page);
       expect(columnValue).to.equal(defaultDiscount);
 
       // Check final price
-      let finalPrice = await productPage.getProductInformation(page);
+      let finalPrice = await foProductPage.getProductInformation(page);
       expect(finalPrice.price).to.equal(productPrice);
 
       // Set quantity of the product
-      await productPage.setQuantity(page, editCatalogPriceRuleData.fromQuantity);
+      await foProductPage.setQuantity(page, editCatalogPriceRuleData.fromQuantity);
 
       // Check discount value
-      columnValue = await productPage.getDiscountAmount(page);
+      columnValue = await foProductPage.getDiscountAmount(page);
       expect(columnValue).to.equal(discountAmountForUpdatedDiscount);
 
       // Check final price
-      finalPrice = await productPage.getProductInformation(page);
+      finalPrice = await foProductPage.getProductInformation(page);
       expect(finalPrice.price).to.equal(priceAfterUpdatedDiscount);
     });
   });
@@ -248,7 +248,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBoToDelete', baseContext);
 
-      page = await productPage.closePage(browserContext, page, 0);
+      page = await foProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await catalogPriceRulesPage.getPageTitle(page);
       expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);

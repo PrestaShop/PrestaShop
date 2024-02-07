@@ -10,7 +10,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
-import productPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -119,7 +119,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page);
+      await foProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(index + 1);

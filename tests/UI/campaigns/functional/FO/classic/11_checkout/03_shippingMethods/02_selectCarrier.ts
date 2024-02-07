@@ -10,7 +10,7 @@ import {createAccountTest} from '@commonTests/FO/account';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Carriers from '@data/demo/carriers';
@@ -76,14 +76,14 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
 
       await homePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should add product to cart and go to cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await productPage.addProductToTheCart(page);
+      await foProductPage.addProductToTheCart(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);

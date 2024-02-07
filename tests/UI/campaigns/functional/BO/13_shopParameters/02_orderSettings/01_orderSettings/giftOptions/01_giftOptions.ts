@@ -14,7 +14,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
@@ -183,7 +183,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
 
           // Go to the fourth product page
           await homePage.goToProductPage(page, 4);
-          await productPage.addProductToTheCart(page);
+          await foProductPage.addProductToTheCart(page);
 
           const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
           expect(notificationsNumber).to.be.equal(1);

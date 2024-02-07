@@ -15,7 +15,7 @@ import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 
 // Import FO pages
-import foProductPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Employees from '@data/demo/employees';

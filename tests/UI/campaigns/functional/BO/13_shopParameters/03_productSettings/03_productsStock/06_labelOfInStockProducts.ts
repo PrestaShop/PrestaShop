@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Products from '@data/demo/products';
@@ -79,24 +79,24 @@ describe('BO - Shop Parameters - Product Settings : Update label of in-stock pro
 
       await homePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
     });
 
     it('should check the label of in-stock product in FO product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkLabelInStock_${index}`, baseContext);
 
-      const isVisible = await productPage.isAvailabilityQuantityDisplayed(page);
+      const isVisible = await foProductPage.isAvailabilityQuantityDisplayed(page);
       expect(isVisible).to.be.equal(test.args.exist);
 
-      const availabilityLabel = await productPage.getProductAvailabilityLabel(page);
+      const availabilityLabel = await foProductPage.getProductAvailabilityLabel(page);
       expect(availabilityLabel).to.contains(test.args.labelToCheck);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-      page = await productPage.closePage(browserContext, page, 0);
+      page = await foProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);

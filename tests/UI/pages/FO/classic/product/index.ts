@@ -869,5 +869,5 @@ class Product extends FOBasePage {
   }
 }
 
-const productPage = new Product();
-export {productPage, Product};
+const foProductPage = new Product();
+export {foProductPage, Product};

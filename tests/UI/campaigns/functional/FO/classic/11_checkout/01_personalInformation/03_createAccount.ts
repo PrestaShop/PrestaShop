@@ -9,7 +9,7 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import pages
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';

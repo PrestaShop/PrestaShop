@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Products from '@data/demo/products';
@@ -48,14 +48,14 @@ describe('FO - Catalog : Check the Product page', async () => {
 
       await homePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should check the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPage', baseContext);
 
-      const result = await productPage.getProductInformation(page);
+      const result = await foProductPage.getProductInformation(page);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_1.name),
         expect(result.price).to.equal(Products.demo_1.finalPrice),

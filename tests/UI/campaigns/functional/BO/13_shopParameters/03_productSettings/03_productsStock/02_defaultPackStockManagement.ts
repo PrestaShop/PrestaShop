@@ -12,7 +12,7 @@ import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import foProductPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';

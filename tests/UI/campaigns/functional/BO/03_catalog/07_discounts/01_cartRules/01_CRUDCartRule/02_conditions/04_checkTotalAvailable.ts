@@ -16,7 +16,7 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import foProductPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Customers from '@data/demo/customers';

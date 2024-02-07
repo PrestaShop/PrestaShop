@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Products from '@data/demo/products';
@@ -129,24 +129,24 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
           await homePage.goToProductPage(page, 1);
 
-          const pageTitle = await productPage.getPageTitle(page);
+          const pageTitle = await foProductPage.getPageTitle(page);
           expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
         });
 
         it('should check the existence of product price and add to cart button', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkPrice&AddToCartButton${index}`, baseContext);
 
-          let isVisible = await productPage.isPriceDisplayed(page);
+          let isVisible = await foProductPage.isPriceDisplayed(page);
           expect(isVisible).to.equal(showPrices.args.isPriceExist);
 
-          isVisible = await productPage.isAddToCartButtonDisplayed(page);
+          isVisible = await foProductPage.isAddToCartButtonDisplayed(page);
           expect(isVisible).to.equal(showPrices.args.isAddToCartExist);
         });
 
         it('should close the page and go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
-          page = await productPage.closePage(browserContext, page, 0);
+          page = await foProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await productSettingsPage.getPageTitle(page);
           expect(pageTitle).to.contains(productSettingsPage.pageTitle);
@@ -175,24 +175,24 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
         await homePage.goToProductPage(page, 1);
 
-        const pageTitle = await productPage.getPageTitle(page);
+        const pageTitle = await foProductPage.getPageTitle(page);
         expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should check the existence of product price and add to cart button', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkPrice&AddToCartButtonVisible', baseContext);
 
-        let isVisible = await productPage.isPriceDisplayed(page);
+        let isVisible = await foProductPage.isPriceDisplayed(page);
         expect(isVisible).to.eq(true);
 
-        isVisible = await productPage.isAddToCartButtonDisplayed(page);
+        isVisible = await foProductPage.isAddToCartButtonDisplayed(page);
         expect(isVisible).to.eq(true);
       });
 
       it('should close the page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-        page = await productPage.closePage(browserContext, page, 0);
+        page = await foProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(productSettingsPage.pageTitle);

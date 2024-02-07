@@ -16,7 +16,7 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
-import productPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -173,7 +173,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
       // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      await foProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -303,7 +303,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
       // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      await foProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
