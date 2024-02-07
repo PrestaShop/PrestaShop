@@ -134,6 +134,8 @@ export default class BOBasePage extends CommonPage {
 
   public readonly themeAndLogoParentLink: string;
 
+  public readonly themeAndLogoLink: string;
+
   public readonly emailThemeLink: string;
 
   public readonly pagesLink: string;
@@ -401,6 +403,7 @@ export default class BOBasePage extends CommonPage {
     this.designParentLink = '#subtab-AdminParentThemes';
     // Theme & Logo
     this.themeAndLogoParentLink = '#subtab-AdminThemesParent';
+    this.themeAndLogoLink = '#subtab-AdminThemes';
     // Email theme
     this.emailThemeLink = '#subtab-AdminParentMailTheme';
     // Pages
