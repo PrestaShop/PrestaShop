@@ -56,11 +56,6 @@ services:
     autowire: true
     autoconfigure: true
 
-  PrestaShopBundle\EventListener\ModuleActivatedListener:
-    autowire: true
-    tags:
-      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
-
   PrestaShopBundle\EventListener\AdminSecurityListener:
     autowire: true
     tags:
