@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\CurrencyContext;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
@@ -43,50 +44,13 @@ use PrestaShopBundle\Translation\TranslatorInterface;
  */
 class CartGridDataFactory implements GridDataFactoryInterface
 {
-    /**
-     * @var GridDataFactoryInterface
-     */
-    private $cartDataFactory;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var LocaleInterface
-     */
-    private $locale;
-
-    /**
-     * @var string
-     */
-    private $contextCurrencyIsoCode;
-
-    /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
-    /**
-     * @param GridDataFactoryInterface $cartDataFactory
-     * @param TranslatorInterface $translator
-     * @param LocaleInterface $locale
-     * @param $contextCurrencyIsoCode
-     * @param CommandBusInterface $queryBus
-     */
     public function __construct(
-        GridDataFactoryInterface $cartDataFactory,
-        TranslatorInterface $translator,
-        LocaleInterface $locale,
-        $contextCurrencyIsoCode,
-        CommandBusInterface $queryBus
+        protected readonly GridDataFactoryInterface $cartDataFactory,
+        protected readonly TranslatorInterface $translator,
+        protected readonly LocaleInterface $locale,
+        protected readonly CommandBusInterface $queryBus,
+        protected readonly CurrencyContext $currencyContext,
     ) {
-        $this->cartDataFactory = $cartDataFactory;
-        $this->translator = $translator;
-        $this->locale = $locale;
-        $this->contextCurrencyIsoCode = $contextCurrencyIsoCode;
-        $this->queryBus = $queryBus;
     }
 
     /**
@@ -133,7 +97,7 @@ class CartGridDataFactory implements GridDataFactoryInterface
         $cartForViewing = $this->queryBus->handle(new GetCartForViewing((int) $record['id_cart']));
         $record['cart_total'] = $this->locale->formatPrice(
             $cartForViewing->getCartSummary()['total_products'],
-            $this->contextCurrencyIsoCode
+            $this->currencyContext->getIsoCode()
         );
 
         $record['unremovable'] = $record['status'] === CartStatus::ORDERED;

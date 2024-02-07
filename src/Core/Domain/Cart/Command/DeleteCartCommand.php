@@ -35,22 +35,13 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
  */
 class DeleteCartCommand
 {
-    /**
-     * @var CartId
-     */
-    private $cartId;
+    private CartId $cartId;
 
-    /**
-     * @param int $cartId
-     */
     public function __construct(int $cartId)
     {
         $this->cartId = new CartId($cartId);
     }
 
-    /**
-     * @return CartId
-     */
     public function getCartId(): CartId
     {
         return $this->cartId;

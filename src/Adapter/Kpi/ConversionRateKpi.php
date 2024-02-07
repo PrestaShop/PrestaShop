@@ -37,34 +37,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class ConversionRateKpi implements KpiInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @var LegacyContext
-     */
-    private $contextAdapter;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param ConfigurationInterface $configuration
-     * @param LegacyContext $contextAdapter
-     */
     public function __construct(
-        TranslatorInterface $translator,
-        ConfigurationInterface $configuration,
-        LegacyContext $contextAdapter
+        private readonly TranslatorInterface $translator,
+        private readonly ConfigurationInterface $configuration,
+        private readonly LegacyContext $contextAdapter
     ) {
-        $this->translator = $translator;
-        $this->configuration = $configuration;
-        $this->contextAdapter = $contextAdapter;
     }
 
     /**

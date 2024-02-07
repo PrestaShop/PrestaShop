@@ -24,39 +24,39 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
+use Throwable;
 
 /**
- * Class CartStatusesChoiceProvider is responsible for providing cart status choices in cart grid filters.
+ * Base class to use for bulk operations, it stores a list of exception indexed by the carts ID that was impacted.
+ * It should be used as a base class for all the bulk action exceptions.
  */
-final class CartStatusesChoiceProvider implements FormChoiceProviderInterface
+class BulkCartException extends CartException implements BulkCommandExceptionInterface
 {
     /**
-     * @var TranslatorInterface
+     * @param Throwable[] $exceptions
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
      */
-    private $translator;
-
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
+    public function __construct(
+        private readonly array $exceptions,
+        string $message = 'Errors occurred during Cart bulk action',
+        int $code = 0,
+        Throwable $previous = null
+    ) {
+        parent::__construct($message, $code, $previous);
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
-    public function getChoices(): array
+    public function getExceptions(): array
     {
-        return [
-            $this->translator->trans('Ordered', [], 'Admin.Orderscustomers.Feature') => CartStatus::ORDERED,
-            $this->translator->trans('Non ordered', [], 'Admin.Orderscustomers.Feature') => CartStatus::NOT_ORDERED,
-            $this->translator->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') => CartStatus::ABANDONED_CART,
-        ];
+        return $this->exceptions;
     }
 }

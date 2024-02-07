@@ -12,7 +12,7 @@ admin_carts_search:
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
-    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.cart
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory
     redirectRoute: admin_carts_index
     _legacy_controller: AdminCarts
     _legacy_link: AdminCarts

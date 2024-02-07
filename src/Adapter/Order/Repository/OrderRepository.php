@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Order\Repository;
 
 use Doctrine\DBAL\Connection;
-use Exception;
 use Order;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -41,22 +40,10 @@ use PrestaShopException;
 
 class OrderRepository extends AbstractObjectModelRepository
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
     public function __construct(
-        Connection $connection,
-        string $dbPrefix
+        private readonly Connection $connection,
+        private string $dbPrefix
     ) {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
     }
 
     /**
@@ -98,37 +85,27 @@ class OrderRepository extends AbstractObjectModelRepository
      *
      * @param CartId $cartId
      *
-     * @return Order|null
+     * @return Order
      *
      * @throws CoreException
+     * @throws OrderException
+     * @throws OrderNotFoundException
+     * @throws \Doctrine\DBAL\Exception
      */
-    public function findByCartId(CartId $cartId): ?Order
+    public function getByCartId(CartId $cartId): Order
     {
-        try {
-            $orderId = $this->connection->createQueryBuilder()
-                ->select('id_order')
-                ->from($this->dbPrefix . 'orders')
-                ->where('id_cart = :cartId')
-                ->setParameter('cartId', $cartId->getValue())
-                ->execute()
-                ->fetchOne();
+        $orderId = $this->connection->createQueryBuilder()
+            ->select('id_order')
+            ->from($this->dbPrefix . 'orders')
+            ->where('id_cart = :cartId')
+            ->setParameter('cartId', $cartId->getValue())
+            ->execute()
+            ->fetchOne();
 
-            if ($orderId) {
-                return $this->get(new OrderId((int) $orderId));
-            }
-
-            return null;
-        } catch (Exception $e) {
-            throw new CoreException(
-                sprintf(
-                    'Error occurred when trying to get %s by cart #%d [%s]',
-                    Order::class,
-                    $cartId->getValue(),
-                    $e->getMessage()
-                ),
-                0,
-                $e
-            );
+        if ($orderId) {
+            return $this->get(new OrderId((int) $orderId));
         }
+
+        throw new OrderNotFoundException(message: sprintf('Order for cart #%d was not found', $cartId->getValue()));
     }
 }

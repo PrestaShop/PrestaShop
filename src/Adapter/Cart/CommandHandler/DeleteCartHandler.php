@@ -37,31 +37,19 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\DeleteCartHandlerInter
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteOrderedCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Handles deletion of cart using legacy object model
  */
 #[AsCommandHandler]
-final class DeleteCartHandler extends AbstractCartHandler implements DeleteCartHandlerInterface
+class DeleteCartHandler extends AbstractCartHandler implements DeleteCartHandlerInterface
 {
-    /**
-     * @var CartRepository
-     */
-    private $cartRepository;
-
-    /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
-
-    /**
-     * @param CartRepository $cartRepository
-     */
-    public function __construct(CartRepository $cartRepository, OrderRepository $orderRepository)
-    {
-        $this->cartRepository = $cartRepository;
-        $this->orderRepository = $orderRepository;
+    public function __construct(
+        protected readonly CartRepository $cartRepository,
+        protected readonly OrderRepository $orderRepository
+    ) {
     }
 
     /**
@@ -74,10 +62,12 @@ final class DeleteCartHandler extends AbstractCartHandler implements DeleteCartH
      */
     public function handle(DeleteCartCommand $command): void
     {
-        $order = $this->orderRepository->findByCartId($command->getCartId());
-        if ($order) {
+        try {
+            $this->orderRepository->getByCartId($command->getCartId());
             throw new CannotDeleteOrderedCartException(sprintf('Cart "%s" with order cannot be deleted.', $command->getCartId()->getValue()));
+        } catch (OrderNotFoundException $e) {
+            // Cart is not linked to any order, we can safely delete it
+            $this->cartRepository->delete($command->getCartId());
         }
-        $this->cartRepository->delete($command->getCartId());
     }
 }

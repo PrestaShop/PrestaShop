@@ -418,6 +418,11 @@ services:
     autowire: true
     public: true
 
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory:
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    autowire: true
+    public: true
+
   # deprecated services
   # Alias for this abstract definition causes tests in vendor fail for some reason, so we stick to full definition instead
   prestashop.core.grid.definition.factory.abstract_grid_definition:
@@ -430,14 +435,3 @@ services:
     deprecated:
       package: PrestaShop\PrestaShop
       version: 9.0
-
-  prestashop.core.grid.definition.factory.cart:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-    autowire: true
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
-      - '@prestashop.adapter.shop.context'
-      - '@=service("prestashop.adapter.multistore_feature").isActive()'
-      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CartStatusesChoiceProvider'
-    public: true

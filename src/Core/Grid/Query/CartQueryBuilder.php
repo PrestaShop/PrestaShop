@@ -41,16 +41,6 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
  */
 final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
 {
-    /**
-     * @var DoctrineSearchCriteriaApplicatorInterface
-     */
-    private $searchCriteriaApplicator;
-
-    /**
-     * @var MultistoreContextCheckerInterface
-     */
-    private $multistoreContextChecker;
-
     /** @var int */
     private const CUSTOMER_ONLINE_TIME = 1800; // 30 min
 
@@ -63,12 +53,10 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        MultistoreContextCheckerInterface $multistoreContextChecker,
+        private readonly DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
+        private readonly MultistoreContextCheckerInterface $multistoreContextChecker,
     ) {
         parent::__construct($connection, $dbPrefix);
-        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->multistoreContextChecker = $multistoreContextChecker;
     }
 
     /**

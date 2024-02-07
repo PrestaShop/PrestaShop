@@ -530,7 +530,7 @@ services:
   prestashop.core.grid.factory.cart:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.cart'
-      - '@prestashop.core.grid.data.factory.cart_decorator'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\CartGridDataFactory'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'

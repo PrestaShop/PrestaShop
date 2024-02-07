@@ -666,16 +666,15 @@ services:
   prestashop.core.grid.data.factory.cart:
     class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
     arguments:
-      - '@prestashop.core.grid.query.builder.cart'
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\CartQueryBuilder'
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'cart'
 
-  prestashop.core.grid.data.factory.cart_decorator:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CartGridDataFactory'
+  PrestaShop\PrestaShop\Core\Grid\Data\Factory\CartGridDataFactory:
+    autowire: true
     arguments:
       - '@prestashop.core.grid.data.factory.cart'
       - '@translator'
       - '@prestashop.core.localization.locale.context_locale'
-      - '@=service("prestashop.adapter.legacy.context").getContext().currency.iso_code'
       - '@prestashop.core.query_bus'

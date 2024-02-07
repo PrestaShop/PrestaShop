@@ -51,6 +51,6 @@ Feature: Cart deleting in BO
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
     When I bulk delete carts "dummy_cart1,dummy_cart2"
-    Then cart "dummy_cart1" should exist because cart is already ordered
-    And cart "dummy_cart2" should exist
+    Then cart "dummy_cart1" should exist because cart is already ordered in bulk delete
+    And cart "dummy_cart2" should be deleted
     And cart "dummy_cart3" should exist

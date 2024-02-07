@@ -54,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductPriceInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\BulkCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteOrderedCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
@@ -1197,6 +1198,15 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function cartShouldExistBecauseCartIsAlreadyOrdered(string $cartReference)
     {
         $this->assertLastErrorIs(CannotDeleteOrderedCartException::class);
+        $this->cartShouldExist($cartReference);
+    }
+
+    /**
+     * @Then cart :cartReference should exist because cart is already ordered in bulk delete
+     */
+    public function cartShouldExistBecauseCartIsAlreadyOrderedInBulkDelete(string $cartReference)
+    {
+        $this->assertLastErrorIs(BulkCartException::class);
         $this->cartShouldExist($cartReference);
     }
 

@@ -233,7 +233,9 @@ services:
 
   prestashop.adapter.order.repository.order_repository:
     alias: PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository:
     arguments:

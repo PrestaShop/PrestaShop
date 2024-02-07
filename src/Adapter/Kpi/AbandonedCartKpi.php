@@ -29,10 +29,11 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 use HelperKpi;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -41,50 +42,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class AbandonedCartKpi implements KpiInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @var LegacyContext
-     */
-    private $contextAdapter;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
-     * @var FeatureFlagRepository
-     */
-    private $featureFlag;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param ConfigurationInterface $configuration
-     * @param LegacyContext $contextAdapter
-     * @param UrlGeneratorInterface $router
-     * @param FeatureFlagRepository $featureFlag
-     */
     public function __construct(
-        TranslatorInterface $translator,
-        ConfigurationInterface $configuration,
-        LegacyContext $contextAdapter,
-        UrlGeneratorInterface $router,
-        FeatureFlagRepository $featureFlag
+        private readonly LegacyContext $contextAdapter,
+        private readonly TranslatorInterface $translator,
+        private readonly ConfigurationInterface $configuration,
+        private readonly LanguageContext $languageContext,
+        private readonly UrlGeneratorInterface $router,
+        private readonly FeatureFlagStateCheckerInterface $flagStateChecker,
     ) {
-        $this->translator = $translator;
-        $this->configuration = $configuration;
-        $this->contextAdapter = $contextAdapter;
-        $this->router = $router;
-        $this->featureFlag = $featureFlag;
     }
 
     /**
@@ -92,7 +57,7 @@ final class AbandonedCartKpi implements KpiInterface
      */
     public function render()
     {
-        $dateFormat = $this->contextAdapter->getLanguage()->date_format_lite;
+        $dateFormat = $this->languageContext->getDateFormat();
 
         $helper = new HelperKpi();
         $helper->id = 'box-carts';
@@ -103,13 +68,14 @@ final class AbandonedCartKpi implements KpiInterface
             '%date1%' => date($dateFormat, strtotime('-2 day')),
             '%date2%' => date($dateFormat, strtotime('-1 day')),
         ], 'Admin.Orderscustomers.Feature');
-        $helper->href = $this->contextAdapter->getAdminLink('AdminCarts', true, [
-            'action' => 'filterOnlyAbandonedCarts',
-        ]);
 
-        if ($this->featureFlag->isEnabled(FeatureFlagSettings::FEATURE_FLAG_CARTS)) {
+        if ($this->flagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_CARTS)) {
             $helper->href = $this->router->generate('admin_carts_index', [
                 'cart[filters][status]' => CartStatus::ABANDONED_CART,
+            ]);
+        } else {
+            $helper->href = $this->contextAdapter->getAdminLink('AdminCarts', true, [
+                'action' => 'filterOnlyAbandonedCarts',
             ]);
         }
 

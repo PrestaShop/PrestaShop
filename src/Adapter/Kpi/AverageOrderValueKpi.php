@@ -37,34 +37,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class AverageOrderValueKpi implements KpiInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ShopConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @var LegacyContext
-     */
-    private $contextAdapter;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param ShopConfigurationInterface $configuration
-     * @param LegacyContext $contextAdapter
-     */
     public function __construct(
-        TranslatorInterface $translator,
-        ShopConfigurationInterface $configuration,
-        LegacyContext $contextAdapter
+        private readonly TranslatorInterface $translator,
+        private readonly ShopConfigurationInterface $configuration,
+        private readonly LegacyContext $contextAdapter
     ) {
-        $this->translator = $translator;
-        $this->configuration = $configuration;
-        $this->contextAdapter = $contextAdapter;
     }
 
     /**

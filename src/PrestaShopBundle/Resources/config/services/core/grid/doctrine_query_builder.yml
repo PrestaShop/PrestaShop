@@ -537,8 +537,7 @@ services:
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
 
-  prestashop.core.grid.query.builder.cart:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Query\CartQueryBuilder'
+  PrestaShop\PrestaShop\Core\Grid\Query\CartQueryBuilder:
     parent: 'prestashop.core.grid.abstract_query_builder'
     public: false
     arguments:

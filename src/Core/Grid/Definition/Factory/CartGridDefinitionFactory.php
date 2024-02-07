@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CartStatusesChoiceProvider;
+use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\DeleteCartAccessibilityChecker;
@@ -62,53 +64,14 @@ class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 
     public const GRID_ID = 'cart';
 
-    /**
-     * @var string
-     */
-    private $contextDateFormat;
-
-    /**
-     * @var MultistoreContextCheckerInterface
-     */
-    private $multistoreContextChecker;
-
-    /**
-     * @var bool
-     */
-    private $isMultiStoreFeatureUsed;
-
-    /**
-     * @var CartStatusesChoiceProvider
-     */
-    private $cartStatusesChoiceProvider;
-
-    /**
-     * @var DeleteCartAccessibilityChecker
-     */
-    private $deleteCartAccessibilityChecker;
-
-    /**
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param string $contextDateFormat
-     * @param MultistoreContextCheckerInterface $multistoreContextChecker
-     * @param bool $isMultiStoreFeatureUsed
-     * @param CartStatusesChoiceProvider $cartStatusesChoiceProvider
-     * @param DeleteCartAccessibilityChecker $deleteCartAccessibilityChecker
-     */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        string $contextDateFormat,
-        MultistoreContextCheckerInterface $multistoreContextChecker,
-        bool $isMultiStoreFeatureUsed,
-        CartStatusesChoiceProvider $cartStatusesChoiceProvider,
-        DeleteCartAccessibilityChecker $deleteCartAccessibilityChecker
+        protected readonly MultistoreFeature $multistoreFeature,
+        protected readonly LanguageContext $languageContext,
+        protected readonly MultistoreContextCheckerInterface $multistoreContextChecker,
+        protected readonly DeleteCartAccessibilityChecker $deleteCartAccessibilityChecker,
     ) {
         parent::__construct($hookDispatcher);
-        $this->contextDateFormat = $contextDateFormat;
-        $this->multistoreContextChecker = $multistoreContextChecker;
-        $this->isMultiStoreFeatureUsed = $isMultiStoreFeatureUsed;
-        $this->cartStatusesChoiceProvider = $cartStatusesChoiceProvider;
-        $this->deleteCartAccessibilityChecker = $deleteCartAccessibilityChecker;
     }
 
     /**
@@ -186,7 +149,7 @@ class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
             ->setName($this->trans('Date', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'date_add',
-                'format' => $this->contextDateFormat,
+                'format' => $this->languageContext->getDateTimeFormat(),
                 'clickable' => true,
             ])
             )
@@ -268,7 +231,11 @@ class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
                 (new Filter('status', ChoiceType::class))
                     ->setAssociatedColumn('status')
                     ->setTypeOptions([
-                        'choices' => $this->cartStatusesChoiceProvider->getChoices(),
+                        'choices' => [
+                            $this->translator->trans('Ordered', [], 'Admin.Orderscustomers.Feature') => CartStatus::ORDERED,
+                            $this->translator->trans('Non ordered', [], 'Admin.Orderscustomers.Feature') => CartStatus::NOT_ORDERED,
+                            $this->translator->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') => CartStatus::ABANDONED_CART,
+                        ],
                         'expanded' => false,
                         'multiple' => false,
                         'required' => false,
@@ -368,6 +335,6 @@ class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
      */
     private function needShopNameColumn(): bool
     {
-        return $this->isMultiStoreFeatureUsed && !$this->multistoreContextChecker->isSingleShopContext();
+        return $this->multistoreFeature->isActive() && !$this->multistoreContextChecker->isSingleShopContext();
     }
 }
