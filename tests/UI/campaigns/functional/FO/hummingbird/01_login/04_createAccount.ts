@@ -16,6 +16,7 @@ import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import files from "@utils/files";
 
 const baseContext: string = 'functional_FO_hummingbird_login_createAccount';
 
@@ -36,6 +37,7 @@ describe('FO - Login : Create account', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Create account', () => {

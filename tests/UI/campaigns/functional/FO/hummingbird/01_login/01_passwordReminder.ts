@@ -22,6 +22,7 @@ import type MailDevEmail from '@data/types/maildevEmail';
 import {expect} from 'chai';
 import type MailDev from 'maildev';
 import type {BrowserContext, Page} from 'playwright';
+import files from "@utils/files";
 
 const baseContext: string = 'functional_FO_hummingbird_login_passwordReminder';
 
@@ -76,6 +77,7 @@ describe('FO - Login : Password reminder', async () => {
   after(async () => {
     await helper.closeBrowserContext(browserContext);
     mailHelper.stopListener(mailListener);
+    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Go to FO and check the password reminder', async () => {

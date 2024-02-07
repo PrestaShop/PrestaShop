@@ -17,6 +17,7 @@ import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import files from "@utils/files";
 
 const baseContext: string = 'functional_FO_hummingbird_headerAndFooter_checkLinksInHeader';
 
@@ -46,6 +47,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
     after(async () => {
       await helper.closeBrowserContext(browserContext);
+      await files.deleteFile('../../admin-dev/hummingbird.zip');
     });
 
     it('should go to FO home page', async function () {

@@ -19,6 +19,7 @@ import Languages from '@data/demo/languages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import files from "@utils/files";
 
 const baseContext: string = 'functional_FO_hummingbird_headerAndFooter_changeLanguage';
 
@@ -45,6 +46,7 @@ describe('FO - Header and Footer : Change language', async () => {
 
     after(async () => {
       await helper.closeBrowserContext(browserContext);
+      await files.deleteFile('../../admin-dev/hummingbird.zip');
     });
 
     // 1 - Disable language
