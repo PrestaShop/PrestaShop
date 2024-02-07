@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
-import productPage from '@pages/FO/classic/product';
+import {foProductPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import OrderData from '@data/faker/order';
@@ -77,7 +77,7 @@ function createShoppingCart(orderData: OrderData, baseContext: string = 'commonT
 
       await searchResultsPage.goToProductPage(page, 1);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page, orderData.products[0].quantity);
+      await foProductPage.addProductToTheCart(page, orderData.products[0].quantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
