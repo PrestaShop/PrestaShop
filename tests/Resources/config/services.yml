@@ -57,10 +57,14 @@ services:
       alias: serializer
 
     # Decorate contexts to make them mutable for test purpose only
+    # It is very important to have these decorators lazy, or it would force the early creation of the decorated service that would be
+    # built before the listeners get the chance to setup the builders
     Tests\Resources\Context\ApiClientContextDecorator:
+      lazy: true
       decorates: PrestaShop\PrestaShop\Core\Context\ApiClientContext
       arguments: ['@.inner']
 
     Tests\Resources\Context\EmployeeContextDecorator:
+      lazy: true
       decorates: PrestaShop\PrestaShop\Core\Context\EmployeeContext
       arguments: ['@.inner']
