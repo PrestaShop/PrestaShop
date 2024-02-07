@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
- <li class="mb-2 {% if message.employeeId %}messages-block-employee{% else %}messages-block-customer{% endif %}">
+ <li class="mb-2 {% if message.employeeId or message.isPrivate %}messages-block-employee{% else %}messages-block-customer{% endif %}">
   <div class="row no-gutters">
-    {% if not message.employeeId %}
+    {% if not message.employeeId and not message.isPrivate %}
       <div class="messages-block-icon">
         <i class="material-icons">account_circle</i>
       </div>
@@ -59,6 +59,22 @@
 
       <div class="messages-block-icon">
         <i class="material-icons employee-icon{{ message.isPrivate ? '--private' : '' }}"></i>
+      </div>
+    {% endif %}
+
+    {% if not message.employeeId and message.isPrivate %}
+      <div class="messages-block-content messages-block-content--manual">
+        <p class="mb-0 message automatic-message border-left border-primary">
+          {{ message.message|nl2br }}
+        </p>
+        <p class="text-muted mb-0 text-right">
+          <span class="align-middle">{{ message.messageDate.format }}</span>
+          <span class="badge badge-primary align-middle ml-2">{{ 'Private'|trans({}, 'Admin.Global') }}</span>
+        </p>
+      </div>
+
+      <div class="messages-block-icon">
+        <i class="material-icons employee-icon"></i>
       </div>
     {% endif %}
   </div>
