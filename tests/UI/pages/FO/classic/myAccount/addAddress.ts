@@ -16,7 +16,7 @@ class AddAddressPage extends FOBasePage {
 
   public readonly updateFormTitle: string;
 
-  public pageHeaderTitle: string;
+  protected pageHeaderTitle: string;
 
   private readonly addressForm: string;
 

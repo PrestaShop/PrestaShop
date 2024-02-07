@@ -56,10 +56,10 @@ describe('FO - Account : CRUD address', async () => {
   const secondAddressData: AddressData = new AddressData({country: 'France'});
 
   // Pre-condition
-  createAccountTest(newCustomerData, `${baseContext}_preTest_2`);
+  createAccountTest(newCustomerData, `${baseContext}_preTest_1`);
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_3`);
+  installHummingbird(`${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {

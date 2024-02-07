@@ -23,9 +23,9 @@ class AddressesPage extends FOBasePage {
 
   private readonly addressBlock: string;
 
-  public addressBodyTitle: string;
+  protected addressBodyTitle: string;
 
-  public createNewAddressLink: string;
+  protected createNewAddressLink: string;
 
   private readonly editAddressLink: string;
 

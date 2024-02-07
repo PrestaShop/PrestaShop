@@ -49,7 +49,7 @@ class Product extends FOBasePage {
 
   private readonly blockCartModal: string;
 
-  public proceedToCheckoutButton: string;
+  protected proceedToCheckoutButton: string;
 
   private readonly productQuantitySpan: string;
 
