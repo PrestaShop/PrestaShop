@@ -30,7 +30,6 @@ const baseContext: string = 'functional_FO_hummingbird_userAccount_CRUDAddress';
 
 /*
 Pre-condition:
-- Clear cache
 - Create account test
 - Install hummingbird theme
 Scenario:
