@@ -213,7 +213,7 @@ class CheckoutPage extends FOBasePage {
 
   private readonly deliveryAddressSection: string;
 
-  private readonly deliveryAddressPosition: (position: number) => string;
+  public deliveryAddressPosition: (position: number) => string;
 
   private readonly invoiceAddressPosition: (position: number) => string;
 

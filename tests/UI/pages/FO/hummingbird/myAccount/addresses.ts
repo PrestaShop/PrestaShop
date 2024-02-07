@@ -13,6 +13,9 @@ class Addresses extends AddressesPage {
    */
   constructor() {
     super('hummingbird');
+
+    this.createNewAddressLink = '#content a.addresses__new-address';
+    this.addressBodyTitle = 'article.address .card-body p';
   }
 }
 
