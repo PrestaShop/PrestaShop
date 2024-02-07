@@ -38,6 +38,9 @@ class OrderHistoryCore extends ObjectModel
     /** @var int Employee id for this history entry */
     public $id_employee;
 
+    /** @var string ApiAccess id for this history entry */
+    public string $api_client_id = '';
+
     /** @var string Object creation date */
     public $date_add;
 
@@ -54,6 +57,7 @@ class OrderHistoryCore extends ObjectModel
             'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_order_state' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'api_client_id' => ['type' => self::TYPE_STRING, 'size' => 255],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];

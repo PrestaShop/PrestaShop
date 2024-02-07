@@ -140,6 +140,7 @@ default:
             paths:
                 - "%paths.base%/Features/Scenario/Order"
             contexts:
+                - Tests\Integration\Behaviour\Features\Context\ApiClientFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartRuleFeatureContext

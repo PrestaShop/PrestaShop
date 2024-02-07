@@ -392,7 +392,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 new DateTimeImmutable($item['date_add']),
                 (bool) $item['send_email'],
                 $item['employee_firstname'],
-                $item['employee_lastname']
+                $item['employee_lastname'],
+                $item['api_client_id'],
             );
         }
 
@@ -703,7 +704,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
         foreach ($orderMessagesForOrderPage['messages'] as $orderMessage) {
             $messageEmployeeId = (int) $orderMessage['id_employee'];
-            $isCurrentEmployeesMessage = (int) $this->context->employee->id === $messageEmployeeId;
+            $isCurrentEmployeesMessage = $this->context->employee && ((int) $this->context->employee->id === $messageEmployeeId);
 
             $messages[] = new OrderMessageForViewing(
                 (int) $orderMessage['id_customer_message'],
