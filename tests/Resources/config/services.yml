@@ -55,3 +55,8 @@ services:
 
     Symfony\Component\Serializer\SerializerInterface:
       alias: serializer
+
+    # Decorate contexts to make them mutable for test purpose only
+    Tests\Resources\Context\EmployeeContextDecorator:
+      decorates: PrestaShop\PrestaShop\Core\Context\EmployeeContext
+      arguments: ['@.inner']
