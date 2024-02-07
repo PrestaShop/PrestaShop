@@ -737,22 +737,6 @@ abstract class ControllerCore
     }
 
     /**
-     * @deprecated deprecated since 1.7.5.0, use ajaxRender instead
-     * Dies and echoes output value
-     *
-     * @param string|null $value
-     * @param string|null $controller
-     * @param string|null $method
-     *
-     * @throws PrestaShopException
-     */
-    protected function ajaxDie($value = null, $controller = null, $method = null)
-    {
-        $this->ajaxRender($value, $controller, $method);
-        exit;
-    }
-
-    /**
      * @param string|null $value
      * @param string|null $controller
      * @param string|null $method
@@ -770,14 +754,6 @@ abstract class ControllerCore
             $method = $bt[1]['function'];
         }
 
-        /* @deprecated deprecated since 1.6.1.1 */
-        Hook::exec('actionAjaxDieBefore', ['controller' => $controller, 'method' => $method, 'value' => $value]);
-
-        /*
-         * @deprecated deprecated since 1.6.1.1
-         * use 'actionAjaxDie'.$controller.$method.'Before' instead
-         */
-        Hook::exec('actionBeforeAjaxDie' . $controller . $method, ['value' => $value]);
         Hook::exec('actionAjaxDie' . $controller . $method . 'Before', ['value' => &$value]);
         header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 

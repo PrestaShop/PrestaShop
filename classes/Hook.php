@@ -114,7 +114,6 @@ class HookCore extends ObjectModel
         'displayAdminOrderContentShip' => ['from' => '1.7.7.0'],
 
         // Controller
-        'actionAjaxDieBefore' => ['from' => '1.6.1.1'],
         'actionGetProductPropertiesAfter' => ['from' => '1.7.8.0'],
     ];
 

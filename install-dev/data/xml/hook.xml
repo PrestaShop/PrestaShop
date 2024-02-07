@@ -4559,10 +4559,5 @@
       <title>Triggers before product is added to cart</title>
       <description>Allows responding to add to cart events.</description>
     </hook>
-    <hook id="actionAjaxDieBefore">
-      <name>actionAjaxDieBefore</name>
-      <title>Triggers when returning AJAX response</title>
-      <description>Allows to modify AJAX response of controllers using ajaxRender method.</description>
-    </hook>
   </entities>
 </entity_hook>
