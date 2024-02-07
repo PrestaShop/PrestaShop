@@ -98,7 +98,7 @@ class OrderControllerCore extends FrontController
                 $context->cart = $duplication['cart'];
                 CartRule::autoAddToCart($context);
                 $this->context->cookie->write();
-                Tools::redirect('index.php?controller=order');
+                Tools::redirect($this->context->link->getPageLink('order'));
             }
         }
 

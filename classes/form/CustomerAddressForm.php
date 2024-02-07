@@ -77,7 +77,7 @@ class CustomerAddressFormCore extends AbstractForm
         }
 
         if (!$context->customer->isLogged() && !$context->customer->isGuest()) {
-            return Tools::redirect('/index.php?controller=authentication');
+            return Tools::redirect($context->link->getPageLink('authentication'));
         }
 
         if ($this->address->id_customer != $context->customer->id) {

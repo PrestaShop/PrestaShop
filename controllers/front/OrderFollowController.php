@@ -47,44 +47,89 @@ class OrderFollowControllerCore extends FrontController
             $order_qte_input = Tools::getValue('order_qte_input');
 
             if (!$id_order = (int) Tools::getValue('id_order')) {
-                Tools::redirect('index.php?controller=history');
+                Tools::redirect($this->context->link->getPageLink('history'));
             }
             if (!($ids_order_detail = Tools::getValue('ids_order_detail'))) {
-                Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorDetail1');
+                Tools::redirect($this->context->link->getPageLink(
+                    'order-detail',
+                    null,
+                    null,
+                    [
+                        'id_order' => $id_order,
+                        'errorDetail1' => 1,
+                    ]
+                ));
             }
             if (!$order_qte_input) {
-                Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorDetail2');
+                Tools::redirect($this->context->link->getPageLink(
+                    'order-detail',
+                    null,
+                    null,
+                    [
+                        'id_order' => $id_order,
+                        'errorDetail2' => 1,
+                    ]
+                ));
             }
 
             $order = new Order((int) $id_order);
             if (!$order->isReturnable()) {
-                Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorNotReturnable');
+                Tools::redirect($this->context->link->getPageLink(
+                    'order-detail',
+                    null,
+                    null,
+                    [
+                        'id_order' => $id_order,
+                        'errorNotReturnable' => 1,
+                    ]
+                ));
             }
             if ($order->id_customer != $this->context->customer->id) {
-                Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorNotReturnable');
+                Tools::redirect($this->context->link->getPageLink(
+                    'order-detail',
+                    null,
+                    null,
+                    [
+                        'id_order' => $id_order,
+                        'errorNotReturnable' => 1,
+                    ]
+                ));
             }
             $orderReturn = new OrderReturn();
             $orderReturn->id_customer = (int) $this->context->customer->id;
             $orderReturn->id_order = $id_order;
             $orderReturn->question = htmlspecialchars(Tools::getValue('returnText'));
             if (empty($orderReturn->question)) {
-                Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorMsg&' .
-                    http_build_query([
+                Tools::redirect($this->context->link->getPageLink(
+                    'order-detail',
+                    null,
+                    null,
+                    [
+                        'id_order' => $id_order,
+                        'errorMsg' => 1,
                         'ids_order_detail' => $ids_order_detail,
                         'order_qte_input' => $order_qte_input,
-                        'id_order' => Tools::getValue('id_order'),
-                    ]));
+                    ]
+                ));
             }
 
             if (!$orderReturn->checkEnoughProduct($ids_order_detail, $order_qte_input)) {
-                Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorQuantity');
+                Tools::redirect($this->context->link->getPageLink(
+                    'order-detail',
+                    null,
+                    null,
+                    [
+                        'id_order' => $id_order,
+                        'errorQuantity' => 1,
+                    ]
+                ));
             }
 
             $orderReturn->state = 1;
             $orderReturn->add();
             $orderReturn->addReturnDetail($ids_order_detail, $order_qte_input);
             Hook::exec('actionOrderReturn', ['orderReturn' => $orderReturn]);
-            Tools::redirect('index.php?controller=order-follow');
+            Tools::redirect($this->context->link->getPageLink('order-follow'));
         }
     }
 

@@ -179,7 +179,12 @@ class PasswordControllerCore extends FrontController
             } else {
                 // Both password fields posted. Check if all is right and store new password properly.
                 if (!$reset_token || (strtotime($customer->last_passwd_gen . '+' . (int) Configuration::get('PS_PASSWD_TIME_FRONT') . ' minutes') - time()) > 0) {
-                    Tools::redirect('index.php?controller=authentication&error_regen_pwd');
+                    Tools::redirect($this->context->link->getPageLink(
+                        'authentication',
+                        null,
+                        null,
+                        ['error_regen_pwd' => 1]
+                    ));
                 } else {
                     $customer->passwd = $this->get('hashing')->hash($password = Tools::getValue('passwd'), _COOKIE_KEY_);
                     $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
@@ -214,7 +219,7 @@ class PasswordControllerCore extends FrontController
                             ]);
                             $this->success[] = $this->trans('Your password has been successfully reset and a confirmation has been sent to your email address: %s', [$customer->email], 'Shop.Notifications.Success');
                             $this->context->updateCustomer($customer);
-                            $this->redirectWithNotifications('index.php?controller=my-account');
+                            $this->redirectWithNotifications($this->context->link->getPageLink('my-account'));
                         } else {
                             $this->errors[] = $this->trans('An error occurred while sending the email.', [], 'Shop.Notifications.Error');
                         }

@@ -316,7 +316,15 @@ abstract class PaymentModuleCore extends Module
                 if ($error = $rule->checkValidity($this->context, true, true)) {
                     $this->context->cart->removeCartRule((int) $rule->id);
                     if (isset($this->context->cookie, $this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code)) {
-                        Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name=' . urlencode($rule->code));
+                        Tools::redirect($this->context->link->getPageLink(
+                            'order',
+                            null,
+                            null,
+                            [
+                                'submitAddDiscount' => 1,
+                                'discount_name' => $rule->code,
+                            ]
+                        ));
                     } else {
                         $rule_name = isset($rule->name[(int) $this->context->cart->id_lang]) ? $rule->name[(int) $this->context->cart->id_lang] : $rule->code;
                         $error = $this->trans('The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart', [htmlspecialchars($rule_name), (int) $rule->id], 'Admin.Payment.Notification');

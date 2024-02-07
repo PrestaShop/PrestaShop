@@ -37,7 +37,12 @@ class PdfOrderSlipControllerCore extends FrontController
     public function postProcess()
     {
         if (!$this->context->customer->isLogged()) {
-            Tools::redirect('index.php?controller=authentication&back=order-follow');
+            Tools::redirect($this->context->link->getPageLink(
+                'authentication',
+                null,
+                null,
+                ['back' => 'order-follow']
+            ));
         }
 
         if (isset($_GET['id_order_slip']) && Validate::isUnsignedId($_GET['id_order_slip'])) {
