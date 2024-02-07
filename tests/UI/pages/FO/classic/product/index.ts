@@ -325,8 +325,9 @@ class Product extends FOBasePage {
    *
    * @param page {Page} Browser tab
    * @param email {string|null} Email if needed
+   * @return {Promise<string>}
    */
-  async notifyEmailAlert(page: Page, email: string | null = null) {
+  async notifyEmailAlert(page: Page, email: string | null = null): Promise<string> {
     if (email) {
       await this.setValue(page, this.productMailAlertsEmailInput, email);
     }

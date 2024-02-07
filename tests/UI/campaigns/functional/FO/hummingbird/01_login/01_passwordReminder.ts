@@ -2,6 +2,8 @@
 import helper from '@utils/helpers';
 import mailHelper from '@utils/mailHelper';
 import testContext from '@utils/testContext';
+import type {BrowserContext, Page} from 'playwright';
+import files from '@utils/files';
 
 // Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
@@ -21,8 +23,6 @@ import type MailDevEmail from '@data/types/maildevEmail';
 
 import {expect} from 'chai';
 import type MailDev from 'maildev';
-import type {BrowserContext, Page} from 'playwright';
-import files from "@utils/files";
 
 const baseContext: string = 'functional_FO_hummingbird_login_passwordReminder';
 

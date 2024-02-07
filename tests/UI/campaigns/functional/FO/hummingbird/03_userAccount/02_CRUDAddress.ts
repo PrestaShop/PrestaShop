@@ -1,9 +1,9 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import files from '@utils/files';
 
 // Import commonTests
-import deleteCacheTest from '@commonTests/BO/advancedParameters/cache';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/account';
 import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
@@ -25,7 +25,6 @@ import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import files from "@utils/files";
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_CRUDAddress';
 

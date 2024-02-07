@@ -1,6 +1,7 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import files from '@utils/files';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -19,7 +20,6 @@ import Languages from '@data/demo/languages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import files from "@utils/files";
 
 const baseContext: string = 'functional_FO_hummingbird_headerAndFooter_changeLanguage';
 

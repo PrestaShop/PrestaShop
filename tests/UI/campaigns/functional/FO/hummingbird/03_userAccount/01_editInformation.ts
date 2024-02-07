@@ -1,6 +1,7 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import files from '@utils/files';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
@@ -18,7 +19,6 @@ import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import files from "@utils/files";
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_editInformation';
 
