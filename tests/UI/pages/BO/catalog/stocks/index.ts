@@ -542,7 +542,7 @@ class Stocks extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterByStatus(page: Page, status: string): Promise<void> {
-    await this.openCloseAdvancedFilter(page);
+    await this.openAdvancedFilter(page);
     switch (status) {
       case 'enabled':
         await page.locator(this.filterStatusEnabledLabel).click();
@@ -565,27 +565,28 @@ class Stocks extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterByCategory(page: Page, category: string[]): Promise<void> {
-    await this.openCloseAdvancedFilter(page);
+    await this.openAdvancedFilter(page);
     await page.locator(this.filterCategoryExpandButton).first().click();
     for (let i: number = 0; i < category.length; i++) {
       await page.locator(this.filterCategoryCheckBoxDiv(category[i])).first().click();
     }
     await this.waitForHiddenSelector(page, this.productListLoading);
     await page.locator(this.filterCategoryCollapseButton).click();
-    await this.openCloseAdvancedFilter(page, false);
+    await page.locator(this.advancedFiltersButton).click();
   }
 
   /**
-   * Open / close advanced filter
+   * Open advanced filter
    * @param page {Page} Browser tab
-   * @param toOpen {boolean} True if we need to open advanced filter, false if not
    * @return {Promise<void>}
    */
-  async openCloseAdvancedFilter(page: Page, toOpen: boolean = true): Promise<void> {
-    await Promise.all([
-      page.locator(this.advancedFiltersButton).click(),
-      this.waitForVisibleSelector(page, `${this.advancedFiltersButton}[aria-expanded='${toOpen.toString()}']`),
-    ]);
+  async openAdvancedFilter(page: Page): Promise<void> {
+    if (await this.elementNotVisible(page, `${this.advancedFiltersButton}[aria-expanded='true']`)) {
+      await Promise.all([
+        page.locator(this.advancedFiltersButton).click(),
+        this.waitForVisibleSelector(page, `${this.advancedFiltersButton}[aria-expanded='true']`),
+      ]);
+    }
   }
 
   /**
