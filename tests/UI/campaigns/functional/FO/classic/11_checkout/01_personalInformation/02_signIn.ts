@@ -4,7 +4,7 @@ import helper from '@utils/helpers';
 
 // Import pages
 import {homePage} from '@pages/FO/classic/home';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
@@ -56,7 +56,7 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
     await homePage.goToProductPage(page, 1);
-    await foProductPage.addProductToTheCart(page, 1);
+    await productPage.addProductToTheCart(page, 1);
 
     const pageTitle = await cartPage.getPageTitle(page);
     expect(pageTitle).to.equal(cartPage.pageTitle);

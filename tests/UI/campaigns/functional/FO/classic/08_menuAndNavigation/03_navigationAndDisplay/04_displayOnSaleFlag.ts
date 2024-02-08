@@ -10,7 +10,7 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import addProductPage from '@pages/BO/catalog/products/add';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import ProductData from '@data/faker/product';
@@ -93,14 +93,14 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
 
       page = await addProductPage.previewProduct(page);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(onSaleProductData.name);
     });
 
     it('should check the discount flag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountTag', baseContext);
 
-      const flagText = await foProductPage.getProductTag(page);
+      const flagText = await productPage.getProductTag(page);
       expect(flagText).to.contains('On sale!');
     });
   });

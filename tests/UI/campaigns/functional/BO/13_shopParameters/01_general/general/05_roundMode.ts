@@ -16,7 +16,7 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import ProductData from '@data/faker/product';
@@ -118,21 +118,21 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           await searchResultsPage.goToProductPage(page, 1);
 
-          const pageTitle = await foProductPage.getPageTitle(page);
+          const pageTitle = await productPage.getPageTitle(page);
           expect(pageTitle).to.contains(productData.name);
         });
 
         it('should check the product price', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductPrice${index}`, baseContext);
 
-          const productPrice = await foProductPage.getProductPrice(page);
+          const productPrice = await productPage.getProductPrice(page);
           expect(productPrice).to.equal(test.args.price);
         });
 
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-          page = await foProductPage.closePage(browserContext, page, 0);
+          page = await productPage.closePage(browserContext, page, 0);
 
           const pageTitle = await generalPage.getPageTitle(page);
           expect(pageTitle).to.contains(generalPage.pageTitle);
@@ -237,21 +237,21 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           await searchResultsPage.goToProductPage(page, 1);
 
-          const pageTitle = await foProductPage.getPageTitle(page);
+          const pageTitle = await productPage.getPageTitle(page);
           expect(pageTitle).to.contains(productData.name);
         });
 
         it('should check the product price', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductPrice2${index}`, baseContext);
 
-          const productPrice = await foProductPage.getProductPrice(page);
+          const productPrice = await productPage.getProductPrice(page);
           expect(productPrice).to.equal(test.args.price);
         });
 
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo2${index}`, baseContext);
 
-          page = await foProductPage.closePage(browserContext, page, 0);
+          page = await productPage.closePage(browserContext, page, 0);
 
           const pageTitle = await generalPage.getPageTitle(page);
           expect(pageTitle).to.contains(generalPage.pageTitle);
@@ -356,21 +356,21 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           await searchResultsPage.goToProductPage(page, 1);
 
-          const pageTitle = await foProductPage.getPageTitle(page);
+          const pageTitle = await productPage.getPageTitle(page);
           expect(pageTitle).to.contains(productData.name);
         });
 
         it('should check the product price', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductPrice3${index}`, baseContext);
 
-          const productPrice = await foProductPage.getProductPrice(page);
+          const productPrice = await productPage.getProductPrice(page);
           expect(productPrice).to.equal(test.args.price);
         });
 
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo3${index}`, baseContext);
 
-          page = await foProductPage.closePage(browserContext, page, 0);
+          page = await productPage.closePage(browserContext, page, 0);
 
           const pageTitle = await generalPage.getPageTitle(page);
           expect(pageTitle).to.contains(generalPage.pageTitle);

@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import Products from '@data/demo/products';
@@ -54,14 +54,14 @@ describe('FO - Cart : Check Cart in FO', async () => {
 
       await homePage.goToProductPage(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should add product to cart and check that the number of products was updated in cart header', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
-      await foProductPage.addProductToTheCart(page);
+      await productPage.addProductToTheCart(page);
       // getNumberFromText is used to get the notifications number in the cart
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
@@ -81,14 +81,14 @@ describe('FO - Cart : Check Cart in FO', async () => {
 
       await homePage.goToProductPage(page, 2);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(Products.demo_3.name);
     });
 
     it('should add product to cart and check that the number of products was updated in cart header', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-      await foProductPage.addProductToTheCart(page);
+      await productPage.addProductToTheCart(page);
 
       // getNumberFromText is used to get the notifications number in the cart
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);

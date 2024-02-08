@@ -15,7 +15,7 @@ import preferencesPage from '@pages/BO/payment/preferences';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -208,7 +208,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             // Go to the first product page
             await homePage.goToProductPage(page, 1);
             // Add the product to the cart
-            await foProductPage.addProductToTheCart(page);
+            await productPage.addProductToTheCart(page);
             // Proceed to checkout the shopping cart
             await cartPage.clickOnProceedToCheckout(page);
 

@@ -18,7 +18,7 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import Products from '@data/demo/products';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import orderDetails from '@pages/FO/classic/myAccount/orderDetails';
 import {myAccountPage} from '@pages/FO/classic/myAccount';

@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 
 import {expect} from 'chai';
@@ -94,7 +94,7 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
       await homePage.goToProductPage(page, 1);
 
       // Add the created product to the cart
-      await foProductPage.addProductToTheCart(page);
+      await productPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(index + 1);

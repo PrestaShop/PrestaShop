@@ -16,7 +16,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
@@ -133,15 +133,15 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
       await homePage.searchProduct(page, Products.demo_8.name);
       await searchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(Products.demo_8.name);
     });
 
     it('should add the product to cart and click on continue shopping', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foProductPage.addProductToTheCart(page, 1, undefined, false);
-      await foProductPage.goToHomePage(page);
+      await productPage.addProductToTheCart(page, 1, undefined, false);
+      await productPage.goToHomePage(page);
 
       const isHomePage = await homePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);

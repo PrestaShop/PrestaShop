@@ -13,7 +13,7 @@ import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
@@ -140,7 +140,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
         await homePage.searchProduct(page, productData.name);
         await searchResultsPage.goToProductPage(page, 1);
 
-        const pageTitle = await foProductPage.getPageTitle(page);
+        const pageTitle = await productPage.getPageTitle(page);
         expect(pageTitle).to.contains(productData.name);
       });
 
@@ -152,14 +152,14 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
           baseContext,
         );
 
-        const lastQuantityIsVisible = await foProductPage.isAvailabilityQuantityDisplayed(page);
+        const lastQuantityIsVisible = await productPage.isAvailabilityQuantityDisplayed(page);
         expect(lastQuantityIsVisible).to.be.equal(test.exist);
       });
 
       it('should close the page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${test.state}`, baseContext);
 
-        page = await foProductPage.closePage(browserContext, page, 0);
+        page = await productPage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(productSettingsPage.pageTitle);

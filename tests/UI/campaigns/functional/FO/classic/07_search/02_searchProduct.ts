@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
@@ -60,7 +60,7 @@ describe('FO - Search Page : Search a product and validate', async () => {
 
     await homePage.clickAutocompleteSearchResult(page, Products.demo_8.name, 1);
 
-    const pageTitle = await foProductPage.getPageTitle(page);
+    const pageTitle = await productPage.getPageTitle(page);
     expect(pageTitle).to.contains(Products.demo_8.name);
 
     const inputValue = await homePage.getSearchValue(page);

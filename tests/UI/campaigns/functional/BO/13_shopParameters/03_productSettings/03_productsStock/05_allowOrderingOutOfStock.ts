@@ -12,7 +12,7 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {homePage} from '@pages/FO/classic/home';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
@@ -127,7 +127,7 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
         await homePage.searchProduct(page, productData.name);
         await searchResultsPage.goToProductPage(page, 1);
 
-        const pageTitle = await foProductPage.getPageTitle(page);
+        const pageTitle = await productPage.getPageTitle(page);
         expect(pageTitle).to.contains(productData.name);
       });
 
@@ -140,7 +140,7 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
         );
 
         // Check add to cart button
-        const lastQuantityIsVisible = await foProductPage.isAddToCartButtonEnabled(page);
+        const lastQuantityIsVisible = await productPage.isAddToCartButtonEnabled(page);
         expect(lastQuantityIsVisible).to.be.equal(test.args.enable);
       });
 
@@ -148,7 +148,7 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${test.args.action}`, baseContext);
 
         // Go back to BO
-        page = await foProductPage.closePage(browserContext, page, 0);
+        page = await productPage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(productSettingsPage.pageTitle);

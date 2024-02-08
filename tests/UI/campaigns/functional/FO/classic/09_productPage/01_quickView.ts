@@ -14,7 +14,7 @@ import boAddProductPage from '@pages/BO/catalog/products/add';
 // FO
 import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
@@ -362,16 +362,16 @@ describe('FO - product page : Product quick view', async () => {
 
       await homePage.selectProductColor(page, 1, 'White');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should get product image Url and go back to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getProductImage1', baseContext);
 
-      imageFirstColor = await foProductPage.getProductImageUrls(page);
+      imageFirstColor = await productPage.getProductImageUrls(page);
 
-      await foProductPage.goToHomePage(page);
+      await productPage.goToHomePage(page);
       const isHomePage = await homePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
@@ -381,14 +381,14 @@ describe('FO - product page : Product quick view', async () => {
 
       await homePage.selectProductColor(page, 1, 'Black');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should product image be different from the ', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getProductImage2', baseContext);
 
-      imageSecondColor = await foProductPage.getProductImageUrls(page);
+      imageSecondColor = await productPage.getProductImageUrls(page);
       expect(imageFirstColor.coverImage).to.not.equal(imageSecondColor.coverImage);
     });
   });

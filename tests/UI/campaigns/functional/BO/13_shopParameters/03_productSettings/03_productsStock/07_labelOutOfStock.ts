@@ -12,7 +12,7 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {homePage} from '@pages/FO/classic/home';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
@@ -188,7 +188,7 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
         await homePage.searchProduct(page, productData.name);
         await searchResultsPage.goToProductPage(page, 1);
 
-        const pageTitle = await foProductPage.getPageTitle(page);
+        const pageTitle = await productPage.getPageTitle(page);
         expect(pageTitle).to.contains(productData.name);
       });
 
@@ -201,17 +201,17 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
         );
 
         // Check quantity and availability label
-        const lastQuantityIsVisible = await foProductPage.isAddToCartButtonEnabled(page);
+        const lastQuantityIsVisible = await productPage.isAddToCartButtonEnabled(page);
         expect(lastQuantityIsVisible).to.be.equal(test.args.enable);
 
-        const availabilityLabel = await foProductPage.getProductAvailabilityLabel(page);
+        const availabilityLabel = await productPage.getProductAvailabilityLabel(page);
         expect(availabilityLabel).to.contains(test.args.labelToCheck);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-        page = await foProductPage.closePage(browserContext, page, 0);
+        page = await productPage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(productSettingsPage.pageTitle);

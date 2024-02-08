@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
@@ -88,21 +88,21 @@ describe('BO - Shop Parameters - Product Settings : Update separator of attribut
       await homePage.searchProduct(page, Products.demo_1.name);
       await searchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should check the attribute separator on the product links in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkAttributeSeparator_${index}`, baseContext);
 
-      const currentURL = await foProductPage.getProductPageURL(page);
+      const currentURL = await productPage.getProductPageURL(page);
       expect(currentURL).to.contains(test.args.attributesInProductLink);
     });
 
     it('should close the page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await productPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);

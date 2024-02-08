@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import Attributes from '@data/demo/attributes';
@@ -98,7 +98,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       // Go to the first product page
       await foHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.equal(test.args.metaTitle);
     });
 
