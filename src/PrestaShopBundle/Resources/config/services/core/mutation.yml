@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\Mutation\:
+    resource: "%kernel.project_dir%/src/Core/Mutation/*"
