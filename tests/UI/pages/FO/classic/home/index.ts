@@ -107,7 +107,7 @@ class HomePage extends FOBasePage {
 
   private readonly blockCartLabel: string;
 
-  private readonly blockCartModalDiv: string;
+  protected readonly blockCartModalDiv: string;
 
   private readonly blockCartModalCloseButton: string;
 
@@ -131,7 +131,7 @@ class HomePage extends FOBasePage {
 
   private readonly cartModalProductTaxInclBlock: string;
 
-  private readonly cartModalCheckoutLink: string;
+  protected cartModalCheckoutLink: string;
 
   private readonly continueShoppingButton: string;
 

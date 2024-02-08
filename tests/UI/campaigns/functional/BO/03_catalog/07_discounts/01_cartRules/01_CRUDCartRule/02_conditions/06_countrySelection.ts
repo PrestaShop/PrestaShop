@@ -15,7 +15,7 @@ import zonesPage from '@pages/BO/international/locations';
 import countriesPage from '@pages/BO/international/locations/countries';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import foProductPage from '@pages/FO/classic/product';
 

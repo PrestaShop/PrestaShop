@@ -100,7 +100,7 @@ class CartPage extends FOBasePage {
 
   private readonly alertWarning: string;
 
-  private readonly proceedToCheckoutButton: string;
+  protected proceedToCheckoutButton: string;
 
   private readonly disabledProceedToCheckoutButton: string;
 

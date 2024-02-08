@@ -13,7 +13,7 @@ import carriersPage from '@pages/BO/shipping/carriers';
 import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import foCheckoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage as foCheckoutPage} from '@pages/FO/classic/checkout';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import foProductPage from '@pages/FO/classic/product';
 

@@ -5,12 +5,13 @@ import mailHelper from '@utils/mailHelper';
 
 // Import common tests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {homePage} from '@pages/FO/classic/home';
-import {checkoutPage} from '@pages/FO/classic/checkout';
+import cartPage from '@pages/FO/hummingbird/cart';
+import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
+import homePage from '@pages/FO/hummingbird/home';
+import checkoutPage from '@pages/FO/hummingbird/checkout';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -22,7 +23,7 @@ import type {BrowserContext, Page} from 'playwright';
 import MailDevEmail from '@data/types/maildevEmail';
 import MailDev from 'maildev';
 
-const baseContext: string = 'functional_FO_classic_checkout_payment_choosePaymentMethod';
+const baseContext: string = 'functional_FO_hummingbird_checkout_payment_choosePaymentMethod';
 
 describe('FO - Checkout - Payment : Choose a payment method', async () => {
   let browserContext: BrowserContext;
@@ -32,7 +33,10 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
   let mailListener: MailDev;
 
   // Pre-Condition : Setup config SMTP
-  setupSmtpConfigTest(`${baseContext}_preTest`);
+  setupSmtpConfigTest(`${baseContext}_preTest_0`);
+
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest_1`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -150,5 +154,8 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
   });
 
   // Post-condition : Reset SMTP config
-  resetSmtpConfigTest(`${baseContext}_postTest`);
+  resetSmtpConfigTest(`${baseContext}_postTest_0`);
+
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest_1`);
 });

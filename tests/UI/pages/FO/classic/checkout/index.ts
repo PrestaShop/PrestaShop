@@ -14,12 +14,14 @@ import {ProductDetailsBasic} from '@data/types/product';
  * @class
  * @extends FOBasePage
  */
-class Checkout extends FOBasePage {
+class CheckoutPage extends FOBasePage {
   public readonly deleteAddressSuccessMessage: string;
 
   private readonly successAlert: string;
 
   private readonly checkoutPageBody: string;
+
+  protected stepFormSuccess: string;
 
   public readonly messageIfYouSignOut: string;
 
@@ -77,7 +79,7 @@ class Checkout extends FOBasePage {
 
   private readonly checkoutPromoCodeAddButton: string;
 
-  public readonly personalInformationStepForm: string;
+  public personalInformationStepForm: string;
 
   private readonly forgetPasswordLink: string;
 
@@ -109,7 +111,7 @@ class Checkout extends FOBasePage {
 
   private readonly checkoutGuestContinueButton: string;
 
-  private readonly signInHyperLink: string;
+  protected signInHyperLink: string;
 
   private readonly checkoutSummary: string;
 
@@ -125,7 +127,7 @@ class Checkout extends FOBasePage {
 
   private readonly passwordInput: string;
 
-  private readonly personalInformationContinueButton: string;
+  protected personalInformationContinueButton: string;
 
   private readonly logoutMessage: string;
 
@@ -137,7 +139,7 @@ class Checkout extends FOBasePage {
 
   private readonly loginErrorMessage: string;
 
-  private readonly addressStepSection: string;
+  protected addressStepSection: string;
 
   private readonly addressStepContent: string;
 
@@ -177,7 +179,7 @@ class Checkout extends FOBasePage {
 
   private readonly invoiceAddressSection: string;
 
-  private readonly deliveryStepSection: string;
+  protected deliveryStepSection: string;
 
   private readonly deliveryStepEditButton: string;
 
@@ -243,8 +245,8 @@ class Checkout extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on checkout page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
     this.cartRuleAlertMessageText = 'You cannot use this voucher with this carrier';
     this.deleteAddressSuccessMessage = 'Address successfully deleted.';
     this.noPaymentNeededText = 'No payment needed for this order';
@@ -254,6 +256,7 @@ class Checkout extends FOBasePage {
     // Selectors
     this.successAlert = '#notifications article.alert-success';
     this.checkoutPageBody = 'body#checkout';
+    this.stepFormSuccess = '.-complete';
 
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
@@ -405,7 +408,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isStepCompleted(page: Page, stepSelector: string): Promise<boolean> {
-    return this.elementVisible(page, `${stepSelector}.-complete`, 1000);
+    return this.elementVisible(page, `${stepSelector}${this.stepFormSuccess}`, 1000);
   }
 
   /**
@@ -1241,4 +1244,5 @@ class Checkout extends FOBasePage {
   }
 }
 
-export default new Checkout();
+const checkoutPage = new CheckoutPage();
+export {checkoutPage, CheckoutPage};

@@ -8,14 +8,14 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class OrderConfirmation extends FOBasePage {
+class OrderConfirmationPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly orderConfirmationCardTitle: string;
 
-  private readonly orderConfirmationCardSection: string;
+  protected orderConfirmationCardSection: string;
 
-  private readonly orderConfirmationCardTitleH3: string;
+  protected orderConfirmationCardTitleH3: string;
 
   private readonly orderSummaryContent: string;
 
@@ -27,16 +27,16 @@ class OrderConfirmation extends FOBasePage {
 
   private readonly giftWrappingRow: string;
 
-  private readonly orderDetailsTable: string;
+  protected orderDetailsTable: string;
 
-  private readonly paymentMethodRow: string;
+  protected paymentMethodRow: string;
 
   /**
    * @constructs
    * Setting up texts and selectors to use on order confirmation page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Order confirmation';
     this.orderConfirmationCardTitle = 'Your order is confirmed';
@@ -115,4 +115,5 @@ class OrderConfirmation extends FOBasePage {
   }
 }
 
-export default new OrderConfirmation();
+const orderConfirmationPage = new OrderConfirmationPage();
+export {orderConfirmationPage, OrderConfirmationPage};

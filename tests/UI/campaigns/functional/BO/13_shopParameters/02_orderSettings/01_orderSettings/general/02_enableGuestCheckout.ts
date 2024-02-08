@@ -13,7 +13,7 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import {homePage} from '@pages/FO/classic/home';
 import productPage from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
