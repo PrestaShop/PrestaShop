@@ -2,17 +2,19 @@
 import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import files from '@utils/files';
 
 // Import commonTests
 import {createCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/account';
+import createAccountTest from '@commonTests/FO/hummingbird/account';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
-import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
+import homePage from '@pages/FO/hummingbird/home';
+import foLoginPage from '@pages/FO/hummingbird/login';
+import myAccountPage from '@pages/FO/hummingbird/myAccount';
+import foVouchersPage from '@pages/FO/hummingbird/myAccount/vouchers';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';
@@ -21,17 +23,19 @@ import CustomerData from '@data/faker/customer';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_userAccount_viewVouchers';
+const baseContext: string = 'functional_FO_hummingbird_userAccount_viewVouchers';
 
 /*
 Pre-condition:
 - Create customer
 - Create 2 cart rules for the customer
+- Install hummingbird theme
 Scenario:
 - Go To FO and sign in
 - Check vouchers in account page
 Post-condition:
 - Delete customer
+- Uninstall hummingbird theme
  */
 describe('FO - Account : View vouchers', async () => {
   let browserContext: BrowserContext;
@@ -58,6 +62,9 @@ describe('FO - Account : View vouchers', async () => {
     dateTo: futureDate,
   });
 
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest_0`);
+
   // Pre-condition: Create new account on FO
   createAccountTest(customerData, `${baseContext}_preTest_1`);
 
@@ -74,6 +81,7 @@ describe('FO - Account : View vouchers', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('View vouchers on FO', async () => {
@@ -144,5 +152,8 @@ describe('FO - Account : View vouchers', async () => {
   });
 
   // Post-condition: Delete created customer
-  deleteCustomerTest(customerData, `${baseContext}_postTest`);
+  deleteCustomerTest(customerData, `${baseContext}_postTest_0`);
+
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest_1`);
 });
