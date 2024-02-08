@@ -127,11 +127,11 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
       expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleCreate);
     });
 
-    it('should check that scopes from Core are present and enabled', async function () {
+    it('should check that scopes from Core are no more present', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkScopesCore', baseContext);
 
-      const scopes = await addNewApiAccessPage.getApiScopes(page, '__core_scopes');
-      expect(scopes.length).to.be.gt(0);
+      const hasScopes = await addNewApiAccessPage.hasScopes(page);
+      expect(hasScopes).to.equal(false);
     });
 
     it('should check that scopes from Module are not present', async function () {
@@ -206,11 +206,18 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
       expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleCreate);
     });
 
+    it('should check that scopes are present', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkScopePresent', baseContext);
+
+      const hasScopes = await addNewApiAccessPage.hasScopes(page);
+      expect(hasScopes).to.equal(true);
+    });
+
     it('should check that scopes from Core are present', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkScopesCore', baseContext);
 
       const scopes = await addNewApiAccessPage.getApiScopes(page, '__core_scopes');
-      expect(scopes.length).to.be.gt(0);
+      expect(scopes.length).to.be.eq(0);
     });
 
     it('should check that scopes from Module are present', async function () {
