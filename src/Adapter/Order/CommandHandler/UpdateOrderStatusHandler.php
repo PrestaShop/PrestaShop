@@ -32,12 +32,12 @@ use OrderHistory;
 use OrderState;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
-use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Mutation\MutationTracker;
 
 /**
  * @internal
@@ -47,7 +47,7 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
 {
     public function __construct(
         private EmployeeContext $employeeContext,
-        private ApiClientContext $apiClientContext,
+        private MutationTracker $mutationTracker,
     ) {
     }
 
@@ -69,7 +69,6 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
         $history = new OrderHistory();
         $history->id_order = $order->id;
         $history->id_employee = (int) $this->employeeContext->getEmployee()?->getId();
-        $history->api_client_id = (string) $this->apiClientContext->getApiClient()?->getClientId();
 
         $useExistingPayments = false;
         if (!$order->hasInvoice()) {
@@ -89,6 +88,8 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
 
         // Save all changes
         if ($history->addWithemail(true, $templateVars)) {
+            $this->mutationTracker->addMutation('order_history', (int) $history->id, MutationTracker::CREATE_ACTION);
+
             return;
         }
 

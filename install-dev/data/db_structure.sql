@@ -1398,7 +1398,6 @@ CREATE TABLE `PREFIX_order_cart_rule` (
 CREATE TABLE `PREFIX_order_history` (
   `id_order_history` int(10) unsigned NOT NULL auto_increment,
   `id_employee` int(10) unsigned NOT NULL,
-  `api_client_id` varchar(255) NOT NULL DEFAULT '',
   `id_order` int(10) unsigned NOT NULL,
   `id_order_state` int(10) unsigned NOT NULL,
   `date_add` datetime NOT NULL,

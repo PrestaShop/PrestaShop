@@ -46,6 +46,12 @@ Feature: Order from Back Office (BO)
       | Awaiting bank wire payment | Puff                | Daddy              |               |
 
   Scenario: I update the order status while logged as an api client
+    Given I create an api access "AA-1" with following properties:
+      | clientName  | Thomas               |
+      | apiClientId | api_client           |
+      | enabled     | true                 |
+      | description | a simple description |
+      | lifetime    | 3600                 |
     Given I am not logged in as an employee
     Given I am logged in as api client with id "api_client"
     And I create an empty cart "dummy_cart" for customer "testCustomer"
