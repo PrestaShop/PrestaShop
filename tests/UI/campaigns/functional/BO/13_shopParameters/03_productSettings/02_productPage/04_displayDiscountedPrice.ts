@@ -14,7 +14,7 @@ import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules
 import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {foProductPage} from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import CatalogPriceRuleData from '@data/faker/catalogPriceRule';

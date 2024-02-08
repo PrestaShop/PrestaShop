@@ -12,9 +12,7 @@ import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage as foCheckoutPage} from '@pages/FO/classic/checkout';
-import foProductPage from '@pages/FO/classic/product';
-import {checkoutPage} from '@pages/FO/classic/checkout';
-import {foProductPage} from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 // Import data

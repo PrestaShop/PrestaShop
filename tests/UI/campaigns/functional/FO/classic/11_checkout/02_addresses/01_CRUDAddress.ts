@@ -8,7 +8,7 @@ import {createAccountTest} from '@commonTests/FO/account';
 
 // Import pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {foProductPage} from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 import Products from '@data/demo/products';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';

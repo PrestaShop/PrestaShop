@@ -15,7 +15,7 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 // Import FO pages
 import categoryPage from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
-import {foProductPage} from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Modules from '@data/demo/modules';

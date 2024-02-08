@@ -13,7 +13,7 @@ import preferencesPage from '@pages/BO/payment/preferences';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
-import {foProductPage} from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Importing data
 import Customers from '@data/demo/customers';

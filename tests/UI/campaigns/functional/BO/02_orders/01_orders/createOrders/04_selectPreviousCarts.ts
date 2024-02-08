@@ -19,7 +19,7 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
-import {foProductPage} from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import Carriers from '@data/demo/carriers';
@@ -296,7 +296,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
       // Add the product to the cart
-      await foProductPage.addProductToTheCart(page);
+      await productPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
