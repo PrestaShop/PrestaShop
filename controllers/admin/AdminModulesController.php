@@ -198,7 +198,6 @@ class AdminModulesControllerCore extends AdminController
         }
 
         $this->context->smarty->assign([
-            'trad_link' => 'index.php?controller=AdminTranslations&token=' . Tools::getAdminTokenLite('AdminTranslations') . '&type=modules&module=' . Tools::getValue('configure') . '&lang=',
             'module_languages' => $languages,
             'module_name' => Tools::getValue('configure'),
             'translateLinks' => $translateLinks,

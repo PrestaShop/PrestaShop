@@ -368,7 +368,7 @@ class AdminDashboardControllerCore extends AdminController
                 ) . $this->trans(
                     'If this is your main domain, please {link}change it now{/link}.',
                     [
-                        '{link}' => '<a href="index.php?controller=AdminShopUrl&id_shop_url=' . (int) $shop->id . '&updateshop_url&token=' . Tools::getAdminTokenLite('AdminShopUrl') . '">',
+                        '{link}' => '<a href="' . $this->context->link->getAdminLink('AdminShopUrl', true, [], ['id_shop_url' => (int) $shop->id, 'updateshop_url' => 1]) . '">',
                         '{/link}' => '</a>',
                     ],
                     'Admin.Dashboard.Notification'
@@ -378,7 +378,7 @@ class AdminDashboardControllerCore extends AdminController
 				' . $this->trans(
                     'If this is your main domain, please {link}change it now{/link}.',
                     [
-                        '{link}' => '<a href="index.php?controller=AdminMeta&token=' . Tools::getAdminTokenLite('AdminMeta') . '#meta_fieldset_shop_url">',
+                        '{link}' => '<a href="' . $this->context->link->getAdminLink('AdminMeta') . '#meta_fieldset_shop_url">',
                         '{/link}' => '</a>',
                     ],
                     'Admin.Dashboard.Notification'

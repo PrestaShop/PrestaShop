@@ -249,7 +249,7 @@ class AdminTranslationsControllerCore extends AdminController
             'themes' => $this->themes,
             'modules' => $modules,
             'current_theme_name' => $this->context->shop->theme_name,
-            'url_create_language' => 'index.php?controller=AdminLanguages&addlang&token=' . $token,
+            'url_create_language' => $this->context->link->getAdminLink('AdminLanguages', true, [], ['addlang' => '']),
             'level' => $this->authorizationLevel(),
         ];
 
