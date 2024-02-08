@@ -14,7 +14,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
-import {productPage} from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -134,14 +134,14 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
 
       await foHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
     });
 
     it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await productPage.addProductToTheCart(page);
+      await foProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
@@ -179,14 +179,14 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
 
       await foHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
     });
 
     it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-      await productPage.addProductToTheCart(page);
+      await foProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
