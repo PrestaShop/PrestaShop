@@ -221,16 +221,15 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
       await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
-      // @todo https://github.com/PrestaShop/PrestaShop/issues/34770
-      //const validationMessage = await contactUsPage.getAlertSuccess(page);
-      //expect(validationMessage).to.equal(contactUsPage.validationMessage);
+
+      const validationMessage = await contactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(contactUsPage.validationMessage);
     });
 
-    // @todo https://github.com/PrestaShop/PrestaShop/issues/34770
-    it.skip('should check that the confirmation mail is in mailbox', async function () {
+    it('should check that the confirmation mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMail', baseContext);
 
-      expect(newMail.subject).to.contains('Message from contact form');
+      expect(newMail.subject).to.contains(`[${global.INSTALL.SHOP_NAME}] Your message has been correctly sent`);
     });
   });
 
