@@ -26,7 +26,7 @@ import MessageData from '@data/faker/message';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_contactUs_addAttachment';
+const baseContext: string = 'functional_FO_hummingbird_contactUs_addAttachment';
 
 /*
 Pre-condition:
