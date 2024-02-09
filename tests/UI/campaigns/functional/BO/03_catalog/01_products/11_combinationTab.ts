@@ -12,7 +12,7 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import attributesPage from '@pages/BO/catalog/attributes';
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 import productSettings from '@pages/BO/shopParameters/productSettings';
 
 // Import data

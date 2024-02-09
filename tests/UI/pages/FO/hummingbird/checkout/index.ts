@@ -29,6 +29,7 @@ class Checkout extends CheckoutPage {
 
     // Shipping method selectors
     this.deliveryStepSection = 'li[data-step="checkout-delivery-step"]';
+    this.deliveryAddressPosition = (position) => `#delivery-addresses div:nth-child(${position}) article`;
   }
 }
 

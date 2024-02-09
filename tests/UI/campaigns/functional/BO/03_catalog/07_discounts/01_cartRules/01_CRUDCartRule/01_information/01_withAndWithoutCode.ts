@@ -14,7 +14,7 @@ import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Products from '@data/demo/products';

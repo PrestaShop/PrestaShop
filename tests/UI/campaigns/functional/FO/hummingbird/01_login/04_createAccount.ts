@@ -1,6 +1,7 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import files from '@utils/files';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
@@ -36,6 +37,7 @@ describe('FO - Login : Create account', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Create account', () => {

@@ -15,7 +15,7 @@ import productsPage from '@pages/BO/catalog/products';
 import filesPage from '@pages/BO/catalog/files';
 
 // Import FO pages
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import ProductData from '@data/faker/product';

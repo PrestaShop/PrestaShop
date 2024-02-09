@@ -14,7 +14,7 @@ import boAddProductPage from '@pages/BO/catalog/products/add';
 // FO
 import {homePage} from '@pages/FO/classic/home';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
-import productPage from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 
 // Import data

@@ -1,21 +1,22 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import files from '@utils/files';
 
 // Import commonTests
-import deleteCacheTest from '@commonTests/BO/advancedParameters/cache';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/account';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
-import {checkoutPage} from '@pages/FO/classic/checkout';
-import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
-import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
-import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
-import {productPage} from '@pages/FO/classic/product';
+import cartPage from '@pages/FO/hummingbird/cart';
+import checkoutPage from '@pages/FO/hummingbird/checkout';
+import homePage from '@pages/FO/hummingbird/home';
+import loginPage from '@pages/FO/hummingbird/login';
+import myAccountPage from '@pages/FO/hummingbird/myAccount';
+import addAddressPage from '@pages/FO/hummingbird/myAccount/addAddress';
+import addressesPage from '@pages/FO/hummingbird/myAccount/addresses';
+import productPage from '@pages/FO/hummingbird/product';
 
 // Import data
 import Products from '@data/demo/products';
@@ -25,12 +26,12 @@ import AddressData from '@data/faker/address';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_userAccount_CRUDAddress';
+const baseContext: string = 'functional_FO_hummingbird_userAccount_CRUDAddress';
 
 /*
 Pre-condition:
-- Clear cache
 - Create account test
+- Install hummingbird theme
 Scenario:
 - Create first address
 - Edit address
@@ -41,6 +42,7 @@ Scenario:
 - Delete the first address and check success message
 Post-condition:
 - Delete customer account
+- Uninstall hummingbird theme
  */
 describe('FO - Account : CRUD address', async () => {
   let browserContext: BrowserContext;
@@ -53,11 +55,11 @@ describe('FO - Account : CRUD address', async () => {
   const editAddressData: AddressData = new AddressData({country: 'France'});
   const secondAddressData: AddressData = new AddressData({country: 'France'});
 
-  // Pre-condition: Delete cache
-  deleteCacheTest(baseContext);
-
   // Pre-condition
-  createAccountTest(newCustomerData, baseContext);
+  createAccountTest(newCustomerData, `${baseContext}_preTest_1`);
+
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -67,6 +69,7 @@ describe('FO - Account : CRUD address', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Go to \'Add first address\' page and create address', async () => {
@@ -321,6 +324,9 @@ describe('FO - Account : CRUD address', async () => {
     });
   });
 
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest_1`);
+
   // Post-condition: Delete created customer
-  deleteCustomerTest(newCustomerData, baseContext);
+  deleteCustomerTest(newCustomerData, `${baseContext}_postTest_2`);
 });

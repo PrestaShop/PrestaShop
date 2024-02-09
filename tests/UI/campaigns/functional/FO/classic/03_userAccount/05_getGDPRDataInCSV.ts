@@ -24,7 +24,7 @@ import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 import gdprPersonalDataPage from '@pages/FO/classic/myAccount/gdprPersonalData';
 import ordersPage from '@pages/BO/orders';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
-import productPage from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import PaymentMethods from '@data/demo/paymentMethods';

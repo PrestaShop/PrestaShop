@@ -49,7 +49,7 @@ class Product extends FOBasePage {
 
   private readonly blockCartModal: string;
 
-  private readonly proceedToCheckoutButton: string;
+  protected proceedToCheckoutButton: string;
 
   private readonly productQuantitySpan: string;
 
@@ -169,8 +169,8 @@ class Product extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on product page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     // Messages
     this.messageNotVisibleToCustomers = 'This product is not visible to your customers.';
@@ -325,8 +325,9 @@ class Product extends FOBasePage {
    *
    * @param page {Page} Browser tab
    * @param email {string|null} Email if needed
+   * @return {Promise<string>}
    */
-  async notifyEmailAlert(page: Page, email: string|null = null) {
+  async notifyEmailAlert(page: Page, email: string | null = null): Promise<string> {
     if (email) {
       await this.setValue(page, this.productMailAlertsEmailInput, email);
     }
@@ -869,4 +870,5 @@ class Product extends FOBasePage {
   }
 }
 
-export default new Product();
+const productPage = new Product();
+export {productPage, Product};
