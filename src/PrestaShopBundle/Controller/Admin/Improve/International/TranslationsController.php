@@ -133,8 +133,8 @@ class TranslationsController extends FrameworkBundleAdminController
     {
         try {
             $routeFinder = $this->get('prestashop.adapter.translation_route_finder');
-            $route = $routeFinder->findRoute($request->query);
-            $routeParameters = $routeFinder->findRouteParameters($request->query);
+            $route = $routeFinder->findRoute($request);
+            $routeParameters = $routeFinder->findRouteParameters($request);
         } catch (InvalidModuleException $e) {
             $this->addFlash('error', $this->trans('An error has occurred, this module does not exist: %s', 'Admin.International.Notification', [$e->getMessage()]));
 
