@@ -34,6 +34,11 @@ class Home extends HomePage {
     // Wishlist modal
     this.wishlistModal = '.wishlist-add-to .wishlist-modal.show';
     this.wishlistModalTitle = '.wishlist-modal.show p.modal-title';
+
+    // Newsletter form
+    this.newsletterFormField = '#footer div.email-subscription__content__right input[name="email"]';
+    this.newsletterSubmitButton = '.email-subscription__content__inputs [name="submitNewsletter"][value="Subscribe"]';
+    this.subscriptionAlertMessage = '#footer div.email-subscription__content__infos p.alert';
   }
 
   /**

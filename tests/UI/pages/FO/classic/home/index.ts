@@ -59,11 +59,11 @@ class HomePage extends FOBasePage {
 
   private readonly customTextBlock: string;
 
-  private readonly newsletterFormField: string;
+  protected newsletterFormField: string;
 
-  private readonly newsletterSubmitButton: string;
+  protected newsletterSubmitButton: string;
 
-  private readonly subscriptionAlertMessage: string;
+  protected subscriptionAlertMessage: string;
 
   private readonly quickViewModalDiv: string;
 
