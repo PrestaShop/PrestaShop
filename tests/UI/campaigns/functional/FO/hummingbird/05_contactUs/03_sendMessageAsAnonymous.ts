@@ -31,7 +31,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import MailDev from 'maildev';
 
-const baseContext: string = 'functional_FO_classic_contactUs_sendMessageAsAnonymous';
+const baseContext: string = 'functional_FO_hummingbird_contactUs_sendMessageAsAnonymous';
 
 /*
 Pre-condition:
