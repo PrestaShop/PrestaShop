@@ -7,6 +7,7 @@ import mailHelper from '@utils/mailHelper';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
 
 // Import pages
 // Import BO pages
@@ -14,10 +15,11 @@ import dashboardPage from '@pages/BO/dashboard';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import contactFormPage from '@pages/BO/modules/contactForm';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
+
 // Import FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import contactUsPage from '@pages/FO/hummingbird/contactUs';
+import homePage from '@pages/FO/hummingbird/home';
+import loginPage from '@pages/FO/hummingbird/login';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -82,6 +84,9 @@ describe('FO - Contact us : Send message from contact us page with customer not 
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest_2`);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -103,6 +108,7 @@ describe('FO - Contact us : Send message from contact us page with customer not 
     await helper.closeBrowserContext(browserContext);
 
     await files.deleteFile(`${contactUsData.fileName}.txt`);
+    await files.deleteFile('../../admin-dev/hummingbird.zip');
     // Stop listening to maildev server
     mailHelper.stopListener(mailListener);
   });
@@ -167,16 +173,16 @@ describe('FO - Contact us : Send message from contact us page with customer not 
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-      await foHomePage.goTo(page, global.FO.URL);
+      await homePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await homePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should check if that any account is connected', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfCustomerNotConnected', baseContext);
 
-      const isCustomerConnected = await foHomePage.isCustomerConnected(page);
+      const isCustomerConnected = await homePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
@@ -184,7 +190,7 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
       // Go to contact us page
-      await foLoginPage.goToFooterLink(page, 'Contact us');
+      await loginPage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
       expect(pageTitle).to.equal(contactUsPage.pageTitle);
@@ -221,16 +227,15 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
       await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
-      // @todo https://github.com/PrestaShop/PrestaShop/issues/34770
-      //const validationMessage = await contactUsPage.getAlertSuccess(page);
-      //expect(validationMessage).to.equal(contactUsPage.validationMessage);
+
+      const validationMessage = await contactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(contactUsPage.validationMessage);
     });
 
-    // @todo https://github.com/PrestaShop/PrestaShop/issues/34770
-    it.skip('should check that the confirmation mail is in mailbox', async function () {
+    it('should check that the confirmation mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMail', baseContext);
 
-      expect(newMail.subject).to.contains('Message from contact form');
+      expect(newMail.subject).to.contains(`[${global.INSTALL.SHOP_NAME}] Your message has been correctly sent`);
     });
   });
 
@@ -336,5 +341,8 @@ describe('FO - Contact us : Send message from contact us page with customer not 
   });
 
   // Post-Condition : Reset SMTP config
-  resetSmtpConfigTest(`${baseContext}_postTest_2`);
+  resetSmtpConfigTest(`${baseContext}_postTest_1`);
+
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest_2`);
 });
