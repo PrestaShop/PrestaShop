@@ -12,6 +12,8 @@ class ContactUs extends ContactUsPage {
    */
   constructor() {
     super('hummingbird');
+
+    this.attachmentLabel = 'input[name="fileUpload"]';
   }
 }
 
