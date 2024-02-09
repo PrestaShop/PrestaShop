@@ -56,13 +56,13 @@ class CQRSDeleteTest extends TestCase
 
         // With named parameters
         $operation = new CQRSDelete(
-            output: true,
+            output: 'test',
             extraProperties: ['scopes' => ['test']],
         );
         $this->assertEquals(QueryProvider::class, $operation->getProvider());
         $this->assertNull($operation->getProcessor());
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
-        $this->assertTrue($operation->getOutput());
+        $this->assertEquals('test', $operation->getOutput());
     }
 
     public function testScopes(): void
