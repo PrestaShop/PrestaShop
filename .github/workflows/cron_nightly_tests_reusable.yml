@@ -82,6 +82,8 @@ jobs:
           - 'functional:FO:classic:04-07'
           - 'functional:FO:classic:08-12'
           - 'functional:FO:hummingbird:01-03'
+          - 'functional:FO:hummingbird:04-07'
+          - 'functional:FO:hummingbird:08-12'
           - 'functional:productV2'
           - 'functional:API'
           - 'functional:WS'
@@ -108,6 +110,10 @@ jobs:
           - BRANCH: 1.7.8.x
             CAMPAIGN: 'functional:FO:hummingbird:01-03'
           - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:hummingbird:04-07'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'functional:FO:hummingbird:08-12'
+          - BRANCH: 1.7.8.x
             CAMPAIGN: 'functional:WS'
           - BRANCH: 1.7.8.x
             CAMPAIGN: 'modules'
@@ -133,6 +139,10 @@ jobs:
           - BRANCH: 8.0.x
             CAMPAIGN: 'functional:FO:hummingbird:01-03'
           - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:hummingbird:04-07'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:hummingbird:08-12'
+          - BRANCH: 8.0.x
             CAMPAIGN: 'functional:WS'
           - BRANCH: 8.0.x
             CAMPAIGN: 'modules'
@@ -145,6 +155,10 @@ jobs:
             CAMPAIGN: 'functional:FO:04-07'
           - BRANCH: 8.1.x
             CAMPAIGN: 'functional:FO:08-12'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:FO:hummingbird:04-07'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:FO:hummingbird:08-12'
           ## develop
           - BRANCH: develop
             CAMPAIGN: 'functional:FO:01-03'
