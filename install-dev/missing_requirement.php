@@ -138,7 +138,7 @@
             <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_ ?> you need to change your server's PHP version.</i>
         </li>
     <?php endif; ?>
-        <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache')): ?>
+        <?php if (!is_writable(_PS_CACHE_DIR_)): ?>
       <li>
           PrestaShop installation needs to write critical files in the folder var/cache.
           <i>Please review the permissions on your server.</i>
