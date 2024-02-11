@@ -344,6 +344,13 @@ class StockAvailableCore extends ObjectModel
         );
         $this->setQuantity($this->id_product, 0, $total_quantity, $id_shop, false);
 
+        // ensure product date update after a stock movement
+        Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'product
+                                    SET `date_upd` = "' . pSQL(date('Y-m-d H:i:s')) . '" WHERE id_product = ' . (int) $this->id_product);
+        Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'product_shop
+                                    SET `date_upd` = "' . pSQL(date('Y-m-d H:i:s')) . '" WHERE id_product = ' . (int) $this->id_product . '
+                                        AND id_shop = ' . (int) $this->id_shop);
+
         return true;
     }
 
