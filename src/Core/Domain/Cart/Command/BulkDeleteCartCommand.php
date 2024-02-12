@@ -26,32 +26,48 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\FeatureFlag;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
-class FeatureFlagSettings
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+
+/**
+ * Deletes cart in bulk action
+ */
+class BulkDeleteCartCommand
 {
     /**
-     * Stability consts
+     * @var CartId[]
      */
-    public const STABILITY_STABLE = 'stable';
-    public const STABILITY_BETA = 'beta';
+    private $cartIds;
 
     /**
-     * Type consts
+     * @param int[] $cartIds
+     *
+     * @throws CartConstraintException
      */
-    public const TYPE_DEFAULT = 'env,dotenv,db';
-    public const TYPE_ENV = 'env';
-    public const TYPE_QUERY = 'query';
-    public const TYPE_DOTENV = 'dotenv';
-    public const TYPE_DB = 'db';
+    public function __construct(array $cartIds)
+    {
+        $this->setCartIds($cartIds);
+    }
 
     /**
-     * Prefix for DotEnv & Env Layers
+     * @return CartId[]
      */
-    public const PREFIX = 'PS_FF_';
+    public function getCartIds(): array
+    {
+        return $this->cartIds;
+    }
 
-    public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
-    public const FEATURE_FLAG_SYMFONY_LAYOUT = 'symfony_layout';
-    public const FEATURE_FLAG_FRONT_CONTAINER_V2 = 'front_container_v2';
-    public const FEATURE_FLAG_CARTS = 'carts';
+    /**
+     * @param int[] $cartIds
+     *
+     * @throws CartConstraintException
+     */
+    private function setCartIds(array $cartIds): void
+    {
+        foreach ($cartIds as $cartId) {
+            $this->cartIds[] = new CartId($cartId);
+        }
+    }
 }

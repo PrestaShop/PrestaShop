@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,36 +21,25 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-declare(strict_types=1);
+{% block content %}
+  {% block carts_kpis %}
+    {{ render(controller(
+      'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
+      { 'kpiRow': cartsKpi }
+    )) }}
+  {% endblock %}
 
-namespace PrestaShop\PrestaShop\Core\FeatureFlag;
+  {% block cart_listing %}
+    {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cartGrid} %}
+  {% endblock %}
+{% endblock %}
 
-class FeatureFlagSettings
-{
-    /**
-     * Stability consts
-     */
-    public const STABILITY_STABLE = 'stable';
-    public const STABILITY_BETA = 'beta';
+{% block javascripts %}
+  {{ parent() }}
 
-    /**
-     * Type consts
-     */
-    public const TYPE_DEFAULT = 'env,dotenv,db';
-    public const TYPE_ENV = 'env';
-    public const TYPE_QUERY = 'query';
-    public const TYPE_DOTENV = 'dotenv';
-    public const TYPE_DB = 'db';
-
-    /**
-     * Prefix for DotEnv & Env Layers
-     */
-    public const PREFIX = 'PS_FF_';
-
-    public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
-    public const FEATURE_FLAG_SYMFONY_LAYOUT = 'symfony_layout';
-    public const FEATURE_FLAG_FRONT_CONTAINER_V2 = 'front_container_v2';
-    public const FEATURE_FLAG_CARTS = 'carts';
-}
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/cart.bundle.js') }}"></script>
+{% endblock %}

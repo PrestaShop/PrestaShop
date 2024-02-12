@@ -19,6 +19,10 @@ services:
   prestashop.core.grid.action.row.accessibility_checker.delete_order_states:
     class: 'PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\DeleteOrderStatesAccessibilityChecker'
 
+  PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\DeleteCartAccessibilityChecker:
+    autowire: true
+    public: false
+
   PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductSingleShopAssociatedAccessibilityChecker:
     autowire: true
     public: false

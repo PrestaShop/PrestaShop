@@ -24,47 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
+
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\ShopFilters;
 
 /**
- * Class BadgeColumn displays column with badge.
+ * Default Cart list filters
  */
-final class BadgeColumn extends AbstractColumn
+class CartFilter extends ShopFilters
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function getType()
-    {
-        return 'badge';
-    }
+    protected $filterId = CartGridDefinitionFactory::GRID_ID;
 
     /**
      * {@inheritdoc}
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public static function getDefaults(): array
     {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'badge_type' => 'success',
-                'badge_type_field' => '',
-                'empty_value' => '',
-                'clickable' => true,
-                'color_field' => '',
-                'alignment' => 'right',
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('empty_value', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedValues('badge_type', ['success', 'info', 'danger', 'warning', ''])
-            ->setAllowedTypes('badge_type_field', 'string');
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_cart',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ];
     }
 }

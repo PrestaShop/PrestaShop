@@ -26,32 +26,31 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\FeatureFlag;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart;
 
-class FeatureFlagSettings
+/*
+ * Cart status
+ */
+enum CartStatus
 {
     /**
-     * Stability consts
+     * Cart ordered
      */
-    public const STABILITY_STABLE = 'stable';
-    public const STABILITY_BETA = 'beta';
+    public const ORDERED = 'ordered';
 
     /**
-     * Type consts
+     * Cart not ordered
      */
-    public const TYPE_DEFAULT = 'env,dotenv,db';
-    public const TYPE_ENV = 'env';
-    public const TYPE_QUERY = 'query';
-    public const TYPE_DOTENV = 'dotenv';
-    public const TYPE_DB = 'db';
+    public const NOT_ORDERED = 'not_ordered';
 
     /**
-     * Prefix for DotEnv & Env Layers
+     * Cart not ordered but for long time
      */
-    public const PREFIX = 'PS_FF_';
+    public const ABANDONED_CART = 'abandoned_cart';
 
-    public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
-    public const FEATURE_FLAG_SYMFONY_LAYOUT = 'symfony_layout';
-    public const FEATURE_FLAG_FRONT_CONTAINER_V2 = 'front_container_v2';
-    public const FEATURE_FLAG_CARTS = 'carts';
+    /**
+     * Time in seconds representing time before not ordered carts are considered abandoned
+     * (For now: 24h)
+     */
+    public const ABANDONED_CART_EXPIRATION_TIME = 86400;
 }

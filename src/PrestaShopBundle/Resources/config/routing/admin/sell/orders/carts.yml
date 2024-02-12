@@ -1,3 +1,51 @@
+admin_carts_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::indexAction
+    _legacy_controller: AdminCarts
+    _legacy_link: AdminCarts
+    _legacy_feature_flag: carts
+
+admin_carts_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory
+    redirectRoute: admin_carts_index
+    _legacy_controller: AdminCarts
+    _legacy_link: AdminCarts
+    _legacy_feature_flag: carts
+
+admin_carts_delete:
+  path: /{cartId}
+  methods: [ DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::deleteCartAction
+    _legacy_controller: AdminCarts
+    _legacy_feature_flag: carts
+  requirements:
+    cartId: \d+
+
+admin_carts_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::bulkDeleteCartAction
+    _legacy_controller: AdminCarts
+    _legacy_link: AdminCarts
+    _legacy_feature_flag: carts
+
+admin_carts_export:
+  path: /export
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::exportCartAction
+    _legacy_controller: AdminCarts
+    _legacy_link: AdminCarts:exportcart
+    _legacy_feature_flag: carts
+
 admin_carts_view:
   path: /{cartId}/view
   methods: [ GET ]

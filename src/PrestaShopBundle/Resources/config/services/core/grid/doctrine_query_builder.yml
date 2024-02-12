@@ -536,3 +536,10 @@ services:
       $languageId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Core\Grid\Query\CartQueryBuilder:
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: false
+    arguments:
+      $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
+      $multistoreContextChecker: '@prestashop.adapter.shop.context'

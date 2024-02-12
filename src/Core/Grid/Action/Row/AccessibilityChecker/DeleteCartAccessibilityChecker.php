@@ -26,32 +26,22 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\FeatureFlag;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker;
 
-class FeatureFlagSettings
+/**
+ * Class DeleteCartAccessibilityChecker
+ */
+class DeleteCartAccessibilityChecker implements AccessibilityCheckerInterface
 {
     /**
-     * Stability consts
+     * {@inheritdoc}
      */
-    public const STABILITY_STABLE = 'stable';
-    public const STABILITY_BETA = 'beta';
+    public function isGranted(array $record): bool
+    {
+        if (isset($record['unremovable'])) {
+            return !$record['unremovable'];
+        }
 
-    /**
-     * Type consts
-     */
-    public const TYPE_DEFAULT = 'env,dotenv,db';
-    public const TYPE_ENV = 'env';
-    public const TYPE_QUERY = 'query';
-    public const TYPE_DOTENV = 'dotenv';
-    public const TYPE_DB = 'db';
-
-    /**
-     * Prefix for DotEnv & Env Layers
-     */
-    public const PREFIX = 'PS_FF_';
-
-    public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
-    public const FEATURE_FLAG_SYMFONY_LAYOUT = 'symfony_layout';
-    public const FEATURE_FLAG_FRONT_CONTAINER_V2 = 'front_container_v2';
-    public const FEATURE_FLAG_CARTS = 'carts';
+        return false;
+    }
 }

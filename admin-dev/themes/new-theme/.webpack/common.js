@@ -159,6 +159,7 @@ module.exports = {
     country_form: './js/pages/country/form',
     create_product: './js/pages/product/create/create-product',
     create_product_default_theme: './scss/pages/product/create_product_default_theme.scss',
+    cart: './js/pages/cart',
   },
   output: {
     publicPath: '',

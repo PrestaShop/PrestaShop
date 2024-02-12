@@ -24,47 +24,39 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
+use Throwable;
 
 /**
- * Class BadgeColumn displays column with badge.
+ * Base class to use for bulk operations, it stores a list of exception indexed by the carts ID that was impacted.
+ * It should be used as a base class for all the bulk action exceptions.
  */
-final class BadgeColumn extends AbstractColumn
+class BulkCartException extends CartException implements BulkCommandExceptionInterface
 {
     /**
-     * {@inheritdoc}
+     * @param Throwable[] $exceptions
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
      */
-    public function getType()
-    {
-        return 'badge';
+    public function __construct(
+        private readonly array $exceptions,
+        string $message = 'Errors occurred during Cart bulk action',
+        int $code = 0,
+        Throwable $previous = null
+    ) {
+        parent::__construct($message, $code, $previous);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function getExceptions(): array
     {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'badge_type' => 'success',
-                'badge_type_field' => '',
-                'empty_value' => '',
-                'clickable' => true,
-                'color_field' => '',
-                'alignment' => 'right',
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('empty_value', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedValues('badge_type', ['success', 'info', 'danger', 'warning', ''])
-            ->setAllowedTypes('badge_type_field', 'string');
+        return $this->exceptions;
     }
 }
