@@ -16,7 +16,7 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
-import foVouchersPage from '@pages/FO/classic/myAccount/vouchers';
+import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 import {cartPage} from '@pages/FO/classic/cart';
 
 // Import data
