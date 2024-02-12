@@ -91,12 +91,30 @@ export default class themeAndLogoBasePage extends BOBasePage {
   }
 
   /**
+   * Is present pages configuration tab
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async hasSubTabPagesConfiguration(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.pagesConfigurationNavItemLink);
+  }
+
+  /**
    * Go to pages configuration page
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToSubTabPagesConfiguration(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.pagesConfigurationNavItemLink);
+  }
+
+  /**
+   * Is present advanced customization tab
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async hasSubTabAdvancedCustomization(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.advancedCustomizationNavItemLink);
   }
 
   /**

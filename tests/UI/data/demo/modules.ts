@@ -34,6 +34,7 @@ export default {
   psThemeCusto: new ModuleData({
     tag: 'ps_themecusto',
     name: 'Theme Customization',
+    releaseZip: 'https://github.com/PrestaShop/ps_themecusto/releases/download/v1.2.3/ps_themecusto.zip',
   }),
   contactForm: new ModuleData({
     tag: 'contactform',
