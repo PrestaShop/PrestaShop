@@ -79,7 +79,7 @@ class CheckoutPage extends FOBasePage {
 
   private readonly checkoutPromoCodeAddButton: string;
 
-  protected personalInformationStepForm: string;
+  public personalInformationStepForm: string;
 
   private readonly forgetPasswordLink: string;
 

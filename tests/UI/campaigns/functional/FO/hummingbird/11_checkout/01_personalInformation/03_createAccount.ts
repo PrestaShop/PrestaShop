@@ -27,7 +27,7 @@ import type {BrowserContext, Page} from 'playwright';
 import MailDevEmail from '@data/types/maildevEmail';
 import MailDev from 'maildev';
 
-const baseContext: string = 'functional_FO_classic_checkout_personalInformation_createAccount';
+const baseContext: string = 'functional_FO_hummingbird_checkout_personalInformation_createAccount';
 
 /*
 Pre-condition:
