@@ -46,6 +46,8 @@ class ShoppingCarts extends BOBasePage {
 
   private readonly tableColumnOrderId: (row: number) => string;
 
+  private readonly tableColumStatus: (row: number) => string;
+
   private readonly tableColumnCustomer: (row: number) => string;
 
   private readonly tableColumnTotal: (row: number) => string;
@@ -102,20 +104,20 @@ class ShoppingCarts extends BOBasePage {
     this.exportLink = '#desc-cart-export';
 
     // Form selectors
-    this.gridForm = '#form-cart';
-    this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
-    this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
+    this.gridForm = '#cart_grid_panel';
+    this.gridTableHeaderTitle = `${this.gridForm} .card-header`;
+    this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} h3.card-header-title`;
 
     // Table selectors
-    this.gridTable = '#table-cart';
+    this.gridTable = '#cart_grid_table';
 
     // Filter selectors
-    this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='cartFilter_${filterBy}']`;
+    this.filterRow = `${this.gridTable} tr.column-filters`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='cart[${filterBy}]']`;
     this.filterDateFromColumn = `${this.filterRow} #local_cartFilter_a__date_add_0`;
     this.filterDateToColumn = `${this.filterRow} #local_cartFilter_a__date_add_1`;
-    this.filterSearchButton = '#submitFilterButtoncart';
-    this.filterResetButton = 'button[name=\'submitResetcart\']';
+    this.filterSearchButton = `${this.filterRow} td[data-column-id="actions"] button[name="cart[actions][search]"]`;
+    this.filterResetButton = 'div.js-grid-reset-button button';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
@@ -124,15 +126,16 @@ class ShoppingCarts extends BOBasePage {
     this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnOrderId = (row: number) => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnCustomer = (row: number) => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnTotal = (row: number) => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnCarrier = (row: number) => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnDate = (row: number) => `${this.tableBodyColumn(row)}:nth-child(7)`;
-    this.tableColumnOnline = (row: number) => `${this.tableBodyColumn(row)}:nth-child(8)`;
-    this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)}:nth-child(9)`;
-    this.tableColumnActionsViewLink = (row: number) => `${this.tableColumnActions(row)} a.btn-default`;
+    this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}.column-id_cart`;
+    this.tableColumnOrderId = (row: number) => `${this.tableBodyColumn(row)}.column-id_order`;
+    this.tableColumStatus = (row: number) => `${this.tableBodyColumn(row)}.column-status span.badge`;
+    this.tableColumnCustomer = (row: number) => `${this.tableBodyColumn(row)}.column-customer_name`;
+    this.tableColumnTotal = (row: number) => `${this.tableBodyColumn(row)}.column-cart_total`;
+    this.tableColumnCarrier = (row: number) => `${this.tableBodyColumn(row)}.column-carrier_name`;
+    this.tableColumnDate = (row: number) => `${this.tableBodyColumn(row)}.column-date_add`;
+    this.tableColumnOnline = (row: number) => `${this.tableBodyColumn(row)}.column-customer_online`;
+    this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)}.column-actions`;
+    this.tableColumnActionsViewLink = (row: number) => `${this.tableColumnActions(row)} a.grid-view-row-link`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -212,7 +215,7 @@ class ShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getNumberOfElementInGrid(page: Page): Promise<number> {
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
   }
 
@@ -223,9 +226,9 @@ class ShoppingCarts extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForURL(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
-    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
 
   /**
@@ -247,25 +250,20 @@ class ShoppingCarts extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
-    const currentUrl: string = page.url();
-
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
-        await page.locator(this.filterSearchButton).click();
-        await this.elementVisible(page, this.filterResetButton);
         break;
 
       case 'select':
-        await Promise.all([
-          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No'),
-        ]);
+        await this.selectByVisibleText(page, this.filterColumn(filterBy), value);
         break;
 
       default:
         throw new Error(`Filter ${filterBy} was not found`);
     }
+    // click on search
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -300,7 +298,7 @@ class ShoppingCarts extends BOBasePage {
         break;
 
       case 'status':
-        columnSelector = this.tableColumnOrderId(row);
+        columnSelector = this.tableColumStatus(row);
         break;
 
       case 'c!lastname':
