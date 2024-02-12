@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
+use PrestaShopBundle\ApiPlatform\Resources\CartRuleAction;
+use PrestaShopBundle\ApiPlatform\Resources\CartRuleMinimumAmount;
 
 /**
  * Provides data for editing CatalogPriceRule
@@ -128,5 +130,125 @@ class CartRuleForEditing
     public function getDateUpd(): ?DateTime
     {
         return $this->dateUpd;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->information->getDescription();
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode(): string
+    {
+        return $this->information->getCode();
+    }
+
+    /**
+     * @return int
+     */
+    public function getPriority(): int
+    {
+        return $this->information->getPriority();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAllowPartialUse(): bool
+    {
+        return $this->information->isPartialUse();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getActive(): bool
+    {
+        return $this->information->isEnabled();
+    }
+
+    /**
+     * @return array
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->information->getLocalizedNames();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHighlightInCart(): bool
+    {
+        return $this->information->isHighlight();
+    }
+
+    public function getMinimumAmount(): CartRuleMinimumAmount
+    {
+        return new CartRuleMinimumAmount(
+            (float) (string) $this->conditions->getMinimum()->getAmount(),
+            $this->conditions->getMinimum()->getCurrencyId(),
+            $this->conditions->getMinimum()->isAmountTax(),
+            $this->conditions->getMinimum()->isShipping(),
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function getMinimumAmountShippingIncluded(): bool
+    {
+        return $this->conditions->getMinimum()->isShipping();
+    }
+
+    /**
+     * @return int
+     */
+    public function getCustomerId(): int
+    {
+        return $this->conditions->getCustomerId()->getValue();
+    }
+
+    /**
+     * @return array
+     */
+    public function getValidityDateRange(): array
+    {
+        return [
+            $this->getConditions()->getDateFrom(),
+            $this->getConditions()->getDateTo(),
+        ];
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalQuantity(): int
+    {
+        return $this->conditions->getQuantity();
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantityPerUser(): int
+    {
+        return $this->conditions->getQuantityPerUser();
+    }
+
+    public function getCartRuleAction(): CartRuleAction
+    {
+        return new CartRuleAction(
+            $this->getActions()->isFreeShipping(),
+            $this->getActions()->getReduction(),
+            $this->getActions()->getGiftProductId(),
+            $this->getActions()->getGiftCombinationId(),
+            $this->getActions()->getDiscountApplicationType(),
+        );
     }
 }
