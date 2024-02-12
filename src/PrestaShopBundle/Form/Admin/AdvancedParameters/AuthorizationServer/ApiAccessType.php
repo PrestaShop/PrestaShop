@@ -35,6 +35,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
@@ -112,5 +113,13 @@ class ApiAccessType extends TranslatorAwareType
                 'label' => $this->trans('Scopes', 'Admin.Advparameters.Feature'),
             ])
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'form_theme' => '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiAccess/form_theme.html.twig',
+        ]);
     }
 }

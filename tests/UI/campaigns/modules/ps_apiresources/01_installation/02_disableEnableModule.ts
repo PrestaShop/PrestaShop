@@ -123,7 +123,7 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
         await testContext.addContextItem(this, 'testIdentifier', `checkScopesCore${index}`, baseContext);
 
         const scopes = await addNewApiAccessPage.getApiScopes(page, '__core_scopes');
-        expect(scopes.length).to.be.gt(0);
+        expect(scopes.length).to.be.eq(0);
 
         // eslint-disable-next-line no-restricted-syntax
         for (const scope of scopes) {

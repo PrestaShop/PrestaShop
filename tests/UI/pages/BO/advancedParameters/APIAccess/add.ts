@@ -36,6 +36,8 @@ class AddNewAPIAccess extends BOBasePage {
 
   private readonly statusInput: string;
 
+  private readonly noScopes: string;
+
   private readonly scopeGroup: (group:string) => string;
 
   private readonly scopeStatus: (scope: string) => string;
@@ -75,6 +77,7 @@ class AddNewAPIAccess extends BOBasePage {
     this.tokenLifetimeInput = `${this.formAPIAccess} #api_access_lifetime`;
     this.statusSpan = `${this.formAPIAccess} span#api_access_enabled`;
     this.statusInput = `${this.statusSpan} input`;
+    this.noScopes = `${this.formAPIAccess} p.resource-scopes-not-available`;
     this.scopeGroup = (group:string) => `#api_access_scopes_${group}_accordion div.switch-scope`;
     this.scopeStatus = (scope: string) => `${this.formAPIAccess} div[data-scope="${scope}"] div.switch-widget span.ps-switch`;
     this.scopeStatusInput = (scope: string) => `${this.scopeStatus(scope)} input`;
@@ -157,11 +160,23 @@ class AddNewAPIAccess extends BOBasePage {
   }
 
   /**
+   * Returns if scopes are visible
+   * @param page {Page} Browser tab
+   * @return Promise<boolean>
+   */
+  async hasScopes(page: Page): Promise<boolean> {
+    return this.elementNotVisible(page, this.noScopes, 1000);
+  }
+
+  /**
    * Returns the list of scopes from a group
    * @param page {Page} Browser tab
    * @param group {string} Scopes Group
    */
   async getApiScopes(page: Page, group: string): Promise<string[]> {
+    if ((await page.locator(this.scopeGroup(group)).count()) === 0) {
+      return [];
+    }
     return page
       .locator(this.scopeGroup(group))
       .evaluateAll(

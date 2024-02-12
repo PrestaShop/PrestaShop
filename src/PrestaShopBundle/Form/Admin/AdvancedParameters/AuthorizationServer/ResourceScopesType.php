@@ -37,6 +37,7 @@ use Symfony\Component\Form\DataMapperInterface;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -111,6 +112,20 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
     public function getParent()
     {
         return AccordionType::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $scopes = 0;
+
+        foreach ($form->all() as $child) {
+            $scopes += $child->count();
+        }
+
+        $view->vars['empty_scopes'] = $scopes === 0;
     }
 
     private function getResourceFormName(ApiResourceScopes $resourceScopes): string
