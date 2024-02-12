@@ -104,7 +104,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should search the non ordered shopping carts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts1', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+      await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
       numberOfNonOrderedShoppingCarts = await shoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfNonOrderedShoppingCarts).to.be.at.most(numberOfShoppingCarts);
@@ -221,7 +221,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should search the non ordered shopping carts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts2', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+      await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
       numberOfNonOrderedShoppingCarts = await shoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfNonOrderedShoppingCarts).to.be.at.most(numberOfShoppingCarts);

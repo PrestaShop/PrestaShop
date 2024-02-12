@@ -67,7 +67,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
   it('should search the non ordered shopping carts and delete them if exist', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
 
-    await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+    await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
     const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
     expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);

@@ -301,7 +301,7 @@ class ShoppingCarts extends BOBasePage {
         columnSelector = this.tableColumStatus(row);
         break;
 
-      case 'c!lastname':
+      case 'customer_name':
         columnSelector = this.tableColumnCustomer(row);
         break;
 

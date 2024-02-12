@@ -123,9 +123,9 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
     it('should filter by customer lastName start by \'guest\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToSort', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'c!lastname', 'guest');
+      await shoppingCartsPage.filterTable(page, 'input', 'customer_name', 'guest');
 
-      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'c!lastname');
+      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'customer_name');
       expect(textColumn).to.contains(customerData.lastName);
     });
 

@@ -110,7 +110,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should search the non ordered shopping cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+      await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
       const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfShoppingCartsAfterFilter).to.equal(1);
@@ -230,7 +230,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should search a shopping cart with a specific order Id', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchSpecificOrderShoppingCarts', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', orderId.toString());
+      await shoppingCartsPage.filterTable(page, 'select', 'status', orderId.toString());
 
       const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfShoppingCartsAfterFilter).to.be.at.equal(1);
