@@ -41,7 +41,7 @@ class CheckoutPage extends FOBasePage {
 
   private readonly paymentConfirmationButton: string;
 
-  private readonly shippingValueSpan: string;
+  protected shippingValueSpan: string;
 
   private readonly blockPromoDiv: string;
 
@@ -155,11 +155,11 @@ class CheckoutPage extends FOBasePage {
 
   private readonly addressStepCityInput: string;
 
-  private readonly addressStepCountrySelect: string;
+  protected addressStepCountrySelect: string;
 
   private readonly addressStepPhoneInput: string;
 
-  private readonly stateInput: string;
+  protected stateInput: string;
 
   private readonly addressStepUseSameAddressCheckbox: string;
 
@@ -167,7 +167,7 @@ class CheckoutPage extends FOBasePage {
 
   private readonly addressStepSubmitButton: string;
 
-  private readonly addressStepEditButton: string;
+  protected addressStepEditButton: string;
 
   private readonly addAddressButton: string;
 
@@ -185,15 +185,15 @@ class CheckoutPage extends FOBasePage {
 
   private readonly deliveryStepCarriersList: string;
 
-  private readonly deliveryOptions: string;
+  protected deliveryOptions: string;
 
   private readonly deliveryOptionsRadioButton: string;
 
-  private readonly deliveryOptionLabel: (id: number) => string;
+  protected deliveryOptionLabel: (id: number) => string;
 
   private readonly deliveryOptionNameSpan: (id: number) => string;
 
-  private readonly deliveryOptionAllNamesSpan: string;
+  protected deliveryOptionAllNamesSpan: string;
 
   private readonly deliveryOptionAllPricesSpan: string;
 
@@ -201,13 +201,13 @@ class CheckoutPage extends FOBasePage {
 
   private readonly deliveryStepContinueButton: string;
 
-  private readonly deliveryOption: (carrierID: number) => string;
+  protected deliveryOption: (carrierID: number) => string;
 
-  private readonly deliveryStepCarrierName: (carrierID: number) => string;
+  protected deliveryStepCarrierName: (carrierID: number) => string;
 
-  private readonly deliveryStepCarrierDelay: (carrierID: number) => string;
+  protected deliveryStepCarrierDelay: (carrierID: number) => string;
 
-  private readonly deliveryStepCarrierPrice: (carrierID: number) => string;
+  protected deliveryStepCarrierPrice: (carrierID: number) => string;
 
   private readonly deliveryAddressBlock: string;
 
@@ -217,7 +217,7 @@ class CheckoutPage extends FOBasePage {
 
   private readonly invoiceAddressPosition: (position: number) => string;
 
-  private readonly deliveryAddressEditButton: (addressID: number) => string;
+  protected deliveryAddressEditButton: (addressID: number) => string;
 
   private readonly deliveryAddressDeleteButton: (addressID: number) => string;
 
@@ -909,7 +909,7 @@ class CheckoutPage extends FOBasePage {
    * Get order message
    * @param page {Page} Browser tab
    */
-  getOrderMessage(page: Page): Promise<string> {
+  async getOrderMessage(page: Page): Promise<string> {
     return this.getTextContent(page, this.deliveryMessage);
   }
 
@@ -1025,7 +1025,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isPaymentConfirmationButtonVisibleAndEnabled(page: Page): Promise<boolean> {
+  async isPaymentConfirmationButtonVisibleAndEnabled(page: Page): Promise<boolean> {
     // small side effect note, the selector is the one that checks for disabled
     return this.elementVisible(page, this.paymentConfirmationButton, 1000);
   }
