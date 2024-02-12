@@ -180,7 +180,7 @@ class Translations extends BOBasePage {
    */
   async translateExpression(page: Page, translation: string): Promise<string> {
     await this.setValue(page, this.translationTextarea, translation);
-    await page.locator(this.saveTranslationButton).click();
+    await page.locator(this.saveTranslationButton).first().click();
 
     return this.getTextContent(page, this.growlMessage);
   }
