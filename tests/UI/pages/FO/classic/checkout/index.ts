@@ -79,7 +79,7 @@ class CheckoutPage extends FOBasePage {
 
   private readonly checkoutPromoCodeAddButton: string;
 
-  public personalInformationStepForm: string;
+  protected personalInformationStepForm: string;
 
   private readonly forgetPasswordLink: string;
 
@@ -121,7 +121,7 @@ class CheckoutPage extends FOBasePage {
 
   private readonly checkoutRemoveDiscountLink: string;
 
-  private readonly checkoutLoginForm: string;
+  protected checkoutLoginForm: string;
 
   private readonly emailInput: string;
 
@@ -133,11 +133,11 @@ class CheckoutPage extends FOBasePage {
 
   private readonly personalInformationLogoutLink: string;
 
-  private readonly personalInformationCustomerIdentity: string;
+  protected personalInformationCustomerIdentity: string;
 
-  private readonly personalInformationEditLink: string;
+  protected personalInformationEditLink: string;
 
-  private readonly loginErrorMessage: string;
+  protected loginErrorMessage: string;
 
   protected addressStepSection: string;
 
