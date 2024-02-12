@@ -2881,6 +2881,11 @@ class AdminControllerCore extends Controller
             return;
         }
 
+        // Do not initialize context when the store is already initialized in CLI
+        if (Tools::isPHPCLI() && $this->context) {
+            return;
+        }
+
         // Change shop context ?
         if (Shop::isFeatureActive() && Tools::getValue('setShopContext') !== false) {
             $this->context->cookie->shopContext = Tools::getValue('setShopContext');
