@@ -136,7 +136,7 @@
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-deprecation": "^2.0.0",
-    "eslint-plugin-html": "^7.1.0",
+    "eslint-plugin-html": "^8.0.0",
     "eslint-plugin-import": "^2.29.1",
     "jsdoc-to-markdown": "^8.0.1",
     "mochawesome-merge": "^4.3.0",
