@@ -218,7 +218,7 @@ class Translations extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getLanguagesFromUpdateResult(page: Page): Promise<string> {
-    return this.getTextContent(page, this.languageToUpdateResult);
+    return this.getTextContent(page, this.languageToUpdateResult, false);
   }
 
   /**
