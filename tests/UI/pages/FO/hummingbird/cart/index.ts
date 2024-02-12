@@ -14,6 +14,7 @@ class Cart extends CartPage {
     super('hummingbird');
 
     this.proceedToCheckoutButton = '#wrapper div.cart-summary div.checkout a.btn';
+    this.noItemsInYourCartSpan = '#content-wrapper div.cart-overview p';
   }
 }
 
