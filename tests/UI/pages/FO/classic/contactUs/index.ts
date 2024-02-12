@@ -28,7 +28,7 @@ class ContactUsPage extends FOBasePage {
 
   private readonly emailAddressInput: string;
 
-  private readonly attachmentLabel: string;
+  protected attachmentLabel: string;
 
   private readonly orderReferenceSelect: string;
 
@@ -59,7 +59,7 @@ class ContactUsPage extends FOBasePage {
     // Form selectors
     this.subjectSelect = '#content select[name=\'id_contact\']';
     this.emailAddressInput = '#content input[name=\'from\']';
-    this.attachmentLabel = '#file-upload';
+    this.attachmentLabel = '#file-upload'; // input[name="fileUpload"]
     this.orderReferenceSelect = 'select[name=id_order]';
     this.messageTextarea = '#content textarea[name=\'message\']';
     this.sendButton = '#content input[name=\'submitMessage\']';

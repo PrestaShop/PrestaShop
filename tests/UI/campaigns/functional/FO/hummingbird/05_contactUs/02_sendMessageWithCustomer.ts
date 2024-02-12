@@ -7,6 +7,7 @@ import mailHelper from '@utils/mailHelper';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
 
 // Import pages
 // Import BO pages
@@ -14,10 +15,11 @@ import dashboardPage from '@pages/BO/dashboard';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 import contactFormPage from '@pages/BO/modules/contactForm';
+
 // Import FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import contactUsPage from '@pages/FO/hummingbird/contactUs';
+import homePage from '@pages/FO/hummingbird/home';
+import loginPage from '@pages/FO/hummingbird/login';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -30,21 +32,23 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import MailDev from 'maildev';
 
-const baseContext: string = 'functional_FO_classic_contactUs_sendMessageWithCustomer';
+const baseContext: string = 'functional_FO_hummingbird_contactUs_sendMessageWithCustomer';
 
 /*
 Pre-condition:
 - Setup SMTP parameters
 - Configure contact form module
+- Install hummingbird theme
 Scenario:
-Go to FO
-Log in with default customer
-Send a message on contact page
-Verify email
-Verify message on customer service page
+- Go to FO
+- Log in with default customer
+- Send a message on contact page
+- Verify email
+- Verify message on customer service page
 Post-condition:
 - Reset config in Contact form module
 - Reset SMTP parameters
+- Uninstall hummingbird theme
  */
 describe('FO - Contact us : Send message from contact us page with customer logged in', async () => {
   let browserContext: BrowserContext;
@@ -62,6 +66,9 @@ describe('FO - Contact us : Send message from contact us page with customer logg
 
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
+
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -84,6 +91,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     await helper.closeBrowserContext(browserContext);
 
     await files.deleteFile(`${contactUsData.fileName}.txt`);
+    await files.deleteFile('../../admin-dev/hummingbird.zip');
 
     // Stop listening to maildev server
     mailHelper.stopListener(mailListener);
@@ -149,27 +157,27 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-      await foHomePage.goTo(page, global.FO.URL);
+      await homePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await homePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFo', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await homePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await loginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(loginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, Customers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await loginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -177,7 +185,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
       await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
       // Go to contact us page
-      await foLoginPage.goToFooterLink(page, 'Contact us');
+      await loginPage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
       expect(pageTitle).to.equal(contactUsPage.pageTitle);
@@ -301,5 +309,8 @@ describe('FO - Contact us : Send message from contact us page with customer logg
   });
 
   // Post-Condition : Reset SMTP config
-  resetSmtpConfigTest(`${baseContext}_postTest_2`);
+  resetSmtpConfigTest(`${baseContext}_postTest_1`);
+
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest_2`);
 });

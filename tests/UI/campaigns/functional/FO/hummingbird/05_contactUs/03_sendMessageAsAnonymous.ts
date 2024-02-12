@@ -6,22 +6,23 @@ import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
+import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
 
 // Import pages
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import customerServicePage from '@pages/BO/customerService/customerService';
-import {moduleManager} from '@pages/BO/modules/moduleManager';
 import contactFormPage from '@pages/BO/modules/contactForm';
+import {moduleManager} from '@pages/BO/modules/moduleManager';
+
 // Import FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import contactUsPage from '@pages/FO/hummingbird/contactUs';
+import homePage from '@pages/FO/hummingbird/home';
+import loginPage from '@pages/FO/hummingbird/login';
 
 // Import data
 import Customers from '@data/demo/customers';
-import Orders from '@data/demo/orders';
 import MessageData from '@data/faker/message';
 import MailDevEmail from '@data/types/maildevEmail';
 import Modules from '@data/demo/modules';
@@ -30,7 +31,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import MailDev from 'maildev';
 
-const baseContext: string = 'functional_FO_classic_contactUs_sendMessageWithCustomer';
+const baseContext: string = 'functional_FO_hummingbird_contactUs_sendMessageAsAnonymous';
 
 /*
 Pre-condition:
@@ -38,30 +39,53 @@ Pre-condition:
 - Configure contact form module
 Scenario:
 Go to FO
-Log in with default customer
+Check if not connected
+Check errors
 Send a message on contact page
 Verify email
+Go to BO
 Verify message on customer service page
 Post-condition:
 - Reset config in Contact form module
 - Reset SMTP parameters
  */
-describe('FO - Contact us : Send message from contact us page with customer logged in', async () => {
+describe('FO - Contact us : Send message from contact us page with customer not logged', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let newMail: MailDevEmail;
   let mailListener: MailDev;
 
+  const contactUsEmptyEmail: MessageData = new MessageData({
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
+    subject: 'Customer service',
+    emailAddress: '',
+  });
+  const contactUsInvalidEmail: MessageData = new MessageData({
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
+    subject: 'Customer service',
+    emailAddress: 'demo@prestashop',
+  });
+  const contactUsEmptyContent: MessageData = new MessageData({
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
+    subject: 'Customer service',
+    emailAddress: Customers.johnDoe.email,
+    message: '',
+  });
   const contactUsData: MessageData = new MessageData({
     firstName: Customers.johnDoe.firstName,
     lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: Customers.johnDoe.email,
-    reference: Orders.firstOrder.reference,
   });
 
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
+
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -84,7 +108,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     await helper.closeBrowserContext(browserContext);
 
     await files.deleteFile(`${contactUsData.fileName}.txt`);
-
+    await files.deleteFile('../../admin-dev/hummingbird.zip');
     // Stop listening to maildev server
     mailHelper.stopListener(mailListener);
   });
@@ -145,42 +169,58 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     });
   });
 
-  describe('FO - Send message from contact us page with customer logged in', async () => {
+  describe('FO - Send message from contact us page with customer not logged', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-      await foHomePage.goTo(page, global.FO.URL);
+      await homePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await homePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFo', baseContext);
+    it('should check if that any account is connected', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkIfCustomerNotConnected', baseContext);
 
-      await foHomePage.goToLoginPage(page);
-
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
-    });
-
-    it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFo', baseContext);
-
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
-
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
+      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
     it('should go on contact us page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
       // Go to contact us page
-      await foLoginPage.goToFooterLink(page, 'Contact us');
+      await loginPage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
       expect(pageTitle).to.equal(contactUsPage.pageTitle);
+    });
+
+    it('should check if the email is empty', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEmptyEmail', baseContext);
+
+      await contactUsPage.sendMessage(page, contactUsEmptyEmail);
+
+      const invalidEmailError = await contactUsPage.getAlertError(page);
+      expect(invalidEmailError).to.contains(contactUsPage.invalidEmail);
+    });
+
+    it('should check if the email is invalid', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkInvalidEmail', baseContext);
+
+      await contactUsPage.sendMessage(page, contactUsInvalidEmail);
+
+      const invalidEmailError = await contactUsPage.getAlertError(page);
+      expect(invalidEmailError).to.contains(contactUsPage.invalidEmail);
+    });
+
+    it('should check if the content is empty', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEmptyContent', baseContext);
+
+      await contactUsPage.sendMessage(page, contactUsEmptyContent);
+
+      const invalidEmailError = await contactUsPage.getAlertError(page);
+      expect(invalidEmailError).to.contains(contactUsPage.invalidContent);
     });
 
     it('should send message to customer service', async function () {
@@ -301,5 +341,8 @@ describe('FO - Contact us : Send message from contact us page with customer logg
   });
 
   // Post-Condition : Reset SMTP config
-  resetSmtpConfigTest(`${baseContext}_postTest_2`);
+  resetSmtpConfigTest(`${baseContext}_postTest_1`);
+
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest_2`);
 });
