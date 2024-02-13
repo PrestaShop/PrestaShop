@@ -78,7 +78,7 @@ function deleteNonOrderedShoppingCarts(baseContext: string = 'commonTests-delete
 
       if (numberOfNonOrderedShoppingCarts > 0) {
         const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-        expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+        expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulDeleteMessage);
       }
     });
 

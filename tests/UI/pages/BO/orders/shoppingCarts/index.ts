@@ -24,6 +24,8 @@ class ShoppingCarts extends BOBasePage {
 
   private readonly filterRow: string;
 
+  private readonly selectAllRowsDiv: string;
+
   private readonly filterColumn: (filterBy: string) => string;
 
   private readonly filterDateFromColumn: string;
@@ -62,15 +64,13 @@ class ShoppingCarts extends BOBasePage {
 
   private readonly tableColumnActionsViewLink: (row: number) => string;
 
-  private readonly bulkActionBlock: string;
+  private readonly bulkActionsToggleButton: string;
 
-  private readonly bulkActionMenuButton: string;
+  private readonly bulkActionsDeleteButton: string;
 
-  private readonly bulkActionDropdownMenu: string;
+  private readonly bulkDeleteModal: string;
 
-  private readonly selectAllLink: string;
-
-  private readonly bulkDeleteLink: string;
+  private readonly bulkDeleteModalDeleteButton: string;
 
   private readonly paginationActiveLabel: string;
 
@@ -98,7 +98,6 @@ class ShoppingCarts extends BOBasePage {
     super();
 
     this.pageTitle = `Shopping Carts • ${global.INSTALL.SHOP_NAME}`;
-    this.alertSuccessBlockParagraph = '.alert-success';
 
     // Selectors
     this.exportLink = '#desc-cart-export';
@@ -113,6 +112,7 @@ class ShoppingCarts extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.column-filters`;
+    this.selectAllRowsDiv = `${this.filterRow} .grid_bulk_action_select_all`;
     this.filterColumn = (filterBy: string) => `${this.filterRow} [name='cart[${filterBy}]']`;
     this.filterDateFromColumn = `${this.filterRow} #local_cartFilter_a__date_add_0`;
     this.filterDateToColumn = `${this.filterRow} #local_cartFilter_a__date_add_1`;
@@ -138,11 +138,12 @@ class ShoppingCarts extends BOBasePage {
     this.tableColumnActionsViewLink = (row: number) => `${this.tableColumnActions(row)} a.grid-view-row-link`;
 
     // Bulk actions selectors
-    this.bulkActionBlock = 'div.bulk-actions';
-    this.bulkActionMenuButton = '#bulk_action_menu_cart';
-    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
-    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
-    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkActionsToggleButton = `${this.gridForm} button.dropdown-toggle.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = `${this.gridForm} #cart_grid_bulk_action_delete_selection`;
+
+    // Modal Dialog
+    this.bulkDeleteModal = '#cart-grid-confirm-modal.show';
+    this.bulkDeleteModalDeleteButton = `${this.bulkDeleteModal} button.btn-confirm-submit`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
@@ -353,29 +354,24 @@ class ShoppingCarts extends BOBasePage {
    * @returns {Promise<string>}
    */
   async bulkDeleteShoppingCarts(page: Page): Promise<string> {
-    // To confirm bulk delete action with dialog
-    await this.dialogListener(page, true);
-
-    // Select all rows
+    // Click on Select All
     await Promise.all([
-      page.locator(this.bulkActionMenuButton).click(),
-      this.waitForVisibleSelector(page, this.selectAllLink),
+      page.locator(this.selectAllRowsDiv).evaluate((el: HTMLElement) => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
-
+    // Click on Button Bulk actions
     await Promise.all([
-      page.locator(this.selectAllLink).click(),
-      this.waitForHiddenSelector(page, this.selectAllLink),
+      page.locator(this.bulkActionsToggleButton).click(),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
-
-    // Perform delete
+    // Click on delete and wait for modal
     await Promise.all([
-      page.locator(this.bulkActionMenuButton).click(),
-      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+      page.locator(this.bulkActionsDeleteButton).click(),
+      this.waitForVisibleSelector(page, `${this.bulkDeleteModal}.show`),
     ]);
+    await this.clickAndWaitForLoadState(page, this.bulkDeleteModalDeleteButton);
+    await this.elementNotVisible(page, this.bulkDeleteModal);
 
-    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
-
-    // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

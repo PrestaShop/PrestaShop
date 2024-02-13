@@ -81,7 +81,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
 
     if (numberOfShoppingCartsAfterFilter > 0) {
       const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-      expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulDeleteMessage);
     }
   });
 

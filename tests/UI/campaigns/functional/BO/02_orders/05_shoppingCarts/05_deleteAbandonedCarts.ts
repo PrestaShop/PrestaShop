@@ -102,7 +102,7 @@ describe('BO - Orders : Create shopping cart and delete abandoned one', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'deleteNonOrderedShoppingCarts', baseContext);
 
       const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-      expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
