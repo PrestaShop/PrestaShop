@@ -422,7 +422,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should get shopping cart ID and Date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getShoppingCartIDAndDate', baseContext);
 
-        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date');
+        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date_add');
 
         shoppingCartID = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
         expect(parseInt(shoppingCartID, 10)).to.be.greaterThan(5);

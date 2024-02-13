@@ -230,12 +230,13 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should search a shopping cart with a specific order Id', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchSpecificOrderShoppingCarts', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'select', 'status', orderId.toString());
+      await shoppingCartsPage.resetFilter(page);
+      await shoppingCartsPage.filterTable(page, 'input', 'id_order', orderId.toString());
 
       const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfShoppingCartsAfterFilter).to.be.at.equal(1);
 
-      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'status');
+      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'id_order');
       expect(textColumn).to.contains(orderId);
     });
 

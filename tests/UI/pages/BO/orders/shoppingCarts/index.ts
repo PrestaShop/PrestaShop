@@ -12,8 +12,6 @@ import type {Page} from 'playwright';
 class ShoppingCarts extends BOBasePage {
   public readonly pageTitle: string;
 
-  private readonly exportLink: string;
-
   private readonly gridForm: string;
 
   private readonly gridTableHeaderTitle: string;
@@ -68,27 +66,29 @@ class ShoppingCarts extends BOBasePage {
 
   private readonly bulkActionsDeleteButton: string;
 
+  private readonly gridActionButton: string;
+
+  private readonly gridActionDropDownMenu: string;
+
+  private readonly gridActionExportLink: string;
+
   private readonly bulkDeleteModal: string;
 
   private readonly bulkDeleteModalDeleteButton: string;
 
-  private readonly paginationActiveLabel: string;
+  private readonly paginationLimitSelect: string;
 
-  private readonly paginationDiv: string;
-
-  private readonly paginationDropdownButton: string;
-
-  private readonly paginationItems: (number: number) => string;
-
-  private readonly paginationPreviousLink: string;
+  private readonly paginationLabel: string;
 
   private readonly paginationNextLink: string;
 
+  private readonly paginationPreviousLink: string;
+
   private readonly tableHead: string;
 
-  private readonly sortColumnDiv: (column: number) => string;
+  private readonly sortColumnDiv: (column: string) => string;
 
-  private readonly sortColumnSpanButton: (column: number) => string;
+  private readonly sortColumnSpanButton: (column: string) => string;
 
   /**
    * @constructs
@@ -98,9 +98,6 @@ class ShoppingCarts extends BOBasePage {
     super();
 
     this.pageTitle = `Shopping Carts • ${global.INSTALL.SHOP_NAME}`;
-
-    // Selectors
-    this.exportLink = '#desc-cart-export';
 
     // Form selectors
     this.gridForm = '#cart_grid_panel';
@@ -114,8 +111,8 @@ class ShoppingCarts extends BOBasePage {
     this.filterRow = `${this.gridTable} tr.column-filters`;
     this.selectAllRowsDiv = `${this.filterRow} .grid_bulk_action_select_all`;
     this.filterColumn = (filterBy: string) => `${this.filterRow} [name='cart[${filterBy}]']`;
-    this.filterDateFromColumn = `${this.filterRow} #local_cartFilter_a__date_add_0`;
-    this.filterDateToColumn = `${this.filterRow} #local_cartFilter_a__date_add_1`;
+    this.filterDateFromColumn = `${this.filterRow} #cart_date_add_from`;
+    this.filterDateToColumn = `${this.filterRow} #cart_date_add_to`;
     this.filterSearchButton = `${this.filterRow} td[data-column-id="actions"] button[name="cart[actions][search]"]`;
     this.filterResetButton = 'div.js-grid-reset-button button';
 
@@ -141,22 +138,25 @@ class ShoppingCarts extends BOBasePage {
     this.bulkActionsToggleButton = `${this.gridForm} button.dropdown-toggle.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = `${this.gridForm} #cart_grid_bulk_action_delete_selection`;
 
+    // Grid Actions
+    this.gridActionButton = '#cart-grid-actions-button';
+    this.gridActionDropDownMenu = '#cart-grid-actions-dropdown-menu';
+    this.gridActionExportLink = '#cart-grid-action-export';
+
     // Modal Dialog
     this.bulkDeleteModal = '#cart-grid-confirm-modal.show';
     this.bulkDeleteModalDeleteButton = `${this.bulkDeleteModal} button.btn-confirm-submit`;
 
     // Pagination selectors
-    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
-    this.paginationDiv = `${this.gridForm} .pagination`;
-    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = (number: number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
-    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
-    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.gridForm} .col-form-label`;
+    this.paginationNextLink = `${this.gridForm} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.gridForm} [data-role=previous-page-link]`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column: number) => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = (column: number) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Filter methods */
@@ -167,7 +167,17 @@ class ShoppingCarts extends BOBasePage {
    * @returns {Promise<string|null>}
    */
   async exportDataToCsv(page: Page): Promise<string | null> {
-    return this.clickAndWaitForDownload(page, this.exportLink);
+    await Promise.all([
+      page.locator(this.gridActionButton).click(),
+      this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
+    ]);
+
+    const [downloadPath] = await Promise.all([
+      this.clickAndWaitForDownload(page, this.gridActionExportLink),
+      this.waitForHiddenSelector(page, `${this.gridActionDropDownMenu}.show`),
+    ]);
+
+    return downloadPath;
   }
 
   /**
@@ -178,13 +188,14 @@ class ShoppingCarts extends BOBasePage {
    */
   async getCartFromTable(page: Page, row: number): Promise<ShoppingCartDetails> {
     return {
-      id_cart: parseFloat(await this.getTextColumn(page, row, 'id_cart')),
+      id_cart: parseInt(await this.getTextColumn(page, row, 'id_cart'), 10),
+      id_order: parseInt(await this.getTextColumn(page, row, 'id_order'), 10),
       status: await this.getTextColumn(page, row, 'status'),
-      lastname: await this.getTextColumn(page, row, 'c!lastname'),
+      lastname: await this.getTextColumn(page, row, 'customer_name'),
       total: await this.getTextColumn(page, row, 'total'),
-      carrier: await this.getTextColumn(page, row, 'ca!name'),
-      date: await this.getTextColumn(page, row, 'date'),
-      online: await this.getTextColumn(page, row, 'id_guest'),
+      carrier: await this.getTextColumn(page, row, 'carrier_name'),
+      date: await this.getTextColumn(page, row, 'date_add'),
+      online: await this.getTextColumn(page, row, 'customer_online'),
     };
   }
 
@@ -197,13 +208,13 @@ class ShoppingCarts extends BOBasePage {
   async getCartInCsvFormat(page: Page, row: number): Promise<string> {
     const cart = await this.getCartFromTable(page, row);
 
-    const cartDate = date.setDateFormat('yyyy-mm-dd', cart.date ?? '');
-    const lastName = cart.lastname !== '--' ? `"${cart.lastname}"` : '';
-    const status = cart.status !== 'Abandoned cart' ? cart.status : `"${cart.status}"`;
-    const carrier = cart.carrier !== '--' ? `"${cart.carrier}"` : '';
+    const cartDate = date.setDateFormat('yyyy-mm-dd', cart.date ?? '')
+      .replace(' ', '');
+    const lastName = cart.lastname !== '--' ? `"${cart.lastname?.replace(' ', '')}"` : '';
+    const carrier = cart.carrier !== '--' ? `"${cart.carrier?.replace(' ', '')}"` : '';
 
     return `${cart.id_cart};`
-      + `${status};`
+      + `${cart.id_order};`
       + `${lastName};`
       + `${cart.total};`
       + `${carrier};`
@@ -298,6 +309,10 @@ class ShoppingCarts extends BOBasePage {
         columnSelector = this.tableColumnId(row);
         break;
 
+      case 'id_order':
+        columnSelector = this.tableColumnOrderId(row);
+        break;
+
       case 'status':
         columnSelector = this.tableColumStatus(row);
         break;
@@ -310,15 +325,15 @@ class ShoppingCarts extends BOBasePage {
         columnSelector = this.tableColumnTotal(row);
         break;
 
-      case 'ca!name':
+      case 'carrier_name':
         columnSelector = this.tableColumnCarrier(row);
         break;
 
-      case 'date':
+      case 'date_add':
         columnSelector = this.tableColumnDate(row);
         break;
 
-      case 'id_guest':
+      case 'customer_online':
         columnSelector = this.tableColumnOnline(row);
         break;
 
@@ -381,8 +396,8 @@ class ShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getPaginationLabel(page: Page): Promise<string> {
-    return this.getTextContent(page, this.paginationActiveLabel);
+  async getPaginationLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.paginationLabel);
   }
 
   /**
@@ -392,8 +407,12 @@ class ShoppingCarts extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
-    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.waitForSelectorAndClick(page, this.paginationItems(number));
+    const currentUrl: string = page.url();
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
+    ]);
+
     return this.getPaginationLabel(page);
   }
 
@@ -426,39 +445,16 @@ class ShoppingCarts extends BOBasePage {
    * @returns {Promise<void>}
    */
   async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
-    let columnSelector: string;
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
-    switch (sortBy) {
-      case 'id_cart':
-        columnSelector = this.sortColumnDiv(2);
-        break;
-
-      case 'status':
-        columnSelector = this.sortColumnDiv(3);
-        break;
-
-      case 'c!lastname':
-        columnSelector = this.sortColumnDiv(4);
-        break;
-
-      case 'ca!name':
-        columnSelector = this.sortColumnDiv(6);
-        break;
-
-      case 'date':
-        columnSelector = this.sortColumnDiv(7);
-        break;
-
-      case 'id_guest':
-        columnSelector = this.sortColumnDiv(8);
-        break;
-
-      default:
-        throw new Error(`Column ${sortBy} was not found`);
+    let i: number = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
+      i += 1;
     }
 
-    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForURL(page, sortColumnButton);
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
   /**

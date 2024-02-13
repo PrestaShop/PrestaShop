@@ -448,7 +448,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should get shopping cart ID and Date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getShoppingCartIDAndDate', baseContext);
 
-        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date');
+        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date_add');
         shoppingCartDate = `${shoppingCartDate.substring(6, 10)}-${shoppingCartDate.substring(0, 2)}-`
           + `${shoppingCartDate.substring(3, 5)}${shoppingCartDate.substring(11, 19)}`;
 
