@@ -15,14 +15,18 @@ class Checkout extends CheckoutPage {
 
     // Selectors
     this.stepFormSuccess = '.checkout__steps--success';
+    this.personalInformationEditLink = '#wrapper div.checkout__steps'
+      + ' button[data-bs-target="#checkout-personal-information-step"]';
 
     // Personal information form
     this.personalInformationStepForm = 'li[data-step="checkout-personal-information-step"]';
+    this.personalInformationCustomerIdentity = '#checkout-personal-information-step a[href*="identity"]';
 
     // Sign in selectors
     this.signInHyperLink = '#checkout-personal-information-step div.step__content '
       + '#contact-tab[data-bs-target="#checkout-login-form"]';
     this.personalInformationContinueButton = '#login-form button[data-link-action="sign-in"]';
+    this.loginErrorMessage = `${this.checkoutLoginForm} div.alert-danger`;
 
     // Addresses step selectors
     this.addressStepSection = 'li[data-step="checkout-addresses-step"]';

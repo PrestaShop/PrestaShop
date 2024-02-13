@@ -58,7 +58,7 @@ class CartPage extends FOBasePage {
 
   private readonly itemsNumber: string;
 
-  private readonly noItemsInYourCartSpan: string;
+  protected noItemsInYourCartSpan: string;
 
   private readonly alertMessage: string;
 
