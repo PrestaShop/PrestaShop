@@ -66,6 +66,7 @@ npm-debug.log.*
 /img/e/*
 !/img/e/index.php
 !/img/flags/
+/img/flags/*
 !/img/genders/
 /img/genders/*
 !/img/genders/index.php
