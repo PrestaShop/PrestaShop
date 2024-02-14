@@ -110,6 +110,11 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
 
+  PrestaShopBundle\ApiPlatform\Provider\QueryListProvider:
+    tags: [ 'api_platform.state_provider' ]
+    public: false
+    autowire: true
+
   PrestaShopBundle\Security\Admin\SessionRenewer:
     arguments:
       $storage: "@security.csrf.token_storage"
