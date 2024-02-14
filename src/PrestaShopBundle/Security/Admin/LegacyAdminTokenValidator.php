@@ -43,9 +43,14 @@ use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 
 /**
  * This service is used to validate the query token in legacy context, especially for Frontend.
- * It's called legacy because it's used in legacy context but ti can validate both Symfony and legacy tokens.
- * As such it's a common service for front and admin which is why some of its dependencies are built manually
- * and why we partially rely on legacy classes and tools.
+ * It's called legacy because it's used in legacy context, but it can validate both Symfony and legacy tokens.
+ *
+ * It's only available in front legacy environment which is why some of its dependencies are built manually and why
+ * we partially rely on legacy classes and tools. It MUST not be used in Symfony environment because it would try to
+ * create a session already handled by the framework.
+ *
+ * If you need to manually validate a token in admin code (even in a legacy controller) you should use
+ * PrestaShopBundle\Security\Admin\UserTokenManager instead.
  */
 class LegacyAdminTokenValidator
 {
@@ -131,7 +136,12 @@ class LegacyAdminTokenValidator
             return $employeeId;
         }
 
-        return $this->requestStack->getMainRequest()->get('id_employee', null);
+        $requestEmployeeId = $this->requestStack->getMainRequest()->get('id_employee', null);
+        if (null !== $requestEmployeeId) {
+            $requestEmployeeId = intval($requestEmployeeId, 10);
+        }
+
+        return $requestEmployeeId ?: null;
     }
 
     private function getControllerName(?string $controllerName): ?string
