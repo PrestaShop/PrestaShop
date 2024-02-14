@@ -23,6 +23,11 @@ class Home extends HomePage {
   constructor() {
     super('hummingbird');
 
+    // Selectors of slider
+    this.carouselSliderId = 'div.carousel.slide';
+    this.carouselControlDirectionLink = (direction: string) => `${this.carouselSliderId} button.carousel-control-${direction}`;
+    this.carouselSliderInnerList = `${this.carouselSliderId} div.carousel-inner`;
+
     // Products list
     this.productArticle = (number: number) => `#content section.featured-products div.container div article:nth-child(${number})`;
     this.addToCartIcon = (number: number) => `${this.productArticle(number)} button[data-button-action='add-to-cart']`;

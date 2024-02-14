@@ -17,11 +17,11 @@ class HomePage extends FOBasePage {
 
   public readonly successAddToCartMessage: string;
 
-  private readonly carouselSliderId: string;
+  protected carouselSliderId: string;
 
   private readonly carouselControlDirectionLink: (direction: string) => string;
 
-  private readonly carouselSliderInnerList: string;
+  protected carouselSliderInnerList: string;
 
   private readonly carouselSliderInnerListItems: string;
 
