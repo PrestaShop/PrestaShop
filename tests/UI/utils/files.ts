@@ -20,7 +20,7 @@ export default {
    * @param filePath {string|null} Filepath to delete
    * @return {Promise<void>}
    */
-  async deleteFile(filePath: string|null): Promise<void> {
+  async deleteFile(filePath: string | null): Promise<void> {
     if (filePath && fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
@@ -55,7 +55,7 @@ export default {
    * @param attempt {number} Number of attempt to check for the file
    * @returns {Promise<boolean>}
    */
-  async doesFileExist(filePath: string|null, attempt: number = 5000): Promise<boolean> {
+  async doesFileExist(filePath: string | null, attempt: number = 5000): Promise<boolean> {
     if (filePath === null) {
       return false;
     }
@@ -92,7 +92,7 @@ export default {
    * @param deleteComma {boolean} True if we need to delete comma
    * @returns {Promise<boolean>}
    */
-  async isTextInPDF(filePath: string|null, text: string, deleteComma: boolean = false): Promise<boolean> {
+  async isTextInPDF(filePath: string | null, text: string, deleteComma: boolean = false): Promise<boolean> {
     if (filePath === null) {
       return false;
     }
@@ -110,7 +110,9 @@ export default {
     const pageTexts = await Promise.all(pageTextPromises);
 
     if (deleteComma) {
-      return (pageTexts.join(' ').split(',').join('').indexOf(text) !== -1);
+      return ((pageTexts.join(' ').split(/,\//).join('/').split(/,\s*,?/)
+        .join(' '))
+        .indexOf(text) !== -1);
     }
 
     return (pageTexts.join(' ').indexOf(text) !== -1);
@@ -121,7 +123,7 @@ export default {
    * @param filePath {string|null} FilePath of the PDF file
    * @return {Promise<number>}
    */
-  async getImageNumberInPDF(filePath: string|null): Promise<number> {
+  async getImageNumberInPDF(filePath: string | null): Promise<number> {
     if (filePath === null) {
       return 0;
     }
@@ -192,7 +194,7 @@ export default {
    * @return {Promise<boolean>}
    */
   async isTextInFile(
-    filePath: string|null,
+    filePath: string | null,
     textToCheckWith: string,
     ignoreSpaces: boolean = false,
     ignoreTimeZone: boolean = false,
@@ -243,7 +245,7 @@ export default {
 
     switch (extension) {
       case 'jpg': {
-        await imgGen.generateImage(width, height, quality, (err: Error|null, image: RawImageData<Buffer>) => {
+        await imgGen.generateImage(width, height, quality, (err: Error | null, image: RawImageData<Buffer>) => {
           if ('data' in image) {
             fs.writeFileSync(imageName, image.data);
           }
@@ -251,7 +253,7 @@ export default {
         break;
       }
       case 'png': {
-        fs.copyFile(`${path.dirname(__dirname)}/data/files/sample.png`, imageName, (err: NodeJS.ErrnoException|null) => {
+        fs.copyFile(`${path.dirname(__dirname)}/data/files/sample.png`, imageName, (err: NodeJS.ErrnoException | null) => {
           if (err) {
             throw err;
           }
@@ -259,7 +261,7 @@ export default {
         break;
       }
       case 'webp': {
-        fs.copyFile(`${path.dirname(__dirname)}/data/files/sample.webp`, imageName, (err: NodeJS.ErrnoException|null) => {
+        fs.copyFile(`${path.dirname(__dirname)}/data/files/sample.webp`, imageName, (err: NodeJS.ErrnoException | null) => {
           if (err) {
             throw err;
           }
@@ -309,7 +311,7 @@ export default {
    * @param newPath {string} New path of the file
    * @return {Promise<void>}
    */
-  async renameFile(oldPath: string|null, newPath: string): Promise<void> {
+  async renameFile(oldPath: string | null, newPath: string): Promise<void> {
     if (oldPath === null) {
       return;
     }
