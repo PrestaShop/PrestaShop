@@ -306,7 +306,7 @@ class PrestaShopBackupCore
 
                         foreach ($row as $value) {
                             if ($value === null) {
-                                $s .= "NULL,";
+                                $s .= 'NULL,';
                             } else {
                                 $s .= "'" . pSQL($value, true) . "',";
                             }
