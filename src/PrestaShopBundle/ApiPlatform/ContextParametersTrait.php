@@ -51,7 +51,7 @@ trait ContextParametersTrait
                 ],
                 'shopId' => $this->shopContext->getId(),
                 'langId' => $this->languageContext->getId(),
-                'apiClientId' => $this->apiClientContext->getApiClient()->getId(),
+                'apiClientId' => $this->apiClientContext->getApiClient() ? $this->apiClientContext->getApiClient()->getId() : null,
             ],
         ];
     }
