@@ -36,6 +36,7 @@ class Checkout extends CheckoutPage {
 
     // Shipping method selectors
     this.deliveryStepSection = 'li[data-step="checkout-delivery-step"]';
+    this.deliveryStepEditButton = `${this.deliveryStepSection} button`;
     this.deliveryOptionAllNamesSpan = '#js-delivery .delivery-options__container span.carrier-name';
     this.deliveryAddressPosition = (position) => `#delivery-addresses div:nth-child(${position}) article`;
     this.deliveryAddressEditButton = (addressID: number) => `#id_address_delivery-address-${addressID} a.address__edit`;

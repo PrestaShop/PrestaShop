@@ -9,7 +9,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class OrderDetails extends FOBasePage {
+class OrderDetailsPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly successMessageText: string;
@@ -50,7 +50,7 @@ class OrderDetails extends FOBasePage {
 
   private readonly submitMessageButton: string;
 
-  private readonly boxMessagesBlock: string;
+  protected boxMessagesBlock: string;
 
   private readonly deliveryAddressBox: string;
 
@@ -60,8 +60,8 @@ class OrderDetails extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on order details page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Order details';
     this.successMessageText = 'Message successfully sent';
@@ -247,4 +247,5 @@ class OrderDetails extends FOBasePage {
   }
 }
 
-export default new OrderDetails();
+const orderDetailsPage = new OrderDetailsPage();
+export {orderDetailsPage, OrderDetailsPage};

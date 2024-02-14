@@ -11,7 +11,7 @@ import {productPage} from '@pages/FO/classic/product';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
 import Carriers from '@data/demo/carriers';
@@ -158,7 +158,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
   });
 
-  it('Go to order details abd check the messages box', async function () {
+  it('should go to order details and check the messages box', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetailsPage', baseContext);
 
     await orderHistoryPage.goToDetailsPage(page);

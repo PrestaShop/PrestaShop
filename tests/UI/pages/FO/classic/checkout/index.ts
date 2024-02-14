@@ -181,7 +181,7 @@ class CheckoutPage extends FOBasePage {
 
   protected deliveryStepSection: string;
 
-  private readonly deliveryStepEditButton: string;
+  protected deliveryStepEditButton: string;
 
   private readonly deliveryStepCarriersList: string;
 
