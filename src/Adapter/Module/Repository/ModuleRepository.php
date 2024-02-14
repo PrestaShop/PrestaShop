@@ -53,6 +53,11 @@ class ModuleRepository extends AbstractObjectModelRepository
     private $activeModulesPaths;
 
     /**
+     * @var array
+     */
+    private $installedModulesPaths;
+
+    /**
      * @var string
      */
     protected $rootDir;
@@ -158,6 +163,27 @@ class ModuleRepository extends AbstractObjectModelRepository
         }
 
         return $installedModules;
+    }
+
+    /**
+     * Returns installed module file paths.
+     *
+     * @return array<string, string> File paths indexed by module name
+     */
+    public function getInstalledModulesPaths(): array
+    {
+        if (null === $this->installedModulesPaths) {
+            $this->installedModulesPaths = [];
+            $installedModules = $this->getInstalledModules();
+
+            foreach ($this->getModulesFromFolder() as $moduleName => $modulePath) {
+                if (in_array($moduleName, $installedModules)) {
+                    $this->installedModulesPaths[$moduleName] = $modulePath;
+                }
+            }
+        }
+
+        return $this->installedModulesPaths;
     }
 
     /**
