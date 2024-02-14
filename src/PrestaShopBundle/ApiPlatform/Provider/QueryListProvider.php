@@ -31,6 +31,7 @@ namespace PrestaShopBundle\ApiPlatform\Provider;
 use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
@@ -49,13 +50,15 @@ class QueryListProvider implements ProviderInterface
 {
     use QueryResultSerializerTrait;
     use ContextParametersTrait;
+
     public const DEFAULT_PAGINATED_ITEM_LIMIT = 50;
 
     public function __construct(
         protected readonly DomainSerializer $domainSerializer,
         protected readonly ContainerInterface $container,
         protected readonly ShopContext $shopContext,
-        protected readonly LanguageContext $languageContext
+        protected readonly LanguageContext $languageContext,
+        protected readonly ApiClientContext $apiClientContext,
     ) {
     }
 

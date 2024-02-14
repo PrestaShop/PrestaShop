@@ -31,6 +31,7 @@ namespace PrestaShopBundle\ApiPlatform\Processor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShopBundle\ApiPlatform\ContextParametersTrait;
@@ -49,7 +50,8 @@ class CommandProcessor implements ProcessorInterface
         protected readonly CommandBusInterface $commandBus,
         protected readonly DomainSerializer $domainSerializer,
         protected readonly ShopContext $shopContext,
-        protected readonly LanguageContext $languageContext
+        protected readonly LanguageContext $languageContext,
+        protected readonly ApiClientContext $apiClientContext,
     ) {
     }
 
