@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class AdminControllerCore extends Controller
 {
@@ -2707,10 +2706,7 @@ class AdminControllerCore extends Controller
                 $this->addJS(_PS_JS_DIR_ . 'admin/notifications.js?v=' . _PS_VERSION_);
             }
 
-            $username = $this->get('prestashop.user_provider')->getUsername();
-            $token = $this->get(CsrfTokenManagerInterface::class)
-                ->getToken($username)
-                ->getValue();
+            $token = $this->get(UserTokenManager::class)->getSymfonyToken();
 
             $this->context->smarty->assign([
                 'js_router_metadata' => [

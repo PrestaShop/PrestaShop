@@ -37,8 +37,8 @@ use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Security\Hashing;
 use PrestaShopBundle\Entity\Repository\TabRepository;
+use PrestaShopBundle\Security\Admin\UserTokenManager;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Generator that centralizes the generation/cleaning/fetching of quick accesses, so it can be used th same way in legacy
@@ -63,7 +63,7 @@ class QuickAccessGenerator
         protected readonly QuickAccessRepositoryInterface $quickAccessRepository,
         protected readonly UserProvider $userProvider,
         protected readonly TabRepository $tabRepository,
-        protected readonly CsrfTokenManagerInterface $tokenManager,
+        protected readonly UserTokenManager $userTokenManager,
         protected readonly EmployeeContext $employeeContext,
         private readonly Hashing $hashing,
         private readonly string $cookieKey,
@@ -147,7 +147,7 @@ class QuickAccessGenerator
 
         $symfonyLayoutEnabled = $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT);
         if ($symfonyLayoutEnabled && !str_contains('_token', $baseUrl)) {
-            $baseUrl .= $separator . '_token=' . $this->tokenManager->getToken($this->userProvider->getUsername())->getValue();
+            $baseUrl .= $separator . '_token=' . $this->userTokenManager->getSymfonyToken();
         } else {
             preg_match('/controller=(\w*)/', $baseUrl, $adminTab);
 
@@ -159,7 +159,7 @@ class QuickAccessGenerator
 
             // If symfony link
             if (!isset($adminTab[1]) && !str_contains('_token', $baseUrl)) {
-                $baseUrl .= $separator . '_token=' . $this->tokenManager->getToken($this->userProvider->getUsername())->getValue();
+                $baseUrl .= $separator . '_token=' . $this->userTokenManager->getSymfonyToken();
             }
         }
 

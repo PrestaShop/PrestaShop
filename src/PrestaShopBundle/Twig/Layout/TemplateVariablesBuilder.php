@@ -38,9 +38,9 @@ use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
+use PrestaShopBundle\Security\Admin\UserTokenManager;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Allows you to construct variables used in rendering
@@ -50,7 +50,7 @@ class TemplateVariablesBuilder
     public function __construct(
         private readonly LegacyContext $context,
         private readonly bool $debugMode,
-        private readonly CsrfTokenManagerInterface $tokenManager,
+        private readonly UserTokenManager $userTokenManager,
         private readonly UserProvider $userProvider,
         private readonly string $psVersion,
         private readonly ConfigurationInterface $configuration,
@@ -104,7 +104,7 @@ class TemplateVariablesBuilder
             // base url for javascript router
             'base_url' => $this->requestStack->getCurrentRequest()->getBaseUrl(),
             //security token for javascript router
-            'token' => $this->tokenManager->getToken($this->userProvider->getUsername())->getValue(),
+            'token' => $this->userTokenManager->getSymfonyToken(),
         ];
     }
 
