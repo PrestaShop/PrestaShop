@@ -41,7 +41,7 @@ use PrestaShopBundle\Entity\Repository\ImageTypeRepository;
  * Handles command that bulk delete image types
  */
 #[AsCommandHandler]
-class BulkImageTypeHandler extends AbstractBulkCommandHandler implements BulkImageTypeHandlerInterface
+class BulkDeleteImageTypeHandler extends AbstractBulkCommandHandler implements BulkDeleteImageTypeHandlerInterface
 {
     public function __construct(
         private readonly ImageTypeRepository $imageTypeRepository

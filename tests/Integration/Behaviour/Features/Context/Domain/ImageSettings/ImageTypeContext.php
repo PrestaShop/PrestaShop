@@ -70,17 +70,37 @@ class ImageTypeContext extends AbstractDomainFeatureContext
     public function editImageTypeUsingCommand(string $imageTypeName, TableNode $table)
     {
         $data = $this->fixDataType($table->getRowsHash());
-        $this->getSharedStorage()->exists($imageTypeName);
 
         $command = new EditImageTypeCommand($this->getSharedStorage()->get($imageTypeName));
         $command->setName($imageTypeName);
-        $command->setWidth($data['width']);
-        $command->setHeight($data['height']);
-        $command->setProducts($data['products']);
-        $command->setCategories($data['categories']);
-        $command->setManufacturers($data['manufacturers']);
-        $command->setSuppliers($data['suppliers']);
-        $command->setStores($data['stores']);
+
+        if (isset($data['width'])) {
+            $command->setWidth($data['width']);
+        }
+
+        if (isset($data['height'])) {
+            $command->setHeight($data['height']);
+        }
+
+        if (isset($data['products'])) {
+            $command->setProducts($data['products']);
+        }
+
+        if (isset($data['categories'])) {
+            $command->setCategories($data['categories']);
+        }
+
+        if (isset($data['manufacturers'])) {
+            $command->setManufacturers($data['manufacturers']);
+        }
+
+        if (isset($data['suppliers'])) {
+            $command->setSuppliers($data['suppliers']);
+        }
+
+        if (isset($data['stores'])) {
+            $command->setStores($data['stores']);
+        }
 
         $this->getCommandBus()->handle($command);
     }
@@ -90,9 +110,7 @@ class ImageTypeContext extends AbstractDomainFeatureContext
      */
     public function deleteImageTypeUsingCommand(string $imageTypeName)
     {
-        $this->getSharedStorage()->exists($imageTypeName);
-        $imageTypeId = $this->getSharedStorage()->get($imageTypeName);
-        $command = new DeleteImageTypeCommand($imageTypeId);
+        $command = new DeleteImageTypeCommand($this->getSharedStorage()->get($imageTypeName));
         $this->getCommandBus()->handle($command);
     }
 
@@ -104,7 +122,6 @@ class ImageTypeContext extends AbstractDomainFeatureContext
         $imageTypesName = explode(',', $imageTypesName);
         $imageTypesIds = [];
         foreach ($imageTypesName as $imageTypeName) {
-            $this->getSharedStorage()->exists($imageTypeName);
             $imageTypesIds[] = $this->getSharedStorage()->get($imageTypeName);
         }
         $command = new BulkDeleteImageTypeCommand($imageTypesIds);
@@ -118,7 +135,6 @@ class ImageTypeContext extends AbstractDomainFeatureContext
     {
         $errors = [];
         $expectedData = $table->getRowsHash();
-        $this->getSharedStorage()->exists($imageTypeName);
 
         /** @var EditableImageType $imageType */
         $imageType = $this->getQueryBus()->handle(new GetImageTypeForEditing($this->getSharedStorage()->get($imageTypeName)));
@@ -181,12 +197,9 @@ class ImageTypeContext extends AbstractDomainFeatureContext
      */
     public function assertImageTypeDoesNotExist(string $imageTypeName)
     {
-        $this->getSharedStorage()->exists($imageTypeName);
-        $imageTypeId = $this->getSharedStorage()->get($imageTypeName);
-
         try {
             $this->getQueryBus()->handle(new GetImageTypeForEditing($this->getSharedStorage()->get($imageTypeName)));
-            throw new \RuntimeException(sprintf('Image type with id %s exists', $imageTypeId));
+            throw new \RuntimeException(sprintf('Image type %s still exists', $imageTypeName));
         } catch (ImageTypeNotFoundException $ex) {
             return;
         }

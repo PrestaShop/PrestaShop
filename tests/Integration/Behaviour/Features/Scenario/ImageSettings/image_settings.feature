@@ -43,6 +43,38 @@ Feature: Image Settings
       | suppliers     | false |
       | stores        | false |
 
+  Scenario: Partial edit an image type
+    When I edit image type "test-default" with following properties:
+      | width         | 999 |
+    Then image type "test-default" should have the following properties:
+      | width         | 999   |
+      | height        | 789   |
+      | products      | false |
+      | categories    | false |
+      | manufacturers | false |
+      | suppliers     | false |
+      | stores        | false |
+    When I edit image type "test-default" with following properties:
+      | height        | 123 |
+    Then image type "test-default" should have the following properties:
+      | width         | 999   |
+      | height        | 123   |
+      | products      | false |
+      | categories    | false |
+      | manufacturers | false |
+      | suppliers     | false |
+      | stores        | false |
+    When I edit image type "test-default" with following properties:
+      | products      | true |
+    Then image type "test-default" should have the following properties:
+      | width         | 999   |
+      | height        | 123   |
+      | products      | true  |
+      | categories    | false |
+      | manufacturers | false |
+      | suppliers     | false |
+      | stores        | false |
+
   Scenario: Delete an image type
     When I delete image type "test-default".
     Then image type "test-default" should not exist.

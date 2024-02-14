@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Command\BulkDeleteImageTypeCommand;
 
 /**
- * Defines contract for BulkImageTypeHandler
+ * Defines contract for BulkDeleteImageTypeHandler
  */
-interface BulkImageTypeHandlerInterface
+interface BulkDeleteImageTypeHandlerInterface
 {
     /**
      * @param BulkDeleteImageTypeCommand $command

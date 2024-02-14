@@ -36,14 +36,14 @@ use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageTypeId;
 class EditImageTypeCommand
 {
     private ImageTypeId $imageTypeId;
-    private string $name;
-    private int $width;
-    private int $height;
-    private bool $products;
-    private bool $categories;
-    private bool $manufacturers;
-    private bool $suppliers;
-    private bool $stores;
+    private ?string $name = null;
+    private ?int $width = null;
+    private ?int $height = null;
+    private ?bool $products = null;
+    private ?bool $categories = null;
+    private ?bool $manufacturers = null;
+    private ?bool $suppliers = null;
+    private ?bool $stores = null;
 
     public function __construct(int $imageTypeId)
     {
@@ -55,7 +55,7 @@ class EditImageTypeCommand
         return $this->imageTypeId;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -67,7 +67,7 @@ class EditImageTypeCommand
         return $this;
     }
 
-    public function getWidth(): int
+    public function getWidth(): ?int
     {
         return $this->width;
     }
@@ -79,7 +79,7 @@ class EditImageTypeCommand
         return $this;
     }
 
-    public function getHeight(): int
+    public function getHeight(): ?int
     {
         return $this->height;
     }
@@ -91,7 +91,7 @@ class EditImageTypeCommand
         return $this;
     }
 
-    public function isProducts(): bool
+    public function isProducts(): ?bool
     {
         return $this->products;
     }
@@ -103,7 +103,7 @@ class EditImageTypeCommand
         return $this;
     }
 
-    public function isCategories(): bool
+    public function isCategories(): ?bool
     {
         return $this->categories;
     }
@@ -115,7 +115,7 @@ class EditImageTypeCommand
         return $this;
     }
 
-    public function isManufacturers(): bool
+    public function isManufacturers(): ?bool
     {
         return $this->manufacturers;
     }
@@ -127,7 +127,7 @@ class EditImageTypeCommand
         return $this;
     }
 
-    public function isSuppliers(): bool
+    public function isSuppliers(): ?bool
     {
         return $this->suppliers;
     }
@@ -139,7 +139,7 @@ class EditImageTypeCommand
         return $this;
     }
 
-    public function isStores(): bool
+    public function isStores(): ?bool
     {
         return $this->stores;
     }

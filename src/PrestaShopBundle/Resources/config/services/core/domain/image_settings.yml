@@ -7,7 +7,7 @@ services:
   PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\AddImageTypeHandler: ~
   PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\EditImageTypeHandler: ~
   PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\DeleteImageTypeHandler: ~
-  PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\BulkImageTypeHandler: ~
+  PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\BulkDeleteImageTypeHandler: ~
   PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\DeleteImagesFromTypeHandler: ~
   PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\EditImageSettingsHandler: ~
   PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\RegenerateThumbnailsHandler: ~
