@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform;
 
+use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 
@@ -35,19 +36,23 @@ trait ContextParametersTrait
 {
     protected readonly ShopContext $shopContext;
     protected readonly LanguageContext $languageContext;
+    protected readonly ApiClientContext $apiClientContext;
 
     protected function getContextParameters(): array
     {
         $shopConstraint = $this->shopContext->getShopConstraint();
 
         return [
-            'shopConstraint' => [
-                'shopId' => $shopConstraint->getShopId()?->getValue(),
-                'shopGroupId' => $shopConstraint->getShopGroupId()?->getValue(),
-                'isStrict' => $shopConstraint->isStrict(),
+            '_context' => [
+                'shopConstraint' => [
+                    'shopId' => $shopConstraint->getShopId()?->getValue(),
+                    'shopGroupId' => $shopConstraint->getShopGroupId()?->getValue(),
+                    'isStrict' => $shopConstraint->isStrict(),
+                ],
+                'shopId' => $this->shopContext->getId(),
+                'langId' => $this->languageContext->getId(),
+                'apiClientId' => $this->apiClientContext->getApiClient()->getId(),
             ],
-            'shopId' => $this->shopContext->getId(),
-            'langId' => $this->languageContext->getId(),
         ];
     }
 }
