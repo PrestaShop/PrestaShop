@@ -5,7 +5,6 @@ admin_image_settings_index:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::indexAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages
-    _legacy_feature_flag: image_settings
 
 admin_image_settings_filter:
   path: /
@@ -14,7 +13,6 @@ admin_image_settings_filter:
     _controller: 'PrestaShopBundle\Controller\Admin\CommonController::searchGridAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages
-    _legacy_feature_flag: image_settings
     gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ImageTypeGridDefinitionFactory
     redirectRoute: admin_image_settings_index
 
@@ -25,7 +23,6 @@ admin_image_settings_save_settings:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::saveSettingsAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages
-    _legacy_feature_flag: image_settings
 
 admin_image_settings_regenerate_thumbnails:
   path: /regenerate-thumbnails
@@ -34,7 +31,6 @@ admin_image_settings_regenerate_thumbnails:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::regenerateThumbnailsAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages
-    _legacy_feature_flag: image_settings
 
 admin_image_settings_create:
   path: /new
@@ -43,7 +39,6 @@ admin_image_settings_create:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::createAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages
-    _legacy_feature_flag: image_settings
 
 admin_image_settings_edit:
   path: /{imageTypeId}/edit
@@ -54,7 +49,6 @@ admin_image_settings_edit:
     _legacy_link: AdminImages
     _legacy_parameters:
       id_image_type: imageTypeId
-    _legacy_feature_flag: image_settings
   requirements:
     imageTypeId: \d+
 
@@ -67,7 +61,6 @@ admin_image_settings_delete:
     _legacy_link: AdminImages
     _legacy_parameters:
       id_image_type: imageTypeId
-    _legacy_feature_flag: image_settings
   requirements:
     imageTypeId: \d+
 
@@ -78,4 +71,3 @@ admin_image_settings_bulk_delete:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::bulkDeleteAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages
-    _legacy_feature_flag: image_settings
