@@ -755,6 +755,16 @@ class CartCore extends ObjectModel
                     $reduction_type_row = ['reduction_type' => 0];
                 }
 
+                if (Pack::isPack($product['id_product'])) {
+                    $product['quantity_available'] = Product::getQuantity(
+                        $product['id_product'],
+                        $product['id_product_attribute'],
+                        null,
+                        null,
+                        $product['id_customization'],
+                    );
+                }
+
                 $products[$key] = array_merge($product, $reduction_type_row);
             }
         }
