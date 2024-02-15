@@ -269,6 +269,8 @@
         ],
         "integration-tests": [
             "@composer create-test-db",
+            "@composer dump-autoload --dev --working-dir=modules/ps_apiresources",
+            "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c modules/ps_apiresources/tests/Integration/phpunit.xml",
             "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml",
             "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit-isolated.xml"
         ],
