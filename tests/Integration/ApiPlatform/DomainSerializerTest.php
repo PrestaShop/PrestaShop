@@ -30,6 +30,7 @@ namespace Tests\Integration\ApiPlatform;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\CustomerGroup;
+use PrestaShop\Module\APIResources\ApiPlatform\Resources\Hook;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
@@ -214,6 +215,35 @@ class DomainSerializerTest extends KernelTestCase
                 'displayLanguageId' => 51,
             ],
             new GetProductForEditing(42, ShopConstraint::shop(2), 51),
+        ];
+
+        $hook = new Hook();
+        $hook->id = 1;
+        $hook->active = true;
+        $hook->name = 'testHook';
+        $hook->title = 'testHookTitle';
+        $hook->description = '';
+        yield [
+            [
+                'id_hook' => 1,
+                'active' => 1,
+                'name' => 'testHook',
+                'title' => 'testHookTitle',
+                'description' => '',
+            ],
+            $hook,
+            ['[id_hook]' => '[id]'],
+        ];
+        yield [
+            [
+                'id_hook' => 1,
+                'active' => '1',
+                'name' => 'testHook',
+                'title' => 'testHookTitle',
+                'description' => '',
+            ],
+            $hook,
+            ['[id_hook]' => '[id]'],
         ];
     }
 
