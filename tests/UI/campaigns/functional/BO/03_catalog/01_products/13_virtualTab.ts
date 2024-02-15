@@ -22,7 +22,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {homePage} from '@pages/FO/classic/home';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
 import ProductData from '@data/faker/product';

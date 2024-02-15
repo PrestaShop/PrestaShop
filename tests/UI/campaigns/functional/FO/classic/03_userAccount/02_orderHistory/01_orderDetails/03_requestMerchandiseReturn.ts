@@ -19,7 +19,7 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import invoicesPage from '@pages/BO/orders/invoices';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
-import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import foMerchandiseReturnsPage from '@pages/FO/classic/myAccount/merchandiseReturns';
 
 // Import data

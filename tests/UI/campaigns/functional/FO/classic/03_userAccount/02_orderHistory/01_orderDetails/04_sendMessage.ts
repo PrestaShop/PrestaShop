@@ -19,7 +19,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
-import orderDetails from '@pages/FO/classic/myAccount/orderDetails';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {productPage} from '@pages/FO/classic/product';
 
@@ -240,8 +240,8 @@ describe('FO - Account : Send a message with an ordered product', async () => {
 
       await orderHistoryPage.goToDetailsPage(page);
 
-      const successMessageText = await orderDetails.addAMessage(page, messageOption, messageSend);
-      expect(successMessageText).to.equal(orderDetails.successMessageText);
+      const successMessageText = await orderDetailsPage.addAMessage(page, messageOption, messageSend);
+      expect(successMessageText).to.equal(orderDetailsPage.successMessageText);
     });
 
     it('should check the received email', async function () {

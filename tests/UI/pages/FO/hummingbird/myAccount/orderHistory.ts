@@ -12,6 +12,9 @@ class OrderHistory extends OrderHistoryPage {
    */
   constructor() {
     super('hummingbird');
+
+    // Selectors
+    this.detailsLink = (row: number) => `${this.ordersTableRow(row)} a[data-link-action="view-order-details"]`;
   }
 }
 
