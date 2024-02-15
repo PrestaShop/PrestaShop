@@ -42,6 +42,11 @@
         <i class="material-icons">info_outline</i> {{ 'Server information'|trans }}
       </h3>
       <div class="card-body">
+        {% if system.hostname is not empty %}
+          <p class="mb-0">
+            <strong>{{ 'Server Hostname:'|trans }}</strong> {{ system.hostname }}
+          </p>
+        {% endif %}
         {% if system.uname is not empty %}
           <p class="mb-0">
             <strong>{{ 'Server information:'|trans }}</strong> {{ system.uname }}
