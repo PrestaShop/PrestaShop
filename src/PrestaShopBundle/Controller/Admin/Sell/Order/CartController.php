@@ -208,7 +208,7 @@ class CartController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
-            return $this->redirect($this->getAdminLink('AdminCarts', [], true));
+            return $this->redirectToRoute('admin_carts_index');
         }
 
         $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.cart');

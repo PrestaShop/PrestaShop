@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonInterface;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -2123,7 +2124,12 @@ class AdminControllerCore extends Controller
                             '_raw' => true,
                             '[1]' => '<strong>',
                             '[/1]' => '</strong>',
-                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true, [], ['action' => 'filterOnlyAbandonedCarts']) . '">',
+                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true,
+                                    [
+                                        'route' => 'admin_carts_index',
+                                        'cart[filters][status]' => CartStatus::ABANDONED_CART,
+                                    ],
+                                    ['action' => 'filterOnlyAbandonedCarts']) . '">',
                             '[/2]' => '</a>',
                             '[3]' => '<br>',
                         ],
