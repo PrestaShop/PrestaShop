@@ -110,10 +110,6 @@ class TokenAuthenticatorTest extends TestCase
         $this->request->headers->add(['Authorization' => 'toto']);
         $this->tokenAuthenticator->authenticate($this->request);
 
-        $this->expectException(CustomUserMessageAuthenticationException::class);
-        $this->expectExceptionMessage('No API token provided');
-        $this->tokenAuthenticator->authenticate($this->request);
-
         $this->request->headers->add(['Authorization' => 'Bearer ' . $this->buildTestToken()]);
         $this->expectException(CustomUserMessageAuthenticationException::class);
         $this->expectExceptionMessage('Invalid credentials');

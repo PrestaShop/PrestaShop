@@ -55,3 +55,9 @@ monolog:
         VERBOSITY_VERY_VERBOSE: NOTICE
         VERBOSITY_DEBUG: DEBUG
       channels: [ "doctrine" ]
+
+api_platform:
+  mapping:
+    paths:
+      - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
+      - '%kernel.project_dir%/tests/Resources/ApiPlatform/Resources'

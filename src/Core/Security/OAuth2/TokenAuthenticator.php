@@ -66,7 +66,7 @@ class TokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        return $this->returnWWWAuthenticateResponse();
+        return $this->returnWWWAuthenticateResponse($exception->getMessage());
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
@@ -75,9 +75,9 @@ class TokenAuthenticator extends AbstractAuthenticator
         return null;
     }
 
-    private function returnWWWAuthenticateResponse(): Response
+    private function returnWWWAuthenticateResponse(?string $content = null): Response
     {
-        return new Response(null, Response::HTTP_UNAUTHORIZED, ['WWW-Authenticate' => 'Bearer']);
+        return new Response($content, Response::HTTP_UNAUTHORIZED, ['WWW-Authenticate' => 'Bearer']);
     }
 
     public function authenticate(Request $request): Passport
@@ -88,11 +88,6 @@ class TokenAuthenticator extends AbstractAuthenticator
         }
         if (!str_starts_with($authorization, 'Bearer ')) {
             throw new CustomUserMessageAuthenticationException('Bearer token missing');
-        }
-
-        $authorization = $request->headers->get('Authorization');
-        if (null === $authorization) {
-            throw new CustomUserMessageAuthenticationException('No API token provided');
         }
 
         $credentials = $this->httpMessageFactory->createRequest($request);
