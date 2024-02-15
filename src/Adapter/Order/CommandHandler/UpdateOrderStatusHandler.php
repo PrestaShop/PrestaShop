@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderStatusHand
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Mutation\MutationTracker;
+use PrestaShopBundle\Entity\MutationAction;
 
 /**
  * @internal
@@ -88,7 +89,7 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
 
         // Save all changes
         if ($history->addWithemail(true, $templateVars)) {
-            $this->mutationTracker->addMutation('order_history', (int) $history->id, MutationTracker::CREATE_ACTION);
+            $this->mutationTracker->addMutationForApiClient('order_history', (int) $history->id, MutationAction::CREATE);
 
             return;
         }

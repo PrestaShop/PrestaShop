@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShopBundle\Entity\MutatorType;
 
 class OrderCore extends ObjectModel
 {
@@ -545,8 +546,8 @@ class OrderCore extends ObjectModel
             LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON os.`id_order_state` = oh.`id_order_state`
             LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) ($id_lang) . ')
             LEFT JOIN `' . _DB_PREFIX_ . 'employee` e ON e.`id_employee` = oh.`id_employee`
-            LEFT JOIN `' . _DB_PREFIX_ . 'mutation` m ON m.`mutated_table` = "order_history" AND m.`id_row` = oh.`id_order_history`
-            LEFT JOIN `' . _DB_PREFIX_ . 'api_access` a ON m.`id_api_client` = a.`id_api_access`
+            LEFT JOIN `' . _DB_PREFIX_ . 'mutation` m ON m.`mutation_table` = "order_history" AND m.`mutation_row_id` = oh.`id_order_history` AND m.`mutator_type` = "' . MutatorType::API_CLIENT->value . '"
+            LEFT JOIN `' . _DB_PREFIX_ . 'api_access` a ON m.`mutator_identifier` = a.`id_api_access`
             WHERE oh.id_order = ' . (int) $this->id . '
             ' . ($no_hidden ? ' AND os.hidden = 0' : '') . '
             ' . ($logable ? ' AND os.logable = 1' : '') . '

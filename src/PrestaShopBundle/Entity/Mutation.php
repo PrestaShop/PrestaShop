@@ -36,9 +36,11 @@ use Doctrine\ORM\Mapping as ORM;
  * also allow tracking some modification in FO like a payment module changing an order status.
  *
  * As such the mutation needs to hold three mandatory elements:
- * - modified table
- * - modified row ID
- * - action performed (create, update, delete, ...)
+ * - mutation table: which table was modified
+ * - mutation row ID: ID identifying which row of the modified table was modified
+ * - action performed (create, update, delete) identified by an enum to remain small in DB
+ * - mutator type: Employee, ApiClient or Module
+ * - mutator identifier: Identifier of associated mutator (usually an int matching the row, but can be a technical name for a module)
  *
  * @ORM\Table
  * @ORM\HasLifecycleCallbacks
@@ -48,40 +50,40 @@ class Mutation
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="id_mutation", type="integer")
+     * @ORM\Column(name="id_mutation", type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private int $id;
 
     /**
-     * @ORM\Column(name="mutated_table", type="string", length=255)
+     * @ORM\Column(name="mutation_table", type="string", length=255)
      */
-    private string $table;
+    private string $mutationTable;
 
     /**
-     * @ORM\Column(name="id_row", type="integer")
+     * @ORM\Column(name="mutation_row_id", type="bigint")
      */
-    private int $rowId;
+    private int $mutationRowId;
 
     /**
-     * @ORM\Column(name="mutation_action", type="string", length=255)
+     * @ORM\Column(name="mutation_action", enumType="PrestaShopBundle\Entity\MutationAction", columnDefinition="ENUM('create', 'update', 'delete')"))
      */
-    private string $action;
+    private MutationAction $action;
 
     /**
-     * @ORM\Column(name="id_employee", type="integer", nullable=true)
+     * @ORM\Column(name="mutator_type", enumType="PrestaShopBundle\Entity\MutatorType", columnDefinition="ENUM('employee', 'api_client', 'module')")
      */
-    private ?int $employeeId = null;
+    private MutatorType $mutatorType;
 
     /**
-     * @ORM\Column(name="id_api_client", type="integer", nullable=true)
+     * @ORM\Column(name="mutator_identifier", type="string", length=255)
      */
-    private ?int $apiClientId = null;
+    private string $mutatorIdentifier;
 
     /**
-     * @ORM\Column(name="id_module", type="integer", nullable=true)
+     * @ORM\Column(name="mutation_details", type="string", length=255, nullable=true)
      */
-    private ?int $moduleId = null;
+    private string $mutationDetails;
 
     /**
      * @ORM\Column(name="date_add", type="datetime", nullable=false)
@@ -93,74 +95,74 @@ class Mutation
         return $this->id;
     }
 
-    public function getTable(): string
+    public function getMutationTable(): string
     {
-        return $this->table;
+        return $this->mutationTable;
     }
 
-    public function setTable(string $table): self
+    public function setMutationTable(string $mutationTable): self
     {
-        $this->table = $table;
+        $this->mutationTable = $mutationTable;
 
         return $this;
     }
 
-    public function getRowId(): int
+    public function getMutationRowId(): int
     {
-        return $this->rowId;
+        return $this->mutationRowId;
     }
 
-    public function setRowId(int $rowId): self
+    public function setMutationRowId(int $mutationRowId): self
     {
-        $this->rowId = $rowId;
+        $this->mutationRowId = $mutationRowId;
 
         return $this;
     }
 
-    public function getAction(): string
+    public function getAction(): MutationAction
     {
         return $this->action;
     }
 
-    public function setAction(string $action): self
+    public function setAction(MutationAction $action): self
     {
         $this->action = $action;
 
         return $this;
     }
 
-    public function getEmployeeId(): ?int
+    public function getMutatorType(): MutatorType
     {
-        return $this->employeeId;
+        return $this->mutatorType;
     }
 
-    public function setEmployeeId(?int $employeeId): self
+    public function setMutatorType(MutatorType $mutatorType): self
     {
-        $this->employeeId = $employeeId;
+        $this->mutatorType = $mutatorType;
 
         return $this;
     }
 
-    public function getApiClientId(): ?int
+    public function getMutatorIdentifier(): string
     {
-        return $this->apiClientId;
+        return $this->mutatorIdentifier;
     }
 
-    public function setApiClientId(?int $apiClientId): self
+    public function setMutatorIdentifier(string $mutatorIdentifier): self
     {
-        $this->apiClientId = $apiClientId;
+        $this->mutatorIdentifier = $mutatorIdentifier;
 
         return $this;
     }
 
-    public function getModuleId(): ?int
+    public function getMutationDetails(): string
     {
-        return $this->moduleId;
+        return $this->mutationDetails;
     }
 
-    public function setModuleId(?int $moduleId): self
+    public function setMutationDetails(string $mutationDetails): self
     {
-        $this->moduleId = $moduleId;
+        $this->mutationDetails = $mutationDetails;
 
         return $this;
     }
