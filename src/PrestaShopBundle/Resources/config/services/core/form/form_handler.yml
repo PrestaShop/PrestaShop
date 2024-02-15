@@ -309,3 +309,9 @@ services:
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
     arguments:
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApiAccessFormDataHandler'
+
+  prestashop.core.form.identifiable_object.handler.image_type_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ImageTypeFormDataHandler'

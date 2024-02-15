@@ -651,3 +651,8 @@ services:
       - { method: setTranslator, arguments: [ '@translator' ] }
     tags:
       - { name: form.type }
+
+  PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageTypeType: ~
+  PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\DeleteImageTypeType: ~
+  PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageSettingsType: ~
+  PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\RegenerateThumbnailsType: ~

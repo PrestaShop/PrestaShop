@@ -131,3 +131,8 @@ services:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\ApiAccess
+
+  PrestaShopBundle\Entity\Repository\ImageTypeRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\ImageType

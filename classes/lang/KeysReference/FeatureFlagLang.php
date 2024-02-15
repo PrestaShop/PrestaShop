@@ -84,3 +84,6 @@ trans('Enable / Disable the new front container.', 'Admin.Advparameters.Help');
 // Carts index feature flag
 trans('Carts', 'Admin.Advaparameters.Feature');
 trans('Enable or Disable the migrated carts page.', 'Admin.Advparameters.Help');
+
+trans('Image settings', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the new image settings page.', 'Admin.Advparameters.Help');

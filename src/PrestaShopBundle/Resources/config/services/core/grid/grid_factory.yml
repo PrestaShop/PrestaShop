@@ -534,3 +534,11 @@ services:
       - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\CartGridDataFactory'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
+
+  prestashop.core.grid.factory.image_type:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ImageTypeGridDefinitionFactory'
+      - '@prestashop.core.grid.data_factory.image_type'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'

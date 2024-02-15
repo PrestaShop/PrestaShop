@@ -54,4 +54,5 @@ class FeatureFlagSettings
     public const FEATURE_FLAG_SYMFONY_LAYOUT = 'symfony_layout';
     public const FEATURE_FLAG_FRONT_CONTAINER_V2 = 'front_container_v2';
     public const FEATURE_FLAG_CARTS = 'carts';
+    public const FEATURE_FLAG_IMAGE_SETTINGS = 'image_settings';
 }

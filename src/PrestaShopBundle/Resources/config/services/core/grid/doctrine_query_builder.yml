@@ -543,3 +543,10 @@ services:
     arguments:
       $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
       $multistoreContextChecker: '@prestashop.adapter.shop.context'
+
+  PrestaShop\PrestaShop\Core\Grid\Query\ImageTypeQueryBuilder:
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: false
+    autowire: true
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'

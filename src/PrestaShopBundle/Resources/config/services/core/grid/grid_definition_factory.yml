@@ -423,6 +423,11 @@ services:
     autowire: true
     public: true
 
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ImageTypeGridDefinitionFactory:
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    autowire: true
+    public: true
+
   # deprecated services
   # Alias for this abstract definition causes tests in vendor fail for some reason, so we stick to full definition instead
   prestashop.core.grid.definition.factory.abstract_grid_definition:

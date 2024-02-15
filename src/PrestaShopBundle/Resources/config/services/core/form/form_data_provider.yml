@@ -253,3 +253,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApiAccessFormDataProvider:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ImageTypeFormDataProvider:
+    autowire: true
+    public: false

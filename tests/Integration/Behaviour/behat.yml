@@ -601,3 +601,10 @@ default:
           contexts:
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\ApiAccessManagementFeatureContext
+        image-settings:
+          paths:
+            - "%paths.base%/Features/Scenario/ImageSettings"
+          contexts:
+            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\ImageSettings\ImageTypeContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\ImageSettings\ImageSettingsContext

@@ -294,3 +294,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  PrestaShop\PrestaShop\Adapter\Admin\ImageConfiguration:
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'

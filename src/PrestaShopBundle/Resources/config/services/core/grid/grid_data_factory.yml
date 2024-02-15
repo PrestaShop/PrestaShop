@@ -678,3 +678,12 @@ services:
       - '@translator'
       - '@prestashop.core.localization.locale.context_locale'
       - '@prestashop.core.query_bus'
+
+  prestashop.core.grid.data_factory.image_type:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    public: false
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\ImageTypeQueryBuilder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'image_type'
