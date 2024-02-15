@@ -59,15 +59,8 @@ class TokenAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): bool
     {
-        $authorization = $request->headers->get('Authorization') ?? null;
-        if (null === $authorization) {
-            return false;
-        }
-        if (!str_starts_with(strtolower($authorization), 'bearer ')) {
-            return false;
-        }
-
         // Every request to the API should be handled by this Authenticator
+        // A filter is already present for requests linked to the API in security.yml
         return true;
     }
 
@@ -89,6 +82,14 @@ class TokenAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
+        $authorization = $request->headers->get('Authorization') ?? null;
+        if (null === $authorization) {
+            throw new CustomUserMessageAuthenticationException('No Authorization header provided');
+        }
+        if (!str_starts_with($authorization, 'Bearer ')) {
+            throw new CustomUserMessageAuthenticationException('Bearer token missing');
+        }
+
         $authorization = $request->headers->get('Authorization');
         if (null === $authorization) {
             throw new CustomUserMessageAuthenticationException('No API token provided');

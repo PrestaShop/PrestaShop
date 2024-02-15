@@ -77,12 +77,6 @@ class TokenAuthenticatorTest extends TestCase
 
     public function testSupports(): void
     {
-        $this->assertFalse($this->tokenAuthenticator->supports($this->request));
-
-        $this->request->headers->add(['Authorization' => 'toto']);
-        $this->assertFalse($this->tokenAuthenticator->supports($this->request));
-
-        $this->request->headers->add(['Authorization' => 'bearer ' . $this->buildTestToken()]);
         $this->assertTrue($this->tokenAuthenticator->supports($this->request));
     }
 
@@ -108,10 +102,19 @@ class TokenAuthenticatorTest extends TestCase
     public function testAuthenticate(): void
     {
         $this->expectException(CustomUserMessageAuthenticationException::class);
+        $this->expectExceptionMessage('No Authorization header provided');
+        $this->tokenAuthenticator->authenticate($this->request);
+
+        $this->expectException(CustomUserMessageAuthenticationException::class);
+        $this->expectExceptionMessage('Bearer token missing');
+        $this->request->headers->add(['Authorization' => 'toto']);
+        $this->tokenAuthenticator->authenticate($this->request);
+
+        $this->expectException(CustomUserMessageAuthenticationException::class);
         $this->expectExceptionMessage('No API token provided');
         $this->tokenAuthenticator->authenticate($this->request);
 
-        $this->request->headers->add(['Authorization' => 'bearer ' . $this->buildTestToken()]);
+        $this->request->headers->add(['Authorization' => 'Bearer ' . $this->buildTestToken()]);
         $this->expectException(CustomUserMessageAuthenticationException::class);
         $this->expectExceptionMessage('Invalid credentials');
         $this->tokenAuthenticator->authenticate($this->request);
