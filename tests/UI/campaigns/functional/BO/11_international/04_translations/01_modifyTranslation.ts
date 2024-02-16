@@ -182,7 +182,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should check the translation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTranslation', baseContext);
 
-      const title = await homePage.getBlockTitle(page);
+      const title = await homePage.getBlockTitle(page, 'popularproducts');
       expect(title).to.contain('translate');
     });
   });

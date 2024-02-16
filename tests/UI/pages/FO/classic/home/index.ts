@@ -31,11 +31,11 @@ class HomePage extends FOBasePage {
 
   private readonly homePageSection: string;
 
-  private productsBlock: (blockId: number) => string;
+  private readonly productsBlock: (blockName: string) => string;
 
-  private readonly productsBlockTitle: (blockId: number) => string;
+  private readonly productsBlockTitle: (blockName: string) => string;
 
-  private readonly productsBlockDiv: (blockId: number) => string;
+  private readonly productsBlockDiv: (blockName: string) => string;
 
   public productArticle: (number: number) => string;
 
@@ -171,10 +171,11 @@ class HomePage extends FOBasePage {
 
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
-    this.productsBlock = (blockId: number) => `#content section:nth-child(${blockId})`;
-    this.productsBlockTitle = (blockId: number) => `${this.productsBlock(blockId)} h2`;
-    this.productsBlockDiv = (blockId: number) => `${this.productsBlock(blockId)} div.products div.js-product`;
-    this.productArticle = (number: number) => `${this.productsBlock(2)} .products div:nth-child(${number}) article`;
+    this.productsBlock = (blockName: string) => `#content section[data-type="${blockName}"]`;
+    this.productsBlockTitle = (blockName: string) => `${this.productsBlock(blockName)} h2`;
+    this.productsBlockDiv = (blockName: string) => `${this.productsBlock(blockName)} div.products div.js-product`;
+    this.productArticle = (number: number) => `${this.productsBlock('popularproducts')} .products `
+      + `div:nth-child(${number}) article`;
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = (number: number) => `${this.productArticle(number)} div.product-description`;
     this.productQuickViewLink = (number: number) => `${this.productArticle(number)} a.quick-view`;
@@ -336,66 +337,20 @@ class HomePage extends FOBasePage {
   /**
    * Get products block title
    * @param page {Page} Browser tab
-   * @param blockID {number} The block number in the page
+   * @param blockName {'bestsellers'|'newproducts'|'onsale'|'popularproducts'} The block name in the page
    * @returns {Promise<string>}
    */
-  async getBlockTitle(page: Page, blockID: number = 1): Promise<string> {
-    let columnSelector: string;
-
-    switch (blockID) {
-      case 1:
-        columnSelector = this.productsBlockTitle(2);
-        break;
-
-      case 2:
-        columnSelector = this.productsBlockTitle(5);
-        break;
-
-      case 3:
-        columnSelector = this.productsBlockTitle(6);
-        break;
-
-      case 4:
-        columnSelector = this.productsBlockTitle(7);
-        break;
-
-      default:
-        throw new Error(`Block ${blockID} was not found`);
-    }
-
-    return this.getTextContent(page, columnSelector);
+  async getBlockTitle(page: Page, blockName: 'bestsellers'|'newproducts'|'onsale'|'popularproducts'): Promise<string> {
+    return this.getTextContent(page, this.productsBlockTitle(blockName));
   }
 
   /**
    * Get products block number
-   * @param blockID {number} The block number in the page
+   * @param blockName {'bestsellers'|'newproducts'|'onsale'|'popularproducts'} The block name in the page
    * @param page {Page} Browser tab
    */
-  async getProductsBlockNumber(page: Page, blockID: number = 1): Promise<number> {
-    let columnSelector: string;
-
-    switch (blockID) {
-      case 1:
-        columnSelector = this.productsBlockDiv(2);
-        break;
-
-      case 2:
-        columnSelector = this.productsBlockDiv(5);
-        break;
-
-      case 3:
-        columnSelector = this.productsBlockDiv(6);
-        break;
-
-      case 4:
-        columnSelector = this.productsBlockDiv(7);
-        break;
-
-      default:
-        throw new Error(`Block ${blockID} was not found`);
-    }
-
-    return page.locator(columnSelector).count();
+  async getProductsBlockNumber(page: Page, blockName: 'bestsellers'|'newproducts'|'onsale'|'popularproducts'): Promise<number> {
+    return page.locator(this.productsBlockDiv(blockName)).count();
   }
 
   /**

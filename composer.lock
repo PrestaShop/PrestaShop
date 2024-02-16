@@ -5008,12 +5008,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "51ece31aadca2f7bc7c6135dbd99eca5689eaae6"
+                "reference": "9bbbe17844f21abeba26e9bd259492f7a1088b60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/51ece31aadca2f7bc7c6135dbd99eca5689eaae6",
-                "reference": "51ece31aadca2f7bc7c6135dbd99eca5689eaae6",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/9bbbe17844f21abeba26e9bd259492f7a1088b60",
+                "reference": "9bbbe17844f21abeba26e9bd259492f7a1088b60",
                 "shasum": ""
             },
             "require-dev": {
@@ -5040,7 +5040,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
             },
-            "time": "2023-10-27T14:14:25+00:00"
+            "time": "2024-02-15T14:52:24+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -5583,12 +5583,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "7622942f547e9bfc75b31929e523ce57af8e72cb"
+                "reference": "94092f06e6767f6ba342e41005532191451717ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/7622942f547e9bfc75b31929e523ce57af8e72cb",
-                "reference": "7622942f547e9bfc75b31929e523ce57af8e72cb",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/94092f06e6767f6ba342e41005532191451717ff",
+                "reference": "94092f06e6767f6ba342e41005532191451717ff",
                 "shasum": ""
             },
             "require": {
@@ -5622,7 +5622,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/ps_apiresources/tree/dev"
             },
-            "time": "2024-02-13T15:50:15+00:00"
+            "time": "2024-02-09T15:48:47+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -17969,5 +17969,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.6.0"
 }
