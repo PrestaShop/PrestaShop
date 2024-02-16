@@ -16,12 +16,6 @@ class Home extends HomePage {
 
   private readonly addToCartIcon: (number: number) => string;
 
-  public readonly productArticle: (number: number) => string;
-
-  public readonly quickViewButton: (number: number) => string;
-
-  public readonly blockCartModalCloseButtonHummingbird: string;
-
   /**
    * @constructs
    * Setting up texts and selectors to use on home page
@@ -60,9 +54,9 @@ class Home extends HomePage {
     this.allProductsBlockLink = (blockName: number | string) => `#content div.${blockName}-footer a`;
     this.productArticle = (number: number) => `#content section.featured-products article:nth-child(${number})`;
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
-    this.quickViewButton = (number: number) => `${this.productArticle(number)} .product-miniature__quickview `
+    this.productQuickViewLink = (number: number) => `${this.productArticle(number)} .product-miniature__quickview `
       + 'button';
-    this.blockCartModalCloseButtonHummingbird = `${this.blockCartModalDiv} button.btn-close`;
+    this.blockCartModalCloseButton = `${this.blockCartModalDiv} button.btn-close`;
 
     // Quick view modal
     this.quickViewProductName = `${this.quickViewModalDiv} .h3`;
@@ -103,25 +97,6 @@ class Home extends HomePage {
   }
 
   /**
-   * Get products products block title
-   * @param page {Page} Browser tab
-   * @param blockName {string} The block name in the page
-   * @returns {Promise<string>}
-   */
-  async getProductsBlockTitle(page: Page, blockName: string): Promise<string> {
-    return this.getTextContent(page, this.productsBlockTitle(blockName));
-  }
-
-  /**
-   * Get products block number
-   * @param blockName {string} The block name in the page
-   * @param page {Page} Browser tab
-   */
-  async getProductsByBlockNumber(page: Page, blockName: string): Promise<number> {
-    return page.locator(this.productsBlockDiv(blockName)).count();
-  }
-
-  /**
    * Go to all products
    * @param page {Page} Browser tab
    * @param blockName {string} The block name in the page
@@ -139,19 +114,8 @@ class Home extends HomePage {
    */
   async quickViewProduct(page: Page, id: number): Promise<void> {
     await page.locator(this.productImg(id)).hover();
-    await this.waitForVisibleSelector(page, this.quickViewButton(id));
-    await page.locator(this.quickViewButton(id)).click();
-  }
-
-  /**
-   * Close block cart modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async closeBlockCartModal(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, this.blockCartModalCloseButtonHummingbird);
-
-    return this.elementNotVisible(page, this.blockCartModalDiv, 1000);
+    await this.waitForVisibleSelector(page, this.productQuickViewLink(id));
+    await page.locator(this.productQuickViewLink(id)).click();
   }
 
   /**

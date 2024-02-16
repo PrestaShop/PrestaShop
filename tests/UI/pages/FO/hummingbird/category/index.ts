@@ -1,6 +1,6 @@
 // Import FO pages
 import {CategoryPage} from '@pages/FO/classic/category/index';
-import {Page} from "playwright";
+import {Page} from 'playwright';
 
 /**
  * Cart page, contains functions that can be used on the page

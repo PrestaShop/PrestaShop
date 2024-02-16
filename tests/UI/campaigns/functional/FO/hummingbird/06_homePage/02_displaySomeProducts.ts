@@ -60,14 +60,14 @@ describe('FO - Home Page : Display some products', async () => {
 
       await homePage.changeLanguage(page, 'en');
 
-      const popularProductTitle = await homePage.getProductsBlockTitle(page, 'featured-products');
+      const popularProductTitle = await homePage.getBlockTitle(page, 'featured-products');
       expect(popularProductTitle).to.equal('Popular Products');
     });
 
     it('should check the number of popular products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProductsNumber', baseContext);
 
-      const productsNumber = await homePage.getProductsByBlockNumber(page, 'featured-products');
+      const productsNumber = await homePage.getProductsBlockNumber(page, 'featured-products');
       expect(productsNumber).to.equal(8);
     });
 
@@ -110,14 +110,14 @@ describe('FO - Home Page : Display some products', async () => {
     it('should check new products title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewProductsBlock', baseContext);
 
-      const popularProductTitle = await homePage.getProductsBlockTitle(page, 'new-products');
+      const popularProductTitle = await homePage.getBlockTitle(page, 'new-products');
       expect(popularProductTitle).to.equal('New products');
     });
 
     it('should check the number of new products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewProductsNumber', baseContext);
 
-      const productsNumber = await homePage.getProductsByBlockNumber(page, 'new-products');
+      const productsNumber = await homePage.getProductsBlockNumber(page, 'new-products');
       expect(productsNumber).to.equal(8);
     });
 

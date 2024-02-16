@@ -31,11 +31,11 @@ class HomePage extends FOBasePage {
 
   private readonly homePageSection: string;
 
-  private readonly productsBlock: (blockId: number | string) => string;
+  private readonly productsBlock: (blockId: string) => string;
 
-  protected productsBlockTitle: (blockId: number | string) => string;
+  protected productsBlockTitle: (blockId: string) => string;
 
-  protected productsBlockDiv: (blockId: number | string) => string;
+  protected productsBlockDiv: (blockId: string) => string;
 
   public productArticle: (number: number) => string;
 
@@ -43,7 +43,7 @@ class HomePage extends FOBasePage {
 
   private readonly productDescriptionDiv: (number: number) => string;
 
-  private readonly productQuickViewLink: (number: number) => string;
+  protected productQuickViewLink: (number: number) => string;
 
   private readonly productColorLink: (number: number, color: string) => string;
 
@@ -109,7 +109,7 @@ class HomePage extends FOBasePage {
 
   protected readonly blockCartModalDiv: string;
 
-  private readonly blockCartModalCloseButton: string;
+  protected blockCartModalCloseButton: string;
 
   private readonly cartModalProductNameBlock: string;
 
@@ -322,10 +322,12 @@ class HomePage extends FOBasePage {
   /**
    * Get products block title
    * @param page {Page} Browser tab
-   * @param blockName {'bestsellers'|'newproducts'|'onsale'|'popularproducts'} The block name in the page
+   * @param blockName {'bestsellers'|'newproducts'|'onsale'|'popularproducts'| string} The block name in the page
    * @returns {Promise<string>}
    */
-  async getBlockTitle(page: Page, blockName: 'bestsellers'|'newproducts'|'onsale'|'popularproducts'): Promise<string> {
+  async getBlockTitle(
+    page: Page,
+    blockName: 'bestsellers' | 'newproducts' | 'onsale' | 'popularproducts' | string): Promise<string> {
     return this.getTextContent(page, this.productsBlockTitle(blockName));
   }
 
@@ -334,7 +336,9 @@ class HomePage extends FOBasePage {
    * @param blockName {'bestsellers'|'newproducts'|'onsale'|'popularproducts'} The block name in the page
    * @param page {Page} Browser tab
    */
-  async getProductsBlockNumber(page: Page, blockName: 'bestsellers'|'newproducts'|'onsale'|'popularproducts'): Promise<number> {
+  async getProductsBlockNumber(
+    page: Page,
+    blockName: 'bestsellers' | 'newproducts' | 'onsale' | 'popularproducts' | string): Promise<number> {
     return page.locator(this.productsBlockDiv(blockName)).count();
   }
 
