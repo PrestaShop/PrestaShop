@@ -1366,7 +1366,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         // - current : Category the product was accessed from
         // - default : Product default category
         if (('current' === Configuration::get('PS_PRODUCT_BREADCRUMB_CATEGORY')) &&
-            !is_null($this->category)) {
+            !empty($this->category)) {
             $productBreadcrumbCategory = $this->category;
         } else {
             $productBreadcrumbCategory = new Category($this->product->id_category_default, $this->context->language->id);
