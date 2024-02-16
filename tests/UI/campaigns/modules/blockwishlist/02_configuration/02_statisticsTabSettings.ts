@@ -12,7 +12,7 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 import blockwishlistPage from '@pages/BO/modules/blockwishlist';
 import blockwishlistStatisticsPage from '@pages/BO/modules/blockwishlist/statistics';
 // Import FO pages
-import categoryPage from '@pages/FO/classic/category';
+import {categoryPage} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 

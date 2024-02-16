@@ -13,7 +13,7 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 import psFacetedSearch from '@pages/BO/modules/psFacetedSearch';
 import psFacetedSearchFilterTemplate from '@pages/BO/modules/psFacetedSearch/filterTemplate';
 // Import FO pages
-import categoryPageFO from '@pages/FO/classic/category';
+import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 
 // Import data
