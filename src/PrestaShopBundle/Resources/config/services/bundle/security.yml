@@ -12,8 +12,7 @@ services:
       - "@prestashop.static_cache.adapter"
       - '@PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface'
 
-  prestashop.security.api-access.provider:
-    class: PrestaShopBundle\Security\OAuth2\Provider\ApiAccessProvider
+  PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider:
     arguments:
       - '@PrestaShopBundle\Entity\Repository\ApiClientRepository'
       - '@Symfony\Component\PasswordHasher\PasswordHasherInterface'

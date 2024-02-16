@@ -51,7 +51,7 @@ class ScopeRepository implements ScopeRepositoryInterface
 
     public function __construct(
         private readonly ApiResourceScopesExtractorInterface $scopesExtractor,
-        private readonly UserProviderInterface $apiAccessProvider,
+        private readonly UserProviderInterface $apiClientProvider,
     ) {
         $this->apiResourceScopes = $this->scopesExtractor->getEnabledApiResourceScopes();
     }
@@ -78,7 +78,7 @@ class ScopeRepository implements ScopeRepositoryInterface
         ];
 
         /** @var ApiClient $apiClient */
-        $apiClient = $this->apiAccessProvider->loadUserByIdentifier($clientEntity->getIdentifier());
+        $apiClient = $this->apiClientProvider->loadUserByIdentifier($clientEntity->getIdentifier());
         foreach ($scopes as $scope) {
             if (!in_array($scope->getIdentifier(), $apiClient->getScopes())) {
                 $hint = \sprintf(

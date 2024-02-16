@@ -4,7 +4,7 @@ security:
   enable_authenticator_manager: true
   password_hashers:
     # auto hasher with default options for the User class (and children)
-    PrestaShopBundle\Entity\ApiAccess: 'auto'
+    PrestaShopBundle\Entity\ApiClient: 'auto'
 
     # auto hasher with custom options for all PasswordAuthenticatedUserInterface instances
     Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
@@ -21,7 +21,7 @@ security:
       id: prestashop.security.admin.provider
 
     oauth2:
-      id: prestashop.security.api-access.provider
+      id: PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider
 
   firewalls:
     # disables authentication for assets and the profiler, adapt it according to your needs

@@ -36,7 +36,7 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class ApiAccessProvider implements UserProviderInterface
+class ApiClientProvider implements UserProviderInterface
 {
     public function __construct(
         private readonly ApiClientRepository $apiClientRepository,
