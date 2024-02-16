@@ -72,10 +72,12 @@ class StockController extends ApiController
             $queryParams = $request->query->all();
 
             if (isset($queryParams['keywords'])) {
+                // 'keywords' exists in the parameters, so it must be converted into an array
                 $queryParams['keywords'] = explode(',', $queryParams['keywords']);
+                $request->query->replace($queryParams);
             }
 
-            $queryParamsCollection = $this->queryParams->fromArray($queryParams);
+            $queryParamsCollection = $this->queryParams->fromRequest($request);
         } catch (InvalidPaginationParamsException $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
