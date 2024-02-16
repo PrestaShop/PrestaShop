@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import pages
-import categoryPageFO from '@pages/FO/classic/category';
+import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 import {pricesDropPage} from '@pages/FO/classic/pricesDrop';
 import {newProductsPage} from '@pages/FO/classic/newProducts';

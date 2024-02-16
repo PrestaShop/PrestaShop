@@ -7,7 +7,7 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import categoryPage from '@pages/FO/classic/category';
+import {categoryPage} from '@pages/FO/classic/category';
 
 // Import data
 import Products from '@data/demo/products';
