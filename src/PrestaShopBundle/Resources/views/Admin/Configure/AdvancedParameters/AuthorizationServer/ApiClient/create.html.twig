@@ -23,21 +23,4 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% extends '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiAccess/form.html.twig' %}
-
-{% block form_submit_buttons %}
-  <a
-    class="btn btn-primary generate-client-secret"
-    href="{{ path('admin_api_accesses_regenerate_secret', {apiAccessId: app.request.get('apiAccessId')}) }}"
-    data-confirm-title="{{ 'Regenerate client secret?'|trans({}, 'Admin.Advparameters.Feature') }}"
-    data-confirm-message="{{ 'If you regenerate your client secret, your former secret will become obsolete.'|trans({}, 'Admin.Advparameters.Feature') }}"
-    data-confirm-button-label= "{{ 'Regenerate client secret'|trans({}, 'Admin.Advparameters.Feature') }}"
-    data-close-button-label= "{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
-  >
-    {{ 'Regenerate client secret'|trans({}, 'Admin.Advparameters.Feature') }}
-  </a>
-
-  <button type="submit" class="btn btn-primary">
-    {{ 'Save'|trans({}, 'Admin.Actions') }}
-  </button>
-{% endblock %}
+{% extends '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/form.html.twig' %}

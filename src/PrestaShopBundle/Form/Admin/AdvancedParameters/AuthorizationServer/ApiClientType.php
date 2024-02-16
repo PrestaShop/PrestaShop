@@ -119,7 +119,7 @@ class ApiClientType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'form_theme' => '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiAccess/form_theme.html.twig',
+            'form_theme' => '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/form_theme.html.twig',
         ]);
     }
 }

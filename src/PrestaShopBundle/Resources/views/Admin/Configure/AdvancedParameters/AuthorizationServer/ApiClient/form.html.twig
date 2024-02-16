@@ -48,22 +48,22 @@
 {% endblock %}
 
 {% block content %}
-  {% block api_access_form_block %}
-    {{ form_start(apiAccessForm) }}
+  {% block api_client_form_block %}
+    {{ form_start(apiClientForm) }}
 
     <div class="card">
       <h3 class="card-header">
-        {{ 'API access'|trans({}, 'Admin.Advparameters.Feature') }}
+        {{ 'API client'|trans({}, 'Admin.Advparameters.Feature') }}
       </h3>
 
       <div class="card-body">
         <div class="form-wrapper">
-          {{ form_widget(apiAccessForm) }}
+          {{ form_widget(apiClientForm) }}
         </div>
       </div>
 
       <div class="card-footer">
-        <a href="{{ path('admin_api_accesses_index') }}" class="btn btn-outline-secondary">
+        <a href="{{ path('admin_api_clients_index') }}" class="btn btn-outline-secondary">
           {{ 'Cancel'|trans({}, 'Admin.Actions') }}
         </a>
         <div class="float-right">
@@ -76,7 +76,7 @@
       </div>
     </div>
 
-    {{ form_end(apiAccessForm) }}
+    {{ form_end(apiClientForm) }}
   {% endblock %}
 {% endblock %}
 

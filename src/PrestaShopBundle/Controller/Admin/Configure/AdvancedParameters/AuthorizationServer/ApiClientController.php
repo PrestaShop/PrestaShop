@@ -29,20 +29,20 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ApiAccessSettings;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\DeleteApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\EditApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateApiAccessSecretCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotAddApiAccessException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotUpdateApiAccessException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\ApiClientSettings;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\DeleteApiClientCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\EditApiClientCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\GenerateApiClientSecretCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\ApiClientConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\ApiClientNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\CannotAddApiClientException;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\CannotUpdateApiClientException;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Query\GetApiClientForEditing;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\QueryResult\EditableApiClient;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Search\Filters\ApiAccessFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\ApiClientFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,56 +50,54 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Manages the "Configure > Advanced Parameters > Authorization Server > Api Access" page.
- *
- * @experimental
+ * Manages the "Configure > Advanced Parameters > Authorization Server" page.
  */
-class ApiAccessController extends FrameworkBundleAdminController
+class ApiClientController extends FrameworkBundleAdminController
 {
     /**
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(ApiAccessFilters $apiAccessesFilters): Response
+    public function indexAction(ApiClientFilters $apiClientFilters): Response
     {
-        $apiAccessGridFactory = $this->get('prestashop.core.grid.factory.api_access');
-        $apiAccessGrid = $apiAccessGridFactory->getGrid($apiAccessesFilters);
+        $apiClientGridFactory = $this->get('prestashop.core.grid.factory.api_client');
+        $apiClientGrid = $apiClientGridFactory->getGrid($apiClientFilters);
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiAccess/index.html.twig', [
-            'apiAccessGrid' => $this->presentGrid($apiAccessGrid),
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/index.html.twig', [
+            'apiClientGrid' => $this->presentGrid($apiClientGrid),
             'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
-            'layoutTitle' => $this->trans('API Access list', 'Admin.Navigation.Menu'),
-            'layoutHeaderToolbarBtn' => $this->getApiAccessesToolbarButtons(),
+            'layoutTitle' => $this->trans('API Clients', 'Admin.Navigation.Menu'),
+            'layoutHeaderToolbarBtn' => $this->getApiClientsToolbarButtons(),
         ]);
     }
 
-    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_api_accesses_index')]
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_index')]
     public function createAction(Request $request): Response
     {
-        $apiAccessForm = $this->getFormBuilder()->getForm();
-        $apiAccessForm->handleRequest($request);
+        $apiClientForm = $this->getFormBuilder()->getForm();
+        $apiClientForm->handleRequest($request);
 
         try {
-            $handlerResult = $this->getFormHandler()->handle($apiAccessForm);
+            $handlerResult = $this->getFormHandler()->handle($apiClientForm);
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                /** @var CreatedApiAccess $apiAccess */
-                $apiAccess = $handlerResult->getIdentifiableObjectId();
+                /** @var CreatedApiClient $createdApiClient */
+                $createdApiClient = $handlerResult->getIdentifiableObjectId();
                 $this->displayTemporarySecret(
-                    $this->trans('The API access and client secret have been generated successfully.', 'Admin.Notifications.Success'),
-                    $apiAccess->getSecret()
+                    $this->trans('The API Client and client secret have been generated successfully.', 'Admin.Notifications.Success'),
+                    $createdApiClient->getSecret()
                 );
 
-                return $this->redirectToRoute('admin_api_accesses_edit', ['apiAccessId' => $apiAccess->getApiAccessId()->getValue()]);
+                return $this->redirectToRoute('admin_api_clients_edit', ['apiClientId' => $createdApiClient->getApiClientId()->getValue()]);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->render(
-            '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiAccess/create.html.twig',
+            '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/create.html.twig',
             [
-                'layoutTitle' => $this->trans('New API Access', 'Admin.Navigation.Menu'),
-                'apiAccessForm' => $apiAccessForm->createView(),
+                'layoutTitle' => $this->trans('New API Client', 'Admin.Navigation.Menu'),
+                'apiClientForm' => $apiClientForm->createView(),
             ]
         );
     }
@@ -119,37 +117,37 @@ class ApiAccessController extends FrameworkBundleAdminController
         $this->addFlash('client_secret', $secret);
     }
 
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_accesses_index')]
-    public function editAction(Request $request, int $apiAccessId): Response
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_index')]
+    public function editAction(Request $request, int $apiClientId): Response
     {
-        $apiAccessForm = $this->getFormBuilder()->getFormFor($apiAccessId);
-        $apiAccessForm->handleRequest($request);
+        $apiClientForm = $this->getFormBuilder()->getFormFor($apiClientId);
+        $apiClientForm->handleRequest($request);
 
         try {
-            $handlerResult = $this->getFormHandler()->handleFor($apiAccessId, $apiAccessForm);
+            $handlerResult = $this->getFormHandler()->handleFor($apiClientId, $apiClientForm);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_api_accesses_edit', ['apiAccessId' => $apiAccessId]);
+                return $this->redirectToRoute('admin_api_clients_edit', ['apiClientId' => $apiClientId]);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $formData = $apiAccessForm->getData();
+        $formData = $apiClientForm->getData();
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiAccess/edit.html.twig', [
-            'layoutTitle' => $this->trans('Editing API Access "%name%"', 'Admin.Navigation.Menu', ['%name%' => $formData['client_name']]),
-            'apiAccessForm' => $apiAccessForm->createView(),
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/edit.html.twig', [
+            'layoutTitle' => $this->trans('Editing API Client "%name%"', 'Admin.Navigation.Menu', ['%name%' => $formData['client_name']]),
+            'apiClientForm' => $apiClientForm->createView(),
         ]);
     }
 
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_accesses_edit')]
-    public function regenerateSecretAction(Request $request, int $apiAccessId): Response
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_edit')]
+    public function regenerateSecretAction(Request $request, int $apiClientId): Response
     {
         try {
-            $newSecret = $this->getCommandBus()->handle(new GenerateApiAccessSecretCommand($apiAccessId));
+            $newSecret = $this->getCommandBus()->handle(new GenerateApiClientSecretCommand($apiClientId));
             $this->displayTemporarySecret(
                 $this->trans('Your new client secret has been generated successfully. Your former client secret is now obsolete.', 'Admin.Notifications.Success'),
                 $newSecret
@@ -158,23 +156,23 @@ class ApiAccessController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_api_accesses_edit', ['apiAccessId' => $apiAccessId]);
+        return $this->redirectToRoute('admin_api_clients_edit', ['apiClientId' => $apiClientId]);
     }
 
     /**
-     * @param int $apiAccessId
+     * @param int $apiClientId
      *
      * @return JsonResponse
      */
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_accesses_index')]
-    public function toggleStatusAction(int $apiAccessId): JsonResponse
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_index')]
+    public function toggleStatusAction(int $apiClientId): JsonResponse
     {
-        /** @var EditableApiAccess $apiAccess */
-        $apiAccess = $this->getQueryBus()->handle(new GetApiAccessForEditing($apiAccessId));
+        /** @var EditableApiClient $editableApiClient */
+        $editableApiClient = $this->getQueryBus()->handle(new GetApiClientForEditing($apiClientId));
 
         try {
-            $command = new EditApiAccessCommand($apiAccessId);
-            $command->setEnabled(!$apiAccess->isEnabled());
+            $command = new EditApiClientCommand($apiClientId);
+            $command->setEnabled(!$editableApiClient->isEnabled());
             $this->getCommandBus()->handle($command);
         } catch (Exception $e) {
             return $this->json([
@@ -190,15 +188,15 @@ class ApiAccessController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param int $apiAccessId
+     * @param int $apiClientId
      *
      * @return Response
      */
-    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_api_accesses_index')]
-    public function deleteAction(int $apiAccessId): Response
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_api_clients_index')]
+    public function deleteAction(int $apiClientId): Response
     {
         try {
-            $this->getCommandBus()->handle(new DeleteApiAccessCommand($apiAccessId));
+            $this->getCommandBus()->handle(new DeleteApiClientCommand($apiClientId));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', 'Admin.Notifications.Success')
@@ -207,29 +205,29 @@ class ApiAccessController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_api_accesses_index');
+        return $this->redirectToRoute('admin_api_clients_index');
     }
 
     private function getFormHandler(): FormHandlerInterface
     {
-        return $this->get('prestashop.core.form.identifiable_object.api_access_form_handler');
+        return $this->get('prestashop.core.form.identifiable_object.api_client_form_handler');
     }
 
     private function getFormBuilder(): FormBuilderInterface
     {
-        return $this->get('prestashop.core.form.identifiable_object.builder.api_access_form_builder');
+        return $this->get('prestashop.core.form.identifiable_object.builder.api_client_form_builder');
     }
 
     /**
      * @return array
      */
-    private function getApiAccessesToolbarButtons(): array
+    private function getApiClientsToolbarButtons(): array
     {
         $toolbarButtons = [];
 
-        $toolbarButtons['addApiAccess'] = [
-            'href' => $this->generateUrl('admin_api_accesses_create'),
-            'desc' => $this->trans('Add new API Access', 'Admin.Actions'),
+        $toolbarButtons['addApiClient'] = [
+            'href' => $this->generateUrl('admin_api_clients_create'),
+            'desc' => $this->trans('Add new API Client', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'class' => 'btn-primary',
         ];
@@ -245,67 +243,67 @@ class ApiAccessController extends FrameworkBundleAdminController
     private function getErrorMessages()
     {
         return [
-            ApiAccessNotFoundException::class => $this->trans(
+            ApiClientNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
-            ApiAccessConstraintException::class => [
-                ApiAccessConstraintException::CLIENT_ID_ALREADY_USED => $this->trans(
+            ApiClientConstraintException::class => [
+                ApiClientConstraintException::CLIENT_ID_ALREADY_USED => $this->trans(
                     'This value for "%field%" is already used and must be unique.',
                     'Admin.Notifications.Error',
                     ['%field%' => $this->trans('Client ID', 'Admin.Advparameters.Feature')]
                 ),
-                ApiAccessConstraintException::CLIENT_NAME_ALREADY_USED => $this->trans(
+                ApiClientConstraintException::CLIENT_NAME_ALREADY_USED => $this->trans(
                     'This value for "%field%" is already used and must be unique.',
                     'Admin.Notifications.Error',
                     ['%field%' => $this->trans('Client Name', 'Admin.Advparameters.Feature')]
                 ),
-                ApiAccessConstraintException::INVALID_CLIENT_ID => $this->trans(
+                ApiClientConstraintException::INVALID_CLIENT_ID => $this->trans(
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('Client ID', 'Admin.Advparameters.Feature'))]
                 ),
-                ApiAccessConstraintException::INVALID_CLIENT_NAME => $this->trans(
+                ApiClientConstraintException::INVALID_CLIENT_NAME => $this->trans(
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('Client Name', 'Admin.Advparameters.Feature'))]
                 ),
-                ApiAccessConstraintException::INVALID_DESCRIPTION => $this->trans(
+                ApiClientConstraintException::INVALID_DESCRIPTION => $this->trans(
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('Description', 'Admin.Global'))]
                 ),
-                ApiAccessConstraintException::CLIENT_ID_TOO_LARGE => $this->trans(
+                ApiClientConstraintException::CLIENT_ID_TOO_LARGE => $this->trans(
                     'The field "%field%" cannot be longer than %limit% characters.',
                     'Admin.Notifications.Error',
                     [
                         '%field%' => $this->trans('Client ID', 'Admin.Advparameters.Feature'),
-                        '%limit%' => ApiAccessSettings::MAX_CLIENT_ID_LENGTH,
+                        '%limit%' => ApiClientSettings::MAX_CLIENT_ID_LENGTH,
                     ]
                 ),
-                ApiAccessConstraintException::CLIENT_NAME_TOO_LARGE => $this->trans(
+                ApiClientConstraintException::CLIENT_NAME_TOO_LARGE => $this->trans(
                     'The field "%field%" cannot be longer than %limit% characters.',
                     'Admin.Notifications.Error',
                     [
                         '%field%' => $this->trans('Client Name', 'Admin.Advparameters.Feature'),
-                        '%limit%' => ApiAccessSettings::MAX_CLIENT_NAME_LENGTH,
+                        '%limit%' => ApiClientSettings::MAX_CLIENT_NAME_LENGTH,
                     ]
                 ),
-                ApiAccessConstraintException::DESCRIPTION_TOO_LARGE => $this->trans(
+                ApiClientConstraintException::DESCRIPTION_TOO_LARGE => $this->trans(
                     'The field "%field%" cannot be longer than %limit% characters.',
                     'Admin.Notifications.Error',
                     [
                         '%field%' => $this->trans('Description', 'Admin.Global'),
-                        '%limit%' => ApiAccessSettings::MAX_DESCRIPTION_LENGTH,
+                        '%limit%' => ApiClientSettings::MAX_DESCRIPTION_LENGTH,
                     ]
                 ),
             ],
-            CannotAddApiAccessException::class => $this->trans(
-                'An error occurred while creating the API Access.',
+            CannotAddApiClientException::class => $this->trans(
+                'An error occurred while creating the API Client.',
                 'Admin.Advparameters.Notification'
             ),
-            CannotUpdateApiAccessException::class => $this->trans(
-                'An error occurred while creating the API Access.',
+            CannotUpdateApiClientException::class => $this->trans(
+                'An error occurred while creating the API Client.',
                 'Admin.Advparameters.Notification'
             ),
         ];

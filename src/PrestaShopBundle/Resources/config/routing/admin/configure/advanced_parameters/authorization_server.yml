@@ -1,42 +1,42 @@
-admin_api_accesses_index:
-  path: /api-accesses
+admin_api_clients_index:
+  path: /api-clients
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::indexAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiClientController::indexAction
     _legacy_controller: AdminAuthorizationServer
     _legacy_link: AdminAuthorizationServer
 
-admin_api_accesses_create:
-  path: /api-accesses/create
+admin_api_clients_create:
+  path: /api-clients/create
   methods: [ GET, POST, PATCH ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::createAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiClientController::createAction
     _legacy_controller: AdminAuthorizationServer
 
-admin_api_accesses_edit:
-  path: /api-accesses/{apiAccessId}/edit
+admin_api_clients_edit:
+  path: /api-clients/{apiClientId}/edit
   methods: [ GET, POST, PATCH ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::editAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiClientController::editAction
     _legacy_controller: AdminAuthorizationServer
 
-admin_api_accesses_toggle_active:
-  path: /api-accesses/{apiAccessId}/toggle-active
+admin_api_clients_toggle_active:
+  path: /api-clients/{apiClientId}/toggle-active
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::toggleStatusAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiClientController::toggleStatusAction
     _legacy_controller: AdminAuthorizationServer
 
-admin_api_accesses_delete:
-  path: /api-accesses/{apiAccessId}/delete
+admin_api_clients_delete:
+  path: /api-clients/{apiClientId}/delete
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::deleteAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiClientController::deleteAction
     _legacy_controller: AdminAuthorizationServer
 
-admin_api_accesses_regenerate_secret:
-  path: /api-accesses/{apiAccessId}/regenerate-secret
+admin_api_clients_regenerate_secret:
+  path: /api-clients/{apiClientId}/regenerate-secret
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::regenerateSecretAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiClientController::regenerateSecretAction
     _legacy_controller: AdminAuthorizationServer
