@@ -30,60 +30,57 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use PrestaShopBundle\Entity\ApiAccess;
+use PrestaShopBundle\Entity\ApiClient;
 
-/**
- * @experimental
- */
-class ApiAccessRepository extends EntityRepository
+class ApiClientRepository extends EntityRepository
 {
     /**
-     * @param int $apiAccessId
+     * @param int $apiClientId
      *
-     * @return ApiAccess
+     * @return ApiClient
      *
      * @throws NoResultException
      */
-    public function getById(int $apiAccessId): ApiAccess
+    public function getById(int $apiClientId): ApiClient
     {
-        $apiAccess = $this->findOneBy(['id' => $apiAccessId]);
+        $apiClient = $this->findOneBy(['id' => $apiClientId]);
 
-        if (null === $apiAccess) {
+        if (null === $apiClient) {
             throw new NoResultException();
         }
 
-        return $apiAccess;
+        return $apiClient;
     }
 
     /**
      * @param string $clientId
      *
-     * @return ApiAccess
+     * @return ApiClient
      *
      * @throws NoResultException
      */
-    public function getByClientId(string $clientId): ApiAccess
+    public function getByClientId(string $clientId): ApiClient
     {
-        $apiAccess = $this->findOneBy(['clientId' => $clientId]);
+        $apiClient = $this->findOneBy(['clientId' => $clientId]);
 
-        if (null === $apiAccess) {
+        if (null === $apiClient) {
             throw new NoResultException();
         }
 
-        return $apiAccess;
+        return $apiClient;
     }
 
-    public function delete(ApiAccess $apiAccess): void
+    public function delete(ApiClient $apiClient): void
     {
-        $this->getEntityManager()->remove($apiAccess);
+        $this->getEntityManager()->remove($apiClient);
         $this->getEntityManager()->flush();
     }
 
-    public function save(ApiAccess $apiAccess): int
+    public function save(ApiClient $apiClient): int
     {
-        $this->getEntityManager()->persist($apiAccess);
+        $this->getEntityManager()->persist($apiClient);
         $this->getEntityManager()->flush();
 
-        return $apiAccess->getId();
+        return $apiClient->getId();
     }
 }

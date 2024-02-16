@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessId;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
-use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
+use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\Resetter\ApiAccessResetter;
@@ -290,7 +290,7 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     private function assertSecret(string $secretReference, string $apiAccessReference, bool $expected): void
     {
         // Manually get the entity because secret is not part of the CQRS query
-        $apiAccessRepository = $this->getContainer()->get(ApiAccessRepository::class);
+        $apiAccessRepository = $this->getContainer()->get(ApiClientRepository::class);
         $apiAccess = $apiAccessRepository->getById($this->getSharedStorage()->get($apiAccessReference));
         $hashedSecret = $apiAccess->getClientSecret();
 

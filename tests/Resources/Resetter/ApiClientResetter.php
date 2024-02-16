@@ -31,10 +31,10 @@ namespace Tests\Resources\Resetter;
 
 use Tests\Resources\DatabaseDump;
 
-class ApiAccessResetter
+class ApiClientResetter
 {
-    public static function resetApiAccess(): void
+    public static function resetApiClient(): void
     {
-        DatabaseDump::restoreTables(['api_access']);
+        DatabaseDump::restoreTables(['api_client']);
     }
 }

@@ -36,18 +36,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ApiAccessRepository")
+ * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ApiClientRepository")
  * @ORM\Table()
  *
  * @experimental
  */
 #[UniqueEntity('clientId')]
 #[UniqueEntity('clientName')]
-class ApiAccess implements UserInterface, PasswordAuthenticatedUserInterface
+class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="id_api_access", type="integer", options={"unsigned": true})
+     * @ORM\Column(name="id_api_client", type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     #[Assert\Positive]

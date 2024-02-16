@@ -37,14 +37,14 @@ use PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler\EditApiAccessComm
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotUpdateApiAccessException;
-use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
+use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsCommandHandler]
 class EditApiAccessHandler implements EditApiAccessCommandHandlerInterface
 {
     public function __construct(
-        private readonly ApiAccessRepository $repository,
+        private readonly ApiClientRepository $repository,
         private readonly ValidatorInterface $validator
     ) {
     }
@@ -52,36 +52,36 @@ class EditApiAccessHandler implements EditApiAccessCommandHandlerInterface
     public function handle(EditApiAccessCommand $command): void
     {
         try {
-            $apiAccess = $this->repository->getById($command->getApiAccessId()->getValue());
+            $apiClient = $this->repository->getById($command->getApiAccessId()->getValue());
         } catch (NoResultException $e) {
             throw new ApiAccessNotFoundException(sprintf('Could not find Api access %s', $command->getApiClientId()), 0, $e);
         }
 
         if (!is_null($command->getApiClientId())) {
-            $apiAccess->setClientId($command->getApiClientId());
+            $apiClient->setClientId($command->getApiClientId());
         }
 
         if (!is_null($command->getClientName())) {
-            $apiAccess->setClientName($command->getClientName());
+            $apiClient->setClientName($command->getClientName());
         }
 
         if (!is_null($command->isEnabled())) {
-            $apiAccess->setEnabled($command->isEnabled());
+            $apiClient->setEnabled($command->isEnabled());
         }
 
         if (!is_null($command->getDescription())) {
-            $apiAccess->setDescription($command->getDescription());
+            $apiClient->setDescription($command->getDescription());
         }
 
         if (!is_null($command->getScopes())) {
-            $apiAccess->setScopes($command->getScopes());
+            $apiClient->setScopes($command->getScopes());
         }
 
         if (!is_null($command->getLifetime())) {
-            $apiAccess->setLifetime($command->getLifetime());
+            $apiClient->setLifetime($command->getLifetime());
         }
 
-        $errors = $this->validator->validate($apiAccess);
+        $errors = $this->validator->validate($apiClient);
 
         if (count($errors) > 0) {
             throw ApiAccessConstraintException::buildFromPropertyPath(
@@ -92,7 +92,7 @@ class EditApiAccessHandler implements EditApiAccessCommandHandlerInterface
         }
 
         try {
-            $this->repository->save($apiAccess);
+            $this->repository->save($apiClient);
         } catch (ORMException $e) {
             throw new CannotUpdateApiAccessException('Could not update Api access', 0, $e);
         }

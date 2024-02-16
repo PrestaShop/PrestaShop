@@ -15,7 +15,7 @@ services:
   prestashop.security.api-access.provider:
     class: PrestaShopBundle\Security\OAuth2\Provider\ApiAccessProvider
     arguments:
-      - '@PrestaShopBundle\Entity\Repository\ApiAccessRepository'
+      - '@PrestaShopBundle\Entity\Repository\ApiClientRepository'
       - '@Symfony\Component\PasswordHasher\PasswordHasherInterface'
 
   prestashop.security.role.dynamic_role_hierarchy:

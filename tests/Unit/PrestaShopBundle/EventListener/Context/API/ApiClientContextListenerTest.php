@@ -31,8 +31,8 @@ namespace Tests\Unit\PrestaShopBundle\EventListener\Context\API;
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder;
 use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
-use PrestaShopBundle\Entity\ApiAccess;
-use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
+use PrestaShopBundle\Entity\ApiClient;
+use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use PrestaShopBundle\EventListener\Context\API\ApiClientContextListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
@@ -142,17 +142,17 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
         return $security;
     }
 
-    private function mockRepository(string $expectedClientId, array $scopes): ApiAccessRepository|MockObject
+    private function mockRepository(string $expectedClientId, array $scopes): ApiClientRepository|MockObject
     {
-        $apiAccess = new ApiAccess();
-        $apiAccess->setScopes($scopes);
-        $apiAccess->setClientId($expectedClientId);
+        $apiClient = new ApiClient();
+        $apiClient->setScopes($scopes);
+        $apiClient->setClientId($expectedClientId);
 
-        $builder = $this->createMock(ApiAccessRepository::class);
+        $builder = $this->createMock(ApiClientRepository::class);
         $builder
             ->method('getByClientId')
             ->with($expectedClientId)
-            ->willReturn($apiAccess)
+            ->willReturn($apiClient)
         ;
 
         return $builder;

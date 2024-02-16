@@ -35,31 +35,31 @@ use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundExcep
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryHandler\GetApiAccessForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
-use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
+use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 
 #[AsQueryHandler]
 class GetApiAccessForEditingHandler implements GetApiAccessForEditingHandlerInterface
 {
-    public function __construct(private readonly ApiAccessRepository $repository)
+    public function __construct(private readonly ApiClientRepository $repository)
     {
     }
 
     public function handle(GetApiAccessForEditing $query): EditableApiAccess
     {
         try {
-            $apiAccess = $this->repository->getById($query->getApiAccessId()->getValue());
+            $apiClient = $this->repository->getById($query->getApiAccessId()->getValue());
         } catch (NoResultException $e) {
             throw new ApiAccessNotFoundException(sprintf('Could not find Api access %s', $query->getApiAccessId()->getValue()), 0, $e);
         }
 
         return new EditableApiAccess(
-            $apiAccess->getId(),
-            $apiAccess->getClientId(),
-            $apiAccess->getClientName(),
-            $apiAccess->isEnabled(),
-            $apiAccess->getDescription(),
-            $apiAccess->getScopes(),
-            $apiAccess->getLifetime()
+            $apiClient->getId(),
+            $apiClient->getClientId(),
+            $apiClient->getClientName(),
+            $apiClient->isEnabled(),
+            $apiClient->getDescription(),
+            $apiClient->getScopes(),
+            $apiClient->getLifetime()
         );
     }
 }

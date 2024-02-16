@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Security\OAuth2\Provider;
 
-use PrestaShopBundle\Entity\ApiAccess;
-use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
+use PrestaShopBundle\Entity\ApiClient;
+use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -39,36 +39,36 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class ApiAccessProvider implements UserProviderInterface
 {
     public function __construct(
-        private readonly ApiAccessRepository $apiAccessRepository,
+        private readonly ApiClientRepository $apiClientRepository,
     ) {
     }
 
-    public function loadUserByIdentifier(string $identifier): ApiAccess
+    public function loadUserByIdentifier(string $identifier): ApiClient
     {
-        $apiAccess = $this->apiAccessRepository->findOneBy(['clientId' => $identifier]);
+        $apiClient = $this->apiClientRepository->findOneBy(['clientId' => $identifier]);
 
-        if (!$apiAccess instanceof ApiAccess) {
-            throw new UserNotFoundException('Api Access not found');
+        if (!$apiClient instanceof ApiClient) {
+            throw new UserNotFoundException('Api Client not found');
         }
 
-        return $apiAccess;
+        return $apiClient;
     }
 
-    public function refreshUser(UserInterface $apiAccess): ApiAccess
+    public function refreshUser(UserInterface $apiClient): ApiClient
     {
-        if (!$apiAccess instanceof ApiAccess) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $apiAccess::class));
+        if (!$apiClient instanceof ApiClient) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $apiClient::class));
         }
 
-        return $this->loadUserByIdentifier($apiAccess->getUserIdentifier());
+        return $this->loadUserByIdentifier($apiClient->getUserIdentifier());
     }
 
     public function supportsClass(string $class): bool
     {
-        return $class === ApiAccess::class;
+        return $class === ApiClient::class;
     }
 
-    public function loadUserByUsername(string $username): ApiAccess
+    public function loadUserByUsername(string $username): ApiClient
     {
         return $this->loadUserByIdentifier($username);
     }

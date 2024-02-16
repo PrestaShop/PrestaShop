@@ -35,26 +35,26 @@ use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\DeleteApiAccessCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\CommandHandler\DeleteApiAccessHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\CannotDeleteApiAccessException;
-use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
+use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 
 #[AsCommandHandler]
 class DeleteApiAccessHandler implements DeleteApiAccessHandlerInterface
 {
     public function __construct(
-        private readonly ApiAccessRepository $repository,
+        private readonly ApiClientRepository $repository,
     ) {
     }
 
     public function handle(DeleteApiAccessCommand $command): void
     {
         try {
-            $apiAccess = $this->repository->getById($command->getApiAccessId()->getValue());
+            $apiClient = $this->repository->getById($command->getApiAccessId()->getValue());
         } catch (NoResultException $e) {
             throw new ApiAccessNotFoundException(sprintf('Could not find Api access with ID %s', $command->getApiAccessId()->getValue()), 0, $e);
         }
 
         try {
-            $this->repository->delete($apiAccess);
+            $this->repository->delete($apiClient);
         } catch (ORMException $e) {
             throw new CannotDeleteApiAccessException('Could not delete Api access', 0, $e);
         }

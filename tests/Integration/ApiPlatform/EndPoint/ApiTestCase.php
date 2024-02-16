@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Shop;
 use ShopGroup;
-use Tests\Resources\DatabaseDump;
+use Tests\Resources\Resetter\ApiClientResetter;
 
 abstract class ApiTestCase extends ApiPlatformTestCase
 {
@@ -49,13 +49,13 @@ abstract class ApiTestCase extends ApiPlatformTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        DatabaseDump::restoreTables(['api_access']);
+        ApiClientResetter::resetApiClient();
     }
 
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        DatabaseDump::restoreTables(['api_access']);
+        ApiClientResetter::resetApiClient();
         self::$clientSecret = null;
     }
 
