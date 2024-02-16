@@ -15,7 +15,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import categoryPage from '@pages/FO/classic/category';
+import {categoryPage} from '@pages/FO/classic/category';
 
 // Import data
 import ProductData from '@data/faker/product';
