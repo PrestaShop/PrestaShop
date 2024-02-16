@@ -30,64 +30,64 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\DeleteApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\EditApiAccessCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\GenerateApiAccessSecretCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\ApiAccessId;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\AddApiClientCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\DeleteApiClientCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\EditApiClientCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\GenerateApiClientSecretCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\ApiClientConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\ApiClientException;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\ApiClientNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Query\GetApiClientForEditing;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\QueryResult\EditableApiClient;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\ApiClientId;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
-use Tests\Resources\Resetter\ApiAccessResetter;
+use Tests\Resources\Resetter\ApiClientResetter;
 
-class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
+class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When I create an api access :apiAccessReference with following properties:
+     * @When I create an api client :apiClientReference with following properties:
      */
-    public function createApiAccessUsingCommand(string $apiAccessReference, TableNode $table)
+    public function createApiClientUsingCommand(string $apiClientReference, TableNode $table)
     {
-        $this->createApiAccess($apiAccessReference, $table);
+        $this->createApiClient($apiClientReference, $table);
     }
 
     /**
-     * @When I create an api access :apiAccessReference with generated secret :secretReference using following properties:
+     * @When I create an api client :apiClientReference with generated secret :secretReference using following properties:
      */
-    public function createApiAccessUsingCommandAndStoreSecret(string $apiAccessReference, string $secretReference, TableNode $table)
+    public function createApiClientUsingCommandAndStoreSecret(string $apiClientReference, string $secretReference, TableNode $table)
     {
-        $this->createApiAccess($apiAccessReference, $table, $secretReference);
+        $this->createApiClient($apiClientReference, $table, $secretReference);
     }
 
     /**
-     * @When I generate new secret :secretReference for api access :apiAccessReference
+     * @When I generate new secret :secretReference for api client :apiClientReference
      */
-    public function generateSecretApiAccessUsingCommand(string $secretReference, string $apiAccessReference)
+    public function generateSecretApiClientUsingCommand(string $secretReference, string $apiClientReference)
     {
-        $this->getSharedStorage()->exists($apiAccessReference);
+        $this->getSharedStorage()->exists($apiClientReference);
 
         $commandBus = $this->getCommandBus();
-        $command = new GenerateApiAccessSecretCommand($this->getSharedStorage()->get($apiAccessReference));
+        $command = new GenerateApiClientSecretCommand($this->getSharedStorage()->get($apiClientReference));
         $newSecret = $commandBus->handle($command);
         $this->getSharedStorage()->set($secretReference, $newSecret);
     }
 
     /**
-     * @Then /^api access "(.+)" should have the following properties:$/
+     * @Then /^api client "(.+)" should have the following properties:$/
      */
-    public function assertQueryApiAccessProperties(string $apiAccessReference, TableNode $table)
+    public function assertQueryApiClientProperties(string $apiClientReference, TableNode $table)
     {
         $errors = [];
         $expectedData = $table->getRowsHash();
-        $this->getSharedStorage()->exists($apiAccessReference);
+        $this->getSharedStorage()->exists($apiClientReference);
 
-        /** @var EditableApiAccess $result */
-        $result = $this->getQueryBus()->handle(new GetApiAccessForEditing($this->getSharedStorage()->get($apiAccessReference)));
+        /** @var EditableApiClient $result */
+        $result = $this->getQueryBus()->handle(new GetApiClientForEditing($this->getSharedStorage()->get($apiClientReference)));
 
         if (isset($expectedData['clientName'])) {
             if ($result->getClientName() !== $expectedData['clientName']) {
@@ -95,7 +95,7 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
             }
         }
         if (isset($expectedData['apiClientId'])) {
-            if ($result->getApiClientId() !== $expectedData['apiClientId']) {
+            if ($result->getClientId() !== $expectedData['apiClientId']) {
                 $errors[] = 'apiClientId';
             }
         }
@@ -123,22 +123,22 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I edit api access "(.+)" with the following values:$/
+     * @When /^I edit api client "(.+)" with the following values:$/
      */
-    public function editCustomerUsingCommand(string $apiAccessReference, TableNode $table)
+    public function editCustomerUsingCommand(string $apiClientReference, TableNode $table)
     {
-        $this->getSharedStorage()->exists($apiAccessReference);
+        $this->getSharedStorage()->exists($apiClientReference);
         $data = $this->fixDataType($table->getRowsHash());
 
         $commandBus = $this->getCommandBus();
 
-        $command = new EditApiAccessCommand($this->getSharedStorage()->get($apiAccessReference));
+        $command = new EditApiClientCommand($this->getSharedStorage()->get($apiClientReference));
 
         if (isset($data['clientName'])) {
             $command->setClientName($data['clientName']);
         }
         if (isset($data['apiClientId'])) {
-            $command->setApiClientId($data['apiClientId']);
+            $command->setClientId($data['apiClientId']);
         }
         if (isset($data['enabled'])) {
             $command->setEnabled($data['enabled']);
@@ -155,19 +155,19 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
 
         try {
             $commandBus->handle($command);
-        } catch (ApiAccessConstraintException $e) {
+        } catch (ApiClientConstraintException $e) {
             $this->setLastException($e);
         }
     }
 
     /**
-     * @When /^I create an api access "(.+)" with a large value in (.+):$/
+     * @When /^I create an api client "(.+)" with a large value in (.+):$/
      */
-    public function iCreateAnApiAccessWithALargeValueInFieldName(string $apiAccessReference, string $fieldName, TableNode $table)
+    public function iCreateAnApiClientWithALargeValueInFieldName(string $apiClientReference, string $fieldName, TableNode $table)
     {
         $data = $this->generateMaxLengthValue($this->fixDataType($table->getRowsHash()), $fieldName);
 
-        $command = new AddApiAccessCommand(
+        $command = new AddApiClientCommand(
             $data['clientName'],
             $data['apiClientId'],
             $data['enabled'],
@@ -177,31 +177,31 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
         );
 
         try {
-            /* @var ApiAccessId $id */
+            /* @var ApiClientId $id */
             $id = $this->getCommandBus()->handle($command);
-            $this->getSharedStorage()->set($apiAccessReference, $id->getValue());
-        } catch (ApiAccessConstraintException $e) {
+            $this->getSharedStorage()->set($apiClientReference, $id->getValue());
+        } catch (ApiClientConstraintException $e) {
             $this->setLastException($e);
         }
     }
 
     /**
-     * @When /^I edit api access "(.+)" with a large value in (.+):$/
+     * @When /^I edit api client "(.+)" with a large value in (.+):$/
      */
-    public function iEditApiAccessWithALargeValueInApiClientId(string $apiAccessReference, string $fieldName)
+    public function iEditApiClientWithALargeValueInApiClientId(string $apiClientReference, string $fieldName)
     {
-        $this->getSharedStorage()->exists($apiAccessReference);
+        $this->getSharedStorage()->exists($apiClientReference);
         $data = $this->generateMaxLengthValue([], $fieldName);
 
         $commandBus = $this->getCommandBus();
 
-        $command = new EditApiAccessCommand($this->getSharedStorage()->get($apiAccessReference));
+        $command = new EditApiClientCommand($this->getSharedStorage()->get($apiClientReference));
 
         if (isset($data['clientName'])) {
             $command->setClientName($data['clientName']);
         }
         if (isset($data['apiClientId'])) {
-            $command->setApiClientId($data['apiClientId']);
+            $command->setClientId($data['apiClientId']);
         }
         if (isset($data['enabled'])) {
             $command->setEnabled($data['enabled']);
@@ -212,30 +212,30 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
 
         try {
             $commandBus->handle($command);
-        } catch (ApiAccessException $e) {
+        } catch (ApiClientException $e) {
             $this->setLastException($e);
         }
     }
 
     /**
-     * @When /^I delete api access "(.+)"$/
+     * @When /^I delete api client "(.+)"$/
      */
-    public function iDeleteApiAccess(string $apiAccessReference)
+    public function iDeleteApiClient(string $apiClientReference)
     {
-        $this->getCommandBus()->handle(new DeleteApiAccessCommand($this->getSharedStorage()->get($apiAccessReference)));
+        $this->getCommandBus()->handle(new DeleteApiClientCommand($this->getSharedStorage()->get($apiClientReference)));
     }
 
     /**
-     * @Then /^api access "(.+)" should not exist$/
+     * @Then /^api client "(.+)" should not exist$/
      */
-    public function checkApiAccessNotFound(string $apiAccessReference)
+    public function checkApiClientNotFound(string $apiClientReference)
     {
         try {
-            $this->getCommandBus()->handle(new GetApiAccessForEditing($this->getSharedStorage()->get($apiAccessReference)));
-        } catch (ApiAccessNotFoundException $e) {
+            $this->getCommandBus()->handle(new GetApiClientForEditing($this->getSharedStorage()->get($apiClientReference)));
+        } catch (ApiClientNotFoundException $e) {
             return;
         }
-        throw new \RuntimeException(sprintf('API Access %s still exists', $apiAccessReference));
+        throw new \RuntimeException(sprintf('API Client %s still exists', $apiClientReference));
     }
 
     /**
@@ -244,7 +244,7 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     public function iShouldGetAnErrorThatFieldIsNotUnique(string $fieldName): void
     {
         $this->assertLastErrorIs(
-            ApiAccessConstraintException::class,
+            ApiClientConstraintException::class,
             $this->getUnicityConstraintErrorCode($fieldName)
         );
     }
@@ -255,7 +255,7 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     public function iShouldGetAnErrorThatFieldIsInvalid(string $fieldName): void
     {
         $this->assertLastErrorIs(
-            ApiAccessConstraintException::class,
+            ApiClientConstraintException::class,
             $this->getInvalidConstraintErrorCode($fieldName)
         );
     }
@@ -266,33 +266,33 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     public function iShouldGetAnErrorThatFieldIsTooLarge(string $fieldName): void
     {
         $this->assertLastErrorIs(
-            ApiAccessConstraintException::class,
+            ApiClientConstraintException::class,
             $this->getTooLargeConstraintErrorCode($fieldName)
         );
     }
 
     /**
-     * @Then secret :secretReference is valid for api access :apiAccessReference
+     * @Then secret :secretReference is valid for api client :apiClientReference
      */
-    public function assertSecretIsValid(string $secretReference, string $apiAccessReference): void
+    public function assertSecretIsValid(string $secretReference, string $apiClientReference): void
     {
-        $this->assertSecret($secretReference, $apiAccessReference, true);
+        $this->assertSecret($secretReference, $apiClientReference, true);
     }
 
     /**
-     * @Then secret :secretReference is invalid for api access :apiAccessReference
+     * @Then secret :secretReference is invalid for api client :apiClientReference
      */
-    public function assertSecretIsInvalid(string $secretReference, string $apiAccessReference): void
+    public function assertSecretIsInvalid(string $secretReference, string $apiClientReference): void
     {
-        $this->assertSecret($secretReference, $apiAccessReference, false);
+        $this->assertSecret($secretReference, $apiClientReference, false);
     }
 
-    private function assertSecret(string $secretReference, string $apiAccessReference, bool $expected): void
+    private function assertSecret(string $secretReference, string $apiClientReference, bool $expected): void
     {
         // Manually get the entity because secret is not part of the CQRS query
-        $apiAccessRepository = $this->getContainer()->get(ApiClientRepository::class);
-        $apiAccess = $apiAccessRepository->getById($this->getSharedStorage()->get($apiAccessReference));
-        $hashedSecret = $apiAccess->getClientSecret();
+        $apiClientRepository = $this->getContainer()->get(ApiClientRepository::class);
+        $apiClient = $apiClientRepository->getById($this->getSharedStorage()->get($apiClientReference));
+        $hashedSecret = $apiClient->getClientSecret();
 
         $plainSecret = $this->getSharedStorage()->get($secretReference);
         $passwordHasher = $this->getContainer()->get(PasswordHasherInterface::class);
@@ -306,18 +306,18 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @BeforeFeature @restore-api-access-before-feature
+     * @BeforeFeature @restore-api-client-before-feature
      */
     public static function restoreProductTablesBeforeFeature(): void
     {
-        ApiAccessResetter::resetApiAccess();
+        ApiClientResetter::resetApiClient();
     }
 
-    private function createApiAccess(string $apiAccessReference, TableNode $table, string $secretReference = null): void
+    private function createApiClient(string $apiClientReference, TableNode $table, string $secretReference = null): void
     {
         $data = $this->fixDataType($table->getRowsHash());
 
-        $command = new AddApiAccessCommand(
+        $command = new AddApiClientCommand(
             $data['clientName'],
             $data['apiClientId'],
             $data['enabled'],
@@ -327,14 +327,14 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
         );
 
         try {
-            /** @var CreatedApiAccess $apiAccess */
-            $apiAccess = $this->getCommandBus()->handle($command);
+            /** @var CreatedApiClient $apiClient */
+            $apiClient = $this->getCommandBus()->handle($command);
 
-            $this->getSharedStorage()->set($apiAccessReference, $apiAccess->getApiAccessId()->getValue());
+            $this->getSharedStorage()->set($apiClientReference, $apiClient->getApiClientId()->getValue());
             if (!empty($secretReference)) {
-                $this->getSharedStorage()->set($secretReference, $apiAccess->getSecret());
+                $this->getSharedStorage()->set($secretReference, $apiClient->getSecret());
             }
-        } catch (ApiAccessConstraintException $e) {
+        } catch (ApiClientConstraintException $e) {
             $this->setLastException($e);
         }
     }
@@ -355,8 +355,8 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     private function getUnicityConstraintErrorCode(string $fieldName): int
     {
         $constraintErrorFieldMap = [
-            'clientId' => ApiAccessConstraintException::CLIENT_ID_ALREADY_USED,
-            'clientName' => ApiAccessConstraintException::CLIENT_NAME_ALREADY_USED,
+            'clientId' => ApiClientConstraintException::CLIENT_ID_ALREADY_USED,
+            'clientName' => ApiClientConstraintException::CLIENT_NAME_ALREADY_USED,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
@@ -369,12 +369,12 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     private function getInvalidConstraintErrorCode(string $fieldName): int
     {
         $constraintErrorFieldMap = [
-            'apiClientId' => ApiAccessConstraintException::INVALID_CLIENT_ID,
-            'clientName' => ApiAccessConstraintException::INVALID_CLIENT_NAME,
-            'enabled' => ApiAccessConstraintException::INVALID_ENABLED,
-            'description' => ApiAccessConstraintException::INVALID_DESCRIPTION,
-            'scopes' => ApiAccessConstraintException::NON_INSTALLED_SCOPES,
-            'lifetime' => ApiAccessConstraintException::NOT_POSITIVE_LIFETIME,
+            'apiClientId' => ApiClientConstraintException::INVALID_CLIENT_ID,
+            'clientName' => ApiClientConstraintException::INVALID_CLIENT_NAME,
+            'enabled' => ApiClientConstraintException::INVALID_ENABLED,
+            'description' => ApiClientConstraintException::INVALID_DESCRIPTION,
+            'scopes' => ApiClientConstraintException::NON_INSTALLED_SCOPES,
+            'lifetime' => ApiClientConstraintException::NOT_POSITIVE_LIFETIME,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
@@ -387,9 +387,9 @@ class ApiAccessManagementFeatureContext extends AbstractDomainFeatureContext
     private function getTooLargeConstraintErrorCode(string $fieldName): int
     {
         $constraintErrorFieldMap = [
-            'apiClientId' => ApiAccessConstraintException::CLIENT_ID_TOO_LARGE,
-            'clientName' => ApiAccessConstraintException::CLIENT_NAME_TOO_LARGE,
-            'description' => ApiAccessConstraintException::DESCRIPTION_TOO_LARGE,
+            'apiClientId' => ApiClientConstraintException::CLIENT_ID_TOO_LARGE,
+            'clientName' => ApiClientConstraintException::CLIENT_NAME_TOO_LARGE,
+            'description' => ApiClientConstraintException::DESCRIPTION_TOO_LARGE,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {

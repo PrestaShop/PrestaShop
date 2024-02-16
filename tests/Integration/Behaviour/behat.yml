@@ -595,12 +595,12 @@ default:
             - Tests\Integration\Behaviour\Features\Context\Domain\AliasFeatureContext
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
             - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
-        api-access:
+        api-client:
           paths:
-            - "%paths.base%/Features/Scenario/ApiAccess"
+            - "%paths.base%/Features/Scenario/ApiClient"
           contexts:
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\ApiAccessManagementFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\ApiClientManagementFeatureContext
         image-settings:
           paths:
             - "%paths.base%/Features/Scenario/ImageSettings"
