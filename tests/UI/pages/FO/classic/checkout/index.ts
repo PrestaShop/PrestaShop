@@ -81,7 +81,7 @@ class CheckoutPage extends FOBasePage {
 
   public personalInformationStepForm: string;
 
-  private readonly forgetPasswordLink: string;
+  protected forgetPasswordLink: string;
 
   private readonly activeLink: string;
 
