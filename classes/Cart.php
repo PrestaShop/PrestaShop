@@ -756,13 +756,12 @@ class CartCore extends ObjectModel
                 }
 
                 if (Pack::isPack($product['id_product'])) {
-                    $product['quantity_available'] = Product::getQuantity(
-                        $product['id_product'],
-                        $product['id_product_attribute'],
-                        null,
-                        null,
-                        $product['id_customization'],
-                    );
+                    /*
+                    * In case of packs, we need to properly calculate the quantity in stock. We can't just use the quantity from the query, because stocks can be set to use the quantity of the products in them. The quantity in stock_available then has no meaning and could be always zero.
+                    *
+                    * When calling Pack::getQuantity here, you MUST use null for $cart parameter. Otherwise it will subtract the quantity that is already in the cart. Basically resulting in a nonsense - half of quantity you have. We need the REAL quantity.
+                    */
+                    $row['quantity_available'] = Pack::getQuantity((int) $product['id_product'], (int) $product['id_product_attribute'], true, null, (int) $product['id_customization']);
                 }
 
                 $products[$key] = array_merge($product, $reduction_type_row);
