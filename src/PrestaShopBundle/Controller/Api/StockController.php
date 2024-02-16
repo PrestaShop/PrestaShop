@@ -71,8 +71,8 @@ class StockController extends ApiController
         try {
             $queryParams = $request->query->all();
 
-            if (isset($queryParams['keywords'])) {
-                // 'keywords' exists in the parameters, so it must be converted into an array
+            if (isset($queryParams['keywords']) && !is_array($queryParams['keywords'])) {
+                // 'keywords' exists in the parameters and is not array, so it must be converted into an array
                 $queryParams['keywords'] = explode(',', $queryParams['keywords']);
                 $request->query->replace($queryParams);
             }
