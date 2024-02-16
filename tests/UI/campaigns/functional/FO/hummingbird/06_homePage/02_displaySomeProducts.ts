@@ -1,28 +1,38 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import files from '@utils/files';
+
+// Import common tests
+import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
 
 // Import pages
-import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
-import {homePage} from '@pages/FO/classic/home';
-import {pricesDropPage} from '@pages/FO/classic/pricesDrop';
-import {newProductsPage} from '@pages/FO/classic/newProducts';
+import categoryPageFO from '@pages/FO/hummingbird/category';
+import homePage from '@pages/FO/hummingbird/home';
+import newProductsPage from '@pages/FO/hummingbird/newProducts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_homePage_displaySomeProducts';
+const baseContext: string = 'functional_FO_hummingbird_homePage_displaySomeProducts';
 
 /*
+Pre-condition:
+- Install hummingbird theme
+Scenario:
 - Go to FO
 - Check the block of popular products
 - Check the banner and the custom text block
-- Check the block of products on sale
 - Check the block of new products
+Post-condition:
+- Uninstall hummingbird theme
  */
 describe('FO - Home Page : Display some products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -32,6 +42,7 @@ describe('FO - Home Page : Display some products', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Check popular products block', async () => {
@@ -49,21 +60,21 @@ describe('FO - Home Page : Display some products', async () => {
 
       await homePage.changeLanguage(page, 'en');
 
-      const popularProductTitle = await homePage.getBlockTitle(page, 'popularproducts');
+      const popularProductTitle = await homePage.getBlockTitle(page, 'featured-products');
       expect(popularProductTitle).to.equal('Popular Products');
     });
 
     it('should check the number of popular products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProductsNumber', baseContext);
 
-      const productsNumber = await homePage.getProductsBlockNumber(page, 'popularproducts');
+      const productsNumber = await homePage.getProductsBlockNumber(page, 'featured-products');
       expect(productsNumber).to.equal(8);
     });
 
     it('should check All products link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllPopularProductsLink', baseContext);
 
-      await homePage.goToAllProductsBlockPage(page, 1);
+      await homePage.clickOnAllProductsButton(page, 'featured-products');
 
       const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -95,71 +106,31 @@ describe('FO - Home Page : Display some products', async () => {
     });
   });
 
-  describe('Check products on sale block', async () => {
-    it('should check products on sale block title', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkProductsOnSaleBlockTitle', baseContext);
-
-      const popularProductTitle = await homePage.getBlockTitle(page, 'onsale');
-      expect(popularProductTitle).to.equal('On sale');
-    });
-
-    it('should check the number of products in sale', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProductsInSale', baseContext);
-
-      const productsNumber = await homePage.getProductsBlockNumber(page, 'onsale');
-      expect(productsNumber).to.equal(2);
-    });
-
-    it('should check All products for sale link', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkAllProductsInSaleLink', baseContext);
-
-      await homePage.goToAllProductsBlockPage(page, 2);
-
-      const pageTitle = await pricesDropPage.getPageTitle(page);
-      expect(pageTitle).to.equal(pricesDropPage.pageTitle);
-    });
-
-    it('should go to home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage2', baseContext);
-
-      await homePage.goToHomePage(page);
-
-      const isHomePage = await homePage.isHomePage(page);
-      expect(isHomePage, 'Home page is not displayed').to.eq(true);
-    });
-  });
-
   describe('Check new products block', async () => {
     it('should check new products title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewProductsBlock', baseContext);
 
-      const popularProductTitle = await homePage.getBlockTitle(page, 'newproducts');
+      const popularProductTitle = await homePage.getBlockTitle(page, 'new-products');
       expect(popularProductTitle).to.equal('New products');
     });
 
     it('should check the number of new products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewProductsNumber', baseContext);
 
-      const productsNumber = await homePage.getProductsBlockNumber(page, 'newproducts');
+      const productsNumber = await homePage.getProductsBlockNumber(page, 'new-products');
       expect(productsNumber).to.equal(8);
     });
 
     it('should check All new products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllNewProductsLink', baseContext);
 
-      await homePage.goToAllProductsBlockPage(page, 3);
+      await homePage.clickOnAllProductsButton(page, 'new-products');
 
       const pageTitle = await newProductsPage.getPageTitle(page);
       expect(pageTitle).to.equal(newProductsPage.pageTitle);
     });
-
-    it('should go to home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage3', baseContext);
-
-      await homePage.goToHomePage(page);
-
-      const isHomePage = await homePage.isHomePage(page);
-      expect(isHomePage, 'Home page is not displayed').to.eq(true);
-    });
   });
+
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest`);
 });

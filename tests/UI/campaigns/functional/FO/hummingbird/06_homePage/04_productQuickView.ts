@@ -1,13 +1,15 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import files from '@utils/files';
 
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-import {categoryPage} from '@pages/FO/classic/category';
+import homePage from '@pages/FO/hummingbird/home';
+import categoryPage from '@pages/FO/hummingbird/category';
 
 // Import data
 import Products from '@data/demo/products';
@@ -17,11 +19,12 @@ import {ProductAttribute} from '@data/types/product';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_homePage_productQuickView';
+const baseContext: string = 'functional_FO_hummingbird_homePage_productQuickView';
 
 /*
 Pre-condition:
 - Create product out of stock not allowed
+- Install hummingbird theme
 Scenario:
 - Quick view product with combinations
 - Quick view simple product
@@ -29,6 +32,7 @@ Scenario:
 - Quick view product out of stock not allowed
 Post-condition:
 - Delete created product
+- Uninstall hummingbird theme
  */
 describe('FO - Home Page : Product quick view', async () => {
   let browserContext: BrowserContext;
@@ -56,7 +60,10 @@ describe('FO - Home Page : Product quick view', async () => {
   });
 
   // Pre-condition : Create product out of stock not allowed
-  createProductTest(productOutOfStockNotAllowed, `${baseContext}_preTest`);
+  createProductTest(productOutOfStockNotAllowed, `${baseContext}_preTest_0`);
+
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
@@ -66,6 +73,7 @@ describe('FO - Home Page : Product quick view', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Quick view product with combinations', async () => {
@@ -190,7 +198,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
-      await homePage.goToAllProductsPage(page);
+      await homePage.clickOnAllProductsButton(page);
 
       const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -268,5 +276,8 @@ describe('FO - Home Page : Product quick view', async () => {
   });
 
   // Post-condition : Delete the created product
-  deleteProductTest(productOutOfStockNotAllowed, `${baseContext}_postTest`);
+  deleteProductTest(productOutOfStockNotAllowed, `${baseContext}_postTest_0`);
+
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest_1`);
 });

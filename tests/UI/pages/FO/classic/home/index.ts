@@ -17,37 +17,37 @@ class HomePage extends FOBasePage {
 
   public readonly successAddToCartMessage: string;
 
-  private readonly carouselSliderId: string;
+  protected carouselSliderId: string;
 
-  private readonly carouselControlDirectionLink: (direction: string) => string;
+  protected carouselControlDirectionLink: (direction: string) => string;
 
-  private readonly carouselSliderInnerList: string;
+  protected carouselSliderInnerList: string;
 
   private readonly carouselSliderInnerListItems: string;
 
-  private readonly carouselSliderURL: string;
+  protected carouselSliderURL: string;
 
-  private readonly carouselSliderInnerListItem: (position: number) => string;
+  protected carouselSliderInnerListItem: (position: number) => string;
 
   private readonly homePageSection: string;
 
-  private readonly productsBlock: (blockName: string) => string;
+  private readonly productsBlock: (blockId: string) => string;
 
-  private readonly productsBlockTitle: (blockName: string) => string;
+  protected productsBlockTitle: (blockId: string) => string;
 
-  private readonly productsBlockDiv: (blockName: string) => string;
+  protected productsBlockDiv: (blockId: string) => string;
 
   public productArticle: (number: number) => string;
 
-  private readonly productImg: (number: number) => string;
+  protected productImg: (number: number) => string;
 
   private readonly productDescriptionDiv: (number: number) => string;
 
-  private readonly productQuickViewLink: (number: number) => string;
+  protected productQuickViewLink: (number: number) => string;
 
   private readonly productColorLink: (number: number, color: string) => string;
 
-  private readonly allProductsBlockLink: (blockId: number) => string;
+  protected allProductsBlockLink: (blockId: number | string) => string;
 
   private readonly totalProducts: string;
 
@@ -65,35 +65,35 @@ class HomePage extends FOBasePage {
 
   protected subscriptionAlertMessage: string;
 
-  private readonly quickViewModalDiv: string;
+  protected quickViewModalDiv: string;
 
-  private readonly quickViewCloseButton: string;
+  protected quickViewCloseButton: string;
 
-  private readonly quickViewProductName: string;
+  protected quickViewProductName: string;
 
-  private readonly quickViewRegularPrice: string;
+  protected quickViewRegularPrice: string;
 
-  private readonly quickViewProductPrice: string;
+  protected quickViewProductPrice: string;
 
-  private readonly quickViewDiscountPercentage: string;
+  protected quickViewDiscountPercentage: string;
 
-  private readonly quickViewTaxShippingDeliveryLabel: string;
+  protected quickViewTaxShippingDeliveryLabel: string;
 
-  private readonly quickViewShortDescription: string;
+  protected quickViewShortDescription: string;
 
-  private readonly quickViewProductVariants: string;
+  protected quickViewProductVariants: string;
 
   private readonly quickViewProductSize: string;
 
   private readonly quickViewProductColor: string;
 
-  private readonly quickViewProductDimension: string;
+  protected quickViewProductDimension: string;
 
   private readonly productAvailability: string;
 
-  private readonly quickViewCoverImage: string;
+  protected quickViewCoverImage: string;
 
-  private readonly quickViewThumbImage: string;
+  protected quickViewThumbImage: string;
 
   private readonly quickViewQuantityWantedInput: string;
 
@@ -109,7 +109,7 @@ class HomePage extends FOBasePage {
 
   protected readonly blockCartModalDiv: string;
 
-  private readonly blockCartModalCloseButton: string;
+  protected blockCartModalCloseButton: string;
 
   private readonly cartModalProductNameBlock: string;
 
@@ -133,7 +133,7 @@ class HomePage extends FOBasePage {
 
   protected cartModalCheckoutLink: string;
 
-  private readonly continueShoppingButton: string;
+  protected continueShoppingButton: string;
 
   public readonly successSubscriptionMessage: string;
 
@@ -142,14 +142,6 @@ class HomePage extends FOBasePage {
   public readonly successSendConfirmationEmailMessage: string;
 
   public readonly alreadyUsedEmailMessage: string;
-
-  public readonly productHummingbird: (number: number) => string;
-
-  public readonly productImgHummingbird: (number: number) => string;
-
-  public readonly quickViewButtonHummingbird: (number: number) => string;
-
-  public readonly blockCartModalCloseButtonHummingbird: string;
 
   /**
    * @constructs
@@ -181,7 +173,7 @@ class HomePage extends FOBasePage {
     this.productQuickViewLink = (number: number) => `${this.productArticle(number)} a.quick-view`;
     this.productColorLink = (number: number, color: string) => `${this.productArticle(number)} .variant-links`
       + ` a[aria-label='${color}']`;
-    this.allProductsBlockLink = (blockId: number) => `#content section:nth-child(${blockId}) a.all-product-link`;
+    this.allProductsBlockLink = (blockId: number | string) => `#content section:nth-child(${blockId}) a.all-product-link`;
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.productPrice = (number: number) => `${this.productArticle(number)} span[aria-label="Price"]`;
     this.newFlag = (number: number) => `${this.productArticle(number)} .product-flag.new`;
@@ -237,13 +229,6 @@ class HomePage extends FOBasePage {
     this.successSendVerificationEmailMessage = 'A verification email has been sent. Please check your inbox.';
     this.successSendConfirmationEmailMessage = 'A confirmation email has been sent. Please check your inbox.';
     this.alreadyUsedEmailMessage = 'This email address is already registered.';
-
-    // Hummingbird
-    this.productHummingbird = (number: number) => `#content .products div:nth-child(${number})`;
-    this.productImgHummingbird = (number: number) => `${this.productHummingbird(number)} img`;
-    this.quickViewButtonHummingbird = (number: number) => `${this.productHummingbird(number)} .product-miniature__quickview `
-      + 'button';
-    this.blockCartModalCloseButtonHummingbird = `${this.blockCartModalDiv} button.btn-close`;
   }
 
   /**
@@ -337,10 +322,12 @@ class HomePage extends FOBasePage {
   /**
    * Get products block title
    * @param page {Page} Browser tab
-   * @param blockName {'bestsellers'|'newproducts'|'onsale'|'popularproducts'} The block name in the page
+   * @param blockName {'bestsellers'|'newproducts'|'onsale'|'popularproducts'| string} The block name in the page
    * @returns {Promise<string>}
    */
-  async getBlockTitle(page: Page, blockName: 'bestsellers'|'newproducts'|'onsale'|'popularproducts'): Promise<string> {
+  async getBlockTitle(
+    page: Page,
+    blockName: 'bestsellers' | 'newproducts' | 'onsale' | 'popularproducts' | string): Promise<string> {
     return this.getTextContent(page, this.productsBlockTitle(blockName));
   }
 
@@ -349,7 +336,9 @@ class HomePage extends FOBasePage {
    * @param blockName {'bestsellers'|'newproducts'|'onsale'|'popularproducts'} The block name in the page
    * @param page {Page} Browser tab
    */
-  async getProductsBlockNumber(page: Page, blockName: 'bestsellers'|'newproducts'|'onsale'|'popularproducts'): Promise<number> {
+  async getProductsBlockNumber(
+    page: Page,
+    blockName: 'bestsellers' | 'newproducts' | 'onsale' | 'popularproducts' | string): Promise<number> {
     return page.locator(this.productsBlockDiv(blockName)).count();
   }
 
@@ -410,14 +399,6 @@ class HomePage extends FOBasePage {
    * @return {Promise<void>}
    */
   async quickViewProduct(page: Page, id: number): Promise<void> {
-    if (this.theme === 'hummingbird') {
-      await page.locator(this.productImgHummingbird(id)).first().hover();
-      await this.waitForVisibleSelector(page, this.quickViewButtonHummingbird(id));
-      await page.locator(this.quickViewButtonHummingbird(id)).first().click();
-
-      return;
-    }
-
     await page.locator(this.productImg(id)).hover();
     let displayed: boolean = false;
 
@@ -662,11 +643,7 @@ class HomePage extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async closeBlockCartModal(page: Page): Promise<boolean> {
-    if (this.theme === 'hummingbird') {
-      await this.waitForSelectorAndClick(page, this.blockCartModalCloseButtonHummingbird);
-    } else {
-      await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
-    }
+    await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
 
     return this.elementNotVisible(page, this.blockCartModalDiv, 1000);
   }

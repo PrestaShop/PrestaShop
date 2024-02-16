@@ -1,28 +1,33 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import files from '@utils/files';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
 
 // Import pages
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 // Import FO pages
-import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
-import {homePage} from '@pages/FO/classic/home';
+import categoryPage from '@pages/FO/hummingbird/category';
+import homePage from '@pages/FO/hummingbird/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_homePage_allProducts';
+const baseContext: string = 'functional_FO_hummingbird_homePage_allProducts';
 
 describe('FO - Home Page : Display all products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfActiveProducts: number;
   let numberOfProducts: number;
+
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -32,6 +37,7 @@ describe('FO - Home Page : Display all products', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('BO : Get the number of products', async () => {
@@ -89,45 +95,48 @@ describe('FO - Home Page : Display all products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
       await homePage.changeLanguage(page, 'en');
-      await homePage.goToAllProductsPage(page);
+      await homePage.clickOnAllProductsButton(page, 'featured-products');
 
-      const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
+      const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should check the number of products on the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'numberOfProducts', baseContext);
 
-      const numberOfProducts = await categoryPageFO.getNumberOfProducts(page);
+      const numberOfProducts = await categoryPage.getNumberOfProducts(page);
       expect(numberOfProducts).to.eql(numberOfActiveProducts);
     });
 
     it('should check that the header name is equal to HOME', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'nameOfHeader', baseContext);
 
-      const headerProductsName = await categoryPageFO.getHeaderPageName(page);
-      expect(headerProductsName).to.equal('HOME');
+      const headerProductsName = await categoryPage.getHeaderPageName(page);
+      expect(headerProductsName).to.equal('Home');
     });
 
     it('should check that the sorting link is displayed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'homeSortAndPaginationLink', baseContext);
 
-      const isSortingLinkVisible = await categoryPageFO.isSortButtonVisible(page);
+      const isSortingLinkVisible = await categoryPage.isSortButtonVisible(page);
       expect(isSortingLinkVisible, 'Sorting Link is not visible').to.eq(true);
     });
 
     it('should check the showing items text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'showingItemTextDisplayed', baseContext);
 
-      const numberOfItems = await categoryPageFO.getShowingItems(page);
+      const numberOfItems = await categoryPage.getShowingItems(page);
       expect(numberOfItems).equal(`Showing 1-12 of ${numberOfActiveProducts} item(s)`);
     });
 
     it('should check the list of product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayedListOfProduct', baseContext);
 
-      const listOfProductDisplayed = await categoryPageFO.getNumberOfProductsDisplayed(page);
+      const listOfProductDisplayed = await categoryPage.getNumberOfProductsDisplayed(page);
       expect(listOfProductDisplayed).to.be.above(0);
     });
   });
+
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest`);
 });

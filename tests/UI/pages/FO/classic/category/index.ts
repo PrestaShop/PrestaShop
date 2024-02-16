@@ -8,28 +8,28 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class Category extends FOBasePage {
+class CategoryPage extends FOBasePage {
   public readonly messageAddedToWishlist: string;
 
   private readonly bodySelector: string;
 
   private readonly mainSection: string;
 
-  private readonly headerNamePage: string;
+  protected headerNamePage: string;
 
   private readonly productsSection: string;
 
   private readonly productListTop: string;
 
-  private readonly productListDiv: string;
+  protected productListDiv: string;
 
   private readonly pagesList: string;
 
-  private readonly productItemListDiv: string;
+  protected productItemListDiv: string;
 
-  private readonly paginationText: string;
+  protected paginationText: string;
 
-  private readonly paginationNext: string;
+  protected paginationNext: string;
 
   private readonly paginationPrevious: string;
 
@@ -51,7 +51,7 @@ class Category extends FOBasePage {
 
   private readonly productList: string;
 
-  private readonly productArticle: (number: number) => string;
+  protected productArticle: (number: number) => string;
 
   private readonly productTitle: (number: number) => string;
 
@@ -59,11 +59,11 @@ class Category extends FOBasePage {
 
   private readonly productAttribute: (number: number, attribute: string) => string;
 
-  private readonly productImg: (number: number) => string;
+  protected productImg: (number: number) => string;
 
   private readonly productDescriptionDiv: (number: number) => string;
 
-  private readonly productQuickViewLink: (number: number) => string;
+  protected productQuickViewLink: (number: number) => string;
 
   private readonly productAddToWishlist: (number: number) => string;
 
@@ -103,8 +103,8 @@ class Category extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on category page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     // Message
     this.messageAddedToWishlist = 'Product added';
@@ -647,4 +647,5 @@ class Category extends FOBasePage {
   }
 }
 
-export default new Category();
+const categoryPage = new CategoryPage();
+export {categoryPage, CategoryPage};
