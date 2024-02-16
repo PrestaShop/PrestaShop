@@ -304,11 +304,11 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TitleFormDataHandler'
 
-  prestashop.core.form.identifiable_object.api_access_form_handler:
+  prestashop.core.form.identifiable_object.api_client_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
     arguments:
-      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApiAccessFormDataHandler'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApiClientFormDataHandler'
 
   prestashop.core.form.identifiable_object.handler.image_type_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'

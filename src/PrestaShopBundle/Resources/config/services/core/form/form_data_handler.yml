@@ -275,7 +275,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TitleFormDataHandler:
     autowire: true
 
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApiAccessFormDataHandler:
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApiClientFormDataHandler:
     autowire: true
     public: false
 

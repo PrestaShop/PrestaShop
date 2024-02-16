@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer;
 
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ApiAccessSettings;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\ApiClientSettings;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -40,7 +40,7 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
 
-class ApiAccessType extends TranslatorAwareType
+class ApiClientType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -51,12 +51,12 @@ class ApiAccessType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank(),
                     new Length([
-                        'max' => ApiAccessSettings::MAX_CLIENT_NAME_LENGTH,
+                        'max' => ApiClientSettings::MAX_CLIENT_NAME_LENGTH,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters.',
                             'Admin.Notifications.Error',
                             [
-                                '%limit%' => ApiAccessSettings::MAX_CLIENT_NAME_LENGTH,
+                                '%limit%' => ApiClientSettings::MAX_CLIENT_NAME_LENGTH,
                             ]
                         ),
                     ]),
@@ -68,12 +68,12 @@ class ApiAccessType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank(),
                     new Length([
-                        'max' => ApiAccessSettings::MAX_CLIENT_ID_LENGTH,
+                        'max' => ApiClientSettings::MAX_CLIENT_ID_LENGTH,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters.',
                             'Admin.Notifications.Error',
                             [
-                                '%limit%' => ApiAccessSettings::MAX_CLIENT_ID_LENGTH,
+                                '%limit%' => ApiClientSettings::MAX_CLIENT_ID_LENGTH,
                             ]
                         ),
                     ]),
@@ -85,12 +85,12 @@ class ApiAccessType extends TranslatorAwareType
                 'empty_data' => '',
                 'constraints' => [
                     new Length([
-                        'max' => ApiAccessSettings::MAX_DESCRIPTION_LENGTH,
+                        'max' => ApiClientSettings::MAX_DESCRIPTION_LENGTH,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters.',
                             'Admin.Notifications.Error',
                             [
-                                '%limit%' => ApiAccessSettings::MAX_DESCRIPTION_LENGTH,
+                                '%limit%' => ApiClientSettings::MAX_DESCRIPTION_LENGTH,
                             ]
                         ),
                     ]),

@@ -29,10 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Query\GetApiClientForEditing;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\QueryResult\EditableApiClient;
 
-class ApiAccessFormDataProvider implements FormDataProviderInterface
+class ApiClientFormDataProvider implements FormDataProviderInterface
 {
     public function __construct(
         private CommandBusInterface $queryBus
@@ -41,11 +41,11 @@ class ApiAccessFormDataProvider implements FormDataProviderInterface
 
     public function getData($id)
     {
-        /** @var EditableApiAccess $apiAccess */
-        $apiAccess = $this->queryBus->handle(new GetApiAccessForEditing((int) $id));
+        /** @var EditableApiClient $apiAccess */
+        $apiAccess = $this->queryBus->handle(new GetApiClientForEditing((int) $id));
 
         return [
-            'client_id' => $apiAccess->getApiClientId(),
+            'client_id' => $apiAccess->getClientId(),
             'client_name' => $apiAccess->getClientName(),
             'description' => $apiAccess->getDescription(),
             'enabled' => $apiAccess->isEnabled(),

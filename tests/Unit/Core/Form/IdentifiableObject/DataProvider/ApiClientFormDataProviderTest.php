@@ -30,16 +30,16 @@ namespace Core\Form\IdentifiableObject\DataProvider;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\QueryResult\EditableApiAccess;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApiAccessFormDataProvider;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Query\GetApiClientForEditing;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\QueryResult\EditableApiClient;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApiClientFormDataProvider;
 
-class ApiAccessFormDataProviderTest extends TestCase
+class ApiClientFormDataProviderTest extends TestCase
 {
     public function testGetDefaultData(): void
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
-        $provider = new ApiAccessFormDataProvider($queryBusMock);
+        $provider = new ApiClientFormDataProvider($queryBusMock);
 
         $this->assertEquals([], $provider->getDefaultData());
     }
@@ -47,29 +47,29 @@ class ApiAccessFormDataProviderTest extends TestCase
     /**
      * @dataProvider provideApiAccessData
      */
-    public function testGetData(EditableApiAccess $apiAccess, array $expectedData): void
+    public function testGetData(EditableApiClient $apiAccess, array $expectedData): void
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
         $queryBusMock
             ->method('handle')
-            ->with($this->isInstanceOf(GetApiAccessForEditing::class))
+            ->with($this->isInstanceOf(GetApiClientForEditing::class))
             ->willReturn($apiAccess)
         ;
 
-        $provider = new ApiAccessFormDataProvider($queryBusMock);
+        $provider = new ApiClientFormDataProvider($queryBusMock);
         $this->assertEquals($expectedData, $provider->getData(42));
     }
 
     public function provideApiAccessData(): iterable
     {
         yield 'simple case with basic fields' => [
-            new EditableApiAccess(
+            new EditableApiClient(
                 42,
                 'client-id',
                 'client-name',
                 true,
                 'short description',
-                ['api_access_read', 'hook_read'],
+                ['api_client_read', 'hook_read'],
                 3600
             ),
             [
@@ -77,7 +77,7 @@ class ApiAccessFormDataProviderTest extends TestCase
                 'client_name' => 'client-name',
                 'description' => 'short description',
                 'enabled' => true,
-                'scopes' => ['api_access_read', 'hook_read'],
+                'scopes' => ['api_client_read', 'hook_read'],
                 'lifetime' => 3600,
             ],
         ];
