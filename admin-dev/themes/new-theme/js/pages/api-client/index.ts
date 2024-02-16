@@ -35,7 +35,7 @@ import AsyncToggleColumnExtension from '@components/grid/extension/column/common
 const {$} = window;
 
 $(() => {
-  const grid = new Grid('api_access');
+  const grid = new Grid('api_client');
 
   grid.addExtension(new ExportToSqlManagerExtension());
   grid.addExtension(new ReloadListActionExtension());

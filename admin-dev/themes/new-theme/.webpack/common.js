@@ -41,8 +41,8 @@ module.exports = {
   },
   entry: {
     address: './js/pages/address',
-    api_access: './js/pages/api-access',
-    api_access_form: './js/pages/api-access/form',
+    api_client: './js/pages/api-client',
+    api_client_form: './js/pages/api-client/form',
     attachment: './js/pages/attachment',
     attribute: './js/pages/attribute',
     attribute_form: './js/pages/attribute/form',

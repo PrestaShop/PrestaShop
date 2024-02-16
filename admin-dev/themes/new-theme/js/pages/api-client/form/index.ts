@@ -23,19 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ApiAccessMap from '@pages/api-access/api-access-map';
+import ApiClientMap from '@pages/api-client/api-client-map';
 import ConfirmModal from '@components/modal/confirm-modal';
 
 const {$} = window;
 
 $(() => {
   // Display a confirmation modal when regeneration link is clicked before submitting the regeneration
-  document.querySelector<HTMLLinkElement>(ApiAccessMap.generateSecretLink)?.addEventListener('click', (event) => {
+  document.querySelector<HTMLLinkElement>(ApiClientMap.generateSecretLink)?.addEventListener('click', (event) => {
     event.preventDefault();
     const generateLink = event.target as HTMLLinkElement;
     const generateConfirmModal = new ConfirmModal(
       {
-        id: ApiAccessMap.generateSecretModalId,
+        id: ApiClientMap.generateSecretModalId,
         confirmTitle: generateLink.dataset.confirmTitle,
         confirmMessage: generateLink.dataset.confirmMessage,
         confirmButtonLabel: generateLink.dataset.confirmButtonLabel,
@@ -61,7 +61,7 @@ $(() => {
   }
 
   // Copy secret to clipboard
-  document.querySelector<HTMLLinkElement>(ApiAccessMap.copySecret)?.addEventListener('click', (event) => {
+  document.querySelector<HTMLLinkElement>(ApiClientMap.copySecret)?.addEventListener('click', (event) => {
     event.preventDefault();
     const copyLink = event.target as HTMLLinkElement;
 

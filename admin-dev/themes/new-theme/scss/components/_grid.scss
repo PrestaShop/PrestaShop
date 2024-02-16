@@ -281,16 +281,6 @@ table .column-filters {
           &.date_time-type {
             word-break: normal;
           }
-
-          &.api_accesses_states-type {
-            .active {
-              color: #21834d;
-            }
-
-            .inactive {
-              color: #f44336;
-            }
-          }
         }
       }
     }
