@@ -32,7 +32,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\CustomerGroup;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\Hook;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
@@ -265,11 +265,11 @@ class DomainSerializerTest extends KernelTestCase
 
     public function getNormalizationData(): iterable
     {
-        $createdApiAccess = new CreatedApiAccess(42, 'my_secret');
+        $createdApiClient = new CreatedApiClient(42, 'my_secret');
         yield 'normalize command result that contains a ValueObject' => [
-            $createdApiAccess,
+            $createdApiClient,
             [
-                'apiAccessId' => 42,
+                'apiClientId' => 42,
                 'secret' => 'my_secret',
             ],
         ];
