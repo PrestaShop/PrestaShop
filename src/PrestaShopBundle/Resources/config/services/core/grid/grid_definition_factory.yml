@@ -413,7 +413,7 @@ services:
     autowire: true
     public: true
 
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiAccessGridDefinitionFactory:
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiClientGridDefinitionFactory:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     autowire: true
     public: true

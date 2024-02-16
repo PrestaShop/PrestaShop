@@ -32,12 +32,12 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShop\PrestaShop\Core\Search\Filters\ApiAccessFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\ApiClientFilters;
 
 /**
- * Class ApiAccessQueryBuilder builds search & count queries for api access grid.
+ * Class ApiClientQueryBuilder builds search & count queries for api access grid.
  */
-class ApiAccessQueryBuilder extends AbstractDoctrineQueryBuilder
+class ApiClientQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicator
@@ -64,18 +64,18 @@ class ApiAccessQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        if (!$searchCriteria instanceof ApiAccessFilters) {
+        if (!$searchCriteria instanceof ApiClientFilters) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Expected %s, but got %s',
-                    ApiAccessFilters::class, get_class($searchCriteria)
+                    ApiClientFilters::class, get_class($searchCriteria)
                 )
             );
         }
 
         $queryBuilder = $this->getQueryBuilder()
             ->select('aa.*')
-            ->from($this->dbPrefix . 'api_access', 'aa');
+            ->from($this->dbPrefix . 'api_client', 'aa');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $queryBuilder)
@@ -89,18 +89,18 @@ class ApiAccessQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        if (!$searchCriteria instanceof ApiAccessFilters) {
+        if (!$searchCriteria instanceof ApiClientFilters) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Expected %s, but got %s',
-                    ApiAccessFilters::class, get_class($searchCriteria)
+                    ApiClientFilters::class, get_class($searchCriteria)
                 )
             );
         }
 
         return $this->getQueryBuilder()
-            ->select('COUNT(aa.id_api_access)')
-            ->from($this->dbPrefix . 'api_access', 'aa');
+            ->select('COUNT(aa.id_api_client)')
+            ->from($this->dbPrefix . 'api_client', 'aa');
     }
 
     /**

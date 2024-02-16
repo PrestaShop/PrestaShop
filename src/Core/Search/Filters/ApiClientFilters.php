@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,6 +22,31 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-<i class="material-icons active">check</i>{{ 'Active'|trans({}, 'Admin.Global') }}: {{ record.active_api_access }} <i class="material-icons inactive">close</i>{{ 'Inactive'|trans({}, 'Admin.Global') }}: {{ record.inactive_api_access }}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
+
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiClientGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
+
+final class ApiClientFilters extends Filters
+{
+    /** @var string */
+    protected $filterId = ApiClientGridDefinitionFactory::GRID_ID;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults(): array
+    {
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'id_api_client',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
+}

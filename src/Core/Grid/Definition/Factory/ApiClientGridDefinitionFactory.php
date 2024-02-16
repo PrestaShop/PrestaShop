@@ -40,13 +40,13 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 
 /**
- * Class ApiAccessGridDefinitionFactory is responsible for creating new instance of Api Access grid definition.
+ * Class ApiClientGridDefinitionFactory is responsible for creating new instance of Api Client grid definition.
  */
-final class ApiAccessGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class ApiClientGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use DeleteActionTrait;
 
-    public const GRID_ID = 'api_access';
+    public const GRID_ID = 'api_client';
 
     /**
      * {@inheritdoc}
@@ -61,7 +61,7 @@ final class ApiAccessGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName(): string
     {
-        return $this->trans('Api Accesses', [], 'Admin.Navigation.Menu');
+        return $this->trans('Api Clients', [], 'Admin.Navigation.Menu');
     }
 
     /**
@@ -71,10 +71,10 @@ final class ApiAccessGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new ColumnCollection())
             ->add(
-                (new IdentifierColumn('id_api_access'))
+                (new IdentifierColumn('id_api_client'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
                     ->setOptions([
-                        'identifier_field' => 'id_api_access',
+                        'identifier_field' => 'id_api_client',
                         'clickable' => false,
                     ])
             )
@@ -97,9 +97,9 @@ final class ApiAccessGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Status', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'active',
-                        'primary_field' => 'id_api_access',
-                        'route' => 'admin_api_accesses_toggle_active',
-                        'route_param_name' => 'apiAccessId',
+                        'primary_field' => 'id_api_client',
+                        'route' => 'admin_api_clients_toggle_active',
+                        'route_param_name' => 'apiClientId',
                     ])
             )
             ->add((new ActionColumn('actions'))
@@ -121,16 +121,16 @@ final class ApiAccessGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Edit', [], 'Admin.Actions'))
             ->setIcon('edit')
             ->setOptions([
-                'route' => 'admin_api_accesses_edit',
-                'route_param_name' => 'apiAccessId',
-                'route_param_field' => 'id_api_access',
+                'route' => 'admin_api_clients_edit',
+                'route_param_name' => 'apiClientId',
+                'route_param_field' => 'id_api_client',
             ])
             )
             ->add(
                 $this->buildDeleteAction(
-                    'admin_api_accesses_delete',
-                    'apiAccessId',
-                    'id_api_access'
+                    'admin_api_clients_delete',
+                    'apiClientId',
+                    'id_api_client'
                 )
             );
 
