@@ -31,48 +31,48 @@ namespace FakeModule\ApiPlatform\Resources;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Exception\ApiAccessNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Query\GetApiAccessForEditing;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\ApiClientNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Query\GetApiClientForEditing;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 #[ApiResource(
     operations: [
         new Get(
-            uriTemplate: '/api-access/{apiAccessId}',
-            requirements: ['apiAccessId' => '\d+'],
+            uriTemplate: '/api-client/{apiClientId}',
+            requirements: ['apiClientId' => '\d+'],
             openapiContext: [
-                'summary' => 'Get API Access details',
-                'description' => 'Get API Access public details only, sensitive information like secrets is not returned',
+                'summary' => 'Get API Client details',
+                'description' => 'Get API Client public details only, sensitive information like secrets is not returned',
                 'parameters' => [
                     [
-                        'name' => 'apiAccessId',
+                        'name' => 'apiClientId',
                         'in' => 'path',
                         'required' => true,
                         'schema' => [
                             'type' => 'string',
                         ],
-                        'description' => 'Id of the API Access you are requesting the details from',
+                        'description' => 'Id of the API Client you are requesting the details from',
                     ],
                     [
                         'name' => 'Authorization',
                         'in' => 'scopes',
-                        'description' => 'api_access_read',
+                        'description' => 'api_client_read',
                     ],
                 ],
             ],
-            exceptionToStatus: [ApiAccessNotFoundException::class => 404],
+            exceptionToStatus: [ApiClientNotFoundException::class => 404],
             provider: QueryProvider::class,
             extraProperties: [
-                'query' => GetApiAccessForEditing::class,
-                'scopes' => ['api_access_read'],
+                'query' => GetApiClientForEditing::class,
+                'scopes' => ['api_client_read'],
             ]
         ),
     ],
 )]
-class ApiAccess
+class ApiClient
 {
     #[ApiProperty(identifier: true)]
-    public int $apiAccessId;
+    public int $apiClientId;
 
     public string $clientName;
 
