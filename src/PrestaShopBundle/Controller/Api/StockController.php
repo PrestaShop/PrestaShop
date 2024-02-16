@@ -69,7 +69,13 @@ class StockController extends ApiController
         }
 
         try {
-            $queryParamsCollection = $this->queryParams->fromRequest($request);
+            $queryParams = $request->query->all();
+
+            if (isset($queryParams['keywords'])) {
+                $queryParams['keywords'] = explode(',', $queryParams['keywords']);
+            }
+
+            $queryParamsCollection = $this->queryParams->fromArray($queryParams);
         } catch (InvalidPaginationParamsException $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
