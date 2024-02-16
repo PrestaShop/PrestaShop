@@ -354,6 +354,16 @@ class HomePage extends FOBasePage {
   }
 
   /**
+   * Has products block
+   * @param blockName {'bestsellers'|'newproducts'|'onsale'|'popularproducts'} The block name in the page
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async hasProductsBlock(page: Page, blockName: 'bestsellers'|'newproducts'|'onsale'|'popularproducts'): Promise<boolean> {
+    return (await page.locator(this.productsBlock(blockName)).count()) > 0;
+  }
+
+  /**
    * Go to all products
    * @param page {Page} Browser tab
    * @param blockID {number} The block number in the page
