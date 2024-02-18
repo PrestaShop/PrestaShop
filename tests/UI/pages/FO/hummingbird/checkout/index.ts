@@ -33,13 +33,17 @@ class Checkout extends CheckoutPage {
     this.addressStepCountrySelect = 'select[name="id_country"]';
     this.stateInput = 'select[name="id_state"]';
     this.addressStepEditButton = `${this.addressStepSection} button`;
+    this.addAddressButton = '.js-address-form a[href*="?newAddress=delivery"]';
+    this.addInvoiceAddressButton = '.js-address-form a[href*="?newAddress=invoice"]';
 
     // Shipping method selectors
     this.deliveryStepSection = 'li[data-step="checkout-delivery-step"]';
     this.deliveryStepEditButton = `${this.deliveryStepSection} button`;
     this.deliveryOptionAllNamesSpan = '#js-delivery .delivery-options__container span.carrier-name';
     this.deliveryAddressPosition = (position) => `#delivery-addresses div:nth-child(${position}) article`;
+    this.invoiceAddressPosition = (position) => `#invoice-addresses div:nth-child(${position}) article`;
     this.deliveryAddressEditButton = (addressID: number) => `#id_address_delivery-address-${addressID} a.address__edit`;
+    this.deliveryAddressDeleteButton = (addressID: number) => `#id_address_delivery-address-${addressID} a.address__delete`;
     this.deliveryOptions = '#js-delivery .delivery-options__container';
     this.deliveryOptionLabel = (id: number) => `input#delivery_option_${id}`;
     this.deliveryOption = (carrierID: number) => `${this.deliveryOptions} label[for="delivery_option_${carrierID}"]`;

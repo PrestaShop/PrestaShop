@@ -169,9 +169,9 @@ class CheckoutPage extends FOBasePage {
 
   protected addressStepEditButton: string;
 
-  private readonly addAddressButton: string;
+  protected addAddressButton: string;
 
-  private readonly addInvoiceAddressButton: string;
+  protected addInvoiceAddressButton: string;
 
   private readonly differentInvoiceAddressLink: string;
 
@@ -215,11 +215,11 @@ class CheckoutPage extends FOBasePage {
 
   protected deliveryAddressPosition: (position: number) => string;
 
-  private readonly invoiceAddressPosition: (position: number) => string;
+  protected invoiceAddressPosition: (position: number) => string;
 
   protected deliveryAddressEditButton: (addressID: number) => string;
 
-  private readonly deliveryAddressDeleteButton: (addressID: number) => string;
+  protected deliveryAddressDeleteButton: (addressID: number) => string;
 
   private readonly deliveryAddressRadioButton: (addressID: number) => string;
 
