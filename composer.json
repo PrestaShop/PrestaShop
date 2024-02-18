@@ -71,7 +71,7 @@
         "prestashop/gsitemap": "^4",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^6.0",
-        "prestashop/ps_apiresources": "dev-dev",
+        "prestashop/ps_apiresources": "dev-rename-api-client",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
         "prestashop/ps_brandlist": "^1.0",
@@ -248,6 +248,12 @@
             "Tests\\": "tests/",
             "Tests\\Unit\\Resources\\": "tests/Unit/Resources/api_platform/fake_core_resources/src",
             "FakeModule\\": "tests/Unit/Resources/api_platform/fake_module_resources/fake_module/src"
+        }
+    },
+    "repositories": {
+        "ps_apiresources": {
+            "type": "vcs",
+            "url": "https://github.com/jolelievre/ps_apiresources.git"
         }
     },
     "minimum-stability": "dev",
