@@ -2,27 +2,27 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 // Import data
-import APIAccessData from '@data/faker/APIAccess';
+import APIClientData from '@data/faker/APIClient';
 
 import type {Page} from 'playwright';
 
 /**
- * New API Access page, contains functions that can be used on the page
+ * New API Client page, contains functions that can be used on the page
  * @class
  * @extends BOBasePage
  */
-class AddNewAPIAccess extends BOBasePage {
+class AddNewAPIClient extends BOBasePage {
   public readonly pageTitleCreate: string;
 
-  public readonly pageTitleEdit: (apiAccessName: string) => string;
+  public readonly pageTitleEdit: (apiClientName: string) => string;
 
-  public readonly apiAccessGeneratedMessage: string;
+  public readonly apiClientGeneratedMessage: string;
 
-  public readonly apiAccessRegeneratedMessage: string;
+  public readonly apiClientRegeneratedMessage: string;
 
   private readonly copyClientSecretLink: string;
 
-  private readonly formAPIAccess: string;
+  private readonly formAPIClient: string;
 
   private readonly clientNameInput: string;
 
@@ -57,12 +57,12 @@ class AddNewAPIAccess extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = `New API Access • ${global.INSTALL.SHOP_NAME}`;
-    this.pageTitleEdit = (apiAccessName: string) => `Editing API Access "${apiAccessName}" • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleCreate = `New API Client • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = (apiClientName: string) => `Editing API Client "${apiClientName}" • ${global.INSTALL.SHOP_NAME}`;
     this.successfulCreationMessage = 'Client secret:';
-    this.apiAccessGeneratedMessage = 'The API access and client secret have been generated successfully. '
+    this.apiClientGeneratedMessage = 'The API Client and client secret have been generated successfully. '
       + 'This secret value will only be displayed once. Don\'t forget to make a copy in a secure location.';
-    this.apiAccessRegeneratedMessage = 'Your new client secret has been generated successfully. '
+    this.apiClientRegeneratedMessage = 'Your new client secret has been generated successfully. '
       + 'Your former client secret is now obsolete. '
       + 'This secret value will only be displayed once. '
       + 'Don\'t forget to make a copy in a secure location.';
@@ -70,19 +70,19 @@ class AddNewAPIAccess extends BOBasePage {
     // Selectors
     this.alertSuccessBlockParagraph = 'div.alert-success div.alert-text';
     this.copyClientSecretLink = `${this.alertSuccessBlockParagraph} a.copy-secret-to-clipboard`;
-    this.formAPIAccess = 'form[name="api_access"]';
-    this.clientNameInput = `${this.formAPIAccess} #api_access_client_name`;
-    this.clientIdInput = `${this.formAPIAccess} #api_access_client_id`;
-    this.descriptionInput = `${this.formAPIAccess} #api_access_description`;
-    this.tokenLifetimeInput = `${this.formAPIAccess} #api_access_lifetime`;
-    this.statusSpan = `${this.formAPIAccess} span#api_access_enabled`;
+    this.formAPIClient = 'form[name="api_client"]';
+    this.clientNameInput = `${this.formAPIClient} #api_client_client_name`;
+    this.clientIdInput = `${this.formAPIClient} #api_client_client_id`;
+    this.descriptionInput = `${this.formAPIClient} #api_client_description`;
+    this.tokenLifetimeInput = `${this.formAPIClient} #api_client_lifetime`;
+    this.statusSpan = `${this.formAPIClient} span#api_client_enabled`;
     this.statusInput = `${this.statusSpan} input`;
-    this.noScopes = `${this.formAPIAccess} p.resource-scopes-not-available`;
-    this.scopeGroup = (group:string) => `#api_access_scopes_${group}_accordion div.switch-scope`;
-    this.scopeStatus = (scope: string) => `${this.formAPIAccess} div[data-scope="${scope}"] div.switch-widget span.ps-switch`;
+    this.noScopes = `${this.formAPIClient} p.resource-scopes-not-available`;
+    this.scopeGroup = (group:string) => `#api_client_scopes_${group}_accordion div.switch-scope`;
+    this.scopeStatus = (scope: string) => `${this.formAPIClient} div[data-scope="${scope}"] div.switch-widget span.ps-switch`;
     this.scopeStatusInput = (scope: string) => `${this.scopeStatus(scope)} input`;
-    this.saveButton = `${this.formAPIAccess} .card-footer button`;
-    this.generateClientSecret = `${this.formAPIAccess} .card-footer .generate-client-secret`;
+    this.saveButton = `${this.formAPIClient} .card-footer button`;
+    this.generateClientSecret = `${this.formAPIClient} .card-footer .generate-client-secret`;
     this.modalDialogConfirmButton = '#generate-secret-modal .modal-footer .btn-confirm-submit';
   }
 
@@ -102,20 +102,20 @@ class AddNewAPIAccess extends BOBasePage {
   }
 
   /**
-   * Add API Access
+   * Add API Client
    * @param page {Page} Browser tab
-   * @param apiAccessData {APIAccessData}}
+   * @param apiClientData {APIClientData}}
    * @return {Promise<string>}
    */
-  async addAPIAccess(page: Page, apiAccessData: APIAccessData): Promise<string> {
-    await this.setValue(page, this.clientNameInput, apiAccessData.clientName);
-    await this.setValue(page, this.clientIdInput, apiAccessData.clientId);
-    await this.setValue(page, this.descriptionInput, apiAccessData.description);
-    await this.setValue(page, this.tokenLifetimeInput, apiAccessData.tokenLifetime);
-    await this.setEnabled(page, apiAccessData.enabled);
+  async addAPIClient(page: Page, apiClientData: APIClientData): Promise<string> {
+    await this.setValue(page, this.clientNameInput, apiClientData.clientName);
+    await this.setValue(page, this.clientIdInput, apiClientData.clientId);
+    await this.setValue(page, this.descriptionInput, apiClientData.description);
+    await this.setValue(page, this.tokenLifetimeInput, apiClientData.tokenLifetime);
+    await this.setEnabled(page, apiClientData.enabled);
 
     // eslint-disable-next-line no-restricted-syntax
-    for (const scope of apiAccessData.scopes) {
+    for (const scope of apiClientData.scopes) {
       await this.setAPIScopeChecked(page, scope, true);
     }
 
@@ -123,7 +123,7 @@ class AddNewAPIAccess extends BOBasePage {
   }
 
   /**
-   * Returns if the API Access is enabled
+   * Returns if the API Client is enabled
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
@@ -139,7 +139,7 @@ class AddNewAPIAccess extends BOBasePage {
   }
 
   /**
-   * Check/Uncheck an API Access
+   * Check/Uncheck an API Client
    * @param page {Page} Browser tab
    * @param valueWanted {boolean} True if we need to enable status, false if not
    * @return {Promise<boolean>} return true if action is done, false otherwise
@@ -286,4 +286,4 @@ class AddNewAPIAccess extends BOBasePage {
   }
 }
 
-export default new AddNewAPIAccess();
+export default new AddNewAPIClient();

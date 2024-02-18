@@ -1,4 +1,4 @@
-type APIAccessCreator = {
+type APIClientCreator = {
   id?: number
   clientName?: string
   clientId?: string
@@ -8,4 +8,4 @@ type APIAccessCreator = {
   scopes?: string[]
 };
 
-export default APIAccessCreator;
+export default APIClientCreator;

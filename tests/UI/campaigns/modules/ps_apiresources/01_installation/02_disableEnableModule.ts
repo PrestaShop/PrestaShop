@@ -9,8 +9,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import apiAccessPage from '@pages/BO/advancedParameters/APIAccess';
-import addNewApiAccessPage from '@pages/BO/advancedParameters/APIAccess/add';
+import apiClientPage from 'pages/BO/advancedParameters/APIClient';
+import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
@@ -90,7 +90,7 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
         }
       });
 
-      it('should go to \'Advanced Parameters > API Access\' page', async function () {
+      it('should go to \'Advanced Parameters > API Client\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAuthorizationServerPage${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(
@@ -99,35 +99,35 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
           dashboardPage.authorizationServerLink,
         );
 
-        const pageTitle = await apiAccessPage.getPageTitle(page);
-        expect(pageTitle).to.eq(apiAccessPage.pageTitle);
+        const pageTitle = await apiClientPage.getPageTitle(page);
+        expect(pageTitle).to.eq(apiClientPage.pageTitle);
       });
 
       it('should check that no records found', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkThatNoRecordFound${index}`, baseContext);
 
-        const noRecordsFoundText = await apiAccessPage.getTextForEmptyTable(page);
+        const noRecordsFoundText = await apiClientPage.getTextForEmptyTable(page);
         expect(noRecordsFoundText).to.contains('warning No records found');
       });
 
-      it('should go to add New API Access page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToNewAPIAccessPage${index}`, baseContext);
+      it('should go to add New API Client page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToNewAPIClientPage${index}`, baseContext);
 
-        await apiAccessPage.goToNewAPIAccessPage(page);
+        await apiClientPage.goToNewAPIClientPage(page);
 
-        const pageTitle = await addNewApiAccessPage.getPageTitle(page);
-        expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleCreate);
+        const pageTitle = await addNewApiClientPage.getPageTitle(page);
+        expect(pageTitle).to.eq(addNewApiClientPage.pageTitleCreate);
       });
 
       it('should check that scopes from Core are present and enabled', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkScopesCore${index}`, baseContext);
 
-        const scopes = await addNewApiAccessPage.getApiScopes(page, '__core_scopes');
+        const scopes = await addNewApiClientPage.getApiScopes(page, '__core_scopes');
         expect(scopes.length).to.be.eq(0);
 
         // eslint-disable-next-line no-restricted-syntax
         for (const scope of scopes) {
-          const isScopeDisabled = await addNewApiAccessPage.isAPIScopeDisabled(page, scope);
+          const isScopeDisabled = await addNewApiClientPage.isAPIScopeDisabled(page, scope);
           expect(isScopeDisabled).to.be.equal(false);
         }
       });
@@ -138,11 +138,11 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
 
         this.skip();
         /*
-        const scopes = await addNewApiAccessPage.getApiScopes(page, Modules.psApiResources.tag);
+        const scopes = await addNewApiClientPage.getApiScopes(page, Modules.psApiResources.tag);
 
         // eslint-disable-next-line no-restricted-syntax
         for (const scope of scopes) {
-          const isScopeDisabled = await addNewApiAccessPage.isAPIScopeDisabled(page, scope);
+          const isScopeDisabled = await addNewApiClientPage.isAPIScopeDisabled(page, scope);
           expect(isScopeDisabled).to.be.equal(!test.state);
         }
         */

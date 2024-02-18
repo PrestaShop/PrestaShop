@@ -3,14 +3,14 @@ import BOBasePage from '@pages/BO/BObasePage';
 import type {Page} from 'playwright';
 
 /**
- * API Access page, contains functions that can be used on the page
+ * API Client page, contains functions that can be used on the page
  * @class
  * @extends BOBasePage
  */
-class APIAccess extends BOBasePage {
+class APIClient extends BOBasePage {
   public readonly pageTitle: string;
 
-  private readonly newApiAccessLink: string;
+  private readonly newApiClientLink: string;
 
   private readonly gridPanel: string;
 
@@ -44,25 +44,25 @@ class APIAccess extends BOBasePage {
 
   /**
    * @constructs
-   * Setting up texts and selectors to use on API Access page
+   * Setting up texts and selectors to use on API Client page
    */
   constructor() {
     super();
 
-    this.pageTitle = `API Access list • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitle = `API Clients • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
 
     // Header
-    this.newApiAccessLink = '#page-header-desc-configuration-addApiAccess';
+    this.newApiClientLink = '#page-header-desc-configuration-addApiClient';
 
     // Selectors grid panel
-    this.gridPanel = '#api_access_grid_panel';
+    this.gridPanel = '#api_client_grid_panel';
     this.gridHeader = `${this.gridPanel} .card-header`;
     this.gridHeaderTitle = `${this.gridHeader} h3`;
 
     // Table rows and columns
-    this.gridTable = '#api_access_grid_table';
+    this.gridTable = '#api_client_grid_table';
     this.gridTableBody = `${this.gridTable} tbody`;
     this.gridTableEmptyRow = `${this.gridTableBody} tr.empty_row`;
     this.gridTableRow = (row: number) => `${this.gridTable} tbody tr:nth-child(${row})`;
@@ -75,7 +75,7 @@ class APIAccess extends BOBasePage {
     this.gridTableEditLink = (row: number) => `${this.gridTableColumnAction(row)} a.grid-edit-row-link`;
 
     // Delete modal
-    this.confirmDeleteModal = '#api_access-grid-confirm-modal';
+    this.confirmDeleteModal = '#api_client-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
@@ -84,21 +84,21 @@ class APIAccess extends BOBasePage {
    */
   /* Header methods */
   /**
-   * Go to new API Access page
+   * Go to new API Client page
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToNewAPIAccessPage(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, this.newApiAccessLink);
+  async goToNewAPIClientPage(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, this.newApiClientLink);
   }
 
   /**
-   * Go to edit API Access page
+   * Go to edit API Client page
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @returns {Promise<void>}
    */
-  async goToEditAPIAccessPage(page: Page, row: number): Promise<void> {
+  async goToEditAPIClientPage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForURL(page, this.gridTableEditLink(row));
   }
 
@@ -156,7 +156,7 @@ class APIAccess extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async deleteAPIAccess(page: Page, row: number): Promise<string> {
+  async deleteAPIClient(page: Page, row: number): Promise<string> {
     // Click on dropDown
     await Promise.all([
       page.locator(this.gridTableToggleDropDown(row)).click(),
@@ -175,4 +175,4 @@ class APIAccess extends BOBasePage {
   }
 }
 
-export default new APIAccess();
+export default new APIClient();

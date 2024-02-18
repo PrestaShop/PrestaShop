@@ -4,25 +4,25 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 import dashboardPage from '@pages/BO/dashboard';
-import apiAccessPage from '@pages/BO/advancedParameters/APIAccess';
-import addNewApiAccessPage from '@pages/BO/advancedParameters/APIAccess/add';
+import apiClientPage from 'pages/BO/advancedParameters/APIClient';
+import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 
-import APIAccessData from '@data/faker/APIAccess';
+import APIClientData from '@data/faker/APIClient';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 /**
- * Function to create API Access
- * @param apiAccess {APIAccessData} Data to set in API Access form
+ * Function to create API Client
+ * @param apiClient {APIClientData} Data to set in API Client form
  * @param baseContext {string} String to identify the test
  */
-function createAPIAccessTest(apiAccess: APIAccessData, baseContext: string = 'commonTests-createAPIAccessTest'): void {
+function createAPIClientTest(apiClient: APIClientData, baseContext: string = 'commonTests-createAPIClientTest'): void {
   let browserContext: BrowserContext;
   let page: Page;
-  let numberOfAPIAccess: number = 0;
+  let numberOfAPIClient: number = 0;
 
-  describe('PRE-TEST: Create an API Access', async () => {
+  describe('PRE-TEST: Create an API Client', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -37,7 +37,7 @@ function createAPIAccessTest(apiAccess: APIAccessData, baseContext: string = 'co
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Advanced Parameters > API Access\' page', async function () {
+    it('should go to \'Advanced Parameters > API Client\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -46,34 +46,34 @@ function createAPIAccessTest(apiAccess: APIAccessData, baseContext: string = 'co
         dashboardPage.authorizationServerLink,
       );
 
-      const pageTitle = await apiAccessPage.getPageTitle(page);
-      expect(pageTitle).to.eq(apiAccessPage.pageTitle);
+      const pageTitle = await apiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(apiClientPage.pageTitle);
 
-      numberOfAPIAccess = await apiAccessPage.getNumberOfElementInGrid(page);
-      expect(numberOfAPIAccess).to.gte(0);
+      numberOfAPIClient = await apiClientPage.getNumberOfElementInGrid(page);
+      expect(numberOfAPIClient).to.gte(0);
     });
 
     it('should check that no records found', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatNoRecordFound', baseContext);
 
-      const noRecordsFoundText = await apiAccessPage.getTextForEmptyTable(page);
+      const noRecordsFoundText = await apiClientPage.getTextForEmptyTable(page);
       expect(noRecordsFoundText).to.contains('warning No records found');
     });
 
-    it('should go to add New API Access page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIAccessPage', baseContext);
+    it('should go to add New API Client page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIClientPage', baseContext);
 
-      await apiAccessPage.goToNewAPIAccessPage(page);
+      await apiClientPage.goToNewAPIClientPage(page);
 
-      const pageTitle = await addNewApiAccessPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleCreate);
+      const pageTitle = await addNewApiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleCreate);
     });
 
-    it('should create API Access', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createAPIAccess', baseContext);
+    it('should create API Client', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAPIClient', baseContext);
 
-      const textResult = await addNewApiAccessPage.addAPIAccess(page, apiAccess);
-      expect(textResult).to.contains(addNewApiAccessPage.successfulCreationMessage);
+      const textResult = await addNewApiClientPage.addAPIClient(page, apiClient);
+      expect(textResult).to.contains(addNewApiClientPage.successfulCreationMessage);
 
       // Go back to list to get number of elements because creation form redirects to edition form
       await dashboardPage.goToSubMenu(
@@ -81,22 +81,22 @@ function createAPIAccessTest(apiAccess: APIAccessData, baseContext: string = 'co
         dashboardPage.advancedParametersLink,
         dashboardPage.authorizationServerLink,
       );
-      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
-      expect(numElements).to.equal(numberOfAPIAccess + 1);
+      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
+      expect(numElements).to.equal(numberOfAPIClient + 1);
     });
   });
 }
 
 /**
- * Function to delete API Access
+ * Function to delete API Client
  * @param baseContext {string} String to identify the test
  */
-function deleteAPIAccessTest(baseContext: string = 'commonTests-deleteAPIAccessTest'): void {
+function deleteAPIClientTest(baseContext: string = 'commonTests-deleteAPIClientTest'): void {
   let browserContext: BrowserContext;
   let page: Page;
-  let numberOfAPIAccess: number = 0;
+  let numberOfAPIClient: number = 0;
 
-  describe('PRE-TEST: Delete an API Access', async () => {
+  describe('PRE-TEST: Delete an API Client', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -111,7 +111,7 @@ function deleteAPIAccessTest(baseContext: string = 'commonTests-deleteAPIAccessT
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Advanced Parameters > API Access\' page', async function () {
+    it('should go to \'Advanced Parameters > API Client\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -120,26 +120,26 @@ function deleteAPIAccessTest(baseContext: string = 'commonTests-deleteAPIAccessT
         dashboardPage.authorizationServerLink,
       );
 
-      const pageTitle = await apiAccessPage.getPageTitle(page);
-      expect(pageTitle).to.eq(apiAccessPage.pageTitle);
+      const pageTitle = await apiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(apiClientPage.pageTitle);
 
-      numberOfAPIAccess = await apiAccessPage.getNumberOfElementInGrid(page);
-      expect(numberOfAPIAccess).to.gte(0);
+      numberOfAPIClient = await apiClientPage.getNumberOfElementInGrid(page);
+      expect(numberOfAPIClient).to.gte(0);
     });
 
-    it('should delete API Access', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteAPIAccess', baseContext);
+    it('should delete API Client', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAPIClient', baseContext);
 
-      const textResult = await apiAccessPage.deleteAPIAccess(page, 1);
-      expect(textResult).to.equal(addNewApiAccessPage.successfulDeleteMessage);
+      const textResult = await apiClientPage.deleteAPIClient(page, 1);
+      expect(textResult).to.equal(addNewApiClientPage.successfulDeleteMessage);
 
-      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
+      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(0);
     });
   });
 }
 
 export {
-  createAPIAccessTest,
-  deleteAPIAccessTest,
+  createAPIClientTest,
+  deleteAPIClientTest,
 };

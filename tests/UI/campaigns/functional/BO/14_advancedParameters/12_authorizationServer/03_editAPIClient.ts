@@ -4,48 +4,48 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createAPIAccessTest} from '@commonTests/BO/advancedParameters/authServer';
+import {createAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-import apiAccessPage from 'pages/BO/advancedParameters/APIAccess';
-import addNewApiAccessPage from '@pages/BO/advancedParameters/APIAccess/add';
+import apiClientPage from 'pages/BO/advancedParameters/APIClient';
+import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import APIAccessData from '@data/faker/APIAccess';
+import APIClientData from '@data/faker/APIClient';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_advancedParameters_authorizationServer_editAPIAccess';
+const baseContext: string = 'functional_BO_advancedParameters_authorizationServer_editAPIClient';
 
-describe('BO - Advanced Parameter - Authorization Server : Edit API Access', async () => {
+describe('BO - Advanced Parameter - Authorization Server : Edit API Client', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const createAPIAccess: APIAccessData = new APIAccessData({
-    clientName: 'API Access XYZ',
-    clientId: 'api-access-xyz',
+  const createAPIClient: APIClientData = new APIClientData({
+    clientName: 'API Client XYZ',
+    clientId: 'api-client-xyz',
     description: 'Description ABC',
   });
-  const editAPIAccess: APIAccessData = new APIAccessData({
-    clientName: 'API Access UVW',
-    clientId: 'api-access-uvw',
+  const editAPIClient: APIClientData = new APIClientData({
+    clientName: 'API Client UVW',
+    clientId: 'api-client-uvw',
     description: 'Description DEF',
     tokenLifetime: 5,
     scopes: [
       'hook_write',
-      'api_access_read',
+      'product_read',
     ],
   });
 
   // Pre-condition: Enable experimental feature : Authorization server
   setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, true, `${baseContext}_enableAuthorizationServer`);
 
-  // Pre-condition: Create an API Access
-  createAPIAccessTest(createAPIAccess, `${baseContext}_preTest_0`);
+  // Pre-condition: Create an API Client
+  createAPIClientTest(createAPIClient, `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -57,12 +57,12 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Access', asy
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('BO - Advanced Parameter - API Access : Edit API Access', async () => {
+  describe('BO - Advanced Parameter - API Client : Edit API Client', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Advanced Parameters > API Access\' page', async function () {
+    it('should go to \'Advanced Parameters > API Client\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -71,52 +71,52 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Access', asy
         dashboardPage.authorizationServerLink,
       );
 
-      const pageTitle = await apiAccessPage.getPageTitle(page);
-      expect(pageTitle).to.eq(apiAccessPage.pageTitle);
+      const pageTitle = await apiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(apiClientPage.pageTitle);
     });
 
-    it('should go to edit API Access page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIAccessPage', baseContext);
+    it('should go to edit API Client page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIClientPage', baseContext);
 
-      await apiAccessPage.goToEditAPIAccessPage(page, 1);
+      await apiClientPage.goToEditAPIClientPage(page, 1);
 
-      const pageTitle = await addNewApiAccessPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleEdit(createAPIAccess.clientName));
+      const pageTitle = await addNewApiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleEdit(createAPIClient.clientName));
     });
 
-    it('should edit API Access', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'editAPIAccess', baseContext);
+    it('should edit API Client', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editAPIClient', baseContext);
 
-      const textResult = await addNewApiAccessPage.addAPIAccess(page, editAPIAccess);
-      expect(textResult).to.equal(addNewApiAccessPage.successfulUpdateMessage);
+      const textResult = await addNewApiClientPage.addAPIClient(page, editAPIClient);
+      expect(textResult).to.equal(addNewApiClientPage.successfulUpdateMessage);
     });
 
     it('should check information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInformations', baseContext);
 
-      const tokenLifetime = await addNewApiAccessPage.getValue(page, 'tokenLifetime');
-      expect(tokenLifetime).to.be.equal(editAPIAccess.tokenLifetime.toString());
+      const tokenLifetime = await addNewApiClientPage.getValue(page, 'tokenLifetime');
+      expect(tokenLifetime).to.be.equal(editAPIClient.tokenLifetime.toString());
 
-      const hasScopeHookRead = await addNewApiAccessPage.isAPIScopeChecked(page, 'hook_read');
+      const hasScopeHookRead = await addNewApiClientPage.isAPIScopeChecked(page, 'hook_read');
       expect(hasScopeHookRead).to.be.equal(false);
 
-      const hasScopeHookWrite = await addNewApiAccessPage.isAPIScopeChecked(page, 'hook_write');
+      const hasScopeHookWrite = await addNewApiClientPage.isAPIScopeChecked(page, 'hook_write');
       expect(hasScopeHookWrite).to.be.equal(true);
     });
 
     it('should disable the application', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableApplication', baseContext);
 
-      await addNewApiAccessPage.setEnabled(page, false);
+      await addNewApiClientPage.setEnabled(page, false);
 
-      const textResult = await addNewApiAccessPage.saveForm(page);
-      expect(textResult).to.equal(addNewApiAccessPage.successfulUpdateMessage);
+      const textResult = await addNewApiClientPage.saveForm(page);
+      expect(textResult).to.equal(addNewApiClientPage.successfulUpdateMessage);
     });
 
     it('should check information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInformationsAfterDisable', baseContext);
 
-      const status = await addNewApiAccessPage.isEnabled(page);
+      const status = await addNewApiClientPage.isEnabled(page);
       expect(status).to.equal(false);
     });
 
@@ -129,39 +129,39 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Access', asy
         dashboardPage.advancedParametersLink,
         dashboardPage.authorizationServerLink,
       );
-      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
+      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);
     });
 
     it('should check list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkListAfterDisable', baseContext);
 
-      const status = await apiAccessPage.getStatus(page, 1);
+      const status = await apiClientPage.getStatus(page, 1);
       expect(status).to.equal(false);
     });
 
-    it('should go to edit API Access page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIAccessPageAfterDisable', baseContext);
+    it('should go to edit API Client page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIClientPageAfterDisable', baseContext);
 
-      await apiAccessPage.goToEditAPIAccessPage(page, 1);
+      await apiClientPage.goToEditAPIClientPage(page, 1);
 
-      const pageTitle = await addNewApiAccessPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleEdit(editAPIAccess.clientName));
+      const pageTitle = await addNewApiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleEdit(editAPIClient.clientName));
     });
 
     it('should enable the application', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableApplication', baseContext);
 
-      await addNewApiAccessPage.setEnabled(page, true);
+      await addNewApiClientPage.setEnabled(page, true);
 
-      const textResult = await addNewApiAccessPage.saveForm(page);
-      expect(textResult).to.equal(addNewApiAccessPage.successfulUpdateMessage);
+      const textResult = await addNewApiClientPage.saveForm(page);
+      expect(textResult).to.equal(addNewApiClientPage.successfulUpdateMessage);
     });
 
     it('should check information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInformationsAfterEnable', baseContext);
 
-      const status = await addNewApiAccessPage.isEnabled(page);
+      const status = await addNewApiClientPage.isEnabled(page);
       expect(status).to.equal(true);
     });
 
@@ -174,54 +174,54 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Access', asy
         dashboardPage.advancedParametersLink,
         dashboardPage.authorizationServerLink,
       );
-      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
+      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);
     });
 
     it('should check list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkListAfterEnable', baseContext);
 
-      const status = await apiAccessPage.getStatus(page, 1);
+      const status = await apiClientPage.getStatus(page, 1);
       expect(status).to.equal(true);
     });
 
-    it('should go to edit API Access page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIAccessPageAfterEnable', baseContext);
+    it('should go to edit API Client page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIClientPageAfterEnable', baseContext);
 
-      await apiAccessPage.goToEditAPIAccessPage(page, 1);
+      await apiClientPage.goToEditAPIClientPage(page, 1);
 
-      const pageTitle = await addNewApiAccessPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleEdit(editAPIAccess.clientName));
+      const pageTitle = await addNewApiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleEdit(editAPIClient.clientName));
     });
 
     it('should regenerate the client secret', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'regenerateClientSecret', baseContext);
 
-      const textResult = await addNewApiAccessPage.regenerateClientSecret(page);
-      expect(textResult).to.contains(addNewApiAccessPage.successfulCreationMessage);
+      const textResult = await addNewApiClientPage.regenerateClientSecret(page);
+      expect(textResult).to.contains(addNewApiClientPage.successfulCreationMessage);
 
-      const textMessage = await addNewApiAccessPage.getAlertInfoBlockParagraphContent(page);
-      expect(textMessage).to.contains(addNewApiAccessPage.apiAccessRegeneratedMessage);
+      const textMessage = await addNewApiClientPage.getAlertInfoBlockParagraphContent(page);
+      expect(textMessage).to.contains(addNewApiClientPage.apiClientRegeneratedMessage);
     });
 
     it('should copy client secret', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'copyClientSecret', baseContext);
 
-      await addNewApiAccessPage.copyClientSecret(page);
+      await addNewApiClientPage.copyClientSecret(page);
 
-      const clipboardContent = await addNewApiAccessPage.getClipboardText(page);
+      const clipboardContent = await addNewApiClientPage.getClipboardText(page);
       expect(clipboardContent.length).to.be.gt(0);
 
-      const clientSecret = await addNewApiAccessPage.getClientSecret(page);
+      const clientSecret = await addNewApiClientPage.getClientSecret(page);
       expect(clientSecret.length).to.be.gt(0);
 
       expect(clipboardContent).to.be.equal(clientSecret);
     });
 
     it('should reload page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createAPIAccess', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'createAPIClient', baseContext);
 
-      const hasAlertBlock = await addNewApiAccessPage.hasAlertBlock(page);
+      const hasAlertBlock = await addNewApiClientPage.hasAlertBlock(page);
       expect(hasAlertBlock).to.equal(false);
     });
 
@@ -234,17 +234,17 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Access', asy
         dashboardPage.advancedParametersLink,
         dashboardPage.authorizationServerLink,
       );
-      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
+      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);
     });
 
-    it('should delete API Access', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteAPIAccess', baseContext);
+    it('should delete API Client', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAPIClient', baseContext);
 
-      const textResult = await apiAccessPage.deleteAPIAccess(page, 1);
-      expect(textResult).to.equal(addNewApiAccessPage.successfulDeleteMessage);
+      const textResult = await apiClientPage.deleteAPIClient(page, 1);
+      expect(textResult).to.equal(addNewApiClientPage.successfulDeleteMessage);
 
-      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
+      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(0);
     });
   });
