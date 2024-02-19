@@ -98,7 +98,7 @@ $(() => {
     // Display confirmation modal
     const modal = new (ConfirmModal as any)(
       {
-        id: '#regeneration-confirm-modal',
+        id: 'regeneration-confirm-modal',
         confirmTitle: $regenerateThumbnailsButton.data('confirm-title'),
         confirmMessage: $regenerateThumbnailsButton.data('confirm-message'),
         closeButtonLabel: $regenerateThumbnailsButton.data('confirm-cancel'),

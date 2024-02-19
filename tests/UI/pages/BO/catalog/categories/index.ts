@@ -519,7 +519,7 @@ class Categories extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page: Page): Promise<string> {
+  async getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
