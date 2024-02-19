@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d48ce450ac1f55754e99bd50752cf465",
+    "content-hash": "30fd1969f048ec19d910a63059e8bbe9",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5579,16 +5579,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-rename-api-client",
+            "version": "dev-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "cc3b7437c97af4c1f577cd49aeb70fb512493cd0"
+                "url": "https://github.com/PrestaShop/ps_apiresources.git",
+                "reference": "c0ca6de9363b18a1f913dab0617bc0def10c5a6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/cc3b7437c97af4c1f577cd49aeb70fb512493cd0",
-                "reference": "cc3b7437c97af4c1f577cd49aeb70fb512493cd0",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/c0ca6de9363b18a1f913dab0617bc0def10c5a6f",
+                "reference": "c0ca6de9363b18a1f913dab0617bc0def10c5a6f",
                 "shasum": ""
             },
             "require": {
@@ -5597,6 +5597,7 @@
             "require-dev": {
                 "prestashop/php-dev-tools": "^4.2"
             },
+            "default-branch": true,
             "type": "prestashop-module",
             "autoload": {
                 "psr-4": {
@@ -5606,11 +5607,7 @@
                     "ps_apiresources.php"
                 ]
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "PsApiResourcesTest\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
             ],
@@ -5623,9 +5620,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/jolelievre/ps_apiresources/tree/rename-api-client"
+                "source": "https://github.com/PrestaShop/ps_apiresources/tree/dev"
             },
-            "time": "2024-02-18T14:33:42+00:00"
+            "time": "2024-02-19T13:54:37+00:00"
         },
         {
             "name": "prestashop/ps_banner",
