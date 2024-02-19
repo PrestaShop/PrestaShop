@@ -25,6 +25,7 @@ class Checkout extends CheckoutPage {
     // Sign in selectors
     this.signInHyperLink = '#checkout-personal-information-step div.step__content '
       + '#contact-tab[data-bs-target="#checkout-login-form"]';
+    this.forgetPasswordLink = '#login-form div.login__forgot-password a[href*=password-recovery]';
     this.personalInformationContinueButton = '#login-form button[data-link-action="sign-in"]';
     this.loginErrorMessage = `${this.checkoutLoginForm} div.alert-danger`;
 
