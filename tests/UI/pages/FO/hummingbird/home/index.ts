@@ -16,6 +16,8 @@ class Home extends HomePage {
 
   private readonly addToCartIcon: (number: number) => string;
 
+  public readonly blockCartModalSummary: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on home page
@@ -47,6 +49,18 @@ class Home extends HomePage {
     this.newsletterFormField = '#footer div.email-subscription__content__right input[name="email"]';
     this.newsletterSubmitButton = '.email-subscription__content__inputs [name="submitNewsletter"][value="Subscribe"]';
     this.subscriptionAlertMessage = '#footer div.email-subscription__content__infos p.alert';
+
+    // Quick view modal
+    this.productImg = (number: number) => `${this.productArticle(number)} img`;
+    this.productQuickViewLink = (number: number) => `${this.productArticle(number)} .product-miniature__quickview button`;
+    this.blockCartModalCloseButton = `${this.blockCartModalDiv} button.btn-close`;
+
+    // Block cart modal
+    this.blockCartModalSummary = '.blockcart-modal__summery';
+    this.cartModalProductsCountBlock = `${this.blockCartModalSummary} p`;
+    this.cartModalSubtotalBlock = `${this.blockCartModalSummary} .product-subtotal .subtotals.value`;
+    this.cartModalShippingBlock = `${this.blockCartModalSummary} .product-shipping .shipping.value`;
+    this.cartModalProductTaxInclBlock = `${this.blockCartModalSummary} .product-total .value`;
 
     // Products section
     this.productsBlockTitle = (blockName: number | string) => `#content section.${blockName} h2`;
@@ -140,6 +154,29 @@ class Home extends HomePage {
       coverImage: await this.getAttributeContent(page, this.quickViewCoverImage, 'src'),
       thumbImage: await this.getAttributeContent(page, this.quickViewThumbImage, 'srcset'),
     };
+  }
+
+  /**
+   * Click on Quick view Product
+   * @param page {Page} Browser tab
+   * @param id {number} Index of product in list of products
+   * @return {Promise<void>}
+   */
+  async quickViewProduct(page: Page, id: number): Promise<void> {
+    await page.locator(this.productImg(id)).first().hover();
+    await this.waitForVisibleSelector(page, this.productQuickViewLink(id));
+    await page.locator(this.productQuickViewLink(id)).first().click();
+  }
+
+  /**
+   * Close block cart modal
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeBlockCartModal(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
+
+    return this.elementNotVisible(page, this.blockCartModalDiv, 1000);
   }
 }
 
