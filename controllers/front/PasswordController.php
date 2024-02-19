@@ -23,8 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 
 class PasswordControllerCore extends FrontController
 {
