@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ImageTypeFilters;
 
 /**
- * Class ApiAccessQueryBuilder builds search & count queries for api access grid.
+ * Class ImageTypeQueryBuilder builds search & count queries for image type grid.
  */
 class ImageTypeQueryBuilder extends AbstractDoctrineQueryBuilder
 {

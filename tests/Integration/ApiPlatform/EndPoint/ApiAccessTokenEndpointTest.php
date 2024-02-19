@@ -34,7 +34,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::createApiAccess(
+        static::createApiClient(
             [
                 'hook_read',
                 'hook_write',

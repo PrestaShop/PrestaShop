@@ -53,7 +53,7 @@ class ApiResourceScopesExtractorTest extends TestCase
 
         $expectedResourceScopes = [
             ApiResourceScopes::createCoreScopes(['hook_read', 'hook_write']),
-            ApiResourceScopes::createModuleScopes(['api_access_read'], 'fake_module'),
+            ApiResourceScopes::createModuleScopes(['api_client_read'], 'fake_module'),
             ApiResourceScopes::createModuleScopes(['customer_group_read'], 'disabled_fake_module'),
         ];
         $this->assertEquals($expectedResourceScopes, $resourceScopes);
@@ -66,7 +66,7 @@ class ApiResourceScopesExtractorTest extends TestCase
 
         $expectedResourceScopes = [
             ApiResourceScopes::createCoreScopes(['hook_read', 'hook_write']),
-            ApiResourceScopes::createModuleScopes(['api_access_read'], 'fake_module'),
+            ApiResourceScopes::createModuleScopes(['api_client_read'], 'fake_module'),
         ];
         $this->assertEquals($expectedResourceScopes, $resourceScopes);
     }

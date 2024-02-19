@@ -7,31 +7,31 @@ import loginCommon from '@commonTests/BO/loginBO';
 import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-import apiAccessPage from 'pages/BO/advancedParameters/APIAccess';
-import addNewApiAccessPage from '@pages/BO/advancedParameters/APIAccess/add';
+import apiClientPage from 'pages/BO/advancedParameters/APIClient';
+import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import APIAccessData from '@data/faker/APIAccess';
+import APIClientData from '@data/faker/APIClient';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_authorizationServer_CRUD';
 
-describe('BO - Advanced Parameter - API Access : CRUD', async () => {
+describe('BO - Advanced Parameter - API Client : CRUD', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const createAPIAccess: APIAccessData = new APIAccessData({
-    clientName: 'API Access XYZ',
-    clientId: 'api-access-xyz',
+  const createAPIClient: APIClientData = new APIClientData({
+    clientName: 'API Client XYZ',
+    clientId: 'api-client-xyz',
     description: 'Description ABC',
   });
-  const editAPIAccess: APIAccessData = new APIAccessData({
-    clientName: 'API Access UVW',
-    clientId: 'api-access-uvw',
+  const editAPIClient: APIClientData = new APIClientData({
+    clientName: 'API Client UVW',
+    clientId: 'api-client-uvw',
     description: 'Description DEF',
   });
 
@@ -48,12 +48,12 @@ describe('BO - Advanced Parameter - API Access : CRUD', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('BO - Advanced Parameter - API Access : CRUD', async () => {
+  describe('BO - Advanced Parameter - API Client : CRUD', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Advanced Parameters > API Access\' page', async function () {
+    it('should go to \'Advanced Parameters > API Client\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -62,31 +62,31 @@ describe('BO - Advanced Parameter - API Access : CRUD', async () => {
         dashboardPage.authorizationServerLink,
       );
 
-      const pageTitle = await apiAccessPage.getPageTitle(page);
-      expect(pageTitle).to.eq(apiAccessPage.pageTitle);
+      const pageTitle = await apiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(apiClientPage.pageTitle);
     });
 
     it('should check that no records found', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatNoRecordFound', baseContext);
 
-      const noRecordsFoundText = await apiAccessPage.getTextForEmptyTable(page);
+      const noRecordsFoundText = await apiClientPage.getTextForEmptyTable(page);
       expect(noRecordsFoundText).to.contains('warning No records found');
     });
 
-    it('should go to add New API Access page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIAccessPage', baseContext);
+    it('should go to add New API Client page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIClientPage', baseContext);
 
-      await apiAccessPage.goToNewAPIAccessPage(page);
+      await apiClientPage.goToNewAPIClientPage(page);
 
-      const pageTitle = await addNewApiAccessPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleCreate);
+      const pageTitle = await addNewApiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleCreate);
     });
 
-    it('should create API Access', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createAPIAccess', baseContext);
+    it('should create API Client', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAPIClient', baseContext);
 
-      const textResult = await addNewApiAccessPage.addAPIAccess(page, createAPIAccess);
-      expect(textResult).to.contain(addNewApiAccessPage.successfulCreationMessage);
+      const textResult = await addNewApiClientPage.addAPIClient(page, createAPIClient);
+      expect(textResult).to.contain(addNewApiClientPage.successfulCreationMessage);
 
       // Go back to list to get number of elements because creation form redirects to edition form
       await dashboardPage.goToSubMenu(
@@ -94,24 +94,24 @@ describe('BO - Advanced Parameter - API Access : CRUD', async () => {
         dashboardPage.advancedParametersLink,
         dashboardPage.authorizationServerLink,
       );
-      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
+      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);
     });
 
-    it('should go to edit API Access page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIAccessPage', baseContext);
+    it('should go to edit API Client page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIClientPage', baseContext);
 
-      await apiAccessPage.goToEditAPIAccessPage(page, 1);
+      await apiClientPage.goToEditAPIClientPage(page, 1);
 
-      const pageTitle = await addNewApiAccessPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleEdit(createAPIAccess.clientName));
+      const pageTitle = await addNewApiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleEdit(createAPIClient.clientName));
     });
 
-    it('should edit API Access', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'editAPIAccess', baseContext);
+    it('should edit API Client', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editAPIClient', baseContext);
 
-      const textResult = await addNewApiAccessPage.addAPIAccess(page, editAPIAccess);
-      expect(textResult).to.equal(addNewApiAccessPage.successfulUpdateMessage);
+      const textResult = await addNewApiClientPage.addAPIClient(page, editAPIClient);
+      expect(textResult).to.equal(addNewApiClientPage.successfulUpdateMessage);
 
       // Go back to list to get number of elements because edition form redirects to itself
       await dashboardPage.goToSubMenu(
@@ -119,17 +119,17 @@ describe('BO - Advanced Parameter - API Access : CRUD', async () => {
         dashboardPage.advancedParametersLink,
         dashboardPage.authorizationServerLink,
       );
-      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
+      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);
     });
 
-    it('should delete API Access', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteAPIAccess', baseContext);
+    it('should delete API Client', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAPIClient', baseContext);
 
-      const textResult = await apiAccessPage.deleteAPIAccess(page, 1);
-      expect(textResult).to.equal(addNewApiAccessPage.successfulDeleteMessage);
+      const textResult = await apiClientPage.deleteAPIClient(page, 1);
+      expect(textResult).to.equal(addNewApiClientPage.successfulDeleteMessage);
 
-      const numElements = await apiAccessPage.getNumberOfElementInGrid(page);
+      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(0);
     });
   });

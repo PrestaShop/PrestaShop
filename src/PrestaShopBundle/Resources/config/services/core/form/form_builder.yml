@@ -330,12 +330,12 @@ services:
       - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\TitleType'
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TitleFormDataProvider'
 
-  prestashop.core.form.identifiable_object.builder.api_access_form_builder:
+  prestashop.core.form.identifiable_object.builder.api_client_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
     arguments:
-      - 'PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApiAccessType'
-      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApiAccessFormDataProvider'
+      - 'PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApiClientType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApiClientFormDataProvider'
 
   prestashop.core.form.identifiable_object.builder.image_type_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'

@@ -34,7 +34,7 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopes;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface;
-use PrestaShopBundle\Entity\ApiAccess;
+use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Security\OAuth2\Entity\ScopeEntity;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -51,7 +51,7 @@ class ScopeRepository implements ScopeRepositoryInterface
 
     public function __construct(
         private readonly ApiResourceScopesExtractorInterface $scopesExtractor,
-        private readonly UserProviderInterface $apiAccessProvider,
+        private readonly UserProviderInterface $apiClientProvider,
     ) {
         $this->apiResourceScopes = $this->scopesExtractor->getEnabledApiResourceScopes();
     }
@@ -77,10 +77,10 @@ class ScopeRepository implements ScopeRepositoryInterface
             new ScopeEntity('is_authenticated'),
         ];
 
-        /** @var ApiAccess $apiAccess */
-        $apiAccess = $this->apiAccessProvider->loadUserByIdentifier($clientEntity->getIdentifier());
+        /** @var ApiClient $apiClient */
+        $apiClient = $this->apiClientProvider->loadUserByIdentifier($clientEntity->getIdentifier());
         foreach ($scopes as $scope) {
-            if (!in_array($scope->getIdentifier(), $apiAccess->getScopes())) {
+            if (!in_array($scope->getIdentifier(), $apiClient->getScopes())) {
                 $hint = \sprintf(
                     'Usage of scope `%s` is not allowed for this client',
                     \htmlspecialchars($scope->getIdentifier(), ENT_QUOTES, 'UTF-8', false)

@@ -127,10 +127,10 @@ services:
       - "@doctrine.dbal.default_connection"
       - "%database_prefix%"
 
-  PrestaShopBundle\Entity\Repository\ApiAccessRepository:
+  PrestaShopBundle\Entity\Repository\ApiClientRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
-      - PrestaShopBundle\Entity\ApiAccess
+      - PrestaShopBundle\Entity\ApiClient
 
   PrestaShopBundle\Entity\Repository\ImageTypeRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]

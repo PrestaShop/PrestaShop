@@ -30,14 +30,14 @@ namespace Tests\Integration\ApiPlatform\EndPoint;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase as ApiPlatformTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\AddApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Shop;
 use ShopGroup;
-use Tests\Resources\DatabaseDump;
+use Tests\Resources\Resetter\ApiClientResetter;
 
 abstract class ApiTestCase extends ApiPlatformTestCase
 {
@@ -49,13 +49,13 @@ abstract class ApiTestCase extends ApiPlatformTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        DatabaseDump::restoreTables(['api_access']);
+        ApiClientResetter::resetApiClient();
     }
 
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        DatabaseDump::restoreTables(['api_access']);
+        ApiClientResetter::resetApiClient();
         self::$clientSecret = null;
     }
 
@@ -75,7 +75,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
     protected function getBearerToken(array $scopes = []): string
     {
         if (null === self::$clientSecret) {
-            self::createApiAccess($scopes);
+            self::createApiClient($scopes);
         }
         $client = static::createClient();
         $parameters = ['parameters' => [
@@ -95,10 +95,10 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         return json_decode($response->getContent())->access_token;
     }
 
-    protected static function createApiAccess(array $scopes = [], int $lifetime = 10000): void
+    protected static function createApiClient(array $scopes = [], int $lifetime = 10000): void
     {
         $client = static::createClient();
-        $command = new AddApiAccessCommand(
+        $command = new AddApiClientCommand(
             static::CLIENT_NAME,
             static::CLIENT_ID,
             true,
@@ -109,9 +109,9 @@ abstract class ApiTestCase extends ApiPlatformTestCase
 
         $container = $client->getContainer();
         $commandBus = $container->get('prestashop.core.command_bus');
-        $createdApiAccess = $commandBus->handle($command);
+        $createdApiClient = $commandBus->handle($command);
 
-        self::$clientSecret = $createdApiAccess->getSecret();
+        self::$clientSecret = $createdApiClient->getSecret();
     }
 
     protected static function addLanguageByLocale(string $locale): int

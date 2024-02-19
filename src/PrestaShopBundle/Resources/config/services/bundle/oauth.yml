@@ -4,7 +4,7 @@ services:
 
   PrestaShopBundle\Security\OAuth2\Repository\ClientRepository:
     arguments:
-      - '@prestashop.security.api-access.provider'
+      - '@PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider'
       - '@security.user_password_hasher'
 
   PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository:
@@ -14,7 +14,7 @@ services:
   PrestaShopBundle\Security\OAuth2\Repository\ScopeRepository:
     arguments:
       - '@PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface'
-      - '@prestashop.security.api-access.provider'
+      - '@PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider'
 
   League\OAuth2\Server\Grant\ClientCredentialsGrant:
 
