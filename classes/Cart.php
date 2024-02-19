@@ -761,7 +761,7 @@ class CartCore extends ObjectModel
                     *
                     * When calling Pack::getQuantity here, you MUST use null for $cart parameter. Otherwise it will subtract the quantity that is already in the cart. Basically resulting in a nonsense - half of quantity you have. We need the REAL quantity.
                     */
-                    $row['quantity_available'] = Pack::getQuantity((int) $product['id_product'], (int) $product['id_product_attribute'], true, null, (int) $product['id_customization']);
+                    $product['quantity_available'] = Pack::getQuantity((int) $product['id_product'], (int) $product['id_product_attribute'], true, null, (int) $product['id_customization']);
                 }
 
                 $products[$key] = array_merge($product, $reduction_type_row);
