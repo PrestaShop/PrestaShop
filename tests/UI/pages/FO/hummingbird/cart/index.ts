@@ -1,6 +1,6 @@
 // Import FO pages
 import {CartPage} from '@pages/FO/classic/cart/index';
-import {Page} from "playwright";
+import {Page} from 'playwright';
 
 /**
  * Cart page, contains functions that can be used on the page
@@ -18,7 +18,8 @@ class Cart extends CartPage {
     this.noItemsInYourCartSpan = '#content-wrapper div.cart-overview p';
     this.productItem = (number: number) => `#content-wrapper li.cart__item:nth-of-type(${number})`;
     this.productName = (number: number) => `${this.productItem(number)} div.product-line__content a.product-line__title`;
-    this.productRegularPrice = (number: number) => `${this.productItem(number)} div.product-line__basic span.product-line__regular`;
+    this.productRegularPrice = (number: number) => `${this.productItem(number)} div.product-line__basic`
+      + ' span.product-line__regular';
     this.productDiscountPercentage = (number: number) => `${this.productItem(number)} span.discount.badge.discount`;
     this.productPrice = (number: number) => `${this.productItem(number)} div.product-line__current span.price`;
     this.productTotalPrice = (number: number) => `${this.productItem(number)} span.product-line__price`;
