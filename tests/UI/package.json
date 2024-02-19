@@ -111,7 +111,7 @@
     "chai": "^4.4.1",
     "chai-string": "^1.5.0",
     "csv-writer": "^1.6.0",
-    "dotenv": "^16.4.2",
+    "dotenv": "^16.4.4",
     "fast-xml-parser": "^4.3.4",
     "jpeg-js": "^0.4.4",
     "js-image-generator": "^1.0.4",
