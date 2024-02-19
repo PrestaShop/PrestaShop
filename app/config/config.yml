@@ -99,7 +99,7 @@ twig:
     '%kernel.project_dir%/modules': Modules
     '%mail_themes_dir%': MailThemes
     '%prestashop_views%': PrestaShopCore
-    '%kernel.project_dir%/admin-dev/themes/new-theme': AdminNewTheme
+    '%prestashop.admin_dir%/themes/new-theme': AdminNewTheme
   globals:
     ps: '@PrestaShopBundle\Twig\Layout\PrestaShopLayoutGlobalVariables'
     webpack_server: false
