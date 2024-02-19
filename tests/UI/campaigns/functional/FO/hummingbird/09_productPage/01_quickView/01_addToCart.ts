@@ -17,7 +17,7 @@ import CartProductDetails from '@data/types/cart';
 import {ProductAttribute} from '@data/types/product';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_addToCart';
 

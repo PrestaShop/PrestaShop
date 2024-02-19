@@ -16,7 +16,7 @@ class Home extends HomePage {
 
   private readonly addToCartIcon: (number: number) => string;
 
-  public readonly blockCartModalSummary: string;
+  private readonly blockCartModalSummary: string;
 
   /**
    * @constructs
