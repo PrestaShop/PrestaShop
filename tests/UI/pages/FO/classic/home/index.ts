@@ -123,13 +123,13 @@ class HomePage extends FOBasePage {
 
   private readonly cartContentBlock: string;
 
-  private readonly cartModalProductsCountBlock: string;
+  protected cartModalProductsCountBlock: string;
 
-  private readonly cartModalShippingBlock: string;
+  protected cartModalShippingBlock: string;
 
-  private readonly cartModalSubtotalBlock: string;
+  protected cartModalSubtotalBlock: string;
 
-  private readonly cartModalProductTaxInclBlock: string;
+  protected cartModalProductTaxInclBlock: string;
 
   protected cartModalCheckoutLink: string;
 
