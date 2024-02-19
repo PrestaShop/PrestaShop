@@ -157,18 +157,6 @@ class Home extends HomePage {
   }
 
   /**
-   * Click on Quick view Product
-   * @param page {Page} Browser tab
-   * @param id {number} Index of product in list of products
-   * @return {Promise<void>}
-   */
-  async quickViewProduct(page: Page, id: number): Promise<void> {
-    await page.locator(this.productImg(id)).first().hover();
-    await this.waitForVisibleSelector(page, this.productQuickViewLink(id));
-    await page.locator(this.productQuickViewLink(id)).first().click();
-  }
-
-  /**
    * Close block cart modal
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
