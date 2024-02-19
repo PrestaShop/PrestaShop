@@ -401,10 +401,10 @@ class MailCore extends ObjectModel
             $moduleName = false;
 
             // get templatePath
-            if (preg_match('#' . $shop->physical_uri . 'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath)) &&
-                preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath), $res)
-            ) {
-                $moduleName = $res[1];
+            $templatePathDirectories = explode(DIRECTORY_SEPARATOR, $templatePath);
+            $pos = array_search('modules', $templatePathDirectories);
+            if ($pos && array_key_exists($pos + 1, $templatePathDirectories)) {
+                $moduleName = $templatePathDirectories[$pos + 1];
             }
 
             $isoTemplate = '';
