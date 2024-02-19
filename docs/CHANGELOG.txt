@@ -21,6 +21,8 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 @copyright Since 2007 PrestaShop SA and Contributors
 @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 
+Changelog for PrestaShop 8
+
 ####################################
 #   v8.1.4 - (2024-02-12)
 ####################################
