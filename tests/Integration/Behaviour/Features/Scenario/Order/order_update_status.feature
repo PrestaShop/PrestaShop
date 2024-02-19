@@ -46,7 +46,7 @@ Feature: Order from Back Office (BO)
       | Awaiting bank wire payment | Puff                | Daddy              |               |
 
   Scenario: I update the order status while logged as an api client
-    Given I create an api access "AA-1" with following properties:
+    Given I create an api client "AC-1" with following properties:
       | clientName  | Thomas               |
       | apiClientId | api_client           |
       | enabled     | true                 |
