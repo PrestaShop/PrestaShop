@@ -59,7 +59,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
   ];
 
   // Pre-condition : Install Hummingbird
-  //installHummingbird(`${baseContext}_preTest`);
+  installHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -175,5 +175,5 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  //uninstallHummingbird(`${baseContext}_postTest`);
+  uninstallHummingbird(`${baseContext}_postTest`);
 });
