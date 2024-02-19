@@ -14,13 +14,13 @@ class SearchResultsPage extends FOBasePage {
 
   private readonly totalProduct: string;
 
-  private readonly productArticle: (number: number) => string;
+  protected productArticle: (number: number) => string;
 
-  private readonly productImg: (number: number) => string;
+  protected productImg: (number: number) => string;
 
   private readonly productDescriptionDiv: (number: number) => string;
 
-  private readonly productQuickViewLink: (number: number) => string;
+  protected productQuickViewLink: (number: number) => string;
 
   protected productPrice: string;
 

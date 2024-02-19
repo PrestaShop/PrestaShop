@@ -30,29 +30,29 @@ class CartPage extends FOBasePage {
 
   public readonly noItemsInYourCartMessage: string;
 
-  private readonly productItem: (number: number) => string;
+  protected productItem: (number: number) => string;
 
-  private readonly productName: (number: number) => string;
+  protected productName: (number: number) => string;
 
-  private readonly productRegularPrice: (number: number) => string;
+  protected productRegularPrice: (number: number) => string;
 
-  private readonly productDiscountPercentage: (number: number) => string;
+  protected productDiscountPercentage: (number: number) => string;
 
-  private readonly productPrice: (number: number) => string;
+  protected productPrice: (number: number) => string;
 
-  private readonly productTotalPrice: (number: number) => string;
+  protected productTotalPrice: (number: number) => string;
 
-  private readonly productQuantity: (number: number) => string;
+  protected productQuantity: (number: number) => string;
 
   private readonly productQuantityScrollUpButton: string;
 
   private readonly productQuantityScrollDownButton: string;
 
-  private readonly productSize: (number: number) => string;
+  protected productSize: (number: number) => string;
 
-  private readonly productColor: (number: number) => string;
+  protected productColor: (number: number) => string;
 
-  private readonly productImage: (number: number) => string;
+  protected productImage: (number: number) => string;
 
   private readonly deleteIcon: (number: number) => string;
 
