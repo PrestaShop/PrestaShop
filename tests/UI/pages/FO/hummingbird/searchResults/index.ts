@@ -1,6 +1,6 @@
 // Import FO pages
 import {SearchResultsPage} from '@pages/FO/classic/searchResults';
-import {Page} from 'playwright';
+import type {Page} from 'playwright';
 
 /**
  * Password Reminder page, contains functions that can be used on the page
