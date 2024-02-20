@@ -246,15 +246,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         $this->_select = '
 			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(cm.`message`) as messages, cm.private,
-			(
-				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
-				FROM `' . _DB_PREFIX_ . 'customer_message` cm2
-				INNER JOIN ' . _DB_PREFIX_ . 'employee e
-					ON e.`id_employee` = cm2.`id_employee`
-				WHERE cm2.id_employee > 0
-					AND cm2.`id_customer_thread` = a.`id_customer_thread`
-				ORDER BY cm2.`date_add` DESC LIMIT 1
-			) as employee';
+			emp.`employee_name` as employee';
 
         $this->_join = '
 			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
@@ -264,7 +256,25 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			LEFT JOIN `' . _DB_PREFIX_ . 'lang` l
 				ON l.`id_lang` = a.`id_lang`
 			LEFT JOIN `' . _DB_PREFIX_ . 'contact_lang` cl
-				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = ' . (int) $this->context->language->id . ')';
+				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = ' . (int) $this->context->language->id . ')'
+            LEFT JOIN(
+                SELECT 
+                    last_messages.`id_customer_thread`,
+                    IFNULL( CONCAT( LEFT(e.`firstname`, 1), ". ", e.`lastname` ), "--" ) AS employee_name 
+                FROM (
+                    SELECT 
+                        cm.id_customer_thread,
+                        MAX(cm.id_customer_message) AS `id_customer_message`
+                    FROM `' . _DB_PREFIX_ . 'customer_message` cm 
+                    GROUP BY cm.id_customer_thread
+                ) last_messages 
+                LEFT OUTER JOIN `' . _DB_PREFIX_ . 'customer_message` cm3 ON 
+                    cm3.id_customer_message = last_messages.id_customer_message 
+                LEFT JOIN `' . _DB_PREFIX_ . 'employee` e ON 
+                    e.`id_employee` = cm3.`id_employee`
+            ) AS emp
+            ON
+                emp.`id_customer_thread` = a.`id_customer_thread`';
 
         if ($id_order = Tools::getValue('id_order')) {
             $this->_where .= ' AND id_order = ' . (int) $id_order;
