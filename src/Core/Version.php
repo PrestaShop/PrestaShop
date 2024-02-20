@@ -32,11 +32,11 @@ namespace PrestaShop\PrestaShop\Core;
  */
 final class Version
 {
-    public const VERSION = '8.1.4';
+    public const VERSION = '8.1.5';
     public const MAJOR_VERSION_STRING = '8';
     public const MAJOR_VERSION = 8;
     public const MINOR_VERSION = 1;
-    public const RELEASE_VERSION = 4;
+    public const RELEASE_VERSION = 5;
 
     // This class should not be instanciated
     private function __construct()
