@@ -132,6 +132,12 @@ services:
     arguments:
       - PrestaShopBundle\Entity\ApiClient
 
+
+  PrestaShopBundle\Entity\Repository\MutationRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\Mutation
+
   PrestaShopBundle\Entity\Repository\ImageTypeRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:

@@ -1638,7 +1638,7 @@ CREATE TABLE `PREFIX_product` (
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `redirect_type` ENUM(
     '', '404', '410', '301-product', '302-product',
-    '301-category', '302-category', '200-displayed', 
+    '301-category', '302-category', '200-displayed',
     '404-displayed', '410-displayed', 'default'
   ) NOT NULL DEFAULT 'default',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1698,7 +1698,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `redirect_type` ENUM(
     '', '404', '410', '301-product', '302-product',
-    '301-category', '302-category', '200-displayed', 
+    '301-category', '302-category', '200-displayed',
     '404-displayed', '410-displayed', 'default'
   ) NOT NULL DEFAULT 'default',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',

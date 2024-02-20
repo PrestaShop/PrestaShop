@@ -45,13 +45,13 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
     /**
      * @dataProvider getExpectedClients
      */
-    public function testBuildBasedOnSecurityToken(string $clientId, array $scopes): void
+    public function testBuildBasedOnSecurityToken(int $apiId, string $clientId, array $scopes): void
     {
         // Create request that mimic a call to external API
         $event = $this->createRequestEvent(new Request([], [], ['_controller' => 'api_platform.action.placeholder']));
 
         $builder = new ApiClientContextBuilder(
-            $this->mockRepository($clientId, $scopes),
+            $this->mockRepository($apiId, $clientId, $scopes),
             $this->mockConfiguration(['PS_SHOP_DEFAULT' => 42])
         );
         $listener = new ApiClientContextListener(
@@ -63,6 +63,7 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
 
         $apiClientContext = $builder->build();
         $this->assertNotNull($apiClientContext->getApiClient());
+        $this->assertEquals($apiId, $apiClientContext->getApiClient()->getId());
         $this->assertEquals($clientId, $apiClientContext->getApiClient()->getClientId());
         $this->assertEquals($scopes, $apiClientContext->getApiClient()->getScopes());
         $this->assertEquals(42, $apiClientContext->getApiClient()->getShopId());
@@ -71,11 +72,13 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
     public function getExpectedClients(): iterable
     {
         yield 'client with scopes' => [
+            42,
             'client_id',
             ['scope1', 'scope3'],
         ];
 
         yield 'client with empty scopes' => [
+            51,
             'any_other_client_id',
             [],
         ];
@@ -142,9 +145,10 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
         return $security;
     }
 
-    private function mockRepository(string $expectedClientId, array $scopes): ApiClientRepository|MockObject
+    private function mockRepository(int $apiId, string $expectedClientId, array $scopes): ApiClientRepository|MockObject
     {
         $apiClient = new ApiClient();
+        $apiClient->setId($apiId);
         $apiClient->setScopes($scopes);
         $apiClient->setClientId($expectedClientId);
 

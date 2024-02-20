@@ -40,20 +40,24 @@ class ApiClientContextBuilderTest extends TestCase
 {
     use MockConfigurationTrait;
 
+    private const SHOP_ID = 42;
+    private const API_CLIENT_ID = 51;
+
     public function testBuild(): void
     {
         $apiClient = $this->getApiClientEntity();
         $builder = new ApiClientContextBuilder(
             $this->mockRepository($apiClient),
-            $this->mockConfiguration(['PS_SHOP_DEFAULT' => 42])
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::SHOP_ID])
         );
 
         $builder->setClientId('client_id');
         $apiClientContext = $builder->build();
         $this->assertNotNull($apiClientContext->getApiClient());
-        $this->assertEquals($apiClient->getClientId(), $apiClientContext->getApiClient()->getClientId());
-        $this->assertEquals($apiClient->getScopes(), $apiClientContext->getApiClient()->getScopes());
-        $this->assertEquals(42, $apiClientContext->getApiClient()->getShopId());
+        $this->assertEquals(self::API_CLIENT_ID, $apiClientContext->getApiClient()->getId());
+        $this->assertEquals('client_id', $apiClientContext->getApiClient()->getClientId());
+        $this->assertEquals(['scope1', 'scope3'], $apiClientContext->getApiClient()->getScopes());
+        $this->assertEquals(self::SHOP_ID, $apiClientContext->getApiClient()->getShopId());
     }
 
     public function testBuildWithStringValue(): void
@@ -61,7 +65,7 @@ class ApiClientContextBuilderTest extends TestCase
         $apiClient = $this->getApiClientEntity();
         $builder = new ApiClientContextBuilder(
             $this->mockRepository($apiClient),
-            $this->mockConfiguration(['PS_SHOP_DEFAULT' => '42'])
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => (string) self::SHOP_ID])
         );
 
         $builder->setClientId('client_id');
@@ -69,7 +73,7 @@ class ApiClientContextBuilderTest extends TestCase
         $this->assertNotNull($apiClientContext->getApiClient());
         $this->assertEquals($apiClient->getClientId(), $apiClientContext->getApiClient()->getClientId());
         $this->assertEquals($apiClient->getScopes(), $apiClientContext->getApiClient()->getScopes());
-        $this->assertEquals(42, $apiClientContext->getApiClient()->getShopId());
+        $this->assertEquals(self::SHOP_ID, $apiClientContext->getApiClient()->getShopId());
     }
 
     public function testBuildNoApiClient(): void
@@ -98,7 +102,7 @@ class ApiClientContextBuilderTest extends TestCase
     {
         $apiClient = new ApiClient();
         $apiClient
-            ->setId(42)
+            ->setId(self::API_CLIENT_ID)
             ->setClientId('client_id')
             ->setClientName('client_name')
             ->setScopes(['scope1', 'scope3'])

@@ -31,10 +31,16 @@ namespace PrestaShop\PrestaShop\Core\Context;
 class ApiClient
 {
     public function __construct(
+        private int $id,
         private string $clientId,
         private array $scopes,
         private int $shopId
     ) {
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getClientId(): string

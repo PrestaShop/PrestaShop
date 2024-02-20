@@ -763,6 +763,45 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then order :orderReference has the following status history:
+     *
+     * @param string $orderReference
+     * @param TableNode $tableNode
+     *
+     * @throws RuntimeException
+     */
+    public function orderHasHistoryStatus(string $orderReference, TableNode $tableNode)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderStatusHistory = $orderForViewing->getHistory()->getStatuses();
+
+        /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
+        $orderStateChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.order_state_by_id');
+        $availableOrderStates = $orderStateChoiceProvider->getChoices();
+
+        $expectedOrderStatusHistory = $tableNode->getColumnsHash();
+        Assert::assertEquals(count($expectedOrderStatusHistory), count($orderStatusHistory));
+
+        foreach ($expectedOrderStatusHistory as $key => $expectedOrderStatus) {
+            if (!isset($availableOrderStates[$expectedOrderStatus['status']])) {
+                throw new RuntimeException('Unknown order status ' . $expectedOrderStatus['status']);
+            }
+            $expectedOrderStatusHistory[$key]['status_id'] = (int) $availableOrderStates[$expectedOrderStatus['status']];
+        }
+
+        foreach ($expectedOrderStatusHistory as $key => $expectedOrderStatus) {
+            $orderStatus = $orderStatusHistory[$key];
+            Assert::assertEquals($expectedOrderStatus['status_id'], $orderStatus->getOrderStatusId());
+            Assert::assertEquals($expectedOrderStatus['status'], $orderStatus->getName());
+            Assert::assertEquals($expectedOrderStatus['employee_first_name'], $orderStatus->getEmployeeFirstName());
+            Assert::assertEquals($expectedOrderStatus['employee_last_name'], $orderStatus->getEmployeeLastName());
+            Assert::assertEquals($expectedOrderStatus['api_client_id'], $orderStatus->getApiClientId());
+        }
+    }
+
+    /**
      * @Then order :orderReference has :statusNb status(es) in history
      *
      * @param string $orderReference
@@ -1635,7 +1674,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $data = [];
         $cartId = SharedStorage::getStorage()->get($testCaseData['cart']);
         $data['cartId'] = $cartId;
-        $data['employeeId'] = Context::getContext()->employee->id;
+        $data['employeeId'] = (int) Context::getContext()->employee?->id;
         $data['orderMessage'] = $testCaseData['message'];
         $data['paymentModuleName'] = $testCaseData['payment module name'];
 

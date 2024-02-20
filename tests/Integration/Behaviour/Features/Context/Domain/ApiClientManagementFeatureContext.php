@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use PrestaShop\PrestaShop\Core\Context\ApiClient;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\AddApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\DeleteApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\EditApiClientCommand;
@@ -43,7 +44,9 @@ use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\ApiClientId;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Resources\Context\ApiClientContextDecorator;
 use Tests\Resources\Resetter\ApiClientResetter;
 
 class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
@@ -307,10 +310,47 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @BeforeFeature @restore-api-client-before-feature
-     */
-    public static function restoreProductTablesBeforeFeature(): void
+     * @AfterFeature @restore-api-client-after-feature     */
+    public static function restoreApiClientTables(): void
     {
         ApiClientResetter::resetApiClient();
+    }
+
+    /**
+     * @Given I am logged in as api client with id :apiClientId
+     */
+    public function logsInAsApiClient(string $apiClientId): void
+    {
+        $apiAccessRepository = CommonFeatureContext::getContainer()->get(ApiClientRepository::class);
+        $apiClient = $apiAccessRepository->getByClientId($apiClientId);
+        /** @var ApiClientContextDecorator $apiClientContext */
+        $apiClientContext = CommonFeatureContext::getContainer()->get(ApiClientContextDecorator::class);
+        $apiClientContext->setOverriddenApiClient(new ApiClient(
+            id: $apiClient->getId(),
+            clientId: $apiClient->getClientId(),
+            shopId: $this->getDefaultShopId(),
+            scopes: $apiClient->getScopes(),
+        ));
+    }
+
+    /**
+     * @Given I am not logged in as an api client
+     */
+    public function logsOutApiClient()
+    {
+        /** @var ApiClientContextDecorator $apiClientContext */
+        $apiClientContext = CommonFeatureContext::getContainer()->get(ApiClientContextDecorator::class);
+        $apiClientContext->setOverriddenApiClient(null);
+    }
+
+    /**
+     * @AfterFeature
+     */
+    public static function resetApiClientContext(): void
+    {
+        /** @var ApiClientContextDecorator $apiClientContext */
+        $apiClientContext = CommonFeatureContext::getContainer()->get(ApiClientContextDecorator::class);
+        $apiClientContext->resetOverriddenApiClient();
     }
 
     private function createApiClient(string $apiClientReference, TableNode $table, string $secretReference = null): void

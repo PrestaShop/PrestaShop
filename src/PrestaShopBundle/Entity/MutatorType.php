@@ -24,46 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
+namespace PrestaShopBundle\Entity;
 
-/**
- * Defines Employee ID with it's constraints.
- */
-class EmployeeId implements EmployeeIdInterface
+enum MutatorType: string
 {
-    /**
-     * @var int
-     */
-    private $employeeId;
-
-    /**
-     * @param int $employeeId
-     *
-     * @throws InvalidEmployeeIdException
-     */
-    public function __construct($employeeId)
-    {
-        $this->assertIntegerIsGreaterThanZero($employeeId);
-
-        $this->employeeId = $employeeId;
-    }
-
-    public function getValue(): int
-    {
-        return $this->employeeId;
-    }
-
-    /**
-     * @param int $employeeId
-     *
-     * @throws InvalidEmployeeIdException
-     */
-    private function assertIntegerIsGreaterThanZero($employeeId)
-    {
-        if (!is_int($employeeId) || 0 > $employeeId) {
-            throw new InvalidEmployeeIdException(sprintf('Invalid employee id %s supplied. Employee id must be positive integer.', var_export($employeeId, true)));
-        }
-    }
+    case EMPLOYEE = 'employee';
+    case API_CLIENT = 'api_client';
+    case MODULE = 'module';
 }
