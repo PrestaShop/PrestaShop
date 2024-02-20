@@ -225,6 +225,8 @@ abstract class PaymentModuleCore extends Module
             'cart' => $this->context->cart,
             'customer' => $this->context->customer,
             'currency' => $this->context->currency,
+            'id_order_state' => &$id_order_state,
+            'payment_method' => $payment_method,
         ]);
 
         $this->context->cart = new Cart((int) $id_cart);
