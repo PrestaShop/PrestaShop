@@ -111,6 +111,8 @@ class HomePage extends FOBasePage {
 
   protected blockCartModalCloseButton: string;
 
+  protected productRowQuantityUpDownButton: (direction: string) => string;
+
   private readonly cartModalProductNameBlock: string;
 
   private readonly cartModalProductPriceBlock: string;
@@ -206,6 +208,8 @@ class HomePage extends FOBasePage {
     this.quickViewTwitterSocialSharing = `${this.quickViewModalDiv} .twitter a`;
     this.quickViewPinterestSocialSharing = `${this.quickViewModalDiv} .pinterest a`;
     this.addToCartButton = `${this.quickViewModalDiv} button[data-button-action='add-to-cart']`;
+    this.productRowQuantityUpDownButton = (direction: string) => 'span.input-group-btn-vertical'
+      + ` button.bootstrap-touchspin-${direction}`;
 
     // Block Cart Modal
     this.blockCartModalDiv = '#blockcart-modal';
@@ -348,7 +352,7 @@ class HomePage extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  async hasProductsBlock(page: Page, blockName: 'bestsellers'|'newproducts'|'onsale'|'popularproducts'): Promise<boolean> {
+  async hasProductsBlock(page: Page, blockName: 'bestsellers' | 'newproducts' | 'onsale' | 'popularproducts'): Promise<boolean> {
     return (await page.locator(this.productsBlock(blockName)).count()) > 0;
   }
 
@@ -508,8 +512,33 @@ class HomePage extends FOBasePage {
    * @param quantity {number} The product quantity to change
    * @returns {Promise<void>}
    */
-  async changeQuantity(page: Page, quantity: number): Promise<void> {
+  async changeQuantity(page: Page, quantity: number | string): Promise<void> {
     await this.setValue(page, this.quickViewQuantityWantedInput, quantity);
+  }
+
+  /**
+   * Get product quantity from quick view modal
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getProductQuantityFromQuickViewModal(page: Page): Promise<number> {
+    return parseInt(await page.locator(this.quickViewQuantityWantedInput).evaluate((node: HTMLSelectElement) => node.value), 10);
+  }
+
+  /**
+   * Update quantity value arrow up down in quick view modal
+   * @param page {Page} Browser tab
+   * @param quantityWanted {number} Value to add/subtract from quantity
+   * @param direction {string} Direction to click on
+   * @returns {Promise<string>}
+   */
+  async setQuantityByArrowUpDown(page: Page, quantityWanted: number, direction: string): Promise<void> {
+    const inputValue = await this.getProductQuantityFromQuickViewModal(page);
+    const nbClick: number = Math.abs(inputValue - quantityWanted);
+
+    for (let i = 0; i < nbClick; i++) {
+      await page.locator(this.productRowQuantityUpDownButton(direction)).click();
+    }
   }
 
   /**
