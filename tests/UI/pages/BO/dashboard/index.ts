@@ -156,14 +156,14 @@ class Dashboard extends BOBasePage {
     this.dashboardLiveSection = '#dash_live span.data_label';
     this.onlineVisitorLink = `${this.dashboardLiveSection} a[href*='controller=AdminStats']`;
     this.onlineVisitorsNumber = '#online_visitor';
-    this.activeShoppingCartsLink = `${this.dashboardLiveSection} a[href*='controller=AdminCarts']`;
+    this.activeShoppingCartsLink = `${this.dashboardLiveSection} a[href*='sell/orders/carts/?']`;
     this.activeShoppingCartNumber = '#active_shopping_cart';
     this.dashboardPendingSection = '#dash_pending span.data_label';
-    this.dashboardOrdersLink = `${this.dashboardPendingSection} a[href*='sell/orders']`;
+    this.dashboardOrdersLink = `${this.dashboardPendingSection} a[href*='sell/orders/?']`;
     this.ordersNumber = '#pending_orders';
     this.returnExchangeLink = `${this.dashboardPendingSection} a[href*='controller=AdminReturn']`;
     this.returnExchangeNumber = '#return_exchanges';
-    this.abandonedCartsLink = `${this.dashboardPendingSection} a[href*='controller=AdminCarts']`;
+    this.abandonedCartsLink = `${this.dashboardPendingSection} a[href*='sell/orders/carts/?']`;
     this.abandonedCartsNumber = '#abandoned_cart';
     this.outOfStockProductsLink = `${this.dashboardPendingSection} a[href*='catalog/monitoring']`;
     this.outOfStockProductsNumber = '#products_out_of_stock';

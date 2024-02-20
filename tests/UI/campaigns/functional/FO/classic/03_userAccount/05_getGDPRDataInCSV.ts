@@ -436,19 +436,19 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should filter list by customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
 
-        await shoppingCartsPage.filterTable(page, 'input', 'c!lastname', customerData.lastName);
+        await shoppingCartsPage.filterTable(page, 'input', 'customer_name', customerData.lastName);
 
         const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
         expect(numberOfShoppingCartsAfterFilter).to.equal(1);
 
-        const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'c!lastname');
+        const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'customer_name');
         expect(textColumn).to.contains(customerData.lastName);
       });
 
       it('should get shopping cart ID and Date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getShoppingCartIDAndDate', baseContext);
 
-        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date');
+        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date_add');
         shoppingCartDate = `${shoppingCartDate.substring(6, 10)}-${shoppingCartDate.substring(0, 2)}-`
           + `${shoppingCartDate.substring(3, 5)}${shoppingCartDate.substring(11, 19)}`;
 

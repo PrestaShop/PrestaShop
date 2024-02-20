@@ -11,6 +11,7 @@ type ShoppingCartCreator = {
 
 type ShoppingCartDetails = {
   id_cart?: number
+  id_order?: number
   status?: string
   lastname?: string
   total?: string

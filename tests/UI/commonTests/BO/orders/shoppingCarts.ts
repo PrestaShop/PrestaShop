@@ -60,7 +60,7 @@ function deleteNonOrderedShoppingCarts(baseContext: string = 'commonTests-delete
     it('should search for the non ordered shopping carts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts1', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+      await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
       numberOfNonOrderedShoppingCarts = await shoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfNonOrderedShoppingCarts).to.be.at.most(numberOfShoppingCarts);
@@ -78,7 +78,7 @@ function deleteNonOrderedShoppingCarts(baseContext: string = 'commonTests-delete
 
       if (numberOfNonOrderedShoppingCarts > 0) {
         const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-        expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+        expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulDeleteMessage);
       }
     });
 

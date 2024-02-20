@@ -161,7 +161,7 @@ describe('WS - Orders : CRUD', async () => {
         it('should search the non ordered shopping cart', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
 
-          await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+          await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
           const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
           expect(numberOfShoppingCartsAfterFilter).to.gte(1);
