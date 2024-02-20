@@ -231,6 +231,7 @@ class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
                 (new Filter('status', ChoiceType::class))
                     ->setAssociatedColumn('status')
                     ->setTypeOptions([
+                        'placeholder' => $this->translator->trans('All', [], 'Admin.Global'),
                         'choices' => [
                             $this->translator->trans('Ordered', [], 'Admin.Orderscustomers.Feature') => CartStatus::ORDERED,
                             $this->translator->trans('Non ordered', [], 'Admin.Orderscustomers.Feature') => CartStatus::NOT_ORDERED,
