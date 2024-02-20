@@ -121,6 +121,7 @@ api_platform:
   docs_formats:
     # This is used to allow using the Swagger UI in HTML presentation
     html: [ 'text/html' ]
+    json: [ 'application/json' ]
   mapping:
     paths:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
