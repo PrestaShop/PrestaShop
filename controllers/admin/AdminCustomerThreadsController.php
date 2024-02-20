@@ -256,7 +256,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			LEFT JOIN `' . _DB_PREFIX_ . 'lang` l
 				ON l.`id_lang` = a.`id_lang`
 			LEFT JOIN `' . _DB_PREFIX_ . 'contact_lang` cl
-				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = ' . (int) $this->context->language->id . ')'
+				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = ' . (int) $this->context->language->id . ')
             LEFT JOIN(
                 SELECT 
                     last_messages.`id_customer_thread`,
