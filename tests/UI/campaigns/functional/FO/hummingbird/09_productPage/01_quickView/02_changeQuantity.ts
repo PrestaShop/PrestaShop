@@ -9,13 +9,10 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingb
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_addToCart';
+const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_changeQuantity';
 
 /*
 Pre-condition:
@@ -75,7 +72,7 @@ describe('FO - Product page - Quick view : Change quantity', async () => {
     });
 
     it('should change the quantity by using the arrow \'Down\' button', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'incrementQuantity', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'incrementQuantity2', baseContext);
 
       await homePage.setQuantityByArrowUpDown(page, 1, 'decrement');
 
