@@ -17,6 +17,10 @@ const baseContext: string = 'functional_FO_hummingbird_cart_cart_changeQuantity'
 /*
 Pre-condition:
 - Install hummingbird theme
+Scenario:
+- Go to Fo and add the first product to cart
+- Increase/Decrease the product quantity by the touchSpin up/down
+- Edit product quantity bu the input (3, -6, +6, 64, 'azerty', 2400, 0)
 Post-condition:
 - Uninstall hummingbird theme
 */
