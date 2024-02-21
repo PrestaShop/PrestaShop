@@ -92,16 +92,16 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
   });
 
-  it('should change pagination to 300 items per page', async function () {
+  it('should change pagination to 100 items per page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo300', baseContext);
 
     let paginationNumber: string = '1';
 
     if (numberOfShoppingCarts >= 21) {
-      paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 300);
+      paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 100);
     }
 
-    expect(paginationNumber).to.equal('1');
+    expect(paginationNumber).to.contains('(page 1 / 1)');
   });
 
   const tests = [
