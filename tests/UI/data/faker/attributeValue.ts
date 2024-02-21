@@ -13,6 +13,8 @@ export default class AttributeValueData {
 
   public readonly position: number;
 
+  public attributeID: number;
+
   public readonly attributeName: string;
 
   public readonly value: string;
@@ -36,6 +38,9 @@ export default class AttributeValueData {
     /** @type {number} Position */
     this.position = valueToCreate.position || 0;
 
+    /** @type {number} ID of the parent attribute */
+    this.attributeID = valueToCreate.attributeID || 0;
+
     /** @type {string} Name of the parent attribute */
     this.attributeName = valueToCreate.attributeName || faker.helpers.arrayElement(attributesNames);
 
@@ -53,5 +58,9 @@ export default class AttributeValueData {
 
     /** @type {string} if the attribute type is texture, filename of the texture */
     this.textureFileName = valueToCreate.textureFileName || faker.system.commonFileName('txt');
+  }
+
+  setAttributeId(attributeId: number): void {
+    this.attributeID = attributeId;
   }
 }

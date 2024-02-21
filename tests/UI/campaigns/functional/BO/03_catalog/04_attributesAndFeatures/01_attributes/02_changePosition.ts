@@ -73,11 +73,11 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
     it('should sort by \'position\' \'asc\' and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sortByPosition', baseContext);
 
-      const nonSortedTable = await attributesPage.getAllRowsColumnContent(page, 'a!position');
+      const nonSortedTable = await attributesPage.getAllRowsColumnContent(page, 'position');
 
-      await attributesPage.sortTable(page, 'a!position', 'up');
+      await attributesPage.sortTable(page, 'position', 'asc');
 
-      const sortedTable = await attributesPage.getAllRowsColumnContent(page, 'a!position');
+      const sortedTable = await attributesPage.getAllRowsColumnContent(page, 'position');
 
       const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
       const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
@@ -90,29 +90,36 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
       await testContext.addContextItem(this, 'testIdentifier', 'changeAttributePosition', baseContext);
 
       // Get first row attribute name
-      const firstRowAttributeName = await attributesPage.getTextColumn(page, 1, 'b!name');
+      const firstRowAttributeName = await attributesPage.getTextColumn(page, 1, 'name');
 
       // Change position and check successful message
       const textResult = await attributesPage.changePosition(page, 1, 3);
       expect(textResult, 'Unable to change position').to.contains(attributesPage.successfulUpdateMessage);
 
+      await attributesPage.closeAlertBlock(page);
+
       // Get third row attribute name and check if is equal the first row attribute name before changing position
-      const thirdRowAttributeName = await attributesPage.getTextColumn(page, 3, 'b!name');
+      const thirdRowAttributeName = await attributesPage.getTextColumn(page, 3, 'name');
       expect(thirdRowAttributeName, 'Changing position was done wrongly').to.equal(firstRowAttributeName);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/35535
     it('should reset third attribute position to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAttributePosition', baseContext);
 
+      this.skip();
+
       // Get third row attribute name
-      const thirdRowAttributeName = await attributesPage.getTextColumn(page, 3, 'b!name');
+      const thirdRowAttributeName = await attributesPage.getTextColumn(page, 3, 'name');
 
       // Change position and check successful message
       const textResult = await attributesPage.changePosition(page, 3, 1);
       expect(textResult, 'Unable to change position').to.contains(attributesPage.successfulUpdateMessage);
 
+      await attributesPage.closeAlertBlock(page);
+
       // Get first row attribute name and check if is equal the first row attribute name before changing position
-      const firstRowAttributeName = await attributesPage.getTextColumn(page, 1, 'b!name');
+      const firstRowAttributeName = await attributesPage.getTextColumn(page, 1, 'name');
       expect(firstRowAttributeName, 'Changing position was done wrongly').to.equal(thirdRowAttributeName);
     });
   });
@@ -121,9 +128,9 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
     it(`should filter list of attributes by Name ${Attributes.size.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAttributes', baseContext);
 
-      await attributesPage.filterTable(page, 'b!name', Attributes.size.name);
+      await attributesPage.filterTable(page, 'name', Attributes.size.name);
 
-      const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
+      const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(Attributes.size.name);
     });
 
@@ -133,7 +140,7 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
       await attributesPage.viewAttribute(page, 1);
 
       const pageTitle = await viewAttributePage.getPageTitle(page);
-      expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${Attributes.size.name}`);
+      expect(pageTitle).to.contains(viewAttributePage.pageTitle(Attributes.size.name));
     });
 
     // Should reset filters before changing position
@@ -148,29 +155,36 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
       await testContext.addContextItem(this, 'testIdentifier', 'changeValuePosition', baseContext);
 
       // Get first row attribute name
-      const firstRowValueName = await viewAttributePage.getTextColumn(page, 1, 'b!name');
+      const firstRowValueName = await viewAttributePage.getTextColumn(page, 1, 'name');
 
       // Change position and check successful message
       const textResult = await viewAttributePage.changePosition(page, 1, 3);
       expect(textResult, 'Unable to change position').to.contains(attributesPage.successfulUpdateMessage);
 
+      await viewAttributePage.closeAlertBlock(page);
+
       // Get third row attribute name and check if is equal the first row attribute name before changing position
-      const thirdRowValueName = await viewAttributePage.getTextColumn(page, 3, 'b!name');
+      const thirdRowValueName = await viewAttributePage.getTextColumn(page, 3, 'name');
       expect(thirdRowValueName, 'Changing position was done wrongly').to.equal(firstRowValueName);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/35535
     it('should reset third value position to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetValuePosition', baseContext);
 
+      this.skip();
+
       // Get third row attribute name
-      const thirdRowValueName = await viewAttributePage.getTextColumn(page, 3, 'b!name');
+      const thirdRowValueName = await viewAttributePage.getTextColumn(page, 3, 'name');
 
       // Change position and check successful message
       const textResult = await viewAttributePage.changePosition(page, 3, 1);
       expect(textResult, 'Unable to change position').to.contains(attributesPage.successfulUpdateMessage);
 
+      await viewAttributePage.closeAlertBlock(page);
+
       // Get first row attribute name and check if is equal the first row attribute name before changing position
-      const firstRowValueName = await viewAttributePage.getTextColumn(page, 1, 'b!name');
+      const firstRowValueName = await viewAttributePage.getTextColumn(page, 1, 'name');
       expect(firstRowValueName, 'Changing position was done wrongly').to.equal(thirdRowValueName);
     });
   });

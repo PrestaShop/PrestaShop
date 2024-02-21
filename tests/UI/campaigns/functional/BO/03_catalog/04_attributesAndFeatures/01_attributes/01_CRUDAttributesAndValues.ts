@@ -37,6 +37,7 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfAttributes: number = 0;
+  let attributeId: number = 0;
 
   const createAttributeData: AttributeData = new AttributeData();
   const updateAttributeData: AttributeData = new AttributeData();
@@ -101,7 +102,7 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
       await attributesPage.goToAddAttributePage(page);
 
       const pageTitle = await addAttributePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addAttributePage.createPageTitle);
+      expect(pageTitle).to.equal(addAttributePage.createPageTitle);
     });
 
     it('should create new attribute', async function () {
@@ -119,10 +120,13 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
     it('should filter list of attributes', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedAttribute', baseContext);
 
-      await attributesPage.filterTable(page, 'b!name', createAttributeData.name);
+      await attributesPage.filterTable(page, 'name', createAttributeData.name);
 
-      const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
+      const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(createAttributeData.name);
+
+      attributeId = parseInt(await attributesPage.getTextColumn(page, 1, 'id_attribute_group'), 10);
+      expect(attributeId).to.be.gt(0);
     });
 
     it('should view attribute', async function () {
@@ -131,7 +135,7 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
       await attributesPage.viewAttribute(page, 1);
 
       const pageTitle = await viewAttributePage.getPageTitle(page);
-      expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${createAttributeData.name}`);
+      expect(pageTitle).to.equal(viewAttributePage.pageTitle(createAttributeData.name));
     });
   });
 
@@ -142,16 +146,26 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
       await viewAttributePage.goToAddNewValuePage(page);
 
       const pageTitle = await addValuePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addValuePage.createPageTitle);
+      expect(pageTitle).to.equal(addValuePage.createPageTitle);
     });
 
     valuesToCreate.forEach((valueToCreate: AttributeValueData, index: number) => {
       it(`should create value n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createValue${index}`, baseContext);
 
+        valueToCreate.setAttributeId(attributeId);
         const textResult = await addValuePage.addEditValue(page, valueToCreate, index === 0);
         expect(textResult).to.contains(viewAttributePage.successfulCreationMessage);
       });
+    });
+
+    it('return to the Attributes page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'returnAttributesPage', baseContext);
+
+      await viewAttributePage.backToAttributesList(page);
+
+      const pageTitle = await attributesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(attributesPage.pageTitle);
     });
   });
 
@@ -160,9 +174,9 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAttribute', baseContext);
 
       await attributesPage.resetFilter(page);
-      await attributesPage.filterTable(page, 'b!name', createAttributeData.name);
+      await attributesPage.filterTable(page, 'name', createAttributeData.name);
 
-      const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
+      const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(createAttributeData.name);
     });
 
@@ -172,7 +186,7 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
       await attributesPage.goToEditAttributePage(page, 1);
 
       const pageTitle = await addAttributePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addAttributePage.editPageTitle);
+      expect(pageTitle).to.equal(addAttributePage.editPageTitle(createAttributeData.name));
     });
 
     it('should update attribute', async function () {
@@ -187,9 +201,9 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
     it('should filter list of attributes', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewUpdateAttribute', baseContext);
 
-      await attributesPage.filterTable(page, 'b!name', updateAttributeData.name);
+      await attributesPage.filterTable(page, 'name', updateAttributeData.name);
 
-      const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
+      const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(updateAttributeData.name);
     });
 
@@ -199,7 +213,7 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
       await attributesPage.viewAttribute(page, 1);
 
       const pageTitle = await viewAttributePage.getPageTitle(page);
-      expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${updateAttributeData.name}`);
+      expect(pageTitle).to.equal(viewAttributePage.pageTitle(updateAttributeData.name));
 
       const numberOfValues = await viewAttributePage.getNumberOfElementInGrid(page);
       expect(numberOfValues).to.equal(2);
@@ -210,9 +224,9 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
     it('should filter values', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterValuesToUpdate', baseContext);
 
-      await viewAttributePage.filterTable(page, 'b!name', valuesToCreate[0].value);
+      await viewAttributePage.filterTable(page, 'name', valuesToCreate[0].value);
 
-      const textColumn = await viewAttributePage.getTextColumn(page, 1, 'b!name');
+      const textColumn = await viewAttributePage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(valuesToCreate[0].value);
     });
 
@@ -222,12 +236,13 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
       await viewAttributePage.goToEditValuePage(page, 1);
 
       const pageTitle = await addValuePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addValuePage.editPageTitle);
+      expect(pageTitle).to.contains(addValuePage.editPageTitle(valuesToCreate[0].value));
     });
 
     it('should update value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateValue', baseContext);
 
+      updateValueData.setAttributeId(attributeId);
       const textResult = await addValuePage.addEditValue(page, updateValueData);
       expect(textResult).to.contains(addValuePage.successfulUpdateMessage);
     });
@@ -237,9 +252,9 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
     it('should filter values', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterValuesToDelete', baseContext);
 
-      await viewAttributePage.filterTable(page, 'b!name', valuesToCreate[1].value);
+      await viewAttributePage.filterTable(page, 'name', valuesToCreate[1].value);
 
-      const textColumn = await viewAttributePage.getTextColumn(page, 1, 'b!name');
+      const textColumn = await viewAttributePage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(valuesToCreate[1].value);
     });
 
@@ -268,9 +283,9 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
       await testContext.addContextItem(this, 'testIdentifier', 'filterAttributesToDelete', baseContext);
 
       await attributesPage.resetFilter(page);
-      await attributesPage.filterTable(page, 'b!name', updateAttributeData.name);
+      await attributesPage.filterTable(page, 'name', updateAttributeData.name);
 
-      const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
+      const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(updateAttributeData.name);
     });
 
