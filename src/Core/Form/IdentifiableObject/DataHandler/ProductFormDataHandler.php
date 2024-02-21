@@ -94,7 +94,6 @@ class ProductFormDataHandler implements FormDataHandlerInterface
         return $productId->getValue();
     }
 
-
     /**
      * {@inheritdoc}
      */

@@ -551,6 +551,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             DateTimeUtil::buildDateTimeOrNull($virtualProductFile->date_expiration)
         );
     }
+
     private function getCover(ProductId $productId, int $shopId): string
     {
         $idOfCoverImage = $this->productImageRepository->findCoverImageId($productId, new ShopId($shopId));

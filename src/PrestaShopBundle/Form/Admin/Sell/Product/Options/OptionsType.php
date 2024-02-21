@@ -45,7 +45,7 @@ class OptionsType extends TranslatorAwareType
         $builder
             ->add('published_date', DatePickerType::class, [
                 'required' => false,
-                'label' =>  $this->trans('Date of publication', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Date of publication', 'Admin.Catalog.Feature'),
                 'label_subtitle' => $this->trans('When do you want your product to appear?', 'Admin.Catalog.Feature'),
                 'modify_all_shops' => true,
                 'attr' => ['placeholder' => 'YYYY-MM-DD'],
