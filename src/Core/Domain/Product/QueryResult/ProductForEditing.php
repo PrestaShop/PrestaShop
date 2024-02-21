@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+use Datetime;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 
@@ -149,7 +150,7 @@ class ProductForEditing
         ProductStockInformation $stockInformation,
         ?VirtualProductFileForEditing $virtualProductFile,
         string $coverThumbnailUrl,
-        \DateTime $publishedDate
+        DateTime $publishedDate
     ) {
         $this->productId = $productId;
         $this->type = $type;
@@ -289,7 +290,7 @@ class ProductForEditing
         return $this->coverThumbnailUrl;
     }
 
-    public function getPublishedDate(): \DateTime
+    public function getPublishedDate(): DateTime
     {
         return $this->publishedDate;
     }
