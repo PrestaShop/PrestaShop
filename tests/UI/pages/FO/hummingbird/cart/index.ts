@@ -25,9 +25,14 @@ class Cart extends CartPage {
     this.productTotalPrice = (number: number) => `${this.productItem(number)} span.product-line__price`;
     this.productQuantity = (number: number) => `${this.productItem(number)} div.input-group `
       + 'input.js-cart-line-product-quantity';
+    this.productQuantityScrollUpButton = (number: number) => `${this.productItem(number)} button.js-increment-button`;
+    this.productQuantityScrollDownButton = (number: number) => `${this.productItem(number)} button.js-decrement-button`;
     this.productImage = (number: number) => `${this.productItem(number)} div.product-line__image img`;
     this.productSize = (number: number) => `${this.productItem(number)} div.product-line__info.size span.value`;
     this.productColor = (number: number) => `${this.productItem(number)} div.product-line__info.color span.value`;
+
+    // Notifications
+    this.alertMessage = '#js-toast-container div.toast div.toast-body';
   }
 
   /**
@@ -55,6 +60,29 @@ class Cart extends CartPage {
       quantity: parseFloat(await this.getAttributeContent(page, this.productQuantity(row), 'value') ?? ''),
       totalPrice: await this.getPriceFromText(page, this.productTotalPrice(row)),
     };
+  }
+
+  /**
+   * Set quantity
+   * @param page {Page} Browser tab
+   * @param productID {number} Row of the product
+   * @param quantity {number} New quantity of the product
+   * @returns {Promise<void>}
+   */
+  async setQuantity(page: Page, productID: number, quantity: number | string): Promise<void> {
+    await this.setValue(page, this.productQuantity(productID), quantity);
+  }
+
+  /**
+   * To edit the product quantity
+   * @param page {Page} Browser tab
+   * @param productID {number} Row of the product
+   * @param quantity {number} New quantity of the product
+   * @returns {Promise<void>}
+   */
+  async editProductQuantity(page: Page, productID: number, quantity: number | string): Promise<void> {
+    await this.setValue(page, this.productQuantity(productID), quantity);
+    await page.locator(this.productQuantityScrollUpButton(productID)).click();
   }
 }
 
