@@ -71,7 +71,7 @@
         "prestashop/gsitemap": "^4",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^6.0",
-        "prestashop/ps_apiresources": "dev-dev",
+        "prestashop/ps_apiresources": "dev-fix/protected-tests",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
         "prestashop/ps_brandlist": "^1.0",
@@ -250,13 +250,19 @@
             "FakeModule\\": "tests/Unit/Resources/api_platform/fake_module_resources/fake_module/src"
         }
     },
+    "repositories": {
+        "ps_apiresources": {
+            "type": "vcs",
+            "url": "https://github.com/M0rgan01/ps_apiresources.git"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
         "api-module-tests": [
             "@composer create-test-db",
             "@composer dump-autoload --dev --working-dir=modules/ps_apiresources",
-            "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c modules/ps_apiresources/tests/Integration/phpunit.xml"
+            "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c modules/ps_apiresources/tests/Integration/phpunit-ci.xml"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "create-test-db": [
