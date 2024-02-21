@@ -90,9 +90,8 @@ class QueryListProvider implements ProviderInterface
         /** @var DoctrineQueryBuilderInterface $queryBuilder * */
         $queryBuilder = $this->container->get($queryBuilderDefinition);
 
-        $filters = $context['filters']['filters'] ?? [];
-        $queryParameters = array_merge($uriVariables, $filters, $this->getContextParameters());
-
+        $queryParameters = $context['filters'] ?? [];
+        $filters = $queryParameters['filters'] ?? [];
         $orderBy = array_key_exists('orderBy', $queryParameters) ? $queryParameters['orderBy'] : null;
         $sortOrder = array_key_exists('sortOrder', $queryParameters) ? $queryParameters['sortOrder'] : 'asc';
         $offset = array_key_exists('offset', $queryParameters) ? (int) $queryParameters['offset'] : null;
