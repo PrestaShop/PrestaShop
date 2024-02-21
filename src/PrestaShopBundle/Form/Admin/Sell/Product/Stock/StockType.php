@@ -114,7 +114,8 @@ class StockType extends TranslatorAwareType
             ->add('pack_stock_type', ChoiceType::class, [
                 'choices' => $this->packStockTypeChoiceProvider->getChoices(),
                 'expanded' => true,
-                'label' => $this->trans('Pack quantities', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Pack stock behavior', 'Admin.Catalog.Feature'),
+                'label_help_box' => $this->trans('Controls how you want stock of the pack to be calculated. You can decide, if you want to manage the stocks of packs manually, or if it should be calculated automatically depending on stock of the products inside. In that case, the quantity of the pack inside is ignored.', 'Admin.Catalog.Help'),
                 'label_tag_name' => 'h3',
                 'required' => false,
                 'placeholder' => false,

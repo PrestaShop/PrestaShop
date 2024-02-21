@@ -312,18 +312,18 @@ class ProductQuantity extends CommonAbstractType
                 $defaultChoiceLabel = $this->translator->trans('Default', [], 'Admin.Global') . ': ';
                 if ($pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY) {
                     $defaultChoiceLabel .= $this->translator->trans(
-                        'Decrement pack only.',
+                        'Use pack quantity',
                         [],
                         'Admin.Catalog.Feature'
                     );
                 } elseif ($pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY) {
                     $defaultChoiceLabel .= $this->translator->trans(
-                        'Decrement products in pack only.',
+                        'Use quantity of products in the pack',
                         [],
                         'Admin.Catalog.Feature'
                     );
                 } else {
-                    $defaultChoiceLabel .= $this->translator->trans('Decrement both.', [], 'Admin.Catalog.Feature');
+                    $defaultChoiceLabel .= $this->translator->trans('Use both, whatever is lower', [], 'Admin.Catalog.Feature');
                 }
 
                 $form->add(
@@ -331,15 +331,15 @@ class ProductQuantity extends CommonAbstractType
                     FormType\ChoiceType::class,
                     [
                         'choices' => [
-                            $this->translator->trans('Decrement pack only.', [], 'Admin.Catalog.Feature') => 0,
-                            $this->translator->trans('Decrement products in pack only.', [], 'Admin.Catalog.Feature') => 1,
-                            $this->translator->trans('Decrement both.', [], 'Admin.Catalog.Feature') => 2,
+                            $this->translator->trans('Use pack quantity', [], 'Admin.Catalog.Feature') => 0,
+                            $this->translator->trans('Use quantity of products in the pack', [], 'Admin.Catalog.Feature') => 1,
+                            $this->translator->trans('Use both, whatever is lower', [], 'Admin.Catalog.Feature') => 2,
                             $defaultChoiceLabel => 3,
                         ],
                         'expanded' => false,
                         'required' => true,
                         'placeholder' => false,
-                        'label' => $this->translator->trans('Pack quantities', [], 'Admin.Catalog.Feature'),
+                        'label' => $this->translator->trans('Pack stock behavior', [], 'Admin.Catalog.Feature'),
                     ]
                 );
             }

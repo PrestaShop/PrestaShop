@@ -57,17 +57,17 @@ class StockType extends TranslatorAwareType
             ])
             ->add('pack_stock_management', ChoiceType::class, [
                 'label' => $this->trans(
-                    'Default pack stock management',
+                    'Default pack stock behavior',
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'When selling packs of products, how do you want your stock to be calculated?',
+                    'When selling packs of products, how do you want the stock to be calculated by default? You can decide, if you want to manage the stocks of packs manually, or if it should be calculated automatically depending on stock of the products inside. You can further configure it for each product.',
                     'Admin.Shopparameters.Help'
                 ),
                 'choices' => [
-                    'Decrement pack only.' => PackStockType::STOCK_TYPE_PACK_ONLY,
-                    'Decrement products in pack only.' => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,
-                    'Decrement both.' => PackStockType::STOCK_TYPE_BOTH,
+                    'Use pack quantity' => PackStockType::STOCK_TYPE_PACK_ONLY,
+                    'Use quantity of products in the pack' => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,
+                    'Use both, whatever is lower' => PackStockType::STOCK_TYPE_BOTH,
                 ],
                 'choice_translation_domain' => 'Admin.Catalog.Feature',
                 'required' => false,
