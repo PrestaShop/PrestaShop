@@ -37,137 +37,24 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\Vir
  */
 class ProductForEditing
 {
-    /**
-     * @var int
-     */
-    private $productId;
-
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var bool
-     */
-    private $isActive;
-
-    /**
-     * @var ProductBasicInformation
-     */
-    private $basicInformation;
-
-    /**
-     * @var CategoriesInformation
-     */
-    private $categoriesInformation;
-
-    /**
-     * @var ProductPricesInformation
-     */
-    private $pricesInformation;
-
-    /**
-     * @var ProductOptions
-     */
-    private $options;
-
-    /**
-     * @var ProductDetails
-     */
-    private $details;
-
-    /**
-     * @var ProductCustomizationOptions
-     */
-    private $customizationOptions;
-
-    /**
-     * @var ProductShippingInformation
-     */
-    private $shippingInformation;
-
-    /**
-     * @var ProductSeoOptions
-     */
-    private $productSeoOptions;
-
-    /**
-     * @var AttachmentInformation[]
-     */
-    private $associatedAttachments;
-
-    /**
-     * @var ProductStockInformation
-     */
-    private $stockInformation;
-
-    /**
-     * @var VirtualProductFileForEditing|null
-     */
-    private $virtualProductFile;
-
-    /**
-     * @var string
-     */
-    private $coverThumbnailUrl;
-
-    /**
-     * @var \DateTime
-     */
-    private $publishedDate;
-
-    /**
-     * @param int $productId
-     * @param string $type
-     * @param bool $isActive
-     * @param ProductCustomizationOptions $customizationOptions
-     * @param ProductBasicInformation $basicInformation
-     * @param CategoriesInformation $categoriesInformation
-     * @param ProductPricesInformation $pricesInformation
-     * @param ProductOptions $options
-     * @param ProductDetails $details
-     * @param ProductShippingInformation $shippingInformation
-     * @param ProductSeoOptions $productSeoOptions
-     * @param AttachmentInformation[] $associatedAttachments
-     * @param ProductStockInformation $stockInformation
-     * @param VirtualProductFileForEditing|null $virtualProductFile
-     * @param string $coverThumbnailUrl
-     */
     public function __construct(
-        int $productId,
-        string $type,
-        bool $isActive,
-        ProductCustomizationOptions $customizationOptions,
-        ProductBasicInformation $basicInformation,
-        CategoriesInformation $categoriesInformation,
-        ProductPricesInformation $pricesInformation,
-        ProductOptions $options,
-        ProductDetails $details,
-        ProductShippingInformation $shippingInformation,
-        ProductSeoOptions $productSeoOptions,
-        array $associatedAttachments,
-        ProductStockInformation $stockInformation,
-        ?VirtualProductFileForEditing $virtualProductFile,
-        string $coverThumbnailUrl,
-        DateTime $publishedDate
+        private int $productId,
+        private string $type,
+        private bool $isActive,
+        private ProductCustomizationOptions $customizationOptions,
+        private ProductBasicInformation $basicInformation,
+        private CategoriesInformation $categoriesInformation,
+        private ProductPricesInformation $pricesInformation,
+        private ProductOptions $options,
+        private ProductDetails $details,
+        private ProductShippingInformation $shippingInformation,
+        private ProductSeoOptions $productSeoOptions,
+        private array $associatedAttachments,
+        private ProductStockInformation $stockInformation,
+        private ?VirtualProductFileForEditing $virtualProductFile,
+        private string $coverThumbnailUrl,
+        private DateTime $publishedDate
     ) {
-        $this->productId = $productId;
-        $this->type = $type;
-        $this->isActive = $isActive;
-        $this->customizationOptions = $customizationOptions;
-        $this->basicInformation = $basicInformation;
-        $this->categoriesInformation = $categoriesInformation;
-        $this->pricesInformation = $pricesInformation;
-        $this->options = $options;
-        $this->details = $details;
-        $this->shippingInformation = $shippingInformation;
-        $this->productSeoOptions = $productSeoOptions;
-        $this->associatedAttachments = $associatedAttachments;
-        $this->stockInformation = $stockInformation;
-        $this->virtualProductFile = $virtualProductFile;
-        $this->coverThumbnailUrl = $coverThumbnailUrl;
-        $this->publishedDate = $publishedDate;
     }
 
     /**
