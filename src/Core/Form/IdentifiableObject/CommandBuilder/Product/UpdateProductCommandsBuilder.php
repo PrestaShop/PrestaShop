@@ -106,11 +106,13 @@ class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
     {
         $config
             ->addField('[description][manufacturer]', 'setManufacturerId', DataField::TYPE_INT)
+            ->addMultiShopField('[options][published_date]', 'setPublishedDate', DataField::TYPE_DATETIME)
             ->addMultiShopField('[options][visibility][online_only]', 'setOnlineOnly', DataField::TYPE_BOOL)
             ->addMultiShopField('[options][visibility][visibility]', 'setVisibility', DataField::TYPE_STRING)
             ->addMultiShopField('[options][visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)
             ->addMultiShopField('[options][visibility][show_price]', 'setShowPrice', DataField::TYPE_BOOL)
             ->addMultiShopField('[details][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
+
         ;
 
         // based on show_condition value, the condition field can be disabled, in that case "condition" won't exist in request

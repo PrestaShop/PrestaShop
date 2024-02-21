@@ -1657,6 +1657,7 @@ CREATE TABLE `PREFIX_product` (
   `cache_default_attribute` int(10) unsigned DEFAULT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
+  `published_date` datetime NOT NULL,
   `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   `state` int(11) unsigned NOT NULL DEFAULT '1',

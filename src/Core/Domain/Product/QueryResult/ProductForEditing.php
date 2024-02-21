@@ -112,6 +112,11 @@ class ProductForEditing
     private $coverThumbnailUrl;
 
     /**
+     * @var \DateTime
+     */
+    private $publishedDate;
+
+    /**
      * @param int $productId
      * @param string $type
      * @param bool $isActive
@@ -143,7 +148,8 @@ class ProductForEditing
         array $associatedAttachments,
         ProductStockInformation $stockInformation,
         ?VirtualProductFileForEditing $virtualProductFile,
-        string $coverThumbnailUrl
+        string $coverThumbnailUrl,
+        \DateTime $publishedDate
     ) {
         $this->productId = $productId;
         $this->type = $type;
@@ -160,6 +166,7 @@ class ProductForEditing
         $this->stockInformation = $stockInformation;
         $this->virtualProductFile = $virtualProductFile;
         $this->coverThumbnailUrl = $coverThumbnailUrl;
+        $this->publishedDate = $publishedDate;
     }
 
     /**
@@ -280,5 +287,10 @@ class ProductForEditing
     public function getCoverThumbnailUrl(): string
     {
         return $this->coverThumbnailUrl;
+    }
+
+    public function getPublishedDate(): \DateTime
+    {
+        return $this->publishedDate;
     }
 }

@@ -246,6 +246,9 @@ class ProductCore extends ObjectModel
     /** @var string Object last modification date in mysql format Y-m-d H:i:s */
     public $date_upd;
 
+    /** @var string Object creation date in mysql format Y-m-d H:i:s */
+    public $published_date;
+
     /** @var array Tags data */
     public $tags;
 
@@ -529,6 +532,7 @@ class ProductCore extends ObjectModel
             'advanced_stock_management' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'],
+            'published_date' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'],
             'pack_stock_type' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'],
 
             /* Lang fields */
