@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\DBAL\Exception as ExceptionAlias;
@@ -271,6 +272,8 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
         $product->name = $localizedNames;
         $product->link_rewrite = $localizedLinkRewrites;
         $product->id_tax_rules_group = $this->taxRulesGroupRepository->getIdTaxRulesGroupMostUsed();
+        $currentDate = new DateTime('NOW');
+        $product->published_date = $currentDate->format('Y-m-d');
 
         $this->productValidator->validateCreation($product);
         $this->addObjectModelToShops($product, [$shopId], CannotAddProductException::class);
