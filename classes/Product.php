@@ -246,7 +246,7 @@ class ProductCore extends ObjectModel
     /** @var string Object last modification date in mysql format Y-m-d H:i:s */
     public $date_upd;
 
-    /** @var string Object creation date in mysql format Y-m-d H:i:s */
+    /** @var string Object publication date in mysql format Y-m-d H:i:s */
     public $published_date;
 
     /** @var array Tags data */
