@@ -54,6 +54,7 @@ class Home extends HomePage {
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productQuickViewLink = (number: number) => `${this.productArticle(number)} .product-miniature__quickview button`;
     this.blockCartModalCloseButton = `${this.blockCartModalDiv} button.btn-close`;
+    this.productRowQuantityUpDownButton = (direction: string) => `div.product-actions__quantity button.js-${direction}-button`;
 
     // Block cart modal
     this.blockCartModalSummary = '.blockcart-modal__summery';
