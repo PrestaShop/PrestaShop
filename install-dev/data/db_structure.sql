@@ -1638,7 +1638,7 @@ CREATE TABLE `PREFIX_product` (
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `redirect_type` ENUM(
     '', '404', '410', '301-product', '302-product',
-    '301-category', '302-category', '200-displayed', 
+    '301-category', '302-category', '200-displayed',
     '404-displayed', '410-displayed', 'default'
   ) NOT NULL DEFAULT 'default',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1657,6 +1657,7 @@ CREATE TABLE `PREFIX_product` (
   `cache_default_attribute` int(10) unsigned DEFAULT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
+  `published_date` datetime NOT NULL,
   `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   `state` int(11) unsigned NOT NULL DEFAULT '1',
@@ -1698,7 +1699,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `redirect_type` ENUM(
     '', '404', '410', '301-product', '302-product',
-    '301-category', '302-category', '200-displayed', 
+    '301-category', '302-category', '200-displayed',
     '404-displayed', '410-displayed', 'default'
   ) NOT NULL DEFAULT 'default',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',

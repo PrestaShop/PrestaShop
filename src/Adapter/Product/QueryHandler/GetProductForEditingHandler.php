@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
+use DateTime;
+use DateTimeInterface;
 use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -223,7 +225,8 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             $this->getAttachments($query->getProductId()),
             $this->getProductStockInformation($product),
             $this->getVirtualProductFile($product),
-            $this->getCover($query->getProductId(), $product->getShopId())
+            $this->getCover($query->getProductId(), $product->getShopId()),
+            new DateTime($product->published_date),
         );
     }
 
@@ -548,7 +551,6 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             DateTimeUtil::buildDateTimeOrNull($virtualProductFile->date_expiration)
         );
     }
-
     private function getCover(ProductId $productId, int $shopId): string
     {
         $idOfCoverImage = $this->productImageRepository->findCoverImageId($productId, new ShopId($shopId));
@@ -558,5 +560,12 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         }
 
         return $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
+    }
+
+    private function getPublishedDate(string $publishedDate): DateTimeInterface
+    {
+        $date = new DateTime($publishedDate);
+
+        return $date;
     }
 }
