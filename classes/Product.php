@@ -778,6 +778,8 @@ class ProductCore extends ObjectModel
             $this->product_type = ProductType::TYPE_VIRTUAL;
         }
 
+        $this->published_date = date('Y-m-d H:i:s');
+
         if (!parent::add($autodate, $null_values)) {
             return false;
         }
