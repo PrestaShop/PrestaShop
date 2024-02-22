@@ -78,9 +78,9 @@ final class RegenerateThumbnailsHandler extends AbstractObjectModelHandler imple
 
             // Getting formats generation (all if 'all' selected)
             if ($command->getImageTypeId() === 0) {
-                $formats = $this->imageTypeRepository->findAll();
+                $formats = $this->imageTypeRepository->findBy([$proc['type'] => 1]);
             } else {
-                $formats = $this->imageTypeRepository->findBy(['id' => $command->getImageTypeId()]);
+                $formats = $this->imageTypeRepository->findBy(['id' => $command->getImageTypeId(), $proc['type'] => 1]);
             }
 
             // If user asked to erase images, let's do it first

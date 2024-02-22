@@ -74,7 +74,7 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
       await imageSettingsPage.goToNewImageTypePage(page);
 
       const pageTitle = await addImageTypePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addImageTypePage.pageTitleCreate);
+      expect(pageTitle).to.equal(addImageTypePage.pageTitleCreate);
     });
 
     it('should create image type and check result', async function () {
@@ -111,7 +111,7 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
       await imageSettingsPage.gotoEditImageTypePage(page, 1);
 
       const pageTitle = await addImageTypePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addImageTypePage.pageTitleEdit);
+      expect(pageTitle).to.equal(addImageTypePage.pageTitleEdit(createImageTypeData.name));
     });
 
     it('should update image type', async function () {

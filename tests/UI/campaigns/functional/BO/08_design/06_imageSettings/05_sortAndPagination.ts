@@ -97,28 +97,28 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
       const paginationNumber = await imageSettingsPage.selectPaginationLimit(page, 20);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await imageSettingsPage.paginationNext(page);
-      expect(paginationNumber).to.equal('2');
+      expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
       const paginationNumber = await imageSettingsPage.paginationPrevious(page);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await imageSettingsPage.selectPaginationLimit(page, 50);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 
@@ -127,42 +127,42 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
     const sortTests = [
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_image_type', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_image_type', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByWidthAsc', sortBy: 'width', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByWidthAsc', sortBy: 'width', sortDirection: 'asc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByWidthDesc', sortBy: 'width', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByWidthDesc', sortBy: 'width', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByHeightAsc', sortBy: 'height', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByHeightAsc', sortBy: 'height', sortDirection: 'asc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByHeightDesc', sortBy: 'height', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByHeightDesc', sortBy: 'height', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_image_type', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_image_type', sortDirection: 'asc', isFloat: true,
         },
       },
     ];
@@ -183,7 +183,7 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.args.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
@@ -191,7 +191,7 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());

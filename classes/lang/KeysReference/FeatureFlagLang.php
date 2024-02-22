@@ -80,6 +80,3 @@ trans('Enable / Disable symfony layout (in opposition to legacy layout).', 'Admi
 
 trans('New front container', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the new front container.', 'Admin.Advparameters.Help');
-
-trans('Image settings', 'Admin.Advparameters.Feature');
-trans('Enable / Disable the new image settings page.', 'Admin.Advparameters.Help');
