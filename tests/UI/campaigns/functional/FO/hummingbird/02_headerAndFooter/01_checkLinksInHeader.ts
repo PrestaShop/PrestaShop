@@ -12,6 +12,8 @@ import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import homePage from '@pages/FO/hummingbird/home';
 import loginPage from '@pages/FO/hummingbird/login';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
+import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
+import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -103,10 +105,11 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
       await loginPage.goToHomePage(page);
       // Add product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 1, 3);
+      await homePage.quickViewProduct(page, 1);
+      await quickViewModal.setQuantityAndAddToCart(page, 3);
 
       // Close block cart modal
-      const isQuickViewModalClosed = await homePage.closeBlockCartModal(page);
+      const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page);
       expect(isQuickViewModalClosed).to.eq(true);
     });
 

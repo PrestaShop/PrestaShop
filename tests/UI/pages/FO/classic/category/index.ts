@@ -2,6 +2,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 import type {Page} from 'playwright';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 /**
  * Category page, contains functions that can be used on the page
@@ -16,6 +17,8 @@ class CategoryPage extends FOBasePage {
   private readonly mainSection: string;
 
   protected headerNamePage: string;
+
+  private readonly totalProducts: string;
 
   private readonly productsSection: string;
 
@@ -67,10 +70,6 @@ class CategoryPage extends FOBasePage {
 
   private readonly productAddToWishlist: (number: number) => string;
 
-  private readonly quickViewModalDiv: string;
-
-  private readonly quickViewModalProductImageCover: string;
-
   private readonly categoryDescription: string;
 
   private readonly searchFilters: string;
@@ -113,6 +112,7 @@ class CategoryPage extends FOBasePage {
     this.bodySelector = '#category';
     this.mainSection = '#main';
     this.headerNamePage = '#js-product-list-header';
+    this.totalProducts = '#js-product-list-top .total-products > p';
     this.productsSection = '#products';
     this.productListTop = '#js-product-list-top';
     this.productListDiv = '#js-product-list';
@@ -148,9 +148,6 @@ class CategoryPage extends FOBasePage {
     this.paginationNext = '#js-product-list nav.pagination a[rel=\'next\']';
     this.paginationPrevious = '#js-product-list nav.pagination a[rel=\'prev\']';
 
-    // Quick View modal
-    this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
-    this.quickViewModalProductImageCover = `${this.quickViewModalDiv} div.product-cover picture`;
     this.categoryDescription = '#category-description';
 
     // Filter
@@ -180,6 +177,15 @@ class CategoryPage extends FOBasePage {
    */
   async isCategoryPage(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.bodySelector, 2000);
+  }
+
+  /**
+   * Get products number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getProductsNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.totalProducts);
   }
 
   /**
@@ -319,7 +325,6 @@ class CategoryPage extends FOBasePage {
     await this.clickAndWaitForURL(page, this.productAttribute(id, 'thumbnail'));
   }
 
-  // Quick view methods
   /**
    * Click on Quick view Product
    * @param page {Page} Browser tab
@@ -350,27 +355,9 @@ class CategoryPage extends FOBasePage {
     }
     /* eslint-enable no-await-in-loop */
     await Promise.all([
-      this.waitForVisibleSelector(page, this.quickViewModalDiv),
+      this.waitForVisibleSelector(page, quickViewModal.quickViewModalDiv),
       page.locator(this.productQuickViewLink(id)).evaluate((el: HTMLElement) => el.click()),
     ]);
-  }
-
-  /**
-   * Is quick view product modal visible
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async isQuickViewProductModalVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.quickViewModalDiv, 2000);
-  }
-
-  /**
-   * Returns the URL of the main image in the quickview
-   * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
-   */
-  async getQuickViewImageMain(page: Page): Promise<string | null> {
-    return this.getAttributeContent(page, `${this.quickViewModalProductImageCover} source`, 'srcset');
   }
 
   /**

@@ -16,6 +16,7 @@ import imageSettingsPage from '@pages/BO/design/imageSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {categoryPage} from '@pages/FO/classic/category';
+import {quickViewModal} from "@pages/FO/classic/modal/quickView";
 
 // Import data
 import ProductData from '@data/faker/product';
@@ -292,14 +293,14 @@ describe('BO - Design - Image Settings - Check product image format', async () =
 
         await categoryPage.quickViewProduct(page, nthProduct as number);
 
-        const isModalVisible = await categoryPage.isQuickViewProductModalVisible(page);
+        const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
         expect(isModalVisible).to.eq(true);
       });
 
       it('should check that the main image of the quick view is a WebP', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkMainImageQuickView${arg.extOriginal}`, baseContext);
 
-        const quickViewImageMain = await categoryPage.getQuickViewImageMain(page);
+        const quickViewImageMain = await quickViewModal.getQuickViewImageMain(page);
         expect(quickViewImageMain).to.not.eq(null);
 
         await files.downloadFile(quickViewImageMain as string, 'image.img');

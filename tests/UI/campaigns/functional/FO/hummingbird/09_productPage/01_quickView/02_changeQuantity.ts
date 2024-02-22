@@ -8,6 +8,8 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingb
 
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
+import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
+import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -58,42 +60,41 @@ describe('FO - Product page - Quick view : Change quantity', async () => {
 
       await homePage.quickViewProduct(page, 3);
 
-      const isModalVisible = await homePage.isQuickViewProductModalVisible(page);
+      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it('should change the quantity by using the arrow \'UP\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'incrementQuantity', baseContext);
 
-      await homePage.setQuantityByArrowUpDown(page, 5, 'increment');
+      await quickViewModal.setQuantityByArrowUpDown(page, 5, 'increment');
 
-      const productQuantity = await homePage.getProductQuantityFromQuickViewModal(page);
+      const productQuantity = await quickViewModal.getProductQuantityFromQuickViewModal(page);
       expect(productQuantity).to.equal(5);
     });
 
     it('should change the quantity by using the arrow \'Down\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'incrementQuantity2', baseContext);
 
-      await homePage.setQuantityByArrowUpDown(page, 1, 'decrement');
+      await quickViewModal.setQuantityByArrowUpDown(page, 1, 'decrement');
 
-      const productQuantity = await homePage.getProductQuantityFromQuickViewModal(page);
+      const productQuantity = await quickViewModal.getProductQuantityFromQuickViewModal(page);
       expect(productQuantity).to.equal(1);
     });
 
     it('should add quantity of the product by setting input value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput', baseContext);
 
-      await homePage.changeQuantity(page, 12);
-      await homePage.addToCartByQuickView(page);
+      await quickViewModal.setQuantityAndAddToCart(page, 12);
 
-      const isVisible = await homePage.isBlockCartModalVisible(page);
+      const isVisible = await blockCartModal.isBlockCartModalVisible(page);
       expect(isVisible).to.eq(true);
     });
 
     it('should click on continue shopping and check that the modal is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping', baseContext);
 
-      const isNotVisible = await homePage.continueShopping(page);
+      const isNotVisible = await blockCartModal.continueShopping(page);
       expect(isNotVisible).to.eq(true);
     });
 
@@ -109,7 +110,7 @@ describe('FO - Product page - Quick view : Change quantity', async () => {
 
       await homePage.quickViewProduct(page, 3);
 
-      const isModalVisible = await homePage.isQuickViewProductModalVisible(page);
+      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.eq(true);
     });
 
@@ -117,17 +118,17 @@ describe('FO - Product page - Quick view : Change quantity', async () => {
     it.skip('should set \'-24\' in the quantity input', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput2', baseContext);
 
-      await homePage.changeQuantity(page, '-24');
-      await homePage.addToCartByQuickView(page);
+      await quickViewModal.setQuantity(page, '-24');
+      await quickViewModal.addToCartByQuickView(page);
 
-      const isVisible = await homePage.isBlockCartModalVisible(page);
+      const isVisible = await blockCartModal.isBlockCartModalVisible(page);
       expect(isVisible).to.eq(true);
     });
 
     it.skip('should click on continue shopping and check that the modal is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping2', baseContext);
 
-      const isNotVisible = await homePage.continueShopping(page);
+      const isNotVisible = await blockCartModal.continueShopping(page);
       expect(isNotVisible).to.eq(true);
     });
 
@@ -143,17 +144,16 @@ describe('FO - Product page - Quick view : Change quantity', async () => {
 
       await homePage.quickViewProduct(page, 3);
 
-      const isModalVisible = await homePage.isQuickViewProductModalVisible(page);
+      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it('should set \'Prestashop\' in the quantity input and check that add to cart button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput3', baseContext);
 
-      await homePage.changeQuantity(page, 'Prestashop');
-      await homePage.addToCartByQuickView(page);
+      await quickViewModal.setQuantityAndAddToCart(page, 'Prestashop');
 
-      const isEnabled = await homePage.isAddToCartButtonEnabled(page);
+      const isEnabled = await quickViewModal.isAddToCartButtonEnabled(page);
       expect(isEnabled, 'Add to cart button is not disabled').to.eq(false);
     });
   });

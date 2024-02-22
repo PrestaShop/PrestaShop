@@ -15,7 +15,7 @@ import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
-import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
+import {categoryPage, categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 
 // Import data
@@ -23,6 +23,7 @@ import ProductData from '@data/faker/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
+import {quickViewModal} from "@pages/FO/classic/modal/quickView";
 
 const baseContext: string = 'functional_BO_catalog_products_optionsTab';
 
@@ -158,13 +159,13 @@ describe('BO - Catalog - Products : Options tab', async () => {
     it('should check that the created product is visible in clothes category list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatProductIsVisible', baseContext);
 
-      productsNumber = await homePage.getProductsNumber(page);
+      productsNumber = await categoryPage.getProductsNumber(page);
       await categoryPageFO.quickViewProduct(page, productsNumber);
 
-      const isModalVisible = await categoryPageFO.isQuickViewProductModalVisible(page);
+      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.eq(true);
 
-      const result = await homePage.getProductDetailsFromQuickViewModal(page);
+      const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
       expect(result.name).to.equal(newProductData.name);
     });
 
@@ -209,14 +210,14 @@ describe('BO - Catalog - Products : Options tab', async () => {
     it('should check that the created product is not visible in clothes category list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatProductIsNotVisible', baseContext);
 
-      const productsNumberInCategory = await homePage.getProductsNumber(page);
+      const productsNumberInCategory = await categoryPageFO.getProductsNumber(page);
       expect(productsNumberInCategory).to.eq(productsNumber - 1);
     });
 
     it('should search for the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-      await homePage.searchProduct(page, newProductData.name);
+      await categoryPageFO.searchProduct(page, newProductData.name);
       await searchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
@@ -264,7 +265,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
     it('should check that the created product is not visible in clothes category list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatProductIsNotVisible2', baseContext);
 
-      const productsNumberInCategory = await homePage.getProductsNumber(page);
+      const productsNumberInCategory = await categoryPageFO.getProductsNumber(page);
       expect(productsNumberInCategory).to.eq(productsNumber - 1);
     });
 
