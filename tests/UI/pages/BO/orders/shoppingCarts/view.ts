@@ -59,7 +59,7 @@ class ViewShoppingCarts extends BOBasePage {
     this.orderInformationBlock = '#main-div div[data-role="order-information"]';
     this.orderInformationBlockBody = `${this.orderInformationBlock} .card-body`;
     this.orderInformationButtonCreateOrder = `${this.orderInformationBlockBody} #create-order-from-cart`;
-    this.orderInformationLinkOrder = `${this.orderInformationBlockBody} h2 a`;
+    this.orderInformationLinkOrder = `${this.orderInformationBlockBody} a`;
 
     // Cart Summary Block
     this.cartSummaryBlock = '#main-div div[data-role="cart-summary"]';

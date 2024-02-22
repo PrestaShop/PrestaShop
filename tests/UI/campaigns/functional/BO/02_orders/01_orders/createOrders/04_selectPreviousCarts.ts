@@ -471,11 +471,11 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
         .and.to.contains(todayCartFormat);
     });
 
-    it('should check the order Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock', baseContext);
+    it('should check the cart Information Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCartInformationBlock', baseContext);
 
       const orderInformation = await viewShoppingCartPage.getOrderInformation(shoppingCartPage!);
-      expect(orderInformation).to.contains('No order was created from this cart.');
+      await expect(orderInformation).to.contains('The customer has not proceeded to checkout yet.');
 
       const hasButtonCreateOrderFromCart = await viewShoppingCartPage.hasButtonCreateOrderFromCart(shoppingCartPage!);
       expect(hasButtonCreateOrderFromCart).to.eq(true);

@@ -441,14 +441,19 @@ class FrontControllerCore extends Controller
                 $cart->id_address_delivery = 0;
                 $cart->id_address_invoice = 0;
             }
-
-            // Needed if the merchant want to give a free product to every visitors
             $this->context->cart = $cart;
-            CartRule::autoAddToCart($this->context);
         } else {
             $this->context->cart = $cart;
             $this->context->cart->checkAndUpdateAddresses();
         }
+
+        /*
+         * We also need to run automatic cart rule actions.
+         * autoAddToCart is required to automatically assigning newly created cart rules with no code (automatic).
+         * autoRemoveFromCart is needed to verify, if the cart rules already in a cart are still valid.
+         */
+        CartRule::autoRemoveFromCart($this->context);
+        CartRule::autoAddToCart($this->context);
 
         $this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
@@ -472,8 +477,6 @@ class FrontControllerCore extends Controller
         if (!Tools::isPHPCLI() && Country::GEOLOC_FORBIDDEN == $this->restrictedCountry) {
             $this->displayRestrictedCountryPage();
         }
-
-        $this->context->cart = $cart;
 
         Hook::exec(
             'actionFrontControllerInitAfter',
@@ -1494,7 +1497,7 @@ class FrontControllerCore extends Controller
                 'js_url' => _THEME_JS_DIR_,
                 'pic_url' => _THEME_PROD_PIC_DIR_,
                 'theme_assets' => _THEME_DIR_ . 'assets/',
-                'theme_dir' => $this->getThemeDir(),
+                'theme_dir' => _THEME_DIR_,
             ];
 
             $themeAssetsConfig = $this->context->shop->theme->get('assets', false);
