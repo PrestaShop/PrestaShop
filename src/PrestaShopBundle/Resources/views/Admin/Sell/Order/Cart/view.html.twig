@@ -33,14 +33,14 @@
   {% endblock %}
 
   <div class="row">
-    <div class="col">
-      {% block cart_customer_information %}
-        {% include '@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/customer_information.html.twig' %}
-      {% endblock %}
-    </div>
-    <div class="col">
+    <div class="col-md-6">
       {% block cart_order_information %}
         {% include '@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/order_information.html.twig' %}
+      {% endblock %}
+    </div>
+    <div class="col-md-6">
+      {% block cart_customer_information %}
+        {% include '@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/customer_information.html.twig' %}
       {% endblock %}
     </div>
   </div>
@@ -48,4 +48,20 @@
   {% block cart_summary %}
     {% include '@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig' %}
   {% endblock %}
+
+  {% if cartView.cartSummary.cart_link is not empty %}
+    <div class="card" data-role="customer-information">
+      <h3 class="card-header">
+        <i class="material-icons">mail</i>
+        {{ 'Share this cart'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </h3>
+      <div class="card-body">
+        <p>{{ 'Thanks to this link, your customer can open the cart, check its contents and validate the order, if it suits them.'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+        <div class="card bg-light p-2 mb-0">
+        {{ cartView.cartSummary.cart_link }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  
 {% endblock %}

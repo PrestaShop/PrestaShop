@@ -28,45 +28,51 @@
     {{ 'Customer information'|trans({}, 'Admin.Orderscustomers.Feature') }}
   </h3>
   <div class="card-body">
-    <div class="row">
-      {% if cartView.customerInformation.id %}
-        <div class="col">
-          <h2>
-            <a href="{{ path('admin_customers_view', {'customerId': cartView.customerInformation.id }) }}">
-              {% if cartView.customerInformation.gender %}
-                {{ cartView.customerInformation.gender }}
-              {% endif %}
-              {{ cartView.customerInformation.first_name }}
-              {{ cartView.customerInformation.last_name }}
-            </a>
-          </h2>
+    {% if cartView.customerInformation.id %}
+      <p class="mb-0">
+        {{ 'Customer ID:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        {{ cartView.customerInformation.id }}
+      </p>
 
-          <p class="mb-0">
-            {{ 'Account registration date:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-            {{ cartView.customerInformation.registration_date }}
-          </p>
+      <p class="mb-0">
+        {{ 'Name:'|trans({}, 'Admin.Global') }}
+        {% if cartView.customerInformation.gender %}
+          {{ cartView.customerInformation.gender }}
+        {% endif %}
+        {{ cartView.customerInformation.first_name }} {{ cartView.customerInformation.last_name }}
+      </p>
 
-          <p class="mb-0">
-            {{ 'Valid orders placed:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-            {{ cartView.customerInformation.valid_orders_count }}
-          </p>
+      <p class="mb-0">
+        {{ 'Email:'|trans({}, 'Admin.Global') }}
+        {{ cartView.customerInformation.email }}
+      </p>
 
-          <p class="mb-0">
-            {{ 'Total spent since registration:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-            {{ cartView.customerInformation.total_spent_since_registration }}
-          </p>
-        </div>
+      <p class="mb-0">
+        {{ 'Account creation date:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        {{ cartView.customerInformation.registration_date }}
+      </p>
 
-        <div class="col text-right">
-          <a href="mailto:{{ cartView.customerInformation.email }}" class="btn btn-outline-secondary">
-            {{ cartView.customerInformation.email }}
-          </a>
-        </div>
-      {% else %}
-        <div class="col">
-          <h2 class="mb-0">{{ 'Guest not registered'|trans({}, 'Admin.Orderscustomers.Feature') }}</h2>
-        </div>
-      {% endif %}
-    </div>
+      <p class="mb-0">
+        {{ 'Number of orders:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        {{ cartView.customerInformation.valid_orders_count }}
+      </p>
+
+      <p>
+        {{ 'Amount spent:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        {{ cartView.customerInformation.total_spent_since_registration }}
+      </p>
+
+      <a href="{{ path('admin_customers_view', {'customerId': cartView.customerInformation.id }) }}" class="btn btn-primary">
+        <i class="material-icons">remove_red_eye</i>
+        {{ 'View customer'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </a>
+      <a href="mailto:{{ cartView.customerInformation.email }}" class="btn btn-secondary">
+        <i class="material-icons">mail</i>
+        {{ 'Write an email'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </a>
+
+    {% else %}
+      <p class="mb-0">{{ 'No customer information available yet.'|trans({}, 'Admin.Orderscustomers.Feature') }}</h2>
+    {% endif %}
   </div>
 </div>
