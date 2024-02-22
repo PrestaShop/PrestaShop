@@ -40,6 +40,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TokenAuthenticatorTest extends TestCase
 {
@@ -51,9 +52,12 @@ class TokenAuthenticatorTest extends TestCase
     {
         $psr7 = new Psr17Factory();
         $this->authorizationServer = $this->createMock(AuthorisationServerInterface::class);
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')->willReturnArgument(0);
         $this->tokenAuthenticator = new TokenAuthenticator(
             $this->authorizationServer,
-            new PsrHttpFactory($psr7, $psr7, $psr7, $psr7)
+            new PsrHttpFactory($psr7, $psr7, $psr7, $psr7),
+            $translator,
         );
         $this->request = Request::create('/');
         parent::setUp();
