@@ -79,7 +79,7 @@
     "test:functional:FO:hummingbird": "TEST_PATH='functional/FO/hummingbird/**/*' npm run test:specific",
     "test:functional:FO:hummingbird:01-03": "TEST_PATH='functional/FO/hummingbird/0{1,2,3}*/**/*' npm run test:specific",
     "test:functional:FO:hummingbird:04-07": "TEST_PATH='functional/FO/hummingbird/0{4,5,6,7}*/**/*' npm run test:specific",
-    "test:functional:FO:hummingbird:08-12": "TEST_PATH='functional/FO/hummingbird/{08,09,11,12}*/**/*' npm run test:specific",
+    "test:functional:FO:hummingbird:08-12": "TEST_PATH='functional/FO/hummingbird/{08,09,10,11,12}*/**/*' npm run test:specific",
     "// Functional WS": "Scripts to run functional WS tests",
     "test:functional:WS": "TEST_PATH='functional/WS/**/*' npm run test:specific",
     "// Modules tests": "Scripts to run modules tests",

@@ -44,9 +44,9 @@ class CartPage extends FOBasePage {
 
   protected productQuantity: (number: number) => string;
 
-  private readonly productQuantityScrollUpButton: string;
+  protected productQuantityScrollUpButton: (number: number) => string;
 
-  private readonly productQuantityScrollDownButton: string;
+  protected productQuantityScrollDownButton: (number: number) => string;
 
   protected productSize: (number: number) => string;
 
@@ -60,7 +60,7 @@ class CartPage extends FOBasePage {
 
   protected noItemsInYourCartSpan: string;
 
-  private readonly alertMessage: string;
+  protected alertMessage: string;
 
   private readonly subtotalDiscountValueSpan: string;
 
@@ -139,8 +139,10 @@ class CartPage extends FOBasePage {
     this.productTotalPrice = (number: number) => `${this.productItem(number)} span.product-price`;
     this.productQuantity = (number: number) => `${this.productItem(number)} div.input-group `
       + 'input.js-cart-line-product-quantity';
-    this.productQuantityScrollUpButton = 'button.js-increase-product-quantity.bootstrap-touchspin-up';
-    this.productQuantityScrollDownButton = 'button.js-decrease-product-quantity.bootstrap-touchspin-down';
+    this.productQuantityScrollUpButton = (number: number) => `${this.productItem(number)} `
+      + 'button.js-increase-product-quantity.bootstrap-touchspin-up';
+    this.productQuantityScrollDownButton = (number: number) => `${this.productItem(number)} `
+      + 'button.js-decrease-product-quantity.bootstrap-touchspin-down';
     this.productSize = (number: number) => `${this.productItem(number)} div.product-line-info.size span.value`;
     this.productColor = (number: number) => `${this.productItem(number)} div.product-line-info.color span.value`;
     this.productImage = (number: number) => `${this.productItem(number)} span.product-image img`;
@@ -279,26 +281,26 @@ class CartPage extends FOBasePage {
   /**
    * Set product quantity
    * @param page {Page} Browser tab
-   * @param productID {number} ID of the product
+   * @param productRow {number} Row of the product
    * @param quantity {number} New quantity of the product
    * @returns {Promise<number>}
    */
-  async setProductQuantity(page: Page, productID: number = 1, quantity: number = 1): Promise<number> {
-    const productQuantity: number = parseInt(await this.getAttributeContent(page, this.productQuantity(productID), 'value'), 10);
+  async setProductQuantity(page: Page, productRow: number = 1, quantity: number = 1): Promise<number> {
+    const productQuantity: number = parseInt(await this.getAttributeContent(page, this.productQuantity(productRow), 'value'), 10);
 
     if (productQuantity < quantity) {
       for (let i: number = 1; i < quantity; i++) {
-        await page.locator(this.productQuantityScrollUpButton).click();
+        await page.locator(this.productQuantityScrollUpButton(productRow)).click();
         await page.waitForTimeout(1000);
       }
     } else {
       for (let i: number = productQuantity; i > quantity; i--) {
-        await page.locator(this.productQuantityScrollDownButton).click();
+        await page.locator(this.productQuantityScrollDownButton(productRow)).click();
         await page.waitForTimeout(1000);
       }
     }
 
-    return parseInt(await this.getAttributeContent(page, this.productQuantity(productID), 'value'), 10);
+    return parseInt(await this.getAttributeContent(page, this.productQuantity(productRow), 'value'), 10);
   }
 
   /**
