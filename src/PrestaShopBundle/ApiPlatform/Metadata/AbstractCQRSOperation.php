@@ -140,6 +140,9 @@ abstract class AbstractCQRSOperation extends HttpOperation
         unset($passedArguments['CQRSQueryMapping']);
         unset($passedArguments['ApiResourceMapping']);
 
+        // Unless especially specified we only handle JSON format by default
+        $passedArguments['formats'] = $formats ?? ['json'];
+
         parent::__construct(...$passedArguments);
     }
 

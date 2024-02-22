@@ -44,6 +44,7 @@ class CQRSCreateTest extends TestCase
         $this->assertNull($operation->getProvider());
         $this->assertEquals(CQRSCreate::METHOD_POST, $operation->getMethod());
         $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With positioned parameters
         $operation = new CQRSCreate('/uri');
@@ -52,14 +53,17 @@ class CQRSCreateTest extends TestCase
         $this->assertEquals(CQRSCreate::METHOD_POST, $operation->getMethod());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With named parameters
         $operation = new CQRSCreate(
+            formats: ['json', 'html'],
             extraProperties: ['scopes' => ['test']]
         );
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
         $this->assertNull($operation->getProvider());
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
+        $this->assertEquals(['json', 'html'], $operation->getFormats());
     }
 
     public function testScopes(): void

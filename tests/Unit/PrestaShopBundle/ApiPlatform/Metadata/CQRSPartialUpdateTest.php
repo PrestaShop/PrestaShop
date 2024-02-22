@@ -49,6 +49,7 @@ class CQRSPartialUpdateTest extends TestCase
         $this->assertNotEmpty($operation->getDenormalizationContext());
         $this->assertArrayHasKey('deep_object_to_populate', $operation->getDenormalizationContext());
         $this->assertFalse($operation->getDenormalizationContext()['deep_object_to_populate']);
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With positioned parameters
         $operation = new CQRSPartialUpdate('/uri');
@@ -57,9 +58,11 @@ class CQRSPartialUpdateTest extends TestCase
         $this->assertEquals(CQRSPartialUpdate::METHOD_PATCH, $operation->getMethod());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With named parameters
         $operation = new CQRSPartialUpdate(
+            formats: ['json', 'html'],
             read: true,
             extraProperties: ['scopes' => ['test']],
         );
@@ -67,6 +70,7 @@ class CQRSPartialUpdateTest extends TestCase
         $this->assertNull($operation->getProvider());
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
         $this->assertTrue($operation->canRead());
+        $this->assertEquals(['json', 'html'], $operation->getFormats());
     }
 
     public function testScopes(): void

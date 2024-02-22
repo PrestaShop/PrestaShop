@@ -44,6 +44,7 @@ class CQRSDeleteTest extends TestCase
         $this->assertEquals(CQRSDelete::METHOD_DELETE, $operation->getMethod());
         $this->assertEquals([], $operation->getExtraProperties());
         $this->assertFalse($operation->getOutput());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With positioned parameters
         $operation = new CQRSDelete('/uri');
@@ -53,9 +54,11 @@ class CQRSDeleteTest extends TestCase
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
         $this->assertFalse($operation->getOutput());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With named parameters
         $operation = new CQRSDelete(
+            formats: ['json', 'html'],
             output: 'test',
             extraProperties: ['scopes' => ['test']],
         );
@@ -63,6 +66,7 @@ class CQRSDeleteTest extends TestCase
         $this->assertNull($operation->getProcessor());
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
         $this->assertEquals('test', $operation->getOutput());
+        $this->assertEquals(['json', 'html'], $operation->getFormats());
     }
 
     public function testScopes(): void

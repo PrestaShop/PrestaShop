@@ -45,6 +45,7 @@ class CQRSUpdateTest extends TestCase
         $this->assertEquals(CQRSUpdate::METHOD_PUT, $operation->getMethod());
         $this->assertEquals([], $operation->getExtraProperties());
         $this->assertFalse($operation->canRead());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With positioned parameters
         $operation = new CQRSUpdate('/uri');
@@ -53,9 +54,11 @@ class CQRSUpdateTest extends TestCase
         $this->assertEquals(CQRSUpdate::METHOD_PUT, $operation->getMethod());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With named parameters
         $operation = new CQRSUpdate(
+            formats: ['json', 'html'],
             read: true,
             extraProperties: ['scopes' => ['test']],
         );
@@ -63,6 +66,7 @@ class CQRSUpdateTest extends TestCase
         $this->assertNull($operation->getProvider());
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
         $this->assertTrue($operation->canRead());
+        $this->assertEquals(['json', 'html'], $operation->getFormats());
     }
 
     public function testScopes(): void

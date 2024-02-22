@@ -44,6 +44,7 @@ class CQRSCommandTest extends TestCase
         $this->assertNull($operation->getProvider());
         $this->assertEquals(CQRSCommand::METHOD_POST, $operation->getMethod());
         $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With positioned parameters
         $operation = new CQRSCommand(CQRSCommand::METHOD_PUT, '/uri');
@@ -52,14 +53,17 @@ class CQRSCommandTest extends TestCase
         $this->assertEquals(CQRSCommand::METHOD_PUT, $operation->getMethod());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With named parameters
         $operation = new CQRSCommand(
+            formats: ['json', 'html'],
             extraProperties: ['scopes' => ['test']]
         );
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
         $this->assertNull($operation->getProvider());
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
+        $this->assertEquals(['json', 'html'], $operation->getFormats());
     }
 
     public function testScopes(): void

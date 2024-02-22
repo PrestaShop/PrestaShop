@@ -43,19 +43,23 @@ class DQBPaginatedListTest extends TestCase
         $this->assertEquals(QueryListProvider::class, $operation->getProvider());
         $this->assertEquals(DQBPaginatedList::METHOD_GET, $operation->getMethod());
         $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With positioned parameters
         $operation = new DQBPaginatedList('/uri');
         $this->assertEquals(QueryListProvider::class, $operation->getProvider());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With named parameters
         $operation = new DQBPaginatedList(
+            formats: ['json', 'html'],
             extraProperties: ['scopes' => ['test']]
         );
         $this->assertEquals(QueryListProvider::class, $operation->getProvider());
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
+        $this->assertEquals(['json', 'html'], $operation->getFormats());
     }
 
     public function testScopes(): void

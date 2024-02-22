@@ -42,19 +42,23 @@ class CQRSGetTest extends TestCase
         $this->assertEquals(QueryProvider::class, $operation->getProvider());
         $this->assertEquals(CQRSGet::METHOD_GET, $operation->getMethod());
         $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With positioned parameters
         $operation = new CQRSGet('/uri');
         $this->assertEquals(QueryProvider::class, $operation->getProvider());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With named parameters
         $operation = new CQRSGet(
-            extraProperties: ['scopes' => ['test']]
+            formats: ['json', 'html'],
+            extraProperties: ['scopes' => ['test']],
         );
         $this->assertEquals(QueryProvider::class, $operation->getProvider());
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
+        $this->assertEquals(['json', 'html'], $operation->getFormats());
     }
 
     public function testScopes(): void

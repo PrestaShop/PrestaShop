@@ -115,9 +115,11 @@ api_platform:
   enable_swagger: true
   enable_swagger_ui: true
   formats:
-    json: [ 'application/json' ]
+    json: [ 'application/json', 'application/merge-patch+json' ]
     # Allow this format for other API endpoint than native endpoint (by default we will use json)
     jsonld: [ 'application/ld+json' ]
+  patch_formats:
+    json: [ 'application/merge-patch+json' ]
   docs_formats:
     # This is used to allow using the Swagger UI in HTML presentation
     html: [ 'text/html' ]
