@@ -120,6 +120,8 @@ api_platform:
     jsonld: [ 'application/ld+json' ]
   patch_formats:
     json: [ 'application/merge-patch+json' ]
+  error_formats:
+    json: [ 'application/json' ]
   docs_formats:
     # This is used to allow using the Swagger UI in HTML presentation
     html: [ 'text/html' ]

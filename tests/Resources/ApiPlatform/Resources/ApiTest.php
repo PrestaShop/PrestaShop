@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Resources\ApiPlatform\Resources;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
 
@@ -39,16 +39,32 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
             uriTemplate: '/test/unscoped/product/{productId}',
             CQRSQuery: GetProductForEditing::class,
             scopes: [],
-            CQRSQueryMapping: Product::QUERY_MAPPING,
+            CQRSQueryMapping: ApiTest::QUERY_MAPPING,
         ),
         new CQRSGet(
             uriTemplate: '/test/scoped/product/{productId}',
             CQRSQuery: GetProductForEditing::class,
             scopes: ['product_read'],
-            CQRSQueryMapping: Product::QUERY_MAPPING,
+            CQRSQueryMapping: ApiTest::QUERY_MAPPING,
         ),
     ],
 )]
-class ApiTest extends Product
+class ApiTest
 {
+    #[ApiProperty(identifier: true)]
+    public int $productId;
+
+    public string $type;
+
+    public bool $active;
+
+    public array $names;
+
+    public array $descriptions;
+
+    public const QUERY_MAPPING = [
+        '[langId]' => '[displayLanguageId]',
+        '[basicInformation][localizedNames]' => '[names]',
+        '[basicInformation][localizedDescriptions]' => '[descriptions]',
+    ];
 }

@@ -38,6 +38,7 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This class is responsible for authenticating api calls using the Authorization header
@@ -49,6 +50,7 @@ class TokenAuthenticator extends AbstractAuthenticator
     public function __construct(
         private readonly AuthorisationServerInterface $authorizationServer,
         private readonly HttpMessageFactoryInterface $httpMessageFactory,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -66,7 +68,7 @@ class TokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        return $this->returnWWWAuthenticateResponse($exception->getMessage());
+        return $this->returnWWWAuthenticateResponse($this->translator->trans($exception->getMessageKey(), $exception->getMessageData()));
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
@@ -91,12 +93,14 @@ class TokenAuthenticator extends AbstractAuthenticator
         }
 
         $credentials = $this->httpMessageFactory->createRequest($request);
-        $userIdentifier = $this->authorizationServer->getUser($credentials);
+        $user = $this->authorizationServer->getUser($credentials);
 
-        if (null === $userIdentifier) {
+        if (null === $user) {
             throw new CustomUserMessageAuthenticationException('Invalid credentials');
         }
 
-        return new SelfValidatingPassport(new UserBadge($userIdentifier->getUserIdentifier()));
+        // Returns passport purely based on JWT token here, we set a specific loader that returns the
+        // user object directly since it was already resolved by our authorization server
+        return new SelfValidatingPassport(new UserBadge($user->getUserIdentifier(), fn () => $user));
     }
 }

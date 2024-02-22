@@ -45,7 +45,7 @@ class ApiClientProvider implements UserProviderInterface
 
     public function loadUserByIdentifier(string $identifier): ApiClient
     {
-        $apiClient = $this->apiClientRepository->findOneBy(['clientId' => $identifier]);
+        $apiClient = $this->apiClientRepository->getByClientId($identifier);
 
         if (!$apiClient instanceof ApiClient) {
             throw new UserNotFoundException('Api Client not found');
