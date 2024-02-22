@@ -56,8 +56,7 @@ class ScopesToSecurityMetadataCollectionFactoryDecorator implements ResourceMeta
             foreach ($operations as $key => $operation) {
                 $extraProperties = $operation->getExtraProperties();
                 if (array_key_exists('scopes', $extraProperties)) {
-                    // We remove the original element and replace it with our modified clone.
-                    $operations->remove($key);
+                    // Using add with the same key replaces the element in the Operations elements
                     $operations->add($key, $operation->withSecurity(
                         $this->translateScopeToSecurity($extraProperties['scopes'], $operation->getSecurity())
                     ));
