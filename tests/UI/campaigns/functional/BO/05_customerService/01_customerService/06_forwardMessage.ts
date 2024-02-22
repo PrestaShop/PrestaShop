@@ -131,7 +131,7 @@ describe('BO - Customer Service : Forward message', async () => {
     });
 
     it('should quick view the first product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'quickViewFirstProduct', baseContext);
 
       await homePage.quickViewProduct(page, 1);
 
