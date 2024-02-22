@@ -43,8 +43,7 @@ class ApiSecurityTest extends ApiTestCase
     {
         self::createApiClient();
         $bearerToken = $this->getBearerToken();
-        $client = static::createClient();
-        $response = $client->request('GET', '/api/test/unscoped/product/1', [
+        $response = static::createClient()->request('GET', '/api/test/unscoped/product/1', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $bearerToken,
             ],
@@ -57,8 +56,7 @@ class ApiSecurityTest extends ApiTestCase
     public function testAuthenticationWithoutTokenFailed()
     {
         self::createApiClient();
-        $client = static::createClient();
-        $response = $client->request('GET', '/api/test/unscoped/product/1');
+        $response = static::createClient()->request('GET', '/api/test/unscoped/product/1');
 
         self::assertResponseStatusCodeSame(401);
         $this->assertEquals('No Authorization header provided', $response->getContent(false));
@@ -68,8 +66,7 @@ class ApiSecurityTest extends ApiTestCase
     {
         self::createApiClient();
         $bearerToken = $this->getBearerToken();
-        $client = static::createClient();
-        $response = $client->request('GET', '/api/test/unscoped/product/1', [
+        $response = static::createClient()->request('GET', '/api/test/unscoped/product/1', [
             'headers' => [
                 'Authorization' => $bearerToken,
             ],
@@ -82,8 +79,7 @@ class ApiSecurityTest extends ApiTestCase
     public function testAuthenticationWithInvalidCredential()
     {
         self::createApiClient();
-        $client = static::createClient();
-        $response = $client->request('GET', '/api/test/unscoped/product/1', [
+        $response = static::createClient()->request('GET', '/api/test/unscoped/product/1', [
             'headers' => [
                 'Authorization' => 'Bearer toto',
             ],
@@ -97,8 +93,7 @@ class ApiSecurityTest extends ApiTestCase
     {
         self::createApiClient();
         $bearerToken = $this->getBearerToken();
-        $client = static::createClient();
-        $response = $client->request('GET', '/api/test/unscoped/product/1', [
+        $response = static::createClient()->request('GET', '/api/test/unscoped/product/1', [
             'headers' => [
                 'Authorization' => 'bearer ' . $bearerToken,
             ],
@@ -112,8 +107,7 @@ class ApiSecurityTest extends ApiTestCase
     {
         self::createApiClient(['product_read']);
         $bearerToken = $this->getBearerToken(['product_read']);
-        $client = static::createClient();
-        $response = $client->request('GET', '/api/test/scoped/product/1', [
+        $response = static::createClient()->request('GET', '/api/test/scoped/product/1', [
             'auth_bearer' => $bearerToken,
         ]);
 
@@ -127,8 +121,7 @@ class ApiSecurityTest extends ApiTestCase
         self::createApiClient(['product_read']);
         // But the token is generated without containing the required scope
         $bearerToken = $this->getBearerToken();
-        $client = static::createClient();
-        $client->request('GET', '/api/test/scoped/product/1', [
+        static::createClient()->request('GET', '/api/test/scoped/product/1', [
             'auth_bearer' => $bearerToken,
         ]);
 

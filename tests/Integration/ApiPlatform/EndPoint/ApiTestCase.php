@@ -77,7 +77,6 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         if (null === self::$clientSecret) {
             self::createApiClient($scopes);
         }
-        $client = static::createClient();
         $parameters = ['parameters' => [
             'client_id' => static::CLIENT_ID,
             'client_secret' => static::$clientSecret,
@@ -90,14 +89,13 @@ abstract class ApiTestCase extends ApiPlatformTestCase
                 'content-type' => 'application/x-www-form-urlencoded',
             ],
         ];
-        $response = $client->request('POST', '/api/oauth2/token', $options);
+        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
 
         return json_decode($response->getContent())->access_token;
     }
 
     protected static function createApiClient(array $scopes = [], int $lifetime = 10000): void
     {
-        $client = static::createClient();
         $command = new AddApiClientCommand(
             static::CLIENT_NAME,
             static::CLIENT_ID,
@@ -107,7 +105,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
             $scopes
         );
 
-        $container = $client->getContainer();
+        $container = static::createClient()->getContainer();
         $commandBus = $container->get('prestashop.core.command_bus');
         $createdApiClient = $commandBus->handle($command);
 
@@ -116,7 +114,6 @@ abstract class ApiTestCase extends ApiPlatformTestCase
 
     protected static function addLanguageByLocale(string $locale): int
     {
-        $client = static::createClient();
         $isoCode = substr($locale, 0, strpos($locale, '-'));
 
         // Copy resource assets into tmp folder to mimic an upload file path
@@ -143,7 +140,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
             [1]
         );
 
-        $container = $client->getContainer();
+        $container = static::createClient()->getContainer();
         $commandBus = $container->get('prestashop.core.command_bus');
 
         return $commandBus->handle($command)->getValue();
