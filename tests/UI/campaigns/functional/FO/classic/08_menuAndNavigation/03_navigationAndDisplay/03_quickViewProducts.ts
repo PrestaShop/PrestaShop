@@ -109,7 +109,7 @@ describe('FO - Navigation and display : Quick view products', async () => {
 
       await searchResultsPage.quickViewProduct(page, 1);
 
-      const isModalVisible = await searchResultsPage.isQuickViewProductModalVisible(page);
+      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.eq(true);
     });
 
@@ -150,14 +150,14 @@ describe('FO - Navigation and display : Quick view products', async () => {
 
       await searchResultsPage.quickViewProduct(page, 1);
 
-      const isModalVisible = await searchResultsPage.isQuickViewProductModalVisible(page);
+      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it('should check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation3', baseContext);
 
-      const result = await homePage.getProductDetailsFromQuickViewModal(page);
+      const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_14.name),
         expect(result.price).to.equal(Products.demo_14.price),
@@ -171,14 +171,14 @@ describe('FO - Navigation and display : Quick view products', async () => {
     it('should check that \'Add to cart\' button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton', baseContext);
 
-      const isEnabled = await homePage.isAddToCartButtonEnabled(page);
+      const isEnabled = await quickViewModal.isAddToCartButtonEnabled(page);
       expect(isEnabled, 'Add to cart button is not disabled').to.eq(false);
     });
 
     it('should close the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal2', baseContext);
 
-      const isQuickViewModalClosed = await homePage.closeQuickViewModal(page);
+      const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page);
       expect(isQuickViewModalClosed).to.eq(true);
     });
   });

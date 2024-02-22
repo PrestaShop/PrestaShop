@@ -15,9 +15,11 @@ import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
+import {loginPage as foLoginPage, loginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -148,20 +150,31 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
-    it('should add the first product to the cart by quick view', async function () {
+    it('should quick view the first product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'quickViewTheFirstProduct', baseContext);
+
+      await foLoginPage.goToHomePage(page);
+      await homePage.quickViewProduct(page, 1);
+
+      const isQuickViewModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      expect(isQuickViewModalVisible).to.equal(true);
+    });
+
+    it('should add the product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
-      await homePage.addProductToCartByQuickView(page, 1);
+      await quickViewModal.addToCartByQuickView(page);
 
-      const isNotVisible = await homePage.continueShopping(page);
+      const isNotVisible = await blockCartModal.continueShopping(page);
       expect(isNotVisible).to.eq(true);
     });
 
     it('should add the second product to the cart by quick view', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addSecondProductToCart', baseContext);
 
-      await homePage.addProductToCartByQuickView(page, 2);
-      await homePage.proceedToCheckout(page);
+      await homePage.quickViewProduct(page, 2);
+      await quickViewModal.addToCartByQuickView(page);
+      await blockCartModal.proceedToCheckout(page);
 
       // Check number of products in cart
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);

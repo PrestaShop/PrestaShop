@@ -490,8 +490,8 @@ describe('FO - product page : Product quick view', async () => {
       it('should verify when we change thumb image in quick view modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'verifyThumbImage', baseContext);
 
-        const coverSecondImageURL = await searchResultsPage.selectThumbImage(page, 2);
-        const coverFirstImageURL = await searchResultsPage.selectThumbImage(page, 1);
+        const coverSecondImageURL = await quickViewModal.selectThumbImage(page, 2);
+        const coverFirstImageURL = await quickViewModal.selectThumbImage(page, 1);
 
         expect(coverSecondImageURL).to.not.equal(coverFirstImageURL);
       });

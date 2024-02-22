@@ -11,12 +11,11 @@ import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import Products from '@data/demo/products';
 import CartProductDetails from '@data/types/cart';
 import {ProductAttribute} from '@data/types/product';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
-import {quickViewModal} from "@pages/FO/classic/modal/quickView";
-import {blockCartModal} from "@pages/FO/classic/modal/blockCart";
-import blockCart from "@pages/FO/hummingbird/modal/blockCart";
 
 const baseContext: string = 'functional_FO_classic_productPage_quickView_addToCart';
 
@@ -162,7 +161,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
 
     await searchResultsPage.quickViewProduct(page, 1);
 
-    const isDisabled = await homePage.isAddToCartButtonDisabled(page);
+    const isDisabled = await quickViewModal.isAddToCartButtonDisabled(page);
     expect(isDisabled).to.eq(true);
   });
 });

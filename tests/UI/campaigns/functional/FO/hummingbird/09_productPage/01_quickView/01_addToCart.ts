@@ -89,7 +89,9 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
 
       await homePage.quickViewProduct(page, 1);
 
-      const successMessage = await quickViewModal.addToCartByQuickView(page);
+      await quickViewModal.addToCartByQuickView(page);
+
+      const successMessage = await blockCartModal.getBlockCartModalTitle(page);
       expect(successMessage).to.contains(homePage.successAddToCartMessage);
     });
 

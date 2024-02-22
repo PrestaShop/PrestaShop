@@ -56,6 +56,8 @@ class QuickViewModal extends FOBasePage {
 
   protected productRowQuantityUpDownButton: (direction: string) => string;
 
+  private readonly quickViewThumbImagePosition: (position: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on home page
@@ -88,6 +90,7 @@ class QuickViewModal extends FOBasePage {
     this.addToCartButton = `${this.quickViewModalDiv} button[data-button-action='add-to-cart']`;
     this.productRowQuantityUpDownButton = (direction: string) => 'span.input-group-btn-vertical'
       + ` button.bootstrap-touchspin-${direction}`;
+    this.quickViewThumbImagePosition = (position: number) => `${this.quickViewModalDiv} li:nth-child(${position}) img.js-thumb`;
   }
 
   /**
@@ -151,9 +154,9 @@ class QuickViewModal extends FOBasePage {
    * Add product to cart with Quick view
    * @param page {Page} Browser tab
    * @param quantityWanted {number | string} Quantity to order
-   * @return {Promise<string>}
+   * @return {Promise<void>}
    */
-  async setQuantityAndAddToCart(page: Page, quantityWanted: number | string = 1): Promise<string> {
+  async setQuantityAndAddToCart(page: Page, quantityWanted: number | string = 1): Promise<void> {
     await this.setQuantity(page, quantityWanted);
     await this.addToCartByQuickView(page);
   }
@@ -331,6 +334,19 @@ class QuickViewModal extends FOBasePage {
    */
   async getQuickViewImageMain(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, `${this.quickViewModalProductImageCover} source`, 'srcset');
+  }
+
+  /**
+   * Select thumb image
+   * @param page {Page} Browser tab
+   * @param position {number} Position of the image
+   * @returns {Promise<string>}
+   */
+  async selectThumbImage(page: Page, position: number): Promise<string> {
+    await page.locator(this.quickViewThumbImagePosition(position)).click();
+    await this.waitForVisibleSelector(page, `${this.quickViewThumbImagePosition(position)}.selected`);
+
+    return this.getAttributeContent(page, this.quickViewCoverImage, 'src');
   }
 
   /**

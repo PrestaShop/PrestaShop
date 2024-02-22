@@ -100,7 +100,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const result = await homePage.getProductDetailsFromQuickViewModal(page);
+      const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_6.name),
         expect(result.price).to.equal(Products.demo_6.combinations[0].price),
@@ -167,7 +167,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSimpleProductInformation', baseContext);
 
-      const result = await homePage.getProductDetailsFromQuickViewModal(page);
+      const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_11.name),
         expect(result.price).to.equal(Products.demo_11.finalPrice),

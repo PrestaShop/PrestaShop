@@ -16,6 +16,8 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {cartPage} from '@pages/FO/classic/cart';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';
@@ -109,12 +111,21 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       expect(result).to.eq(true);
     });
 
-    it('should add the third product to the cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signOut', baseContext);
+    it('should quick view the third product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct', baseContext);
 
       await foLoginPage.goToHomePage(page);
-      await homePage.addProductToCartByQuickView(page, 3);
-      await homePage.proceedToCheckout(page);
+      await homePage.quickViewProduct(page, 3);
+
+      const isQuickViewModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      expect(isQuickViewModalVisible).to.equal(true);
+    });
+
+    it('should add the product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+
+      await quickViewModal.addToCartByQuickView(page);
+      await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.eq(cartPage.pageTitle);

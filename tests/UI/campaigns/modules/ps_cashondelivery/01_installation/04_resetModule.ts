@@ -14,6 +14,8 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -117,8 +119,9 @@ describe('Cash on delivery (COD) module - Reset module', async () => {
     await foLoginPage.goToHomePage(page);
 
     // Add first product to cart by quick view
-    await homePage.addProductToCartByQuickView(page, 1);
-    await homePage.proceedToCheckout(page);
+    await homePage.quickViewProduct(page, 1);
+    await quickViewModal.addToCartByQuickView(page);
+    await blockCartModal.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);
     expect(pageTitle).to.eq(cartPage.pageTitle);

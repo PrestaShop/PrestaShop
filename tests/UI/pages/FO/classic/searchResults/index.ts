@@ -1,4 +1,5 @@
 import FOBasePage from '@pages/FO/FObasePage';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import type {Page} from 'playwright';
 
@@ -26,12 +27,6 @@ class SearchResultsPage extends FOBasePage {
 
   private readonly productNoMatches: string;
 
-  private readonly quickViewModalDiv: string;
-
-  private readonly quickViewCoverImage: string;
-
-  private readonly quickViewThumbImage: (position: number) => string;
-
   /**
    * @constructs
    * Setting up texts and selectors to use on search page
@@ -50,11 +45,6 @@ class SearchResultsPage extends FOBasePage {
     this.productQuickViewLink = (number: number) => `${this.productArticle(number)} a.quick-view`;
     this.productPrice = '#js-product-list div.product-description span.price';
     this.productNoMatches = '#product-search-no-matches';
-
-    // Quick View modal
-    this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
-    this.quickViewCoverImage = `${this.quickViewModalDiv} img.js-qv-product-cover`;
-    this.quickViewThumbImage = (position: number) => `${this.quickViewModalDiv} li:nth-child(${position}) img.js-thumb`;
   }
 
   // Methods
@@ -116,31 +106,9 @@ class SearchResultsPage extends FOBasePage {
     }
     /* eslint-enable no-await-in-loop */
     await Promise.all([
-      this.waitForVisibleSelector(page, this.quickViewModalDiv),
+      this.waitForVisibleSelector(page, quickViewModal.quickViewModalDiv),
       page.locator(this.productQuickViewLink(id)).evaluate((el: HTMLElement) => el.click()),
     ]);
-  }
-
-  /**
-   * Is quick view product modal visible
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  isQuickViewProductModalVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.quickViewModalDiv, 2000);
-  }
-
-  /**
-   * Select thumb image
-   * @param page {Page} Browser tab
-   * @param position {number} Position of the image
-   * @returns {Promise<string>}
-   */
-  async selectThumbImage(page: Page, position: number): Promise<string> {
-    await page.locator(this.quickViewThumbImage(position)).click();
-    await this.waitForVisibleSelector(page, `${this.quickViewThumbImage(position)}.selected`);
-
-    return this.getAttributeContent(page, this.quickViewCoverImage, 'src');
   }
 
   /**

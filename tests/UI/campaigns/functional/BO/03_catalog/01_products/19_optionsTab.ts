@@ -15,15 +15,15 @@ import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
-import {categoryPage, categoryPage as categoryPageFO} from '@pages/FO/classic/category';
+import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 // Import data
 import ProductData from '@data/faker/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {quickViewModal} from "@pages/FO/classic/modal/quickView";
 
 const baseContext: string = 'functional_BO_catalog_products_optionsTab';
 
@@ -159,7 +159,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
     it('should check that the created product is visible in clothes category list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatProductIsVisible', baseContext);
 
-      productsNumber = await categoryPage.getProductsNumber(page);
+      productsNumber = await categoryPageFO.getProductsNumber(page);
       await categoryPageFO.quickViewProduct(page, productsNumber);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);

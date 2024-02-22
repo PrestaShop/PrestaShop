@@ -13,7 +13,7 @@ import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_changeQuantity';
+const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_shareLinks';
 
 /*
 Pre-condition:

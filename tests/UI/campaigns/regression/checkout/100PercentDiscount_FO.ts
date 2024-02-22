@@ -15,6 +15,8 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';
@@ -70,12 +72,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
    */
   describe('SETUP', async () => {
     it('should go to cart rule page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'goToCartRulesPageToCreate',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCartRulesPageToCreate', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -89,12 +86,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
 
     describe('Create a percentage cart rule', async () => {
       it('should go to new cart rule page', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'goToNewCartRulePage1',
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage1', baseContext);
 
         await cartRulesPage.goToAddNewCartRulesPage(page);
 
@@ -103,31 +95,16 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       });
 
       it('should create new cart rule', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'createPercentCartRule',
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', 'createPercentCartRule', baseContext);
 
-        const validationMessage = await addCartRulePage.createEditCartRules(
-          page,
-          percentCartRule,
-        );
-        expect(validationMessage).to.contains(
-          addCartRulePage.successfulCreationMessage,
-        );
+        const validationMessage = await addCartRulePage.createEditCartRules(page, percentCartRule);
+        expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
       });
     });
 
     describe('Change terms and conditions setting no', async () => {
       it("should go to 'Shop Parameters > Order Settings' page", async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'goToOrderSettingsPage',
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage', baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
@@ -140,17 +117,10 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       });
 
       it('should change the terms and conditions back to disabled', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'disableTermAndConditions',
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', 'disableTermAndConditions', baseContext);
 
         const result = await orderSettingsPage.setTermsOfService(page, false);
-        expect(result).to.contains(
-          orderSettingsPage.successfulUpdateMessage,
-        );
+        expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
       });
     });
   });
@@ -161,12 +131,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
    */
   describe('Place an order with discounts in FO', async () => {
     it('should go to FO page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'viewMyShop',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       page = await cartRulesPage.viewMyShop(page);
 
@@ -174,28 +139,27 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
-    it('should add first product to cart and Proceed to checkout', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'addProductToCart',
-        baseContext,
-      );
+    it('should quick view the first product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'quickViewTheFirstProduct', baseContext);
 
-      await homePage.addProductToCartByQuickView(page, 1, 1);
-      await homePage.proceedToCheckout(page);
+      await homePage.quickViewProduct(page, 1);
+
+      const isQuickViewModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      expect(isQuickViewModalVisible).to.equal(true);
+    });
+
+    it('should add product to cart and Proceed to checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+
+      await quickViewModal.addToCartByQuickView(page);
+      await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should add our discount code and check that the total price is 0', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'addPercentDiscount',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'addPercentDiscount', baseContext);
 
       await cartPage.addPromoCode(page, percentCartRule.code);
 
@@ -204,12 +168,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
     });
 
     it('should go to checkout process', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'proceedToCheckout',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -218,97 +177,50 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
     });
 
     it('should fill personal information as a guest', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'setPersonalInformation',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
 
-      const isStepPersonalInfoCompleted = await checkoutPage.setGuestPersonalInformation(
-        page,
-        customerData,
-      );
-      expect(
-        isStepPersonalInfoCompleted,
-        'Step personal information is not completed',
-      ).to.eq(true);
+      const isStepPersonalInfoCompleted = await checkoutPage.setGuestPersonalInformation(page, customerData);
+      expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.eq(true);
     });
 
     it('should fill address form and go to delivery step', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'setAddressStep',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
-      const isStepAddressComplete = await checkoutPage.setAddress(
-        page,
-        addressData,
-      );
-      expect(isStepAddressComplete, 'Step Address is not complete')
-        .to.eq(true);
+      const isStepAddressComplete = await checkoutPage.setAddress(page, addressData);
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should go to last step', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'goToLastStep',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLastStep', baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      expect(isStepDeliveryComplete, 'Step Address is not complete')
-        .to.eq(true);
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should contain no payment needed text', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'checkNoPaymentNeededText',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNoPaymentNeededText', baseContext);
 
       const noPaymentNeededText = await checkoutPage.getNoPaymentNeededBlockContent(page);
       expect(noPaymentNeededText).to.contains(checkoutPage.noPaymentNeededText);
     });
 
     it('should check that complete order button is enabled', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'checkCompleteIsNotDisabled',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCompleteIsNotDisabled', baseContext);
 
-      const confirmButtonVisible = await checkoutPage.isPaymentConfirmationButtonVisibleAndEnabled(
-        page,
-      );
+      const confirmButtonVisible = await checkoutPage.isPaymentConfirmationButtonVisibleAndEnabled(page);
       expect(confirmButtonVisible, 'Confirm button visible').to.eq(true);
     });
 
     it('should complete the order', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'completeOrder',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
       // complete the order
       await checkoutPage.orderWithoutPaymentMethod(page);
 
       // Check that we got to order confirmation (probably not necessary)
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(
-        page,
-      );
-      expect(cardTitle).to.contains(
-        orderConfirmationPage.orderConfirmationCardTitle,
-      );
+      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -319,12 +231,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
    */
   describe('CLEANUP', async () => {
     it('should go back to BO', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'BackToBOForCleanup',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'BackToBOForCleanup', baseContext);
 
       page = await checkoutPage.closePage(browserContext, page, 0);
 
@@ -334,12 +241,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
 
     describe('Delete created cart rules', async () => {
       it('should go to cart rules page', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'goToCartRulesPageToDelete',
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCartRulesPageToDelete', baseContext);
 
         await cartRulesPage.goToSubMenu(
           page,
@@ -352,12 +254,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       });
 
       it('should delete our 100% cart rules', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'deleteCartRules',
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRules', baseContext);
 
         const validationMessage = await cartRulesPage.deleteCartRule(page);
         expect(validationMessage).to.contains(
@@ -368,12 +265,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
 
     describe('Change terms and conditions setting back to yes', async () => {
       it("should go to 'Shop Parameters > Order Settings' page", async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'goToOrderSettingsPageToReset',
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPageToReset', baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
@@ -386,21 +278,10 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       });
 
       it('should change the terms and conditions back to enabled', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'resetTermsAndConditionsValue',
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', 'resetTermsAndConditionsValue', baseContext);
 
-        const result = await orderSettingsPage.setTermsOfService(
-          page,
-          true,
-          'Terms and conditions of use',
-        );
-        expect(result).to.contains(
-          orderSettingsPage.successfulUpdateMessage,
-        );
+        const result = await orderSettingsPage.setTermsOfService(page, true, 'Terms and conditions of use');
+        expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
       });
     });
   });

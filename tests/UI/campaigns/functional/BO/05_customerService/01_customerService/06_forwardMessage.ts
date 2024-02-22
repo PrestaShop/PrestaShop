@@ -23,6 +23,8 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {cartPage} from '@pages/FO/classic/cart';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import PaymentMethods from '@data/demo/paymentMethods';
@@ -128,11 +130,20 @@ describe('BO - Customer Service : Forward message', async () => {
       expect(result).to.eq(true);
     });
 
+    it('should quick view the first product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+
+      await homePage.quickViewProduct(page, 1);
+
+      const isCartModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      expect(isCartModalVisible).to.equal(true);
+    });
+
     it('should add first product to cart and Proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await homePage.addProductToCartByQuickView(page, 1, 1);
-      await homePage.proceedToCheckout(page);
+      await quickViewModal.addToCartByQuickView(page);
+      await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);

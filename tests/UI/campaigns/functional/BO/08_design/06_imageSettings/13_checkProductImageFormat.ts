@@ -16,7 +16,7 @@ import imageSettingsPage from '@pages/BO/design/imageSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {categoryPage} from '@pages/FO/classic/category';
-import {quickViewModal} from "@pages/FO/classic/modal/quickView";
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 // Import data
 import ProductData from '@data/faker/product';

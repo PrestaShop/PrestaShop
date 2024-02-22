@@ -22,6 +22,8 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import foMerchandiseReturnsPage from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -96,16 +98,19 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
       await foLoginPage.goToHomePage(page);
 
       // Add first product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 1, 2);
-      await homePage.continueShopping(page);
+      await homePage.quickViewProduct(page, 1);
+      await quickViewModal.setQuantityAndAddToCart(page, 2);
+      await blockCartModal.continueShopping(page);
 
       // Add second product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 2, 2);
-      await homePage.continueShopping(page);
+      await homePage.quickViewProduct(page, 2);
+      await quickViewModal.setQuantityAndAddToCart(page, 2);
+      await blockCartModal.continueShopping(page);
 
       // Add third product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 3, 2);
-      await homePage.proceedToCheckout(page);
+      await homePage.quickViewProduct(page, 3);
+      await quickViewModal.setQuantityAndAddToCart(page, 2);
+      await blockCartModal.proceedToCheckout(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(6);
