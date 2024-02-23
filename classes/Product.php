@@ -4312,12 +4312,18 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Get available product quantities (this method already have decreased products in cart).
+     * Gets available product quantity.
+     *
+     * Method will automatically determine all special conditions and return correct
+     * quantity for packs, if needed.
+     *
+     * By default, it returns the TRUE quantity in stock. If you want to, you can pass a $cart parameter
+     * and the quantity in stock will be reduced by the quantity there is in the cart.
      *
      * @param int $idProduct Product identifier
      * @param int|null $idProductAttribute Product attribute id (optional)
-     * @param bool|null $cacheIsPack
-     * @param CartCore|null $cart
+     * @param bool|null $cacheIsPack (unused, you can pass null)
+     * @param CartCore|null $cart Pass if you want to reduce the quantity by amount in cart
      * @param int|null $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
@@ -4329,24 +4335,31 @@ class ProductCore extends ObjectModel
         CartCore $cart = null,
         $idCustomization = null
     ) {
-        // pack usecase: Pack::getQuantity() returns the pack quantity after cart quantities have been removed from stock
+        // If the product is pack, we will handle the logic in another method, because pack stocks can be calculated
+        // in multiple ways, depending on the configuration of the pack.
         if (Pack::isPack((int) $idProduct)) {
             return Pack::getQuantity($idProduct, $idProductAttribute, $cacheIsPack, $cart, $idCustomization);
         }
+
+        // We get the real quantity of the product stock
         $availableQuantity = StockAvailable::getQuantityAvailableByProduct($idProduct, $idProductAttribute);
+
+        // Now, if a $cart was passed, we subtract the quantity in cart from the real quantity.
+        // We don't substract products in cart if the cart is already attached to an order, since stock quantity
+        // has already been updated, this is only useful when the order has not yet been created.
+        // @todo This logic should probably be moved somewhere else, this method should not do anything with orders.
         $nbProductInCart = 0;
-
-        // we don't substract products in cart if the cart is already attached to an order, since stock quantity
-        // has already been updated, this is only useful when the order has not yet been created
         if ($cart && empty(Order::getByCartId($cart->id))) {
+            /*
+             * Now, we get the quantity of the product in cart. This method is clever and in deep_quantity,
+             * it will get us the quantity products in all the packs, if there are some in the cart, not just standard products.
+             */
             $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
-
             if (!empty($cartProduct['deep_quantity'])) {
                 $nbProductInCart = $cartProduct['deep_quantity'];
             }
         }
 
-        // @since 1.5.0
         return $availableQuantity - $nbProductInCart;
     }
 

@@ -430,6 +430,14 @@ class CartControllerCore extends FrontController
 
         // Check product quantity availability
         if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
+            /*
+             * If the product can't be in the cart in this quantity, we raise an error.
+             * For the purpose if the error message, we must get the real quantity in stock.
+             * No subtracting of quantity the cart here.
+             *
+             * @todo StockAvailable::getQuantityAvailableByProduct does not work for packs
+             * which depend on quantity of products inside..
+             */
             $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
                 $this->id_product,
                 $this->id_product_attribute
@@ -521,6 +529,14 @@ class CartControllerCore extends FrontController
                     'Shop.Notifications.Error'
                 );
             } elseif ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
+                /*
+                 * If the product can't be in the cart in this quantity, we raise an error.
+                 * For the purpose if the error message, we must get the real quantity in stock.
+                 * No subtracting of quantity the cart here.
+                 *
+                 * @todo StockAvailable::getQuantityAvailableByProduct does not work for packs
+                 * which depend on quantity of products inside..
+                 */
                 $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
                     $this->id_product,
                     $this->id_product_attribute
@@ -599,7 +615,12 @@ class CartControllerCore extends FrontController
             return false;
         }
 
-        // Check if this product is out-of-stock
+        /*
+         * We check if this product is out-of-stock.
+         *
+         * @todo StockAvailable::getQuantityAvailableByProduct does not work for packs
+         * which depend on quantity of products inside..
+         */
         $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
             $this->id_product,
             $this->id_product_attribute
@@ -623,6 +644,8 @@ class CartControllerCore extends FrontController
 
     /**
      * Check if the products in the cart are available.
+     * This is a general check that is handy when you want to check whole cart,
+     * for example when loading the cart or order page.
      *
      * @return bool|string
      */

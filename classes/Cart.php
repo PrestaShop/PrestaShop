@@ -4063,6 +4063,8 @@ class CartCore extends ObjectModel
         }
 
         foreach ($this->getProducts() as $product) {
+            // This code is not used, because advanced_stock_management is never enabled
+            // on 1.7 and newer.
             if (
                 !$this->allow_seperated_package
                 && !$product['allow_oosp']
@@ -4080,6 +4082,10 @@ class CartCore extends ObjectModel
                 }
             }
 
+            /*
+             * We have an immediate failure if the product is not active or available for order.
+             * @todo The second condition with quantity is not needed because it's checked properly further down.
+             */
             if (
                 !$product['active'] ||
                 !$product['available_for_order'] ||
