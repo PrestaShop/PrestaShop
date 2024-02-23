@@ -77,7 +77,7 @@ describe('FO - Home Page : Product quick view', async () => {
       await homePage.goTo(page, global.FO.URL);
 
       const result = await homePage.isHomePage(page);
-      expect(result).to.eq(true);
+      expect(result).to.equal(true);
     });
 
     it(`should quick view the product '${Products.demo_6.name}'`, async function () {
@@ -86,7 +86,7 @@ describe('FO - Home Page : Product quick view', async () => {
       await homePage.quickViewProduct(page, 3);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
-      expect(isModalVisible).to.eq(true);
+      expect(isModalVisible).to.equal(true);
     });
 
     it('should check product information', async function () {
@@ -131,18 +131,17 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should change the product quantity and click on add to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await quickViewModal.setQuantity(page, attributesQty);
-      await quickViewModal.addToCartByQuickView(page);
+      await quickViewModal.setQuantityAndAddToCart(page, attributesQty);
 
       const isVisible = await blockCartModal.isBlockCartModalVisible(page);
-      expect(isVisible).to.eq(true);
+      expect(isVisible).to.equal(true);
     });
 
     it('should click on continue shopping and check that the modal is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping', baseContext);
 
       const isNotVisible = await blockCartModal.continueShopping(page);
-      expect(isNotVisible).to.eq(true);
+      expect(isNotVisible).to.equal(true);
     });
   });
 
@@ -153,7 +152,7 @@ describe('FO - Home Page : Product quick view', async () => {
       await homePage.quickViewProduct(page, 6);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
-      expect(isModalVisible).to.eq(true);
+      expect(isModalVisible).to.equal(true);
     });
 
     it('should check product information', async function () {
@@ -177,14 +176,14 @@ describe('FO - Home Page : Product quick view', async () => {
       await quickViewModal.addToCartByQuickView(page);
 
       const isVisible = await blockCartModal.isBlockCartModalVisible(page);
-      expect(isVisible).to.eq(true);
+      expect(isVisible).to.equal(true);
     });
 
     it('should click on continue shopping and check that the modal is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping2', baseContext);
 
       const isNotVisible = await blockCartModal.continueShopping(page);
-      expect(isNotVisible).to.eq(true);
+      expect(isNotVisible).to.equal(true);
     });
   });
 
@@ -195,7 +194,7 @@ describe('FO - Home Page : Product quick view', async () => {
       await homePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
-      expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
+      expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);
     });
 
     it(`should go to the second page and quick view the product '${Products.demo_14.name}'`, async function () {
@@ -205,7 +204,7 @@ describe('FO - Home Page : Product quick view', async () => {
       await categoryPage.quickViewProduct(page, 7);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
-      expect(isModalVisible).to.eq(true);
+      expect(isModalVisible).to.equal(true);
     });
 
     it('should check product information', async function () {
@@ -226,14 +225,14 @@ describe('FO - Home Page : Product quick view', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton', baseContext);
 
       const isEnabled = await quickViewModal.isAddToCartButtonEnabled(page);
-      expect(isEnabled, 'Add to cart button is not disabled').to.eq(false);
+      expect(isEnabled, 'Add to cart button is not disabled').to.equal(false);
     });
 
     it('should close the quick view modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeQuickOptionModal', baseContext);
 
       const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page);
-      expect(isQuickViewModalClosed).to.eq(true);
+      expect(isQuickViewModalClosed).to.equal(true);
     });
   });
 
@@ -244,14 +243,14 @@ describe('FO - Home Page : Product quick view', async () => {
       await categoryPage.quickViewProduct(page, 8);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
-      expect(isModalVisible).to.eq(true);
+      expect(isModalVisible).to.equal(true);
     });
 
     it('should check that \'Add to cart\' button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton2', baseContext);
 
       const isEnabled = await quickViewModal.isAddToCartButtonEnabled(page);
-      expect(isEnabled, 'Add to cart button is not disabled').to.eq(false);
+      expect(isEnabled, 'Add to cart button is not disabled').to.equal(false);
     });
 
     it('should check the product availability', async function () {
@@ -265,7 +264,7 @@ describe('FO - Home Page : Product quick view', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'closeQuickOptionModal2', baseContext);
 
       const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page);
-      expect(isQuickViewModalClosed).to.eq(true);
+      expect(isQuickViewModalClosed).to.equal(true);
     });
   });
 
