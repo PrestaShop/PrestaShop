@@ -432,11 +432,11 @@ class CartControllerCore extends FrontController
         if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
             /*
              * If the product can't be in the cart in this quantity, we raise an error.
-             * For the purpose if the error message, we must get the real quantity in stock.
-             * No subtracting of quantity the cart here.
+             * For the purpose of this error message, we must get the real quantity in stock.
+             * No subtracting of quantity in the cart here.
              *
              * @todo StockAvailable::getQuantityAvailableByProduct does not work for packs
-             * which depend on quantity of products inside..
+             * which depend on quantity of products inside.
              */
             $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
                 $this->id_product,
@@ -531,11 +531,11 @@ class CartControllerCore extends FrontController
             } elseif ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
                 /*
                  * If the product can't be in the cart in this quantity, we raise an error.
-                 * For the purpose if the error message, we must get the real quantity in stock.
-                 * No subtracting of quantity the cart here.
+                 * For the purpose of this error message, we must get the real quantity in stock.
+                 * No subtracting of quantity in the cart here.
                  *
                  * @todo StockAvailable::getQuantityAvailableByProduct does not work for packs
-                 * which depend on quantity of products inside..
+                 * which depend on quantity of products inside.
                  */
                 $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
                     $this->id_product,
@@ -619,7 +619,7 @@ class CartControllerCore extends FrontController
          * We check if this product is out-of-stock.
          *
          * @todo StockAvailable::getQuantityAvailableByProduct does not work for packs
-         * which depend on quantity of products inside..
+         * which depend on quantity of products inside.
          */
         $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
             $this->id_product,
