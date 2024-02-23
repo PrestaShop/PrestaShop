@@ -26,46 +26,39 @@
 
 declare(strict_types=1);
 
-namespace Tests\Resources\ApiPlatform\Resources;
+namespace PrestaShopBundle\ApiPlatform\Resources;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Query\GetApiClientForEditing;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
 
 #[ApiResource(
     operations: [
         new CQRSGet(
-            uriTemplate: '/test/unscoped/product/{productId}',
-            CQRSQuery: GetProductForEditing::class,
+            uriTemplate: '/api-client/infos',
+            CQRSQuery: GetApiClientForEditing::class,
             scopes: [],
-            CQRSQueryMapping: ApiTest::QUERY_MAPPING,
-        ),
-        new CQRSGet(
-            uriTemplate: '/test/scoped/product/{productId}',
-            CQRSQuery: GetProductForEditing::class,
-            scopes: ['product_read'],
-            CQRSQueryMapping: ApiTest::QUERY_MAPPING,
+            CQRSQueryMapping: [
+                '[_context][apiClientId]' => '[apiClientId]',
+            ],
         ),
     ],
 )]
-class ApiTest
+class ApiClient
 {
     #[ApiProperty(identifier: true)]
-    public int $productId;
+    public int $apiClientId;
 
-    public string $type;
+    public string $clientId;
 
-    public bool $active;
+    public string $clientName;
 
-    public array $names;
+    public string $description;
 
-    public array $descriptions;
+    public bool $enabled;
 
-    public const QUERY_MAPPING = [
-        '[_context][shopConstraint]' => '[shopConstraint]',
-        '[_context][langId]' => '[displayLanguageId]',
-        '[basicInformation][localizedNames]' => '[names]',
-        '[basicInformation][localizedDescriptions]' => '[descriptions]',
-    ];
+    public int $lifetime;
+
+    public array $scopes;
 }
