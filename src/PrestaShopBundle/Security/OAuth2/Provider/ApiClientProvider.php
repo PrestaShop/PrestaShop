@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Security\OAuth2\Provider;
 
+use Doctrine\ORM\NoResultException;
 use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -45,9 +46,9 @@ class ApiClientProvider implements UserProviderInterface
 
     public function loadUserByIdentifier(string $identifier): ApiClient
     {
-        $apiClient = $this->apiClientRepository->getByClientId($identifier);
-
-        if (!$apiClient instanceof ApiClient) {
+        try {
+            $apiClient = $this->apiClientRepository->getByClientId($identifier);
+        } catch (NoResultException) {
             throw new UserNotFoundException('Api Client not found');
         }
 

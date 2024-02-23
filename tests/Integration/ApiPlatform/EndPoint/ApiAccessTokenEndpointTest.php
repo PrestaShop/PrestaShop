@@ -159,4 +159,49 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
             'message' => 'The resource owner or authorization server denied the request.',
         ], $decodedResponse);
     }
+
+    public function testInvalidCredentials(): void
+    {
+        // Test with non-existing API client
+        $options = [
+            'extra' => ['parameters' => [
+                'client_id' => 'invalid_client',
+                'client_secret' => 'invalid_secret',
+                'grant_type' => 'client_credentials',
+            ]],
+            'headers' => [
+                'content-type' => 'application/x-www-form-urlencoded',
+            ],
+        ];
+        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
+        $this->assertEquals(401, $response->getInfo('http_code'));
+        $decodedResponse = json_decode($response->getContent(false), true);
+        $this->assertNotFalse($decodedResponse);
+        $this->assertEquals([
+            'error' => 'invalid_client',
+            'error_description' => 'Client authentication failed',
+            'message' => 'Client authentication failed',
+        ], $decodedResponse);
+
+        // Test with existing API client but invalid secret
+        $options = [
+            'extra' => ['parameters' => [
+                'client_id' => static::CLIENT_ID,
+                'client_secret' => 'invalid_secret',
+                'grant_type' => 'client_credentials',
+            ]],
+            'headers' => [
+                'content-type' => 'application/x-www-form-urlencoded',
+            ],
+        ];
+        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
+        $this->assertEquals(401, $response->getInfo('http_code'));
+        $decodedResponse = json_decode($response->getContent(false), true);
+        $this->assertNotFalse($decodedResponse);
+        $this->assertEquals([
+            'error' => 'invalid_client',
+            'error_description' => 'Client authentication failed',
+            'message' => 'Client authentication failed',
+        ], $decodedResponse);
+    }
 }
