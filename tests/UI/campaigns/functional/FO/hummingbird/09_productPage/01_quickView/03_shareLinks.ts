@@ -21,7 +21,7 @@ Pre-condition:
 Scenario:
 - Go to FO
 - Quick view third product
-
+- Check shared links (Facebook-Twitter-Pinterest)
 Post-condition:
 - Uninstall hummingbird theme
  */
@@ -62,8 +62,46 @@ describe('FO - Product page - Quick view : Share links', async () => {
       expect(isModalVisible).to.eq(true);
     });
 
-    it('should check the first share link \'F\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkFacebookLink', baseContext);
+    const tests = [
+      {
+        args:
+          {
+            name: 'Facebook',
+          },
+        result:
+          {
+            url: 'https://www.facebook.com/',
+          },
+      },
+      {
+        args:
+          {
+            name: 'Twitter',
+          },
+        result:
+          {
+            url: 'https://twitter.com/',
+          },
+      },
+      {
+        args:
+          {
+            name: 'Pinterest',
+          },
+        result:
+          {
+            url: 'https://www.pinterest.com/',
+          },
+      },
+    ];
+
+    tests.forEach((test, index: number) => {
+      it(`should check the share link '${test.args.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkLink${index}`, baseContext);
+
+        const url = await quickViewModal.getSocialSharingLink(page, test.args.name);
+        expect(url).to.contain(test.result.url);
+      });
     });
   });
 
