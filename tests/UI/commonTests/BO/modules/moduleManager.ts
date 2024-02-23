@@ -13,7 +13,7 @@ import ModuleData from '@data/faker/module';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-function installModule(module: ModuleData, baseContext: string = 'commonTests-installHummingbird'): void {
+function installModule(module: ModuleData, baseContext: string = 'commonTests-installModule'): void {
   describe(`Install module ${module.name}`, async () => {
     let browserContext: BrowserContext;
     let page: Page;
