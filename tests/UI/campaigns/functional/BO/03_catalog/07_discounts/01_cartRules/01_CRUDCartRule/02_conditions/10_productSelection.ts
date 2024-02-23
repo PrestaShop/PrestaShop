@@ -15,7 +15,7 @@ import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage, loginPage} from '@pages/FO/classic/login';
+import {loginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
@@ -153,7 +153,6 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
     it('should quick view the first product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewTheFirstProduct', baseContext);
 
-      await foLoginPage.goToHomePage(page);
       await homePage.quickViewProduct(page, 1);
 
       const isQuickViewModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);

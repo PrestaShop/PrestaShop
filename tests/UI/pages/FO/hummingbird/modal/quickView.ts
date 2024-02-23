@@ -5,7 +5,7 @@ import {QuickViewModal} from '@pages/FO/classic/modal/quickView';
 /**
  * Quick view modal, contains functions that can be used on the page
  * @class
- * @extends HomePage
+ * @extends QuickViewModal
  */
 class QuickView extends QuickViewModal {
   /**
