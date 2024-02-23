@@ -54,7 +54,7 @@ class CartPage extends FOBasePage {
 
   protected productImage: (number: number) => string;
 
-  private readonly deleteIcon: (number: number) => string;
+  protected readonly deleteIcon: (number: number) => string;
 
   private readonly itemsNumber: string;
 
@@ -318,7 +318,7 @@ class CartPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getATIPrice(page: Page): Promise<number> {
+  async getATIPrice(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.cartTotalATI, 2000);
   }
 
@@ -327,7 +327,7 @@ class CartPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getSubtotalDiscountValue(page: Page): Promise<number> {
+  async getSubtotalDiscountValue(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.subtotalDiscountValueSpan, 2000);
   }
 

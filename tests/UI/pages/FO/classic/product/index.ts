@@ -609,7 +609,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity of the product that customer wants
    * @param combination {ProductAttribute[]}  Product's combination data to add to cart
-   * @param proceedToCheckout {boolean} True to click on proceed to checkout button on modal
+   * @param proceedToCheckout {boolean|null} True to click on proceed to checkout button on modal
    * @param customizedText {string} Value of customization
    * @returns {Promise<void>}
    */
@@ -617,7 +617,7 @@ class Product extends FOBasePage {
     page: Page,
     quantity: number = 1,
     combination: ProductAttribute[] = [],
-    proceedToCheckout: boolean = true,
+    proceedToCheckout: boolean|null = true,
     customizedText: string = 'text',
   ): Promise<void> {
     await this.selectAttributes(page, quantity, combination);
@@ -633,11 +633,12 @@ class Product extends FOBasePage {
     await this.waitForSelectorAndClick(page, this.addToCartButton);
     await this.waitForVisibleSelector(page, `${this.blockCartModal}[style*='display: block;']`);
 
-    if (proceedToCheckout) {
+    if (proceedToCheckout === true) {
       await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
       await this.clickAndWaitForURL(page, this.proceedToCheckoutButton);
       await this.waitForPageTitleToLoad(page);
-    } else {
+    }
+    if (proceedToCheckout === false) {
       await this.waitForSelectorAndClick(page, this.continueShoppingButton);
       await this.waitForHiddenSelector(page, this.continueShoppingButton);
     }

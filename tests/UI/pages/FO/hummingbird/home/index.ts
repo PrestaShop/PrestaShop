@@ -72,11 +72,11 @@ class Home extends HomePage {
   /**
    * Is add to cart button visible
    * @param page {Page} Browser tab
-   * @param id {number} Id of product
+   * @param nthProduct {number} nth of product
    * @returns Promise<boolean>
    */
-  async isAddToCartButtonVisible(page: Page, id: number = 1): Promise<boolean> {
-    return this.elementVisible(page, this.addToCartIcon(id), 1000);
+  async isAddToCartButtonVisible(page: Page, nthProduct: number = 1): Promise<boolean> {
+    return this.elementVisible(page, this.addToCartIcon(nthProduct), 1000);
   }
 
   /**
@@ -99,6 +99,15 @@ class Home extends HomePage {
     await page.locator(this.productImg(id)).hover();
     await this.waitForVisibleSelector(page, this.productQuickViewLink(id));
     await page.locator(this.productQuickViewLink(id)).click();
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param nthProduct {number} Product row in the list
+   */
+  async addProductToCart(page: Page, nthProduct: number): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.addToCartIcon(nthProduct));
   }
 }
 
