@@ -129,12 +129,14 @@ describe('Faceted search module - Edit template - Product stock filter', async (
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setProductStockFilter_${index}`, baseContext);
 
-        const textResult = await psFacetedSearchFilterTemplate.setFilterForm(
+        await psFacetedSearchFilterTemplate.setTemplateFilterForm(
           page,
           'Product stock filter',
           test.filterStatus,
           test.filterType,
         );
+
+        const textResult = await psFacetedSearchFilterTemplate.saveTemplate(page);
         expect(textResult).to.match(/× Your filter "[-A-Za-z0-9\s]+" was updated successfully./);
       });
 
