@@ -20,9 +20,6 @@ security:
     admin:
       id: prestashop.security.admin.provider
 
-    oauth2:
-      id: PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider
-
   firewalls:
     # disables authentication for assets and the profiler, adapt it according to your needs
     dev:
@@ -36,7 +33,6 @@ security:
     api:
       pattern: '^(%api_base_path%)(?!/docs)'
       stateless: true
-      provider: 'oauth2'
       custom_authenticators:
         - PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator
       request_matcher: PrestaShop\PrestaShop\Core\Security\OAuth2\ApiRequestMatcher

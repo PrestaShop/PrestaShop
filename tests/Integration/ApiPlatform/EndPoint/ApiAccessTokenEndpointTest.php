@@ -65,7 +65,6 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
      */
     public function testApiAccessToken(string $contentType): void
     {
-        $client = static::createClient();
         $parameters = ['parameters' => [
             'client_id' => static::CLIENT_ID,
             'client_secret' => static::$clientSecret,
@@ -82,7 +81,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'content-type' => $contentType,
             ],
         ];
-        $response = $client->request('POST', '/api/oauth2/token', $options);
+        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
         $token = json_decode($response->getContent())->access_token;
         $decodedToken = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $token)[1]))));
 
@@ -107,7 +106,6 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
 
     public function testNonExistentScope(): void
     {
-        $client = static::createClient();
         $parameters = ['parameters' => [
             'client_id' => static::CLIENT_ID,
             'client_secret' => static::$clientSecret,
@@ -122,7 +120,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'content-type' => 'application/x-www-form-urlencoded',
             ],
         ];
-        $response = $client->request('POST', '/api/oauth2/token', $options);
+        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
         $this->assertEquals(400, $response->getInfo('http_code'));
         $decodedResponse = json_decode($response->getContent(false), true);
         $this->assertNotFalse($decodedResponse);
@@ -136,7 +134,6 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
 
     public function testUnauthorizedScope(): void
     {
-        $client = static::createClient();
         $parameters = ['parameters' => [
             'client_id' => static::CLIENT_ID,
             'client_secret' => static::$clientSecret,
@@ -151,7 +148,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'content-type' => 'application/x-www-form-urlencoded',
             ],
         ];
-        $response = $client->request('POST', '/api/oauth2/token', $options);
+        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
         $this->assertEquals(401, $response->getInfo('http_code'));
         $decodedResponse = json_decode($response->getContent(false), true);
         $this->assertNotFalse($decodedResponse);
@@ -160,6 +157,51 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
             'error_description' => 'The resource owner or authorization server denied the request.',
             'hint' => 'Usage of scope `customer_group_write` is not allowed for this client',
             'message' => 'The resource owner or authorization server denied the request.',
+        ], $decodedResponse);
+    }
+
+    public function testInvalidCredentials(): void
+    {
+        // Test with non-existing API client
+        $options = [
+            'extra' => ['parameters' => [
+                'client_id' => 'invalid_client',
+                'client_secret' => 'invalid_secret',
+                'grant_type' => 'client_credentials',
+            ]],
+            'headers' => [
+                'content-type' => 'application/x-www-form-urlencoded',
+            ],
+        ];
+        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
+        $this->assertEquals(401, $response->getInfo('http_code'));
+        $decodedResponse = json_decode($response->getContent(false), true);
+        $this->assertNotFalse($decodedResponse);
+        $this->assertEquals([
+            'error' => 'invalid_client',
+            'error_description' => 'Client authentication failed',
+            'message' => 'Client authentication failed',
+        ], $decodedResponse);
+
+        // Test with existing API client but invalid secret
+        $options = [
+            'extra' => ['parameters' => [
+                'client_id' => static::CLIENT_ID,
+                'client_secret' => 'invalid_secret',
+                'grant_type' => 'client_credentials',
+            ]],
+            'headers' => [
+                'content-type' => 'application/x-www-form-urlencoded',
+            ],
+        ];
+        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
+        $this->assertEquals(401, $response->getInfo('http_code'));
+        $decodedResponse = json_decode($response->getContent(false), true);
+        $this->assertNotFalse($decodedResponse);
+        $this->assertEquals([
+            'error' => 'invalid_client',
+            'error_description' => 'Client authentication failed',
+            'message' => 'Client authentication failed',
         ], $decodedResponse);
     }
 }

@@ -16,9 +16,9 @@ services:
 
   PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator:
     public: false
+    autowire: true
     arguments:
       - '@PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface'
-      - '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'
 
   PrestaShop\PrestaShop\Core\Security\OAuth2\ApiRequestMatcher:
     public: false

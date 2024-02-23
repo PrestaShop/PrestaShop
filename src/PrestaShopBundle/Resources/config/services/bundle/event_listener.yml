@@ -23,6 +23,14 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+  # CRITICAL this listener must have a priority greater than ApiPlatform ReadListener (which has a priority of 4)
+  # but it must be run AFTER the Firewall listener or the Security token won't be initialized yet (which has a
+  # priority of 8)
+  PrestaShopBundle\EventListener\ScopeCheckerListener:
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
+
   # Priority 40 to be called before the RouterListener (which has priority 32)
   prestashop.legacy_url_listener:
     class: PrestaShopBundle\EventListener\LegacyUrlListener
