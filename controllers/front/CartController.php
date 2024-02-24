@@ -434,14 +434,8 @@ class CartControllerCore extends FrontController
              * If the product can't be in the cart in this quantity, we raise an error.
              * For the purpose of this error message, we must get the real quantity in stock.
              * No subtracting of quantity in the cart here.
-             *
-             * @todo StockAvailable::getQuantityAvailableByProduct does not work for packs
-             * which depend on quantity of products inside.
              */
-            $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
-                $this->id_product,
-                $this->id_product_attribute
-            );
+            $availableProductQuantity = Product::getQuantity($this->id_product, $this->id_product_attribute);
             $this->errors[] = $this->trans(
                 'You can only buy %quantity% "%product%". Please adjust the quantity in your cart to continue.',
                 [
@@ -533,14 +527,8 @@ class CartControllerCore extends FrontController
                  * If the product can't be in the cart in this quantity, we raise an error.
                  * For the purpose of this error message, we must get the real quantity in stock.
                  * No subtracting of quantity in the cart here.
-                 *
-                 * @todo StockAvailable::getQuantityAvailableByProduct does not work for packs
-                 * which depend on quantity of products inside.
                  */
-                $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
-                    $this->id_product,
-                    $this->id_product_attribute
-                );
+                $availableProductQuantity = Product::getQuantity($this->id_product, $this->id_product_attribute);
                 $this->{$ErrorKey}[] = $this->trans(
                     'You can only buy %quantity% "%product%". Please adjust the quantity in your cart to continue.',
                     [
@@ -552,6 +540,7 @@ class CartControllerCore extends FrontController
             }
         }
 
+        // Check validity of all cart rules in cart and check if there are some automatic ones that should be applied
         CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
 
@@ -617,14 +606,8 @@ class CartControllerCore extends FrontController
 
         /*
          * We check if this product is out-of-stock.
-         *
-         * @todo StockAvailable::getQuantityAvailableByProduct does not work for packs
-         * which depend on quantity of products inside.
          */
-        $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
-            $this->id_product,
-            $this->id_product_attribute
-        );
+        $availableProductQuantity = Product::getQuantity($this->id_product, $this->id_product_attribute);
         if ($availableProductQuantity < $qtyToCheck) {
             return true;
         }
