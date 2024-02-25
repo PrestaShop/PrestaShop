@@ -366,8 +366,8 @@ class CartRuleCore extends ObjectModel
      * @param int $id_lang Language ID
      * @param int $id_customer Customer ID
      * @param bool $active Active vouchers only
-     * @param bool $includeGeneric Include generic AND highlighted vouchers, regardless of highlight_only setting
-     * @param bool $inStock Vouchers in stock only
+     * @param bool $includeGeneric Include generic vouchers that don't have specific customer
+     * @param bool $inStock Vouchers that have "total quantity" remaining
      * @param CartCore|null $cart Cart
      * @param bool $free_shipping_only Free shipping only
      * @param bool $highlight_only Highlighted vouchers only
@@ -390,30 +390,35 @@ class CartRuleCore extends ObjectModel
             return [];
         }
 
-        $sql_part1 = '* FROM `' . _DB_PREFIX_ . 'cart_rule` cr
-            LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
+        // Basic part of the query, we are selecting all cart rules
+        $sql = '
+            SELECT SQL_NO_CACHE * FROM `' . _DB_PREFIX_ . 'cart_rule` cr
+            LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl 
+            ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
 
-        $sql_where = ' WHERE ((cr.`id_customer` = ' . (int) $id_customer . ' OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = "")))';
+        // We will definitely include vouchers for this specific customer
+        $sql .= ' WHERE (cr.`id_customer` = ' . (int) $id_customer;
 
+        // And if required, all the generic ones, that don't have any specific customer set
         if ($includeGeneric && (int) $id_customer !== 0) {
-            $sql_where .= ' OR cr.`id_customer` = 0)';
-        } else {
-            $sql_where .= ')';
+            $sql .= ' OR cr.`id_customer` = 0';
         }
+        $sql .= ')';
 
-        $sql_part2 = ' AND NOW() BETWEEN cr.date_from AND cr.date_to
+        // Then, conditions for date, voucher active property and total amount of vouchers in stock
+        $sql .= ' AND NOW() BETWEEN cr.date_from AND cr.date_to
             ' . ($active ? 'AND cr.`active` = 1' : '') . '
             ' . ($inStock ? 'AND cr.`quantity` > 0' : '');
 
+        // If we want to select only vouchers that have free shipping as the action
         if ($free_shipping_only) {
-            $sql_part2 .= ' AND free_shipping = 1 AND carrier_restriction = 1';
+            $sql .= ' AND free_shipping = 1 AND carrier_restriction = 1';
         }
 
+        // If we want to select only vouchers with "Highlight" option activated
         if ($highlight_only) {
-            $sql_part2 .= ' AND highlight = 1 AND code NOT LIKE "' . pSQL(CartRule::BO_ORDER_CODE_PREFIX) . '%"';
+            $sql .= ' AND highlight = 1 AND code NOT LIKE "' . pSQL(CartRule::BO_ORDER_CODE_PREFIX) . '%"';
         }
-
-        $sql = 'SELECT SQL_NO_CACHE ' . $sql_part1 . $sql_where . $sql_part2;
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
