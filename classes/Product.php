@@ -4433,7 +4433,8 @@ class ProductCore extends ObjectModel
                 ' . Product::sqlStock('p', 0) . '
                 WHERE `id_product_1` = ' . (int) $this->id .
                 ($active ? ' AND product_shop.`active` = 1 AND product_shop.`visibility` != \'none\'' : '') . '
-                GROUP BY product_shop.id_product';
+                GROUP BY product_shop.id_product
+                ORDER BY pl.`name`';
 
         if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
             return [];
