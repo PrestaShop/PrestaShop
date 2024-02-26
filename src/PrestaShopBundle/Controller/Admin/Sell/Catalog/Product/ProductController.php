@@ -63,6 +63,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\ProductDownload;
@@ -715,6 +716,48 @@ class ProductController extends FrameworkBundleAdminController
     public function disableForAllShopsAction(int $productId): RedirectResponse
     {
         return $this->updateProductStatusByShopConstraint($productId, false, ShopConstraint::allShops());
+    }
+
+    public function exportAction(ProductFilters $filters)
+    {
+
+        if ($this->shouldRedirectToV1()) {
+            return $this->redirectToRoute('admin_product_catalog');
+        }
+
+        $productGridFactory = $this->get('prestashop.core.grid.factory.product');
+        $grid = $productGridFactory->getGrid($filters);
+
+        $headers = [
+            'id_product' => 'Product ID',
+            'image_link' => $this->trans('Image', 'Admin.Global'),
+            'name' => $this->trans('Name', 'Admin.Global'),
+            'reference' => $this->trans('Reference', 'Admin.Global'),
+            'name_category' => $this->trans('Category', 'Admin.Global'),
+            'price' => $this->trans('Price (tax excl.)', 'Admin.Catalog.Feature'),
+            'price_final' => $this->trans('Price (tax incl.)', 'Admin.Catalog.Feature'),
+            'sav_quantity' => $this->trans('Quantity', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($grid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_product' => $record['id_product'],
+                'image_link' => $record['image'],
+                'name' => $record['name'],
+                'reference' => $record['reference'],
+                'name_category' => $record['category'],
+                'price' => $record['final_price_tax_excluded'],
+                'price_final' => $record['price_tax_included'],
+                'sav_quantity' => $record['quantity'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('product_' . date('Y-m-d_His') . '.csv');
     }
 
     /**

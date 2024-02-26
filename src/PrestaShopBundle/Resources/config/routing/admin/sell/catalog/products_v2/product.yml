@@ -34,6 +34,14 @@ admin_products_preview:
   requirements:
     productId: \d+
 
+admin_products_export:
+  path: /export
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::exportAction
+    _legacy_controller: AdminProducts
+    _legacy_link: AdminProducts:exportproduct
+
 admin_products_search:
   path: /
   methods: [ POST ]
