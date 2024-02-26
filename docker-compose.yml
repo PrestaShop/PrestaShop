@@ -3,10 +3,6 @@ version: '2.1'
 volumes:
   db-data:
     name: db-data
-  vendor:
-    name: vendor
-  var:
-    name: var
 
 services:
   mysql:
