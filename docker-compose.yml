@@ -2,7 +2,6 @@ version: '2.1'
 
 volumes:
   db-data:
-    name: db-data
 
 services:
   mysql:
