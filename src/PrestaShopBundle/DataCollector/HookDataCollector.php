@@ -166,7 +166,7 @@ final class HookDataCollector extends DataCollector
     protected function getCasters()
     {
         $casters = parent::getCasters();
-        
+
         $casters['*'] = function ($vv, array $a, Stub $s, $isNested) {
             if (!$vv instanceof Stub) {
                 foreach ($a as $k => $v) {
