@@ -26,9 +26,13 @@
 
 namespace PrestaShopBundle\DataCollector;
 
+use Smarty;
+use Smarty_Internal_Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Symfony\Component\VarDumper\Caster\CutStub;
+use Symfony\Component\VarDumper\Cloner\Stub;
 
 /**
  * Collect all information about Legacy hooks and make it available
@@ -154,5 +158,28 @@ final class HookDataCollector extends DataCollector
         }
 
         return $hooksList;
+    }
+
+    /**
+     * @return callable[] The casters to add to the cloner
+     */
+    protected function getCasters()
+    {
+        $casters = parent::getCasters();
+        
+        $casters['*'] = function ($vv, array $a, Stub $s, $isNested) {
+            if (!$vv instanceof Stub) {
+                foreach ($a as $k => $v) {
+                    $isSmarty = $k === 'smarty' && $vv instanceof Smarty_Internal_Template && $v instanceof Smarty;
+                    if (\is_object($v) && !$v instanceof \DateTimeInterface && !$v instanceof Stub && !$isSmarty) {
+                        $a[$k] = new CutStub($v);
+                    }
+                }
+            }
+
+            return $a;
+        };
+
+        return $casters;
     }
 }
