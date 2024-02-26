@@ -718,9 +718,17 @@ class ProductController extends FrameworkBundleAdminController
         return $this->updateProductStatusByShopConstraint($productId, false, ShopConstraint::allShops());
     }
 
+    /**
+     * Export filtered products
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param ProductFilters $filters
+     *
+     * @return CsvResponse
+     */
     public function exportAction(ProductFilters $filters)
     {
-
         if ($this->shouldRedirectToV1()) {
             return $this->redirectToRoute('admin_product_catalog');
         }
