@@ -774,6 +774,10 @@ class ProductCore extends ObjectModel
             $this->product_type = ProductType::TYPE_VIRTUAL;
         }
 
+        if($this->getIdTaxRulesGroupMostUsed() !== false && $this->id_tax_rules_group === null) {
+            $this->id_tax_rules_group = (int) $this->getIdTaxRulesGroupMostUsed();
+        }
+
         if (!parent::add($autodate, $null_values)) {
             return false;
         }
