@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "52415039c821f3f35c03738ab6fc8e1c",
+    "content-hash": "30fd1969f048ec19d910a63059e8bbe9",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5579,16 +5579,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-product-context",
+            "version": "dev-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "d235c2381476ce74e4563340d77ab8de7f944af3"
+                "url": "https://github.com/PrestaShop/ps_apiresources.git",
+                "reference": "dc19a0c4dd8a391512deb3d44cce5b7260384fc8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/d235c2381476ce74e4563340d77ab8de7f944af3",
-                "reference": "d235c2381476ce74e4563340d77ab8de7f944af3",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/dc19a0c4dd8a391512deb3d44cce5b7260384fc8",
+                "reference": "dc19a0c4dd8a391512deb3d44cce5b7260384fc8",
                 "shasum": ""
             },
             "require": {
@@ -5599,6 +5599,7 @@
                 "phpunit/phpunit": "^9.6",
                 "prestashop/php-dev-tools": "^4.2"
             },
+            "default-branch": true,
             "type": "prestashop-module",
             "autoload": {
                 "psr-4": {
@@ -5608,26 +5609,7 @@
                     "ps_apiresources.php"
                 ]
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "PsApiResourcesTest\\": "tests/"
-                }
-            },
-            "scripts": {
-                "clear-test-cache": [
-                    "PsApiResourcesTest\\EnvironmentBuilder::clearCache"
-                ],
-                "create-test-db": [
-                    "@composer clear-test-cache",
-                    "@composer setup-local-tests -- --build-db"
-                ],
-                "run-module-tests": [
-                    "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Integration/phpunit-local.xml"
-                ],
-                "setup-local-tests": [
-                    "PsApiResourcesTest\\EnvironmentBuilder::setupLocalTests"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
             ],
@@ -5640,9 +5622,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/jolelievre/ps_apiresources/tree/product-context"
+                "source": "https://github.com/PrestaShop/ps_apiresources/tree/dev"
             },
-            "time": "2024-02-23T15:30:58+00:00"
+            "time": "2024-02-26T09:58:45+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -6628,16 +6610,16 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v6.0.4",
+            "version": "v6.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "f4048a33e3cfc06a76e68d40cb77425103f0124e"
+                "reference": "e84c1d1e37969ac9b608e03194ca69c81a7f7e29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/f4048a33e3cfc06a76e68d40cb77425103f0124e",
-                "reference": "f4048a33e3cfc06a76e68d40cb77425103f0124e",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/e84c1d1e37969ac9b608e03194ca69c81a7f7e29",
+                "reference": "e84c1d1e37969ac9b608e03194ca69c81a7f7e29",
                 "shasum": ""
             },
             "require": {
@@ -6669,9 +6651,9 @@
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_linklist/tree/v6.0.4"
+                "source": "https://github.com/PrestaShop/ps_linklist/tree/v6.0.6"
             },
-            "time": "2023-09-05T12:44:43+00:00"
+            "time": "2024-02-26T14:11:10+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
