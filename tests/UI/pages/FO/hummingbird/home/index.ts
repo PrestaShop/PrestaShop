@@ -16,8 +16,6 @@ class Home extends HomePage {
 
   private readonly addToCartIcon: (number: number) => string;
 
-  private readonly blockCartModalSummary: string;
-
   /**
    * @constructs
    * Setting up texts and selectors to use on home page
@@ -37,10 +35,6 @@ class Home extends HomePage {
     this.addToCartIcon = (number: number) => `${this.productArticle(number)} button[data-button-action='add-to-cart']`;
     this.productAddToWishlist = (number: number) => `${this.productArticle(number)} button.wishlist-button-add`;
 
-    // Block Cart Modal
-    this.cartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-footer-actions a`;
-    this.continueShoppingButton = `${this.blockCartModalDiv} div.cart-footer-actions button`;
-
     // Wishlist modal
     this.wishlistModal = '.wishlist-add-to .wishlist-modal.show';
     this.wishlistModalTitle = '.wishlist-modal.show p.modal-title';
@@ -50,19 +44,6 @@ class Home extends HomePage {
     this.newsletterSubmitButton = '.email-subscription__content__inputs [name="submitNewsletter"][value="Subscribe"]';
     this.subscriptionAlertMessage = '#footer div.email-subscription__content__infos p.alert';
 
-    // Quick view modal
-    this.productImg = (number: number) => `${this.productArticle(number)} img`;
-    this.productQuickViewLink = (number: number) => `${this.productArticle(number)} .product-miniature__quickview button`;
-    this.blockCartModalCloseButton = `${this.blockCartModalDiv} button.btn-close`;
-    this.productRowQuantityUpDownButton = (direction: string) => `div.product-actions__quantity button.js-${direction}-button`;
-
-    // Block cart modal
-    this.blockCartModalSummary = '.blockcart-modal__summery';
-    this.cartModalProductsCountBlock = `${this.blockCartModalSummary} p`;
-    this.cartModalSubtotalBlock = `${this.blockCartModalSummary} .product-subtotal .subtotals.value`;
-    this.cartModalShippingBlock = `${this.blockCartModalSummary} .product-shipping .shipping.value`;
-    this.cartModalProductTaxInclBlock = `${this.blockCartModalSummary} .product-total .value`;
-
     // Products section
     this.productsBlockTitle = (blockName: number | string) => `#content section.${blockName} h2`;
     this.productsBlockDiv = (blockName: number | string) => `#content section.${blockName} div.products div.card`;
@@ -71,19 +52,6 @@ class Home extends HomePage {
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productQuickViewLink = (number: number) => `${this.productArticle(number)} .product-miniature__quickview `
       + 'button';
-    this.blockCartModalCloseButton = `${this.blockCartModalDiv} button.btn-close`;
-
-    // Quick view modal
-    this.quickViewProductName = `${this.quickViewModalDiv} .h3`;
-    this.quickViewRegularPrice = `${this.quickViewModalDiv} span.product__price-regular`;
-    this.quickViewProductPrice = `${this.quickViewModalDiv} div.product__current-price`;
-    this.quickViewDiscountPercentage = `${this.quickViewModalDiv} div.product__discount-percentage`;
-    this.quickViewTaxShippingDeliveryLabel = `${this.quickViewModalDiv} div.product__tax-label`;
-    this.quickViewCoverImage = `${this.quickViewModalDiv} #product-images img.img-fluid`;
-    this.quickViewThumbImage = `${this.quickViewModalDiv} div.thumbnails__container img.img-fluid`;
-    this.quickViewProductVariants = `${this.quickViewModalDiv} div.js-product-variants`;
-    this.quickViewProductDimension = `${this.quickViewProductVariants} select#group_3`;
-    this.quickViewCloseButton = `${this.quickViewModalDiv} button.btn-close`;
   }
 
   /**
@@ -131,41 +99,6 @@ class Home extends HomePage {
     await page.locator(this.productImg(id)).hover();
     await this.waitForVisibleSelector(page, this.productQuickViewLink(id));
     await page.locator(this.productQuickViewLink(id)).click();
-  }
-
-  /**
-   * Get product details from quick view modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<{thumbImage: string|null, price: number, taxShippingDeliveryLabel: string,
-   * coverImage: string|null, name: string, shortDescription: string}>}
-   */
-  async getProductDetailsFromQuickViewModal(page: Page): Promise<{
-    thumbImage: string | null,
-    price: number,
-    taxShippingDeliveryLabel: string,
-    coverImage: string | null,
-    name: string,
-    shortDescription: string,
-  }> {
-    return {
-      name: await this.getTextContent(page, this.quickViewProductName),
-      price: parseFloat((await this.getTextContent(page, this.quickViewProductPrice)).replace('€', '')),
-      taxShippingDeliveryLabel: await this.getTextContent(page, this.quickViewTaxShippingDeliveryLabel),
-      shortDescription: await this.getTextContent(page, this.quickViewShortDescription),
-      coverImage: await this.getAttributeContent(page, this.quickViewCoverImage, 'src'),
-      thumbImage: await this.getAttributeContent(page, this.quickViewThumbImage, 'srcset'),
-    };
-  }
-
-  /**
-   * Close block cart modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async closeBlockCartModal(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
-
-    return this.elementNotVisible(page, this.blockCartModalDiv, 1000);
   }
 }
 

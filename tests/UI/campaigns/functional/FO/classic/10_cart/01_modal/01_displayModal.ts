@@ -6,6 +6,8 @@ import testContext from '@utils/testContext';
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -38,10 +40,13 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
   it('should add the first product to cart by quick view and click on continue button', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
-    const successMessage = await homePage.addProductToCartByQuickView(page, 1, 2);
-    expect(successMessage).to.contains(homePage.successAddToCartMessage);
+    await homePage.quickViewProduct(page, 1);
+    await quickViewModal.setQuantityAndAddToCart(page, 2);
 
-    const isModalNotVisible = await homePage.continueShopping(page);
+    const isBlockCartModal = await blockCartModal.isBlockCartModalVisible(page);
+    expect(isBlockCartModal).to.contains(homePage.successAddToCartMessage);
+
+    const isModalNotVisible = await blockCartModal.continueShopping(page);
     expect(isModalNotVisible).to.eq(true);
   });
 

@@ -11,6 +11,8 @@ import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import Products from '@data/demo/products';
 import CartProductDetails from '@data/types/cart';
 import {ProductAttribute} from '@data/types/product';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
@@ -72,14 +74,17 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
   it('should add first product to cart by quick view', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addToCartByQuickView', baseContext);
 
-    const successMessage = await homePage.addProductToCartByQuickView(page, 1, 1);
+    await homePage.quickViewProduct(page, 1);
+    await quickViewModal.addToCartByQuickView(page);
+
+    const successMessage = await blockCartModal.getBlockCartModalTitle(page);
     expect(successMessage).to.contains(homePage.successAddToCartMessage);
   });
 
   it('should check product details from cart modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetailsInCartModal', baseContext);
 
-    const result = await homePage.getProductDetailsFromBlockCartModal(page);
+    const result = await blockCartModal.getProductDetailsFromBlockCartModal(page);
     await Promise.all([
       expect(result.name).to.equal(checkProductDetails.name),
       expect(result.price).to.equal(checkProductDetails.price),
@@ -90,7 +95,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
       expect(result.totalTaxIncl).to.equal(checkProductDetails.totalTaxIncl),
     ]);
 
-    const productAttributesFromBlockCart = await homePage.getProductAttributesFromBlockCartModal(page);
+    const productAttributesFromBlockCart = await blockCartModal.getProductAttributesFromBlockCartModal(page);
     await Promise.all([
       expect(productAttributesFromBlockCart.length).to.equal(2),
       expect(productAttributesFromBlockCart[0].name).to.equal(checkProductDetailsProducts[0].name),
@@ -103,7 +108,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
   it('should proceed to checkout and check the cart page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCartPage', baseContext);
 
-    await homePage.proceedToCheckout(page);
+    await blockCartModal.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);
     expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -156,7 +161,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
 
     await searchResultsPage.quickViewProduct(page, 1);
 
-    const isDisabled = await homePage.isAddToCartButtonDisabled(page);
+    const isDisabled = await quickViewModal.isAddToCartButtonDisabled(page);
     expect(isDisabled).to.eq(true);
   });
 });

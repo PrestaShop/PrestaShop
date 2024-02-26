@@ -18,6 +18,8 @@ import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 import {cartPage} from '@pages/FO/classic/cart';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';
@@ -165,12 +167,21 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
-    it('should add the first product to the cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
+    it('should quick view the first product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'quickViewTheFirstProduct', baseContext);
 
       await foLoginPage.goToHomePage(page);
-      await homePage.addProductToCartByQuickView(page, 1);
-      await homePage.proceedToCheckout(page);
+      await homePage.quickViewProduct(page, 1);
+
+      const isQuickViewModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      expect(isQuickViewModalVisible).to.equal(true);
+    });
+
+    it('should add the product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
+
+      await quickViewModal.addToCartByQuickView(page);
+      await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.eq(cartPage.pageTitle);

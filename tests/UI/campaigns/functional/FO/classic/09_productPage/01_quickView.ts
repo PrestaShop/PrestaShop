@@ -11,11 +11,14 @@ import loginCommon from '@commonTests/BO/loginBO';
 import boDashboardPage from '@pages/BO/dashboard';
 import boProductsPage from '@pages/BO/catalog/products';
 import boAddProductPage from '@pages/BO/catalog/products/add';
+
 // FO
 import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import Products from '@data/demo/products';
@@ -124,9 +127,10 @@ describe('FO - product page : Product quick view', async () => {
     it('should add product to cart by quick view and check details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addToCartByQuickView', baseContext);
 
-      await homePage.addProductToCartByQuickView(page, 1, 1);
+      await homePage.quickViewProduct(page, 1);
+      await quickViewModal.addToCartByQuickView(page);
 
-      const result = await homePage.getProductDetailsFromBlockCartModal(page);
+      const result = await blockCartModal.getProductDetailsFromBlockCartModal(page);
       await Promise.all([
         expect(result.name).to.equal(firstCheckProductDetails.name),
         expect(result.price).to.equal(firstCheckProductDetails.price),
@@ -137,7 +141,7 @@ describe('FO - product page : Product quick view', async () => {
         expect(result.totalTaxIncl).to.equal(firstCheckProductDetails.totalTaxIncl),
       ]);
 
-      const productAttributesFromBlockCart = await homePage.getProductAttributesFromBlockCartModal(page);
+      const productAttributesFromBlockCart = await blockCartModal.getProductAttributesFromBlockCartModal(page);
       await Promise.all([
         expect(productAttributesFromBlockCart.length).to.equal(2),
         expect(productAttributesFromBlockCart[0].name).to.equal(firstCheckProductDetailsProducts[0].name),
@@ -153,7 +157,7 @@ describe('FO - product page : Product quick view', async () => {
     it('should proceed to checkout and delete product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProductFromCart1', baseContext);
 
-      await homePage.proceedToCheckout(page);
+      await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -166,9 +170,10 @@ describe('FO - product page : Product quick view', async () => {
     it('should change product quantity from quick view modal and check details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeQuantityByQuickView', baseContext);
 
-      await homePage.addProductToCartByQuickView(page, 1, 2);
+      await homePage.quickViewProduct(page, 1);
+      await quickViewModal.setQuantityAndAddToCart(page, 2);
 
-      const result = await homePage.getProductDetailsFromBlockCartModal(page);
+      const result = await blockCartModal.getProductDetailsFromBlockCartModal(page);
       await Promise.all([
         expect(result.name).to.equal(secondCheckProductDetails.name),
         expect(result.price).to.equal(secondCheckProductDetails.price),
@@ -179,7 +184,7 @@ describe('FO - product page : Product quick view', async () => {
         expect(result.totalTaxIncl).to.equal(secondCheckProductDetails.totalTaxIncl),
       ]);
 
-      const productAttributesFromBlockCart = await homePage.getProductAttributesFromBlockCartModal(page);
+      const productAttributesFromBlockCart = await blockCartModal.getProductAttributesFromBlockCartModal(page);
       await Promise.all([
         expect(productAttributesFromBlockCart.length).to.equal(2),
         expect(productAttributesFromBlockCart[0].name).to.equal(secondCheckProductDetailsProducts[0].name),
@@ -192,7 +197,7 @@ describe('FO - product page : Product quick view', async () => {
     it('should proceed to checkout and delete product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProductFromCart2', baseContext);
 
-      await homePage.proceedToCheckout(page);
+      await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -246,7 +251,7 @@ describe('FO - product page : Product quick view', async () => {
           await homePage.quickViewProduct(page, 1);
         }
 
-        const url = await homePage.getSocialSharingLink(page, test.args.name);
+        const url = await quickViewModal.getSocialSharingLink(page, test.args.name);
         expect(url).to.contain(test.result.url);
       });
     });
@@ -257,7 +262,7 @@ describe('FO - product page : Product quick view', async () => {
     it('should check product information from quick view modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const result = await homePage.getProductWithDiscountDetailsFromQuickViewModal(page);
+      const result = await quickViewModal.getProductWithDiscountDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_1.name),
         expect(result.regularPrice).to.equal(Products.demo_1.retailPrice),
@@ -269,7 +274,7 @@ describe('FO - product page : Product quick view', async () => {
         expect(result.thumbImage).to.contains(Products.demo_1.coverImage),
       ]);
 
-      const productAttributesFromQuickView = await homePage.getProductAttributesFromQuickViewModal(page);
+      const productAttributesFromQuickView = await quickViewModal.getProductAttributesFromQuickViewModal(page);
       await Promise.all([
         expect(productAttributesFromQuickView.length).to.equal(2),
         expect(productAttributesFromQuickView[0].name).to.equal('size'),
@@ -285,7 +290,7 @@ describe('FO - product page : Product quick view', async () => {
     it('should close quick view product modal and check it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeQuickOptionModal', baseContext);
 
-      const isQuickViewModalClosed = await homePage.closeQuickViewModal(page);
+      const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page);
       expect(isQuickViewModalClosed).to.eq(true);
     });
   });
@@ -297,15 +302,15 @@ describe('FO - product page : Product quick view', async () => {
 
       await homePage.quickViewProduct(page, 1);
 
-      const isModalVisible = await homePage.isQuickViewProductModalVisible(page);
+      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it('should change combination on popup and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeCombination', baseContext);
 
-      await homePage.changeAttributesAndAddToCart(page, attributes, attributesQty);
-      await homePage.proceedToCheckout(page);
+      await quickViewModal.setAttributesAndAddToCart(page, attributes, attributesQty);
+      await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -485,8 +490,8 @@ describe('FO - product page : Product quick view', async () => {
       it('should verify when we change thumb image in quick view modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'verifyThumbImage', baseContext);
 
-        const coverSecondImageURL = await searchResultsPage.selectThumbImage(page, 2);
-        const coverFirstImageURL = await searchResultsPage.selectThumbImage(page, 1);
+        const coverSecondImageURL = await quickViewModal.selectThumbImage(page, 2);
+        const coverFirstImageURL = await quickViewModal.selectThumbImage(page, 1);
 
         expect(coverSecondImageURL).to.not.equal(coverFirstImageURL);
       });

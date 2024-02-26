@@ -4,6 +4,7 @@ import helper from '@utils/helpers';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
+import {categoryPage} from '@pages/FO/classic/category';
 
 // Import data
 import Categories from '@data/demo/categories';
@@ -50,29 +51,29 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
 
       await homePage.goToAllProductsPage(page);
 
-      allProductsNumber = await homePage.getProductsNumber(page);
+      allProductsNumber = await categoryPage.getProductsNumber(page);
       expect(allProductsNumber).to.be.above(0);
     });
 
     it('should filter products by the category \'Accessories\' and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'FilterProductByCategory', baseContext);
 
-      await homePage.goToCategory(page, Categories.accessories.id);
+      await categoryPage.goToCategory(page, Categories.accessories.id);
 
-      const pageTitle = await homePage.getPageTitle(page);
+      const pageTitle = await categoryPage.getPageTitle(page);
       expect(pageTitle).to.equal(Categories.accessories.name);
 
-      const numberOfProducts = await homePage.getProductsNumber(page);
+      const numberOfProducts = await categoryPage.getProductsNumber(page);
       expect(numberOfProducts).to.be.below(allProductsNumber);
     });
 
     it('should filter products by the subcategory \'Stationery\' and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'FilterProductBySubCategory', baseContext);
 
-      await homePage.reloadPage(page);
-      await homePage.goToSubCategory(page, Categories.accessories.id, Categories.stationery.id);
+      await categoryPage.reloadPage(page);
+      await categoryPage.goToSubCategory(page, Categories.accessories.id, Categories.stationery.id);
 
-      const numberOfProducts = await homePage.getProductsNumber(page);
+      const numberOfProducts = await categoryPage.getProductsNumber(page);
       expect(numberOfProducts).to.be.below(allProductsNumber);
     });
   });
