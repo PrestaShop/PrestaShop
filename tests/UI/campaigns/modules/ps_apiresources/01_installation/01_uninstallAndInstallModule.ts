@@ -144,7 +144,7 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
 
   describe('BackOffice - Install the module', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPageInstall', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -158,14 +158,14 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
     });
 
     it(`should search the module ${Modules.psApiResources.name}`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'searchModuleInstall', baseContext);
 
       const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psApiResources);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should install the module', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
       const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psApiResources, 'install', false);
       expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.psApiResources.tag));
@@ -178,7 +178,7 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
 
   describe('BackOffice - Check that the module is present', async () => {
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPageAfterInstall', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -191,14 +191,14 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
     });
 
     it('should check that no records found', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkThatNoRecordFound', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkThatNoRecordFoundAfterInstall', baseContext);
 
       const noRecordsFoundText = await apiClientPage.getTextForEmptyTable(page);
       expect(noRecordsFoundText).to.contains('warning No records found');
     });
 
     it('should go to add New API Client page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIClientPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIClientPageAfterInstall', baseContext);
 
       await apiClientPage.goToNewAPIClientPage(page);
 
@@ -213,15 +213,15 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
       expect(hasScopes).to.equal(true);
     });
 
-    it('should check that scopes from Core are present', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkScopesCore', baseContext);
+    it('should check that scopes from Core are not present', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkScopesCoreNotPresent', baseContext);
 
       const scopes = await addNewApiClientPage.getApiScopes(page, '__core_scopes');
       expect(scopes.length).to.be.eq(0);
     });
 
     it('should check that scopes from Module are present', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkScopeModule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkScopeModulePresent', baseContext);
 
       const scopes = await addNewApiClientPage.getApiScopes(page, Modules.psApiResources.tag);
       expect(scopes.length).to.be.gt(0);

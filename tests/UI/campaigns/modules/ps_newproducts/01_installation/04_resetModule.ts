@@ -105,14 +105,14 @@ describe('New products block module - Reset module', async () => {
   });
 
   it('should check the number of products in the "New Products" block', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'changeConfiguration', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
     const numProductsInBlock = await homePage.getProductsBlockNumber(page, 'newproducts');
     expect(numProductsInBlock).to.be.equal(numProducts);
   });
 
   it('should return to the back office', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'changeConfiguration', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'returnToBO', baseContext);
 
     page = await homePage.closePage(browserContext, page, 0);
 
@@ -121,7 +121,7 @@ describe('New products block module - Reset module', async () => {
   });
 
   it('should return to \'Modules > Module Manager\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'returnToModuleManagerPage', baseContext);
 
     await dashboardPage.goToSubMenu(
       page,
@@ -135,7 +135,7 @@ describe('New products block module - Reset module', async () => {
   });
 
   it(`should search the module ${Modules.psNewProducts.name}`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'searchModuleForReset', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psNewProducts);
     expect(isModuleVisible).to.eq(true);
@@ -149,7 +149,7 @@ describe('New products block module - Reset module', async () => {
   });
 
   it(`should go to the configuration page of the module '${Modules.psNewProducts.name}'`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPageAfterReset', baseContext);
 
     await moduleManagerPage.goToConfigurationPage(page, Modules.psNewProducts.tag);
 
@@ -158,14 +158,14 @@ describe('New products block module - Reset module', async () => {
   });
 
   it('should check the configuration is reset', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'changeConfiguration', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'changeConfigurationReset', baseContext);
 
     const numProductsValue = await psNewProducts.getNumProductsToDisplay(page);
     expect(numProductsValue).to.be.equal(defaultValue.toString());
   });
 
   it('should go to the front office', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToTheFo', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToTheFoAfterReset', baseContext);
 
     page = await psNewProducts.viewMyShop(page);
     await homePage.changeLanguage(page, 'en');
@@ -175,7 +175,7 @@ describe('New products block module - Reset module', async () => {
   });
 
   it('should check the number of products in the "New Products" block', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'changeConfiguration', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProductsAfterReset', baseContext);
 
     const numProductsInBlock = await homePage.getProductsBlockNumber(page, 'newproducts');
     expect(numProductsInBlock).to.be.equal(defaultValue);
