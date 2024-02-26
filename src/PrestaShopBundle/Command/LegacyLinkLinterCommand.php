@@ -95,6 +95,7 @@ class LegacyLinkLinterCommand extends Command
         'admin_products_quantity',
         'admin_categories_get_categories_tree',
         'admin_catalog_price_rules_list_for_product',
+        'admin_features_horizontal_index',
         'admin_products_toggle_status_for_shop',
     ];
 

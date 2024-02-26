@@ -28,9 +28,7 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block content %}
-  {% if settingsTipMessage is not empty %}
-    {{ ps.infotip(settingsTipMessage, true) }}
-  {% endif %}
+  {{ ps.infotip(settingsTipMessage, true) }}
   {% block feature_group_showcase_card %}
       {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/showcase_card.html.twig' %}
   {% endblock %}

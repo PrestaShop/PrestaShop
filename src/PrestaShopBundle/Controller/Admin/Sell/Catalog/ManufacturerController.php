@@ -783,16 +783,20 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    private function getSettingsTipMessage()
+    private function getSettingsTipMessage(): string
     {
-        if ($this->getConfiguration()->get('PS_DISPLAY_MANUFACTURERS')) {
-            return null;
-        }
-
         $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences'));
         $urlEnding = '</a>';
+
+        if ($this->getConfiguration()->get('PS_DISPLAY_MANUFACTURERS')) {
+            return $this->trans(
+                'The display of your brands is enabled on your store. Go to %sShop Parameters > General%s to edit settings.',
+                'Admin.Catalog.Notification',
+                [$urlOpening, $urlEnding]
+            );
+        }
 
         return $this->trans(
             'The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.',

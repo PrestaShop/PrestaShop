@@ -28,9 +28,7 @@
 
 {% block content %}
   {% block manufacturers_listing %}
-    {% if settingsTipMessage is not empty %}
-      {{ ps.infotip(settingsTipMessage, true) }}
-    {% endif %}
+    {{ ps.infotip(settingsTipMessage, true) }}
     {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': manufacturerGrid} %}
   {% endblock %}
 

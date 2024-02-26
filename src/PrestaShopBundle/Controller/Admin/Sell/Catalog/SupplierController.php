@@ -532,16 +532,20 @@ class SupplierController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     protected function getSettingsTipMessage()
     {
-        if ($this->getConfiguration()->get('PS_DISPLAY_SUPPLIERS')) {
-            return null;
-        }
-
         $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences'));
         $urlEnding = '</a>';
+
+        if ($this->getConfiguration()->get('PS_DISPLAY_SUPPLIERS')) {
+            return $this->trans(
+                'The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.',
+                'Admin.Catalog.Notification',
+                [$urlOpening, $urlEnding]
+            );
+        }
 
         return $this->trans(
             'The display of your suppliers is disabled on your store. Go to %sShop Parameters > General%s to edit settings.',
