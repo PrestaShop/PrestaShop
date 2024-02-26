@@ -27,6 +27,7 @@ import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sq
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import Grid from '@components/grid/grid';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
 import SortingExtension from '@components/grid/extension/sorting-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
@@ -45,5 +46,6 @@ $(() => {
   grid.addExtension(new SortingExtension());
   grid.addExtension(new SubmitRowActionExtension());
   grid.addExtension(new SubmitBulkExtension());
+  grid.addExtension(new LinkRowActionExtension());
   grid.addExtension(new BulkActionCheckboxExtension());
 });

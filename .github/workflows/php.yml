@@ -13,7 +13,7 @@ jobs:
     permissions:
       contents: read  # for actions/checkout to fetch code
     name: PHP CS Fixer
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

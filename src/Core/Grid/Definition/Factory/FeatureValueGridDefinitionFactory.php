@@ -125,6 +125,7 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
                                 'extra_route_params' => [
                                     'featureId' => 'id_feature',
                                 ],
+                                'clickable_row' => true,
                             ])
                     )
                     ->add(
