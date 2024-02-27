@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ApiClientSettings;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\DeleteApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\EditApiClientCommand;
@@ -40,6 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\CannotUpdateApiClientE
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Query\GetApiClientForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\QueryResult\EditableApiClient;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ApiClientFilters;
@@ -54,6 +57,12 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ApiClientController extends FrameworkBundleAdminController
 {
+    public function __construct(
+        private readonly FeatureFlagManager $featureFlagManager,
+        private readonly MultistoreFeature $multiStoreFeature,
+    ) {
+    }
+
     /**
      * @return Response
      */
@@ -62,18 +71,24 @@ class ApiClientController extends FrameworkBundleAdminController
     {
         $apiClientGridFactory = $this->get('prestashop.core.grid.factory.api_client');
         $apiClientGrid = $apiClientGridFactory->getGrid($apiClientFilters);
+        $isAuthorizationServerMultistoreRequested = $this->isAuthorizationServerMultistoreRequested();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/index.html.twig', [
             'apiClientGrid' => $this->presentGrid($apiClientGrid),
             'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
             'layoutTitle' => $this->trans('API Clients', 'Admin.Navigation.Menu'),
             'layoutHeaderToolbarBtn' => $this->getApiClientsToolbarButtons(),
+            'isAuthorizationServerMultistoreRequested' => $isAuthorizationServerMultistoreRequested,
         ]);
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_index')]
     public function createAction(Request $request): Response
     {
+        if ($this->isAuthorizationServerMultistoreRequested()) {
+            return $this->redirectToRoute('admin_api_clients_index');
+        }
+
         $apiClientForm = $this->getFormBuilder()->getForm();
         $apiClientForm->handleRequest($request);
 
@@ -120,6 +135,10 @@ class ApiClientController extends FrameworkBundleAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_index')]
     public function editAction(Request $request, int $apiClientId): Response
     {
+        if ($this->isAuthorizationServerMultistoreRequested()) {
+            return $this->redirectToRoute('admin_api_clients_index');
+        }
+
         $apiClientForm = $this->getFormBuilder()->getFormFor($apiClientId);
         $apiClientForm->handleRequest($request);
 
@@ -307,5 +326,11 @@ class ApiClientController extends FrameworkBundleAdminController
                 'Admin.Advparameters.Notification'
             ),
         ];
+    }
+
+    private function isAuthorizationServerMultistoreRequested(): bool
+    {
+        return !$this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE)
+            && $this->multiStoreFeature->isActive();
     }
 }

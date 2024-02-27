@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
@@ -29,20 +29,32 @@
   <div class="alert alert-info" role="alert">
     <p class="alert-text">
       {{ 'PrestaShop provides numerous APIs if you need you can see their details in the dedicated automated documentation:'|trans({}, 'Admin.Advparameters.Feature') }}
-      <ul>
-        <li>
-          <a target="_blank" href="{{ path('api_doc') }}">
-            {{ 'API Documentation (HTML format)'|trans({}, 'Admin.Advparameters.Feature') }}
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="{{ path('api_doc', {_format: 'json'}) }}">
-            {{ 'API Documentation (JSON format)'|trans({}, 'Admin.Advparameters.Feature') }}
-          </a>
-        </li>
-      </ul>
+    <ul>
+      <li>
+        <a target="_blank" href="{{ path('api_doc') }}">
+          {{ 'API Documentation (HTML format)'|trans({}, 'Admin.Advparameters.Feature') }}
+        </a>
+      </li>
+      <li>
+        <a target="_blank" href="{{ path('api_doc', {_format: 'json'}) }}">
+          {{ 'API Documentation (JSON format)'|trans({}, 'Admin.Advparameters.Feature') }}
+        </a>
+      </li>
+    </ul>
     </p>
   </div>
+
+  {% if isAuthorizationServerMultistoreRequested %}
+    <div class="alert alert-danger" role="alert">
+      <p class="alert-text">
+        {{ 'The use of multistore and authorization server  is an experimental feature. You need to
+        enabled the "Authorization server - Multistore" functionality in'|trans({}, 'Admin.Advparameters.Feature') }}
+        <a href="{{ path('admin_feature_flags_index') }}">
+          {{ 'New & Experimental Features'|trans({}, 'Admin.Navigation.Menu') }}
+        </a>
+      </p>
+    </div>
+  {% endif %}
 
   {% block api_client_listing %}
     {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': apiClientGrid} %}
