@@ -1,7 +1,6 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import common tests
 import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
@@ -43,7 +42,6 @@ describe('FO - Contact us : Check mail link on contact us page', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Check mail link on contact us page', async () => {

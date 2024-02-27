@@ -2,7 +2,6 @@
 import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import commonTests
 import {createCartRuleTest} from '@commonTests/BO/catalog/cartRule';
@@ -81,7 +80,6 @@ describe('FO - Account : View vouchers', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('View vouchers on FO', async () => {

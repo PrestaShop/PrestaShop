@@ -91,7 +91,6 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     await helper.closeBrowserContext(browserContext);
 
     await files.deleteFile(`${contactUsData.fileName}.txt`);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
 
     // Stop listening to maildev server
     mailHelper.stopListener(mailListener);

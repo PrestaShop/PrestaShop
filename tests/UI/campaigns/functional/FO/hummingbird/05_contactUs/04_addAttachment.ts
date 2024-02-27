@@ -71,7 +71,6 @@ describe('FO - Contact us : Add attachment', async () => {
 
     await files.deleteFile(`${contactUsData.fileName}.csv`);
     await files.deleteFile(`${contactUsData.fileName}.png`);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Add attachment', async () => {

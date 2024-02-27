@@ -1,7 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 import helper from '@utils/helpers';
-import files from '@utils/files';
 
 // Import common tests
 import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
@@ -51,7 +50,6 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Sign from Personal information step', async () => {
