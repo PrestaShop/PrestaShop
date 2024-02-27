@@ -30,9 +30,9 @@ class QuickViewModal extends FOBasePage {
 
   protected quickViewProductVariants: string;
 
-  private readonly quickViewProductSize: string;
+  protected quickViewProductSize: string;
 
-  private readonly quickViewProductColor: string;
+  protected quickViewProductColor: string;
 
   protected quickViewProductDimension: string;
 
@@ -52,11 +52,11 @@ class QuickViewModal extends FOBasePage {
 
   private readonly addToCartButton: string;
 
-  private readonly quickViewModalProductImageCover: string;
+  protected quickViewModalProductImageCover: string;
 
   protected productRowQuantityUpDownButton: (direction: string) => string;
 
-  private readonly quickViewThumbImagePosition: (position: number) => string;
+  protected quickViewThumbImagePosition: (position: number) => string;
 
   /**
    * @constructs
@@ -66,7 +66,7 @@ class QuickViewModal extends FOBasePage {
     super(theme);
 
     // Quick View modal
-    this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
+    this.quickViewModalDiv = 'div[id*="quickview-modal"]';
     this.quickViewCloseButton = `${this.quickViewModalDiv} button.close`;
     this.productAvailability = '#product-availability';
     this.quickViewProductName = `${this.quickViewModalDiv} h1`;
@@ -79,7 +79,6 @@ class QuickViewModal extends FOBasePage {
     this.quickViewProductSize = `${this.quickViewProductVariants} select#group_1`;
     this.quickViewProductColor = `${this.quickViewProductVariants} ul#group_2`;
     this.quickViewProductDimension = `${this.quickViewProductVariants} select#group_3`;
-    this.productAvailability = '#product-availability';
     this.quickViewCoverImage = `${this.quickViewModalDiv} img.js-qv-product-cover`;
     this.quickViewThumbImage = `${this.quickViewModalDiv} img.js-thumb.selected`;
     this.quickViewQuantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
@@ -113,19 +112,18 @@ class QuickViewModal extends FOBasePage {
   }
 
   /**
-   * Change product attributes
+   * Change product attribute
    * @param page {Page} Browser tab
    * @param attributes {ProductAttribute} The attributes data (size, color, dimension)
    * @returns {Promise<void>}
    */
-  async setAttributes(page: Page, attributes: ProductAttribute): Promise<void> {
+  async setAttribute(page: Page, attributes: ProductAttribute): Promise<void> {
     switch (attributes.name) {
       case 'color':
-        await this.waitForSelectorAndClick(page, `${this.quickViewProductColor} input[title='${attributes.value}']`);
-        await this.waitForVisibleSelector(
-          page,
-          `${this.quickViewProductColor} input[title='${attributes.value}'][checked]`,
-        );
+        await Promise.all([
+          await this.waitForSelectorAndClick(page, `${this.quickViewProductColor} input[title='${attributes.value}'] + span`),
+          await page.waitForResponse((response) => response.url().includes('product&token=')),
+        ]);
         break;
       case 'dimension':
         await Promise.all([
@@ -134,7 +132,10 @@ class QuickViewModal extends FOBasePage {
         ]);
         break;
       case 'size':
-        await this.selectByVisibleText(page, this.quickViewProductSize, attributes.value);
+        await Promise.all([
+          page.waitForResponse((response) => response.url().includes('product&token=')),
+          this.selectByVisibleText(page, this.quickViewProductSize, attributes.value),
+        ]);
         break;
       default:
         throw new Error(`${attributes.name} has not being in defined in "changeAttributes"`);
@@ -164,13 +165,25 @@ class QuickViewModal extends FOBasePage {
   /**
    * Change attributes and add to cart
    * @param page {Page} Browser tab
+   * @param attributes {ProductAttribute[]} The attributes data (size, color)
+   * @returns {Promise<void>}
+   */
+  async setAttributes(page: Page, attributes: ProductAttribute[]): Promise<void> {
+    for (let i: number = 0; i < attributes.length; i++) {
+      await this.setAttribute(page, attributes[i]);
+    }
+  }
+
+  /**
+   * Change attributes and add to cart
+   * @param page {Page} Browser tab
    * @param attributes {ProductAttribute[]} The attributes data (size, color, quantity)
    * @param quantity {number} The attributes data (size, color, quantity)
    * @returns {Promise<void>}
    */
   async setAttributesAndAddToCart(page: Page, attributes: ProductAttribute[], quantity: number): Promise<void> {
     for (let i: number = 0; i < attributes.length; i++) {
-      await this.setAttributes(page, attributes[i]);
+      await this.setAttribute(page, attributes[i]);
     }
     await this.setQuantityAndAddToCart(page, quantity);
   }
@@ -282,20 +295,41 @@ class QuickViewModal extends FOBasePage {
     return attributes;
   }
 
+  async getSelectedAttributes(page: Page): Promise<ProductAttribute[]> {
+    return [
+      {
+        name: 'size',
+        value: await this.getAttributeContent(page, `${this.quickViewProductSize} option[selected]`, 'title'),
+      },
+      {
+        name: 'color',
+        value: await this.getAttributeContent(page, `${this.quickViewProductColor} input[checked='checked']`, 'title'),
+      },
+    ];
+  }
+
   /**
    * Get product attributes from quick view modal
    * @param page {Page} Browser tab
    * @returns {Promise<ProductAttribute[]>}
    */
   async getProductAttributesFromQuickViewModal(page: Page): Promise<ProductAttribute[]> {
+    if (await this.elementVisible(page, this.quickViewProductSize, 1000)) {
+      return [
+        {
+          name: 'size',
+          value: await this.getTextContent(page, this.quickViewProductSize),
+        },
+        {
+          name: 'color',
+          value: await this.getTextContent(page, this.quickViewProductColor, false),
+        },
+      ];
+    }
     return [
       {
-        name: 'size',
-        value: await this.getTextContent(page, this.quickViewProductSize),
-      },
-      {
-        name: 'color',
-        value: await this.getTextContent(page, this.quickViewProductColor, false),
+        name: 'dimension',
+        value: await this.getTextContent(page, this.quickViewProductDimension),
       },
     ];
   }
@@ -352,10 +386,15 @@ class QuickViewModal extends FOBasePage {
   /**
    * Close quick view modal
    * @param page {Page} Browser tab
+   * @param byKeyboard {boolean} True if we need to use the keyboard to close the modal
    * @returns {Promise<boolean>}
    */
-  async closeQuickViewModal(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, this.quickViewCloseButton);
+  async closeQuickViewModal(page: Page, byKeyboard: boolean = false): Promise<boolean> {
+    if (byKeyboard) {
+      await page.keyboard.press('Escape');
+    } else {
+      await this.waitForSelectorAndClick(page, this.quickViewCloseButton);
+    }
 
     return this.elementNotVisible(page, this.quickViewModalDiv, 1000);
   }
