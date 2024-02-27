@@ -209,6 +209,7 @@ class ConfigurationTestCore
     public static function test_gd()
     {
         if (function_exists('gd_info')) {
+            $gd = gd_info();
             return !empty($gd['JPEG Support']) || !empty($gd['JPG Support']);
         }
 
