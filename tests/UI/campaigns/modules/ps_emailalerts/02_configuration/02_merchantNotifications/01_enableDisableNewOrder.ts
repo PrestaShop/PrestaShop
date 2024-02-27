@@ -102,7 +102,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPageEnableNewOrder', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -116,14 +116,14 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
 
     it(`should search the module ${Modules.psEmailAlerts.name}`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'searchModuleEnableNewOrder', baseContext);
 
       const isModuleVisible = await moduleManager.searchModule(page, Modules.psEmailAlerts);
       expect(isModuleVisible).to.equal(true);
     });
 
     it(`should go to the configuration page of the module '${Modules.psEmailAlerts.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPageEnableNewOrder', baseContext);
 
       await moduleManager.goToConfigurationPage(page, Modules.psEmailAlerts.tag);
 
@@ -320,7 +320,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
 
     it('should add product to cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
@@ -334,7 +334,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
 
     it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep2', baseContext);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
@@ -345,7 +345,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
 
     it('should go to payment step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep2', baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
@@ -353,7 +353,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
 
     it('should choose payment method and confirm the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder2', baseContext);
 
       // Payment step - Choose payment step
       await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);

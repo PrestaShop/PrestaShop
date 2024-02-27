@@ -137,7 +137,7 @@ describe('Mail alerts module - Uninstall and install module', async () => {
 
   describe('FrontOffice - Check that the module is not present', async () => {
     it('should go to Front Office', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFoAfterUninstall', baseContext);
 
       page = await moduleManagerPage.viewMyShop(page);
       await homePage.changeLanguage(page, 'en');
@@ -147,7 +147,7 @@ describe('Mail alerts module - Uninstall and install module', async () => {
     });
 
     it('should go to the All Products Page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAllProductsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAllProductsPageAfterUninstall', baseContext);
 
       await homePage.goToAllProductsPage(page);
 
@@ -192,7 +192,7 @@ describe('Mail alerts module - Uninstall and install module', async () => {
     });
 
     it('should install the module', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
       const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psEmailAlerts, 'install', false);
       expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.psEmailAlerts.tag));
