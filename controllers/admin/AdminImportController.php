@@ -3863,8 +3863,13 @@ class AdminImportControllerCore extends AdminController
 
         /** @var Store $store */
         if (isset($store->image) && !empty($store->image)) {
-            if (!(AdminImportController::copyImg($store->id, null, $store->image, 'stores', !$regenerate))) {
-                $this->warnings[] = $store->image . ' ' . $this->trans('cannot be copied.', [], 'Admin.Advparameters.Notification');
+            
+            // check to see if the image exists
+            $headers = @get_headers($store->image);
+            if ($headers && strpos($headers[0], '200')) {
+                if (!(AdminImportController::copyImg($store->id, null, $store->image, 'stores', !$regenerate))) {
+                    $this->warnings[] = $store->image . ' ' . $this->trans('cannot be copied.', [], 'Admin.Advparameters.Notification');
+                }
             }
         }
 
