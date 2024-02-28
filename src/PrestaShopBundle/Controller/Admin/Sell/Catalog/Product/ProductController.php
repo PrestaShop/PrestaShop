@@ -729,10 +729,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function exportAction(ProductFilters $filters)
     {
-        if ($this->shouldRedirectToV1()) {
-            return $this->redirectToRoute('admin_product_catalog');
-        }
-
         $productGridFactory = $this->get('prestashop.core.grid.factory.product');
         $grid = $productGridFactory->getGrid($filters);
 
