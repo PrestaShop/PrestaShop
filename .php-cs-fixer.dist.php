@@ -3,12 +3,14 @@
 ini_set('memory_limit','256M');
 
 $finder = PhpCsFixer\Finder::create()->in([
+    __DIR__.'/app',
     __DIR__.'/src',
     __DIR__.'/classes',
     __DIR__.'/controllers',
     __DIR__.'/tests',
     __DIR__.'/tools/profiling',
 ])->notPath([
+    __DIR__.'/app/parameters.php',
     'Unit/Resources/config/params.php',
     'Unit/Resources/config/params_modified.php',
 ]);
