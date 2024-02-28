@@ -44,7 +44,10 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
     await quickViewModal.setQuantityAndAddToCart(page, 2);
 
     const isBlockCartModal = await blockCartModal.isBlockCartModalVisible(page);
-    expect(isBlockCartModal).to.contains(homePage.successAddToCartMessage);
+    expect(isBlockCartModal).to.equal(true);
+
+    const successMessage = await blockCartModal.getBlockCartModalTitle(page);
+    expect(successMessage).to.contains(homePage.successAddToCartMessage);
 
     const isModalNotVisible = await blockCartModal.continueShopping(page);
     expect(isModalNotVisible).to.eq(true);
