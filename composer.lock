@@ -6770,16 +6770,16 @@
         },
         {
             "name": "prestashop/ps_googleanalytics",
-            "version": "v5.0.0",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_googleanalytics.git",
-                "reference": "9f18ecee06bc62da8ff21553be2d46602a30e3e5"
+                "reference": "efdc50414724aa990eeb87eff3bb1868986cdfda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_googleanalytics/zipball/9f18ecee06bc62da8ff21553be2d46602a30e3e5",
-                "reference": "9f18ecee06bc62da8ff21553be2d46602a30e3e5",
+                "url": "https://api.github.com/repos/PrestaShop/ps_googleanalytics/zipball/efdc50414724aa990eeb87eff3bb1868986cdfda",
+                "reference": "efdc50414724aa990eeb87eff3bb1868986cdfda",
                 "shasum": ""
             },
             "require": {
@@ -6809,9 +6809,9 @@
             "description": "PrestaShop module ps_googleanalytics",
             "homepage": "https://github.com/PrestaShop/ps_googleanalytics",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_googleanalytics/tree/v5.0.0"
+                "source": "https://github.com/PrestaShop/ps_googleanalytics/tree/v5.0.1"
             },
-            "time": "2024-02-08T13:20:07+00:00"
+            "time": "2024-02-28T16:20:31+00:00"
         },
         {
             "name": "prestashop/ps_imageslider",
