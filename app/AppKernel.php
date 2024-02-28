@@ -191,7 +191,7 @@ abstract class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
+        $loader->load($this->getKernelConfigPath());
 
         $activeModules = $this->getModuleRepository()->getActiveModules();
         // We only load translations and services of active modules (not simply installed)
@@ -271,6 +271,11 @@ abstract class AppKernel extends Kernel
             // Container freshness depends on this folder existence
             $container->addResource(new FileExistenceResource($adminDir));
         });
+    }
+
+    protected function getKernelConfigPath(): string
+    {
+        return $this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml';
     }
 
     /**
