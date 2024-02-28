@@ -9,6 +9,7 @@ import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import files from '@utils/files';
 
 function installHummingbird(baseContext: string = 'commonTests-installHummingbird'): void {
   describe('Install Hummingbird theme', async () => {
@@ -25,6 +26,9 @@ function installHummingbird(baseContext: string = 'commonTests-installHummingbir
 
     after(async () => {
       await helper.closeBrowserContext(browserContext);
+      if (await files.doesFileExist('../../admin-dev/hummingbird.zip')) {
+        await files.deleteFile('../../admin-dev/hummingbird.zip');
+      }
     });
 
     it('should login in BO', async function () {

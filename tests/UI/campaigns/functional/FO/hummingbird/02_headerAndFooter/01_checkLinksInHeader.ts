@@ -1,7 +1,6 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import commonTests
 import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
@@ -49,7 +48,6 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
     after(async () => {
       await helper.closeBrowserContext(browserContext);
-      await files.deleteFile('../../admin-dev/hummingbird.zip');
     });
 
     it('should go to FO home page', async function () {

@@ -1,7 +1,6 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import common tests
 import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
@@ -40,7 +39,6 @@ describe('FO - Product page - Quick view : Share links', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Check share links', async () => {

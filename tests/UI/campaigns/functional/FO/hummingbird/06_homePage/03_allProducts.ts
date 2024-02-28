@@ -1,7 +1,6 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -37,7 +36,6 @@ describe('FO - Home Page : Display all products', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('BO : Get the number of products', async () => {

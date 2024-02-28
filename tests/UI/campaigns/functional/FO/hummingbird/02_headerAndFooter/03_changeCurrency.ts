@@ -1,5 +1,4 @@
 // Import utils
-import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
@@ -42,7 +41,6 @@ Post-condition:
 describe('FO - Header and Footer : Change currency', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
   let exchangeRateValue: number = 0;
 
   // Pre-condition : Install Hummingbird
@@ -55,7 +53,6 @@ describe('FO - Header and Footer : Change currency', async () => {
     });
 
     after(async () => {
-      await files.deleteFile(filePath);
       await helper.closeBrowserContext(browserContext);
     });
 

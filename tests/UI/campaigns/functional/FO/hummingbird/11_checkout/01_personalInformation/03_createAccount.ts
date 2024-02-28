@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 import helper from '@utils/helpers';
 import mailHelper from '@utils/mailHelper';
-import files from '@utils/files';
 
 // Import common tests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
@@ -73,7 +72,6 @@ describe('FO - Checkout - Personal information : Create account', async () => {
   after(async () => {
     await helper.closeBrowserContext(browserContext);
     mailHelper.stopListener(mailListener);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   // Pre-Condition : Setup config SMTP

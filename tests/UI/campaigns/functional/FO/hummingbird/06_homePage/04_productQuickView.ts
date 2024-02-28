@@ -1,7 +1,6 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
@@ -75,7 +74,6 @@ describe('FO - Home Page : Product quick view', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Quick view product with combinations', async () => {
