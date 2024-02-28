@@ -732,9 +732,13 @@ abstract class QueryParamsCollection
                 'AND (' .
                 '{supplier_name} LIKE :keyword_%d OR ' .
                 '{product_reference} LIKE :keyword_%d OR ' .
+                '{product_ean13} LIKE :keyword_%d OR ' .
+                '{combination_ean13} LIKE :keyword_%d OR ' .
                 '{product_name} LIKE :keyword_%d OR ' .
                 '{combination_name} LIKE :keyword_%d' .
                 ')',
+                $index,
+                $index,
                 $index,
                 $index,
                 $index,
