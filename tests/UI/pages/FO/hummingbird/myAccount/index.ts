@@ -14,6 +14,7 @@ class MyAccount extends MyAccountPage {
   constructor() {
     super('hummingbird');
 
+    this.orderSlipsLink = '.account-menu #order-slips__link';
     this.logoutFooterLink = '#my-account .account-menu .account-menu--signout';
   }
 }
