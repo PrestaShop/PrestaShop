@@ -253,7 +253,7 @@ class QueryParamsCollectionTest extends TestCase
         $supplierFilterMessage = 'It should provide with a SQL condition clause on supplier';
         $categoryFilterMessage = 'It should provide with a SQL condition clause on category';
         $keywordsFilterMessage =
-            'It should provide with SQL conditions clauses on product references, names and supplier names';
+            'It should provide with SQL conditions clauses on product references, names, EAN codes and supplier names';
         $attributesFilterMessage = 'It should provide with SQL conditions clauses on product attributes';
         $featuresFilterMessage = 'It should provide with SQL conditions clauses on product features';
 
@@ -287,6 +287,8 @@ class QueryParamsCollectionTest extends TestCase
                     QueryParamsCollection::SQL_CLAUSE_HAVING => 'AND (' .
                         '{supplier_name} LIKE :keyword_0 OR ' .
                         '{product_reference} LIKE :keyword_0 OR ' .
+                        '{product_ean13} LIKE :keyword_0 OR ' .
+                        '{combination_ean13} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
                         '{combination_name} LIKE :keyword_0' .
                         ')',
@@ -300,6 +302,8 @@ class QueryParamsCollectionTest extends TestCase
                     QueryParamsCollection::SQL_CLAUSE_HAVING => 'AND (' .
                         '{supplier_name} LIKE :keyword_0 OR ' .
                         '{product_reference} LIKE :keyword_0 OR ' .
+                        '{product_ean13} LIKE :keyword_0 OR ' .
+                        '{combination_ean13} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
                         '{combination_name} LIKE :keyword_0' .
                         ')',
@@ -313,18 +317,24 @@ class QueryParamsCollectionTest extends TestCase
                     QueryParamsCollection::SQL_CLAUSE_HAVING => 'AND (' .
                         '{supplier_name} LIKE :keyword_0 OR ' .
                         '{product_reference} LIKE :keyword_0 OR ' .
+                        '{product_ean13} LIKE :keyword_0 OR ' .
+                        '{combination_ean13} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
                         '{combination_name} LIKE :keyword_0' .
                         ')' . "\n" .
                         'AND (' .
                         '{supplier_name} LIKE :keyword_1 OR ' .
                         '{product_reference} LIKE :keyword_1 OR ' .
+                        '{product_ean13} LIKE :keyword_1 OR ' .
+                        '{combination_ean13} LIKE :keyword_1 OR ' .
                         '{product_name} LIKE :keyword_1 OR ' .
                         '{combination_name} LIKE :keyword_1' .
                         ')' . "\n" .
                         'AND (' .
                         '{supplier_name} LIKE :keyword_2 OR ' .
                         '{product_reference} LIKE :keyword_2 OR ' .
+                        '{product_ean13} LIKE :keyword_2 OR ' .
+                        '{combination_ean13} LIKE :keyword_2 OR ' .
                         '{product_name} LIKE :keyword_2 OR ' .
                         '{combination_name} LIKE :keyword_2' .
                         ')',
