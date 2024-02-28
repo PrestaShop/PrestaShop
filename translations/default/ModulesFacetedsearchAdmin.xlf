@@ -15,7 +15,7 @@
       <trans-unit id="ccc12c5568381293a27db0232877937b">
         <source>Filter template name required (cannot be empty)</source>
         <target>Filter template name required (cannot be empty)</target>
-        <note>Line: 604</note>
+        <note>Line: 606</note>
       </trans-unit>
       <trans-unit id="8c97e587c1b4e519bec26f3903561da3">
         <source>You must select at least one category.</source>
@@ -25,106 +25,106 @@
       <trans-unit id="817c37b9c1f5cd4a450dad384e63e6c7">
         <source>Your filter</source>
         <target>Your filter</target>
-        <note>Line: 694</note>
+        <note>Line: 696</note>
       </trans-unit>
       <trans-unit id="3185cefd67b575e582063148e4f15860">
         <source>was updated successfully.</source>
         <target>was updated successfully.</target>
-        <note>Line: 698</note>
+        <note>Line: 700</note>
       </trans-unit>
       <trans-unit id="7ccab4d8de5d6b9bb61e99c7bba343ab">
         <source>was added successfully.</source>
         <target>was added successfully.</target>
-        <note>Line: 699</note>
+        <note>Line: 701</note>
       </trans-unit>
       <trans-unit id="fe016d3b990c2a9dd72ab6b45892f2ae">
         <source>Settings saved successfully</source>
         <target>Settings saved successfully</target>
-        <note>Line: 717</note>
+        <note>Line: 719</note>
       </trans-unit>
       <trans-unit id="0d07af70081a2421e2b2972609d699db">
         <source>Filter template deleted, categories updated (reverted to default Filter template).</source>
         <target>Filter template deleted, categories updated (reverted to default Filter template).</target>
-        <note>Line: 732</note>
+        <note>Line: 734</note>
       </trans-unit>
       <trans-unit id="491f46aa6101560e9f1e0d55a063231b">
         <source>Filter template not found</source>
         <target>Filter template not found</target>
-        <note>Line: 764</note>
+        <note>Line: 766</note>
       </trans-unit>
       <trans-unit id="a3868119dc6858db57127fd26e6f9656">
         <source>My template - %s</source>
         <target>My template - %s</target>
-        <note>Line: 855</note>
+        <note>Line: 857</note>
       </trans-unit>
       <trans-unit id="32d2e6cd4bb1719c572ef470a3a525b6">
         <source>My template %s</source>
         <target>My template %s</target>
-        <note>Line: 1199</note>
+        <note>Line: 1233</note>
       </trans-unit>
       <trans-unit id="b3786b970611c1a3809dd51b630812a7">
         <source>"%s" is not a valid url</source>
         <target>"%s" is not a valid url</target>
-        <note>Line: 1347</note>
+        <note>Line: 1382</note>
       </trans-unit>
       <trans-unit id="9461ef0a8f8a2adbb3fa8ea0fda9949d">
         <source>You must select at least one page.</source>
         <target>You must select at least one page.</target>
-        <note>Line: 606</note>
+        <note>Line: 608</note>
       </trans-unit>
       <trans-unit id="d4513f10f8edb4426a5723738e129861">
         <source>You must select at least one category if you want to use this filter template on category pages.</source>
         <target>You must select at least one category if you want to use this filter template on category pages.</target>
-        <note>Line: 608</note>
+        <note>Line: 610</note>
       </trans-unit>
       <trans-unit id="3adbdb3ac060038aa0e6e6c138ef9873">
         <source>Category</source>
         <target>Category</target>
-        <note>Line: 1692</note>
+        <note>Line: 1727</note>
       </trans-unit>
       <trans-unit id="c0bd7654d5b278e65f21cf4e9153fdb4">
         <source>Manufacturer</source>
         <target>Manufacturer</target>
-        <note>Line: 1696</note>
+        <note>Line: 1731</note>
       </trans-unit>
       <trans-unit id="ec136b444eede3bc85639fac0dd06229">
         <source>Supplier</source>
         <target>Supplier</target>
-        <note>Line: 1700</note>
+        <note>Line: 1735</note>
       </trans-unit>
       <trans-unit id="9ff0635f5737513b1a6f559ac2bff745">
         <source>New products</source>
         <target>New products</target>
-        <note>Line: 1704</note>
+        <note>Line: 1739</note>
       </trans-unit>
       <trans-unit id="bd7929bc6bed5d8ec99db715a980ba04">
         <source>Best sales</source>
         <target>Best sales</target>
-        <note>Line: 1708</note>
+        <note>Line: 1743</note>
       </trans-unit>
       <trans-unit id="6de5d0b17afc50642850ff9486934f87">
         <source>Prices drop</source>
         <target>Prices drop</target>
-        <note>Line: 1712</note>
+        <note>Line: 1747</note>
       </trans-unit>
       <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
         <source>Search</source>
         <target>Search</target>
-        <note>Line: 1716</note>
+        <note>Line: 1751</note>
       </trans-unit>
       <trans-unit id="bab956f96196bebabbfb693f920b1bc1">
         <source>(experimental)</source>
         <target>(experimental)</target>
-        <note>Line: 1716</note>
+        <note>Line: 1751</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_facetedsearch/src/Form/Feature/FormModifier.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_facetedsearch/src/Form/FeatureValue/FormModifier.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9e11e4b371570340ca07913bc4783a7a">
         <source>Meta title</source>
         <target>Meta title</target>
-        <note>Line: 97</note>
+        <note>Line: 96</note>
       </trans-unit>
     </body>
   </file>
@@ -256,22 +256,102 @@
       <trans-unit id="048c1728a0a6cf36f56c9dcdd23d8a14">
         <source>Product condition filter</source>
         <target>Product condition filter</target>
-        <note>Line: 126</note>
+        <note>Line: 156</note>
       </trans-unit>
       <trans-unit id="e581c019fe5c1b2aa8dfa18d93f88d13">
         <source>Product brand filter</source>
         <target>Product brand filter</target>
-        <note>Line: 157</note>
+        <note>Line: 187</note>
       </trans-unit>
       <trans-unit id="cc72ed9534a489b5d2e5882735bf1364">
         <source>Product weight filter (slider)</source>
         <target>Product weight filter (slider)</target>
-        <note>Line: 188</note>
+        <note>Line: 218</note>
       </trans-unit>
       <trans-unit id="0649bb392812f99ff6b0e2ba160675fa">
         <source>Product price filter (slider)</source>
         <target>Product price filter (slider)</target>
-        <note>Line: 212</note>
+        <note>Line: 242</note>
+      </trans-unit>
+      <trans-unit id="51e17eed0057675de4bde1b34206bb12">
+        <source>New filters template</source>
+        <target>New filters template</target>
+        <note>Line: 23</note>
+      </trans-unit>
+      <trans-unit id="88ec58dbbe7a8b727200696cfca4df3d">
+        <source>You can drag and drop filters to adjust position</source>
+        <target>You can drag and drop filters to adjust position</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="60266302eeda2ac9775c3a2036ae25ca">
+        <source>Filters:</source>
+        <target>Filters:</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="29da3cb8b65298a3e88f5041e9fb9761">
+        <source>Total filters: %s</source>
+        <target>Total filters: %s</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="379d3973e10dfd90c475060f31b9ae74">
+        <source>Filter result limit:</source>
+        <target>Filter result limit:</target>
+        <note>Line: 350</note>
+      </trans-unit>
+      <trans-unit id="284fd1ee8a33e84e08699ba0bbc44943">
+        <source>Filter style:</source>
+        <target>Filter style:</target>
+        <note>Line: 356</note>
+      </trans-unit>
+      <trans-unit id="4f8222964f9a317cef99dddc23a121bd">
+        <source>Checkbox</source>
+        <target>Checkbox</target>
+        <note>Line: 359</note>
+      </trans-unit>
+      <trans-unit id="07a9ca8c8228dd3399141e228034fedf">
+        <source>Radio button</source>
+        <target>Radio button</target>
+        <note>Line: 360</note>
+      </trans-unit>
+      <trans-unit id="5204077231fc7164e2269e96b584dd95">
+        <source>Drop-down list</source>
+        <target>Drop-down list</target>
+        <note>Line: 361</note>
+      </trans-unit>
+      <trans-unit id="ce9bd6e7a7bfa2fa2d9e43bc4fcfeb8a">
+        <source>List of ranges</source>
+        <target>List of ranges</target>
+        <note>Line: 250</note>
+      </trans-unit>
+      <trans-unit id="db6b86d05039c4f657a28647f8eb5140">
+        <source>Attribute group: %name% (%count% attributes)</source>
+        <target>Attribute group: %name% (%count% attributes)</target>
+        <note>Line: 270</note>
+      </trans-unit>
+      <trans-unit id="788a474b0e55d612b3d500743c6251a0">
+        <source>Attribute group: %name% (%count% attribute)</source>
+        <target>Attribute group: %name% (%count% attribute)</target>
+        <note>Line: 279</note>
+      </trans-unit>
+      <trans-unit id="ee59f74265cd7f85d0ad30206a1a89b0">
+        <source>This group will allow user to select a color</source>
+        <target>This group will allow user to select a color</target>
+        <note>Line: 289</note>
+      </trans-unit>
+      <trans-unit id="4127fb33c1db9597f3c881ae057f1370">
+        <source>Feature: %name% (%count% values)</source>
+        <target>Feature: %name% (%count% values)</target>
+        <note>Line: 329</note>
+      </trans-unit>
+      <trans-unit id="cadad7b648bb2b1d3f22421b00a14fd2">
+        <source>Feature: %name% (%count% value)</source>
+        <target>Feature: %name% (%count% value)</target>
+        <note>Line: 338</note>
+      </trans-unit>
+      <trans-unit id="4e0e25a7f0ffc6adce58b7fd3412cd35">
+        <source>Product extras filter</source>
+        <target>Product extras filter</target>
+        <note>Line: 127</note>
       </trans-unit>
     </body>
   </file>
@@ -526,85 +606,6 @@
         <source>This option controls the behavior of category filter block - how deep children of the currently browsed category you want to display? The default value is 1 - only the direct children. Use 0 for unlimited depth.</source>
         <target>This option controls the behavior of category filter block - how deep children of the currently browsed category you want to display? The default value is 1 - only the direct children. Use 0 for unlimited depth.</target>
         <note>Line: 209</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_facetedsearch/views/templates/admin/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="51e17eed0057675de4bde1b34206bb12">
-        <source>New filters template</source>
-        <target>New filters template</target>
-        <note>Line: 23</note>
-      </trans-unit>
-      <trans-unit id="88ec58dbbe7a8b727200696cfca4df3d">
-        <source>You can drag and drop filters to adjust position</source>
-        <target>You can drag and drop filters to adjust position</target>
-        <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="60266302eeda2ac9775c3a2036ae25ca">
-        <source>Filters:</source>
-        <target>Filters:</target>
-        <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="29da3cb8b65298a3e88f5041e9fb9761">
-        <source>Total filters: %s</source>
-        <target>Total filters: %s</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="379d3973e10dfd90c475060f31b9ae74">
-        <source>Filter result limit:</source>
-        <target>Filter result limit:</target>
-        <note>Line: 190</note>
-      </trans-unit>
-      <trans-unit id="284fd1ee8a33e84e08699ba0bbc44943">
-        <source>Filter style:</source>
-        <target>Filter style:</target>
-        <note>Line: 196</note>
-      </trans-unit>
-      <trans-unit id="4f8222964f9a317cef99dddc23a121bd">
-        <source>Checkbox</source>
-        <target>Checkbox</target>
-        <note>Line: 199</note>
-      </trans-unit>
-      <trans-unit id="07a9ca8c8228dd3399141e228034fedf">
-        <source>Radio button</source>
-        <target>Radio button</target>
-        <note>Line: 200</note>
-      </trans-unit>
-      <trans-unit id="5204077231fc7164e2269e96b584dd95">
-        <source>Drop-down list</source>
-        <target>Drop-down list</target>
-        <note>Line: 201</note>
-      </trans-unit>
-      <trans-unit id="ce9bd6e7a7bfa2fa2d9e43bc4fcfeb8a">
-        <source>List of ranges</source>
-        <target>List of ranges</target>
-        <note>Line: 72</note>
-      </trans-unit>
-      <trans-unit id="db6b86d05039c4f657a28647f8eb5140">
-        <source>Attribute group: %name% (%count% attributes)</source>
-        <target>Attribute group: %name% (%count% attributes)</target>
-        <note>Line: 110</note>
-      </trans-unit>
-      <trans-unit id="788a474b0e55d612b3d500743c6251a0">
-        <source>Attribute group: %name% (%count% attribute)</source>
-        <target>Attribute group: %name% (%count% attribute)</target>
-        <note>Line: 119</note>
-      </trans-unit>
-      <trans-unit id="ee59f74265cd7f85d0ad30206a1a89b0">
-        <source>This group will allow user to select a color</source>
-        <target>This group will allow user to select a color</target>
-        <note>Line: 129</note>
-      </trans-unit>
-      <trans-unit id="4127fb33c1db9597f3c881ae057f1370">
-        <source>Feature: %name% (%count% values)</source>
-        <target>Feature: %name% (%count% values)</target>
-        <note>Line: 169</note>
-      </trans-unit>
-      <trans-unit id="cadad7b648bb2b1d3f22421b00a14fd2">
-        <source>Feature: %name% (%count% value)</source>
-        <target>Feature: %name% (%count% value)</target>
-        <note>Line: 178</note>
       </trans-unit>
     </body>
   </file>

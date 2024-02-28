@@ -19,7 +19,7 @@
       <trans-unit id="0a41f7ebbcf8a28362f8635ca8341d28">
         <source>New block</source>
         <target>New block</target>
-        <note>Line: 289</note>
+        <note>Line: 283</note>
       </trans-unit>
     </body>
   </file>
@@ -29,6 +29,11 @@
         <source>ID</source>
         <target>ID</target>
         <note>Line: 91</note>
+      </trans-unit>
+      <trans-unit id="83ef1503b3bd9858cc923a74e5f9e917">
+        <source>Name of the block</source>
+        <target>Name of the block</target>
+        <note>Line: 98</note>
       </trans-unit>
     </body>
   </file>
@@ -48,11 +53,6 @@
   </file>
   <file original="modules/ps_linklist/src/Form/Type/LinkBlockType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="83ef1503b3bd9858cc923a74e5f9e917">
-        <source>Name of the block</source>
-        <target>Name of the block</target>
-        <note>Line: 114</note>
-      </trans-unit>
       <trans-unit id="220b3899aa8f180e5e2f3238c7d873d3">
         <source>Name of the block cannot be longer than %limit% characters</source>
         <target>Name of the block cannot be longer than %limit% characters</target>

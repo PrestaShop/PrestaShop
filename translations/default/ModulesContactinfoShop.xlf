@@ -26,11 +26,6 @@
         <target>Email us: [1]%email%[/1]</target>
         <note>Line: 57</note>
       </trans-unit>
-      <trans-unit id="a0bfe0853cf82bdf5dcb9b0bac76c357">
-        <source>Email us:</source>
-        <target>Email us:</target>
-        <note>Line: 57</note>
-      </trans-unit>
       <trans-unit id="1300caaefd15b839f37952dc7cc75d82">
         <source>Call us:</source>
         <target>Call us:</target>
@@ -50,6 +45,11 @@
   </file>
   <file original="modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="a0bfe0853cf82bdf5dcb9b0bac76c357">
+        <source>Email us:</source>
+        <target>Email us:</target>
+        <note>Line: 57</note>
+      </trans-unit>
       <trans-unit id="da6eb684bd77243a780629a180c9d19b">
         <source>Fax: [1]%fax%[/1]</source>
         <target>Fax: [1]%fax%[/1]</target>

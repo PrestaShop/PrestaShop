@@ -115,6 +115,18 @@ Comment: Customer threads feature flag</note>
         <note>Line: 92
 Comment: Order states feature flag</note>
       </trans-unit>
+      <trans-unit id="775a3ab6add326ef93f2382f49f9e500">
+        <source>Attribute groups</source>
+        <target>Attribute groups</target>
+        <note>Line: 45
+Comment: Legacy link feature flags</note>
+      </trans-unit>
+      <trans-unit id="3b8c8bf8ab2226d5a44454a20ad7fafb">
+        <source>Cart rules</source>
+        <target>Cart rules</target>
+        <note>Line: 53
+Comment: Cart rules feature flag</note>
+      </trans-unit>
     </body>
   </file>
   <file original="classes/lang/KeysReference/ProfileLang.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -160,12 +172,12 @@ Comment: Order states feature flag</note>
       <trans-unit id="0440efe0a9a9bc643eaec7dbdade39df">
         <source>Supply Orders</source>
         <target>Supply Orders</target>
-        <note>Line: 4642</note>
+        <note>Line: 4641</note>
       </trans-unit>
       <trans-unit id="9f954c5e16659673382f03fa027772ea">
         <source>Supply Order Details</source>
         <target>Supply Order Details</target>
-        <note>Line: 4645</note>
+        <note>Line: 4644</note>
       </trans-unit>
       <trans-unit id="fa4ecc0168c2a9e448f469e3835d2a68">
         <source>Product Reference</source>
@@ -575,7 +587,7 @@ Comment: Order states feature flag</note>
       <trans-unit id="6b127dc82937049e45e74aebca783e74">
         <source>Store contacts</source>
         <target>Store contacts</target>
-        <note>Line: 4632</note>
+        <note>Line: 4631</note>
       </trans-unit>
       <trans-unit id="a7b4930bf2fc5d57eec6b03097200152">
         <source>EAN-13</source>
@@ -594,7 +606,7 @@ Comment: Order states feature flag</note>
       <trans-unit id="60e3ee398aa0ee3498c68914b5d5fb1a">
         <source>Back office connection from %ip%</source>
         <target>Back office connection from %ip%</target>
-        <note>Line: 252</note>
+        <note>Line: 254</note>
       </trans-unit>
     </body>
   </file>
@@ -669,20 +681,10 @@ Comment: voluntary do affectation here</note>
         <target>Webservice accounts</target>
         <note>Line: 585</note>
       </trans-unit>
-      <trans-unit id="775a3ab6add326ef93f2382f49f9e500">
-        <source>Attribute groups</source>
-        <target>Attribute groups</target>
-        <note>Line: 586</note>
-      </trans-unit>
       <trans-unit id="6fab199dbf5a4155871fb0d5dbfa9827">
         <source>Tax rules groups</source>
         <target>Tax rules groups</target>
         <note>Line: 589</note>
-      </trans-unit>
-      <trans-unit id="3b8c8bf8ab2226d5a44454a20ad7fafb">
-        <source>Cart rules</source>
-        <target>Cart rules</target>
-        <note>Line: 592</note>
       </trans-unit>
       <trans-unit id="c8cfbbbe4253e14390b2b14d7e60d9c8">
         <source>Import data</source>
@@ -1021,6 +1023,15 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/CustomerThreadGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
+        <source>Refresh list</source>
+        <target>Refresh list</target>
+        <note>Line: 367</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Definition/Factory/EmailLogsDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5d6103b662f41b07e10687f03aca8fdc">
@@ -1109,11 +1120,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/Core/Grid/Definition/Factory/WebserviceKeyDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
-        <source>Refresh list</source>
-        <target>Refresh list</target>
-        <note>Line: 187</note>
-      </trans-unit>
       <trans-unit id="897356954c2cd3d41b221e3f24f99bba">
         <source>Key</source>
         <target>Key</target>
@@ -1158,12 +1164,50 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dcfba1534995899d2ca36cda978da215">
+        <source>Lifetime of front office cookies</source>
+        <target>Lifetime of front office cookies</target>
+        <note>Line: 298</note>
+      </trans-unit>
+      <trans-unit id="e62d77475fe6318731b4411ba1181dca">
+        <source>Lifetime of back office cookies</source>
+        <target>Lifetime of back office cookies</target>
+        <note>Line: 303</note>
+      </trans-unit>
+      <trans-unit id="454036c51196464f8d9c84ded5808985">
+        <source>Maximum size for attached files</source>
+        <target>Maximum size for attached files</target>
+        <note>Line: 283</note>
+      </trans-unit>
+      <trans-unit id="4ae386b852a3ee22324e8922e50c9aec">
+        <source>Maximum size for a downloadable product</source>
+        <target>Maximum size for a downloadable product</target>
+        <note>Line: 288</note>
+      </trans-unit>
+      <trans-unit id="a1652ab7a761fa7bb3726fe28b97d1f3">
+        <source>Maximum size for a product's image</source>
+        <target>Maximum size for a product's image</target>
+        <note>Line: 293</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/FeatureFlagController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="997320bab8342395326fd0a109068200">
         <source><![CDATA[New & Experimental Features]]></source>
         <target><![CDATA[New & Experimental Features]]></target>
         <note>Line: 96</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
+        <source>Clear cache</source>
+        <target>Clear cache</target>
+        <note>Line: 59</note>
       </trans-unit>
     </body>
   </file>
@@ -1278,11 +1322,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/SmartyType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
-        <source>Clear cache</source>
-        <target>Clear cache</target>
-        <note>Line: 76</note>
-      </trans-unit>
       <trans-unit id="dbe2df5641344e1d14be812243f91ec5">
         <source>Never clear cache files</source>
         <target>Never clear cache files</target>
@@ -1332,16 +1371,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="dcfba1534995899d2ca36cda978da215">
-        <source>Lifetime of front office cookies</source>
-        <target>Lifetime of front office cookies</target>
-        <note>Line: 54</note>
-      </trans-unit>
-      <trans-unit id="e62d77475fe6318731b4411ba1181dca">
-        <source>Lifetime of back office cookies</source>
-        <target>Lifetime of back office cookies</target>
-        <note>Line: 59</note>
-      </trans-unit>
       <trans-unit id="46f18d3960afc01e5a1a5a0e0e9d571b">
         <source>Automatically check for module updates</source>
         <target>Automatically check for module updates</target>
@@ -1380,21 +1409,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="454036c51196464f8d9c84ded5808985">
-        <source>Maximum size for attached files</source>
-        <target>Maximum size for attached files</target>
-        <note>Line: 67</note>
-      </trans-unit>
-      <trans-unit id="4ae386b852a3ee22324e8922e50c9aec">
-        <source>Maximum size for a downloadable product</source>
-        <target>Maximum size for a downloadable product</target>
-        <note>Line: 99</note>
-      </trans-unit>
-      <trans-unit id="a1652ab7a761fa7bb3726fe28b97d1f3">
-        <source>Maximum size for a product's image</source>
-        <target>Maximum size for a product's image</target>
-        <note>Line: 131</note>
-      </trans-unit>
       <trans-unit id="2c111a587b8e6a65856ac7933d76bdce">
         <source>megabytes</source>
         <target>megabytes</target>
@@ -1462,6 +1476,11 @@ Comment: voluntary do affectation here</note>
         <target>Enable the store name as a prefix in the email's subject</target>
         <note>Line: 92</note>
       </trans-unit>
+      <trans-unit id="ec76c5b544633d334c7a3f92db1c7efd">
+        <source>Send emails to</source>
+        <target>Send emails to</target>
+        <note>Line: 77</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/SmtpConfigurationType.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1469,17 +1488,17 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
         <source>None</source>
         <target>None</target>
-        <note>Line: 71</note>
+        <note>Line: 75</note>
       </trans-unit>
       <trans-unit id="099d7d04319e5191b7473e016c55e320">
         <source>TLS</source>
         <target>TLS</target>
-        <note>Line: 72</note>
+        <note>Line: 76</note>
       </trans-unit>
       <trans-unit id="ea52c36203c5f99c3ce2442d531b1a22">
         <source>SSL</source>
         <target>SSL</target>
-        <note>Line: 73</note>
+        <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="3e5b7324ee6019d543023eac3bb13016">
         <source>Email domain name</source>
@@ -1504,7 +1523,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="d7f2615c71a1567cc13cf3a7f7de0aea">
         <source>Encryption</source>
         <target>Encryption</target>
-        <note>Line: 76</note>
+        <note>Line: 80</note>
       </trans-unit>
     </body>
   </file>
@@ -1630,11 +1649,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Logs/LogsByEmailType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ec76c5b544633d334c7a3f92db1c7efd">
-        <source>Send emails to</source>
-        <target>Send emails to</target>
-        <note>Line: 62</note>
-      </trans-unit>
       <trans-unit id="daf5a89c7110f00485d0737ff765e830">
         <source>Minimum severity level</source>
         <target>Minimum severity level</target>
@@ -2668,12 +2682,12 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/cover_image.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Manufacturer/logo_image.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1908624a0bca678cd26b99bfd405324e">
         <source>File size</source>
         <target>File size</target>
-        <note>Line: 33</note>
+        <note>Line: 28</note>
       </trans-unit>
     </body>
   </file>

@@ -27,15 +27,15 @@
         <target>Discount (%):</target>
         <note>Line: 157</note>
       </trans-unit>
+      <trans-unit id="734d291b0d07bae874a51370a032312e">
+        <source>Discount: %.2f%%</source>
+        <target>Discount: %.2f%%</target>
+        <note>Line: 136</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="734d291b0d07bae874a51370a032312e">
-        <source>Discount: %.2f%%</source>
-        <target>Discount: %.2f%%</target>
-        <note>Line: 71</note>
-      </trans-unit>
       <trans-unit id="c20aefc1b11dc684191ded8079cedab4">
         <source>Group information</source>
         <target>Group information</target>
@@ -239,6 +239,16 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
         <target>Social title</target>
         <note>Line: 80</note>
       </trans-unit>
+      <trans-unit id="63889cfb9d3cbe05d1bd2be5cc9953fd">
+        <source>Male</source>
+        <target>Male</target>
+        <note>Line: 151</note>
+      </trans-unit>
+      <trans-unit id="b719ce180ec7bd9641fece2f920f4817">
+        <source>Female</source>
+        <target>Female</target>
+        <note>Line: 156</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -330,7 +340,12 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
       <trans-unit id="effdb9ce6c5d44df31b89d7069c8e0fb">
         <source>Alias</source>
         <target>Alias</target>
-        <note>Line: 4628</note>
+        <note>Line: 4627</note>
+      </trans-unit>
+      <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
+        <source>Search</source>
+        <target>Search</target>
+        <note>Line: 502</note>
       </trans-unit>
     </body>
   </file>
@@ -540,11 +555,6 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
         <target>It will only be applied to the multistore header to highlight your shop context.</target>
         <note>Line: 432</note>
       </trans-unit>
-      <trans-unit id="e72dca5d5a8a4706a206f3225324bf44">
-        <source>Store name</source>
-        <target>Store name</target>
-        <note>Line: 405</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -632,6 +642,11 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
   </file>
   <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="e72dca5d5a8a4706a206f3225324bf44">
+        <source>Store name</source>
+        <target>Store name</target>
+        <note>Line: 476</note>
+      </trans-unit>
       <trans-unit id="57034def557be4e71accee021e74ce5b">
         <source>Add new store</source>
         <target>Add new store</target>
@@ -758,12 +773,12 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/dashproducts/dashproducts.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/dashtrends/dashtrends.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
-        <source>Search</source>
-        <target>Search</target>
-        <note>Line: 386</note>
+      <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
+        <source>Visits</source>
+        <target>Visits</target>
+        <note>Line: 317</note>
       </trans-unit>
     </body>
   </file>
@@ -772,16 +787,7 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
       <trans-unit id="e93c33bd1341ab74195430daeb63db13">
         <source>Shop name</source>
         <target>Shop name</target>
-        <note>Line: 1401</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/statsbestcustomers/statsbestcustomers.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
-        <source>Visits</source>
-        <target>Visits</target>
-        <note>Line: 78</note>
+        <note>Line: 1397</note>
       </trans-unit>
     </body>
   </file>
@@ -802,24 +808,10 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
         <target>Visitors</target>
         <note>Line: 352</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/statspersonalinfos/statspersonalinfos.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="88183b946cc5f0e8c96b2e66e1c74a7e">
         <source>Unknown</source>
         <target>Unknown</target>
-        <note>Line: 339</note>
-      </trans-unit>
-      <trans-unit id="63889cfb9d3cbe05d1bd2be5cc9953fd">
-        <source>Male</source>
-        <target>Male</target>
-        <note>Line: 217</note>
-      </trans-unit>
-      <trans-unit id="b719ce180ec7bd9641fece2f920f4817">
-        <source>Female</source>
-        <target>Female</target>
-        <note>Line: 218</note>
+        <note>Line: 474</note>
       </trans-unit>
     </body>
   </file>
@@ -828,7 +820,7 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
       <trans-unit id="df644ae155e79abf54175bd15d75f363">
         <source>Product name</source>
         <target>Product name</target>
-        <note>Line: 290</note>
+        <note>Line: 289</note>
       </trans-unit>
     </body>
   </file>
@@ -851,12 +843,12 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Form/ChoiceProvider/GenderChoiceProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Grid/Data/Factory/TitleGridDataFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6311ae17c1ee52b36e68aaf4ad066387">
         <source>Other</source>
         <target>Other</target>
-        <note>Line: 60</note>
+        <note>Line: 107</note>
       </trans-unit>
     </body>
   </file>
@@ -1143,11 +1135,6 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
         <target>Offer recycled packaging</target>
         <note>Line: 133</note>
       </trans-unit>
-      <trans-unit id="2a0677dae563d574fb1c50badaa4eabf">
-        <source>Gift-wrapping price</source>
-        <target>Gift-wrapping price</target>
-        <note>Line: 113</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/OrderPreferencesGeneralFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1156,6 +1143,15 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
         <source>Minimum purchase total required in order to validate the order</source>
         <target>Minimum purchase total required in order to validate the order</target>
         <note>Line: 106</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/OrderPreferencesGiftOptionsFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2a0677dae563d574fb1c50badaa4eabf">
+        <source>Gift-wrapping price</source>
+        <target>Gift-wrapping price</target>
+        <note>Line: 102</note>
       </trans-unit>
     </body>
   </file>
@@ -1236,12 +1232,12 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
       <trans-unit id="0a91cf360875af4259f26bc7e2971132">
         <source>Separator of attribute anchor on the product links</source>
         <target>Separator of attribute anchor on the product links</target>
-        <note>Line: 79</note>
+        <note>Line: 74</note>
       </trans-unit>
       <trans-unit id="0437fc99d975a98ce5face0651102b15">
         <source>Display the discounted unit price</source>
         <target>Display the discounted unit price</target>
-        <note>Line: 92</note>
+        <note>Line: 87</note>
       </trans-unit>
     </body>
   </file>
@@ -1549,8 +1545,7 @@ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
       <trans-unit id="b046b7367b515d1c137cae8f10622b4d">
         <source>Add new title</source>
         <target>Add new title</target>
-        <note>Line: 31
-Comment: Stable feature flags form</note>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -1605,8 +1600,7 @@ Comment: Stable feature flags form</note>
       <trans-unit id="60fd39d495f2a8d0674c236c004e8f21">
         <source>Add new order status</source>
         <target>Add new order status</target>
-        <note>Line: 31
-Comment: Stable feature flags form</note>
+        <note>Line: 31</note>
       </trans-unit>
       <trans-unit id="f08b529034b579d49fa94abec7f93af0">
         <source>Add new order return status</source>

@@ -16,6 +16,10 @@
         <target>%s at least, or you will have to edit the translation files manually.</target>
         <note>Line: 47</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="06a92b5dc72bff3b98bf4b932ce72864">
         <source>Apache mod_security is activated on your server. This could result in some Bad Request errors</source>
         <target>Apache mod_security is activated on your server. This could result in some Bad Request errors</target>
@@ -46,33 +50,29 @@
         <target>Please ask your hosting provider to increase this limit to</target>
         <note>Line: 45</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="7cefb4829c6de24b63f7a05716b43bec">
         <source>This expression uses a special syntax:</source>
         <target>This expression uses a special syntax:</target>
         <note>Line: 133</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="4fb6a3beb82f8d8aa4bbdf8f5a0c35fa">
         <source>%s at least, or you will have to edit the translation files.</source>
         <target>%s at least, or you will have to edit the translation files.</target>
-        <note>Line: 49</note>
+        <note>Line: 47</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
         <source>%limit% for suhosin.post.max_vars.</source>
         <target>%limit% for suhosin.post.max_vars.</target>
-        <note>Line: 41</note>
+        <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="e97da54b23c78752578cd7fa01e8866d">
         <source>%limit% for suhosin.request.max_vars.</source>
         <target>%limit% for suhosin.request.max_vars.</target>
-        <note>Line: 42</note>
+        <note>Line: 40</note>
       </trans-unit>
     </body>
   </file>
@@ -258,7 +258,7 @@ Comment: @todo Throw exception</note>
       <trans-unit id="6f3455d187a23443796efdcbe044096b">
         <source>No tax</source>
         <target>No tax</target>
-        <note>Line: 167</note>
+        <note>Line: 163</note>
       </trans-unit>
     </body>
   </file>
@@ -651,19 +651,19 @@ Comment: @todo Throw exception</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="493ce56d58c4880dc32df56f12585a23">
-        <source>Country selection is invalid.</source>
-        <target>Country selection is invalid.</target>
-        <note>Line: 115</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationWhitelistFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="0861a67f819158c5690a1844d95390b4">
         <source>Invalid whitelist</source>
         <target>Invalid whitelist</target>
-        <note>Line: 76</note>
+        <note>Line: 123</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationOptionsFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="493ce56d58c4880dc32df56f12585a23">
+        <source>Country selection is invalid.</source>
+        <target>Country selection is invalid.</target>
+        <note>Line: 75</note>
       </trans-unit>
     </body>
   </file>

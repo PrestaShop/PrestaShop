@@ -5,73 +5,73 @@
       <trans-unit id="70b2e27535936ea2fa3ce0c4304c79e8">
         <source>Customer Reassurance</source>
         <target>Customer Reassurance</target>
-        <note>Line: 103</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="192332ef84898cf4767aba2dcff943bb">
         <source>Connect with your visitors and reassure them about secure payment, free shipping or returns.</source>
         <target>Connect with your visitors and reassure them about secure payment, free shipping or returns.</target>
-        <note>Line: 104</note>
+        <note>Line: 109</note>
       </trans-unit>
       <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
         <source>Are you sure you want to uninstall this module?</source>
         <target>Are you sure you want to uninstall this module?</target>
-        <note>Line: 122
+        <note>Line: 127
 Comment: Confirm uninstall</note>
       </trans-unit>
       <trans-unit id="d03fb13005d37ac587f1cb34820d5a96">
         <source><![CDATA[There was an error during the installation. Please <a href="https://github.com/PrestaShop/PrestaShop/issues">open an issue</a> on the PrestaShop project.]]></source>
         <target><![CDATA[There was an error during the installation. Please <a href="https://github.com/PrestaShop/PrestaShop/issues">open an issue</a> on the PrestaShop project.]]></target>
-        <note>Line: 195</note>
+        <note>Line: 200</note>
       </trans-unit>
       <trans-unit id="4d4c97ef363b13e25f8e13042493f1fe">
         <source><![CDATA[There was an error during the uninstallation. Please <a href="https://github.com/PrestaShop/PrestaShop/issues">open an issue</a> on the PrestaShop project.]]></source>
         <target><![CDATA[There was an error during the uninstallation. Please <a href="https://github.com/PrestaShop/PrestaShop/issues">open an issue</a> on the PrestaShop project.]]></target>
-        <note>Line: 225</note>
+        <note>Line: 230</note>
       </trans-unit>
       <trans-unit id="a596edf2f0e5ae9c2372c93e1c8fcc24">
         <source>Block updated</source>
         <target>Block updated</target>
-        <note>Line: 516</note>
+        <note>Line: 521</note>
       </trans-unit>
       <trans-unit id="f2f5589389027c1c6d63d2cec51afde5">
         <source>Oops... looks like an error occurred</source>
         <target>Oops... looks like an error occurred</target>
-        <note>Line: 517</note>
+        <note>Line: 522</note>
       </trans-unit>
       <trans-unit id="da755c5b9609e21d2f7c0e542fa02cf0">
         <source>Configuration updated successfully!</source>
         <target>Configuration updated successfully!</target>
-        <note>Line: 519</note>
+        <note>Line: 524</note>
       </trans-unit>
       <trans-unit id="81f6a0f1aaedeb8d2c35617f53c90aaa">
         <source>Position changed successfully!</source>
         <target>Position changed successfully!</target>
-        <note>Line: 520</note>
+        <note>Line: 525</note>
       </trans-unit>
       <trans-unit id="939d7906a02e747900bc9a6e06109e06">
         <source>An error occurred when switching position</source>
         <target>An error occurred when switching position</target>
-        <note>Line: 521</note>
+        <note>Line: 526</note>
       </trans-unit>
       <trans-unit id="061843bf9a4b68c61f7e089864b1fe9e">
         <source>An error occurred when removing block</source>
         <target>An error occurred when removing block</target>
-        <note>Line: 523</note>
+        <note>Line: 528</note>
       </trans-unit>
       <trans-unit id="52f5e0bc3859bc5f5e25130b6c7e8881">
         <source>Position</source>
         <target>Position</target>
-        <note>Line: 273</note>
+        <note>Line: 278</note>
       </trans-unit>
       <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
         <source>Description</source>
         <target>Description</target>
-        <note>Line: 276</note>
+        <note>Line: 281</note>
       </trans-unit>
       <trans-unit id="06df33001c1d7187fdd81ea1f5b277aa">
         <source>Actions</source>
         <target>Actions</target>
-        <note>Line: 278</note>
+        <note>Line: 283</note>
       </trans-unit>
     </body>
   </file>
@@ -115,11 +115,6 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/appearance.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
-        <source>Save</source>
-        <target>Save</target>
-        <note>Line: 65</note>
-      </trans-unit>
       <trans-unit id="156f728d597d7b34b3c4b9d567ebb328">
         <source>Customize Module Design</source>
         <target>Customize Module Design</target>
@@ -133,12 +128,17 @@ Comment: Confirm uninstall</note>
       <trans-unit id="5f111ae4c490902059da2004cbc8b424">
         <source>Text color</source>
         <target>Text color</target>
-        <note>Line: 49</note>
+        <note>Line: 48</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/content/config.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Save</target>
+        <note>Line: 74</note>
+      </trans-unit>
       <trans-unit id="c177d75d997a0273d1cc5be2dc4ea701">
         <source>Reassurance Block</source>
         <target>Reassurance Block</target>

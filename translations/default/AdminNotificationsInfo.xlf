@@ -1,57 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/themes/new-theme/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2fc6204d2ca7e856d9e4844d2786f053">
         <source>This field will be modified for all your shops.</source>
         <target>This field will be modified for all your shops.</target>
-        <note>Line: 48</note>
+        <note>Line: 53</note>
       </trans-unit>
       <trans-unit id="7ac170f2b47dbf7d4c5cd38449093c2b">
         <source>This field will be modified for all shops in this shop group:</source>
         <target>This field will be modified for all shops in this shop group:</target>
-        <note>Line: 50</note>
+        <note>Line: 55</note>
       </trans-unit>
       <trans-unit id="fe0ae15c8f93a5335f0991accadd13ca">
         <source>This field will be modified for this shop:</source>
         <target>This field will be modified for this shop:</target>
-        <note>Line: 52</note>
+        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
-        <source>Delete selected</source>
-        <target>Delete selected</target>
-        <note>Line: 80</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCartRulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/helper/HelperList.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
         <source>Delete selected item?</source>
         <target>Delete selected item?</target>
-        <note>Line: 858</note>
+        <note>Line: 589</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
+        <source>Delete selected</source>
+        <target>Delete selected</target>
+        <note>Line: 56</note>
+      </trans-unit>
+      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
+        <source>Delete selected items?</source>
+        <target>Delete selected items?</target>
+        <note>Line: 57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3e053943605d9e4bf7dd7588ea19e9d2">
         <source>Forbidden characters:</source>
         <target>Forbidden characters:</target>
-        <note>Line: 90</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminSearchConfController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
-        <source>Delete selected items?</source>
-        <target>Delete selected items?</target>
-        <note>Line: 55</note>
+        <note>Line: 364</note>
       </trans-unit>
     </body>
   </file>
@@ -156,12 +152,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/payment_preferences.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/PaymentMethods/payment_methods.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="178a5f69a18bd94dc2bbafbd074be1f2">
         <source>Note that this page is available in a single shop context only. Switch context to work on it.</source>
         <target>Note that this page is available in a single shop context only. Switch context to work on it.</target>
-        <note>Line: 33</note>
+        <note>Line: 49</note>
       </trans-unit>
     </body>
   </file>
