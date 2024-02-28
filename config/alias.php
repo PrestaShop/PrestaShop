@@ -35,6 +35,16 @@ if (!function_exists('dump')) {
     }
 }
 
+if (!function_exists('dd')) {
+    function dd($var)
+    {
+        foreach (func_get_args() as $var) {
+            VarDumper::dump($var);
+        }
+        exit(1);
+    }
+}
+
 /**
  * Sanitize data which will be injected into SQL query
  *
