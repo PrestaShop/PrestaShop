@@ -112,7 +112,7 @@ class QuickViewModal extends FOBasePage {
   }
 
   /**
-   * Change product attribute
+   * Change product attributes
    * @param page {Page} Browser tab
    * @param attributes {ProductAttribute} The attributes data (size, color, dimension)
    * @returns {Promise<void>}
@@ -120,10 +120,11 @@ class QuickViewModal extends FOBasePage {
   async setAttribute(page: Page, attributes: ProductAttribute): Promise<void> {
     switch (attributes.name) {
       case 'color':
-        await Promise.all([
-          await this.waitForSelectorAndClick(page, `${this.quickViewProductColor} input[title='${attributes.value}'] + span`),
-          await page.waitForResponse((response) => response.url().includes('product&token=')),
-        ]);
+        await this.waitForSelectorAndClick(page, `${this.quickViewProductColor} input[title='${attributes.value}']`);
+        await this.waitForVisibleSelector(
+          page,
+          `${this.quickViewProductColor} input[title='${attributes.value}'][checked]`,
+        );
         break;
       case 'dimension':
         await Promise.all([
@@ -132,10 +133,7 @@ class QuickViewModal extends FOBasePage {
         ]);
         break;
       case 'size':
-        await Promise.all([
-          page.waitForResponse((response) => response.url().includes('product&token=')),
-          this.selectByVisibleText(page, this.quickViewProductSize, attributes.value),
-        ]);
+        await this.selectByVisibleText(page, this.quickViewProductSize, attributes.value);
         break;
       default:
         throw new Error(`${attributes.name} has not being in defined in "changeAttributes"`);

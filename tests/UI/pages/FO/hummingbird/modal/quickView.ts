@@ -1,6 +1,7 @@
 import {Page} from 'playwright';
 // Import FO Pages
 import {QuickViewModal} from '@pages/FO/classic/modal/quickView';
+import {ProductAttribute} from "@data/types/product";
 
 /**
  * Quick view modal, contains functions that can be used on the page
@@ -75,6 +76,37 @@ class QuickView extends QuickViewModal {
     await page.waitForTimeout(2000);
 
     return this.getAttributeContent(page, this.quickViewCoverImage, 'src');
+  }
+
+  /**
+   * Change product attribute
+   * @param page {Page} Browser tab
+   * @param attributes {ProductAttribute} The attributes data (size, color, dimension)
+   * @returns {Promise<void>}
+   */
+  async setAttribute(page: Page, attributes: ProductAttribute): Promise<void> {
+    switch (attributes.name) {
+      case 'color':
+        await Promise.all([
+          await this.waitForSelectorAndClick(page, `${this.quickViewProductColor} input[title='${attributes.value}'] + span`),
+          await page.waitForResponse((response) => response.url().includes('product&token=')),
+        ]);
+        break;
+      case 'dimension':
+        await Promise.all([
+          page.waitForResponse((response) => response.url().includes('product&token=')),
+          this.selectByVisibleText(page, this.quickViewProductDimension, attributes.value),
+        ]);
+        break;
+      case 'size':
+        await Promise.all([
+          page.waitForResponse((response) => response.url().includes('product&token=')),
+          this.selectByVisibleText(page, this.quickViewProductSize, attributes.value),
+        ]);
+        break;
+      default:
+        throw new Error(`${attributes.name} has not being in defined in "changeAttributes"`);
+    }
   }
 }
 
