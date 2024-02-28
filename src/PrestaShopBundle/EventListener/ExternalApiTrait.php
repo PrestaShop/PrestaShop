@@ -46,10 +46,7 @@ trait ExternalApiTrait
      */
     protected function isExternalApiRequest(Request $request): bool
     {
-        return in_array(
-            $request->attributes->get('_controller'),
-            [AccessTokenController::class, 'api_platform.action.placeholder']
-        );
+        return str_starts_with($request->getBaseUrl(), '/oauth-api');
     }
 
     /**
@@ -62,9 +59,6 @@ trait ExternalApiTrait
      */
     protected function isResourceApiRequest(Request $request): bool
     {
-        return in_array(
-            $request->attributes->get('_controller'),
-            ['api_platform.action.placeholder']
-        );
+        return str_starts_with($request->getBaseUrl(), '/oauth-api') && $request->attributes->get('_controller') !== AccessTokenController::class;
     }
 }

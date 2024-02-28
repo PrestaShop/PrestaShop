@@ -37,7 +37,3 @@ _api_translations:
 _api_positions:
   resource: "api/improve/design/positions.yml"
   prefix: /improve/design/positions
-
-_api_oauth2:
-  resource: "api/oauth2.yml"
-  prefix: /oauth2

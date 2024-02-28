@@ -24,3 +24,7 @@ _admin_errors:
 
 _legacy:
   resource: "admin/_legacy.yml"
+
+# Manually load the Api Platform doc routing
+_api_platform_docs:
+  resource: '@ApiPlatformBundle/Resources/config/routing/docs.xml'

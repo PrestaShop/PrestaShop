@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
+use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,6 +43,8 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class Admin
 {
+    use ExternalApiTrait;
+
     /**
      * @var LegacyContext
      */
@@ -91,7 +93,7 @@ class Admin
     {
         if (
             $this->security->getUser() !== null
-            || $event->getRequest()->get('_controller') === AccessTokenController::class
+            || $this->isExternalApiRequest($event->getRequest())
         ) {
             return;
         }

@@ -1,0 +1,17 @@
+security:
+  firewalls:
+    # disables authentication for assets and the profiler, adapt it according to your needs
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    api_token:
+      pattern: ^/api/oauth2/token
+      security: false
+
+    api:
+      pattern: '^(%api_base_path%)(?!/docs)'
+      stateless: true
+      custom_authenticators:
+        - PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator
+      request_matcher: PrestaShop\PrestaShop\Core\Security\OAuth2\ApiRequestMatcher

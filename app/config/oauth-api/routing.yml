@@ -1,0 +1,6 @@
+_api_oauth2_routing:
+  resource: "@PrestaShopBundle/Resources/config/routing/oauth-api.yml"
+
+_api_platform_routing:
+  resource: .
+  type: api_platform

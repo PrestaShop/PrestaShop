@@ -108,29 +108,8 @@ twig:
     disabling_switch_prefix: !php/const PrestaShopBundle\Form\Extension\DisablingSwitchExtension::FIELD_PREFIX
 
 api_platform:
-  title: Backoffice API
-  version: 0.1.0
-  enable_docs: true
-  enable_entrypoint: false
-  enable_swagger: true
-  enable_swagger_ui: true
-  formats:
-    json: [ 'application/json', 'application/merge-patch+json' ]
-    # Allow this format for other API endpoint than native endpoint (by default we will use json)
-    jsonld: [ 'application/ld+json' ]
-  patch_formats:
-    json: [ 'application/merge-patch+json' ]
-  error_formats:
-    json: [ 'application/json' ]
-  docs_formats:
-    # This is used to allow using the Swagger UI in HTML presentation
-    html: [ 'text/html' ]
-    json: [ 'application/json' ]
+  # We define mapping here because even though the API routes are oncly accessible via the oauth-api endpoint we still need
+  # to parse the Api Platform resources to extract the scopes
   mapping:
     paths:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
-  swagger:
-    api_keys:
-      JWT:
-        name: Authorization
-        type: header

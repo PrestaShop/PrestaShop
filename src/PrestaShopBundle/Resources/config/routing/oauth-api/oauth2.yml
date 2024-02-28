@@ -1,5 +1,5 @@
-api_oauth2:
-  path: /token
+api_oauth2_access_token:
+  path: /access_token
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController

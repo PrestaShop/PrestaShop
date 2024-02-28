@@ -1,2 +1,3 @@
 imports:
   - { resource: ../config_prod.yml }
+  - { resource: config.yml }
