@@ -1,7 +1,7 @@
 import {Page} from 'playwright';
 // Import FO Pages
 import {QuickViewModal} from '@pages/FO/classic/modal/quickView';
-import {ProductAttribute} from "@data/types/product";
+import {ProductAttribute} from '@data/types/product';
 
 /**
  * Quick view modal, contains functions that can be used on the page
