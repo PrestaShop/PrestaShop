@@ -3863,7 +3863,6 @@ class AdminImportControllerCore extends AdminController
 
         /** @var Store $store */
         if (isset($store->image) && !empty($store->image)) {
-            
             // check to see if the image exists
             $headers = @get_headers($store->image);
             if ($headers && strpos($headers[0], '200')) {
