@@ -108,6 +108,11 @@ twig:
     disabling_switch_prefix: !php/const PrestaShopBundle\Form\Extension\DisablingSwitchExtension::FIELD_PREFIX
 
 api_platform:
+  # API docs is disabled in the Admin environment, it is accessible via the oauth dedicated endpoint
+  enable_docs: false
+  enable_entrypoint: false
+  enable_swagger: false
+  enable_swagger_ui: false
   # We define mapping here because even though the API routes are oncly accessible via the oauth-api endpoint we still need
   # to parse the Api Platform resources to extract the scopes
   mapping:
