@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
+use PrestaShop\PrestaShop\Core\Util\Database\EntitySchemaManager;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
@@ -3496,6 +3497,16 @@ abstract class ModuleCore implements ModuleInterface
     {
         static::$_INSTANCE = [];
         Cache::clean('Module::isEnabled*');
+    }
+
+    /**
+     * Return entity schema manager service
+     *
+     * @return EntitySchemaManager
+     */
+    public function getEntitySchemaManager(): EntitySchemaManager
+    {
+        return $this->get('prestashop.core.util.database.entity_cchema_manager');
     }
 }
 
