@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.util.database.entity_cchema_manager:
+    class: 'PrestaShop\PrestaShop\Core\Util\Database\EntitySchemaManager'
+    arguments:
+      - '@doctrine.orm.default_entity_manager'
