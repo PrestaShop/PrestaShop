@@ -37,6 +37,8 @@ final class AttributeFilters extends Filters
     /** @var string */
     protected $filterId = AttributeGridDefinitionFactory::GRID_ID;
 
+    protected $needsToBePersisted = false;
+
     /**
      * {@inheritdoc}
      */
