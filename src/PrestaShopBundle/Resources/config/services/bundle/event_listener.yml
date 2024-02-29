@@ -26,7 +26,7 @@ services:
   PrestaShopBundle\EventListener\AuthorizationServerFeatureListener:
     autowire: true
     tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 6 }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 8 }
 
   # CRITICAL this listener must have a priority greater than ApiPlatform ReadListener (which has a priority of 4)
   # but it must be run AFTER the Firewall listener or the Security token won't be initialized yet (which has a

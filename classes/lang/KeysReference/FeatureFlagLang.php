@@ -34,7 +34,7 @@ trans('Enable or disable the authorization server page.', 'Admin.Advparameters.H
 
 // Authorization server - Multistore feature flag
 trans('Authorization server - Multistore', 'Admin.Advparameters.Feature');
-trans('Enable or disable the multistore for the Authorization server.', 'Admin.Advparameters.Help');
+trans('Enable or disable the Authorization server when multistore is enabled.', 'Admin.Advparameters.Help');
 
 // Cart rules feature flag
 trans('Cart rules', 'Admin.Advparameters.Feature');

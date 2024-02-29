@@ -71,21 +71,21 @@ class ApiClientController extends FrameworkBundleAdminController
     {
         $apiClientGridFactory = $this->get('prestashop.core.grid.factory.api_client');
         $apiClientGrid = $apiClientGridFactory->getGrid($apiClientFilters);
-        $isAuthorizationServerMultistoreRequested = $this->isAuthorizationServerMultistoreRequested();
+        $isAuthorizationServerMultistoreDisabled = $this->isAuthorizationServerMultistoreDisabled();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/index.html.twig', [
             'apiClientGrid' => $this->presentGrid($apiClientGrid),
             'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
             'layoutTitle' => $this->trans('API Clients', 'Admin.Navigation.Menu'),
             'layoutHeaderToolbarBtn' => $this->getApiClientsToolbarButtons(),
-            'isAuthorizationServerMultistoreRequested' => $isAuthorizationServerMultistoreRequested,
+            'isAuthorizationServerMultistoreDisabled' => $isAuthorizationServerMultistoreDisabled,
         ]);
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_index')]
     public function createAction(Request $request): Response
     {
-        if ($this->isAuthorizationServerMultistoreRequested()) {
+        if ($this->isAuthorizationServerMultistoreDisabled()) {
             return $this->redirectToRoute('admin_api_clients_index');
         }
 
@@ -135,7 +135,7 @@ class ApiClientController extends FrameworkBundleAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_index')]
     public function editAction(Request $request, int $apiClientId): Response
     {
-        if ($this->isAuthorizationServerMultistoreRequested()) {
+        if ($this->isAuthorizationServerMultistoreDisabled()) {
             return $this->redirectToRoute('admin_api_clients_index');
         }
 
@@ -328,7 +328,7 @@ class ApiClientController extends FrameworkBundleAdminController
         ];
     }
 
-    private function isAuthorizationServerMultistoreRequested(): bool
+    private function isAuthorizationServerMultistoreDisabled(): bool
     {
         return !$this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE)
             && $this->multiStoreFeature->isActive();

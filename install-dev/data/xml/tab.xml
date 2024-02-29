@@ -546,7 +546,7 @@
             <wording>Webservice</wording>
             <wording_domain>Admin.Navigation.Menu</wording_domain>
         </tab>
-        <tab id="AuthorizationServer" id_parent="Advanced_Parameters" active="0" enabled="1">
+        <tab id="AuthorizationServer" id_parent="Advanced_Parameters" active="1" enabled="1">
             <class_name>AdminAuthorizationServer</class_name>
             <wording>Authorization Server</wording>
             <wording_domain>Admin.Navigation.Menu</wording_domain>
