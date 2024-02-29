@@ -31,7 +31,7 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  //installHummingbird(`${baseContext}_preTest`);
+  installHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
