@@ -1770,7 +1770,7 @@ class ToolsCore
     public static function math_round($value, $places, $mode = PS_ROUND_HALF_UP)
     {
         // since php 8.1 the round function won't tolerate null values
-        if ($value === null) {
+        if (empty($value)) {
             $value = 0.0;
         }
 
