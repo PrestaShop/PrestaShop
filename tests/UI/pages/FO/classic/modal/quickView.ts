@@ -384,12 +384,12 @@ class QuickViewModal extends FOBasePage {
   /**
    * Close quick view modal
    * @param page {Page} Browser tab
-   * @param byKeyboard {boolean} True if we need to use the keyboard to close the modal
+   * @param clickOutside {boolean} True if we need to click outside to close the modal
    * @returns {Promise<boolean>}
    */
-  async closeQuickViewModal(page: Page, byKeyboard: boolean = false): Promise<boolean> {
-    if (byKeyboard) {
-      await page.keyboard.press('Escape');
+  async closeQuickViewModal(page: Page, clickOutside: boolean = false): Promise<boolean> {
+    if (clickOutside) {
+      await page.mouse.click(5, 5);
     } else {
       await this.waitForSelectorAndClick(page, this.quickViewCloseButton);
     }
