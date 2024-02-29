@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dccc1b1f97079c089b8bb20e7d4e8d5c",
+    "content-hash": "f4019cc93bf15cdf5093c1c3e7fca2a9",
     "packages": [
         {
             "name": "api-platform/core",
@@ -7393,27 +7393,26 @@
         },
         {
             "name": "prestashop/psgdpr",
-            "version": "v2.0.1",
+            "version": "v1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/psgdpr.git",
-                "reference": "ad7ba6f3aa8b382955ddbcdb4562a1e68bef9356"
+                "reference": "2b94cd472d00c837275f0aa8677947de2691c6d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/psgdpr/zipball/ad7ba6f3aa8b382955ddbcdb4562a1e68bef9356",
-                "reference": "ad7ba6f3aa8b382955ddbcdb4562a1e68bef9356",
+                "url": "https://api.github.com/repos/PrestaShop/psgdpr/zipball/2b94cd472d00c837275f0aa8677947de2691c6d7",
+                "reference": "2b94cd472d00c837275f0aa8677947de2691c6d7",
                 "shasum": ""
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "^4.3"
+                "prestashop/php-dev-tools": "^3.4"
             },
             "type": "prestashop-module",
             "autoload": {
-                "psr-4": {
-                    "PrestaShop\\Module\\Psgdpr\\": "src/"
-                },
                 "classmap": [
+                    "classes",
+                    "controllers",
                     "psgdpr.php"
                 ]
             },
@@ -7430,9 +7429,9 @@
             "description": "PrestaShop module psgdpr",
             "homepage": "https://github.com/PrestaShopCorp/psgdpr",
             "support": {
-                "source": "https://github.com/PrestaShop/psgdpr/tree/v2.0.1"
+                "source": "https://github.com/PrestaShop/psgdpr/tree/v1.4.3"
             },
-            "time": "2023-04-19T15:47:02+00:00"
+            "time": "2022-12-15T10:02:36+00:00"
         },
         {
             "name": "prestashop/statsbestcategories",

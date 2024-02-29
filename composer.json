@@ -110,7 +110,7 @@
         "prestashop/ps_themecusto": "^1",
         "prestashop/ps_viewedproduct": "^1.2",
         "prestashop/ps_wirepayment": "^2.1",
-        "prestashop/psgdpr": "^2",
+        "prestashop/psgdpr": "^1.4",
         "prestashop/statsbestcategories": "^2",
         "prestashop/statsbestcustomers": "^2",
         "prestashop/statsbestmanufacturers": "^2",
