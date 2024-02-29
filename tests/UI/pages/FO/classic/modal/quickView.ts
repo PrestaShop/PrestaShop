@@ -389,6 +389,7 @@ class QuickViewModal extends FOBasePage {
    */
   async closeQuickViewModal(page: Page, clickOutside: boolean = false): Promise<boolean> {
     if (clickOutside) {
+      await page.waitForTimeout(1000);
       await page.mouse.click(5, 5);
     } else {
       await this.waitForSelectorAndClick(page, this.quickViewCloseButton);

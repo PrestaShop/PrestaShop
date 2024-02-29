@@ -59,7 +59,6 @@ describe('FO - Product page - Quick view : Change image', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
     await files.deleteFile(productWith2Images.coverImage!);
     await files.deleteFile(productWith2Images.thumbImage!);
   });
