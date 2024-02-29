@@ -3506,7 +3506,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function getEntitySchemaManager(): EntitySchemaManager
     {
-        return $this->get('prestashop.core.util.database.entity_cchema_manager');
+        return $this->get('prestashop.core.util.database.entity_schema_manager');
     }
 }
 
