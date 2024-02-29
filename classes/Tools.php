@@ -1771,7 +1771,7 @@ class ToolsCore
     {
         //If PHP_ROUND_HALF_UP exist (PHP 5.3) use it and pass correct mode value (PrestaShop define - 1)
         if (defined('PHP_ROUND_HALF_UP')) {
-            return round($value, $places, $mode - 1);
+            return round($value ?? 0.0, $places, $mode - 1);
         }
 
         $precision_places = 14 - floor(log10(abs($value)));
