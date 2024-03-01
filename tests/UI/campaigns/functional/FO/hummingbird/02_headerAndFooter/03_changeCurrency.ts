@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/currency';
 import loginCommon from '@commonTests/BO/loginBO';
 

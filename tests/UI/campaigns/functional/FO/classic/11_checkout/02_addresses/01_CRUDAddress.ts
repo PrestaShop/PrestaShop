@@ -4,7 +4,7 @@ import helper from '@utils/helpers';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/account';
+import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';

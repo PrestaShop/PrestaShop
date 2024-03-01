@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';

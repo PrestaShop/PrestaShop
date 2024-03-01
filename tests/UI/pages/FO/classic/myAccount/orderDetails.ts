@@ -16,7 +16,7 @@ class OrderDetailsPage extends FOBasePage {
 
   private readonly headerTitle: string;
 
-  private readonly reorderLink: string;
+  protected reorderLink: string;
 
   private readonly invoiceLink: string;
 

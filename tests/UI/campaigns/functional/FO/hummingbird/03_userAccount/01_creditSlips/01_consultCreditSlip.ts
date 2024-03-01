@@ -9,9 +9,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/account';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {createAccountTest} from '@commonTests/FO/classic/account';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 // Import BO pages

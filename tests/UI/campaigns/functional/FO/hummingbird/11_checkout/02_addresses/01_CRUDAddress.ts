@@ -5,7 +5,7 @@ import helper from '@utils/helpers';
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import createAccountTest from '@commonTests/FO/hummingbird/account';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 import foHomePage from '@pages/FO/hummingbird/home';

@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/account';
+import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';

@@ -6,7 +6,7 @@ import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import BO pages

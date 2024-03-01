@@ -9,7 +9,7 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/employee';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';

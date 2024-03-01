@@ -6,8 +6,8 @@ import date from '@utils/date';
 // Import common tests
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/account';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createAccountTest} from '@commonTests/FO/classic/account';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';

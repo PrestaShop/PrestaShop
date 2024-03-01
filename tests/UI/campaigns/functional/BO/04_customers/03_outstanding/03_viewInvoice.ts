@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import pages
 import outstandingPage from '@pages/BO/customers/outstanding';

@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // import common tests
-import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/classic/order';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages

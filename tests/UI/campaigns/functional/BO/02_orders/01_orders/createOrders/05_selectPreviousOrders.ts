@@ -7,7 +7,7 @@ import testContext from '@utils/testContext';
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import customersPage from '@pages/BO/customers';

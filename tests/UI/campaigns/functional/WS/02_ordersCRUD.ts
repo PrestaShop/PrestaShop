@@ -11,7 +11,7 @@ import OrderWS from '@webservices/order/orderWs';
 // Import commonTests
 import {addWebserviceKey, removeWebserviceKey, setWebserviceStatus} from '@commonTests/BO/advancedParameters/ws';
 import loginCommon from '@commonTests/BO/loginBO';
-import createShoppingCart from '@commonTests/FO/shoppingCart';
+import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
