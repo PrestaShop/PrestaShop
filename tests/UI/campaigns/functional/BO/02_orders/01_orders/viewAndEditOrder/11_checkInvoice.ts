@@ -10,7 +10,7 @@ import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';

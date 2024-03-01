@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 import date from '@utils/date';
 
 // Import common tests
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import {
   enableMerchandiseReturns,
   disableMerchandiseReturns,

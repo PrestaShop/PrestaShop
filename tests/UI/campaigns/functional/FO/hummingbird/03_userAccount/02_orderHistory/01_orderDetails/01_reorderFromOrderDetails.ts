@@ -3,42 +3,46 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
-import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
-import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
+import checkoutPage from '@pages/FO/hummingbird/checkout';
+import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
+import homePage from '@pages/FO/hummingbird/home';
+import loginPage from '@pages/FO/hummingbird/login';
+import myAccountPage from '@pages/FO/hummingbird/myAccount';
+import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
+import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 
 // Import data
 import Customers from '@data/demo/customers';
-import Products from '@data/demo/products';
 import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 // context
-const baseContext: string = 'functional_FO_classic_userAccount_orderHistory_reorderFromOrderList';
+const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_orderDetails_reorderFromOrderDetails';
 
 /*
 Pre-condition:
+- Install hummingbird
 - Create order by default customer
 Scenario:
-- Go to userAccount page
-- Go to order history and details
-- On the last order of the list => click on reorder
+- Go to userAccount > order history > order detail
+- Click on the reorder link
+- Proceed checkout
 - Go back to the order list
 - Check if the reorder is displayed
 - Go to the order detail
-- Check if the reorder contain the same product than the "original" order
+- Check if the reorder contain the same product as the "original" order
+Post-condition:
+- Uninstall hummingbird
  */
-describe('FO - Account - Order history : Reorder from order list', async () => {
+describe('FO - Account - Order details : Reorder from order detail', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -53,6 +57,9 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
     paymentMethod: PaymentMethods.wirePayment,
   });
 
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest_1`);
+
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
 
@@ -66,38 +73,38 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Go to order list and proceed reorder', async () => {
+  describe('Go to order detail and proceed reorder', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
-      await foHomePage.goToFo(page);
+      await homePage.goToFo(page);
 
-      const isHomePage: boolean = await foHomePage.isHomePage(page);
+      const isHomePage: boolean = await homePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFoPage', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await homePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await foLoginPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+      const pageHeaderTitle = await loginPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(loginPage.pageTitle);
     });
 
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, Customers.johnDoe);
 
-      const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await homePage.goToMyAccountPage(page);
 
       const pageTitle = await myAccountPage.getPageTitle(page);
       expect(pageTitle).to.equal(myAccountPage.pageTitle);
@@ -112,10 +119,19 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
-    it('should reorder the last order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'reorderLastOrder', baseContext);
+    it('should go to order details page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
 
-      await orderHistoryPage.clickOnReorderLink(page);
+      await orderHistoryPage.goToDetailsPage(page);
+
+      const pageTitle = await orderDetailsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
+    });
+
+    it('should click on reorder link', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnReorderLink', baseContext);
+
+      await orderDetailsPage.clickOnReorderLink(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage, 'Browser is not in checkout Page').to.eq(true);
@@ -152,7 +168,7 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToAccountPage', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await homePage.goToMyAccountPage(page);
 
       const pageTitle = await myAccountPage.getPageTitle(page);
       expect(pageTitle).to.equal(myAccountPage.pageTitle);
@@ -168,7 +184,7 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
     });
 
     it('should go to order details page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToFoToOrderDetails', baseContext);
 
       await orderHistoryPage.goToDetailsPage(page);
 
@@ -179,7 +195,7 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
     it('should check the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTheOrderedProduct', baseContext);
 
-      const orderedProduct = await orderDetailsPage.getProductName(page);
+      const orderedProduct = await orderDetailsPage.getProductName(page, 1, 2);
       expect(orderedProduct).to.contain(Products.demo_1.name);
     });
 
@@ -192,4 +208,7 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
+
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest`);
 });
