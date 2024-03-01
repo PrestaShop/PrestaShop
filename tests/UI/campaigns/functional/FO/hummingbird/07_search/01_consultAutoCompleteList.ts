@@ -11,7 +11,7 @@ import homePage from '@pages/FO/hummingbird/home';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_hummingbird_search_consultAutocompleteList';
+const baseContext: string = 'functional_FO_hummingbird_search_consultAutoCompleteList';
 
 /*
 Pre-condition:
