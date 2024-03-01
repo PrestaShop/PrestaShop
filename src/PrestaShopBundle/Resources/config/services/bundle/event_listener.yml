@@ -2,55 +2,11 @@ services:
   _defaults:
     public: true
 
-  prestashop.user_locale.listener:
-    class: PrestaShopBundle\EventListener\UserLocaleListener
-    arguments:
-      - "@prestashop.adapter.legacy.context"
-      - "@prestashop.adapter.legacy.configuration"
-      - "@prestashop.core.admin.lang.repository"
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 15 }
-
   prestashop.dispatcher.legacy_hooks.subscriber:
     class: 'PrestaShopBundle\EventListener\ActionDispatcherLegacyHooksSubscriber'
     arguments: [ '@prestashop.core.hook.dispatcher' ]
     tags:
       - { name: kernel.event_subscriber }
-
-  prestashop.tokenized_url_listener:
-    class: PrestaShopBundle\EventListener\TokenizedUrlsListener
-    autowire: true
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
-  PrestaShopBundle\EventListener\AuthorizationServerFeatureListener:
-    autowire: true
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 8 }
-
-  # CRITICAL this listener must have a priority greater than ApiPlatform ReadListener (which has a priority of 4)
-  # but it must be run AFTER the Firewall listener or the Security token won't be initialized yet (which has a
-  # priority of 8)
-  PrestaShopBundle\EventListener\ScopeCheckerListener:
-    autowire: true
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
-
-  # Priority 40 to be called before the RouterListener (which has priority 32)
-  prestashop.legacy_url_listener:
-    class: PrestaShopBundle\EventListener\LegacyUrlListener
-    arguments:
-      - "@prestashop.bundle.routing.converter.legacy_url_converter"
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 40 }
-
-  # Priority 30 to be called after the RouterListener
-  prestashop.legacy_parameters_listener:
-    class: PrestaShopBundle\EventListener\LegacyParametersListener
-    arguments:
-      - "@prestashop.bundle.routing.converter.legacy_parameters_converter"
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
 
   prestashop.multishop_command_listener:
     class: PrestaShopBundle\EventListener\MultishopCommandListener
@@ -60,19 +16,9 @@ services:
     tags:
       - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
 
-  PrestaShopBundle\EventListener\AccessDeniedListener:
-    autowire: true
-    tags:
-      - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
-
   PrestaShopBundle\EventListener\DemoModeEnabledListener:
     autowire: true
     autoconfigure: true
-
-  PrestaShopBundle\EventListener\AdminSecurityListener:
-    autowire: true
-    tags:
-      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
   prestashop.bundle.event_listener.filter_category_search_criteria:
     class: PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener
@@ -87,14 +33,6 @@ services:
       - '@request_stack'
     tags:
       - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
-
-  prestashop.bundle.event_listener.back_url_redirect_response_listener:
-    class: PrestaShopBundle\EventListener\BackUrlRedirectResponseListener
-    arguments:
-      - '@PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider'
-      - "@prestashop.adapter.legacy.context"
-    tags:
-      - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
   prestashop.bundle.event_listener.module_guard_listener:
     class: PrestaShopBundle\EventListener\ModuleGuardListener

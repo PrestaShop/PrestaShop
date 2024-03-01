@@ -2,6 +2,7 @@
 # They specify the dedicated security rules and routing mostly
 imports:
   - { resource: security.yml }
+  - { resource: services.yml }
 
 framework:
   router:
