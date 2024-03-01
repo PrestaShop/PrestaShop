@@ -1,6 +1,7 @@
 import {Page} from 'playwright';
 // Import FO Pages
 import {QuickViewModal} from '@pages/FO/classic/modal/quickView';
+import {ProductAttribute} from '@data/types/product';
 
 /**
  * Quick view modal, contains functions that can be used on the page
@@ -22,10 +23,12 @@ class QuickView extends QuickViewModal {
     this.quickViewProductPrice = `${this.quickViewModalDiv} div.product__current-price`;
     this.quickViewDiscountPercentage = `${this.quickViewModalDiv} div.product__discount-percentage`;
     this.quickViewTaxShippingDeliveryLabel = `${this.quickViewModalDiv} div.product__tax-label`;
-    this.quickViewCoverImage = `${this.quickViewModalDiv} #product-images img.img-fluid`;
+    this.quickViewCoverImage = `${this.quickViewModalDiv} #product-images div.carousel-item.active img.img-fluid`;
     this.quickViewThumbImage = `${this.quickViewModalDiv} div.thumbnails__container img.img-fluid`;
     this.quickViewProductVariants = `${this.quickViewModalDiv} div.js-product-variants`;
     this.quickViewProductDimension = `${this.quickViewProductVariants} select#group_3`;
+    this.quickViewProductSize = `${this.quickViewProductVariants} select#group_1`;
+    this.quickViewProductColor = `${this.quickViewProductVariants} ul#group_2`;
     this.quickViewCloseButton = `${this.quickViewModalDiv} button.btn-close`;
   }
 
@@ -51,6 +54,59 @@ class QuickView extends QuickViewModal {
       coverImage: await this.getAttributeContent(page, this.quickViewCoverImage, 'src'),
       thumbImage: await this.getAttributeContent(page, this.quickViewThumbImage, 'srcset'),
     };
+  }
+
+  /**
+   * Returns the URL of the main image in the quickview
+   * @param page {Page} Browser tab
+   * @returns {Promise<string|null>}
+   */
+  async getQuickViewImageMain(page: Page): Promise<string | null> {
+    return this.getAttributeContent(page, this.quickViewCoverImage, 'data-full-size-image-url');
+  }
+
+  /**
+   * Select thumb image
+   * @param page {Page} Browser tab
+   * @param position {number} Position of the image
+   * @returns {Promise<string>}
+   */
+  async selectThumbImage(page: Page, position: number): Promise<string> {
+    await page.locator(this.quickViewThumbImagePosition(position)).click();
+    await page.waitForTimeout(2000);
+
+    return this.getAttributeContent(page, this.quickViewCoverImage, 'src');
+  }
+
+  /**
+   * Change product attribute
+   * @param page {Page} Browser tab
+   * @param attributes {ProductAttribute} The attributes data (size, color, dimension)
+   * @returns {Promise<void>}
+   */
+  async setAttribute(page: Page, attributes: ProductAttribute): Promise<void> {
+    switch (attributes.name) {
+      case 'color':
+        await Promise.all([
+          await this.waitForSelectorAndClick(page, `${this.quickViewProductColor} input[title='${attributes.value}'] + span`),
+          await page.waitForResponse((response) => response.url().includes('product&token=')),
+        ]);
+        break;
+      case 'dimension':
+        await Promise.all([
+          page.waitForResponse((response) => response.url().includes('product&token=')),
+          this.selectByVisibleText(page, this.quickViewProductDimension, attributes.value),
+        ]);
+        break;
+      case 'size':
+        await Promise.all([
+          page.waitForResponse((response) => response.url().includes('product&token=')),
+          this.selectByVisibleText(page, this.quickViewProductSize, attributes.value),
+        ]);
+        break;
+      default:
+        throw new Error(`${attributes.name} has not being in defined in "changeAttributes"`);
+    }
   }
 }
 

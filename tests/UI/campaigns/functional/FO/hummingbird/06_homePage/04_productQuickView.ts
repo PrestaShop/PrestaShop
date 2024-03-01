@@ -117,7 +117,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should change combination and check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeCombination', baseContext);
 
-      await quickViewModal.setAttributes(page, attributes);
+      await quickViewModal.setAttribute(page, attributes);
 
       const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
