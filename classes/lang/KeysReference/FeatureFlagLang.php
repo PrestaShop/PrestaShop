@@ -32,6 +32,10 @@ trans('Enable or disable the migrated attribute page.', 'Admin.Advparameters.Hel
 trans('Authorization server', 'Admin.Advparameters.Feature');
 trans('Enable or disable the authorization server page.', 'Admin.Advparameters.Help');
 
+// Authorization server - Multistore feature flag
+trans('Authorization server - Multistore', 'Admin.Advparameters.Feature');
+trans('Enable or disable the Authorization server when multistore is enabled.', 'Admin.Advparameters.Help');
+
 // Cart rules feature flag
 trans('Cart rules', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated cart rules page.', 'Admin.Advparameters.Help');

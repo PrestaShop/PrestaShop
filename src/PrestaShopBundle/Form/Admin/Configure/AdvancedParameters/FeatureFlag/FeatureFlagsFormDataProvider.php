@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
@@ -51,7 +52,8 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
         protected EntityManagerInterface $doctrineEntityManager,
         protected readonly string $stability,
         private CacheCleanerInterface $cacheCleaner,
-        private FeatureFlagManager $featureFlagManager
+        private FeatureFlagManager $featureFlagManager,
+        private readonly FeatureInterface $multiStoreFeature,
     ) {
     }
 
@@ -75,6 +77,8 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
                 'forced_by_env' => $this->featureFlagManager->getUsedType($flagName) === FeatureFlagSettings::TYPE_ENV,
             ];
         }
+
+        $featureFlagsData = $this->checkAuthorizationServerMultistore($featureFlagsData);
 
         return ['feature_flags' => $featureFlagsData];
     }
@@ -130,5 +134,29 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
     protected function getOneFeatureFlagByName(string $featureFlagName): ?FeatureFlag
     {
         return $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findOneBy(['name' => $featureFlagName]);
+    }
+
+    // conditions the display of the AuthorizationServerMultistore feature fag only if AuthorizationServer is activated, regardless of its stability
+    private function checkAuthorizationServerMultistore(array $featureFlagsData): array
+    {
+        $authorizationServerMultistoreKey = FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE;
+        $authorizationServerKey = FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER;
+        $isMultistoreActive = $this->multiStoreFeature->isActive();
+
+        if (array_key_exists($authorizationServerMultistoreKey, $featureFlagsData)) {
+            if (!$isMultistoreActive) {
+                unset($featureFlagsData[$authorizationServerMultistoreKey]);
+            } elseif (array_key_exists($authorizationServerKey, $featureFlagsData)
+                && !$featureFlagsData[$authorizationServerKey]['enabled']) {
+                unset($featureFlagsData[$authorizationServerMultistoreKey]);
+            } else {
+                $featureFlag = $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findOneBy(['name' => $authorizationServerKey]);
+                if (!$this->featureFlagManager->isEnabled($featureFlag->getName())) {
+                    unset($featureFlagsData[$authorizationServerMultistoreKey]);
+                }
+            }
+        }
+
+        return $featureFlagsData;
     }
 }
