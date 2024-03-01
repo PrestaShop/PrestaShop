@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="151648106e4bf98297882ea2ea1c4b0e">
+        <source>Update successful</source>
+        <target>Update successful</target>
+        <note>Line: 228</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d4eab6753f9f3d4b57580427264beaa6">
         <source>Successful update</source>
         <target>Successful update</target>
         <note>Line: 82</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/new-theme/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="151648106e4bf98297882ea2ea1c4b0e">
-        <source>Update successful</source>
-        <target>Update successful</target>
-        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
@@ -90,23 +90,19 @@
         <target>The selection has been successfully deleted.</target>
         <note>Line: 495</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminSearchConfController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="4f29bc7b6f8b0da95b46defd28f72618">
         <source>Successful creation</source>
         <target>Successful creation</target>
-        <note>Line: 489</note>
+        <note>Line: 496</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="79f062391903591d68e514a400e136cf">
         <source>The status has been updated successfully.</source>
         <target>The status has been updated successfully.</target>
-        <note>Line: 766</note>
+        <note>Line: 85</note>
       </trans-unit>
     </body>
   </file>
@@ -119,15 +115,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_banner/ps_banner.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="efc226b17e0532afff43be870bff0de7">
-        <source>The settings have been updated.</source>
-        <target>The settings have been updated.</target>
-        <note>Line: 173</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_checkpayment/ps_checkpayment.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c888438d14855d7d96a2724ee9c306bd">
@@ -137,12 +124,21 @@
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_dataprivacy/ps_dataprivacy.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="efc226b17e0532afff43be870bff0de7">
+        <source>The settings have been updated.</source>
+        <target>The settings have been updated.</target>
+        <note>Line: 111</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_imageslider/ps_imageslider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="20015706a8cbd457cbb6ea3e7d5dc9b3">
         <source>Configuration updated</source>
         <target>Configuration updated</target>
-        <note>Line: 436</note>
+        <note>Line: 431</note>
       </trans-unit>
     </body>
   </file>
@@ -151,7 +147,7 @@
       <trans-unit id="149cd107b688af7a007e739fd51ac919">
         <source>Successful deletion.</source>
         <target>Successful deletion.</target>
-        <note>Line: 180</note>
+        <note>Line: 174</note>
       </trans-unit>
     </body>
   </file>

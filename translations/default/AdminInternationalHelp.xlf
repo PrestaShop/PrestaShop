@@ -36,45 +36,45 @@
         <target>This expression uses a special syntax:</target>
         <note>Line: 94</note>
       </trans-unit>
-      <trans-unit id="f75f58622599fa286aa5bdd94fb4404d">
-        <source>Some of these expressions use this special syntax: %s.</source>
-        <target>Some of these expressions use this special syntax: %s.</target>
-        <note>Line: 67</note>
-      </trans-unit>
-      <trans-unit id="919a5a4550f8f714f806f5590ed1b66a">
-        <source>There are [1]%replace%[/1] products</source>
-        <target>There are [1]%replace%[/1] products</target>
-        <note>Line: 72</note>
-      </trans-unit>
-      <trans-unit id="06fb8ada95eab3e2b5d4a3e834a9ab10">
-        <source>"%s" will be replaced by a number.</source>
-        <target>"%s" will be replaced by a number.</target>
-        <note>Line: 72</note>
-      </trans-unit>
-      <trans-unit id="cfe3ecf9fcc29ce36de15ee87cebd12b">
-        <source>List of pages in [1]%replace%[/1]</source>
-        <target>List of pages in [1]%replace%[/1]</target>
-        <note>Line: 73</note>
-      </trans-unit>
-      <trans-unit id="a24386154e350ad7c608af84cdb4be11">
-        <source>"%s" will be replaced by a string.</source>
-        <target>"%s" will be replaced by a string.</target>
-        <note>Line: 73</note>
-      </trans-unit>
-      <trans-unit id="9b4ca9541e2c3e7215a5fac1f4cecd2f">
-        <source>Feature: [1]%1%[/1] ([1]%2%[/1] values)</source>
-        <target>Feature: [1]%1%[/1] ([1]%2%[/1] values)</target>
-        <note>Line: 74</note>
-      </trans-unit>
-      <trans-unit id="031775df42ef41141d4b4c7d4db89d65">
-        <source>The numbers enable you to reorder the variables when necessary.</source>
-        <target>The numbers enable you to reorder the variables when necessary.</target>
-        <note>Line: 74</note>
-      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="f75f58622599fa286aa5bdd94fb4404d">
+        <source>Some of these expressions use this special syntax: %s.</source>
+        <target>Some of these expressions use this special syntax: %s.</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="919a5a4550f8f714f806f5590ed1b66a">
+        <source>There are [1]%replace%[/1] products</source>
+        <target>There are [1]%replace%[/1] products</target>
+        <note>Line: 89</note>
+      </trans-unit>
+      <trans-unit id="06fb8ada95eab3e2b5d4a3e834a9ab10">
+        <source>"%s" will be replaced by a number.</source>
+        <target>"%s" will be replaced by a number.</target>
+        <note>Line: 89</note>
+      </trans-unit>
+      <trans-unit id="cfe3ecf9fcc29ce36de15ee87cebd12b">
+        <source>List of pages in [1]%replace%[/1]</source>
+        <target>List of pages in [1]%replace%[/1]</target>
+        <note>Line: 90</note>
+      </trans-unit>
+      <trans-unit id="a24386154e350ad7c608af84cdb4be11">
+        <source>"%s" will be replaced by a string.</source>
+        <target>"%s" will be replaced by a string.</target>
+        <note>Line: 90</note>
+      </trans-unit>
+      <trans-unit id="9b4ca9541e2c3e7215a5fac1f4cecd2f">
+        <source>Feature: [1]%1%[/1] ([1]%2%[/1] values)</source>
+        <target>Feature: [1]%1%[/1] ([1]%2%[/1] values)</target>
+        <note>Line: 91</note>
+      </trans-unit>
+      <trans-unit id="031775df42ef41141d4b4c7d4db89d65">
+        <source>The numbers enable you to reorder the variables when necessary.</source>
+        <target>The numbers enable you to reorder the variables when necessary.</target>
+        <note>Line: 91</note>
+      </trans-unit>
       <trans-unit id="013afdec32d184dc61040022a45409ca">
         <source>Click on the title of a section to open its fieldsets.</source>
         <target>Click on the title of a section to open its fieldsets.</target>
@@ -82,17 +82,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="54524210ee89080b3da6c88a11c6d438">
         <source>You must use this syntax in your translations. Here are several examples:</source>
         <target>You must use this syntax in your translations. Here are several examples:</target>
-        <note>Line: 70</note>
+        <note>Line: 71</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="b3f4e400fe40a25d1c2b0c59e63668cf">
         <source>Here you can modify translations for all installed module.</source>
         <target>Here you can modify translations for all installed module.</target>

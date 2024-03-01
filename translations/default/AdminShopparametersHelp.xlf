@@ -551,7 +551,17 @@
       <trans-unit id="f9aa0af5fdadc92504092774a0afb472">
         <source>In the volume discount table on the product page, display the discounted unit price instead of the unit discount. E.g. If you sell a product for $10 with a discount of $2 from 3 items purchased, the discounted unit price ($8) will be displayed instead of the unit discount ($2).</source>
         <target>In the volume discount table on the product page, display the discounted unit price instead of the unit discount. E.g. If you sell a product for $10 with a discount of $2 from 3 items purchased, the discounted unit price ($8) will be displayed instead of the unit discount ($2).</target>
-        <note>Line: 96</note>
+        <note>Line: 91</note>
+      </trans-unit>
+      <trans-unit id="91440687d19da0f6c7d96d9a5b3f1dec">
+        <source>Display the "%add_to_cart_label%" button when a product has combinations</source>
+        <target>Display the "%add_to_cart_label%" button when a product has combinations</target>
+        <note>Line: 56</note>
+      </trans-unit>
+      <trans-unit id="75dfe702391b0e2cb38a1df614b40fb8">
+        <source>Some themes allow your customers to add a product to their cart directly from the product list. You may want to deactivate this feature if a product has combinations, requiring your customers to check product details and choose one of the options.</source>
+        <target>Some themes allow your customers to add a product to their cart directly from the product list. You may want to deactivate this feature if a product has combinations, requiring your customers to check product details and choose one of the options.</target>
+        <note>Line: 66</note>
       </trans-unit>
     </body>
   </file>

@@ -645,21 +645,12 @@ Comment: subtab</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="fcf3b725bb6ebb0e635b0f0902ade451">
         <source><![CDATA[Theme & Logo]]></source>
         <target><![CDATA[Theme & Logo]]></target>
-        <note>Line: 29</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_combinations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="20ad345341cfd791c1a3f9ef20c35577">
-        <source><![CDATA[Attributes & Features]]></source>
-        <target><![CDATA[Attributes & Features]]></target>
-        <note>Line: 38</note>
+        <note>Line: 28</note>
       </trans-unit>
     </body>
   </file>
@@ -668,6 +659,15 @@ Comment: subtab</note>
       <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
         <source>Addresses</source>
         <target>Addresses</target>
+        <note>Line: 34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/empty_state.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="20ad345341cfd791c1a3f9ef20c35577">
+        <source><![CDATA[Attributes & Features]]></source>
+        <target><![CDATA[Attributes & Features]]></target>
         <note>Line: 34</note>
       </trans-unit>
     </body>
