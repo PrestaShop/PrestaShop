@@ -55,6 +55,8 @@ abstract class AppKernel extends Kernel
      */
     protected $moduleRepository = null;
 
+    abstract public function getAppId(): string;
+
     /**
      * {@inheritdoc}
      */
@@ -184,6 +186,11 @@ abstract class AppKernel extends Kernel
         return dirname(__DIR__) . '/var/logs';
     }
 
+    public function getCacheDir(): string
+    {
+        return $this->getProjectDir() . '/var/cache/' . $this->environment . '/' . $this->getAppId();
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -273,8 +280,18 @@ abstract class AppKernel extends Kernel
         });
     }
 
+    /**
+     * If the app has a dedicated config file load it, else load the common one.
+     *
+     * @return string
+     */
     protected function getKernelConfigPath(): string
     {
+        $dedicatedConfigFile = $this->getRootDir() . '/config/' . $this->getAppId() . '/config_' . $this->getEnvironment() . '.yml';
+        if (file_exists($dedicatedConfigFile)) {
+            return $dedicatedConfigFile;
+        }
+
         return $this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml';
     }
 
@@ -380,6 +397,6 @@ abstract class AppKernel extends Kernel
      */
     public function getAppType(): string
     {
-        return $this instanceof \AdminKernel ? 'admin' : 'front';
+        return $this instanceof \FrontKernel ? 'front' : 'admin';
     }
 }

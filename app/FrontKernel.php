@@ -25,4 +25,8 @@
  */
 class FrontKernel extends AppKernel
 {
+    public function getAppId(): string
+    {
+        return 'front';
+    }
 }

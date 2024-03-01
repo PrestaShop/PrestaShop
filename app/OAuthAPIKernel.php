@@ -28,13 +28,8 @@ declare(strict_types=1);
 
 class OAuthAPIKernel extends AppKernel
 {
-    protected function getKernelConfigPath(): string
+    public function getAppId(): string
     {
-        return $this->getRootDir() . '/config/oauth-api/config_' . $this->getEnvironment() . '.yml';
-    }
-
-    public function getCacheDir(): string
-    {
-        return $this->getProjectDir() . '/var/cache/' . $this->environment . '/oauth-api';
+        return 'oauth-api';
     }
 }

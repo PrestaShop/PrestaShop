@@ -25,4 +25,8 @@
  */
 class AdminKernel extends AppKernel
 {
+    public function getAppId(): string
+    {
+        return 'admin';
+    }
 }

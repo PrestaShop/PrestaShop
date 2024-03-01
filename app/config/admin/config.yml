@@ -1,0 +1,9 @@
+# Dedicated config for Admin Endpoint, these are the common rules for all environments (dev, prod, test)
+# They specify the dedicated security rules and routing mostly
+imports:
+  - { resource: security.yml }
+
+framework:
+  router:
+    resource: "%kernel.project_dir%/app/config/admin/routing.yml"
+    strict_requirements: ~

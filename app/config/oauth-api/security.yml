@@ -10,8 +10,7 @@ security:
       security: false
 
     api:
-      pattern: '^(%api_base_path%)(?!/docs)'
+      pattern: '^(?!/docs)'
       stateless: true
       custom_authenticators:
         - PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator
-      request_matcher: PrestaShop\PrestaShop\Core\Security\OAuth2\ApiRequestMatcher

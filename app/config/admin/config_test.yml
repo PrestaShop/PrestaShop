@@ -1,0 +1,8 @@
+imports:
+  - { resource: ../config_test.yml }
+  - { resource: config.yml }
+
+framework:
+  router:
+    resource: "%kernel.project_dir%/app/config/admin/routing_test.yml"
+    strict_requirements: ~
