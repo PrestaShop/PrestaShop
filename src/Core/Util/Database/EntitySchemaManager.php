@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Util\Database;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\ORM\Tools\ToolsException;
+use PrestaShop\PrestaShop\Core\Exception\DatabaseException;
 
 /**
  * Class EntitySchemaManager help to manage an entity schema: update, create, drop.
@@ -61,6 +63,8 @@ final class EntitySchemaManager
      * @param bool $dropIfExist
      *
      * @return bool
+     *
+     * @throws DatabaseException
      */
     public function create(string $entityClassName, bool $dropIfExist = true): bool
     {
@@ -72,8 +76,8 @@ final class EntitySchemaManager
 
         try {
             $this->schemaTool->createSchema([$entityMetaData]);
-        } catch (\Exception $exception) {
-            return false;
+        } catch (ToolsException $exception) {
+            throw new DatabaseException($exception->getMessage());
         }
 
         return true;
@@ -116,6 +120,8 @@ final class EntitySchemaManager
      * @param bool $dropIfExist
      *
      * @return bool
+     *
+     * @throws DatabaseException
      */
     public function createMultiple(array $entitiesClassesName, bool $dropIfExist = true): bool
     {
