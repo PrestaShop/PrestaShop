@@ -89,6 +89,7 @@ class HostingInformation
     {
         return Tools::apacheModExists('mod_instaweb');
     }
+
     /**
      * @return string
      */
