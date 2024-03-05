@@ -699,7 +699,7 @@ class CartRuleCore extends ObjectModel
         //  - the cart rule can now be disabled but it was at the time it was applied, so it doesn't need to be removed
         //  - the current date is not in the range any more but it was at the time
         //  - the quantity is now zero but it was not when it was added
-        if (!$alreadyInCart) {
+        if (!$useOrderPrices) {
             if (!$this->active) {
                 return (!$display_error) ? false : $this->trans('This voucher is disabled', [], 'Shop.Notifications.Error');
             }
@@ -725,7 +725,7 @@ class CartRuleCore extends ObjectModel
 			AND ' . (int) Configuration::get('PS_OS_ERROR') . ' != o.`current_state`
 			');
 
-            if ($alreadyInCart) {
+            if ($useOrderPrices) {
                 // Sometimes a cart rule is already in a cart, but the cart is not yet attached to an order (when logging
                 // in for example), these cart rules are not taken into account by the query above:
                 // so we count cart rules that are already linked to the current cart but not attached to an order yet.
@@ -819,7 +819,7 @@ class CartRuleCore extends ObjectModel
 
         // Check if the products chosen by the customer are usable with the cart rule
         if ($this->product_restriction) {
-            $r = $this->checkProductRestrictionsFromCart($context->cart, false, $display_error, $alreadyInCart);
+            $r = $this->checkProductRestrictionsFromCart($context->cart, false, $display_error, $useOrderPrices);
             if ($r !== false && $display_error) {
                 return $r;
             } elseif (!$r && !$display_error) {
@@ -892,7 +892,7 @@ class CartRuleCore extends ObjectModel
         }
         if (count($otherCartRules)) {
             foreach ($otherCartRules as $otherCartRule) {
-                if ($otherCartRule['id_cart_rule'] == $this->id && !$alreadyInCart) {
+                if ($otherCartRule['id_cart_rule'] == $this->id && !$useOrderPrices) {
                     return (!$display_error) ? false : $this->trans('This voucher is already in your cart', [], 'Shop.Notifications.Error');
                 }
                 $giftProductQuantity = $cart->getProductQuantity($otherCartRule['gift_product'], $otherCartRule['gift_product_attribute']);
@@ -952,13 +952,13 @@ class CartRuleCore extends ObjectModel
      * @param bool $displayError [default=false]
      *                           If true, this method will return an error message instead of FALSE on errors.
      *                           Otherwise, it returns FALSE on errors
-     * @param bool $alreadyInCart
+     * @param bool $useOrderPrices
      *
      * @return array|bool|string
      *
      * @throws PrestaShopDatabaseException
      */
-    public function checkProductRestrictionsFromCart(CartCore $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
+    public function checkProductRestrictionsFromCart(CartCore $cart, $returnProducts = false, $displayError = true, $useOrderPrices = false)
     {
         // Prepare a list of products to return, if the caller wishes so and provided returnProducts = true
         $selected_products = [];
@@ -1010,7 +1010,7 @@ class CartRuleCore extends ObjectModel
                                 if (in_array($cart_attribute['id_attribute'], $product_rule['values'])) {
                                     $count_matching_products += $cart_attribute['quantity'];
                                     if (
-                                        $alreadyInCart
+                                        $useOrderPrices
                                         && $this->gift_product == $cart_attribute['id_product']
                                         && $this->gift_product_attribute == $cart_attribute['id_product_attribute']) {
                                         --$count_matching_products;
@@ -1041,7 +1041,7 @@ class CartRuleCore extends ObjectModel
                             foreach ($cart_products as $cart_product) {
                                 if (in_array($cart_product['id_product'], $product_rule['values'])) {
                                     $count_matching_products += $cart_product['quantity'];
-                                    if ($alreadyInCart && $this->gift_product == $cart_product['id_product']) {
+                                    if ($useOrderPrices && $this->gift_product == $cart_product['id_product']) {
                                         --$count_matching_products;
                                     }
                                     $matching_products_list[] = $cart_product['id_product'] . '-0';
@@ -1669,7 +1669,7 @@ class CartRuleCore extends ObjectModel
      * Automatically add this CartRule to the Cart.
      *
      * @param Context|null $context Context instance
-     * @param bool $useOrderPrices
+     * @param bool $orderCreated
      */
     public static function autoAddToCart(Context $context = null, bool $useOrderPrices = false)
     {
