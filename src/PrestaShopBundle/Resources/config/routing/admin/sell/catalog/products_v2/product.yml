@@ -40,7 +40,7 @@ admin_products_export:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::exportAction
     _legacy_controller: AdminProducts
-    _legacy_link: AdminProducts:exportproduct
+    _legacy_link: AdminProducts
 
 admin_products_search:
   path: /
