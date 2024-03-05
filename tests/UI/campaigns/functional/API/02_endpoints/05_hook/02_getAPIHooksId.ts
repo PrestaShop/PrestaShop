@@ -5,11 +5,9 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
-import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import dashboardPage from '@pages/BO/dashboard';
@@ -53,9 +51,6 @@ describe('API : GET /api/hooks/{id}', async () => {
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
-
-  // Pre-condition: Enable experimental feature : Authorization server
-  setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, true, `${baseContext}_enableAuthorizationServer`);
 
   describe('BackOffice : Fetch the access token', async () => {
     it('should login in BO', async function () {
@@ -231,7 +226,4 @@ describe('API : GET /api/hooks/{id}', async () => {
 
   // Pre-condition: Create an API Client
   deleteAPIClientTest(`${baseContext}_postTest`);
-
-  // Post-condition: Disable experimental feature : Authorization server
-  setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, false, `${baseContext}_disableAuthorizationServer`);
 });
