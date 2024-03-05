@@ -712,6 +712,9 @@ class CartRuleCore extends ObjectModel
             if (strtotime($this->date_to) < time()) {
                 return (!$display_error) ? false : $this->trans('This voucher has expired', [], 'Shop.Notifications.Error');
             }
+            if (!empty($this->gift_product) && !$this->checkGiftEligibility($this->gift_product, $this->gift_product_attribute)) {
+                return (!$display_error) ? false : $this->trans('This voucher is not available at this time', [], 'Shop.Notifications.Error');
+            }
         }
 
         if ($cart->id_customer) {
@@ -935,6 +938,59 @@ class CartRuleCore extends ObjectModel
 			AND o.`id_cart` = ' . $cart->id);
         if ($removed_order_cartRule_id) {
             return (!$display_error) ? false : $this->trans('You cannot use this voucher because it has manually been removed.', [], 'Shop.Notifications.Error');
+        }
+
+        if (!$display_error) {
+            return true;
+        }
+    }
+
+    /**
+     * Checks if a product is eligible to be used as a gift.
+     *
+     * @param bool $id_product
+     * @param bool $id_product_attribute
+     * @param bool $displayError [default=false]
+     *                           If true, this method will return an error message instead of FALSE on errors.
+     *                           Otherwise, it returns FALSE on errors
+     * @return bool|string Depending on $displayError
+     */
+    public static function checkGiftEligibility($id_product, $id_product_attribute, $display_error = false) {
+
+        // TODO TRANSLATOR
+        // TODO STATIC?
+        // TODO check minimal quanttity of $id_product_attribute
+
+        $product = new Product((int) $id_product);
+
+        // Check if product exists
+        if (!Validate::isLoadedObject($product)) {
+            return $display_error ? 'This product does not exist.' : false;
+            // return $display_error ? $this->trans('This product does not exist.', [], 'Admin.Catalog.Notification') : false;
+        }
+
+        // Check if it's active
+        if (!$product->active) {
+            return $display_error ? 'Disabled product cannot be used as a gift.' : false;
+            // return $display_error ? $this->trans('Disabled product cannot be used as a gift.', [], 'Admin.Catalog.Notification') : false;
+        }
+
+        // Check if it's orderable
+        if (!$product->available_for_order) {
+            return $display_error ? 'Product that is not available for order cannot be used as a gift.' : false;
+            // return $display_error ? $this->trans('Product that is not available for order cannot be used as a gift.', [], 'Admin.Catalog.Notification') : false;
+        }
+
+        // Do not allow products with minimal quantity > 1
+        if ($product->minimal_quantity > 1) {
+            return $display_error ? 'Product with minimal quantity higher than 1 cannot be used as a gift.' : false;
+            // return $display_error ? $this->trans('Product with minimal quantity higher than 1 cannot be used as a gift.', [], 'Admin.Catalog.Notification') : false;
+        }
+
+        // Check if the product doesn't have required customization fields
+        if (count(Product::getRequiredCustomizableFieldsStatic((int) $id_product))) {
+            return $display_error ? 'Product with required customization fields cannot be used as a gift.' : false;
+            // return $display_error ? $this->trans('Product with required customization fields cannot be used as a gift.', [], 'Admin.Catalog.Notification') : false;
         }
 
         if (!$display_error) {

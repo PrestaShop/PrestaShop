@@ -239,9 +239,12 @@ class AdminCartRulesControllerCore extends AdminController
                 $_POST['gift_product_attribute'] = (int) Tools::getValue('ipa_' . $id_product);
             }
 
-            // Do not allow products with required customization
-            if (!empty($_POST['gift_product']) && count(Product::getRequiredCustomizableFieldsStatic((int) $_POST['gift_product']))) {
-                $this->errors[] = $this->trans('Product with required customization fields cannot be used as a gift.', [], 'Admin.Catalog.Notification');
+            // Check if the gift fulfills all requirements to be used as a gift.
+            if (!empty($_POST['gift_product'])) {
+                $giftEligibility = CartRule::checkGiftEligibility($_POST['gift_product'], $_POST['gift_product_attribute'], true);
+                if (!empty($giftEligibility)) {
+                    $this->errors[] = $giftEligibility;
+                }
             }
 
             // Idiot-proof control
