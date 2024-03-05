@@ -2316,7 +2316,7 @@ class ToolsCore
         fwrite($write_fd, "AddType application/font-woff .woff\n");
         fwrite($write_fd, "AddType font/woff2 .woff2\n");
         fwrite($write_fd, "<IfModule mod_headers.c>
-	<FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
+	<FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg|jpg)$\">
 		Header set Access-Control-Allow-Origin \"*\"
 	</FilesMatch>
 </IfModule>\n\n");
