@@ -29,11 +29,11 @@ describe('API : GET /api/api-client/{apiClientId}', async () => {
   let clientSecret: string;
   let idApiClient: number;
 
-  const clientClient: APIClientData = new APIClientData({
+  const clientScope: string = 'api_client_read';
+  const clientData: APIClientData = new APIClientData({
     enabled: true,
     scopes: [
-      'hook_write',
-      'api_client_read',
+      clientScope,
     ],
   });
 
@@ -85,7 +85,7 @@ describe('API : GET /api/api-client/{apiClientId}', async () => {
     it('should create API Client', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAPIClient', baseContext);
 
-      const textResult = await addNewApiClientPage.addAPIClient(page, clientClient);
+      const textResult = await addNewApiClientPage.addAPIClient(page, clientData);
       expect(textResult).to.contains(addNewApiClientPage.successfulCreationMessage);
 
       const textMessage = await addNewApiClientPage.getAlertInfoBlockParagraphContent(page);
@@ -106,10 +106,10 @@ describe('API : GET /api/api-client/{apiClientId}', async () => {
 
       const apiResponse = await apiContext.post('api/oauth2/token', {
         form: {
-          client_id: clientClient.clientId,
+          client_id: clientData.clientId,
           client_secret: clientSecret,
           grant_type: 'client_credentials',
-          scope: 'api_client_read',
+          scope: clientScope,
         },
       });
       expect(apiResponse.status()).to.eq(200);
@@ -162,6 +162,20 @@ describe('API : GET /api/api-client/{apiClientId}', async () => {
       jsonResponse = await apiResponse.json();
     });
 
+    it('should check the JSON Response keys', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseKeys', baseContext);
+
+      expect(jsonResponse).to.have.all.keys(
+        'apiClientId',
+        'clientId',
+        'clientName',
+        'description',
+        'enabled',
+        'lifetime',
+        'scopes',
+      );
+    });
+
     it('should check the JSON Response : `apiClientId`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseApiClientId', baseContext);
 
@@ -170,12 +184,20 @@ describe('API : GET /api/api-client/{apiClientId}', async () => {
       expect(jsonResponse.apiClientId).to.be.equal(idApiClient);
     });
 
+    it('should check the JSON Response : `clientId`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseClientId', baseContext);
+
+      expect(jsonResponse).to.have.property('clientId');
+      expect(jsonResponse.clientId).to.be.a('string');
+      expect(jsonResponse.clientId).to.be.equal(clientData.clientId);
+    });
+
     it('should check the JSON Response : `clientName`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseClientName', baseContext);
 
       expect(jsonResponse).to.have.property('clientName');
       expect(jsonResponse.clientName).to.be.a('string');
-      expect(jsonResponse.clientName).to.be.equal(clientClient.clientName);
+      expect(jsonResponse.clientName).to.be.equal(clientData.clientName);
     });
 
     it('should check the JSON Response : `description`', async function () {
@@ -183,7 +205,7 @@ describe('API : GET /api/api-client/{apiClientId}', async () => {
 
       expect(jsonResponse).to.have.property('description');
       expect(jsonResponse.description).to.be.a('string');
-      expect(jsonResponse.description).to.be.equal(clientClient.description);
+      expect(jsonResponse.description).to.be.equal(clientData.description);
     });
 
     it('should check the JSON Response : `enabled`', async function () {
@@ -191,7 +213,23 @@ describe('API : GET /api/api-client/{apiClientId}', async () => {
 
       expect(jsonResponse).to.have.property('enabled');
       expect(jsonResponse.enabled).to.be.a('boolean');
-      expect(jsonResponse.enabled).to.be.equal(clientClient.enabled);
+      expect(jsonResponse.enabled).to.be.equal(clientData.enabled);
+    });
+
+    it('should check the JSON Response : `lifetime`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLifetime', baseContext);
+
+      expect(jsonResponse).to.have.property('lifetime');
+      expect(jsonResponse.lifetime).to.be.a('number');
+      expect(jsonResponse.lifetime).to.be.equal(clientData.tokenLifetime);
+    });
+
+    it('should check the JSON Response : `scopes`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseScopes', baseContext);
+
+      expect(jsonResponse).to.have.property('scopes');
+      expect(jsonResponse.scopes).to.be.a('array');
+      expect(jsonResponse.scopes).to.deep.equal(clientData.scopes);
     });
   });
 
