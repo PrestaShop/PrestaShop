@@ -120,6 +120,10 @@ class StockType extends TranslatorAwareType
                 'required' => false,
                 'placeholder' => false,
                 'modify_all_shops' => true,
+                'external_link' => [
+                    'text' => $this->trans('[1]Edit default behavior[/1]', 'Admin.Catalog.Feature'),
+                    'href' => $this->router->generate('admin_product_preferences') . '#configuration_fieldset_stock',
+                ],
             ])
             ->add('availability', AvailabilityType::class)
         ;

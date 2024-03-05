@@ -61,7 +61,7 @@ class StockType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'When selling packs of products, how do you want the stock to be calculated by default? You can decide, if you want to manage the stocks of packs manually, or if it should be calculated automatically depending on stock of the products inside. You can further configure it for each product.',
+                    'For packs of products, stocks can be managed manually or automatically based on individual product stock levels. Further customization is possible for each product.',
                     'Admin.Shopparameters.Help'
                 ),
                 'choices' => [
