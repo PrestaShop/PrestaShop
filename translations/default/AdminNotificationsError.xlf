@@ -510,7 +510,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
         <note>Line: 3046</note>
       </trans-unit>
       <trans-unit id="b1367942aa02ea8c9d4aa07cdf5e473c">
-        <source>You need at least one object.</source>
+        <source>You need at least 1 object.</source>
         <target>You need at least one object.</target>
         <note>Line: 4042</note>
       </trans-unit>
