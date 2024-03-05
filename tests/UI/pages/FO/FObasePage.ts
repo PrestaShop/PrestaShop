@@ -176,10 +176,10 @@ export default class FOBasePage extends CommonPage {
     this.currencySelectorMenuItemLink = (currency) => `${this.currencySelectorExpandIcon} ul li a[title='${currency}']`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
     this.searchInput = '#search_widget input.ui-autocomplete-input, #search_widget input.js-search-input';
-    this.autocompleteSearchResult = '.ui-autocomplete , .js-search-dropdown';
-    this.autocompleteSearchResultItem = '.ui-autocomplete li.ui-menu-item , .js-search-dropdown li.search-result';
-    this.autocompleteSearchResultItemLink = (nthChild) => `${this.autocompleteSearchResultItem}`
-      + `:nth-child(${nthChild}) a`;
+    this.autocompleteSearchResult = '.ui-autocomplete, .js-search-dropdown';
+    this.autocompleteSearchResultItem = '.ui-autocomplete li.ui-menu-item, .js-search-dropdown li.search-result';
+    this.autocompleteSearchResultItemLink = (nthChild) => `.ui-autocomplete li.ui-menu-item:nth-child(${nthChild}) a`
+      + `, .js-search-dropdown li.search-result:nth-child(${nthChild}) a`;
 
     // Footer links
     // Products links selectors
