@@ -4,14 +4,12 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
@@ -36,9 +34,6 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
-
-  // Pre-condition: Enable experimental feature : Authorization server
-  setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, true, `${baseContext}_enableAuthorizationServer`);
 
   describe('BackOffice - Login', async () => {
     it('should login in BO', async function () {
@@ -149,7 +144,4 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
       });
     });
   });
-
-  // Post-condition: Disable experimental feature : Authorization server
-  setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, false, `${baseContext}_disableAuthorizationServer`);
 });

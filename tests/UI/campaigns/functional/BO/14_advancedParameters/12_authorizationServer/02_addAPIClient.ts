@@ -4,12 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
@@ -33,9 +31,6 @@ describe('BO - Advanced Parameter - API Client : Add API Client', async () => {
       'product_read',
     ],
   });
-
-  // Pre-condition: Enable experimental feature : Authorization server
-  setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, true, `${baseContext}_enableAuthorizationServer`);
 
   // before and after functions
   before(async function () {
@@ -135,7 +130,4 @@ describe('BO - Advanced Parameter - API Client : Add API Client', async () => {
       expect(numElements).to.equal(0);
     });
   });
-
-  // Post-condition: Disable experimental feature : Authorization server
-  setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, false, `${baseContext}_disableAuthorizationServer`);
 });

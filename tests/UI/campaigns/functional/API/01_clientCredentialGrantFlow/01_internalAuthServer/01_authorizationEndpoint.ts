@@ -5,13 +5,11 @@ import testContext from '@utils/testContext';
 // Import commonTest
 import loginCommon from '@commonTests/BO/loginBO';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
-import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
@@ -44,9 +42,6 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
-
-  // Pre-condition: Enable experimental feature : Authorization server
-  setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, true, `${baseContext}_enableAuthorizationServer`);
 
   describe('API Client : Fetch the client secret', async () => {
     it('should login in BO', async function () {
@@ -180,6 +175,4 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
   });
 
   deleteAPIClientTest(`${baseContext}_postTest_0`);
-
-  setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, false, `${baseContext}_disableAuthorizationServer`);
 });
