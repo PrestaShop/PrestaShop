@@ -5,12 +5,10 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {createAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
-import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
@@ -40,9 +38,6 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Client', asy
       'product_read',
     ],
   });
-
-  // Pre-condition: Enable experimental feature : Authorization server
-  setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, true, `${baseContext}_enableAuthorizationServer`);
 
   // Pre-condition: Create an API Client
   createAPIClientTest(createAPIClient, `${baseContext}_preTest_0`);
@@ -248,7 +243,4 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Client', asy
       expect(numElements).to.equal(0);
     });
   });
-
-  // Post-condition: Disable experimental feature : Authorization server
-  setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, false, `${baseContext}_disableAuthorizationServer`);
 });
