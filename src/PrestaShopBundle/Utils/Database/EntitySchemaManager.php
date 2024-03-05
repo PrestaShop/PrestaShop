@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Util\Database;
+namespace PrestaShopBundle\Utils\Database;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
