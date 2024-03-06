@@ -486,6 +486,12 @@ services:
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
       $homeCategoryId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
 
+  PrestaShopBundle\Form\Admin\Sell\Category\SEO\RedirectOptionType:
+    arguments:
+      $targetTransformer: '@PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer'
+      $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Category\EventListener\RedirectOptionListener'
+      $homeCategoryId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
+
   PrestaShopBundle\Form\Admin\Sell\Product\Options\VisibilityType:
     arguments:
       $productVisibilityChoiceProvider: '@prestashop.core.form.choice_provider.product_visibility_choice_provider'
@@ -631,6 +637,9 @@ services:
     deprecated:
       package: PrestaShop\PrestaShop
       version: 9.0
+
+  PrestaShopBundle\Form\Admin\Sell\Category\EventListener\RedirectOptionListener:
+    autowire: true
 
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
     autowire: true

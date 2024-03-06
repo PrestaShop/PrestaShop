@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Form\Admin\Sell\Category\SEO\RedirectOptionType;
 use PrestaShopBundle\Form\Admin\Type\CategorySeoPreviewType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\ImageWithPreviewType;
@@ -315,6 +316,9 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+            ])
+            ->add('redirect_option', RedirectOptionType::class, [
+                'isRootCategory' => $this instanceof RootCategoryType,
             ])
             ->add('group_association', MaterialChoiceTableType::class, [
                 'label' => $this->trans('Group access', 'Admin.Catalog.Feature'),
