@@ -813,7 +813,7 @@
                   {% endif %}
                 >
                 <i class="md-checkbox-control"></i>
-                {{ 'Select all'|trans({}, 'Admin.Actions') }}
+                {{ 'Select all'|trans({}, 'Admin.Actions') }} {% if form.vars.displayTotalItems %} ({{ form|length }}) {% endif %}
               </label>
             </div>
           </th>
