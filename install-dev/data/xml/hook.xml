@@ -6,6 +6,11 @@
     <field name="description"/>
   </fields>
   <entities>
+    <hook id="actionMailAlterMessageBeforeSend">
+      <name>actionMailAlterMessageBeforeSend</name>
+      <title>Modify Swift Message before sending</title>
+      <description>This hook is called before the Swift Message is sent in Mail.php</description>
+    </hook>
     <hook id="actionValidateOrder">
       <name>actionValidateOrder</name>
       <title>New orders</title>
