@@ -172,18 +172,35 @@ class AddNewAPIClient extends BOBasePage {
    * Returns the list of scopes from a group
    * @param page {Page} Browser tab
    * @param group {string} Scopes Group
+   * @param isChecked {boolean|undefined} Scopes Group
    */
-  async getApiScopes(page: Page, group: string): Promise<string[]> {
+  async getApiScopes(page: Page, group: string, isChecked?: boolean): Promise<string[]> {
     if ((await page.locator(this.scopeGroup(group)).count()) === 0) {
       return [];
     }
-    return page
+    const scopes = await page
       .locator(this.scopeGroup(group))
       .evaluateAll(
         (all: HTMLElement[]) => all
           .map((el) => el.getAttribute('data-scope'))
           .filter((attr): attr is string => attr !== null),
       );
+
+    if (typeof isChecked === 'undefined') {
+      return scopes;
+    }
+    const scopesStatusChecked = [];
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const scope of scopes) {
+      const isAPIChecked = await this.isAPIScopeChecked(page, scope);
+
+      if ((isChecked && isAPIChecked) || (!isChecked && !isAPIChecked)) {
+        scopesStatusChecked.push(scope);
+      }
+    }
+
+    return scopesStatusChecked;
   }
 
   /**
@@ -239,6 +256,8 @@ class AddNewAPIClient extends BOBasePage {
    */
   async getValue(page: Page, inputName: string): Promise<string> {
     switch (inputName) {
+      case 'description':
+        return page.inputValue(this.descriptionInput);
       case 'tokenLifetime':
         return this.getAttributeContent(page, this.tokenLifetimeInput, 'value');
       default:
