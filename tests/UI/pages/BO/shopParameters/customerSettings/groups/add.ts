@@ -119,6 +119,27 @@ class AddGroup extends BOBasePage {
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
   }
+
+  /**
+   * Returns the value of a form element
+   * @param page {Page}
+   * @param inputName {string}
+   * @param languageId {number | undefined}
+   */
+  async getValue(page: Page, inputName: string, languageId?: number): Promise<string> {
+    switch (inputName) {
+      case 'displayPriceTaxExcluded':
+        return page.locator(this.priceDisplayMethodSelect).evaluate((node: HTMLSelectElement) => node.value);
+      case 'localizedNames':
+        return this.getAttributeContent(page, this.nameInput(languageId!), 'value');
+      case 'reductionPercent':
+        return this.getAttributeContent(page, this.discountInput, 'value');
+      case 'showPrice':
+        return (await this.isChecked(page, this.showPricesToggle('on'))) ? '1' : '0';
+      default:
+        throw new Error(`Input ${inputName} was not found`);
+    }
+  }
 }
 
 export default new AddGroup();
