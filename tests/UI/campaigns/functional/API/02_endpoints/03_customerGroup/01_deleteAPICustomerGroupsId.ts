@@ -34,7 +34,7 @@ describe('API : DELETE /api/customers/group/{customerGroupId}', async () => {
   let accessToken: string;
 
   const clientScope: string = 'customer_group_write';
-  const clientClient: APIClientData = new APIClientData({
+  const clientData: APIClientData = new APIClientData({
     enabled: true,
     scopes: [
       clientScope,
@@ -90,7 +90,7 @@ describe('API : DELETE /api/customers/group/{customerGroupId}', async () => {
     it('should create API Client', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAPIClient', baseContext);
 
-      const textResult = await addNewApiClientPage.addAPIClient(page, clientClient);
+      const textResult = await addNewApiClientPage.addAPIClient(page, clientData);
       expect(textResult).to.contains(addNewApiClientPage.successfulCreationMessage);
 
       const textMessage = await addNewApiClientPage.getAlertInfoBlockParagraphContent(page);
@@ -111,7 +111,7 @@ describe('API : DELETE /api/customers/group/{customerGroupId}', async () => {
 
       const apiResponse = await apiContext.post('api/oauth2/token', {
         form: {
-          client_id: clientClient.clientId,
+          client_id: clientData.clientId,
           client_secret: clientSecret,
           grant_type: 'client_credentials',
           scope: clientScope,

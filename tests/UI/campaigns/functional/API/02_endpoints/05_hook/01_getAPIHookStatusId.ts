@@ -31,10 +31,11 @@ describe('API : GET /api/hook-status/{id}', async () => {
   let statusHook: boolean;
   let clientSecret: string;
 
-  const clientClient: APIClientData = new APIClientData({
+  const clientScope: string = 'hook_read';
+  const clientData: APIClientData = new APIClientData({
     enabled: true,
     scopes: [
-      'hook_read',
+      clientScope,
     ],
   });
 
@@ -86,7 +87,7 @@ describe('API : GET /api/hook-status/{id}', async () => {
     it('should create API Client', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAPIClient', baseContext);
 
-      const textResult = await addNewApiClientPage.addAPIClient(page, clientClient);
+      const textResult = await addNewApiClientPage.addAPIClient(page, clientData);
       expect(textResult).to.contains(addNewApiClientPage.successfulCreationMessage);
 
       const textMessage = await addNewApiClientPage.getAlertInfoBlockParagraphContent(page);
@@ -107,10 +108,10 @@ describe('API : GET /api/hook-status/{id}', async () => {
 
       const apiResponse = await apiContext.post('api/oauth2/token', {
         form: {
-          client_id: clientClient.clientId,
+          client_id: clientData.clientId,
           client_secret: clientSecret,
           grant_type: 'client_credentials',
-          scope: 'hook_read',
+          scope: clientScope,
         },
       });
       expect(apiResponse.status()).to.eq(200);
@@ -165,6 +166,15 @@ describe('API : GET /api/hook-status/{id}', async () => {
       expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
       jsonResponse = await apiResponse.json();
+    });
+
+    it('should check the JSON Response keys', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseKeys', baseContext);
+
+      expect(jsonResponse).to.have.all.keys(
+        'id',
+        'active',
+      );
     });
 
     it('should check the JSON Response : `id`', async function () {
