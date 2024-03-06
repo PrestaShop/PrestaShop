@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/design/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
