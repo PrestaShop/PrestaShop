@@ -438,12 +438,12 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="5b8df4265c79cd43831e740281850c84">
         <source>SSL does not seem to be available on your server.</source>
         <target>SSL does not seem to be available on your server.</target>
-        <note>Line: 77</note>
+        <note>Line: 81</note>
       </trans-unit>
       <trans-unit id="762160912d2bac8eb64bc00b711d6f6c">
         <source>Port number to use.</source>
         <target>Port number to use.</target>
-        <note>Line: 82</note>
+        <note>Line: 86</note>
       </trans-unit>
     </body>
   </file>
@@ -463,6 +463,11 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>This page will be displayed just after login.</source>
         <target>This page will be displayed just after login.</target>
         <note>Line: 229</note>
+      </trans-unit>
+      <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
+        <source>Password should be at least %num% characters long.</source>
+        <target>Password should be at least %num% characters long.</target>
+        <note>Line: 173</note>
       </trans-unit>
     </body>
   </file>
@@ -557,15 +562,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>Quick description of the key: who it is for, what permissions it has, etc.</source>
         <target>Quick description of the key: who it is for, what permissions it has, etc.</target>
         <note>Line: 133</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Type/ChangePasswordType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
-        <source>Password should be at least %num% characters long.</source>
-        <target>Password should be at least %num% characters long.</target>
-        <note>Line: 90</note>
       </trans-unit>
     </body>
   </file>

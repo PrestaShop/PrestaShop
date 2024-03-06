@@ -47,17 +47,17 @@
       <trans-unit id="996a45aa702d041706f6388d54c53b12">
         <source>Invalid order</source>
         <target>Invalid order</target>
-        <note>Line: 596</note>
+        <note>Line: 595</note>
       </trans-unit>
       <trans-unit id="5125d7cea2749d85f13a55a023a56c71">
         <source>The order cannot be renewed.</source>
         <target>The order cannot be renewed.</target>
-        <note>Line: 603</note>
+        <note>Line: 602</note>
       </trans-unit>
       <trans-unit id="53a60d3bbec32a4bf2777704834dc35e">
         <source>You must add a minimum quantity of %d</source>
         <target>You must add a minimum quantity of %d</target>
-        <note>Line: 513</note>
+        <note>Line: 512</note>
       </trans-unit>
     </body>
   </file>
@@ -71,22 +71,22 @@
       <trans-unit id="d9c93c77e4f2eb90e8457f586e0c5cb3">
         <source>Cannot create message in a new thread.</source>
         <target>Cannot create message in a new thread.</target>
-        <note>Line: 1104</note>
+        <note>Line: 1108</note>
       </trans-unit>
       <trans-unit id="142c7111dc9e81f5cf273851ccce9fcc">
         <source>The message body is empty, cannot import it.</source>
         <target>The message body is empty, cannot import it.</target>
-        <note>Line: 1172</note>
+        <note>Line: 1176</note>
       </trans-unit>
       <trans-unit id="5d1cbbd2b78574a8cfac676d8bdb9ea4">
         <source>Invalid message content for subject: %s</source>
         <target>Invalid message content for subject: %s</target>
-        <note>Line: 1179</note>
+        <note>Line: 1183</note>
       </trans-unit>
       <trans-unit id="f70f856f6d471d374aaf5080afeb1e53">
         <source>The message content is not valid, cannot import it.</source>
         <target>The message content is not valid, cannot import it.</target>
-        <note>Line: 1185</note>
+        <note>Line: 1189</note>
       </trans-unit>
     </body>
   </file>
@@ -631,11 +631,6 @@
         <target>Are you sure you want to create a new invoice?</target>
         <note>Line: 67</note>
       </trans-unit>
-      <trans-unit id="ca4c54eff098a5785c2016718a00ef1f">
-        <source>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</source>
-        <target>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</target>
-        <note>Line: 71</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/documents.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -649,6 +644,11 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ca4c54eff098a5785c2016718a00ef1f">
+        <source>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</source>
+        <target>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</target>
+        <note>Line: 54</note>
+      </trans-unit>
       <trans-unit id="99def74fcec1306526eaf054ccd2a5f7">
         <source>Are you sure you want to edit this product price? It will be applied to all identical products in this order.</source>
         <target>Are you sure you want to edit this product price? It will be applied to all identical products in this order.</target>

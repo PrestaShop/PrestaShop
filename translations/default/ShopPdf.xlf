@@ -5,7 +5,7 @@
       <trans-unit id="e265492707dd0595fd1f399bb8a2690e">
         <source>: </source>
         <target>:</target>
-        <note>Line: 1209</note>
+        <note>Line: 1222</note>
       </trans-unit>
     </body>
   </file>
@@ -69,22 +69,8 @@
       </trans-unit>
     </body>
   </file>
-  <file original="pdf/delivery-slip.addresses-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e2f324b87eac820c81e4d4a1105dcddf">
-        <source><![CDATA[Billing & Delivery Address]]></source>
-        <target><![CDATA[Billing & Delivery Address]]></target>
-        <note>Line: 39</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="pdf/delivery-slip.payment-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="707436a5aa13b82a4d777f64c717a625">
-        <source>Payment Method</source>
-        <target>Payment Method</target>
-        <note>Line: 27</note>
-      </trans-unit>
       <trans-unit id="e40007b408ac5f66d2c2e6c54f787c99">
         <source>No payment</source>
         <target>No payment</target>
@@ -108,16 +94,6 @@
         <source>image(s):</source>
         <target>image(s):</target>
         <note>Line: 95</note>
-      </trans-unit>
-      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
-        <source>Reference</source>
-        <target>Reference</target>
-        <note>Line: 29</note>
-      </trans-unit>
-      <trans-unit id="03ab340b3f99e03cff9e84314ead38c0">
-        <source>Qty</source>
-        <target>Qty</target>
-        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -166,16 +142,6 @@
         <target>Billing Address</target>
         <note>Line: 31</note>
       </trans-unit>
-      <trans-unit id="af0f5bdc5be121b9307687aeeae38c17">
-        <source>Delivery address</source>
-        <target>Delivery address</target>
-        <note>Line: 27</note>
-      </trans-unit>
-      <trans-unit id="1fbc7e5f1b92c7ec072397b59a0bb5da">
-        <source>Billing address</source>
-        <target>Billing address</target>
-        <note>Line: 31</note>
-      </trans-unit>
     </body>
   </file>
   <file original="pdf/invoice.note-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -184,6 +150,15 @@
         <source>Note</source>
         <target>Note</target>
         <note>Line: 34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="pdf/invoice.payment-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="707436a5aa13b82a4d777f64c717a625">
+        <source>Payment Method</source>
+        <target>Payment Method</target>
+        <note>Line: 27</note>
       </trans-unit>
     </body>
   </file>
@@ -209,21 +184,6 @@
         <target>Discounts</target>
         <note>Line: 165</note>
       </trans-unit>
-      <trans-unit id="ad0d28cdd9113d3ce911bc064b137cde">
-        <source>Base price</source>
-        <target>Base price</target>
-        <note>Line: 40</note>
-      </trans-unit>
-      <trans-unit id="96b0141273eabab320119c467cdcaf17">
-        <source>Total</source>
-        <target>Total</target>
-        <note>Line: 49</note>
-      </trans-unit>
-      <trans-unit id="8fe77c2601e54f1aaef28cfde997bbad">
-        <source>Tax Rate</source>
-        <target>Tax Rate</target>
-        <note>Line: 36</note>
-      </trans-unit>
     </body>
   </file>
   <file original="pdf/invoice.summary-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -242,6 +202,16 @@
   </file>
   <file original="pdf/invoice.tax-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ad0d28cdd9113d3ce911bc064b137cde">
+        <source>Base price</source>
+        <target>Base price</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="8fe77c2601e54f1aaef28cfde997bbad">
+        <source>Tax Rate</source>
+        <target>Tax Rate</target>
+        <note>Line: 37</note>
+      </trans-unit>
       <trans-unit id="8a2d7d9c237b2af40f2659aa76f0bd84">
         <source>Exempt of VAT according to section 259B of the General Tax Code.</source>
         <target>Exempt of VAT according to section 259B of the General Tax Code.</target>
@@ -277,14 +247,19 @@
         <target>No taxes</target>
         <note>Line: 96</note>
       </trans-unit>
+      <trans-unit id="b602e0d0c6a72053d0a5be60cb2f8126">
+        <source>Total Tax</source>
+        <target>Total Tax</target>
+        <note>Line: 41</note>
+      </trans-unit>
     </body>
   </file>
   <file original="pdf/invoice.total-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b602e0d0c6a72053d0a5be60cb2f8126">
-        <source>Total Tax</source>
-        <target>Total Tax</target>
-        <note>Line: 88</note>
+      <trans-unit id="96b0141273eabab320119c467cdcaf17">
+        <source>Total</source>
+        <target>Total</target>
+        <note>Line: 97</note>
       </trans-unit>
       <trans-unit id="b0f79042ac83c64f3ccc42268c8ade26">
         <source>Total Products</source>
@@ -315,6 +290,25 @@
         <source>Total (Tax excl.)</source>
         <target>Total (Tax excl.)</target>
         <note>Line: 75</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="pdf/order-return.addresses-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e2f324b87eac820c81e4d4a1105dcddf">
+        <source><![CDATA[Billing & Delivery Address]]></source>
+        <target><![CDATA[Billing & Delivery Address]]></target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="af0f5bdc5be121b9307687aeeae38c17">
+        <source>Delivery address</source>
+        <target>Delivery address</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="1fbc7e5f1b92c7ec072397b59a0bb5da">
+        <source>Billing address</source>
+        <target>Billing address</target>
+        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>
@@ -401,6 +395,11 @@
   </file>
   <file original="pdf/order-slip.product-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="03ab340b3f99e03cff9e84314ead38c0">
+        <source>Qty</source>
+        <target>Qty</target>
+        <note>Line: 31</note>
+      </trans-unit>
       <trans-unit id="1a22913fb1b16ada25c2637af9d44013">
         <source>Product / Reference</source>
         <target>Product / Reference</target>
@@ -498,6 +497,11 @@
   </file>
   <file original="pdf/supply-order.product-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
+        <source>Reference</source>
+        <target>Reference</target>
+        <note>Line: 31</note>
+      </trans-unit>
       <trans-unit id="66f6e4bbd0a0af1af6b54763871dd280">
         <source>Products ordered:</source>
         <target>Products ordered:</target>
@@ -533,16 +537,6 @@
         <target>Tax rate</target>
         <note>Line: 38</note>
       </trans-unit>
-      <trans-unit id="3a6a6d37bea2c7567f8599ea88b47930">
-        <source>Total TE</source>
-        <target>Total TE</target>
-        <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="fa2ce544158555e8f06c69dd9e681832">
-        <source>Total TI</source>
-        <target>Total TI</target>
-        <note>Line: 39</note>
-      </trans-unit>
     </body>
   </file>
   <file original="pdf/supply-order.tax-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -566,6 +560,16 @@
   </file>
   <file original="pdf/supply-order.total-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="3a6a6d37bea2c7567f8599ea88b47930">
+        <source>Total TE</source>
+        <target>Total TE</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="fa2ce544158555e8f06c69dd9e681832">
+        <source>Total TI</source>
+        <target>Total TI</target>
+        <note>Line: 54</note>
+      </trans-unit>
       <trans-unit id="1300f86974cafc2d65eb1f082a26bdf1">
         <source>Summary:</source>
         <target>Summary:</target>

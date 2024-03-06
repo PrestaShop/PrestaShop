@@ -1,36 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/PaymentModule.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
+        <source>Yes</source>
+        <target>Yes</target>
+        <note>Line: 679</note>
+      </trans-unit>
+      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
+        <source>No</source>
+        <target>No</target>
+        <note>Line: 679</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="classes/controller/FrontController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
         <source>Undefined</source>
         <target>Undefined</target>
-        <note>Line: 904</note>
+        <note>Line: 946</note>
       </trans-unit>
       <trans-unit id="43775ce1723057d9e3d21e5969324fd1">
         <source>Straight rows of keys are easy to guess</source>
         <target>Straight rows of keys are easy to guess</target>
-        <note>Line: 1782</note>
+        <note>Line: 1824</note>
       </trans-unit>
       <trans-unit id="bed5e315d09dedac517831b95571a7f4">
         <source>Short keyboard patterns are easy to guess</source>
         <target>Short keyboard patterns are easy to guess</target>
-        <note>Line: 1783</note>
+        <note>Line: 1825</note>
       </trans-unit>
       <trans-unit id="37ffb1976d12530b5c07821baaf5be39">
         <source>Use a longer keyboard pattern with more turns</source>
         <target>Use a longer keyboard pattern with more turns</target>
-        <note>Line: 1784</note>
+        <note>Line: 1826</note>
       </trans-unit>
       <trans-unit id="773ac0d662987369abf46eebc9000a09">
         <source>Repeats like "aaa" are easy to guess</source>
         <target>Repeats like "aaa" are easy to guess</target>
-        <note>Line: 1785</note>
+        <note>Line: 1827</note>
       </trans-unit>
       <trans-unit id="97681c90722711e8081dcbd10620502e">
         <source>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</source>
         <target>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</target>
-        <note>Line: 1786</note>
+        <note>Line: 1828</note>
       </trans-unit>
       <trans-unit id="c0072984cd1f6cb90856cd8f00a4ad3b">
         <source>Sequences like abc or 6543 are easy to guess</source>
@@ -40,97 +54,97 @@
       <trans-unit id="25096ab4fbb9994547ace751ca107515">
         <source>Recent years are easy to guess</source>
         <target>Recent years are easy to guess</target>
-        <note>Line: 1788</note>
+        <note>Line: 1830</note>
       </trans-unit>
       <trans-unit id="b3c7b778a3c8c869426ae81486275b12">
         <source>Dates are often easy to guess</source>
         <target>Dates are often easy to guess</target>
-        <note>Line: 1789</note>
+        <note>Line: 1831</note>
       </trans-unit>
       <trans-unit id="954a21d373e3f1bd2446606700a37217">
         <source>This is a top-10 common password</source>
         <target>This is a top-10 common password</target>
-        <note>Line: 1790</note>
+        <note>Line: 1832</note>
       </trans-unit>
       <trans-unit id="f6e52aa06b58dd0d8855340b165c0b49">
         <source>This is a top-100 common password</source>
         <target>This is a top-100 common password</target>
-        <note>Line: 1791</note>
+        <note>Line: 1833</note>
       </trans-unit>
       <trans-unit id="0f4a64d2fecd6b4ab2c10d21313e02a6">
         <source>This is a very common password</source>
         <target>This is a very common password</target>
-        <note>Line: 1792</note>
+        <note>Line: 1834</note>
       </trans-unit>
       <trans-unit id="c92578d4545d5aceb430aed0c7285398">
         <source>This is similar to a commonly used password</source>
         <target>This is similar to a commonly used password</target>
-        <note>Line: 1793</note>
+        <note>Line: 1835</note>
       </trans-unit>
       <trans-unit id="9769bc6be635c708fee72d29f5a08f30">
         <source>A word by itself is easy to guess</source>
         <target>A word by itself is easy to guess</target>
-        <note>Line: 1794</note>
+        <note>Line: 1836</note>
       </trans-unit>
       <trans-unit id="83812066e07a07e691d165c97ba89735">
         <source>Names and surnames by themselves are easy to guess</source>
         <target>Names and surnames by themselves are easy to guess</target>
-        <note>Line: 1795</note>
+        <note>Line: 1837</note>
       </trans-unit>
       <trans-unit id="c8a17899dc267baa655e66e93dfa97a2">
         <source>Common names and surnames are easy to guess</source>
         <target>Common names and surnames are easy to guess</target>
-        <note>Line: 1796</note>
+        <note>Line: 1838</note>
       </trans-unit>
       <trans-unit id="dd96380694cf9e241cba2b2ac4cf8c03">
         <source>Use a few words, avoid common phrases</source>
         <target>Use a few words, avoid common phrases</target>
-        <note>Line: 1797</note>
+        <note>Line: 1839</note>
       </trans-unit>
       <trans-unit id="db3fe1774e30b4103c663805d999043b">
         <source>No need for symbols, digits, or uppercase letters</source>
         <target>No need for symbols, digits, or uppercase letters</target>
-        <note>Line: 1798</note>
+        <note>Line: 1840</note>
       </trans-unit>
       <trans-unit id="6af81f974e7c0a35a3a80db30e8e9fa1">
         <source>Avoid repeated words and characters</source>
         <target>Avoid repeated words and characters</target>
-        <note>Line: 1799</note>
+        <note>Line: 1841</note>
       </trans-unit>
       <trans-unit id="cf80cfbbf9eb1b8fc60a7c2c4a1d02d2">
         <source>Avoid sequences</source>
         <target>Avoid sequences</target>
-        <note>Line: 1800</note>
+        <note>Line: 1842</note>
       </trans-unit>
       <trans-unit id="b4535b0e01e0d48c4e38758a933870ad">
         <source>Avoid recent years</source>
         <target>Avoid recent years</target>
-        <note>Line: 1801</note>
+        <note>Line: 1843</note>
       </trans-unit>
       <trans-unit id="18d5eb58e70730c3d43d6a8775201057">
         <source>Avoid years that are associated with you</source>
         <target>Avoid years that are associated with you</target>
-        <note>Line: 1802</note>
+        <note>Line: 1844</note>
       </trans-unit>
       <trans-unit id="54e26a80f66b734f94bc2bd91f3a39ca">
         <source>Avoid dates and years that are associated with you</source>
         <target>Avoid dates and years that are associated with you</target>
-        <note>Line: 1803</note>
+        <note>Line: 1845</note>
       </trans-unit>
       <trans-unit id="fb6fb2ced4938c895874cd10f135a624">
         <source>Capitalization doesn't help very much</source>
         <target>Capitalization doesn't help very much</target>
-        <note>Line: 1804</note>
+        <note>Line: 1846</note>
       </trans-unit>
       <trans-unit id="82958461f3498cc00c0e95ffc05c482d">
         <source>All-uppercase is almost as easy to guess as all-lowercase</source>
         <target>All-uppercase is almost as easy to guess as all-lowercase</target>
-        <note>Line: 1805</note>
+        <note>Line: 1847</note>
       </trans-unit>
       <trans-unit id="fc51ea2f3761abe2201b06a33f75748e">
         <source>Reversed words aren't much harder to guess</source>
         <target>Reversed words aren't much harder to guess</target>
-        <note>Line: 1806</note>
+        <note>Line: 1848</note>
       </trans-unit>
       <trans-unit id="e3c220047c05727a174783f106b69f2b">
         <source>Predictable substitutions like '@' instead of 'a' don't help very much</source>
@@ -140,32 +154,56 @@
       <trans-unit id="a2bfda43aef35df5f7edb8f8de1f5f30">
         <source>Add another word or two. Uncommon words are better.</source>
         <target>Add another word or two. Uncommon words are better.</target>
-        <note>Line: 1808</note>
+        <note>Line: 1850</note>
       </trans-unit>
       <trans-unit id="de3492070cd44f280a6f398dca2f1efb">
         <source>Sequences like "abc" or "6543" are easy to guess</source>
         <target>Sequences like "abc" or "6543" are easy to guess</target>
-        <note>Line: 1787</note>
+        <note>Line: 1829</note>
       </trans-unit>
       <trans-unit id="8aedfe9265263408f5a72fff0a21c118">
         <source>Predictable substitutions like "@" instead of "a" don't help very much</source>
         <target>Predictable substitutions like "@" instead of "a" don't help very much</target>
-        <note>Line: 1807</note>
+        <note>Line: 1849</note>
+      </trans-unit>
+      <trans-unit id="30a3534b67a9a2c4cb3f1bb8659b321f">
+        <source>Very weak</source>
+        <target>Very weak</target>
+        <note>Line: 1819</note>
+      </trans-unit>
+      <trans-unit id="7324e3727807d95037eb19d304fd91ec">
+        <source>Weak</source>
+        <target>Weak</target>
+        <note>Line: 1820</note>
+      </trans-unit>
+      <trans-unit id="b1897515d548a960afe49ecf66a29021">
+        <source>Average</source>
+        <target>Average</target>
+        <note>Line: 1821</note>
+      </trans-unit>
+      <trans-unit id="c43e0fd449c758dab8f891d8e19eb1a9">
+        <source>Strong</source>
+        <target>Strong</target>
+        <note>Line: 1822</note>
+      </trans-unit>
+      <trans-unit id="516b34a4d2351006f3a0f39ccffccefa">
+        <source>Very strong</source>
+        <target>Very strong</target>
+        <note>Line: 1823</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/AddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
+        <source>Addresses</source>
+        <target>Addresses</target>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
   <file original="controllers/front/DiscountController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
-        <source>Yes</source>
-        <target>Yes</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
-        <source>No</source>
-        <target>No</target>
-        <note>Line: 110</note>
-      </trans-unit>
       <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
         <source>None</source>
         <target>None</target>
@@ -173,50 +211,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/OrderConfirmationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="30a3534b67a9a2c4cb3f1bb8659b321f">
-        <source>Very weak</source>
-        <target>Very weak</target>
-        <note>Line: 148</note>
-      </trans-unit>
-      <trans-unit id="7324e3727807d95037eb19d304fd91ec">
-        <source>Weak</source>
-        <target>Weak</target>
-        <note>Line: 149</note>
-      </trans-unit>
-      <trans-unit id="b1897515d548a960afe49ecf66a29021">
-        <source>Average</source>
-        <target>Average</target>
-        <note>Line: 150</note>
-      </trans-unit>
-      <trans-unit id="c43e0fd449c758dab8f891d8e19eb1a9">
-        <source>Strong</source>
-        <target>Strong</target>
-        <note>Line: 151</note>
-      </trans-unit>
-      <trans-unit id="516b34a4d2351006f3a0f39ccffccefa">
-        <source>Very strong</source>
-        <target>Very strong</target>
-        <note>Line: 152</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/OrderFollowController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/front/OrderReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
         <source>Merchandise returns</source>
         <target>Merchandise returns</target>
-        <note>Line: 138</note>
+        <note>Line: 180</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/front/PageNotFoundController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f2fbecfb4e1f8fd471dcc0881d8518f1">
         <source>The page you are looking for was not found.</source>
         <target>The page you are looking for was not found.</target>
-        <note>Line: 1458</note>
+        <note>Line: 70</note>
       </trans-unit>
     </body>
   </file>
@@ -287,17 +296,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/blockwishlist/views/templates/pages/lists.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/blockwishlist/views/templates/pages/products-list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8cf04a9734132302f96da8e113e80ce5">
         <source>Home</source>
         <target>Home</target>
-        <note>Line: 43</note>
+        <note>Line: 47</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/blockwishlist/views/templates/pages/products-list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="6f9d01a14011f05fffe48559583fc609">
         <source>Sort by:</source>
         <target>Sort by:</target>
@@ -314,21 +319,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
         <source>Store information</source>
         <target>Store information</target>
-        <note>Line: 27</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_customeraccountlinks/ps_customeraccountlinks.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
-        <source>Addresses</source>
-        <target>Addresses</target>
-        <note>Line: 114</note>
+        <note>Line: 63</note>
       </trans-unit>
     </body>
   </file>
@@ -379,17 +375,17 @@
       <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
         <source>Tax included</source>
         <target>Tax included</target>
-        <note>Line: 421</note>
+        <note>Line: 422</note>
       </trans-unit>
       <trans-unit id="befcac0f9644a7abee43e69f49252ac4">
         <source>Tax excluded</source>
         <target>Tax excluded</target>
-        <note>Line: 422</note>
+        <note>Line: 423</note>
       </trans-unit>
       <trans-unit id="03c2e7e41ffc181a4e84080b4710e81e">
         <source>New</source>
         <target>New</target>
-        <note>Line: 493</note>
+        <note>Line: 494</note>
       </trans-unit>
     </body>
   </file>
@@ -413,11 +409,6 @@
   </file>
   <file original="themes/classic/modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a0bfe0853cf82bdf5dcb9b0bac76c357">
-        <source>Email us:</source>
-        <target>Email us:</target>
-        <note>Line: 57</note>
-      </trans-unit>
       <trans-unit id="1300caaefd15b839f37952dc7cc75d82">
         <source>Call us:</source>
         <target>Call us:</target>
@@ -432,6 +423,11 @@
   </file>
   <file original="themes/classic/modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="a0bfe0853cf82bdf5dcb9b0bac76c357">
+        <source>Email us:</source>
+        <target>Email us:</target>
+        <note>Line: 67</note>
+      </trans-unit>
       <trans-unit id="da6eb684bd77243a780629a180c9d19b">
         <source>Fax: [1]%fax%[/1]</source>
         <target>Fax: [1]%fax%[/1]</target>
@@ -500,21 +496,21 @@
       </trans-unit>
     </body>
   </file>
+  <file original="themes/classic/modules/ps_shoppingcart/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d0f369aab921195580d8319855bbb69f">
+        <source>%label%:</source>
+        <target>%label%:</target>
+        <note>Line: 87</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="themes/classic/templates/catalog/_partials/sort-orders.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="98438bb96e6464272cadcd6a9c5774b7">
         <source>Sort by selection</source>
         <target>Sort by selection</target>
         <note>Line: 32</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/checkout/_partials/cart-summary-totals.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d0f369aab921195580d8319855bbb69f">
-        <source>%label%:</source>
-        <target>%label%:</target>
-        <note>Line: 48</note>
       </trans-unit>
     </body>
   </file>

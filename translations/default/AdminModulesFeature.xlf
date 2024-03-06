@@ -194,31 +194,31 @@ Comment: Set the modules categories</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid_addons.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
+        <source>PrestaShop Addons Marketplace</source>
+        <target>PrestaShop Addons Marketplace</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="24a25a6b874647087c51ea00b7992def">
+        <source>Exit to PrestaShop Addons Marketplace</source>
+        <target>Exit to PrestaShop Addons Marketplace</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="754475030b0733378b9347e8f9da8bf9">
+        <source>See all results for your search on</source>
+        <target>See all results for your search on</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="228e8380ee42b3ba5d59cdc502dc154d">
         <source>Upgrade available</source>
         <target>Upgrade available</target>
         <note>Line: 80</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list_addons.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
-        <source>PrestaShop Addons Marketplace</source>
-        <target>PrestaShop Addons Marketplace</target>
-        <note>Line: 32</note>
-      </trans-unit>
-      <trans-unit id="24a25a6b874647087c51ea00b7992def">
-        <source>Exit to PrestaShop Addons Marketplace</source>
-        <target>Exit to PrestaShop Addons Marketplace</target>
-        <note>Line: 29</note>
-      </trans-unit>
-      <trans-unit id="754475030b0733378b9347e8f9da8bf9">
-        <source>See all results for your search on</source>
-        <target>See all results for your search on</target>
-        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
