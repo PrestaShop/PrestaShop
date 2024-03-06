@@ -68,17 +68,17 @@ class CartPage extends FOBasePage {
 
   private readonly blockPromoDiv: string;
 
-  private readonly cartSummaryLine: (line: number) => string;
+  protected cartSummaryLine: (line: number) => string;
 
-  private readonly cartRuleName: (line: number) => string;
+  protected cartRuleName: (line: number) => string;
 
-  private readonly discountValue: (line: number) => string;
+  protected discountValue: (line: number) => string;
 
-  private readonly promoCodeLink: string;
+  protected promoCodeLink: string;
 
   private readonly promoCodeBlock: string;
 
-  private readonly promoInput: string;
+  protected promoInput: string;
 
   private readonly addPromoCodeButton: string;
 
