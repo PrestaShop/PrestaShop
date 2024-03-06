@@ -113,6 +113,7 @@ class CartCore extends ObjectModel
     protected static $cachePackageList = [];
     protected static $cacheDeliveryOptionList = [];
     protected static $cacheMultiAddressDelivery = [];
+    protected static $cacheOrderExists = null;
 
     /**
      * @see ObjectModel::$definition
@@ -239,6 +240,7 @@ class CartCore extends ObjectModel
         static::$cachePackageList = [];
         static::$cacheDeliveryOptionList = [];
         static::$cacheMultiAddressDelivery = [];
+        static::$cacheOrderExists = null;
     }
 
     /**
@@ -374,7 +376,8 @@ class CartCore extends ObjectModel
      */
     public function delete()
     {
-        if ($this->orderExists()) { //NOT delete a cart which is associated with an order
+        // Do NOT delete a cart which is associated with an order
+        if ($this->orderExists()) {
             return false;
         }
 
@@ -1800,10 +1803,14 @@ class CartCore extends ObjectModel
      */
     public function orderExists()
     {
-        return (bool) Db::getInstance()->getValue(
-            'SELECT count(*) FROM `' . _DB_PREFIX_ . 'orders` WHERE `id_cart` = ' . (int) $this->id,
-            false
-        );
+        if (self::$cacheOrderExists === null) {
+            self::$cacheOrderExists = (bool) Db::getInstance()->getValue(
+                'SELECT count(*) FROM `' . _DB_PREFIX_ . 'orders` WHERE `id_cart` = ' . (int) $this->id,
+                false
+            );
+        }
+
+        return self::$cacheOrderExists;
     }
 
     /**
