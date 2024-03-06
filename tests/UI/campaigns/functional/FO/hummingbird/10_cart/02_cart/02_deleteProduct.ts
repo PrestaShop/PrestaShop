@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/design/hummingbird';
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
@@ -16,16 +16,6 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_cart_cart_deleteProduct';
 
-/*
-Pre-condition:
-- Install hummingbird theme
-Scenario:
-- Go to Fo and add the first product to cart
-- Increase/Decrease the product quantity by the touchSpin up/down
-- Edit product quantity bu the input (3, -6, +6, 64, 'azerty', 2400, 0)
-Post-condition:
-- Uninstall hummingbird theme
-*/
 describe('FO - cart : Delete product', async () => {
   let browserContext: BrowserContext;
   let page: Page;
