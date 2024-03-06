@@ -71,6 +71,7 @@ final class AddCustomizationHandler extends AbstractCartHandler implements AddCu
 
         $customizationFields = $product->getCustomizationFieldIds();
         $customizationValues = $command->getCustomizationValuesByFieldIds();
+        $cartProductCustomizations = $cart->getProductCustomization($productId);
 
         foreach ($customizationFields as $customizationField) {
             $customizationFieldId = (int) $customizationField['id_customization_field'];
@@ -86,6 +87,15 @@ final class AddCustomizationHandler extends AbstractCartHandler implements AddCu
 
             try {
                 if (CustomizationFieldType::TYPE_TEXT === (int) $customizationField['type']) {
+                    $idCustomization = $this->getExistingCartProductCustomization(
+                        $cartProductCustomizations,
+                        $customizationValues[$customizationFieldId]
+                    );
+
+                    if (null !== $idCustomization) {
+                        return new CustomizationId($idCustomization);
+                    }
+
                     $this->assertCustomTextField($customizationFieldId, $customizationValues[$customizationFieldId]);
 
                     $customizationId = $cart->addTextFieldToProduct(
@@ -188,7 +198,7 @@ final class AddCustomizationHandler extends AbstractCartHandler implements AddCu
      *
      * @throws CustomizationConstraintException
      */
-    private function assertCustomTextField(int $customFieldId, string $value)
+    private function assertCustomTextField(int $customFieldId, string $value): void
     {
         $customization = new CustomizationField($customFieldId);
 
@@ -199,5 +209,22 @@ final class AddCustomizationHandler extends AbstractCartHandler implements AddCu
         if (strlen($value) > CustomizationSettings::MAX_TEXT_LENGTH) {
             throw new CustomizationConstraintException(sprintf('Customization field #%s value is too long', $customFieldId), CustomizationConstraintException::FIELD_IS_TOO_LONG);
         }
+    }
+
+    /**
+     * @param array $cartProductCustomizations
+     * @param string $wantedCustomization
+     *
+     * @return int|null
+     */
+    private function getExistingCartProductCustomization(array $cartProductCustomizations, string $wantedCustomization): ?int
+    {
+        foreach ($cartProductCustomizations as $cartProductCustomization) {
+            if ($cartProductCustomization['value'] === $wantedCustomization) {
+                return (int) $cartProductCustomization['id_customization'];
+            }
+        }
+
+        return null;
     }
 }
