@@ -116,7 +116,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       },
       {
         args: {
-          option: 'Use both, whatever is lower',
+          option: 'Use quantity of products in the pack',
           packQuantity: productPackData.quantity - 1,
           firstProductQuantity: firstProductData.quantity - productPackData.pack[0].quantity,
           secondProductQuantity: secondProductData.quantity - productPackData.pack[1].quantity,

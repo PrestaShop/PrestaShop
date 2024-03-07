@@ -309,7 +309,7 @@ class PackTab extends BOBasePage {
         await page.click(this.packStockTypeRadioButton(0));
         break;
 
-      case 'Use both, whatever is lower':
+      case 'Use quantity of products in the pack':
         await page.click(this.packStockTypeRadioButton(1));
         break;
 
