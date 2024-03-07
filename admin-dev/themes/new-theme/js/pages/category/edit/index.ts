@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,16 +21,13 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
 
-{% block content %}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/form.html.twig' %}
-{% endblock %}
+import {EventEmitter} from '@components/event-emitter';
+import RedirectOptionManager from '@pages/category/edit/manager/redirect-option-manager';
 
-{% block javascripts %}
-  {{ parent() }}
+const {$} = window;
 
-  {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/javascripts.html.twig' %}
-  <script src="{{ asset('themes/new-theme/public/category_edit.bundle.js') }}"></script>
-{% endblock %}
+$(() => {
+  new RedirectOptionManager(EventEmitter);
+});
