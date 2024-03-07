@@ -108,7 +108,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
     const tests = [
       {
         args: {
-          option: 'Decrement pack only.',
+          option: 'Use pack quantity',
           packQuantity: productPackData.quantity - 1,
           firstProductQuantity: firstProductData.quantity,
           secondProductQuantity: secondProductData.quantity,
@@ -116,7 +116,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       },
       {
         args: {
-          option: 'Decrement products in pack only.',
+          option: 'Use both, whatever is lower',
           packQuantity: productPackData.quantity - 1,
           firstProductQuantity: firstProductData.quantity - productPackData.pack[0].quantity,
           secondProductQuantity: secondProductData.quantity - productPackData.pack[1].quantity,
@@ -124,7 +124,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       },
       {
         args: {
-          option: 'Decrement both.',
+          option: 'Use both, whatever is lower',
           packQuantity: productPackData.quantity - 2,
           firstProductQuantity: firstProductData.quantity - 2 * productPackData.pack[0].quantity,
           secondProductQuantity: secondProductData.quantity - 2 * productPackData.pack[1].quantity,

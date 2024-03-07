@@ -305,15 +305,15 @@ class PackTab extends BOBasePage {
     await this.setValue(page, this.minimalQuantityInput, packData.minimalQuantity);
 
     switch (packData.packQuantitiesOption) {
-      case 'Decrement pack only':
+      case 'Use pack quantity':
         await page.click(this.packStockTypeRadioButton(0));
         break;
 
-      case 'Decrement products in pack only':
+      case 'Use both, whatever is lower':
         await page.click(this.packStockTypeRadioButton(1));
         break;
 
-      case 'Decrement both':
+      case 'Use both, whatever is lower':
         await page.click(this.packStockTypeRadioButton(2));
         break;
 
