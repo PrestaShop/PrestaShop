@@ -16,10 +16,6 @@
         <target>%s at least, or you will have to edit the translation files manually.</target>
         <note>Line: 47</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="06a92b5dc72bff3b98bf4b932ce72864">
         <source>Apache mod_security is activated on your server. This could result in some Bad Request errors</source>
         <target>Apache mod_security is activated on your server. This could result in some Bad Request errors</target>
@@ -50,29 +46,33 @@
         <target>Please ask your hosting provider to increase this limit to</target>
         <note>Line: 45</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="7cefb4829c6de24b63f7a05716b43bec">
         <source>This expression uses a special syntax:</source>
         <target>This expression uses a special syntax:</target>
         <note>Line: 133</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="4fb6a3beb82f8d8aa4bbdf8f5a0c35fa">
         <source>%s at least, or you will have to edit the translation files.</source>
         <target>%s at least, or you will have to edit the translation files.</target>
-        <note>Line: 47</note>
+        <note>Line: 49</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
         <source>%limit% for suhosin.post.max_vars.</source>
         <target>%limit% for suhosin.post.max_vars.</target>
-        <note>Line: 39</note>
+        <note>Line: 41</note>
       </trans-unit>
       <trans-unit id="e97da54b23c78752578cd7fa01e8866d">
         <source>%limit% for suhosin.request.max_vars.</source>
         <target>%limit% for suhosin.request.max_vars.</target>
-        <note>Line: 40</note>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
@@ -194,11 +194,6 @@ Comment: @todo Throw exception</note>
         <target>An error has occurred during the default group update</target>
         <note>Line: 583</note>
       </trans-unit>
-      <trans-unit id="962f6e835582ebb404a37893f46c60f3">
-        <source>An error has occurred, this module does not exist: %s</source>
-        <target>An error has occurred, this module does not exist: %s</target>
-        <note>Line: 513</note>
-      </trans-unit>
     </body>
   </file>
   <file original="classes/Translate.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -221,21 +216,6 @@ Comment: @todo Throw exception</note>
         <source>Cannot add configuration %1$s for %2$s language</source>
         <target>Cannot add configuration %1$s for %2$s language</target>
         <note>Line: 1581</note>
-      </trans-unit>
-      <trans-unit id="c9468b4bd45a165049277af6756db10e">
-        <source>Localization pack imported successfully.</source>
-        <target>Localization pack imported successfully.</target>
-        <note>Line: 517</note>
-      </trans-unit>
-      <trans-unit id="6cfb80c26b415f8f6467cf07b0c700dd">
-        <source>The translation was successfully copied.</source>
-        <target>The translation was successfully copied.</target>
-        <note>Line: 507</note>
-      </trans-unit>
-      <trans-unit id="f22def68c5c456936078623b6dcd27ff">
-        <source>The translations have been successfully added.</source>
-        <target>The translations have been successfully added.</target>
-        <note>Line: 508</note>
       </trans-unit>
     </body>
   </file>
@@ -586,6 +566,11 @@ Comment: @todo Throw exception</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="c9468b4bd45a165049277af6756db10e">
+        <source>Localization pack imported successfully.</source>
+        <target>Localization pack imported successfully.</target>
+        <note>Line: 212</note>
+      </trans-unit>
       <trans-unit id="53802fa30d7e83f77eccfa376c33e6fa">
         <source>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</source>
         <target>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</target>
@@ -595,6 +580,21 @@ Comment: @todo Throw exception</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/TranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="962f6e835582ebb404a37893f46c60f3">
+        <source>An error has occurred, this module does not exist: %s</source>
+        <target>An error has occurred, this module does not exist: %s</target>
+        <note>Line: 143</note>
+      </trans-unit>
+      <trans-unit id="6cfb80c26b415f8f6467cf07b0c700dd">
+        <source>The translation was successfully copied.</source>
+        <target>The translation was successfully copied.</target>
+        <note>Line: 318</note>
+      </trans-unit>
+      <trans-unit id="f22def68c5c456936078623b6dcd27ff">
+        <source>The translations have been successfully added.</source>
+        <target>The translations have been successfully added.</target>
+        <note>Line: 177</note>
+      </trans-unit>
       <trans-unit id="2c4113bd192a65a98ee212d9e946d152">
         <source>You must select at least one translation type to export translations.</source>
         <target>You must select at least one translation type to export translations.</target>
@@ -640,17 +640,13 @@ Comment: @todo Throw exception</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationByIpAddressFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7e093dcb7a9f75c8124b2adc265c5302">
         <source>The geolocation database is unavailable.</source>
         <target>The geolocation database is unavailable.</target>
-        <note>Line: 77</note>
+        <note>Line: 107</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="0861a67f819158c5690a1844d95390b4">
         <source>Invalid whitelist</source>
         <target>Invalid whitelist</target>

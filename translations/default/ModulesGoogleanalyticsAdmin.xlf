@@ -17,7 +17,7 @@
         <target>Settings</target>
         <note>Line: 83</note>
       </trans-unit>
-      <trans-unit id="851bd83a102d143ee17d97f9e15e15af">
+      <trans-unit id="2e696d0b719265a07fbe7a75d85747b6">
         <source>Google Analytics tracking ID</source>
         <target>Google Analytics Tracking ID</target>
         <note>Line: 88</note>
@@ -57,12 +57,12 @@
         <target>Use this option to anonymize the visitor’s IP to comply with data privacy laws in some countries</target>
         <note>Line: 116</note>
       </trans-unit>
-      <trans-unit id="86b29d17f0ac2035844b54408374ea0f">
+      <trans-unit id="68781676631d52efc531acfe2a7d924e">
         <source>Enable back office tracking</source>
         <target>Enable Back Office Tracking</target>
         <note>Line: 132</note>
       </trans-unit>
-      <trans-unit id="0767b68fe502b38f6ea34a0611925473">
+      <trans-unit id="9ac629042e524981b0296be43913202e">
         <source>Use this option to enable the tracking inside the back -office</source>
         <target>Use this option to enable the tracking inside the Back Office</target>
         <note>Line: 134</note>
@@ -82,7 +82,7 @@
         <target>Re-send failed orders</target>
         <note>Line: 163</note>
       </trans-unit>
-      <trans-unit id="4c3222a797a0f86905fab4e092c1cfc9">
+      <trans-unit id="64e6960a5535473a69e6505c6a3c7a8a">
         <source>This option will resend all orders that failed to be sent normally in the front office, due to failures or ad-blockers.</source>
         <target>This option will resend all orders that failed to be sent normally in front-office, due to failures or ad-blockers.</target>
         <note>Line: 165</note>
@@ -101,6 +101,26 @@
         <source>Settings updated successfully.</source>
         <target>Settings updated successfully.</target>
         <note>Line: 251</note>
+      </trans-unit>
+      <trans-unit id="851bd83a102d143ee17d97f9e15e15af">
+        <source>Google Analytics Tracking ID</source>
+        <target>Google Analytics Tracking ID</target>
+        <note>Line: 88</note>
+      </trans-unit>
+      <trans-unit id="86b29d17f0ac2035844b54408374ea0f">
+        <source>Enable Back Office Tracking</source>
+        <target>Enable Back Office Tracking</target>
+        <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="0767b68fe502b38f6ea34a0611925473">
+        <source>Use this option to enable the tracking inside the Back Office</source>
+        <target>Use this option to enable the tracking inside the Back Office</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="4c3222a797a0f86905fab4e092c1cfc9">
+        <source>This option will resend all orders that failed to be sent normally in front-office, due to failures or ad-blockers.</source>
+        <target>This option will resend all orders that failed to be sent normally in front-office, due to failures or ad-blockers.</target>
+        <note>Line: 165</note>
       </trans-unit>
     </body>
   </file>

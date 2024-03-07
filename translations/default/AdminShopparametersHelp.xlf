@@ -697,6 +697,10 @@
         <target>Order's return status name.</target>
         <note>Line: 41</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderStates/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="a4bb440d400f4dc30f148b44d08680b4">
         <source>Invalid characters: numbers and</source>
         <target>Invalid characters: numbers and</target>
@@ -705,12 +709,8 @@
       <trans-unit id="00b963b1cb1aad2142ae67ce65329944">
         <source>Status will be highlighted in this color. HTML colors only.</source>
         <target>Status will be highlighted in this color. HTML colors only.</target>
-        <note>Line: 49</note>
+        <note>Line: 83</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderStates/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="83b262520a65657b95fd686817c56a09">
         <source>Order status (e.g. 'Pending').</source>
         <target>Order status (e.g. 'Pending').</target>

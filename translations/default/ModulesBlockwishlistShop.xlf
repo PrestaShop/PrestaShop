@@ -192,11 +192,6 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
-        <source>Cancel</source>
-        <target>Cancel</target>
-        <note>Line: 23</note>
-      </trans-unit>
       <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5">
         <source>Sign in</source>
         <target>Sign in</target>
@@ -211,6 +206,11 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/rename.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>Line: 25</note>
+      </trans-unit>
       <trans-unit id="972d48662f3cf5d0514a3cbba209837a">
         <source>Wishlist name</source>
         <target>Wishlist name</target>

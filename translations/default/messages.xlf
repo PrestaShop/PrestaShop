@@ -116,6 +116,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
+        <source>%</source>
+        <target>%</target>
+        <note>Line: 107</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a1e7379abfdbc3b8e03506e5489c6110">
@@ -210,6 +219,11 @@
         <target>Manage hooks</target>
         <note>Line: 99</note>
       </trans-unit>
+      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
+        <source>Reset</source>
+        <target>Reset</target>
+        <note>Line: 79</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/content-legacy.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -228,11 +242,6 @@
         <source>Please note that for security reasons, you can only add modules that are being distributed on PrestaShop Addons, the official marketplace.</source>
         <target>Please note that for security reasons, you can only add modules that are being distributed on PrestaShop Addons, the official marketplace.</target>
         <note>Line: 56</note>
-      </trans-unit>
-      <trans-unit id="96e36efe70e72835ae51946e2650f9e7">
-        <source>Add a new module</source>
-        <target>Add a new module</target>
-        <note>Line: 35</note>
       </trans-unit>
     </body>
   </file>
@@ -463,6 +472,11 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/page.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="96e36efe70e72835ae51946e2650f9e7">
+        <source>Add a new module</source>
+        <target>Add a new module</target>
+        <note>Line: 31</note>
+      </trans-unit>
       <trans-unit id="6afd80bf62a1b8bdfe729af8a0159fee">
         <source>Modules list</source>
         <target>Modules list</target>
@@ -534,37 +548,37 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/quickview.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/modules/readmore-body.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3424c86a3f3fdfcff4d8f310912ee82b">
         <source>(%s votes)</source>
         <target>(%s votes)</target>
-        <note>Line: 52</note>
+        <note>Line: 35</note>
       </trans-unit>
       <trans-unit id="268cb3857932e260b03bf1334220f3bc">
         <source>(%s vote)</source>
         <target>(%s vote)</target>
-        <note>Line: 52</note>
+        <note>Line: 35</note>
       </trans-unit>
       <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
         <source>Description</source>
         <target>Description</target>
-        <note>Line: 64</note>
+        <note>Line: 52</note>
       </trans-unit>
       <trans-unit id="7a66d21cf5a4354933980f6d79ec78a4">
         <source>Merchant benefits</source>
         <target>Merchant benefits</target>
-        <note>Line: 68</note>
+        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="8530d0ebaf22889c1b42061824f3769b">
         <source>Install module</source>
         <target>Install module</target>
-        <note>Line: 99</note>
+        <note>Line: 92</note>
       </trans-unit>
       <trans-unit id="a6642661dcfc0e354c61f4e8b8b9ec5a">
         <source>View on PrestaShop Addons</source>
         <target>View on PrestaShop Addons</target>
-        <note>Line: 101</note>
+        <note>Line: 94</note>
       </trans-unit>
     </body>
   </file>
@@ -706,7 +720,7 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_errors.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
         <source>%limit% for suhosin.post.max_vars.</source>
@@ -721,8 +735,12 @@
       <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
         <source>%d</source>
         <target>%d</target>
-        <note>Line: 58</note>
+        <note>Line: 52</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="54524210ee89080b3da6c88a11c6d438">
         <source>You must use this syntax in your translations. Here are several examples:</source>
         <target>You must use this syntax in your translations. Here are several examples:</target>
@@ -1097,11 +1115,6 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/list/list_content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
-        <source>%</source>
-        <target>%</target>
-        <note>Line: 120</note>
-      </trans-unit>
       <trans-unit id="087fb8756d4add87f2d162304ccd486b">
         <source>No records found</source>
         <target>No records found</target>
@@ -1140,11 +1153,6 @@
         <target>From</target>
         <note>Line: 358</note>
       </trans-unit>
-      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
-        <source>Reset</source>
-        <target>Reset</target>
-        <note>Line: 417</note>
-      </trans-unit>
       <trans-unit id="6ccfec41b65de46efeb7ca242341e8ea">
         <source>Please fill at least one field to perform a search in this list.</source>
         <target>Please fill at least one field to perform a search in this list.</target>
@@ -1174,11 +1182,6 @@
         <source>To</source>
         <target>To</target>
         <note>Line: 365</note>
-      </trans-unit>
-      <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
-        <source>and stay</source>
-        <target>and stay</target>
-        <note>Line: 206</note>
       </trans-unit>
     </body>
   </file>
@@ -1374,6 +1377,15 @@
         <source>123.45.67.89</source>
         <target>123.45.67.89</target>
         <note>Line: 50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/toolbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
+        <source>and stay</source>
+        <target>and stay</target>
+        <note>Line: 79</note>
       </trans-unit>
     </body>
   </file>

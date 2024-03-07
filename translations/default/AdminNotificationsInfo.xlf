@@ -19,35 +19,35 @@
       </trans-unit>
     </body>
   </file>
-  <file original="classes/helper/HelperList.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
-        <source>Delete selected item?</source>
-        <target>Delete selected item?</target>
-        <note>Line: 589</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
         <source>Delete selected</source>
         <target>Delete selected</target>
-        <note>Line: 56</note>
+        <note>Line: 80</note>
       </trans-unit>
       <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
         <source>Delete selected items?</source>
         <target>Delete selected items?</target>
-        <note>Line: 57</note>
+        <note>Line: 82</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCartRulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
+        <source>Delete selected item?</source>
+        <target>Delete selected item?</target>
+        <note>Line: 863</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3e053943605d9e4bf7dd7588ea19e9d2">
         <source>Forbidden characters:</source>
         <target>Forbidden characters:</target>
-        <note>Line: 364</note>
+        <note>Line: 90</note>
       </trans-unit>
     </body>
   </file>
@@ -78,7 +78,16 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MetaController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bcc5aa7d20ec5e8bfa75d7754753e35b">
+        <source>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</source>
+        <target>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</target>
+        <note>Line: 139</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="233a1ce8ca8efc5c0f45bf2df346812a">
         <source>Note that this page is available in all shops context only, this is why your context has just switched.</source>
@@ -89,11 +98,6 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/TaxController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="bcc5aa7d20ec5e8bfa75d7754753e35b">
-        <source>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</source>
-        <target>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</target>
-        <note>Line: 189</note>
-      </trans-unit>
       <trans-unit id="2ca177b474e501c55d3825873c2addfe">
         <source>Note that this feature is available in all shops context only. It will be added to all your stores.</source>
         <target>Note that this feature is available in all shops context only. It will be added to all your stores.</target>

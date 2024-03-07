@@ -99,15 +99,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="classes/checkout/CheckoutAddressesStep.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2af64b8ece83492468fbc41f9b692556">
-        <source>Could not delete address.</source>
-        <target>Could not delete address.</target>
-        <note>Line: 159</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/controller/FrontController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="914aabd65a536be202b28dc1ac5dd1af">
@@ -128,16 +119,6 @@
         <source>The email is already used, please choose another one or sign in</source>
         <target>The email is already used, please choose another one or sign in</target>
         <note>Line: 131</note>
-      </trans-unit>
-      <trans-unit id="e74bbc67e02323a626ce95619ef42fd5">
-        <source>Password must be between %d and %d characters long</source>
-        <target>Password must be between %d and %d characters long</target>
-        <note>Line: 157</note>
-      </trans-unit>
-      <trans-unit id="f43333ea2272fed37fc121a2e09755c3">
-        <source>The minimum score must be: %s</source>
-        <target>The minimum score must be: %s</target>
-        <note>Line: 175</note>
       </trans-unit>
     </body>
   </file>
@@ -200,6 +181,11 @@
   </file>
   <file original="controllers/front/AddressController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="2af64b8ece83492468fbc41f9b692556">
+        <source>Could not delete address.</source>
+        <target>Could not delete address.</target>
+        <note>Line: 114</note>
+      </trans-unit>
       <trans-unit id="0adae640fffe5e6c0208e25f13aaa414">
         <source>Please fix the error below.</source>
         <target>Please fix the error below.</target>
@@ -441,6 +427,16 @@
   </file>
   <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="e74bbc67e02323a626ce95619ef42fd5">
+        <source>Password must be between %d and %d characters long</source>
+        <target>Password must be between %d and %d characters long</target>
+        <note>Line: 171</note>
+      </trans-unit>
+      <trans-unit id="f43333ea2272fed37fc121a2e09755c3">
+        <source>The minimum score must be: %s</source>
+        <target>The minimum score must be: %s</target>
+        <note>Line: 189</note>
+      </trans-unit>
       <trans-unit id="909179695703d6a048fab0bcc9af4758">
         <source>We cannot regenerate your password with the data you've submitted</source>
         <target>We cannot regenerate your password with the data you've submitted</target>
@@ -508,17 +504,17 @@
       <trans-unit id="6b9cc232bf4044274ec42062b60736fb">
         <source>Invoices are disabled in this shop.</source>
         <target>Invoices are disabled in this shop.</target>
-        <note>Line: 49</note>
+        <note>Line: 51</note>
       </trans-unit>
       <trans-unit id="2ef90fa1b9369f1ad3ca66852ca464a2">
         <source>The invoice was not found.</source>
         <target>The invoice was not found.</target>
-        <note>Line: 62</note>
+        <note>Line: 67</note>
       </trans-unit>
       <trans-unit id="8200c4097227159b14dd0669b8dfe22c">
         <source>No invoice is available.</source>
         <target>No invoice is available.</target>
-        <note>Line: 66</note>
+        <note>Line: 71</note>
       </trans-unit>
     </body>
   </file>
@@ -529,14 +525,10 @@
         <target>Order return not confirmed.</target>
         <note>Line: 57</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/PdfOrderSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="b430bfb9e8ec89ded934087889c2e845">
         <source>Order return not found.</source>
         <target>Order return not found.</target>
-        <note>Line: 50</note>
+        <note>Line: 55</note>
       </trans-unit>
     </body>
   </file>

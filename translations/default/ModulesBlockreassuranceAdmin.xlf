@@ -266,6 +266,16 @@ Comment: Confirm uninstall</note>
         <target>We recommend 3 blocks at maximum.</target>
         <note>Line: 118</note>
       </trans-unit>
+      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
+        <source>None</source>
+        <target>None</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="334c4a4c42fdb79d7ebc3e73b517e6f8">
+        <source>none</source>
+        <target>none</target>
+        <note>Line: 57</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/display.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -298,11 +308,6 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/display/global.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
-        <source>None</source>
-        <target>None</target>
-        <note>Line: 93</note>
-      </trans-unit>
       <trans-unit id="23b5440c1d192315a80d4c47a0a6a777">
         <source>Header position on all pages</source>
         <target>Header position on all pages</target>
@@ -337,11 +342,6 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/display/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="334c4a4c42fdb79d7ebc3e73b517e6f8">
-        <source>none</source>
-        <target>none</target>
-        <note>Line: 41</note>
-      </trans-unit>
       <trans-unit id="3f01481a13daed04a03caaa1a28ab49f">
         <source>Main column</source>
         <target>Main column</target>

@@ -84,11 +84,6 @@
   </file>
   <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
-        <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
-        <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
-        <note>Line: 325</note>
-      </trans-unit>
       <trans-unit id="f2d1c5443636295e9720caac90ea8d93">
         <source>Your internal name for this attribute.</source>
         <target>Your internal name for this attribute.</target>
@@ -226,6 +221,15 @@
         <source>Add new feature value</source>
         <target>Add new feature value</target>
         <note>Line: 224</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
+        <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
+        <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
+        <note>Line: 202</note>
       </trans-unit>
     </body>
   </file>
@@ -393,21 +397,21 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/BulkCombinationPriceType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c4b69e0455faf0784b6a8b2fd9634d16">
+        <source>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</source>
+        <target>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</target>
+        <note>Line: 109</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationFormType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="762d425093de542e7ab628b44ff68515">
         <source>This interface allows you to specify the suppliers of the current combination.</source>
         <target>This interface allows you to specify the suppliers of the current combination.</target>
         <note>Line: 88</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationPriceImpactType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c4b69e0455faf0784b6a8b2fd9634d16">
-        <source>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</source>
-        <target>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</target>
-        <note>Line: 123</note>
       </trans-unit>
     </body>
   </file>

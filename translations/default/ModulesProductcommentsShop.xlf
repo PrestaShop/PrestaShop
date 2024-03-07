@@ -184,6 +184,11 @@
         <target>Your review cannot be sent</target>
         <note>Line: 144</note>
       </trans-unit>
+      <trans-unit id="7966126831926ad29c528b239d69f855">
+        <source>Write your review</source>
+        <target>Write your review</target>
+        <note>Line: 34</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/productcomments/views/templates/hook/product-additional-info.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -192,11 +197,6 @@
         <source>Read user reviews</source>
         <target>Read user reviews</target>
         <note>Line: 40</note>
-      </trans-unit>
-      <trans-unit id="7966126831926ad29c528b239d69f855">
-        <source>Write your review</source>
-        <target>Write your review</target>
-        <note>Line: 45</note>
       </trans-unit>
     </body>
   </file>

@@ -37,21 +37,21 @@
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminImagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
+        <source>Delete selected items?</source>
+        <target>Delete selected items?</target>
+        <note>Line: 60</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
         <source>Delete selected item?</source>
         <target>Delete selected item?</target>
         <note>Line: 566</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
-        <source>Delete selected items?</source>
-        <target>Delete selected items?</target>
-        <note>Line: 115</note>
       </trans-unit>
     </body>
   </file>

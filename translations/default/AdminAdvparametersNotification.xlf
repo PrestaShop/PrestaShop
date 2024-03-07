@@ -124,11 +124,6 @@
         <target>No valid tables were found to backup.</target>
         <note>Line: 335</note>
       </trans-unit>
-      <trans-unit id="4e0ac45de6bd848503ffa98ff6247f2f">
-        <source>Error deleting</source>
-        <target>Error deleting</target>
-        <note>Line: 192</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -230,112 +225,112 @@
       <trans-unit id="52629716aa86c04b8d81bc7e9522463f">
         <source>Store is invalid</source>
         <target>Store is invalid</target>
-        <note>Line: 3976</note>
+        <note>Line: 3980</note>
       </trans-unit>
       <trans-unit id="2e73276e5106584df31fd1cc5823ba81">
         <source>Supplier ID (%id%) is not valid (at line %line%).</source>
         <target>Supplier ID (%id%) is not valid (at line %line%).</target>
-        <note>Line: 4046</note>
+        <note>Line: 4050</note>
       </trans-unit>
       <trans-unit id="5dbfdcc4de08ec893f55919dc4e872dc">
         <source>Lang ID (%id%) is not valid (at line %line%).</source>
         <target>Lang ID (%id%) is not valid (at line %line%).</target>
-        <note>Line: 4049</note>
+        <note>Line: 4053</note>
       </trans-unit>
       <trans-unit id="f0cf11a8f6275d2bac5a189cbb41c689">
         <source>Warehouse ID (%id%) is not valid (at line %line%).</source>
         <target>Warehouse ID (%id%) is not valid (at line %line%).</target>
-        <note>Line: 4052</note>
+        <note>Line: 4056</note>
       </trans-unit>
       <trans-unit id="b390e8c2a66fd018293fb44a5b8208c8">
         <source>Currency ID (%id%) is not valid (at line %line%).</source>
         <target>Currency ID (%id%) is not valid (at line %line%).</target>
-        <note>Line: 4055</note>
+        <note>Line: 4059</note>
       </trans-unit>
       <trans-unit id="41a2fc826e4bd29b8eaf497a89a9dc5d">
         <source>Reference (%ref%) already exists (at line %line%).</source>
         <target>Reference (%ref%) already exists (at line %line%).</target>
-        <note>Line: 4061</note>
+        <note>Line: 4065</note>
       </trans-unit>
       <trans-unit id="70e7a6fcceb39a1e3ea3925182b85d18">
         <source>YYYY-MM-DD</source>
         <target>YYYY-MM-DD</target>
-        <note>Line: 4066</note>
+        <note>Line: 4070</note>
       </trans-unit>
       <trans-unit id="c1be0fbaeb4e6b509e2f65240b7e5970">
         <source>Date format (%date%) is not valid (at line %line%). It should be: %date_format%.</source>
         <target>Date format (%date%) is not valid (at line %line%). It should be: %date_format%.</target>
-        <note>Line: 4064</note>
+        <note>Line: 4068</note>
       </trans-unit>
       <trans-unit id="8cc169924951a04aea4f6a86334f3ce6">
         <source>Date (%date%) cannot be in the past (at line %line%). Format: %date_format%.</source>
         <target>Date (%date%) cannot be in the past (at line %line%). Format: %date_format%.</target>
-        <note>Line: 4066</note>
+        <note>Line: 4070</note>
       </trans-unit>
       <trans-unit id="ef1a78ea7433cfc92f358d6dbf4fcd48">
         <source>Format: Between 0 and 100</source>
         <target>Format: Between 0 and 100</target>
-        <note>Line: 4232</note>
+        <note>Line: 4236</note>
       </trans-unit>
       <trans-unit id="e0b985fb06e1498649ed1cfd6f3fb3e4">
         <source>Discount rate (%rate%) is not valid (at line %line%). %format%.</source>
         <target>Discount rate (%rate%) is not valid (at line %line%). %format%.</target>
-        <note>Line: 4070</note>
+        <note>Line: 4074</note>
       </trans-unit>
       <trans-unit id="3f2f635ad300e97bc217b69cc06dfc30">
         <source>Supply Order (%id%) is not editable (at line %line%).</source>
         <target>Supply Order (%id%) is not editable (at line %line%).</target>
-        <note>Line: 4076</note>
+        <note>Line: 4080</note>
       </trans-unit>
       <trans-unit id="ad1ce5290a697ed3729cbd520432cf22">
         <source>Supply Order could not be saved (at line %line%).</source>
         <target>Supply Order could not be saved (at line %line%).</target>
-        <note>Line: 4104</note>
+        <note>Line: 4108</note>
       </trans-unit>
       <trans-unit id="bb19d4490bdc48656603c0a7ef30db73">
         <source>Supply Order (%s) could not be loaded (at line %d).</source>
         <target>Supply Order (%s) could not be loaded (at line %d).</target>
-        <note>Line: 4172</note>
+        <note>Line: 4176</note>
       </trans-unit>
       <trans-unit id="5e063c49ce8203f2ca7a496da24b819e">
         <source>Product/Attribute (%d/%d) cannot be added twice (at line %d).</source>
         <target>Product/Attribute (%d/%d) cannot be added twice (at line %d).</target>
-        <note>Line: 4194</note>
+        <note>Line: 4198</note>
       </trans-unit>
       <trans-unit id="0a657a7416c29bdc5b134b61b863e7ee">
         <source>Product (%d/%d) is not available for this order (at line %d).</source>
         <target>Product (%d/%d) is not available for this order (at line %d).</target>
-        <note>Line: 4207</note>
+        <note>Line: 4211</note>
       </trans-unit>
       <trans-unit id="ca676c9ec4e1ae9fe9df3ac28910e6ef">
         <source>Unit Price (tax excl.) (%d) is not valid (at line %d).</source>
         <target>Unit Price (tax excl.) (%d) is not valid (at line %d).</target>
-        <note>Line: 4214</note>
+        <note>Line: 4218</note>
       </trans-unit>
       <trans-unit id="406eba9770c82a84cae2d6ee3e846a56">
         <source>Quantity Expected (%d) is not valid (at line %d).</source>
         <target>Quantity Expected (%d) is not valid (at line %d).</target>
-        <note>Line: 4229</note>
+        <note>Line: 4233</note>
       </trans-unit>
       <trans-unit id="8f7627c77b01dc968a9665c0156da405">
         <source>Discount rate (%d) is not valid (at line %d). %s.</source>
         <target>Discount rate (%d) is not valid (at line %d). %s.</target>
-        <note>Line: 4221</note>
+        <note>Line: 4225</note>
       </trans-unit>
       <trans-unit id="243c959202a4f6ce7f1ccba6bc19ff08">
         <source>Cannot read the .CSV file</source>
         <target>Cannot read the .CSV file</target>
-        <note>Line: 4321</note>
+        <note>Line: 4325</note>
       </trans-unit>
       <trans-unit id="931bbbb741d025e3ff25ee3c2e72f414">
         <source>Linking Accessories...</source>
         <target>Linking Accessories...</target>
-        <note>Line: 4599</note>
+        <note>Line: 4603</note>
       </trans-unit>
       <trans-unit id="32de857e46ef2b55ce3582004fef7a95">
         <source>The confirmation email couldn't be sent, but the import is successful. Yay!</source>
         <target>The confirmation email couldn't be sent, but the import is successful. Yay!</target>
-        <note>Line: 4818</note>
+        <note>Line: 4823</note>
       </trans-unit>
       <trans-unit id="a080a85258618039d010a2136f85e69f">
         <source>There is an empty row in the file that won't be imported.</source>
@@ -345,17 +340,17 @@
       <trans-unit id="d165f0c742c272ed88dc27acc91e2642">
         <source>%s import</source>
         <target>%s import</target>
-        <note>Line: 4682</note>
+        <note>Line: 4687</note>
       </trans-unit>
       <trans-unit id="02b5205ddff3073efc5c8b5b9cc165ba">
         <source>(from %s to %s)</source>
         <target>(from %s to %s)</target>
-        <note>Line: 4684</note>
+        <note>Line: 4689</note>
       </trans-unit>
       <trans-unit id="b53b06c0e98a2db123f953f0059a0948">
         <source>with truncate</source>
         <target>with truncate</target>
-        <note>Line: 4687</note>
+        <note>Line: 4692</note>
       </trans-unit>
       <trans-unit id="53d9fc1aa79e85c0f845139c6358daee">
         <source>The category ID must be unique. It can't be the same as the one for Root or Home category.</source>
@@ -400,7 +395,7 @@
       <trans-unit id="50fe5f166bc7695a0c0db12ea8a346e7">
         <source>cannot be copied.</source>
         <target>cannot be copied.</target>
-        <note>Line: 3867</note>
+        <note>Line: 3870</note>
       </trans-unit>
       <trans-unit id="87098ca5171ae766269f50b24ef3189d">
         <source>%1$s (ID: %2$s) cannot be %3$s</source>
@@ -415,12 +410,12 @@
       <trans-unit id="43bf950e043950e2da10f917b902c131">
         <source>%1$s (ID: %2$s) cannot be saved</source>
         <target>%1$s (ID: %2$s) cannot be saved</target>
-        <note>Line: 3969</note>
+        <note>Line: 3973</note>
       </trans-unit>
       <trans-unit id="994e8f1b72a9fe7a9e8949343be6bde7">
         <source>%data% cannot be saved</source>
         <target>%data% cannot be saved</target>
-        <note>Line: 3941</note>
+        <note>Line: 3945</note>
       </trans-unit>
       <trans-unit id="32fa1d06b5d0a192c9991c4bf038b30c">
         <source>Shop is not valid</source>
@@ -510,7 +505,7 @@
       <trans-unit id="197f1953efd11637a634a7f9b269eac3">
         <source>To proceed, please upload a file first.</source>
         <target>To proceed, please upload a file first.</target>
-        <note>Line: 4694</note>
+        <note>Line: 4699</note>
       </trans-unit>
       <trans-unit id="519a3cfe5400ef0f781671c700aaed05">
         <source>The extension of your file should be ".csv".</source>
@@ -948,6 +943,11 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/BackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="4e0ac45de6bd848503ffa98ff6247f2f">
+        <source>Error deleting</source>
+        <target>Error deleting</target>
+        <note>Line: 239</note>
+      </trans-unit>
       <trans-unit id="f36c9a20c2ce51f491c944e41fde5ace">
         <source>It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.</source>
         <target>It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.</target>
@@ -1052,11 +1052,6 @@
         <target>This key already exists.</target>
         <note>Line: 397</note>
       </trans-unit>
-      <trans-unit id="3a59a0e5e521300876d4f2c596d6aeca">
-        <source>Key length must be %length% characters long.</source>
-        <target>Key length must be %length% characters long.</target>
-        <note>Line: 390</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1094,6 +1089,11 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Webservice/WebserviceKeyType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="3a59a0e5e521300876d4f2c596d6aeca">
+        <source>Key length must be %length% characters long.</source>
+        <target>Key length must be %length% characters long.</target>
+        <note>Line: 111</note>
+      </trans-unit>
       <trans-unit id="2cb84ea6e832a3190d3ad11a3e1f415c">
         <source>Only non-accented characters, numbers, and the following special characters are allowed: %allowed_characters%</source>
         <target>Only non-accented characters, numbers, and the following special characters are allowed: %allowed_characters%</target>

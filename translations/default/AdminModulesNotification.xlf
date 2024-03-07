@@ -40,11 +40,6 @@
         <target>Please specify module URL</target>
         <note>Line: 120</note>
       </trans-unit>
-      <trans-unit id="8095c31813f8e77d292bf6bec964169b">
-        <source>Unknown archive type.</source>
-        <target>Unknown archive type.</target>
-        <note>Line: 122</note>
-      </trans-unit>
     </body>
   </file>
   <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -78,16 +73,6 @@
         <source>Successfully signed in to PrestaShop Addons.</source>
         <target>Successfully signed in to PrestaShop Addons.</target>
         <note>Line: 525</note>
-      </trans-unit>
-      <trans-unit id="980b6caee06822f8c5df45eb7db277be">
-        <source>The module transplanted successfully to the hook.</source>
-        <target>The module transplanted successfully to the hook.</target>
-        <note>Line: 509</note>
-      </trans-unit>
-      <trans-unit id="80e868e8d753c3ec4066aab283e66cbc">
-        <source>The module was successfully removed from the hook.</source>
-        <target>The module was successfully removed from the hook.</target>
-        <note>Line: 510</note>
       </trans-unit>
     </body>
   </file>
@@ -275,6 +260,11 @@
   </file>
   <file original="controllers/admin/AdminModulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="8095c31813f8e77d292bf6bec964169b">
+        <source>Unknown archive type.</source>
+        <target>Unknown archive type.</target>
+        <note>Line: 496</note>
+      </trans-unit>
       <trans-unit id="723aac54d8b88c84ca0c9328f3912bf9">
         <source>There was an error while extracting the module (file may be corrupted).</source>
         <target>There was an error while extracting the module (file may be corrupted).</target>
@@ -540,17 +530,27 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/PositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1ff626f78b7506f340c7b2ce3398367a">
-        <source>Cannot %action% module %module%. %error_details%</source>
-        <target>Cannot %action% module %module%. %error_details%</target>
-        <note>Line: 514</note>
+      <trans-unit id="980b6caee06822f8c5df45eb7db277be">
+        <source>The module transplanted successfully to the hook.</source>
+        <target>The module transplanted successfully to the hook.</target>
+        <note>Line: 236</note>
+      </trans-unit>
+      <trans-unit id="80e868e8d753c3ec4066aab283e66cbc">
+        <source>The module was successfully removed from the hook.</source>
+        <target>The module was successfully removed from the hook.</target>
+        <note>Line: 237</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="1ff626f78b7506f340c7b2ce3398367a">
+        <source>Cannot %action% module %module%. %error_details%</source>
+        <target>Cannot %action% module %module%. %error_details%</target>
+        <note>Line: 289</note>
+      </trans-unit>
       <trans-unit id="9dca2e42fe7a0db763b8737e9a8f9133">
         <source>%action% action on module %module% succeeded.</source>
         <target>%action% action on module %module% succeeded.</target>

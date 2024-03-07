@@ -32,20 +32,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="classes/QqUploadedFileXhr.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="608860b0f96a18f3737756fc6b7766f9">
-        <source>Cannot add image because product creation failed.</source>
-        <target>Cannot add image because product creation failed.</target>
-        <note>Line: 64</note>
-      </trans-unit>
-      <trans-unit id="c200140aea36e1efbf655fabf3f3b59e">
-        <source>Error while creating additional image</source>
-        <target>Error while creating additional image</target>
-        <note>Line: 85</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="fc2c8663d58c42bc29edd45a79b4358c">
@@ -89,15 +75,6 @@
         <source>Stock Manager class not found [%s]</source>
         <target>Stock Manager class not found [%s]</target>
         <note>Line: 50</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/webservice/WebserviceSpecificManagementAttachments.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8a23b9ee3a4502a0de3fc32c5ba7aa65">
-        <source>Failed to copy the file.</source>
-        <target>Failed to copy the file.</target>
-        <note>Line: 363</note>
       </trans-unit>
     </body>
   </file>
@@ -230,6 +207,16 @@
   </file>
   <file original="controllers/admin/AdminProductsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="608860b0f96a18f3737756fc6b7766f9">
+        <source>Cannot add image because product creation failed.</source>
+        <target>Cannot add image because product creation failed.</target>
+        <note>Line: 2824</note>
+      </trans-unit>
+      <trans-unit id="c200140aea36e1efbf655fabf3f3b59e">
+        <source>Error while creating additional image</source>
+        <target>Error while creating additional image</target>
+        <note>Line: 2853</note>
+      </trans-unit>
       <trans-unit id="64985418ce04cf0225e600592044206c">
         <source>We were unable to associate this attachment to a product.</source>
         <target>We were unable to associate this attachment to a product.</target>
@@ -694,6 +681,11 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttachmentController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="8a23b9ee3a4502a0de3fc32c5ba7aa65">
+        <source>Failed to copy the file.</source>
+        <target>Failed to copy the file.</target>
+        <note>Line: 376</note>
+      </trans-unit>
       <trans-unit id="99a6e6a05b8d706aeddf480c7e492949">
         <source>Invalid description for %s language</source>
         <target>Invalid description for %s language</target>
@@ -747,11 +739,6 @@
         <target><![CDATA[The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
         <note>Line: 826</note>
       </trans-unit>
-      <trans-unit id="60df675f17670057ec657783db03d35e">
-        <source>Unable to resize one or more of your pictures.</source>
-        <target>Unable to resize one or more of your pictures.</target>
-        <note>Line: 717</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -779,6 +766,11 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="60df675f17670057ec657783db03d35e">
+        <source>Unable to resize one or more of your pictures.</source>
+        <target>Unable to resize one or more of your pictures.</target>
+        <note>Line: 539</note>
+      </trans-unit>
       <trans-unit id="3aff310e32cb7bb2d1affd97920c9f4b">
         <source><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
         <target><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
@@ -927,12 +919,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/list_quicknav.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1aa1527fa7dfdbe44acb4be33af88e4c">
         <source>There is no result for this search. Update your filters to view other products.</source>
         <target>There is no result for this search. Update your filters to view other products.</target>
-        <note>Line: 78</note>
+        <note>Line: 143</note>
       </trans-unit>
     </body>
   </file>

@@ -582,7 +582,8 @@
       <trans-unit id="3ff63fb80ae3bd04b6550282d39f674f">
         <source>Export current theme</source>
         <target>Export current theme</target>
-        <note>Line: 37</note>
+        <note>Line: 37
+Comment: Recommended modules will be attached to here.</note>
       </trans-unit>
       <trans-unit id="6b8e9498b52135e7f6cee757294a6079">
         <source>My current theme</source>
