@@ -194,12 +194,14 @@ GitHub contributors:
 - Daniel Ziegenberg
 - Daniele Giachino
 - Daniele Rosario
+- Danilo Carta
 - Danoosh
 - Danoosh Mir
 - Dany Maillard
 - daresh
 - Darius Aleksiunas
 - dariusakafest
+- Dariusz Tryba
 - David D.
 - David Diverres
 - David Eschmeyer
@@ -357,6 +359,7 @@ GitHub contributors:
 - Henri Davigne
 - Hervé Hennes
 - hhennes
+- Hherreros
 - Hibatallah Aouadni
 - hiousi
 - Hitasukha
