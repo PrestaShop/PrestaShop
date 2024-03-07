@@ -31,6 +31,13 @@ class Cart extends CartPage {
     this.productSize = (number: number) => `${this.productItem(number)} div.product-line__info.size span.value`;
     this.productColor = (number: number) => `${this.productItem(number)} div.product-line__info.color span.value`;
 
+    // Promo code selectors
+    this.promoCodeLink = 'div.cart-voucher button.accordion-button';
+    this.promoInput = '#promo-code input[name="discount_name"]';
+    this.cartSummaryLine = (line: number) => `div.cart-voucher li:nth-child(${line})`;
+    this.cartRuleName = (line: number) => `${this.cartSummaryLine(line)} span.cart-voucher__name`;
+    this.discountValue = (line: number) => `${this.cartSummaryLine(line)} div span.fw-bold`;
+
     // Notifications
     this.alertMessage = '#js-toast-container div.toast div.toast-body';
   }
