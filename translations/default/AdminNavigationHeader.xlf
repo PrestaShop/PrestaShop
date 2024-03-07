@@ -173,17 +173,17 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/new-theme/template/components/layout/quick_access.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/new-theme/template/components/layout/mobile_quickaccess.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="572e3c9b387943813b5b1cb2f1a96dc3">
         <source>Remove from Quick Access</source>
         <target>Remove from Quick Access</target>
-        <note>Line: 53</note>
+        <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="6f08b6d95d204a4e08ad0e186c673f4f">
         <source>Manage your quick accesses</source>
         <target>Manage your quick accesses</target>
-        <note>Line: 73</note>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
@@ -327,17 +327,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Multistore/dropdown.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Multistore/header.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2f6bb081ffe242f2f09f5a7fb0ca75aa">
         <source>Search store name</source>
         <target>Search store name</target>
-        <note>Line: 33</note>
+        <note>Line: 67</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Multistore/header.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="a5facb9cd738950e5cb8ba22d8c882d7">
         <source>Customize your multistore header, [1]pick a color[/1] for this store context.</source>
         <target>Customize your multistore header, [1]pick a color[/1] for this store context.</target>

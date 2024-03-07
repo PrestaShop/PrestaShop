@@ -754,7 +754,8 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="09fac4ee316f450e3defd79540c2d9fe">
         <source>You can also export the query results as a CSV file by clicking on the "%export_label%" button</source>
         <target>You can also export the query results as a CSV file by clicking on the "%export_label%" button</target>
-        <note>Line: 37</note>
+        <note>Line: 37
+Comment: Recommended modules will be attached to here.</note>
       </trans-unit>
     </body>
   </file>

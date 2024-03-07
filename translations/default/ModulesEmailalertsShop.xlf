@@ -35,10 +35,14 @@
         <target>No mail alerts yet.</target>
         <note>Line: 33</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailalerts/views/templates/hook/my-account-footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="4edfd10d0bb5f51e0fd2327df608b5a8">
         <source>My alerts</source>
         <target>My alerts</target>
-        <note>Line: 22</note>
+        <note>Line: 21</note>
       </trans-unit>
     </body>
   </file>

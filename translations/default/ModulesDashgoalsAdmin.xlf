@@ -106,20 +106,20 @@
         <target>Conversion Rate</target>
         <note>Line: 33</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/dashgoals/views/templates/hook/dashboard_zone_two.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="e7935ae6c516d89405ec532359d2d75a">
         <source>Traffic</source>
         <target>Traffic</target>
-        <note>Line: 58</note>
+        <note>Line: 32</note>
       </trans-unit>
       <trans-unit id="8c804960da61b637c548c951652b0cac">
         <source>Average Cart Value</source>
         <target>Average Cart Value</target>
-        <note>Line: 64</note>
+        <note>Line: 34</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="modules/dashgoals/views/templates/hook/dashboard_zone_two.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="3bb1503332637805beddb73a2dd1fe1b">
         <source>Conversion</source>
         <target>Conversion</target>

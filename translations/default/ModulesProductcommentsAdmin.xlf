@@ -1,24 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/productcomments/ProductCommentCriterion.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a09ed6c60eb3213939cecb4c580813cd">
-        <source>Valid for the entire catalog</source>
-        <target>Valid for the entire catalog</target>
-        <note>Line: 300</note>
-      </trans-unit>
-      <trans-unit id="467366059d7d7c743a4d0971363a8d66">
-        <source>Restricted to some categories</source>
-        <target>Restricted to some categories</target>
-        <note>Line: 301</note>
-      </trans-unit>
-      <trans-unit id="772911becd336c843ab09a1d4b4f66c0">
-        <source>Restricted to some products</source>
-        <target>Restricted to some products</target>
-        <note>Line: 302</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/productcomments/productcomments.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b91c4e8b229a399a3bc911d352524a9b">
@@ -255,6 +236,25 @@ Comment: retro compat 1.5</note>
         <target>Active</target>
         <note>Line: 780
 Comment: retro compat 1.5</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/src/Repository/ProductCommentCriterionRepository.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a09ed6c60eb3213939cecb4c580813cd">
+        <source>Valid for the entire catalog</source>
+        <target>Valid for the entire catalog</target>
+        <note>Line: 336</note>
+      </trans-unit>
+      <trans-unit id="467366059d7d7c743a4d0971363a8d66">
+        <source>Restricted to some categories</source>
+        <target>Restricted to some categories</target>
+        <note>Line: 337</note>
+      </trans-unit>
+      <trans-unit id="772911becd336c843ab09a1d4b4f66c0">
+        <source>Restricted to some products</source>
+        <target>Restricted to some products</target>
+        <note>Line: 338</note>
       </trans-unit>
     </body>
   </file>

@@ -78,7 +78,7 @@
       <trans-unit id="a218495ad30949e8ea1f64a261e37463">
         <source>Import complete</source>
         <target>Import complete</target>
-        <note>Line: 4798</note>
+        <note>Line: 4803</note>
       </trans-unit>
     </body>
   </file>
@@ -190,12 +190,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/Cart/CommandHandler/SendCartToCustomerHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/Order/CommandHandler/SendProcessOrderEmailHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="cad374f43e79ca774b2e8e00dcd8b842">
         <source>Process the payment of your order</source>
         <target>Process the payment of your order</target>
-        <note>Line: 65</note>
+        <note>Line: 155</note>
       </trans-unit>
     </body>
   </file>

@@ -60,58 +60,32 @@
         <target>Successful upgrade.</target>
         <note>Line: 522</note>
       </trans-unit>
-      <trans-unit id="7173e38e8a10ed379625687638ddfe74">
-        <source>Successful deletion</source>
-        <target>Successful deletion</target>
-        <note>Line: 494</note>
-      </trans-unit>
-      <trans-unit id="6483df61619946ebf2427ba360df7ce5">
-        <source>The settings have been successfully updated.</source>
-        <target>The settings have been successfully updated.</target>
-        <note>Line: 499</note>
-      </trans-unit>
-      <trans-unit id="1802a23025825ae791c1eea0118ee5f0">
-        <source>The status has been successfully updated.</source>
-        <target>The status has been successfully updated.</target>
-        <note>Line: 498</note>
-      </trans-unit>
-      <trans-unit id="4a6c326f3ec43e638da38a44a21b5eb7">
-        <source>Comment successfully added.</source>
-        <target>Comment successfully added.</target>
-        <note>Line: 504</note>
-      </trans-unit>
-      <trans-unit id="6a5ec212066b2a271ad914acf3dfaeb6">
-        <source>Image successfully deleted.</source>
-        <target>Image successfully deleted.</target>
-        <note>Line: 500</note>
-      </trans-unit>
-      <trans-unit id="02d5b938505dcda41a52ef3abcbd354a">
-        <source>The selection has been successfully deleted.</source>
-        <target>The selection has been successfully deleted.</target>
-        <note>Line: 495</note>
-      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSearchConfController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="4f29bc7b6f8b0da95b46defd28f72618">
         <source>Successful creation</source>
         <target>Successful creation</target>
-        <note>Line: 496</note>
+        <note>Line: 489</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="79f062391903591d68e514a400e136cf">
         <source>The status has been updated successfully.</source>
         <target>The status has been updated successfully.</target>
-        <note>Line: 85</note>
+        <note>Line: 766</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/blockwishlist/src/Controller/WishlistConfigurationAdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_categoryproducts/ps_categoryproducts.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b4a34d3f58b039e7685c2e39b5413757">
-        <source>Successful update.</source>
-        <target>Successful update.</target>
-        <note>Line: 146</note>
+      <trans-unit id="efc226b17e0532afff43be870bff0de7">
+        <source>The settings have been updated.</source>
+        <target>The settings have been updated.</target>
+        <note>Line: 101</note>
       </trans-unit>
     </body>
   </file>
@@ -121,15 +95,6 @@
         <source>Settings updated</source>
         <target>Settings updated</target>
         <note>Line: 116</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_dataprivacy/ps_dataprivacy.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="efc226b17e0532afff43be870bff0de7">
-        <source>The settings have been updated.</source>
-        <target>The settings have been updated.</target>
-        <note>Line: 111</note>
       </trans-unit>
     </body>
   </file>
@@ -144,10 +109,42 @@
   </file>
   <file original="modules/ps_linklist/src/Controller/Admin/Improve/Design/LinkBlockController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b4a34d3f58b039e7685c2e39b5413757">
+        <source>Successful update.</source>
+        <target>Successful update.</target>
+        <note>Line: 205</note>
+      </trans-unit>
       <trans-unit id="149cd107b688af7a007e739fd51ac919">
         <source>Successful deletion.</source>
         <target>Successful deletion.</target>
         <note>Line: 174</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmailController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6483df61619946ebf2427ba360df7ce5">
+        <source>The settings have been successfully updated.</source>
+        <target>The settings have been successfully updated.</target>
+        <note>Line: 140</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MetaController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7173e38e8a10ed379625687638ddfe74">
+        <source>Successful deletion</source>
+        <target>Successful deletion</target>
+        <note>Line: 202</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1802a23025825ae791c1eea0118ee5f0">
+        <source>The status has been successfully updated.</source>
+        <target>The status has been successfully updated.</target>
+        <note>Line: 431</note>
       </trans-unit>
     </body>
   </file>
@@ -195,6 +192,11 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="6a5ec212066b2a271ad914acf3dfaeb6">
+        <source>Image successfully deleted.</source>
+        <target>Image successfully deleted.</target>
+        <note>Line: 482</note>
+      </trans-unit>
       <trans-unit id="893a9104a7f0ebd94a7f4171d1996c7d">
         <source>The image was successfully deleted.</source>
         <target>The image was successfully deleted.</target>
@@ -222,6 +224,24 @@
         <source>Update successful.</source>
         <target>Update successful.</target>
         <note>Line: 1008</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4a6c326f3ec43e638da38a44a21b5eb7">
+        <source>Comment successfully added.</source>
+        <target>Comment successfully added.</target>
+        <note>Line: 1306</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Image/ImageDropzoneType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="02d5b938505dcda41a52ef3abcbd354a">
+        <source>The selection has been successfully deleted.</source>
+        <target>The selection has been successfully deleted.</target>
+        <note>Line: 132</note>
       </trans-unit>
     </body>
   </file>

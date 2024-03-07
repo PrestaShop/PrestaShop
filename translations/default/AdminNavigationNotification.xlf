@@ -93,25 +93,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7c56f525288d680c6efa0c2d07d79d13">
-        <source>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</source>
-        <target>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</target>
-        <note>Line: 2105</note>
-      </trans-unit>
-      <trans-unit id="70821661a53b31c40fdd6c9f3bbff741">
-        <source>Are you active on social media these days?</source>
-        <target>Are you active on social media these days?</target>
-        <note>Line: 2118</note>
-      </trans-unit>
-      <trans-unit id="b5ffb1ab1fe4ad00831c65b8dab60c0c">
-        <source>Seems like all your customers are happy :)</source>
-        <target>Seems like all your customers are happy :)</target>
-        <note>Line: 2121</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c059561b30601ffaf8759ae84f2b44b9">
@@ -123,6 +104,25 @@
         <source>An error occurred while updating the new window property for this object.</source>
         <target>An error occurred while updating the new window property for this object.</target>
         <note>Line: 234</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Bridge/Smarty/HeaderConfigurator.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7c56f525288d680c6efa0c2d07d79d13">
+        <source>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</source>
+        <target>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</target>
+        <note>Line: 225</note>
+      </trans-unit>
+      <trans-unit id="70821661a53b31c40fdd6c9f3bbff741">
+        <source>Are you active on social media these days?</source>
+        <target>Are you active on social media these days?</target>
+        <note>Line: 237</note>
+      </trans-unit>
+      <trans-unit id="b5ffb1ab1fe4ad00831c65b8dab60c0c">
+        <source>Seems like all your customers are happy :)</source>
+        <target>Seems like all your customers are happy :)</target>
+        <note>Line: 240</note>
       </trans-unit>
     </body>
   </file>

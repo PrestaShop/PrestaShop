@@ -32,11 +32,6 @@
         <target>Store installation</target>
         <note>Line: 133</note>
       </trans-unit>
-      <trans-unit id="0e8ea4263454e813a58e0f1bbad5958f">
-        <source>Content of your store</source>
-        <target>Content of your store</target>
-        <note>Line: 123</note>
-      </trans-unit>
     </body>
   </file>
   <file original="install-dev/controllers/http/configure.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -451,6 +446,11 @@ Comment: We fill the process step used for Ajax queries</note>
   </file>
   <file original="install-dev/theme/views/content.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="0e8ea4263454e813a58e0f1bbad5958f">
+        <source>Content of your store</source>
+        <target>Content of your store</target>
+        <note>Line: 29</note>
+      </trans-unit>
       <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
         <source>Yes</source>
         <target>Yes</target>
@@ -1081,15 +1081,15 @@ Comment: We fill the process step used for Ajax queries</note>
         <target>"%class%" must be an instance of "InstallXmlLoader"</target>
         <note>Line: 1107</note>
       </trans-unit>
-      <trans-unit id="6c16e88afa7f92cfe15e74a1fbe9c250">
-        <source><![CDATA[SQL error on query <i>%query%</i>]]></source>
-        <target><![CDATA[SQL error on query <i>%query%</i>]]></target>
-        <note>Line: 328</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Install/XmlLoader.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="6c16e88afa7f92cfe15e74a1fbe9c250">
+        <source><![CDATA[SQL error on query <i>%query%</i>]]></source>
+        <target><![CDATA[SQL error on query <i>%query%</i>]]></target>
+        <note>Line: 1266</note>
+      </trans-unit>
       <trans-unit id="5b56439cb79f3a01ae56d92e52be2218">
         <source><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></source>
         <target><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></target>
