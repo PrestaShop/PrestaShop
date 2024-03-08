@@ -41,19 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
  * Class EditRootCategoryHandler.
  */
 #[AsCommandHandler]
-final class EditRootCategoryHandler extends AbstractObjectModelHandler implements EditRootCategoryHandlerInterface
+final class EditRootCategoryHandler extends AbstractEditCategoryHandler implements EditRootCategoryHandlerInterface
 {
-    /**
-     * @var CategoryImageUploader
-     */
-    private $categoryImageUploader;
-
-    public function __construct(
-        CategoryImageUploader $categoryImageUploader
-    ) {
-        $this->categoryImageUploader = $categoryImageUploader;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -130,6 +119,10 @@ final class EditRootCategoryHandler extends AbstractObjectModelHandler implement
 
         if (null !== $command->getAssociatedGroupIds()) {
             $category->groupBox = $command->getAssociatedGroupIds();
+        }
+
+        if (null !== $command->getRedirectOption()) {
+            $this->fillWithRedirectOption($category, $command->getRedirectOption());
         }
 
         if ($command->getAssociatedShopIds()) {

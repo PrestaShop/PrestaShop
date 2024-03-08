@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 
 /**
  * Class CategoryCore.
@@ -79,6 +80,18 @@ class CategoryCore extends ObjectModel
     /** @var mixed string or array of Meta description */
     public $meta_description;
 
+    /**
+     * @var string Redirection type
+     *
+     * @see RedirectType
+     */
+    public $redirect_type = RedirectType::TYPE_CATEGORY_PERMANENT;
+
+    /**
+     * @var int Product identifier or Category identifier depends on redirect_type
+     */
+    public $id_type_redirected = 0;
+
     /** @var string Object creation date */
     public $date_add;
 
@@ -115,6 +128,8 @@ class CategoryCore extends ObjectModel
             'id_shop_default' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'is_root_category' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'position' => ['type' => self::TYPE_INT],
+            'redirect_type' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'id_type_redirected' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             /* Lang fields */

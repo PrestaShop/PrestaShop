@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectOption;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -104,6 +105,11 @@ class EditCategoryCommand
      * @var UploadedFile|null
      */
     private $thumbnailImage;
+
+    /**
+     * @var RedirectOption
+     */
+    private $redirectOption;
 
     /**
      * @param int $categoryId
@@ -399,5 +405,15 @@ class EditCategoryCommand
     public function setThumbnailImage(?UploadedFile $thumbnailImage): void
     {
         $this->thumbnailImage = $thumbnailImage;
+    }
+
+    public function getRedirectOption(): RedirectOption
+    {
+        return $this->redirectOption;
+    }
+
+    public function setRedirectOption(RedirectOption $redirectOption): void
+    {
+        $this->redirectOption = $redirectOption;
     }
 }

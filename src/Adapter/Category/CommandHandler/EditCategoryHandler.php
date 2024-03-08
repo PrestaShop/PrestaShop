@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
@@ -42,19 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
  * @internal
  */
 #[AsCommandHandler]
-final class EditCategoryHandler extends AbstractObjectModelHandler implements EditCategoryHandlerInterface
+final class EditCategoryHandler extends AbstractEditCategoryHandler implements EditCategoryHandlerInterface
 {
-    /**
-     * @var CategoryImageUploader
-     */
-    private $categoryImageUploader;
-
-    public function __construct(
-        CategoryImageUploader $categoryImageUploader
-    ) {
-        $this->categoryImageUploader = $categoryImageUploader;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -142,6 +131,10 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
 
         if (false === $category->update()) {
             throw new CannotEditCategoryException(sprintf('Failed to edit Category with id "%s".', $category->id));
+        }
+
+        if (null !== $command->getRedirectOption()) {
+            $this->fillWithRedirectOption($category, $command->getRedirectOption());
         }
 
         if ($command->getAssociatedShopIds()) {

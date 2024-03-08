@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectOption;
 
 /**
  * Creates/updates category from data submitted in category form
@@ -106,6 +107,13 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
             $command->setAssociatedShopIds($data['shop_association']);
         }
 
+        $redirectOption = new RedirectOption(
+            $data['redirect_option']['type'],
+            $data['redirect_option']['target']['id']
+        );
+
+        $command->setRedirectOption($redirectOption);
+
         return $command;
     }
 
@@ -132,12 +140,18 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         $command->setLocalizedMetaDescriptions($data['meta_description']);
         $command->setLocalizedMetaKeywords($data['meta_keyword']);
         $command->setAssociatedGroupIds($data['group_association']);
-
         $command->setCoverImage($data['cover_image']);
         $command->setThumbnailImage($data['thumbnail_image']);
         if (isset($data['shop_association'])) {
             $command->setAssociatedShopIds($data['shop_association']);
         }
+
+        $redirectOption = new RedirectOption(
+            $data['redirect_option']['type'],
+            $data['redirect_option']['target']['id']
+        );
+
+        $command->setRedirectOption($redirectOption);
 
         return $command;
     }
