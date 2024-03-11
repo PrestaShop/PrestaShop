@@ -24,13 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\EventListener;
+namespace PrestaShopBundle\EventListener\Console;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Adds to optional input options to all the console commands:
+ *  - id_shop to specify a shop context
+ *  - id_shop_group to specify a shop group context
+ */
 class MultishopCommandListener
 {
     public $context;

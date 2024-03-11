@@ -28,7 +28,7 @@ namespace Tests\Integration\PrestaShopBundle\EventListener;
 
 use LogicException;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
-use PrestaShopBundle\EventListener\MultishopCommandListener;
+use PrestaShopBundle\EventListener\Console\MultishopCommandListener;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;

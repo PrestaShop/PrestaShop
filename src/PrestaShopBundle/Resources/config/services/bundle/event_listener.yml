@@ -8,14 +8,6 @@ services:
     tags:
       - { name: kernel.event_subscriber }
 
-  prestashop.multishop_command_listener:
-    class: PrestaShopBundle\EventListener\MultishopCommandListener
-    arguments:
-      - "@prestashop.adapter.shop.context"
-      - "@=service('kernel').getRootDir()"
-    tags:
-      - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
-
   prestashop.bundle.event_listener.filter_category_search_criteria:
     class: PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener
     arguments:
