@@ -306,13 +306,14 @@ class ImageManagerCore
 
         // If the output is PNG, fill with transparency. Else fill with white background.
         if ($destinationFileType == 'png' || $destinationFileType == 'webp' || $destinationFileType == 'avif') {
-            imagealphablending($destImage, false);
-            imagesavealpha($destImage, true);
-            $transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);
             // if png color type is 3, the file is paletted (256 colors). Change palette to reduce file size
             if (self::getPNGColorType($sourceFile) == 3) {
                 imagetruecolortopalette($destImage, false, 255);
+            } else {
+                imagealphablending($destImage, false);
             }
+            imagesavealpha($destImage, true);
+            $transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);
             imagefilledrectangle($destImage, 0, 0, $destinationWidth, $destinationHeight, $transparent);
         } else {
             $white = imagecolorallocate($destImage, 255, 255, 255);
