@@ -909,7 +909,7 @@ class ImageManagerCore
      *
      * @param string $fileName
      *
-     * @return @return int|bool
+     * @return int|bool
      */
     public static function getPNGColorType($fileName)
     {
