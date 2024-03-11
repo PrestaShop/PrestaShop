@@ -47,8 +47,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class AccessDeniedListener
 {
-    use ExternalApiTrait;
-
     public function __construct(
         private readonly RouterInterface $router,
         private readonly TranslatorInterface $translator,
@@ -61,7 +59,6 @@ class AccessDeniedListener
     {
         if (!$event->isMainRequest()
             || !$event->getThrowable() instanceof AccessDeniedException
-            || $this->isResourceApiRequest($event->getRequest())
         ) {
             return;
         }

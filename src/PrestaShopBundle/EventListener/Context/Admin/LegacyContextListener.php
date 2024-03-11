@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
 use PrestaShop\PrestaShop\Core\Context\LegacyContextBuilderInterface;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
 /**
@@ -43,11 +42,11 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
  *
  * This listener is only executed on kernel.controller event, this way we are sure that a Symfony controller
  * has been found, so this listener shouldn't mess with legacy pages.
+ *
+ * It is only used for the Back-Office/Admin application.
  */
 class LegacyContextListener
 {
-    use ExternalApiTrait;
-
     /**
      * @param iterable|LegacyContextBuilderInterface[] $legacyBuilders
      */
@@ -58,7 +57,7 @@ class LegacyContextListener
 
     public function onKernelController(ControllerEvent $event): void
     {
-        if (!$event->isMainRequest() || $this->isExternalApiRequest($event->getRequest())) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

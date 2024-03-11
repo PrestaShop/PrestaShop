@@ -29,17 +29,18 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener\Context\Admin;
 
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
+ * Listener dedicated to set up LegacyController context for the Back-Office/Admin application.
+ *
+ * The LegacyControllerContext is a context used for backward compatible reasons, we want to get rid
+ * of the legacy Context singleton dependency, but many hooks and code still depend on it, so we propose
+ * this alternative dedicated context that is mostly useful for legacy pages.
  */
 class LegacyControllerContextListener
 {
-    use ExternalApiTrait;
-
     public function __construct(
         private readonly LegacyControllerContextBuilder $legacyControllerContextBuilder,
     ) {
@@ -47,7 +48,7 @@ class LegacyControllerContextListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest() || $this->isExternalApiRequest($event->getRequest())) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

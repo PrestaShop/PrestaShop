@@ -35,17 +35,14 @@ use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
+ * Listener dedicated to set up Shop context for the Back-Office/Admin application.
  */
 class ShopContextListener
 {
-    use ExternalApiTrait;
-
     public function __construct(
         private readonly ShopContextBuilder $shopContextBuilder,
         private readonly EmployeeContext $employeeContext,
@@ -57,11 +54,7 @@ class ShopContextListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        // Once container will be both in FO and BO we'll need to check here that we're in a BO context
-        // either that or the listener itself should be configured in a way so that it only is used in BO context
-        // because in FO we don't handle shop context the same way (there can be only one shop and no shop context
-        // switching is possible)
-        if (!$event->isMainRequest() || $this->isExternalApiRequest($event->getRequest())) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

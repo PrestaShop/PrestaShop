@@ -30,13 +30,13 @@ namespace PrestaShopBundle\EventListener\Context\Admin;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+/**
+ * Listener dedicated to set up Currency context for the Back-Office/Admin application.
+ */
 class CurrencyContextListener
 {
-    use ExternalApiTrait;
-
     public function __construct(
         private readonly CurrencyContextBuilder $currencyContextBuilder,
         private readonly ConfigurationInterface $configuration,
@@ -45,7 +45,7 @@ class CurrencyContextListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest() || $this->isExternalApiRequest($event->getRequest())) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

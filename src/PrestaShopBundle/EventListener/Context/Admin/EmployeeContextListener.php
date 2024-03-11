@@ -30,18 +30,15 @@ namespace PrestaShopBundle\EventListener\Context\Admin;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 use PrestaShopBundle\Security\Admin\Employee;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
+ * Listener dedicated to set up Employee context for the Back-Office/Admin application.
  */
 class EmployeeContextListener
 {
-    use ExternalApiTrait;
-
     public function __construct(
         private readonly EmployeeContextBuilder $employeeContextBuilder,
         private readonly LegacyContext $legacyContext,
@@ -51,7 +48,7 @@ class EmployeeContextListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest() || $this->isExternalApiRequest($event->getRequest())) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

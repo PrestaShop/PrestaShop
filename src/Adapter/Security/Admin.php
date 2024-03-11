@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,8 +42,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class Admin
 {
-    use ExternalApiTrait;
-
     /**
      * @var LegacyContext
      */
@@ -91,10 +88,7 @@ class Admin
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (
-            $this->security->getUser() !== null
-            || $this->isExternalApiRequest($event->getRequest())
-        ) {
+        if ($this->security->getUser() !== null) {
             return;
         }
 

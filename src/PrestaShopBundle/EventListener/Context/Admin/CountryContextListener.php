@@ -30,13 +30,13 @@ namespace PrestaShopBundle\EventListener\Context\Admin;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+/**
+ * Listener dedicated to set up Country context for the Back-Office/Admin application.
+ */
 class CountryContextListener
 {
-    use ExternalApiTrait;
-
     public function __construct(
         private readonly CountryContextBuilder $countryContextBuilder,
         private readonly ConfigurationInterface $configuration
@@ -45,7 +45,7 @@ class CountryContextListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest() || $this->isExternalApiRequest($event->getRequest())) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
