@@ -309,6 +309,10 @@ class ImageManagerCore
             imagealphablending($destImage, false);
             imagesavealpha($destImage, true);
             $transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);
+            // if png color type is 3, the file is paletted (256 colors). Change palette to reduce file size
+            if (self::getPNGColorType($sourceFile) == 3) {
+                imagetruecolortopalette($destImage, false, 255);
+            }
             imagefilledrectangle($destImage, 0, 0, $destinationWidth, $destinationHeight, $transparent);
         } else {
             $white = imagecolorallocate($destImage, 255, 255, 255);
@@ -898,5 +902,27 @@ class ImageManagerCore
         }
 
         return $path;
+    }
+
+    /**
+     * The function `getPNGColorType` returns the color type byte from a PNG file
+     *
+     * @param string $fileName
+     *
+     * @return @return int|bool
+     */
+    public static function getPNGColorType($fileName)
+    {
+        $handle = fopen($fileName, 'r');
+        if (false === $handle) {
+            return false;
+        }
+
+        // set pointer to the color type byte and read it
+        fseek($handle, 25);
+        $colorTypeByte = fread($handle, 1);
+        fclose($handle);
+
+        return ord($colorTypeByte);
     }
 }
