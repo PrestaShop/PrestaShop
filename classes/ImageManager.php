@@ -914,16 +914,10 @@ class ImageManagerCore
      */
     public static function getPNGColorType($fileName)
     {
-        $handle = fopen($fileName, 'r');
-        if (false === $handle) {
+        if (!is_readable($fileName)) {
             return false;
         }
 
-        // set pointer to the color type byte and read it
-        fseek($handle, 25);
-        $colorTypeByte = fread($handle, 1);
-        fclose($handle);
-
-        return ord($colorTypeByte);
+        return ord(@file_get_contents($fileName, false, null, 25, 1));
     }
 }
