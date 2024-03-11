@@ -23,54 +23,53 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-  prestashop.tokenized_url_listener:
-    class: PrestaShopBundle\EventListener\TokenizedUrlsListener
+  PrestaShopBundle\EventListener\Admin\TokenizedUrlsListener:
     autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
   # Priority 40 to be called before the RouterListener (which has priority 32)
-  prestashop.legacy_url_listener:
-    class: PrestaShopBundle\EventListener\LegacyUrlListener
+  PrestaShopBundle\EventListener\Admin\LegacyUrlListener:
     arguments:
       - "@prestashop.bundle.routing.converter.legacy_url_converter"
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 40 }
 
   # Priority 30 to be called after the RouterListener
-  prestashop.legacy_parameters_listener:
-    class: PrestaShopBundle\EventListener\LegacyParametersListener
+  PrestaShopBundle\EventListener\Admin\LegacyParametersListener:
     arguments:
       - "@prestashop.bundle.routing.converter.legacy_parameters_converter"
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
 
-  PrestaShopBundle\EventListener\AccessDeniedListener:
+  PrestaShopBundle\EventListener\Admin\AccessDeniedListener:
     autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
-  PrestaShopBundle\EventListener\AdminSecurityListener:
+  PrestaShopBundle\EventListener\Admin\AdminSecurityListener:
     autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
-  prestashop.bundle.event_listener.back_url_redirect_response_listener:
-    class: PrestaShopBundle\EventListener\BackUrlRedirectResponseListener
+  PrestaShopBundle\EventListener\Admin\BackUrlRedirectResponseListener:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider'
       - "@prestashop.adapter.legacy.context"
     tags:
       - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
-  prestashop.user_locale.listener:
-    class: PrestaShopBundle\EventListener\UserLocaleListener
+  PrestaShopBundle\EventListener\Admin\UserLocaleListener:
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.adapter.legacy.configuration"
       - "@prestashop.core.admin.lang.repository"
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 15 }
+
+  PrestaShopBundle\EventListener\Admin\DemoModeEnabledListener:
+    autowire: true
+    autoconfigure: true
 
   # Context listeners
 

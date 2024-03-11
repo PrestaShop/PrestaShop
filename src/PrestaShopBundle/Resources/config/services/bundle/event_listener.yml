@@ -16,10 +16,6 @@ services:
     tags:
       - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
 
-  PrestaShopBundle\EventListener\DemoModeEnabledListener:
-    autowire: true
-    autoconfigure: true
-
   prestashop.bundle.event_listener.filter_category_search_criteria:
     class: PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener
     arguments:

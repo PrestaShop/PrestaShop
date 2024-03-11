@@ -24,32 +24,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShopBundle\EventListener\Admin;
 
-namespace PrestaShopBundle\EventListener;
-
-use PrestaShopBundle\Routing\Converter\LegacyParametersConverter;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Tools;
 
 /**
- * This listener converts the request routing information (if present) into an array
- * of legacy parameters which is then injected into the Tools class allowing to access
- * former legacy parameters using the same Tools::getValue and the same parameter name.
- *
- * Note: this is limited to parameters defined in the routing via _legacy_link and _legacy_parameters
+ * Converts any legacy url into a migrated Symfony url (if it exists) and redirect to it.
  */
-class LegacyParametersListener
+class LegacyUrlListener
 {
     /**
-     * @var LegacyParametersConverter
+     * @var LegacyUrlConverter
      */
     private $converter;
 
     /**
-     * @param LegacyParametersConverter $converter
+     * @param LegacyUrlConverter $converter
      */
-    public function __construct(LegacyParametersConverter $converter)
+    public function __construct(LegacyUrlConverter $converter)
     {
         $this->converter = $converter;
     }
@@ -63,12 +58,12 @@ class LegacyParametersListener
             return;
         }
 
-        $request = $event->getRequest();
-        $legacyParameters = $this->converter->getParameters($request->attributes->all(), $request->query->all());
-        if (null === $legacyParameters) {
+        try {
+            $convertedUrl = $this->converter->convertByRequest($event->getRequest());
+        } catch (CoreException $e) {
             return;
         }
 
-        Tools::setFallbackParameters($legacyParameters);
+        $event->setResponse(new RedirectResponse($convertedUrl));
     }
 }

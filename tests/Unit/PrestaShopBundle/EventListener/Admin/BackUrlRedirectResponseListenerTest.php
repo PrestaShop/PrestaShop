@@ -24,14 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Unit\PrestaShopBundle\EventListener;
+namespace Tests\Unit\PrestaShopBundle\EventListener\Admin;
 
 use Context;
 use Employee;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
-use PrestaShopBundle\EventListener\BackUrlRedirectResponseListener;
+use PrestaShopBundle\EventListener\Admin\BackUrlRedirectResponseListener;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

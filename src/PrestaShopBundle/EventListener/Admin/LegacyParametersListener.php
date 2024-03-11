@@ -24,27 +24,32 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\EventListener;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+namespace PrestaShopBundle\EventListener\Admin;
+
+use PrestaShopBundle\Routing\Converter\LegacyParametersConverter;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Tools;
 
 /**
- * Converts any legacy url into a migrated Symfony url (if it exists) and redirect to it.
+ * This listener converts the request routing information (if present) into an array
+ * of legacy parameters which is then injected into the Tools class allowing to access
+ * former legacy parameters using the same Tools::getValue and the same parameter name.
+ *
+ * Note: this is limited to parameters defined in the routing via _legacy_link and _legacy_parameters
  */
-class LegacyUrlListener
+class LegacyParametersListener
 {
     /**
-     * @var LegacyUrlConverter
+     * @var LegacyParametersConverter
      */
     private $converter;
 
     /**
-     * @param LegacyUrlConverter $converter
+     * @param LegacyParametersConverter $converter
      */
-    public function __construct(LegacyUrlConverter $converter)
+    public function __construct(LegacyParametersConverter $converter)
     {
         $this->converter = $converter;
     }
@@ -58,12 +63,12 @@ class LegacyUrlListener
             return;
         }
 
-        try {
-            $convertedUrl = $this->converter->convertByRequest($event->getRequest());
-        } catch (CoreException $e) {
+        $request = $event->getRequest();
+        $legacyParameters = $this->converter->getParameters($request->attributes->all(), $request->query->all());
+        if (null === $legacyParameters) {
             return;
         }
 
-        $event->setResponse(new RedirectResponse($convertedUrl));
+        Tools::setFallbackParameters($legacyParameters);
     }
 }

@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\EventListener;
+namespace PrestaShopBundle\EventListener\Admin;
 
 use Doctrine\Common\Annotations\Reader;
 use PrestaShopBundle\Security\Annotation\AdminSecurity as AdminSecurityAnnotation;
