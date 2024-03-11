@@ -32,13 +32,13 @@ use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+/**
+ * Listener dedicated to set up Language context for the Back-Office/Admin application.
+ */
 class LanguageContextListener
 {
-    use ExternalApiTrait;
-
     public function __construct(
         private readonly LanguageContextBuilder $languageContextBuilder,
         private readonly ShopConfigurationInterface $configuration,
@@ -48,7 +48,7 @@ class LanguageContextListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest() || !$this->isResourceApiRequest($event->getRequest())) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

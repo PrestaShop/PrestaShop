@@ -32,15 +32,15 @@ use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+/**
+ * Listener dedicated to set up Shop context for the Back-Office/Admin application.
+ */
 class ShopContextListener
 {
-    use ExternalApiTrait;
-
     public function __construct(
         private readonly ShopContextBuilder $shopContextBuilder,
         private readonly MultistoreFeature $multistoreFeature,
@@ -50,7 +50,7 @@ class ShopContextListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest() || !$this->isResourceApiRequest($event->getRequest())) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

@@ -29,14 +29,14 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener\Context\API;
 
 use PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Security;
 
+/**
+ * Listener dedicated to set up ApiClient context for the Back-Office/Admin application.
+ */
 class ApiClientContextListener
 {
-    use ExternalApiTrait;
-
     public function __construct(
         private readonly ApiClientContextBuilder $accessContextBuilder,
         private readonly Security $security
@@ -45,7 +45,7 @@ class ApiClientContextListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest() || !$this->isResourceApiRequest($event->getRequest())) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

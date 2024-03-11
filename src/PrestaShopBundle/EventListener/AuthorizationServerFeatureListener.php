@@ -37,8 +37,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class AuthorizationServerFeatureListener
 {
-    use ExternalApiTrait;
-
     public function __construct(
         private readonly FeatureFlagManager $featureFlagManager,
         private readonly MultistoreFeature $multiStoreFeature,
@@ -47,8 +45,7 @@ class AuthorizationServerFeatureListener
 
     public function onKernelRequest(RequestEvent $event)
     {
-        if (!$event->isMainRequest() || !$this->isResourceApiRequest($event->getRequest())
-        ) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
