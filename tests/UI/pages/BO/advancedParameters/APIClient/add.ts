@@ -256,6 +256,10 @@ class AddNewAPIClient extends BOBasePage {
    */
   async getValue(page: Page, inputName: string): Promise<string> {
     switch (inputName) {
+      case 'clientId':
+        return page.inputValue(this.clientIdInput);
+      case 'clientName':
+        return page.inputValue(this.clientNameInput);
       case 'description':
         return page.inputValue(this.descriptionInput);
       case 'tokenLifetime':
