@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\Category\CategoryProductSearchProvider;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Category\CategoryPresenter;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
@@ -87,10 +88,39 @@ class CategoryControllerCore extends ProductListingFrontController
         parent::init();
 
         if (!Validate::isLoadedObject($this->category) || !$this->category->active || !$this->category->existsInShop($this->context->shop->id)) {
-            header('HTTP/1.1 404 Not Found');
-            header('Status: 404 Not Found');
-            $this->setTemplate('errors/404');
-            $this->notFound = true;
+
+            if (!$this->category->id_type_redirected) {
+                if (in_array($this->category->redirect_type, [RedirectType::TYPE_CATEGORY_PERMANENT, RedirectType::TYPE_CATEGORY_TEMPORARY])) {
+                    $this->category->id_type_redirected = $this->category->id_category_default;
+                }
+            }
+
+            switch ($this->category->redirect_type) {
+                case RedirectType::TYPE_CATEGORY_PERMANENT:
+                    header('HTTP/1.1 301 Moved Permanently');
+                    header('Location: ' . $this->context->link->getCategoryLink($this->category->id_type_redirected));
+                    exit;
+                case RedirectType::TYPE_CATEGORY_TEMPORARY:
+                    header('HTTP/1.1 302 Moved Temporarily');
+                    header('Cache-Control: no-cache');
+                    header('Location: ' . $this->context->link->getCategoryLink($this->category->id_type_redirected));
+                    exit;
+                case RedirectType::TYPE_GONE:
+                    header('HTTP/1.1 410 Gone');
+                    header('Status: 410 Gone');
+                    $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
+                    $this->setTemplate('errors/410');
+
+                    break;
+                case RedirectType::TYPE_NOT_FOUND:
+                default:
+                    header('HTTP/1.1 404 Not Found');
+                    header('Status: 404 Not Found');
+                    $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
+                    $this->setTemplate('errors/404');
+
+                    break;
+            }
 
             return;
         } elseif (!$this->category->checkAccess($this->context->customer->id)) {
