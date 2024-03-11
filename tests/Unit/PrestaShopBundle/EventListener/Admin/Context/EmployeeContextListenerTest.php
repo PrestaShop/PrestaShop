@@ -26,14 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
+namespace Tests\Unit\PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
+use PrestaShopBundle\EventListener\Admin\Context\EmployeeContextListener;
 use PrestaShopBundle\Security\Admin\Employee;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
+use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class EmployeeContextListenerTest extends ContextEventListenerTestCase
 {

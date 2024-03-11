@@ -24,31 +24,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShopBundle\EventListener\API;
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
-
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
+use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Listener dedicated to set up Country context for the Back-Office/Admin application.
+ * Check the AuthorizationServer features flag
  */
-class CountryContextListener
+class AuthorizationServerFeatureListener
 {
     public function __construct(
-        private readonly CountryContextBuilder $countryContextBuilder,
-        private readonly ConfigurationInterface $configuration
+        private readonly FeatureFlagManager $featureFlagManager,
+        private readonly MultistoreFeature $multiStoreFeature,
     ) {
     }
 
-    public function onKernelRequest(RequestEvent $event): void
+    public function onKernelRequest(RequestEvent $event)
     {
         if (!$event->isMainRequest()) {
             return;
         }
 
-        $this->countryContextBuilder->setCountryId((int) $this->configuration->get('PS_COUNTRY_DEFAULT'));
+        $isAuthorizationServerActive = $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER);
+        $isAuthorizationServerMultistoreActive = $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE);
+        $isMultistoreActive = $this->multiStoreFeature->isActive();
+
+        if (!$isAuthorizationServerActive || (!$isAuthorizationServerMultistoreActive && $isMultistoreActive)) {
+            throw new NotFoundHttpException();
+        }
     }
 }

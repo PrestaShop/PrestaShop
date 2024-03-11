@@ -26,23 +26,20 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\API;
+namespace PrestaShopBundle\EventListener\Admin\Context;
 
-use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
-use PrestaShop\PrestaShop\Core\Context\ShopContext;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * Listener dedicated to set up Language context for the Back-Office/Admin application.
+ * Listener dedicated to set up Country context for the Back-Office/Admin application.
  */
-class LanguageContextListener
+class CountryContextListener
 {
     public function __construct(
-        private readonly LanguageContextBuilder $languageContextBuilder,
-        private readonly ShopConfigurationInterface $configuration,
-        private readonly ShopContext $shopContext
+        private readonly CountryContextBuilder $countryContextBuilder,
+        private readonly ConfigurationInterface $configuration
     ) {
     }
 
@@ -52,14 +49,6 @@ class LanguageContextListener
             return;
         }
 
-        $defaultLanguageId = (int) $this->configuration->get('PS_LANG_DEFAULT', null, ShopConstraint::shop($this->shopContext->getId()));
-        $this->languageContextBuilder->setDefaultLanguageId($defaultLanguageId);
-
-        $langId = $event->getRequest()->get('langId');
-        if ($langId) {
-            $this->languageContextBuilder->setLanguageId((int) $langId);
-        } else {
-            $this->languageContextBuilder->setLanguageId($defaultLanguageId);
-        }
+        $this->countryContextBuilder->setCountryId((int) $this->configuration->get('PS_COUNTRY_DEFAULT'));
     }
 }

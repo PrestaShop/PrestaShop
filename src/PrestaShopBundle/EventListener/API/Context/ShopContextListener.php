@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\API;
+namespace PrestaShopBundle\EventListener\API\Context;
 
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;

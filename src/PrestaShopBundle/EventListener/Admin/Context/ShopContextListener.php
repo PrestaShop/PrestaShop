@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
+namespace PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;

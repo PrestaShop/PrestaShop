@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\EventListener\Context\API;
+namespace Tests\Unit\PrestaShopBundle\EventListener\API\Context;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -36,9 +36,9 @@ use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
-use PrestaShopBundle\EventListener\Context\API\LanguageContextListener;
+use PrestaShopBundle\EventListener\API\Context\LanguageContextListener;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
+use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class LanguageContextListenerTest extends ContextEventListenerTestCase
 {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,36 +27,18 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
+namespace PrestaShopBundle\EventListener\API\Context;
 
-use PrestaShop\PrestaShop\Core\Context\LegacyContextBuilderInterface;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
-/**
- * This listener is responsible for calling every LegacyContextBuilderInterface services and
- * ask them to build the legacy context. This interface is usually implement by the recent
- * context builders that are already responsible for building the recent split context services.
- *
- * Since they already handle the new context it makes sense to give them the responsibility of keeping
- * the backward compatibility on legacy context, so they also fill the legacy context fields based on
- * the settings that ere provided to them, this way we keep a single source of truth.
- *
- * This listener is only executed on kernel.controller event, this way we are sure that a Symfony controller
- * has been found, so this listener shouldn't mess with legacy pages.
- *
- * It is only used for the Back-Office/Admin application.
- */
-class LegacyContextListener
+class ApiLegacyContextListener
 {
-    /**
-     * @param iterable|LegacyContextBuilderInterface[] $legacyBuilders
-     */
     public function __construct(
         private readonly iterable $legacyBuilders
     ) {
     }
 
-    public function onKernelController(ControllerEvent $event): void
+    public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;

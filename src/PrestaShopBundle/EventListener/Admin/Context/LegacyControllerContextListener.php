@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
+namespace PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder;
 use Symfony\Component\HttpFoundation\Request;

@@ -26,19 +26,19 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\EventListener\Context\API;
+namespace Tests\Unit\PrestaShopBundle\EventListener\API\Context;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder;
 use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
-use PrestaShopBundle\EventListener\Context\API\ApiClientContextListener;
+use PrestaShopBundle\EventListener\API\Context\ApiClientContextListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
-use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
+use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class ApiClientContextListenerTest extends ContextEventListenerTestCase
 {

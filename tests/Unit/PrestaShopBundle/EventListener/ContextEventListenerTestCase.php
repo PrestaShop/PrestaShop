@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\EventListener\Context;
+namespace Tests\Unit\PrestaShopBundle\EventListener;
 
 use Context;
 use PHPUnit\Framework\MockObject\MockObject;

@@ -26,20 +26,23 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
+namespace PrestaShopBundle\EventListener\Admin\Context;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
+use PrestaShopBundle\Security\Admin\Employee;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * Listener dedicated to set up Currency context for the Back-Office/Admin application.
+ * Listener dedicated to set up Employee context for the Back-Office/Admin application.
  */
-class CurrencyContextListener
+class EmployeeContextListener
 {
     public function __construct(
-        private readonly CurrencyContextBuilder $currencyContextBuilder,
-        private readonly ConfigurationInterface $configuration,
+        private readonly EmployeeContextBuilder $employeeContextBuilder,
+        private readonly LegacyContext $legacyContext,
+        private readonly Security $security,
     ) {
     }
 
@@ -49,6 +52,10 @@ class CurrencyContextListener
             return;
         }
 
-        $this->currencyContextBuilder->setCurrencyId((int) $this->configuration->get('PS_CURRENCY_DEFAULT'));
+        if (!empty($this->legacyContext->getContext()->cookie->id_employee)) {
+            $this->employeeContextBuilder->setEmployeeId((int) $this->legacyContext->getContext()->cookie->id_employee);
+        } elseif ($this->security->getUser() instanceof Employee) {
+            $this->employeeContextBuilder->setEmployeeId($this->security->getUser()->getId());
+        }
     }
 }

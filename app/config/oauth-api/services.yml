@@ -5,7 +5,7 @@ services:
     autowire: true
     autoconfigure: true
 
-  PrestaShopBundle\EventListener\AuthorizationServerFeatureListener:
+  PrestaShopBundle\EventListener\API\AuthorizationServerFeatureListener:
     autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 8 }
@@ -19,24 +19,24 @@ services:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
 
   # We set a high priority so this listener has a bigger one than ReadListener ApiPlatform (which has a priority of 4)
-  PrestaShopBundle\EventListener\Context\API\ApiClientContextListener:
+  PrestaShopBundle\EventListener\API\Context\ApiClientContextListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
 
   # We set a high priority so this listener has a bigger one than ReadListener ApiPlatform (which has a priority of 4)
   # but lower than the ApiClientListener because the listener depends on it
-  PrestaShopBundle\EventListener\Context\API\ShopContextListener:
+  PrestaShopBundle\EventListener\API\Context\ShopContextListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 6 }
 
   # We set a high priority so this listener has a bigger one than ReadListener ApiPlatform (which has a priority of 4)
   # but lower than the ShopContextListener because the listener depends on it
-  PrestaShopBundle\EventListener\Context\API\LanguageContextListener:
+  PrestaShopBundle\EventListener\API\Context\LanguageContextListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 5 }
 
   # We need to leave this under the LanguageContextListener for priorities.
-  PrestaShopBundle\EventListener\Context\API\ApiLegacyContextListener:
+  PrestaShopBundle\EventListener\API\Context\ApiLegacyContextListener:
     arguments:
       $legacyBuilders:
         - '@PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder'

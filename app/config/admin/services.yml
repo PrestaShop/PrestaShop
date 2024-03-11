@@ -74,33 +74,33 @@ services:
   # Context listeners
 
   # Employee context must have a higher priority because Shop and Language depend on it
-  PrestaShopBundle\EventListener\Context\Admin\EmployeeContextListener:
+  PrestaShopBundle\EventListener\Admin\Context\EmployeeContextListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%employee_listener_priority%' }
 
   # Language depends on Employee so its priority is lower, however it has higher priority than Currency and Country because they depend on Language
-  PrestaShopBundle\EventListener\Context\Admin\LanguageContextListener:
+  PrestaShopBundle\EventListener\Admin\Context\LanguageContextListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%language_listener_priority%' }
 
-  PrestaShopBundle\EventListener\Context\Admin\ShopContextListener:
+  PrestaShopBundle\EventListener\Admin\Context\ShopContextListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%default_listener_priority%' }
 
-  PrestaShopBundle\EventListener\Context\Admin\CurrencyContextListener:
+  PrestaShopBundle\EventListener\Admin\Context\CurrencyContextListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%default_listener_priority%' }
 
-  PrestaShopBundle\EventListener\Context\Admin\CountryContextListener:
+  PrestaShopBundle\EventListener\Admin\Context\CountryContextListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%default_listener_priority%' }
 
   # This listener must run after the router listener since it's based on the request attributes that are defined by the router
-  PrestaShopBundle\EventListener\Context\Admin\LegacyControllerContextListener:
+  PrestaShopBundle\EventListener\Admin\Context\LegacyControllerContextListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-  PrestaShopBundle\EventListener\Context\Admin\LegacyContextListener:
+  PrestaShopBundle\EventListener\Admin\Context\LegacyContextListener:
     arguments:
       $legacyBuilders: !tagged_iterator core.legacy_context_builder
     tags:

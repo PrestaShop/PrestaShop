@@ -26,17 +26,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\EventListener\Context\API;
+namespace Tests\Unit\PrestaShopBundle\EventListener\API\Context;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
-use PrestaShopBundle\EventListener\Context\API\ShopContextListener;
+use PrestaShopBundle\EventListener\API\Context\ShopContextListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
+use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class ShopContextListenerTest extends ContextEventListenerTestCase
 {

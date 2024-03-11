@@ -26,14 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
+namespace Tests\Unit\PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShopBundle\EventListener\Admin\Context\CountryContextListener;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
+use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class CountryContextListenerTest extends ContextEventListenerTestCase
 {

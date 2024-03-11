@@ -26,17 +26,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\EventListener\Context\Admin;
+namespace Tests\Unit\PrestaShopBundle\EventListener\Admin\Context;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShopBundle\EventListener\Context\Admin\ShopContextListener;
+use PrestaShopBundle\EventListener\Admin\Context\ShopContextListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
+use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class ShopContextListenerTest extends ContextEventListenerTestCase
 {

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,28 +26,40 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\API;
+namespace PrestaShopBundle\EventListener\API\Context;
 
-use PrestaShopBundle\EventListener\ExternalApiTrait;
+use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
-class ApiLegacyContextListener
+/**
+ * Listener dedicated to set up Language context for the Back-Office/Admin application.
+ */
+class LanguageContextListener
 {
-    use ExternalApiTrait;
-
     public function __construct(
-        private readonly iterable $legacyBuilders
+        private readonly LanguageContextBuilder $languageContextBuilder,
+        private readonly ShopConfigurationInterface $configuration,
+        private readonly ShopContext $shopContext
     ) {
     }
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest() || !$this->isResourceApiRequest($event->getRequest())) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
-        foreach ($this->legacyBuilders as $legacyBuilder) {
-            $legacyBuilder->buildLegacyContext();
+        $defaultLanguageId = (int) $this->configuration->get('PS_LANG_DEFAULT', null, ShopConstraint::shop($this->shopContext->getId()));
+        $this->languageContextBuilder->setDefaultLanguageId($defaultLanguageId);
+
+        $langId = $event->getRequest()->get('langId');
+        if ($langId) {
+            $this->languageContextBuilder->setLanguageId((int) $langId);
+        } else {
+            $this->languageContextBuilder->setLanguageId($defaultLanguageId);
         }
     }
 }

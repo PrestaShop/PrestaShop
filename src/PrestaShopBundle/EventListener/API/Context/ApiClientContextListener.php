@@ -24,37 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\EventListener;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+namespace PrestaShopBundle\EventListener\API\Context;
+
+use PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Security;
 
 /**
- * Check the AuthorizationServer features flag
+ * Listener dedicated to set up ApiClient context for the Back-Office/Admin application.
  */
-class AuthorizationServerFeatureListener
+class ApiClientContextListener
 {
     public function __construct(
-        private readonly FeatureFlagManager $featureFlagManager,
-        private readonly MultistoreFeature $multiStoreFeature,
+        private readonly ApiClientContextBuilder $accessContextBuilder,
+        private readonly Security $security
     ) {
     }
 
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
         }
 
-        $isAuthorizationServerActive = $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER);
-        $isAuthorizationServerMultistoreActive = $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE);
-        $isMultistoreActive = $this->multiStoreFeature->isActive();
-
-        if (!$isAuthorizationServerActive || (!$isAuthorizationServerMultistoreActive && $isMultistoreActive)) {
-            throw new NotFoundHttpException();
+        $token = $this->security->getToken();
+        if ($token) {
+            $this->accessContextBuilder->setClientId($token->getUserIdentifier());
         }
     }
 }

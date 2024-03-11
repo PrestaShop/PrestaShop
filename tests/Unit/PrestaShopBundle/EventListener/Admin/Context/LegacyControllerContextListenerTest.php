@@ -26,15 +26,16 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
+namespace Tests\Unit\PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder;
 use PrestaShopBundle\Entity\Repository\TabRepository;
+use PrestaShopBundle\EventListener\Admin\Context\LegacyControllerContextListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
+use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class LegacyControllerContextListenerTest extends ContextEventListenerTestCase
 {

@@ -26,14 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
+namespace Tests\Unit\PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShopBundle\EventListener\Admin\Context\CurrencyContextListener;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
+use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class CurrencyContextListenerTest extends ContextEventListenerTestCase
 {

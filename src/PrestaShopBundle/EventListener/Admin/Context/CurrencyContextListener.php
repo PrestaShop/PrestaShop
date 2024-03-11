@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,28 +26,29 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\EventListener\Context\API;
+namespace PrestaShopBundle\EventListener\Admin\Context;
 
-use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
-use PrestaShopBundle\EventListener\Context\API\ApiLegacyContextListener;
-use Symfony\Component\HttpFoundation\Request;
-use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
-class ApiLegacyContextListenerTest extends ContextEventListenerTestCase
+/**
+ * Listener dedicated to set up Currency context for the Back-Office/Admin application.
+ */
+class CurrencyContextListener
 {
-    public function testLegacyContextIsBuilt(): void
+    public function __construct(
+        private readonly CurrencyContextBuilder $currencyContextBuilder,
+        private readonly ConfigurationInterface $configuration,
+    ) {
+    }
+
+    public function onKernelRequest(RequestEvent $event): void
     {
-        $event = $this->createRequestEvent(new Request([], [], ['_controller' => 'api_platform.action.placeholder']));
-        $builder = $this->createMock(LanguageContextBuilder::class);
+        if (!$event->isMainRequest()) {
+            return;
+        }
 
-        $listener = new ApiLegacyContextListener(
-            [
-                $builder,
-            ]
-        );
-
-        $builder->expects(static::once())->method('buildLegacyContext');
-
-        $listener->onKernelRequest($event);
+        $this->currencyContextBuilder->setCurrencyId((int) $this->configuration->get('PS_CURRENCY_DEFAULT'));
     }
 }

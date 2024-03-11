@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,32 +27,28 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\API;
+namespace Tests\Unit\PrestaShopBundle\EventListener\API\Context;
 
-use PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\Security\Core\Security;
+use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
+use PrestaShopBundle\EventListener\API\Context\ApiLegacyContextListener;
+use Symfony\Component\HttpFoundation\Request;
+use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
-/**
- * Listener dedicated to set up ApiClient context for the Back-Office/Admin application.
- */
-class ApiClientContextListener
+class ApiLegacyContextListenerTest extends ContextEventListenerTestCase
 {
-    public function __construct(
-        private readonly ApiClientContextBuilder $accessContextBuilder,
-        private readonly Security $security
-    ) {
-    }
-
-    public function onKernelRequest(RequestEvent $event): void
+    public function testLegacyContextIsBuilt(): void
     {
-        if (!$event->isMainRequest()) {
-            return;
-        }
+        $event = $this->createRequestEvent(new Request());
+        $builder = $this->createMock(LanguageContextBuilder::class);
 
-        $token = $this->security->getToken();
-        if ($token) {
-            $this->accessContextBuilder->setClientId($token->getUserIdentifier());
-        }
+        $listener = new ApiLegacyContextListener(
+            [
+                $builder,
+            ]
+        );
+
+        $builder->expects(static::once())->method('buildLegacyContext');
+
+        $listener->onKernelRequest($event);
     }
 }

@@ -26,23 +26,22 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\EventListener\Context\Admin;
+namespace PrestaShopBundle\EventListener\Admin\Context;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
-use PrestaShopBundle\Security\Admin\Employee;
-use Symfony\Bundle\SecurityBundle\Security;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * Listener dedicated to set up Employee context for the Back-Office/Admin application.
+ * Listener dedicated to set up Language context for the Back-Office/Admin application.
  */
-class EmployeeContextListener
+class LanguageContextListener
 {
     public function __construct(
-        private readonly EmployeeContextBuilder $employeeContextBuilder,
-        private readonly LegacyContext $legacyContext,
-        private readonly Security $security,
+        private readonly LanguageContextBuilder $languageContextBuilder,
+        private readonly EmployeeContext $employeeContext,
+        private readonly ConfigurationInterface $configuration,
     ) {
     }
 
@@ -52,10 +51,15 @@ class EmployeeContextListener
             return;
         }
 
-        if (!empty($this->legacyContext->getContext()->cookie->id_employee)) {
-            $this->employeeContextBuilder->setEmployeeId((int) $this->legacyContext->getContext()->cookie->id_employee);
-        } elseif ($this->security->getUser() instanceof Employee) {
-            $this->employeeContextBuilder->setEmployeeId($this->security->getUser()->getId());
+        $defaultLanguageId = (int) $this->configuration->get('PS_LANG_DEFAULT');
+        $this->languageContextBuilder->setDefaultLanguageId($defaultLanguageId);
+
+        if ($this->employeeContext->getEmployee()) {
+            // Use the employee language if available
+            $this->languageContextBuilder->setLanguageId($this->employeeContext->getEmployee()->getLanguageId());
+        } else {
+            // If not use the default language of the shop
+            $this->languageContextBuilder->setLanguageId($defaultLanguageId);
         }
     }
 }
