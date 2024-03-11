@@ -50,9 +50,6 @@ framework:
   translator:
     fallbacks: [ "default" ]
     paths: "%modules_translation_paths%"
-  router:
-    resource: "%kernel.project_dir%/app/config/routing.yml"
-    strict_requirements: ~
   form: ~
   csrf_protection: ~
   validation: { enable_attributes: true }
