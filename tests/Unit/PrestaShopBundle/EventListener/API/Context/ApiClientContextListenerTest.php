@@ -48,7 +48,7 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
     public function testBuildBasedOnSecurityToken(int $apiId, string $clientId, array $scopes): void
     {
         // Create request that mimic a call to external API
-        $event = $this->createRequestEvent(new Request([], [], ['_controller' => 'api_platform.action.placeholder']));
+        $event = $this->createRequestEvent(new Request());
 
         $builder = new ApiClientContextBuilder(
             $this->mockRepository($apiId, $clientId, $scopes),
@@ -87,7 +87,7 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
     public function testListenWithEmptySecurityToken(): void
     {
         // Create request that mimic a call to external API
-        $event = $this->createRequestEvent(new Request([], [], ['_controller' => 'api_platform.action.placeholder']));
+        $event = $this->createRequestEvent(new Request());
 
         $listener = new ApiClientContextListener(
             $this->mockUnusedBuilder(),

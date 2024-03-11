@@ -49,7 +49,7 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
     public function testLanguageContextBasedOnRequestParameter(): void
     {
         // Create request that mimic a call to external API
-        $event = $this->createRequestEvent(new Request(['langId' => self::QUERY_LANGUAGE_ID], [], ['_controller' => 'api_platform.action.placeholder']));
+        $event = $this->createRequestEvent(new Request(['langId' => self::QUERY_LANGUAGE_ID]));
 
         $languageContextBuilder = new LanguageContextBuilder(
             $this->createMock(LanguageRepositoryInterface::class),
@@ -72,7 +72,7 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
     public function testLanguageContextBasedOnShopConfiguration(): void
     {
         // Create request that mimic a call to external API (no langId parameter)
-        $event = $this->createRequestEvent(new Request([], [], ['_controller' => 'api_platform.action.placeholder']));
+        $event = $this->createRequestEvent(new Request());
 
         $languageContextBuilder = new LanguageContextBuilder(
             $this->createMock(LanguageRepositoryInterface::class),
@@ -90,27 +90,6 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         $listener->onKernelRequest($event);
         $this->assertEquals(self::DEFAULT_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'languageId'));
         $this->assertEquals(self::DEFAULT_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'defaultLanguageId'));
-    }
-
-    public function testRequestNotForApiIsIgnored(): void
-    {
-        $event = $this->createRequestEvent(new Request());
-
-        $listener = new LanguageContextListener(
-            $this->mockUnusedBuilder(),
-            $this->mockConfiguration(),
-            $this->mockShopContext()
-        );
-        $listener->onKernelRequest($event);
-    }
-
-    private function mockUnusedBuilder(): LanguageContextBuilder|MockObject
-    {
-        $builder = $this->createMock(LanguageContextBuilder::class);
-        $builder->expects($this->never())->method('setLanguageId');
-        $builder->expects($this->never())->method('setDefaultLanguageId');
-
-        return $builder;
     }
 
     private function mockShopContext(): ShopContext|MockObject

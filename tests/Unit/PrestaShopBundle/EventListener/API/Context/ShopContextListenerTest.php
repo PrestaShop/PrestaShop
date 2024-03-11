@@ -32,7 +32,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use PrestaShopBundle\EventListener\API\Context\ShopContextListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +45,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
     public function testShopContextWhenMultishopDisabled(): void
     {
         // Create request that mimic a call to external API
-        $event = $this->createRequestEvent(new Request([], [], ['_controller' => 'api_platform.action.placeholder']));
+        $event = $this->createRequestEvent(new Request());
 
         $shopContextBuilder = new ShopContextBuilder(
             $this->mockShopRepository(self::DEFAULT_SHOP_ID),
@@ -62,31 +61,6 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         $this->assertEquals(self::DEFAULT_SHOP_ID, $this->getPrivateField($shopContextBuilder, 'shopId'));
         $this->assertEquals($expectedShopConstraint, $this->getPrivateField($shopContextBuilder, 'shopConstraint'));
         $this->assertEquals($expectedShopConstraint, $event->getRequest()->attributes->get('shopConstraint'));
-    }
-
-    public function testRequestNotForApiIsIgnored(): void
-    {
-        $event = $this->createRequestEvent(new Request());
-
-        $listener = new ShopContextListener(
-            $this->mockUnusedBuilder(),
-            $this->mockMultistoreFeature(false),
-            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID])
-        );
-        $listener->onKernelRequest($event);
-    }
-
-    public function testTokenApiRequestIsIgnored(): void
-    {
-        // When token access point is called the context listeners should not be executed
-        $event = $this->createRequestEvent(new Request([], [], ['_controller' => AccessTokenController::class]));
-
-        $listener = new ShopContextListener(
-            $this->mockUnusedBuilder(),
-            $this->mockMultistoreFeature(false),
-            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID])
-        );
-        $listener->onKernelRequest($event);
     }
 
     /**
@@ -120,37 +94,37 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
     public function getMultishopRequests(): iterable
     {
         yield 'single shop query parameter' => [
-            new Request(['shopId' => self::QUERY_SHOP_ID], [], ['_controller' => 'api_platform.action.placeholder']),
+            new Request(['shopId' => self::QUERY_SHOP_ID]),
             ShopConstraint::shop(self::QUERY_SHOP_ID),
             self::QUERY_SHOP_ID,
         ];
 
         yield 'single shop request parameter' => [
-            new Request([], ['shopId' => self::QUERY_SHOP_ID], ['_controller' => 'api_platform.action.placeholder']),
+            new Request([], ['shopId' => self::QUERY_SHOP_ID]),
             ShopConstraint::shop(self::QUERY_SHOP_ID),
             self::QUERY_SHOP_ID,
         ];
 
         yield 'single shop attribute parameter' => [
-            new Request([], [], ['_controller' => 'api_platform.action.placeholder', 'shopId' => self::QUERY_SHOP_ID]),
+            new Request([], [], ['shopId' => self::QUERY_SHOP_ID]),
             ShopConstraint::shop(self::QUERY_SHOP_ID),
             self::QUERY_SHOP_ID,
         ];
 
         yield 'shop group query parameter' => [
-            new Request(['shopGroupId' => self::QUERY_SHOP_ID], [], ['_controller' => 'api_platform.action.placeholder']),
+            new Request(['shopGroupId' => self::QUERY_SHOP_ID]),
             ShopConstraint::shopGroup(self::QUERY_SHOP_ID),
             self::DEFAULT_SHOP_ID,
         ];
 
         yield 'shop group request parameter' => [
-            new Request([], ['shopGroupId' => self::QUERY_SHOP_ID], ['_controller' => 'api_platform.action.placeholder']),
+            new Request([], ['shopGroupId' => self::QUERY_SHOP_ID]),
             ShopConstraint::shopGroup(self::QUERY_SHOP_ID),
             self::DEFAULT_SHOP_ID,
         ];
 
         yield 'shop group attribute parameter' => [
-            new Request([], [], ['_controller' => 'api_platform.action.placeholder', 'shopGroupId' => self::QUERY_SHOP_ID]),
+            new Request([], [], ['shopGroupId' => self::QUERY_SHOP_ID]),
             ShopConstraint::shopGroup(self::QUERY_SHOP_ID),
             self::DEFAULT_SHOP_ID,
         ];
@@ -162,25 +136,25 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         ];
 
         yield 'all shops query parameter false' => [
-            new Request(['allShops' => false], [], ['_controller' => 'api_platform.action.placeholder']),
+            new Request(['allShops' => false]),
             ShopConstraint::allShops(),
             self::DEFAULT_SHOP_ID,
         ];
 
         yield 'all shops query parameter presence' => [
-            new Request(['allShops' => null], [], ['_controller' => 'api_platform.action.placeholder']),
+            new Request(['allShops' => null]),
             ShopConstraint::allShops(),
             self::DEFAULT_SHOP_ID,
         ];
 
         yield 'all shops request parameter presence' => [
-            new Request([], ['allShops' => null], ['_controller' => 'api_platform.action.placeholder']),
+            new Request([], ['allShops' => null]),
             ShopConstraint::allShops(),
             self::DEFAULT_SHOP_ID,
         ];
 
         yield 'all shops attributes parameter presence' => [
-            new Request([], [], ['_controller' => 'api_platform.action.placeholder', 'allShops' => null]),
+            new Request([], [], ['allShops' => null]),
             ShopConstraint::allShops(),
             self::DEFAULT_SHOP_ID,
         ];
@@ -189,7 +163,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
     public function testMissingRequestParametersWhenMultishopIsEnabled(): void
     {
         // Create request that mimic a call to external API but no shop context parameters is specified
-        $event = $this->createRequestEvent(new Request([], [], ['_controller' => 'api_platform.action.placeholder']));
+        $event = $this->createRequestEvent(new Request());
 
         $shopContextBuilder = new ShopContextBuilder(
             $this->mockShopRepository(self::DEFAULT_SHOP_ID),
@@ -212,15 +186,6 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(JsonResponse::HTTP_BAD_REQUEST, $response->getStatusCode());
         $this->assertStringContainsString('Multi shop is enabled, you must specify a shop context', $response->getContent());
-    }
-
-    private function mockUnusedBuilder(): ShopContextBuilder|MockObject
-    {
-        $builder = $this->createMock(ShopContextBuilder::class);
-        $builder->expects($this->never())->method('setShopId');
-        $builder->expects($this->never())->method('setShopConstraint');
-
-        return $builder;
     }
 
     private function mockMultistoreFeature(bool $isUsed): MultistoreFeature|MockObject
