@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
  * Creates/updates category from data submitted in category form
@@ -85,6 +86,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      * @return AddCategoryCommand
      *
      * @throws CategoryConstraintException
+     * @throws ProductConstraintException
      */
     private function createAddCategoryCommand(array $data): AddCategoryCommand
     {
@@ -109,7 +111,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
 
         $redirectOption = new RedirectOption(
             $data['redirect_option']['type'],
-            $data['redirect_option']['target']['id']
+            $data['redirect_option']['target']['id'] ?? 0
         );
 
         $command->setRedirectOption($redirectOption);
@@ -126,6 +128,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      * @return EditCategoryCommand
      *
      * @throws CategoryConstraintException
+     * @throws ProductConstraintException
      */
     private function createEditCategoryCommand(int $categoryId, array $data): EditCategoryCommand
     {
@@ -148,7 +151,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
 
         $redirectOption = new RedirectOption(
             $data['redirect_option']['type'],
-            $data['redirect_option']['target']['id']
+            $data['redirect_option']['target']['id'] ?? 0
         );
 
         $command->setRedirectOption($redirectOption);

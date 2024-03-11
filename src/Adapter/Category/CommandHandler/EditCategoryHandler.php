@@ -129,12 +129,12 @@ final class EditCategoryHandler extends AbstractEditCategoryHandler implements E
             throw new CannotEditCategoryException('Invalid language data for updating category.');
         }
 
-        if (false === $category->update()) {
-            throw new CannotEditCategoryException(sprintf('Failed to edit Category with id "%s".', $category->id));
-        }
-
         if (null !== $command->getRedirectOption()) {
             $this->fillWithRedirectOption($category, $command->getRedirectOption());
+        }
+
+        if (false === $category->update()) {
+            throw new CannotEditCategoryException(sprintf('Failed to edit Category with id "%s".', $category->id));
         }
 
         if ($command->getAssociatedShopIds()) {

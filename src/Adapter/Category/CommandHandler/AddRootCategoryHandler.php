@@ -122,12 +122,12 @@ final class AddRootCategoryHandler extends AbstractEditCategoryHandler implement
             throw new CategoryException('Invalid language data for creating root category.');
         }
 
-        if (false === $category->save()) {
-            throw new CannotAddCategoryException('Failed to create root category.');
-        }
-
         if (null !== $command->getRedirectOption()) {
             $this->fillWithRedirectOption($category, $command->getRedirectOption());
+        }
+
+        if (false === $category->save()) {
+            throw new CannotAddCategoryException('Failed to create root category.');
         }
 
         if ($command->getAssociatedShopIds()) {

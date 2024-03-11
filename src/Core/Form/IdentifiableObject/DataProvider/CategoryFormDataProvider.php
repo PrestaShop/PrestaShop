@@ -140,6 +140,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'cover_image' => $coverImages,
             'thumbnail_image' => $thumbnailImages,
             'seo_preview' => $categoryUrl,
+            'redirect_option' => $this->extractRedirectOptionData($editableCategory)
         ];
     }
 
@@ -156,6 +157,25 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'shop_association' => $this->contextShopId,
             'active' => true,
             'seo_preview' => $this->categoryProvider->getUrl(0, '{friendly-url}'),
+        ];
+    }
+
+    private function extractRedirectOptionData(EditableCategory $editableCategory): array
+    {
+        // It is important to return null when nothing is selected this way the transformer and therefore
+        // the form field have no value to try and display
+        $redirectTarget = null;
+        if (null !== $editableCategory->getRedirectTarget()) {
+            $redirectTarget = [
+                'id' => $editableCategory->getRedirectTarget()->getId(),
+                'name' => $editableCategory->getRedirectTarget()->getName(),
+                'image' => $editableCategory->getRedirectTarget()->getImage(),
+            ];
+        }
+
+        return [
+            'type' => $editableCategory->getRedirectType(),
+            'target' => $redirectTarget,
         ];
     }
 }

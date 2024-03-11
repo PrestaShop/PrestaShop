@@ -120,12 +120,12 @@ final class AddCategoryHandler extends AbstractEditCategoryHandler implements Ad
             throw new CannotAddCategoryException('Invalid language data for creating category.');
         }
 
-        if (false === $category->add()) {
-            throw new CannotAddCategoryException('Failed to add new category.');
-        }
-
         if (null !== $command->getRedirectOption()) {
             $this->fillWithRedirectOption($category, $command->getRedirectOption());
+        }
+
+        if (false === $category->add()) {
+            throw new CannotAddCategoryException('Failed to add new category.');
         }
 
         if ($command->getAssociatedShopIds()) {

@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 /**
  * Details about the entity used for product redirection (can be a product or a category)
  */
-class ProductRedirectTarget
+class RedirectTarget
 {
     public const PRODUCT_TYPE = 'product';
     public const CATEGORY_TYPE = 'category';

@@ -58,7 +58,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductRedirectTarget;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTarget;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
@@ -812,9 +812,9 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
             'redirect_type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
-            'redirect_target' => new ProductRedirectTarget(
+            'redirect_target' => new RedirectTarget(
                 self::DEFAULT_CATEGORY_ID,
-                ProductRedirectTarget::CATEGORY_TYPE,
+                RedirectTarget::CATEGORY_TYPE,
                 $categoryName,
                 $categoryImage
             ),
