@@ -253,7 +253,7 @@ class QueryParamsCollectionTest extends TestCase
         $supplierFilterMessage = 'It should provide with a SQL condition clause on supplier';
         $categoryFilterMessage = 'It should provide with a SQL condition clause on category';
         $keywordsFilterMessage =
-            'It should provide with SQL conditions clauses on product references, names, EAN codes and supplier names';
+            'It should provide with SQL conditions clauses on product references, names, EAN/isbn/upc/mpn codes and supplier names';
         $attributesFilterMessage = 'It should provide with SQL conditions clauses on product attributes';
         $featuresFilterMessage = 'It should provide with SQL conditions clauses on product features';
 
@@ -289,6 +289,12 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_reference} LIKE :keyword_0 OR ' .
                         '{product_ean13} LIKE :keyword_0 OR ' .
                         '{combination_ean13} LIKE :keyword_0 OR ' .
+                        '{product_isbn} LIKE :keyword_0 OR ' .
+                        '{combination_isbn} LIKE :keyword_0 OR ' .
+                        '{product_upc} LIKE :keyword_0 OR ' .
+                        '{combination_upc} LIKE :keyword_0 OR ' .
+                        '{product_mpn} LIKE :keyword_0 OR ' .
+                        '{combination_mpn} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
                         '{combination_name} LIKE :keyword_0' .
                         ')',
@@ -304,6 +310,12 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_reference} LIKE :keyword_0 OR ' .
                         '{product_ean13} LIKE :keyword_0 OR ' .
                         '{combination_ean13} LIKE :keyword_0 OR ' .
+                        '{product_isbn} LIKE :keyword_0 OR ' .
+                        '{combination_isbn} LIKE :keyword_0 OR ' .
+                        '{product_upc} LIKE :keyword_0 OR ' .
+                        '{combination_upc} LIKE :keyword_0 OR ' .
+                        '{product_mpn} LIKE :keyword_0 OR ' .
+                        '{combination_mpn} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
                         '{combination_name} LIKE :keyword_0' .
                         ')',
@@ -319,6 +331,12 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_reference} LIKE :keyword_0 OR ' .
                         '{product_ean13} LIKE :keyword_0 OR ' .
                         '{combination_ean13} LIKE :keyword_0 OR ' .
+                        '{product_isbn} LIKE :keyword_0 OR ' .
+                        '{combination_isbn} LIKE :keyword_0 OR ' .
+                        '{product_upc} LIKE :keyword_0 OR ' .
+                        '{combination_upc} LIKE :keyword_0 OR ' .
+                        '{product_mpn} LIKE :keyword_0 OR ' .
+                        '{combination_mpn} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
                         '{combination_name} LIKE :keyword_0' .
                         ')' . "\n" .
@@ -327,6 +345,12 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_reference} LIKE :keyword_1 OR ' .
                         '{product_ean13} LIKE :keyword_1 OR ' .
                         '{combination_ean13} LIKE :keyword_1 OR ' .
+                        '{product_isbn} LIKE :keyword_1 OR ' .
+                        '{combination_isbn} LIKE :keyword_1 OR ' .
+                        '{product_upc} LIKE :keyword_1 OR ' .
+                        '{combination_upc} LIKE :keyword_1 OR ' .
+                        '{product_mpn} LIKE :keyword_1 OR ' .
+                        '{combination_mpn} LIKE :keyword_1 OR ' .
                         '{product_name} LIKE :keyword_1 OR ' .
                         '{combination_name} LIKE :keyword_1' .
                         ')' . "\n" .
@@ -335,6 +359,12 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_reference} LIKE :keyword_2 OR ' .
                         '{product_ean13} LIKE :keyword_2 OR ' .
                         '{combination_ean13} LIKE :keyword_2 OR ' .
+                        '{product_isbn} LIKE :keyword_2 OR ' .
+                        '{combination_isbn} LIKE :keyword_2 OR ' .
+                        '{product_upc} LIKE :keyword_2 OR ' .
+                        '{combination_upc} LIKE :keyword_2 OR ' .
+                        '{product_mpn} LIKE :keyword_2 OR ' .
+                        '{combination_mpn} LIKE :keyword_2 OR ' .
                         '{product_name} LIKE :keyword_2 OR ' .
                         '{combination_name} LIKE :keyword_2' .
                         ')',

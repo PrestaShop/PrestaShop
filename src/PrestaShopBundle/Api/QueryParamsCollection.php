@@ -728,22 +728,26 @@ abstract class QueryParamsCollection
         }
 
         $parts = array_map(function ($index) {
-            return sprintf(
-                'AND (' .
-                '{supplier_name} LIKE :keyword_%d OR ' .
-                '{product_reference} LIKE :keyword_%d OR ' .
-                '{product_ean13} LIKE :keyword_%d OR ' .
-                '{combination_ean13} LIKE :keyword_%d OR ' .
-                '{product_name} LIKE :keyword_%d OR ' .
-                '{combination_name} LIKE :keyword_%d' .
-                ')',
-                $index,
-                $index,
-                $index,
-                $index,
-                $index,
-                $index
-            );
+            $fields = [
+                '{supplier_name}',
+                '{product_reference}',
+                '{product_ean13}',
+                '{combination_ean13}',
+                '{product_isbn}',
+                '{combination_isbn}',
+                '{product_upc}',
+                '{combination_upc}',
+                '{product_mpn}',
+                '{combination_mpn}',
+                '{product_name}',
+                '{combination_name}',
+            ];
+
+            $conditions = array_map(function ($field) use ($index) {
+                return sprintf('%s LIKE :keyword_%d', $field, $index);
+            }, $fields);
+
+            return 'AND (' . implode(' OR ', $conditions) . ')';
         }, range(0, count($this->queryParams['filter']['keywords']) - 1));
 
         $filters[self::SQL_CLAUSE_HAVING] = implode("\n", $parts);
