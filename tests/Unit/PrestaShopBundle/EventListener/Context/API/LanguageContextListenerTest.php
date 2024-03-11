@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\EventListener\Context\API;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Language\Repository\LanguageRepository as ObjectModelLanguageRepository;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -44,14 +46,19 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
     private const QUERY_LANGUAGE_ID = 51;
     private const SHOP_ID = 69;
 
-    public function testLanguageContextBasedOnRequestParameter(): void
+    /**
+     * @dataProvider languageIdProvider
+     */
+    public function testLanguageContextBasedOnRequestParameter(int $languageId): void
     {
         // Create request that mimic a call to external API
-        $event = $this->createRequestEvent(new Request(['langId' => self::QUERY_LANGUAGE_ID], [], ['_controller' => 'api_platform.action.placeholder']));
+        $event = $this->createRequestEvent(new Request(['langId' => $languageId], [], ['_controller' => 'api_platform.action.placeholder']));
 
         $languageContextBuilder = new LanguageContextBuilder(
             $this->createMock(LanguageRepositoryInterface::class),
             $this->createMock(RepositoryInterface::class),
+            $this->createMock(ContextStateManager::class),
+            $this->createMock(ObjectModelLanguageRepository::class)
         );
 
         $listener = new LanguageContextListener(
@@ -65,6 +72,17 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         $this->assertEquals(self::DEFAULT_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'defaultLanguageId'));
     }
 
+    /**
+     * @return int[][]
+     */
+    protected function languageIdProvider(): array
+    {
+        return [
+            [self::QUERY_LANGUAGE_ID],
+            [2],
+        ];
+    }
+
     public function testLanguageContextBasedOnShopConfiguration(): void
     {
         // Create request that mimic a call to external API (no langId parameter)
@@ -73,6 +91,8 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         $languageContextBuilder = new LanguageContextBuilder(
             $this->createMock(LanguageRepositoryInterface::class),
             $this->createMock(RepositoryInterface::class),
+            $this->createMock(ContextStateManager::class),
+            $this->createMock(ObjectModelLanguageRepository::class)
         );
 
         $listener = new LanguageContextListener(

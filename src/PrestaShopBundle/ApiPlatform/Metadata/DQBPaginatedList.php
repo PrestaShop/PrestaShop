@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Metadata\CollectionOperationInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
 
 /**
@@ -113,17 +114,25 @@ class DQBPaginatedList extends AbstractCQRSOperation implements CollectionOperat
         array $scopes = [],
         ?array $ApiResourceMapping = null,
         ?string $queryBuilder = null,
+        ?string $filterClass = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_GET;
         $passedArguments['provider'] = $provider ?? QueryListProvider::class;
+        $passedArguments['filterClass'] = $filterClass ?? Filters::class;
 
         if (!empty($queryBuilder)) {
             $this->checkArgumentAndExtraParameterValidity('queryBuilder', $queryBuilder, $passedArguments['extraProperties']);
             $passedArguments['extraProperties']['queryBuilder'] = $queryBuilder;
         }
 
+        if (!empty($filterClass)) {
+            $this->checkArgumentAndExtraParameterValidity('filterClass', $filterClass, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['filterClass'] = $filterClass;
+        }
+
         unset($passedArguments['queryBuilder']);
+        unset($passedArguments['filterClass']);
 
         parent::__construct(...$passedArguments);
     }
@@ -137,6 +146,19 @@ class DQBPaginatedList extends AbstractCQRSOperation implements CollectionOperat
     {
         $self = clone $this;
         $self->extraProperties['queryBuilder'] = $queryBuilder;
+
+        return $self;
+    }
+
+    public function getFilterClass(): ?string
+    {
+        return $this->extraProperties['filterClass'];
+    }
+
+    public function withFilterClass(string $filterClass): static
+    {
+        $self = clone $this;
+        $self->extraProperties['filterClass'] = $filterClass;
 
         return $self;
     }

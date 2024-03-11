@@ -114,6 +114,9 @@ services:
     tags: [ 'api_platform.state_provider' ]
     public: false
     autowire: true
+    arguments:
+      $filtersBuilder: '@prestashop.core.api.search.builder'
+      $requestStack: '@request_stack'
 
   PrestaShopBundle\Security\Admin\SessionRenewer:
     arguments:

@@ -28,8 +28,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Context;
 
+use Language;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Language\Repository\LanguageRepository as ObjectModelLanguageRepository;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
@@ -46,7 +49,9 @@ class LanguageContextBuilderTest extends TestCase
         $locale = $this->mockLocale();
         $builder = new LanguageContextBuilder(
             $this->mockLanguageRepository($language),
-            $this->mockLocaleRepository($locale)
+            $this->mockLocaleRepository($locale),
+            $this->createMock(ContextStateManager::class),
+            $this->createMock(ObjectModelLanguageRepository::class)
         );
         $builder->setLanguageId($language->getId());
 
@@ -69,11 +74,39 @@ class LanguageContextBuilderTest extends TestCase
         $this->assertEquals($locale->getNumberSpecification(), $languageContext->getNumberSpecification());
     }
 
+    public function testBuildLegacyContext(): void
+    {
+        $objectModelLanguage = $this->mockObjectModelLanguage();
+        $contextManagerMock = $this->createMock(ContextStateManager::class);
+
+        $builder = new LanguageContextBuilder(
+            $this->createMock(LanguageRepositoryInterface::class),
+            $this->createMock(Repository::class),
+            $contextManagerMock,
+            $this->mockObjectModelLanguageRepository($objectModelLanguage)
+        );
+
+        $contextManagerMock->expects(static::once())->method('setLanguage')->with($objectModelLanguage);
+
+        $builder->buildLegacyContext();
+    }
+
     private function mockLanguageRepository(LanguageInterface $language): LanguageRepositoryInterface
     {
         $repository = $this->createMock(LanguageRepositoryInterface::class);
         $repository
             ->method('find')
+            ->willReturn($language)
+        ;
+
+        return $repository;
+    }
+
+    private function mockObjectModelLanguageRepository(Language $language): ObjectModelLanguageRepository
+    {
+        $repository = $this->createMock(ObjectModelLanguageRepository::class);
+        $repository
+            ->method('get')
             ->willReturn($language)
         ;
 
@@ -203,6 +236,13 @@ class LanguageContextBuilderTest extends TestCase
             ->method('getDateTimeFormat')
             ->willReturn('d/m/Y H:i:s')
         ;
+
+        return $language;
+    }
+
+    private function mockObjectModelLanguage(): Language|MockObject
+    {
+        $language = $this->createMock(Language::class);
 
         return $language;
     }

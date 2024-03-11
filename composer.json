@@ -71,7 +71,7 @@
         "prestashop/gsitemap": "^4",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^6.0",
-        "prestashop/ps_apiresources": "dev-fix/34852",
+        "prestashop/ps_apiresources": "dev-Issue-34850-product-listing-multilang-context",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
         "prestashop/ps_brandlist": "^1.0",
@@ -253,7 +253,7 @@
     "repositories": {
         "ps_apiresources": {
             "type": "vcs",
-            "url": "https://github.com/M0rgan01/ps_apiresources.git"
+            "url": "https://github.com/tleon/ps_apiresources.git"
         }
     },
     "minimum-stability": "dev",

@@ -62,3 +62,11 @@ services:
   PrestaShopBundle\EventListener\Context\API\LanguageContextListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 5 }
+
+  # le laisser en desous pour des shenanigans avec les prio
+  PrestaShopBundle\EventListener\Context\API\ApiLegacyContextListener:
+    arguments:
+      $legacyBuilders:
+        - '@PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder'
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 5 }
