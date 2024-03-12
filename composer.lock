@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "06878486558a9856bbf94e9be4a85ba2",
+    "content-hash": "3556bccf3612323cdf6a60a90b53bec0",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5579,16 +5579,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-Issue-34850-product-listing-multilang-context",
+            "version": "dev-new-oauth-api",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tleon/ps_apiresources.git",
-                "reference": "3efc3ab44fbbceafd27d1920f52de906131eceb0"
+                "url": "https://github.com/jolelievre/ps_apiresources.git",
+                "reference": "a6722ba6687fbab77c3227eac1bb443e63acf142"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tleon/ps_apiresources/zipball/3efc3ab44fbbceafd27d1920f52de906131eceb0",
-                "reference": "3efc3ab44fbbceafd27d1920f52de906131eceb0",
+                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/a6722ba6687fbab77c3227eac1bb443e63acf142",
+                "reference": "a6722ba6687fbab77c3227eac1bb443e63acf142",
                 "shasum": ""
             },
             "require": {
@@ -5640,9 +5640,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/tleon/ps_apiresources/tree/Issue-34850-product-listing-multilang-context"
+                "source": "https://github.com/jolelievre/ps_apiresources/tree/new-oauth-api"
             },
-            "time": "2024-03-12T16:48:03+00:00"
+            "time": "2024-03-22T14:38:14+00:00"
         },
         {
             "name": "prestashop/ps_banner",
