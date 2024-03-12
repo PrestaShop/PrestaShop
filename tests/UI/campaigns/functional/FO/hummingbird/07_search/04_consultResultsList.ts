@@ -1,7 +1,6 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import basicHelper from '@utils/basicHelper';
 
 // Import common tests
 import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
