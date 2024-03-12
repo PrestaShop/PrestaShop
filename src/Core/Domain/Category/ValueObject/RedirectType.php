@@ -106,6 +106,14 @@ class RedirectType
     }
 
     /**
+     * @return bool
+     */
+    public function isCategoryType(): bool
+    {
+        return in_array($this->value, [static::TYPE_CATEGORY_PERMANENT, static::TYPE_CATEGORY_TEMPORARY]);
+    }
+
+    /**
      * @param string $type
      *
      * @throws CategoryConstraintException

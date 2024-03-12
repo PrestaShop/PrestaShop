@@ -30,8 +30,11 @@ use Category;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectOption;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Class AbstractEditCategoryHandler.
@@ -44,6 +47,11 @@ abstract class AbstractEditCategoryHandler extends AbstractObjectModelHandler
     ) {
     }
 
+    /**
+     * @throws CategoryConstraintException
+     * @throws CoreException
+     * @throws CategoryNotFoundException
+     */
     protected function fillWithRedirectOption(Category $category, RedirectOption $redirectOption): void
     {
         $redirectType = $redirectOption->getRedirectType();
@@ -51,6 +59,13 @@ abstract class AbstractEditCategoryHandler extends AbstractObjectModelHandler
 
         if ($redirectType->isCategoryType()) {
             $this->categoryRepository->assertCategoryExists(new CategoryId($redirectTarget->getValue()));
+        } elseif (!$redirectType->isCategoryType() && !$redirectTarget->isNoTarget()) {
+            throw new CategoryConstraintException(sprintf(
+                'Invalid redirect target "%d". This should have a value of 0 if the redirect type is "%d"',
+                $redirectTarget->getValue(),
+                $redirectType->getValue(),
+            ),
+                CategoryConstraintException::INVALID_REDIRECT_TARGET);
         }
 
         $category->redirect_type = $redirectType->getValue();

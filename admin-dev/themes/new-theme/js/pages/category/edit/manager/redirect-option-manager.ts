@@ -34,9 +34,6 @@ const {$} = window;
  * category is disabled. It is composed on two inputs:
  * - a selection of the redirection type
  * - a rich component to select a category
- *
- * When the type is changed the component automatically updates the labels, remote search urls
- * and values of the target.
  */
 export default class RedirectOptionManager {
   eventEmitter: EventEmitter;

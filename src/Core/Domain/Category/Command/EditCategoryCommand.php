@@ -107,7 +107,7 @@ class EditCategoryCommand
     private $thumbnailImage;
 
     /**
-     * @var RedirectOption
+     * @var RedirectOption|null
      */
     private $redirectOption;
 
@@ -407,12 +407,12 @@ class EditCategoryCommand
         $this->thumbnailImage = $thumbnailImage;
     }
 
-    public function getRedirectOption(): RedirectOption
+    public function getRedirectOption(): ?RedirectOption
     {
         return $this->redirectOption;
     }
 
-    public function setRedirectOption(RedirectOption $redirectOption): void
+    public function setRedirectOption(?RedirectOption $redirectOption): void
     {
         $this->redirectOption = $redirectOption;
     }

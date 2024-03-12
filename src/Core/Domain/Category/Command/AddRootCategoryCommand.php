@@ -96,7 +96,7 @@ class AddRootCategoryCommand
     private $thumbnailImage;
 
     /**
-     * @var RedirectOption
+     * @var ?RedirectOption
      */
     private $redirectOption;
 
@@ -365,12 +365,12 @@ class AddRootCategoryCommand
         $this->thumbnailImage = $thumbnailImage;
     }
 
-    public function getRedirectOption(): RedirectOption
+    public function getRedirectOption(): ?RedirectOption
     {
         return $this->redirectOption;
     }
 
-    public function setRedirectOption(RedirectOption $redirectOption): void
+    public function setRedirectOption(?RedirectOption $redirectOption): void
     {
         $this->redirectOption = $redirectOption;
     }

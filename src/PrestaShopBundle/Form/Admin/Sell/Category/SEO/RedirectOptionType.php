@@ -119,16 +119,11 @@ class RedirectOptionType extends TranslatorAwareType
                 'required' => false,
                 'placeholder' => false, // Guaranties that no empty value is added in options
                 'choices' => $choices,
-                'modify_all_shops' => true,
             ])
             ->add('target', EntitySearchInputType::class, [
                 'required' => false,
                 'limit' => 1,
                 'min_length' => 3,
-                'label' => $entityAttributes['label'],
-                'remote_url' => $entityAttributes['searchUrl'],
-                'placeholder' => $entityAttributes['placeholder'],
-                'help' => $entityAttributes['help'],
                 'attr' => [
                     'data-label' => $entityAttributes['label'],
                     'data-placeholder' => $entityAttributes['placeholder'],
@@ -136,7 +131,7 @@ class RedirectOptionType extends TranslatorAwareType
                     'data-help' => $entityAttributes['help'],
                     'data-filtered' => $entityAttributes['filtered'],
                 ],
-                'modify_all_shops' => true,
+                'alert_message' => $this->getRedirectionAlertMessages(),
             ]);
 
         // This will transform the target ID from model data into an array adapted for EntitySearchInputType
@@ -163,5 +158,24 @@ class RedirectOptionType extends TranslatorAwareType
                 'isRootCategory',
             ])
             ->setAllowedTypes('isRootCategory', 'bool');
+    }
+
+    /**
+     * @return array
+     */
+    private function getRedirectionAlertMessages(): array
+    {
+        $formatParameters = [
+            '[1]' => '<strong>',
+            '[/1]' => '</strong>',
+            '[2]' => '<br>',
+        ];
+
+        return [
+            $this->trans('[1]No redirection (404), display error page[/1] [2] Do not redirect anywhere and display a 404 "Not Found" page.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]No redirection (410), display error page[/1] [2] Do not redirect anywhere and display a 410 "Gone" page.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]Permanent redirection (301)[/1] [2] Permanently display another category instead.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]Temporary redirection (302)[/1] [2] Temporarily display another category instead.', 'Admin.Catalog.Help', $formatParameters),
+        ];
     }
 }

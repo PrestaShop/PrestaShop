@@ -26,15 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\CategoryProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use Symfony\Component\Routing\Router;
 
 /**
