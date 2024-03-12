@@ -77,6 +77,7 @@ class LanguageContextBuilderTest extends TestCase
     public function testBuildLegacyContext(): void
     {
         $objectModelLanguage = $this->mockObjectModelLanguage();
+        $objectModelLanguage->method('getId')->willReturn(42);
         $contextManagerMock = $this->createMock(ContextStateManager::class);
 
         $builder = new LanguageContextBuilder(
@@ -85,6 +86,7 @@ class LanguageContextBuilderTest extends TestCase
             $contextManagerMock,
             $this->mockObjectModelLanguageRepository($objectModelLanguage)
         );
+        $builder->setLanguageId($objectModelLanguage->getId());
 
         $contextManagerMock->expects(static::once())->method('setLanguage')->with($objectModelLanguage);
 

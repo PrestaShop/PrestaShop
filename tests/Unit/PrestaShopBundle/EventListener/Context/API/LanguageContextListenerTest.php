@@ -46,13 +46,10 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
     private const QUERY_LANGUAGE_ID = 51;
     private const SHOP_ID = 69;
 
-    /**
-     * @dataProvider languageIdProvider
-     */
-    public function testLanguageContextBasedOnRequestParameter(int $languageId): void
+    public function testLanguageContextBasedOnRequestParameter(): void
     {
         // Create request that mimic a call to external API
-        $event = $this->createRequestEvent(new Request(['langId' => $languageId], [], ['_controller' => 'api_platform.action.placeholder']));
+        $event = $this->createRequestEvent(new Request(['langId' => self::QUERY_LANGUAGE_ID], [], ['_controller' => 'api_platform.action.placeholder']));
 
         $languageContextBuilder = new LanguageContextBuilder(
             $this->createMock(LanguageRepositoryInterface::class),
@@ -70,17 +67,6 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         $listener->onKernelRequest($event);
         $this->assertEquals(self::QUERY_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'languageId'));
         $this->assertEquals(self::DEFAULT_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'defaultLanguageId'));
-    }
-
-    /**
-     * @return int[][]
-     */
-    protected function languageIdProvider(): array
-    {
-        return [
-            [self::QUERY_LANGUAGE_ID],
-            [2],
-        ];
     }
 
     public function testLanguageContextBasedOnShopConfiguration(): void

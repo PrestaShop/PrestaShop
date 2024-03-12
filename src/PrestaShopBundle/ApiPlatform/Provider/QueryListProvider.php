@@ -145,7 +145,8 @@ class QueryListProvider implements ProviderInterface
             }
         }
 
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->requestStack->getMainRequest();
+        // We force filter ID as empty string to avoid using a prefix in the query parameters (eg: we want limit=10 not product[limit]=10)
         $this->filtersBuilder->setConfig([
             'filter_id' => '',
             'filters_class' => $filterClass,

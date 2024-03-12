@@ -30,8 +30,7 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\EventListener\Context\API;
 
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
-use PrestaShop\PrestaShop\Core\Context\ShopContext;
-use PrestaShopBundle\EventListener\Context\API\LanguageContextListener;
+use PrestaShopBundle\EventListener\Context\API\ApiLegacyContextListener;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\Unit\PrestaShopBundle\EventListener\Context\ContextEventListenerTestCase;
 
@@ -40,13 +39,12 @@ class ApiLegacyContextListenerTest extends ContextEventListenerTestCase
     public function testLegacyContextIsBuilt(): void
     {
         $event = $this->createRequestEvent(new Request([], [], ['_controller' => 'api_platform.action.placeholder']));
-
         $builder = $this->createMock(LanguageContextBuilder::class);
 
-        $listener = new LanguageContextListener(
-            $builder,
-            $this->mockConfiguration(['PS_SHOP_DEFAULT' => 42]),
-            $this->createMock(ShopContext::class)
+        $listener = new ApiLegacyContextListener(
+            [
+                $builder,
+            ]
         );
 
         $builder->expects(static::once())->method('buildLegacyContext');

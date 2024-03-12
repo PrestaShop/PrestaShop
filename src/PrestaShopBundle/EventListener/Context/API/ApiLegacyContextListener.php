@@ -29,10 +29,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Context\API;
 
+use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class ApiLegacyContextListener
 {
+    use ExternalApiTrait;
+
     public function __construct(
         private readonly iterable $legacyBuilders
     ) {
@@ -40,6 +43,10 @@ class ApiLegacyContextListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
+        if (!$event->isMainRequest() || !$this->isResourceApiRequest($event->getRequest())) {
+            return;
+        }
+
         foreach ($this->legacyBuilders as $legacyBuilder) {
             $legacyBuilder->buildLegacyContext();
         }
