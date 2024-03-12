@@ -10,6 +10,9 @@ concurrency:
   cancel-in-progress: true
 jobs:
   symfony-console:
+    strategy:
+      matrix:
+        app-id: [ admin, oauth-api, front ]
     permissions:
       contents: read  # for actions/checkout to fetch code
     name: Symfony Console
@@ -38,13 +41,22 @@ jobs:
       - name: Composer Install
         run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
-      - name: Check bin/console can run without shop install and cache clear
+      - name: Check bin/console can run without shop install and cache clear without app ID (only for admin job since it is the default value)
+        if: matrix.app-id == 'admin'
         run: |
           ./bin/console
           ./bin/console cache:clear --env=dev
           ./bin/console cache:clear --env=prod
           ./bin/console cache:clear --env=dev --no-warmup
           ./bin/console cache:clear --env=prod --no-warmup
+
+      - name: Check bin/console can run without shop install and cache clear for application ${{ matrix.app-id }}
+        run: |
+          ./bin/console --app-id=${{ matrix.app-id }}
+          ./bin/console cache:clear --env=dev --app-id=${{ matrix.app-id }}
+          ./bin/console cache:clear --env=prod --app-id=${{ matrix.app-id }}
+          ./bin/console cache:clear --env=dev --no-warmup --app-id=${{ matrix.app-id }}
+          ./bin/console cache:clear --env=prod --no-warmup --app-id=${{ matrix.app-id }}
 
       # Now install the shop
       - name: Setup Environment
@@ -59,8 +71,8 @@ jobs:
       - name: Check bin/console and cache:clear can run after shop install
         run: |
           docker ps
-          docker exec prestashop_prestashop-git_1 php ./bin/console
-          docker exec prestashop_prestashop-git_1 php -d memory_limit=-1 ./bin/console cache:clear --env=dev
-          docker exec prestashop_prestashop-git_1 php -d memory_limit=-1 ./bin/console cache:clear --env=prod
-          docker exec prestashop_prestashop-git_1 php ./bin/console cache:clear --env=dev --no-warmup
-          docker exec prestashop_prestashop-git_1 php ./bin/console cache:clear --env=prod --no-warmup
+          docker exec prestashop_prestashop-git_1 php ./bin/console --app-id=${{ matrix.app-id }}
+          docker exec prestashop_prestashop-git_1 php -d memory_limit=-1 ./bin/console cache:clear --env=dev --app-id=${{ matrix.app-id }}
+          docker exec prestashop_prestashop-git_1 php -d memory_limit=-1 ./bin/console cache:clear --env=prod --app-id=${{ matrix.app-id }}
+          docker exec prestashop_prestashop-git_1 php ./bin/console cache:clear --env=dev --no-warmup --app-id=${{ matrix.app-id }}
+          docker exec prestashop_prestashop-git_1 php ./bin/console cache:clear --env=prod --no-warmup --app-id=${{ matrix.app-id }}
