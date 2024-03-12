@@ -569,14 +569,24 @@ export default class FOBasePage extends CommonPage {
   }
 
   /**
+   * Set product name in search input
+   * @param page {Page} Browser tab
+   * @param productName {string} Product name to search
+   * @returns {Promise<string>}
+   */
+  async setProductNameInSearchInput(page: Page, productName: string): Promise<void> {
+    await this.setValue(page, this.searchInput, productName);
+    await this.waitForVisibleSelector(page, this.autocompleteSearchResult);
+  }
+
+  /**
    * Get autocomplete search result
    * @param page {Page} Browser tab
    * @param productName {string} Product name to search
    * @returns {Promise<string>}
    */
   async getAutocompleteSearchResult(page: Page, productName: string): Promise<string> {
-    await this.setValue(page, this.searchInput, productName);
-    await this.waitForVisibleSelector(page, this.autocompleteSearchResult);
+    await this.setProductNameInSearchInput(page, productName);
 
     return this.getTextContent(page, this.autocompleteSearchResult);
   }
@@ -588,8 +598,7 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<number>}
    */
   async countAutocompleteSearchResult(page: Page, productName: string): Promise<number> {
-    await this.setValue(page, this.searchInput, productName);
-    await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
+    await this.setProductNameInSearchInput(page, productName);
 
     return page.locator(this.autocompleteSearchResultItem).count();
   }
@@ -611,14 +620,20 @@ export default class FOBasePage extends CommonPage {
   /**
    * Click autocomplete search on the nth result
    * @param page {Page} Browser tab
-   * @param productName {string} Product name to search
    * @param nthResult {number} Nth result to click
    * @returns {Promise<number>}
    */
-  async clickAutocompleteSearchResult(page: Page, productName: string, nthResult: number): Promise<void> {
-    await this.setValue(page, this.searchInput, productName);
-    await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
+  async clickAutocompleteSearchResult(page: Page, nthResult: number): Promise<void> {
     await this.clickAndWaitForURL(page, this.autocompleteSearchResultItemLink(nthResult));
+  }
+
+  /**
+   * Get search input
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async getSearchInput(page: Page): Promise<string> {
+    return this.getAttributeContent(page, this.searchInput, 'value');
   }
 
   // Footer methods

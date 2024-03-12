@@ -100,6 +100,11 @@ export default {
     quantity: 1200,
     status: true,
   }),
+  demo_15: new ProductData({
+    id: 9,
+    name: 'Mountain fox cushion',
+    status: true,
+  }),
   demo_9: new ProductData({
     id: 17,
     name: 'Brown bear notebook',

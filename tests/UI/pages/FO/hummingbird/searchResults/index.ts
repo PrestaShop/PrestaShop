@@ -19,6 +19,7 @@ class SearchResults extends SearchResultsPage {
     this.productArticle = (number: number) => `#js-product-list .products article:nth-child(${number})`;
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productQuickViewLink = (number: number) => `${this.productArticle(number)} button.product-miniature__quickview_button`;
+    this.productNoMatches = '#content.page-not-found';
   }
 
   /**
