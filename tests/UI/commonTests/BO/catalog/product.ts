@@ -63,6 +63,7 @@ function createProductTest(productData: ProductData, baseContext: string = 'comm
 
       await productsPage.selectProductType(page, productData.type);
       await productsPage.clickOnAddNewProduct(page);
+      await addProductPage.closeSfToolBar(page);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -70,8 +71,6 @@ function createProductTest(productData: ProductData, baseContext: string = 'comm
 
     it('should create product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
-
-      await addProductPage.closeSfToolBar(page);
 
       const createProductMessage = await addProductPage.setProduct(page, productData);
       expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
