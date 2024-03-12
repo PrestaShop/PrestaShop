@@ -4542,6 +4542,18 @@ class CartCore extends ObjectModel
         return true;
     }
 
+    public function checkAllProductsAreStillActive()
+    {
+        $productList = $this->getProducts(true);
+        foreach ($productList as $product) {
+            if (!$product['active']) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Set flag to split lines of products given away and also manually added to cart.
      */

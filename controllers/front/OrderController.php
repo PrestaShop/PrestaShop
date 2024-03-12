@@ -231,7 +231,8 @@ class OrderControllerCore extends FrontController
 
         if ($this->context->cart->isAllProductsInStock() !== true ||
             $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true ||
-            $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
+            $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true ||
+            $this->context->cart->checkAllProductsAreStillActive() !== true) {
             $responseData['errors'] = true;
             $responseData['cartUrl'] = $this->context->link->getPageLink('cart', null, null, ['action' => 'show']);
         }
