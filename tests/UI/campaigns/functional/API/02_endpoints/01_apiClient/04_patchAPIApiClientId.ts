@@ -4,8 +4,8 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 import loginCommon from '@commonTests/BO/loginBO';
+import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
@@ -18,15 +18,15 @@ import APIClientData from '@data/faker/APIClient';
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_apiClient_postAPIApiClient';
+const baseContext: string = 'functional_API_endpoints_apiClient_patchAPIApiClientId';
 
-describe('API : POST /api/api-client', async () => {
+describe('API : PATCH /api/api-client/{apiClientId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
   let accessToken: string;
   let clientSecret: string;
-  let jsonResponse: any;
+  let idApiClient: number;
 
   const clientScope: string = 'api_client_write';
   const clientData: APIClientData = new APIClientData({
@@ -36,8 +36,20 @@ describe('API : POST /api/api-client', async () => {
     ],
   });
   const createClient: APIClientData = new APIClientData({
+    enabled: true,
     scopes: [
       'api_client_read',
+      'hook_write',
+    ],
+  });
+  const patchClient: APIClientData = new APIClientData({
+    clientId: 'Client ID Patch',
+    clientName: 'Client Name Patch',
+    description: 'Description Patch',
+    enabled: false,
+    tokenLifetime: 1234,
+    scopes: [
+      'api_client_write',
       'hook_read',
     ],
   });
@@ -130,47 +142,6 @@ describe('API : POST /api/api-client', async () => {
   });
 
   describe('API : Create the API Access', async () => {
-    it('should request the endpoint /api/api-client', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
-
-      const apiResponse = await apiContext.post('api/api-client', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: {
-          clientId: createClient.clientId,
-          clientName: createClient.clientName,
-          description: createClient.description,
-          enabled: createClient.enabled,
-          lifetime: createClient.tokenLifetime,
-          scopes: createClient.scopes,
-        },
-      });
-      expect(apiResponse.status()).to.eq(201);
-      expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
-      expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
-
-      jsonResponse = await apiResponse.json();
-    });
-
-    it('should check the JSON Response keys', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseKeys', baseContext);
-
-      expect(jsonResponse).to.have.all.keys(
-        'apiClientId',
-        'secret',
-      );
-    });
-
-    it('should check the JSON Response', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseJSON', baseContext);
-
-      expect(jsonResponse.apiClientId).to.be.gt(0);
-      expect(jsonResponse.secret.length).to.be.gt(0);
-    });
-  });
-
-  describe('BackOffice : Check the API Access is created', async () => {
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToAuthorizationServerPage', baseContext);
 
@@ -182,73 +153,133 @@ describe('API : POST /api/api-client', async () => {
 
       const pageTitle = await apiClientPage.getPageTitle(page);
       expect(pageTitle).to.eq(apiClientPage.pageTitle);
-    });
-
-    it('should check there are 2 records', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkRecords', baseContext);
 
       const numRecords = await apiClientPage.getNumberOfElementInGrid(page);
-      expect(numRecords).to.equal(2);
+      expect(numRecords).to.be.equal(1);
     });
 
-    it('should check the JSON Response : `apiClientId`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseApiClientId', baseContext);
+    it('should go to add New API Client page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIClientPageForPatch', baseContext);
 
-      const value = parseInt(await apiClientPage.getTextColumn(page, 'id_api_client', 2), 10);
-      expect(value).to.equal(jsonResponse.apiClientId);
+      await apiClientPage.goToNewAPIClientPage(page);
+
+      const pageTitle = await addNewApiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleCreate);
     });
 
-    it('should check the JSON Response : `clientId`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseClientId', baseContext);
+    it('should create API Client', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAPIClientForPatch', baseContext);
 
-      const value = await apiClientPage.getTextColumn(page, 'client_id', 2);
-      expect(value).to.equal(createClient.clientId);
+      const textResult = await addNewApiClientPage.addAPIClient(page, createClient);
+      expect(textResult).to.contains(addNewApiClientPage.successfulCreationMessage);
+
+      const textMessage = await addNewApiClientPage.getAlertInfoBlockParagraphContent(page);
+      expect(textMessage).to.contains(addNewApiClientPage.apiClientGeneratedMessage);
     });
 
-    it('should check the JSON Response : `clientName`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseClientName', baseContext);
+    it('should go to \'Advanced Parameters > API Client\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToAuthorizationServerPageAfterCreate', baseContext);
 
-      const value = await apiClientPage.getTextColumn(page, 'client_name', 2);
-      expect(value).to.equal(createClient.clientName);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.authorizationServerLink,
+      );
+
+      const pageTitle = await apiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(apiClientPage.pageTitle);
+
+      const numRecords = await apiClientPage.getNumberOfElementInGrid(page);
+      expect(numRecords).to.be.equal(2);
     });
 
-    it('should go to the edit page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIClientPage', baseContext);
+    it('should fetch the identifier of the API Client', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'fetchIDApiClient', baseContext);
+
+      idApiClient = parseInt(await apiClientPage.getTextColumn(page, 'id_api_client', 2), 10);
+      expect(idApiClient).to.be.gt(0);
+    });
+
+    it('should go to edit page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
 
       await apiClientPage.goToEditAPIClientPage(page, 2);
 
       const pageTitle = await addNewApiClientPage.getPageTitle(page);
       expect(pageTitle).to.eq(addNewApiClientPage.pageTitleEdit(createClient.clientName));
     });
+  });
 
-    it('should check the JSON Response : `description`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDescription', baseContext);
+  [
+    {
+      propertyName: 'clientId',
+      propertyValue: patchClient.clientId,
+    },
+    {
+      propertyName: 'clientName',
+      propertyValue: patchClient.clientName,
+    },
+    {
+      propertyName: 'description',
+      propertyValue: patchClient.description,
+    },
+    {
+      propertyName: 'enabled',
+      propertyValue: patchClient.enabled,
+    },
+    {
+      propertyName: 'lifetime',
+      propertyValue: patchClient.tokenLifetime,
+    },
+    {
+      propertyName: 'scopes',
+      propertyValue: patchClient.scopes,
+    },
+  ].forEach((data: { propertyName: string, propertyValue: boolean|number|string|string[] }) => {
+    describe(`Update the property \`${data.propertyName}\` with API and check in BO`, async () => {
+      it('should request the endpoint /api/api-client/{apiClientId}', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `requestEndpoint${data.propertyName}`, baseContext);
 
-      const value = await addNewApiClientPage.getValue(page, 'description');
-      expect(value).to.equal(createClient.description);
-    });
+        const dataPatch: any = {};
+        dataPatch[data.propertyName] = data.propertyValue;
 
-    it('should check the JSON Response : `enabled`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseEnabled', baseContext);
+        const apiResponse = await apiContext.patch(`api/api-client/${idApiClient}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: dataPatch,
+        });
+        expect(apiResponse.status()).to.eq(200);
+        expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+        expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
-      const value = await addNewApiClientPage.isEnabled(page);
-      expect(value).to.equal(createClient.enabled);
-    });
+        const jsonResponse = await apiResponse.json();
+        expect(jsonResponse).to.have.property(data.propertyName);
+        expect(jsonResponse[data.propertyName]).to.deep.equal(data.propertyValue);
+      });
 
-    it('should check the JSON Response : `lifetime`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLifetime', baseContext);
+      it(`should check that the property "${data.propertyName}"`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkProperty${data.propertyName}`, baseContext);
 
-      const value = parseInt(await addNewApiClientPage.getValue(page, 'tokenLifetime'), 10);
-      expect(value).to.equal(createClient.tokenLifetime);
-    });
+        await addNewApiClientPage.reloadPage(page);
 
-    it('should check the JSON Response : `scopes`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseScopes', baseContext);
-
-      const value = await addNewApiClientPage.getApiScopes(page, 'ps_apiresources', true);
-      expect(value).to.deep.equal(createClient.scopes);
+        if (['clientId', 'clientName', 'description'].includes(data.propertyName)) {
+          const valueProperty = await addNewApiClientPage.getValue(page, data.propertyName);
+          expect(valueProperty).to.equal(data.propertyValue);
+        } else if (data.propertyName === 'lifetime') {
+          const valueProperty = await addNewApiClientPage.getValue(page, 'tokenLifetime');
+          expect(valueProperty).to.equal(data.propertyValue.toString());
+        } else if (data.propertyName === 'enabled') {
+          const valueProperty = await addNewApiClientPage.isEnabled(page);
+          expect(valueProperty).to.equal(data.propertyValue);
+        } else if (data.propertyName === 'scopes') {
+          const valueProperty = await addNewApiClientPage.getApiScopes(page, 'ps_apiresources', true);
+          expect(valueProperty).to.deep.equal(data.propertyValue);
+        }
+      });
     });
   });
+
   describe('BackOffice : Delete the API Access', async () => {
     it('should return to the list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToList', baseContext);
