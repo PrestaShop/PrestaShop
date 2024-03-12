@@ -34,11 +34,14 @@ const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_
 
 /*
 Pre-condition:
+- Install the theme hummingbird
 - Create 2 orders by default customer
 Scenario:
 - Change the first order status to Shipped
 - Go to FO and check the invoice for the first order
 - Check that no invoice is visible for the second order
+Post-condition:
+- Uninstall the theme hummingbird
  */
 describe('FO - Account - Order history : Download invoice', async () => {
   let browserContext: BrowserContext;
@@ -89,7 +92,7 @@ describe('FO - Account - Order history : Download invoice', async () => {
         invoicesPage.ordersLink,
       );
 
-      const pageTitle: string = await ordersPage.getPageTitle(page);
+      const pageTitle = await ordersPage.getPageTitle(page);
       expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
@@ -99,14 +102,14 @@ describe('FO - Account - Order history : Download invoice', async () => {
       // View order
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle: string = await orderPageTabListBlock.getPageTitle(page);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
       expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatus', baseContext);
 
-      const result: string = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
       expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
@@ -125,8 +128,8 @@ describe('FO - Account - Order history : Download invoice', async () => {
 
       await homePage.goToFo(page);
 
-      const isHomePage: boolean = await homePage.isHomePage(page);
-      expect(isHomePage).to.eq(true);
+      const isHomePage = await homePage.isHomePage(page);
+      expect(isHomePage).to.equal(true);
     });
 
     it('should go to login page', async function () {
@@ -134,7 +137,7 @@ describe('FO - Account - Order history : Download invoice', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageHeaderTitle: string = await loginPage.getPageTitle(page);
+      const pageHeaderTitle = await loginPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(loginPage.pageTitle);
     });
 
@@ -143,8 +146,8 @@ describe('FO - Account - Order history : Download invoice', async () => {
 
       await loginPage.customerLogin(page, Customers.johnDoe);
 
-      const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
-      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
+      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is not connected').to.equal(true);
     });
 
     it('should go to my account page', async function () {
@@ -152,7 +155,7 @@ describe('FO - Account - Order history : Download invoice', async () => {
 
       await homePage.goToMyAccountPage(page);
 
-      const pageTitle: string = await myAccountPage.getPageTitle(page);
+      const pageTitle = await myAccountPage.getPageTitle(page);
       expect(pageTitle).to.equal(myAccountPage.pageTitle);
     });
 
@@ -161,31 +164,31 @@ describe('FO - Account - Order history : Download invoice', async () => {
 
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle: string = await orderHistoryPage.getPageTitle(page);
+      const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
     });
 
     it('should check that the invoice of the first order in list is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
 
-      const isVisible: boolean = await orderHistoryPage.isInvoiceVisible(page, 1);
-      expect(isVisible, 'The invoice file is not existing!').to.eq(true);
+      const isVisible = await orderHistoryPage.isInvoiceVisible(page, 1);
+      expect(isVisible, 'The invoice file is not existing!').to.equal(true);
     });
 
     it('should download the invoice and check the invoice ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
 
-      const downloadFilePath: string|null = await orderHistoryPage.downloadInvoice(page);
+      const downloadFilePath = await orderHistoryPage.downloadInvoice(page);
 
-      const exist: boolean = await files.isTextInPDF(downloadFilePath, fileName);
-      expect(exist).to.eq(true);
+      const exist = await files.isTextInPDF(downloadFilePath, fileName);
+      expect(exist).to.equal(true);
     });
 
     it('should check that no invoice is visible for the second order in list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoInvoice', baseContext);
 
-      const isVisible: boolean = await orderHistoryPage.isInvoiceVisible(page, 2);
-      expect(isVisible).to.eq(false);
+      const isVisible = await orderHistoryPage.isInvoiceVisible(page, 2);
+      expect(isVisible).to.equal(false);
     });
   });
 
