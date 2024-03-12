@@ -54,8 +54,8 @@ class MultishopCommandListenerTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->commandListener = self::$kernel->getContainer()->get('prestashop.multishop_command_listener');
         $this->multishopContext = self::$kernel->getContainer()->get('prestashop.adapter.shop.context');
+        $this->commandListener = new MultishopCommandListener($this->multishopContext, self::$kernel->getProjectDir());
     }
 
     public function testDefaultMultishopContext(): void
