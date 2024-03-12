@@ -15,7 +15,7 @@ import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
-import gdprPersonalDataPage from '@pages/FO/classic/myAccount/gdprPersonalData';
+import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 
 // Import demo data
 import Orders from '@data/demo/orders';
