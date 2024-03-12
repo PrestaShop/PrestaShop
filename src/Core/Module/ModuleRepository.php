@@ -212,7 +212,6 @@ class ModuleRepository implements ModuleRepositoryInterface
 
                 return true;
             } else {
-                $cacheKey = $this->getCacheKey($moduleName);
                 if ($this->cacheProvider->contains($cacheKey)) {
                     return $this->cacheProvider->delete($cacheKey);
                 }
