@@ -109,7 +109,7 @@ class SpecificPriceCore extends ObjectModel
      *
      * @var bool|null
      */
-    protected static $_hasGlobalProductRules = null;
+    protected static $_hasGlobalProductRules;
 
     /**
      * Local cache for the filterOutField function. It stores the different existing values in the specific_price table
@@ -134,7 +134,7 @@ class SpecificPriceCore extends ObjectModel
      */
     protected static $_no_specific_values = [];
 
-    protected static $psQtyDiscountOnCombination = null;
+    protected static $psQtyDiscountOnCombination;
 
     public static function resetStaticCache()
     {
@@ -608,7 +608,7 @@ class SpecificPriceCore extends ObjectModel
             return [];
         }
 
-        $query_extra = self::computeExtraConditions($id_product, ((!$all_combinations) ? $id_product_attribute : null), $id_customer, null);
+        $query_extra = self::computeExtraConditions($id_product, (!$all_combinations) ? $id_product_attribute : null, $id_customer, null);
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *,
 					' . SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer) . '
@@ -670,22 +670,41 @@ class SpecificPriceCore extends ObjectModel
 
         $query_extra = self::computeExtraConditions(null, null, $id_customer, null, $beginning, $ending);
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT `id_product`, `id_product_attribute`
-			FROM `' . _DB_PREFIX_ . 'specific_price`
-			WHERE	`id_shop` ' . self::formatIntInQuery(0, $id_shop) . ' AND
-					`id_currency` ' . self::formatIntInQuery(0, $id_currency) . ' AND
-					`id_country` ' . self::formatIntInQuery(0, $id_country) . ' AND
-					`id_group` ' . self::formatIntInQuery(0, $id_group) . ' AND
-					`from_quantity` = 1 AND
-					`reduction` > 0
-		' . $query_extra);
+            SELECT `id_product`, `id_product_attribute`
+            FROM `' . _DB_PREFIX_ . 'specific_price`
+            WHERE   `id_shop` ' . self::formatIntInQuery(0, $id_shop) . ' AND
+                    `id_currency` ' . self::formatIntInQuery(0, $id_currency) . ' AND
+                    `id_country` ' . self::formatIntInQuery(0, $id_country) . ' AND
+                    `id_group` ' . self::formatIntInQuery(0, $id_group) . ' AND
+                    `from_quantity` = 1 AND
+                    `reduction` > 0
+        ' . $query_extra);
+
         $ids_product = [];
-        foreach ($results as $value) {
-            $ids_product[] = $with_combination_id ?
-                [
-                    'id_product' => (int) $value['id_product'],
-                    'id_product_attribute' => (int) $value['id_product_attribute'],
-                ] : (int) $value['id_product'];
+        if (self::$_hasGlobalProductRules) {
+            $allProducts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+                SELECT p.`id_product`
+                FROM `' . _DB_PREFIX_ . 'product` p
+                INNER JOIN `' . _DB_PREFIX_ . 'product_shop` ps ON p.`id_product` = ps.`id_product`
+                WHERE ps.`active` = 1
+                AND ps.`id_shop` = ' . (int) $id_shop . '
+            ');
+
+            foreach ($allProducts as $product) {
+                $ids_product[] = $with_combination_id ?
+                    [
+                        'id_product' => (int) $product['id_product'],
+                        'id_product_attribute' => 0,
+                    ] : (int) $product['id_product'];
+            }
+        } else {
+            foreach ($results as $value) {
+                $ids_product[] = $with_combination_id ?
+                    [
+                        'id_product' => (int) $value['id_product'],
+                        'id_product_attribute' => (int) $value['id_product_attribute'],
+                    ] : (int) $value['id_product'];
+            }
         }
 
         return $ids_product;
