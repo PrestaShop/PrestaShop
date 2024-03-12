@@ -88,14 +88,15 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         if (null === self::$clientSecret) {
             self::createApiClient($scopes);
         }
-        $parameters = ['parameters' => [
-            'client_id' => static::CLIENT_ID,
-            'client_secret' => static::$clientSecret,
-            'grant_type' => 'client_credentials',
-            'scope' => $scopes,
-        ]];
         $options = [
-            'extra' => $parameters,
+            'extra' => [
+                'parameters' => [
+                    'client_id' => static::CLIENT_ID,
+                    'client_secret' => static::$clientSecret,
+                    'grant_type' => 'client_credentials',
+                    'scope' => $scopes,
+                ],
+            ],
             'headers' => [
                 'content-type' => 'application/x-www-form-urlencoded',
             ],
