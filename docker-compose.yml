@@ -2,11 +2,6 @@ version: '2.1'
 
 volumes:
   db-data:
-    name: db-data
-  vendor:
-    name: vendor
-  var:
-    name: var
 
 services:
   mysql:
@@ -16,8 +11,8 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: prestashop
-      MYSQL_DATABASE: prestashop
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWD:-prestashop}
+      MYSQL_DATABASE: ${DB_NAME:-prestashop}
     restart: unless-stopped
 
   keycloak:
