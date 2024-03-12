@@ -62,7 +62,7 @@ class AuthorizationServerFeatureListenerTest extends ApiTestCase
         $this->featureFlagManager->disable(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER);
         self::createApiClient();
         $bearerToken = $this->getBearerToken();
-        static::createClient()->request('GET', '/api/test/unscoped/product/1', [
+        static::createClient()->request('GET', '/test/unscoped/product/1', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $bearerToken,
             ],
@@ -76,7 +76,7 @@ class AuthorizationServerFeatureListenerTest extends ApiTestCase
         self::updateConfiguration(MultistoreConfig::FEATURE_STATUS, 1);
         self::createApiClient();
         $bearerToken = $this->getBearerToken();
-        static::createClient()->request('GET', '/api/test/unscoped/product/1', [
+        static::createClient()->request('GET', '/test/unscoped/product/1', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $bearerToken,
             ],
@@ -91,7 +91,7 @@ class AuthorizationServerFeatureListenerTest extends ApiTestCase
         $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE);
         self::createApiClient();
         $bearerToken = $this->getBearerToken();
-        static::createClient()->request('GET', '/api/test/unscoped/product/1', [
+        static::createClient()->request('GET', '/test/unscoped/product/1', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $bearerToken,
             ],

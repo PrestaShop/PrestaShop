@@ -57,14 +57,14 @@ class ApiClientEndpointTest extends ApiTestCase
     {
         yield 'get endpoint' => [
             'GET',
-            '/api/api-client/infos',
+            '/api-client/infos',
         ];
     }
 
     public function testGetInfos()
     {
         $bearerToken = $this->getBearerToken();
-        $response = static::createClient()->request('GET', '/api/api-client/infos', [
+        $response = static::createClient()->request('GET', '/api-client/infos', [
             'auth_bearer' => $bearerToken,
         ]);
         self::assertResponseStatusCodeSame(200);

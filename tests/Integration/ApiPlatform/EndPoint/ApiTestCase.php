@@ -30,6 +30,7 @@ namespace Tests\Integration\ApiPlatform\EndPoint;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase as ApiPlatformTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use OAuthAPIKernel;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\AddApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
@@ -57,6 +58,16 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         parent::tearDownAfterClass();
         ApiClientResetter::resetApiClient();
         self::$clientSecret = null;
+    }
+
+    /**
+     * API endpoints are only available in the OAuth application so we force using the proper kernel here.
+     *
+     * @return string
+     */
+    protected static function getKernelClass(): string
+    {
+        return OAuthAPIKernel::class;
     }
 
     protected static function createClient(array $kernelOptions = [], array $defaultOptions = []): Client
@@ -89,7 +100,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
                 'content-type' => 'application/x-www-form-urlencoded',
             ],
         ];
-        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
+        $response = static::createClient()->request('POST', '/access_token', $options);
 
         return json_decode($response->getContent())->access_token;
     }

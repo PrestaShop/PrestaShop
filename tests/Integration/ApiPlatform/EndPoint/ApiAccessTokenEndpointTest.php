@@ -81,7 +81,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'content-type' => $contentType,
             ],
         ];
-        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
+        $response = static::createClient()->request('POST', '/access_token', $options);
         $token = json_decode($response->getContent())->access_token;
         $decodedToken = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $token)[1]))));
 
@@ -120,7 +120,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'content-type' => 'application/x-www-form-urlencoded',
             ],
         ];
-        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
+        $response = static::createClient()->request('POST', '/access_token', $options);
         $this->assertEquals(400, $response->getInfo('http_code'));
         $decodedResponse = json_decode($response->getContent(false), true);
         $this->assertNotFalse($decodedResponse);
@@ -148,7 +148,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'content-type' => 'application/x-www-form-urlencoded',
             ],
         ];
-        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
+        $response = static::createClient()->request('POST', '/access_token', $options);
         $this->assertEquals(401, $response->getInfo('http_code'));
         $decodedResponse = json_decode($response->getContent(false), true);
         $this->assertNotFalse($decodedResponse);
@@ -173,7 +173,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'content-type' => 'application/x-www-form-urlencoded',
             ],
         ];
-        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
+        $response = static::createClient()->request('POST', '/access_token', $options);
         $this->assertEquals(401, $response->getInfo('http_code'));
         $decodedResponse = json_decode($response->getContent(false), true);
         $this->assertNotFalse($decodedResponse);
@@ -194,7 +194,7 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
                 'content-type' => 'application/x-www-form-urlencoded',
             ],
         ];
-        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
+        $response = static::createClient()->request('POST', '/access_token', $options);
         $this->assertEquals(401, $response->getInfo('http_code'));
         $decodedResponse = json_decode($response->getContent(false), true);
         $this->assertNotFalse($decodedResponse);

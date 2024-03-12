@@ -4,9 +4,6 @@
 security:
   enable_authenticator_manager: true
   password_hashers:
-    # auto hasher with default options for the User class (and children)
-    PrestaShopBundle\Entity\ApiClient: 'auto'
-
     # auto hasher with custom options for all PasswordAuthenticatedUserInterface instances
     Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
       algorithm: 'auto'
