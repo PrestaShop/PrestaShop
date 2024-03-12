@@ -28,9 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 
 /**
  * Holds valid redirect option data
@@ -40,11 +38,6 @@ class RedirectOption
     private RedirectType $redirectType;
     private RedirectTarget $redirectTarget;
 
-    /**
-     * @param string $redirectType
-     * @param int $redirectTarget
-     * @throws ProductConstraintException
-     */
     public function __construct(string $redirectType, int $redirectTarget)
     {
         $this->redirectType = new RedirectType($redirectType);
@@ -61,9 +54,6 @@ class RedirectOption
         return $this->redirectTarget;
     }
 
-    /**
-     * @throws ProductConstraintException
-     */
     private function setRedirectTarget(int $value): void
     {
         if ($this->redirectType->isTypeNotFound()) {

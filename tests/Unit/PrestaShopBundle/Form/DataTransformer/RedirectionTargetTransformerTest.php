@@ -30,7 +30,7 @@ namespace Tests\Unit\PrestaShopBundle\Form\DataTransformer;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTarget;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTargetInformation;
 use PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer;
 
 class RedirectionTargetTransformerTest extends TestCase
@@ -129,9 +129,9 @@ class RedirectionTargetTransformerTest extends TestCase
             null,
         ];
 
-        $redirectTarget = new RedirectTarget(
+        $redirectTarget = new RedirectTargetInformation(
             42,
-            RedirectTarget::PRODUCT_TYPE,
+            RedirectTargetInformation::PRODUCT_TYPE,
             'Product 1',
             'path/to/img.jpg'
         );
@@ -313,9 +313,9 @@ class RedirectionTargetTransformerTest extends TestCase
             null,
         ];
 
-        $redirectTarget = new RedirectTarget(
+        $redirectTarget = new RedirectTargetInformation(
             42,
-            RedirectTarget::PRODUCT_TYPE,
+            RedirectTargetInformation::PRODUCT_TYPE,
             'Product 1',
             'path/to/img.jpg'
         );

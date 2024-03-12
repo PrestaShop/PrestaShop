@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTarget;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTargetInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 
@@ -78,7 +78,7 @@ class RedirectTargetProvider
      * @param string $redirectType
      * @param int $redirectTargetId
      *
-     * @return RedirectTarget|null
+     * @return RedirectTargetInformation|null
      *
      * @throws CategoryNotFoundException
      * @throws ProductNotFoundException
@@ -86,7 +86,7 @@ class RedirectTargetProvider
     public function getRedirectTarget(
         string $redirectType,
         int $redirectTargetId
-    ): ?RedirectTarget {
+    ): ?RedirectTargetInformation {
         if (empty($redirectTargetId)) {
             return null;
         }
@@ -106,11 +106,11 @@ class RedirectTargetProvider
     /**
      * @param int $redirectTargetId
      *
-     * @return RedirectTarget
+     * @return RedirectTargetInformation
      *
      * @throws ProductNotFoundException
      */
-    private function getProductTarget(int $redirectTargetId): RedirectTarget
+    private function getProductTarget(int $redirectTargetId): RedirectTargetInformation
     {
         $languageId = $this->legacyContext->getLanguage()->id;
         $productPreview = $this->productPreviewRepository->getPreview(
@@ -118,9 +118,9 @@ class RedirectTargetProvider
             new LanguageId($languageId)
         );
 
-        return new RedirectTarget(
+        return new RedirectTargetInformation(
             $redirectTargetId,
-            RedirectTarget::PRODUCT_TYPE,
+            RedirectTargetInformation::PRODUCT_TYPE,
             $productPreview->getName(),
             $productPreview->getImage()
         );
@@ -129,11 +129,11 @@ class RedirectTargetProvider
     /**
      * @param int $redirectTargetId
      *
-     * @return RedirectTarget
+     * @return RedirectTargetInformation
      *
      * @throws CategoryNotFoundException
      */
-    private function getCategoryTarget(int $redirectTargetId): RedirectTarget
+    private function getCategoryTarget(int $redirectTargetId): RedirectTargetInformation
     {
         $languageId = (int) $this->legacyContext->getLanguage()->id;
         $category = $this->categoryPreviewRepository->getPreview(
@@ -141,9 +141,9 @@ class RedirectTargetProvider
             new LanguageId($languageId)
         );
 
-        return new RedirectTarget(
+        return new RedirectTargetInformation(
             $redirectTargetId,
-            RedirectTarget::CATEGORY_TYPE,
+            RedirectTargetInformation::CATEGORY_TYPE,
             $category->getBreadcrumb(),
             $category->getImage()
         );

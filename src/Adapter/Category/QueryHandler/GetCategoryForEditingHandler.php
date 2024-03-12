@@ -48,7 +48,6 @@ use Shop;
 #[AsQueryHandler]
 final class GetCategoryForEditingHandler implements GetCategoryForEditingHandlerInterface
 {
-
     public function __construct(
         private readonly ImageTagSourceParserInterface $imageTagSourceParser,
         private readonly RedirectTargetProvider $targetProvider,
@@ -82,7 +81,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             '  SELECT * FROM `' . _DB_PREFIX_ . 'category`' .
             '  ORDER BY id_parent, id_category' .
             ') category_sorted, ' .
-            '(SELECT @pv := ' . (int)$category->id . ') initialisation ' .
+            '(SELECT @pv := ' . (int) $category->id . ') initialisation ' .
             'WHERE FIND_IN_SET(id_parent, @pv) ' .
             'AND LENGTH(@pv := CONCAT(@pv, \',\', id_category))'
         );
@@ -95,9 +94,9 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         $editableCategory = new EditableCategory(
             $query->getCategoryId(),
             $category->name,
-            (bool)$category->active,
+            (bool) $category->active,
             $category->description,
-            (int)$category->id_parent,
+            (int) $category->id_parent,
             $category->meta_title,
             $category->meta_description,
             $category->meta_keywords,
@@ -106,7 +105,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             $categoryRedirectTarget,
             $category->getGroups(),
             $category->getAssociatedShops(),
-            (bool)$category->is_root_category,
+            (bool) $category->is_root_category,
             $this->getCoverImage($query->getCategoryId()),
             $this->getThumbnailImage($query->getCategoryId()),
             $subcategories->fetchAll(PDO::FETCH_COLUMN),
@@ -168,8 +167,8 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
                     if (is_file($thumb)) {
                         $imageTag = ImageManager::thumbnail(
                             $thumb,
-                            'category_' . (int)$categoryId->getValue() . '-thumb.jpg',
-                            (int)$imageType['width'],
+                            'category_' . (int) $categoryId->getValue() . '-thumb.jpg',
+                            (int) $imageType['width'],
                             'jpg',
                             true,
                             true
@@ -186,8 +185,8 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
                 ImageManager::resize(
                     _PS_TMP_IMG_DIR_ . $imageName,
                     _PS_TMP_IMG_DIR_ . $imageName,
-                    (int)$imageType['width'],
-                    (int)$imageType['height']
+                    (int) $imageType['width'],
+                    (int) $imageType['height']
                 );
             }
 

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTarget;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTargetInformation;
 
 /**
  * Stores category data needed for editing.
@@ -76,7 +76,7 @@ class EditableCategory
 
     private string $redirectType;
 
-    private ?RedirectTarget $categoryRedirectTarget;
+    private ?RedirectTargetInformation $categoryRedirectTarget;
 
     /**
      * @var string[]
@@ -128,7 +128,7 @@ class EditableCategory
      * @param string[] $metaDescription
      * @param string[] $metaKeywords
      * @param string $redirectType
-     * @param ?RedirectTarget $categoryRedirectTarget
+     * @param ?RedirectTargetInformation $categoryRedirectTarget
      * @param string[] $linkRewrite
      * @param int[] $groupAssociationIds
      * @param int[] $shopAssociationIds
@@ -149,7 +149,7 @@ class EditableCategory
         array $metaKeywords,
         array $linkRewrite,
         string $redirectType,
-        ?RedirectTarget $categoryRedirectTarget,
+        ?RedirectTargetInformation $categoryRedirectTarget,
         array $groupAssociationIds,
         array $shopAssociationIds,
         $isRootCategory,
@@ -268,12 +268,12 @@ class EditableCategory
         $this->redirectType = $redirectType;
     }
 
-    public function getRedirectTarget(): ?RedirectTarget
+    public function getRedirectTarget(): ?RedirectTargetInformation
     {
         return $this->categoryRedirectTarget;
     }
 
-    public function setRedirectTarget(?RedirectTarget $categoryRedirectTarget): void
+    public function setRedirectTarget(?RedirectTargetInformation $categoryRedirectTarget): void
     {
         $this->categoryRedirectTarget = $categoryRedirectTarget;
     }

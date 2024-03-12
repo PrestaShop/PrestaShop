@@ -65,4 +65,9 @@ class CategoryConstraintException extends CategoryException
      * Code is used when performing bulk delete of categories with empty data.
      */
     public const EMPTY_BULK_DELETE_DATA = 12;
+
+    /**
+     * When category redirect type is invalid
+     */
+    public const INVALID_REDIRECT_TYPE = 14;
 }

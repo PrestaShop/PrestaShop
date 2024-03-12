@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryPreview;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPreview;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTarget;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTargetInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 
@@ -55,9 +55,9 @@ class RedirectTargetProviderTest extends TestCase
      * @param array|null $mockOptions
      * @param string $redirectType
      * @param int $redirectTargetId
-     * @param RedirectTarget|null $expectedTarget
+     * @param RedirectTargetInformation|null $expectedTarget
      */
-    public function testGetRedirectTarget(?array $mockOptions, string $redirectType, int $redirectTargetId, ?RedirectTarget $expectedTarget): void
+    public function testGetRedirectTarget(?array $mockOptions, string $redirectType, int $redirectTargetId, ?RedirectTargetInformation $expectedTarget): void
     {
         $provider = new RedirectTargetProvider(
             $this->getProductPreviewRepositoryMock($mockOptions),
@@ -73,9 +73,9 @@ class RedirectTargetProviderTest extends TestCase
     {
         $breadcrumb = 'Category > Path';
         $categoryImage = 'path/to/c/1.jpg';
-        $redirectTarget = new RedirectTarget(
+        $redirectTarget = new RedirectTargetInformation(
             self::CATEGORY_TARGET_ID,
-            RedirectTarget::CATEGORY_TYPE,
+            RedirectTargetInformation::CATEGORY_TYPE,
             $breadcrumb,
             $categoryImage
         );
@@ -106,9 +106,9 @@ class RedirectTargetProviderTest extends TestCase
 
         $productName = 'Product 1';
         $productImage = '/path/p/45.jpg';
-        $redirectTarget = new RedirectTarget(
+        $redirectTarget = new RedirectTargetInformation(
             self::PRODUCT_TARGET_ID,
-            RedirectTarget::PRODUCT_TYPE,
+            RedirectTargetInformation::PRODUCT_TYPE,
             $productName,
             $productImage
         );

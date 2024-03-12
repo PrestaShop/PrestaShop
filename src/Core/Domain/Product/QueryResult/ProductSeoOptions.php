@@ -56,7 +56,7 @@ class ProductSeoOptions
     private $redirectType;
 
     /**
-     * @var RedirectTarget
+     * @var RedirectTargetInformation
      */
     private $redirectTarget;
 
@@ -65,14 +65,14 @@ class ProductSeoOptions
      * @param string[] $localizedMetaDescriptions
      * @param string[] $localizedLinkRewrites
      * @param string $redirectType
-     * @param RedirectTarget|null $redirectTarget
+     * @param RedirectTargetInformation|null $redirectTarget
      */
     public function __construct(
         array $localizedMetaTitles,
         array $localizedMetaDescriptions,
         array $localizedLinkRewrites,
         string $redirectType,
-        ?RedirectTarget $redirectTarget
+        ?RedirectTargetInformation $redirectTarget
     ) {
         $this->localizedMetaTitles = $localizedMetaTitles;
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
@@ -122,9 +122,9 @@ class ProductSeoOptions
     }
 
     /**
-     * @return RedirectTarget|null
+     * @return RedirectTargetInformation|null
      */
-    public function getRedirectTarget(): ?RedirectTarget
+    public function getRedirectTarget(): ?RedirectTargetInformation
     {
         return $this->redirectTarget;
     }

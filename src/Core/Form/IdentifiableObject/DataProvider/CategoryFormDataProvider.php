@@ -42,7 +42,6 @@ use Symfony\Component\Routing\Router;
  */
 final class CategoryFormDataProvider implements FormDataProviderInterface
 {
-
     public function __construct(
         private readonly CommandBusInterface $queryBus,
         private readonly GroupDataProvider $groupDataProvider,

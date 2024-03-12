@@ -164,24 +164,4 @@ class RedirectOptionType extends TranslatorAwareType
             ])
             ->setAllowedTypes('isRootCategory', 'bool');
     }
-
-    /**
-     * @return array
-     */
-    private function getRedirectionAlertMessages(): array
-    {
-        $formatParameters = [
-            '[1]' => '<strong>',
-            '[/1]' => '</strong>',
-            '[2]' => '<br>',
-        ];
-
-        return [
-            $this->trans('[1]No redirection (200), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return normal 200 response.', 'Admin.Catalog.Help', $formatParameters),
-            $this->trans('[1]No redirection (404), display error page[/1] [2] Do not redirect anywhere and display a 404 "Not Found" page.', 'Admin.Catalog.Help', $formatParameters),
-            $this->trans('[1]No redirection (410), display error page[/1] [2] Do not redirect anywhere and display a 410 "Gone" page.', 'Admin.Catalog.Help', $formatParameters),
-            $this->trans('[1]Permanent redirection (301)[/1] [2] Permanently display another category instead.', 'Admin.Catalog.Help', $formatParameters),
-            $this->trans('[1]Temporary redirection (302)[/1] [2] Temporarily display another category instead.', 'Admin.Catalog.Help', $formatParameters),
-        ];
-    }
 }
