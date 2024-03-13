@@ -84,7 +84,9 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $helpLink = '',
         $jsRouterMetadata = [],
         $metaTitle = '',
-        $useRegularH1Structure = true
+        $useRegularH1Structure = true,
+        $displayHeader = true,
+        $displayFooter = true
     ) {
         // Compatibility with legacy behavior.
         // Some controllers can only be used in "All stores" context.
@@ -125,6 +127,8 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->className = 'LegacyLayout';
         $this->jsRouterMetadata = $jsRouterMetadata;
         $this->useRegularH1Structure = $useRegularH1Structure;
+        $this->display_header = $displayHeader;
+        $this->display_footer = $displayFooter;
     }
 
     /**
