@@ -22,6 +22,7 @@ type ProductCreator = {
   applyChangesToAllStores?: boolean
   summary?: string
   description?: string
+  descriptionFR?: string
   reference?: string
   mpn?: string | null
   upc?: string | null
