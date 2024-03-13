@@ -989,7 +989,8 @@ class CategoryCore extends ObjectModel
         $orderWay = Validate::isOrderWay($orderWay) ? Tools::strtoupper($orderWay) : 'ASC';
 
         $orderByPrefix = false;
-        if ($orderBy === 'id_product' || $orderBy === 'date_add' || $orderBy === 'date_upd') {
+
+        if ($orderBy === 'id_product' || $orderBy === 'published_date' || $orderBy === 'date_upd') {
             $orderByPrefix = 'p';
         } elseif ($orderBy === 'name') {
             $orderByPrefix = 'pl';
@@ -1013,7 +1014,7 @@ class CategoryCore extends ObjectModel
 					product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity' : '') . ', pl.`description`, pl.`description_short`, pl.`available_now`,
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image` id_image,
 					il.`legend` as legend, m.`name` AS manufacturer_name, cl.`name` AS category_default,
-					DATEDIFF(product_shop.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
+					DATEDIFF(product_shop.`published_date`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
 					INTERVAL ' . (int) $nbDaysNewProduct . ' DAY)) > 0 AS new, product_shop.price AS orderprice
 				FROM `' . _DB_PREFIX_ . 'category_product` cp
 				LEFT JOIN `' . _DB_PREFIX_ . 'product` p
