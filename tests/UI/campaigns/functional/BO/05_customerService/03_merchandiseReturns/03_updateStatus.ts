@@ -22,7 +22,7 @@ import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseRet
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
-import foMerchandiseReturnsPage from '@pages/FO/classic/myAccount/merchandiseReturns';
+import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
