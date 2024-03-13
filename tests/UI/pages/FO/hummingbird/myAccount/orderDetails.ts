@@ -16,6 +16,7 @@ class OrderDetails extends OrderDetailsPage {
     // Add message form selectors
     this.boxMessagesBlock = 'div.customer__message__content';
     this.reorderLink = '.order__details a';
+    this.invoiceLink = '#content div.order__details div.order__header__left a[href*=\'pdf-invoice\']';
   }
 }
 
