@@ -42,12 +42,15 @@ describe('API : PUT /api/customers/group/{customerGroupId}', async () => {
       clientScope,
     ],
   });
-  const createGroupData: GroupData = new GroupData();
+  const createGroupData: GroupData = new GroupData({
+    priceDisplayMethod: 'Tax included',
+  });
   const updateGroupData: GroupData = new GroupData({
     name: 'Customer Group EN',
     frName: 'Customer Group FR',
     discount: 42,
     shownPrices: false,
+    priceDisplayMethod: 'Tax excluded',
   });
 
   before(async function () {

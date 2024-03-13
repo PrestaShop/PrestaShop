@@ -129,7 +129,9 @@ class AddGroup extends BOBasePage {
   async getValue(page: Page, inputName: string, languageId?: number): Promise<string> {
     switch (inputName) {
       case 'displayPriceTaxExcluded':
-        return page.locator(this.priceDisplayMethodSelect).evaluate((node: HTMLSelectElement) => node.value);
+        return page.locator(this.priceDisplayMethodSelect).evaluate(
+          (node: HTMLSelectElement) => node.options[node.options.selectedIndex].textContent?.trim() ?? '',
+        );
       case 'localizedNames':
         return this.getAttributeContent(page, this.nameInput(languageId!), 'value');
       case 'reductionPercent':
