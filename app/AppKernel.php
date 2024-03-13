@@ -348,6 +348,12 @@ abstract class AppKernel extends Kernel
 
     protected function waitUntilCacheClearIsOver(): void
     {
+        // CLI environment shouldn't be blocked, this allows for example clearing the cache even when the kernel is blocked for HTTP requests
+        // which is exactly what the SymfonyCacheClearer does.
+        if (Tools::isPHPCLI()) {
+            return;
+        }
+
         if (null !== self::$lockStream) {
             // If lockStream is not null it means we are actually in the process that locked it, we don't wait for anything
             // or the cache clear will never happen

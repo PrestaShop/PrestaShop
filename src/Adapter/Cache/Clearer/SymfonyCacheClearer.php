@@ -26,13 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 
+use AdminKernel;
 use AppKernel;
-use Exception;
+use FrontKernel;
 use Hook;
+use OAuthAPIKernel;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\NullOutput;
+use Psr\Log\LoggerInterface;
+use Throwable;
 
 /**
  * Class SymfonyCacheClearer clears Symfony cache directly from filesystem.
@@ -41,16 +42,28 @@ use Symfony\Component\Console\Output\NullOutput;
  */
 final class SymfonyCacheClearer implements CacheClearerInterface
 {
+    private bool $clearCacheRequested = false;
+
+    public function __construct(
+        private readonly LoggerInterface $logger,
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
     public function clear()
     {
-        /* @var AppKernel */
+        /* @var AdminKernel */
         global $kernel;
         if (!$kernel) {
             return;
         }
+
+        if ($this->clearCacheRequested) {
+            return;
+        }
+        $this->clearCacheRequested = true;
 
         $cacheClearLocked = $kernel->locksCacheClear();
         if (false === $cacheClearLocked) {
@@ -62,45 +75,65 @@ final class SymfonyCacheClearer implements CacheClearerInterface
         // the current process is over.
         register_shutdown_function(function () use ($kernel) {
             try {
-                $cacheDir = $kernel->getCacheDir();
-                if (!file_exists($cacheDir)) {
-                    $kernel->unlocksCacheClear();
-
-                    return;
-                }
+                // Remove time limit to make sure the cache has the time to be cleared
+                set_time_limit(0);
 
                 $environments = ['prod', 'dev'];
-                foreach ($environments as $environment) {
-                    try {
-                        $application = new Application($kernel);
-                        $application->setAutoExit(false);
+                $applicationKernelClasses = [AdminKernel::class, OAuthAPIKernel::class, FrontKernel::class];
+                $baseCommandLine = 'php -d memory_limit=-1 ' . $kernel->getProjectDir() . '/bin/console ';
+                foreach ($applicationKernelClasses as $applicationKernelClass) {
+                    foreach ($environments as $environment) {
+                        /** @var AppKernel $applicationKernel */
+                        $applicationKernel = new $applicationKernelClass($environment, false);
+                        $cacheDir = $applicationKernel->getCacheDir();
 
-                        // Clear cache without warmup to be fast
-                        $input = new ArrayInput([
-                            'command' => 'cache:clear',
-                            '--no-warmup' => true,
-                            '--env' => $environment,
-                        ]);
+                        if (!file_exists($cacheDir)) {
+                            $this->logger->info('SymfonyCacheClearer: No cache to clear for ' . $applicationKernel->getAppId() . ' env ' . $environment);
+                            continue;
+                        }
 
-                        $output = new NullOutput();
-                        $application->doRun($input, $output);
-                    } catch (Exception) {
-                        // Do nothing but at least does not break the loop nor function
+                        try {
+                            // Clear cache without warmup so it's faster to execute
+                            $commandLine = $baseCommandLine . 'cache:clear --no-warmup --no-interaction --env=' . $environment . ' --app-id=' . $applicationKernel->getAppId();
+                            $output = [];
+                            $result = 0;
+                            exec($commandLine, $output, $result);
+
+                            if ($result !== 0) {
+                                $this->logger->error('SymfonyCacheClearer: Could not clear cache for ' . $applicationKernel->getAppId() . ' env ' . $environment . 'output: ' . var_export($output, true));
+                            } else {
+                                $this->logger->info('SymfonyCacheClearer: Successfully cleared cache for ' . $applicationKernel->getAppId() . ' env ' . $environment);
+                            }
+                        } catch (Throwable $e) {
+                            // Leave this loop instance since cache warmup is likely to fail as well
+                            $this->logger->error('SymfonyCacheClearer: Error while clearing cache for ' . $applicationKernel->getAppId() . ' env ' . $environment . ': ' . $e->getMessage());
+                            continue;
+                        }
+
+                        // We only warmup cache for prod environment
+                        if ($environment !== 'prod') {
+                            continue;
+                        }
+
+                        try {
+                            // Warmup is needed for prod environment, or it will fail (proxy classes for doctrine need to be generated for example), we skip optional warmers though
+                            $commandLine = $baseCommandLine . 'cache:warmup --no-optional-warmers --no-interaction --env=' . $environment . ' --app-id=' . $applicationKernel->getAppId();
+                            $output = [];
+                            $result = 0;
+                            exec($commandLine, $output, $result);
+
+                            if ($result !== 0) {
+                                $this->logger->error('SymfonyCacheClearer: Could not warm up cache for ' . $applicationKernel->getAppId() . ' env ' . $environment . 'output: ' . var_export($output, true));
+                            } else {
+                                $this->logger->info('SymfonyCacheClearer: Successfully warmed up cache for ' . $applicationKernel->getAppId() . ' env ' . $environment);
+                            }
+                        } catch (Throwable $e) {
+                            $this->logger->error('SymfonyCacheClearer: Error while warming up cache for ' . $applicationKernel->getAppId() . ' env ' . $environment . ': ' . $e->getMessage());
+                        }
                     }
                 }
-
-                // Warmup prod environment only (not needed for dev since many things are dynamic)
-                $application = new Application($kernel);
-                $application->setAutoExit(false);
-                $input = new ArrayInput([
-                    'command' => 'cache:warmup',
-                    '--no-optional-warmers' => true,
-                    '--env' => 'prod',
-                    '--no-debug' => true,
-                ]);
-
-                $output = new NullOutput();
-                $application->doRun($input, $output);
+            } catch (Throwable $e) {
+                $this->logger->error('SymfonyCacheClearer: Something went wrong while clearing cache: ' . $e->getMessage());
             } finally {
                 Hook::exec('actionClearSf2Cache');
                 $kernel->unlocksCacheClear();
