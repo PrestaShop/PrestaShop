@@ -5,7 +5,8 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 // Import BO pages
@@ -15,13 +16,13 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
-import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
-import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
-import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import {returnDetailsPage} from '@pages/FO/classic/myAccount/returnDetails';
+import homePage from '@pages/FO/hummingbird/home';
+import loginPage from '@pages/FO/hummingbird/login';
+import myAccountPage from '@pages/FO/hummingbird/myAccount';
+import foMerchandiseReturnsPage from '@pages/FO/hummingbird/myAccount/merchandiseReturns';
+import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
+import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
+import returnDetailsPage from '@pages/FO/hummingbird/myAccount/returnDetails';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -34,10 +35,11 @@ import OrderData from '@data/faker/order';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_userAccount_merchandiseReturns_consultReturnDetails';
+const baseContext: string = 'functional_FO_hummingbird_userAccount_merchandiseReturns_consultReturnDetails';
 
 /*
 Pre-condition:
+- Install the theme hummingbird
 - Create new order by default customer
 - Enable merchandise returns
 Scenario
@@ -45,6 +47,7 @@ Scenario
 - Check merchandise returns details with all status
 Post-condition:
 - Disable merchandise returns
+- uninstall the theme hummingbird
  */
 describe('FO - Account : Consult return details', async () => {
   let browserContext: BrowserContext;
@@ -65,6 +68,9 @@ describe('FO - Account : Consult return details', async () => {
     ],
     paymentMethod: PaymentMethods.wirePayment,
   });
+
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest_0`);
 
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
@@ -431,4 +437,7 @@ describe('FO - Account : Consult return details', async () => {
 
   // Post-condition : Disable merchandise returns
   disableMerchandiseReturns(`${baseContext}_postTest_1`);
+
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest_2`);
 });

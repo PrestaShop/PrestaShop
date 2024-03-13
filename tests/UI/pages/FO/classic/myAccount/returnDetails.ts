@@ -14,9 +14,9 @@ class ReturnDetails extends FOBasePage {
 
   public readonly orderReturnCardBlock: string;
 
-  private readonly pageTitleHeader: string;
+  protected pageTitleHeader: string;
 
-  private readonly alertWarning: string;
+  protected alertWarning: string;
 
   private readonly orderReturnInfo: string;
 
@@ -24,8 +24,8 @@ class ReturnDetails extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on return details page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Return details';
     this.errorMessage = 'You must wait for confirmation before returning any merchandise.';
@@ -79,4 +79,5 @@ class ReturnDetails extends FOBasePage {
   }
 }
 
-export default new ReturnDetails();
+const returnDetailsPage = new ReturnDetails();
+export {returnDetailsPage, ReturnDetails};
