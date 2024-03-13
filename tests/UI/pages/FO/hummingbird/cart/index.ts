@@ -8,6 +8,8 @@ import type {Page} from 'playwright';
  * @extends FOBasePage
  */
 class Cart extends CartPage {
+  private readonly productListItem: string;
+
   /**
    * @constructs
    */
@@ -16,7 +18,8 @@ class Cart extends CartPage {
 
     this.proceedToCheckoutButton = '#wrapper div.cart-summary div.checkout a.btn';
     this.noItemsInYourCartSpan = '#content-wrapper div.cart-overview p';
-    this.productItem = (number: number) => `#content-wrapper li.cart__item:nth-of-type(${number})`;
+    this.productListItem = '#content-wrapper li.cart__item';
+    this.productItem = (number: number) => `${this.productListItem}:nth-of-type(${number})`;
     this.productName = (number: number) => `${this.productItem(number)} div.product-line__content a.product-line__title`;
     this.productRegularPrice = (number: number) => `${this.productItem(number)} div.product-line__basic`
       + ' span.product-line__regular';
@@ -90,6 +93,26 @@ class Cart extends CartPage {
   async editProductQuantity(page: Page, productID: number, quantity: number | string): Promise<void> {
     await this.setValue(page, this.productQuantity(productID), quantity);
     await page.locator(this.productQuantityScrollUpButton(productID)).click();
+  }
+
+  /**
+   * Delete product
+   * @param page {Page} Browser tab
+   * @param productID {number} ID of the product
+   * @returns {Promise<void>}
+   */
+  async deleteProduct(page: Page, productID: number): Promise<void> {
+    await super.deleteProduct(page, productID);
+    await this.waitForHiddenSelector(page, this.deleteIcon(productID));
+  }
+
+  /**
+   * Returns the number of differents product in the cart
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getProductsNumber(page: Page): Promise<number> {
+    return page.locator(`${this.productListItem}`).count();
   }
 }
 
