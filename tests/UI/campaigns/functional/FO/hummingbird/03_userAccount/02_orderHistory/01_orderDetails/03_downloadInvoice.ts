@@ -30,7 +30,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 // context
-const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_downloadInvoice';
+const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_orderDetails_downloadInvoice';
 
 /*
 Pre-condition:
