@@ -13,6 +13,8 @@ class ReturnDetailsPage extends ReturnDetails {
   constructor() {
     super('hummingbird');
 
+    this.orderReturnCardBlock = 'We have logged your return request. List of items to be returned:';
+
     this.pageTitleHeader = '#content-wrapper h1';
     this.alertWarning = '#notifications article.alert-warning';
   }

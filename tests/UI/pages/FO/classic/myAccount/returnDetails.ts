@@ -12,7 +12,7 @@ class ReturnDetails extends FOBasePage {
 
   public readonly errorMessage: string;
 
-  public readonly orderReturnCardBlock: string;
+  public orderReturnCardBlock: string;
 
   protected pageTitleHeader: string;
 
