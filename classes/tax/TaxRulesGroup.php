@@ -244,7 +244,8 @@ class TaxRulesGroupCore extends ObjectModel
         return (int) Db::getInstance()->getValue(
             'SELECT `id_tax_rules_group`
 			FROM `' . _DB_PREFIX_ . 'tax_rules_group` rg
-			WHERE `name` = \'' . pSQL($name) . '\''
+			WHERE `name` = \'' . pSQL($name) . '\'
+            ORDER BY `active` DESC, `deleted` ASC'
         );
     }
 
