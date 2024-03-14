@@ -15,6 +15,7 @@ class OrderHistory extends OrderHistoryPage {
 
     // Selectors
     this.detailsLink = (row: number) => `${this.ordersTableRow(row)} a[data-link-action="view-order-details"]`;
+    this.reorderLink = (row: number) => `${this.ordersTableRow(row)} a[href*='submitReorder']`;
   }
 }
 
