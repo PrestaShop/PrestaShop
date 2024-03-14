@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "161600723290f85495bf2507fd602dd6",
+    "content-hash": "06878486558a9856bbf94e9be4a85ba2",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5579,16 +5579,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-fix/34852",
+            "version": "dev-Issue-34850-product-listing-multilang-context",
             "source": {
                 "type": "git",
-                "url": "https://github.com/M0rgan01/ps_apiresources.git",
-                "reference": "047609b0c80fbab582ac1569f5f58757059c9924"
+                "url": "https://github.com/tleon/ps_apiresources.git",
+                "reference": "3efc3ab44fbbceafd27d1920f52de906131eceb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/M0rgan01/ps_apiresources/zipball/047609b0c80fbab582ac1569f5f58757059c9924",
-                "reference": "047609b0c80fbab582ac1569f5f58757059c9924",
+                "url": "https://api.github.com/repos/tleon/ps_apiresources/zipball/3efc3ab44fbbceafd27d1920f52de906131eceb0",
+                "reference": "3efc3ab44fbbceafd27d1920f52de906131eceb0",
                 "shasum": ""
             },
             "require": {
@@ -5640,9 +5640,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/M0rgan01/ps_apiresources/tree/fix/34852"
+                "source": "https://github.com/tleon/ps_apiresources/tree/Issue-34850-product-listing-multilang-context"
             },
-            "time": "2024-02-28T10:56:16+00:00"
+            "time": "2024-03-12T16:48:03+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -17989,5 +17989,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }

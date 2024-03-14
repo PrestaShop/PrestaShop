@@ -36,7 +36,8 @@ use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteria;
+use PrestaShop\PrestaShop\Core\Search\Builder\FiltersBuilderInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShopBundle\ApiPlatform\ContextParametersTrait;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Exception\QueryBuilderNotFoundException;
@@ -44,6 +45,7 @@ use PrestaShopBundle\ApiPlatform\Pagination\PaginationElements;
 use PrestaShopBundle\ApiPlatform\QueryResultSerializerTrait;
 use Psr\Container\ContainerInterface;
 use ReflectionException;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class QueryListProvider implements ProviderInterface
@@ -54,11 +56,13 @@ class QueryListProvider implements ProviderInterface
     public const DEFAULT_PAGINATED_ITEM_LIMIT = 50;
 
     public function __construct(
+        protected readonly RequestStack $requestStack,
         protected readonly DomainSerializer $domainSerializer,
         protected readonly ContainerInterface $container,
         protected readonly ShopContext $shopContext,
         protected readonly LanguageContext $languageContext,
         protected readonly ApiClientContext $apiClientContext,
+        protected readonly FiltersBuilderInterface $filtersBuilder
     ) {
     }
 
@@ -93,20 +97,11 @@ class QueryListProvider implements ProviderInterface
         /** @var DoctrineQueryBuilderInterface $queryBuilder * */
         $queryBuilder = $this->container->get($queryBuilderDefinition);
 
-        $queryParameters = $context['filters'] ?? [];
-        $filters = $queryParameters['filters'] ?? [];
-        $orderBy = array_key_exists('orderBy', $queryParameters) ? $queryParameters['orderBy'] : null;
-        $sortOrder = array_key_exists('sortOrder', $queryParameters) ? $queryParameters['sortOrder'] : 'asc';
-        $offset = array_key_exists('offset', $queryParameters) ? (int) $queryParameters['offset'] : null;
-        $limit = array_key_exists('limit', $queryParameters)
-            ? (int) $queryParameters['limit']
-            : self::DEFAULT_PAGINATED_ITEM_LIMIT
-        ;
+        $filter = $this->createFilters($context, $operation->getExtraProperties()['filterClass']);
 
-        $searchCriteria = new SearchCriteria($filters, $orderBy, $sortOrder, $offset, $limit);
-        $count = (int) $queryBuilder->getCountQueryBuilder($searchCriteria)->executeQuery()->fetchOne();
+        $count = (int) $queryBuilder->getCountQueryBuilder($filter)->executeQuery()->fetchOne();
 
-        $queryResult = $queryBuilder->getSearchQueryBuilder($searchCriteria)->fetchAllAssociative();
+        $queryResult = $queryBuilder->getSearchQueryBuilder($filter)->fetchAllAssociative();
 
         $normalizedQueryResult = [];
 
@@ -119,6 +114,49 @@ class QueryListProvider implements ProviderInterface
             );
         }
 
-        return new PaginationElements($count, $orderBy, $sortOrder, $limit, $offset, $filters, $normalizedQueryResult);
+        return new PaginationElements(
+            $count,
+            $filter->getOrderBy(),
+            $filter->getOrderWay(),
+            $filter->getLimit(),
+            $filter->getOffset(),
+            $filter->getFilters(),
+            $normalizedQueryResult
+        );
+    }
+
+    private function createFilters(array $context, string $filterClass): Filters
+    {
+        $queryParameters = $context['filters'] ?? [];
+        $paginationParameters = [
+            'filters' => $queryParameters['filters'] ?? [],
+            'orderBy' => array_key_exists('orderBy', $queryParameters) ? $queryParameters['orderBy'] : null,
+            'sortOrder' => array_key_exists('sortOrder', $queryParameters) ? $queryParameters['sortOrder'] : 'asc',
+            'offset' => array_key_exists('offset', $queryParameters) ? (int) $queryParameters['offset'] : null,
+            'limit' => array_key_exists('limit', $queryParameters)
+                ? (int) $queryParameters['limit']
+                : self::DEFAULT_PAGINATED_ITEM_LIMIT,
+        ];
+
+        /* remove null parameters from the request so the default filter parameters can be used instead of null values. */
+        foreach ($paginationParameters as $key => $parameter) {
+            if ($parameter === null) {
+                unset($paginationParameters[$key]);
+            }
+        }
+
+        $request = $this->requestStack->getMainRequest();
+        // We force filter ID as empty string to avoid using a prefix in the query parameters (eg: we want limit=10 not product[limit]=10)
+        $this->filtersBuilder->setConfig([
+            'filter_id' => '',
+            'filters_class' => $filterClass,
+            'request' => $request,
+            'shop_constraint' => $this->shopContext->getShopConstraint(),
+        ]);
+
+        $filters = $this->filtersBuilder->buildFilters();
+        $filters->add($paginationParameters);
+
+        return $filters;
     }
 }

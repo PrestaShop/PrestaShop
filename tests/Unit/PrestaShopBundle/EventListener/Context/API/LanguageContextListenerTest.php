@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\EventListener\Context\API;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Language\Repository\LanguageRepository as ObjectModelLanguageRepository;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -52,6 +54,8 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         $languageContextBuilder = new LanguageContextBuilder(
             $this->createMock(LanguageRepositoryInterface::class),
             $this->createMock(RepositoryInterface::class),
+            $this->createMock(ContextStateManager::class),
+            $this->createMock(ObjectModelLanguageRepository::class)
         );
 
         $listener = new LanguageContextListener(
@@ -73,6 +77,8 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         $languageContextBuilder = new LanguageContextBuilder(
             $this->createMock(LanguageRepositoryInterface::class),
             $this->createMock(RepositoryInterface::class),
+            $this->createMock(ContextStateManager::class),
+            $this->createMock(ObjectModelLanguageRepository::class)
         );
 
         $listener = new LanguageContextListener(
