@@ -202,19 +202,20 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $this->installedModules = null;
         if ($moduleName !== null) {
-            $cacheKey = $this->getCacheKey($moduleName);
             if ($allShops) {
-                if ($this->cacheProvider->contains($cacheKey)) {
-                    if (!$this->cacheProvider->delete($cacheKey)) {
-                        return false;
+                foreach (Shop::getShops(true, null, true) as $shopId) {
+                    $cacheKey = $this->getCacheKey($moduleName, $shopId);
+                    if ($this->cacheProvider->contains($cacheKey)) {
+                        if (!$this->cacheProvider->delete($cacheKey)) {
+                            return false;
+                        }
                     }
                 }
+            }
 
-                return true;
-            } else {
-                if ($this->cacheProvider->contains($cacheKey)) {
-                    return $this->cacheProvider->delete($cacheKey);
-                }
+            $cacheKey = $this->getCacheKey($moduleName);
+            if ($this->cacheProvider->contains($cacheKey)) {
+                return $this->cacheProvider->delete($cacheKey);
             }
         }
 
