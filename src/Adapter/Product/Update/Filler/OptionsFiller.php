@@ -83,8 +83,8 @@ class OptionsFiller implements ProductFillerInterface
         }
 
         if (null !== $command->getPublishedDate()) {
-            $product->date_novelty = $command->getPublishedDate()->format('Y-m-d');
-            $updatableProperties[] = 'date_novelty';
+            $product->date_new = $command->getPublishedDate()->format('Y-m-d');
+            $updatableProperties[] = 'date_new';
         }
 
         return $updatableProperties;

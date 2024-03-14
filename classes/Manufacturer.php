@@ -450,7 +450,7 @@ class ManufacturerCore extends ObjectModel
 			, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`,
 			pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
 				DATEDIFF(
-					product_shop.`date_novelty`,
+					product_shop.`date_new`,
 					DATE_SUB(
 						"' . date('Y-m-d') . ' 00:00:00",
 						INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY

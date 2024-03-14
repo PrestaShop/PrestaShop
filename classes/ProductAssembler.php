@@ -142,7 +142,7 @@ class ProductAssemblerCore
                     sa.out_of_stock,
                     IFNULL(sa.quantity, 0) as quantity,
                     (DATEDIFF(
-                        p.`date_novelty`,
+                        p.`date_new`,
                         DATE_SUB(
                             '$now',
                             INTERVAL $nbDaysNewProduct DAY

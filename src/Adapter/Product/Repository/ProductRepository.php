@@ -229,7 +229,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
         $product->link_rewrite = $localizedLinkRewrites;
         $product->id_tax_rules_group = $this->taxRulesGroupRepository->getIdTaxRulesGroupMostUsed();
         $currentDate = new DateTime('NOW');
-        $product->date_novelty = $currentDate->format('Y-m-d');
+        $product->date_new = $currentDate->format('Y-m-d');
 
         $this->productValidator->validateCreation($product);
         $this->addObjectModelToShops($product, [$shopId], CannotAddProductException::class);

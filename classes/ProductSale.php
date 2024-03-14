@@ -107,7 +107,7 @@ class ProductSaleCore
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
 					image_shop.`id_image` id_image, il.`legend`,
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
-					DATEDIFF(p.`date_novelty`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
+					DATEDIFF(p.`date_new`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
 					INTERVAL ' . (int) $interval . ' DAY)) > 0 AS new'
             . ' FROM `' . _DB_PREFIX_ . 'product_sale` ps
 				LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON ps.`id_product` = p.`id_product`
