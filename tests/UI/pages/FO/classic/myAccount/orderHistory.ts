@@ -24,7 +24,7 @@ class OrderHistoryPage extends FOBasePage {
 
   private readonly orderTableColumnReference: (row: number) => string;
 
-  private readonly reorderLink: (row: number) => string;
+  protected reorderLink: (row: number) => string;
 
   protected detailsLink: (row: number) => string;
 
