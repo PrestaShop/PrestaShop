@@ -48,12 +48,12 @@ class RedirectType
     /**
      * Represents value of permanent redirection to a category
      */
-    public const TYPE_CATEGORY_PERMANENT = '301';
+    public const TYPE_PERMANENT = '301';
 
     /**
      * Represents value of temporary redirection to a category
      */
-    public const TYPE_CATEGORY_TEMPORARY = '302';
+    public const TYPE_TEMPORARY = '302';
 
     /**
      * Available redirection types
@@ -61,8 +61,8 @@ class RedirectType
     public const AVAILABLE_REDIRECT_TYPES = [
         self::TYPE_NOT_FOUND => self::TYPE_NOT_FOUND,
         self::TYPE_GONE => self::TYPE_GONE,
-        self::TYPE_CATEGORY_PERMANENT => self::TYPE_CATEGORY_PERMANENT,
-        self::TYPE_CATEGORY_TEMPORARY => self::TYPE_CATEGORY_TEMPORARY,
+        self::TYPE_PERMANENT => self::TYPE_PERMANENT,
+        self::TYPE_TEMPORARY => self::TYPE_TEMPORARY,
     ];
 
     /**
@@ -110,7 +110,7 @@ class RedirectType
      */
     public function isCategoryType(): bool
     {
-        return in_array($this->value, [static::TYPE_CATEGORY_PERMANENT, static::TYPE_CATEGORY_TEMPORARY]);
+        return in_array($this->value, [static::TYPE_PERMANENT, static::TYPE_TEMPORARY]);
     }
 
     /**

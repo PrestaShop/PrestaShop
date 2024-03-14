@@ -33,11 +33,12 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectType as CategoryRedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTargetInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType as ProductRedirectType;
 
 /**
  * Build details on the product target based on the configuration (redirection type and entity id)
@@ -92,11 +93,13 @@ class RedirectTargetProvider
         }
 
         switch ($redirectType) {
-            case RedirectType::TYPE_PRODUCT_TEMPORARY:
-            case RedirectType::TYPE_PRODUCT_PERMANENT:
+            case ProductRedirectType::TYPE_PRODUCT_TEMPORARY:
+            case ProductRedirectType::TYPE_PRODUCT_PERMANENT:
                 return $this->getProductTarget($redirectTargetId);
-            case RedirectType::TYPE_CATEGORY_TEMPORARY:
-            case RedirectType::TYPE_CATEGORY_PERMANENT:
+            case ProductRedirectType::TYPE_CATEGORY_TEMPORARY:
+            case ProductRedirectType::TYPE_CATEGORY_PERMANENT:
+            case CategoryRedirectType::TYPE_TEMPORARY:
+            case CategoryRedirectType::TYPE_PERMANENT:
                 return $this->getCategoryTarget($redirectTargetId);
             default:
                 return null;

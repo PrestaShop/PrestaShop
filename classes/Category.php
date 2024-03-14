@@ -85,7 +85,7 @@ class CategoryCore extends ObjectModel
      *
      * @see RedirectType
      */
-    public $redirect_type = RedirectType::TYPE_CATEGORY_PERMANENT;
+    public $redirect_type = RedirectType::TYPE_PERMANENT;
 
     /**
      * @var int Product identifier or Category identifier depends on redirect_type

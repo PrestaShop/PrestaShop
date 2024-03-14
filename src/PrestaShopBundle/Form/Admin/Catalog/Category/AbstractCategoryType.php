@@ -165,13 +165,13 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ->add('active', SwitchType::class, [
                 'label' => $this->trans('Enabled', 'Admin.Global'),
                 'help' => $this->trans(
-                        'If you want a category to appear in your store\'s menu, configure your menu module in [1]Modules > Module Manager[/1].',
-                        'Admin.Catalog.Help',
-                        [
-                            '[1]' => '<a href="' . $this->router->generate('admin_module_manage') . '" target="_blank" rel="noopener noreferrer nofollow">',
-                            '[/1]' => '</a>',
-                        ]
-                    ),
+                    'If you want a category to appear in your store\'s menu, configure your menu module in [1]Modules > Module Manager[/1].',
+                    'Admin.Catalog.Help',
+                    [
+                        '[1]' => '<a href="' . $this->router->generate('admin_module_manage') . '" target="_blank" rel="noopener noreferrer nofollow">',
+                        '[/1]' => '</a>',
+                    ]
+                ),
                 'required' => false,
             ])
             ->add('cover_image', ImageWithPreviewType::class, [
@@ -319,6 +319,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('redirect_option', RedirectOptionType::class, [
                 'isRootCategory' => $this instanceof RootCategoryType,
+                'alert_message' => $this->getRedirectionAlertMessages(),
             ])
             ->add('group_association', MaterialChoiceTableType::class, [
                 'label' => $this->trans('Group access', 'Admin.Catalog.Feature'),
@@ -337,5 +338,28 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'label' => $this->trans('Store association', 'Admin.Global'),
             ]);
         }
+    }
+
+    private function getRedirectionAlertMessages(): array
+    {
+        $formatParameters = [
+            '[1]' => '<strong>',
+            '[/1]' => '</strong>',
+            '[2]' => '<br>',
+        ];
+
+        $alertMessages = [
+            $this->trans('[1]No redirection (404), display error page[/1] [2] Do not redirect anywhere and display a 404 "Not Found" page.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]No redirection (410), display error page[/1] [2] Do not redirect anywhere and display a 410 "Gone" page.', 'Admin.Catalog.Help', $formatParameters),
+        ];
+
+        if (!$this instanceof RootCategoryType) {
+            $alertMessages = array_merge([
+                $this->trans('[1]Permanent redirection (301)[/1] [2] Permanently display another category instead.', 'Admin.Catalog.Help', $formatParameters),
+                $this->trans('[1]Temporary redirection (302)[/1] [2] Temporarily display another category instead.', 'Admin.Catalog.Help', $formatParameters),
+            ], $alertMessages);
+        }
+
+        return $alertMessages;
     }
 }
