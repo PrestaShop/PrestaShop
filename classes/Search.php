@@ -425,7 +425,7 @@ class SearchCore
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
 			 image_shop.`id_image` id_image, il.`legend`, m.`name` manufacturer_name ' . $sqlScore . ',
 				DATEDIFF(
-					p.`published_date`,
+					p.`date_novelty`,
 					DATE_SUB(
 						"' . date('Y-m-d') . ' 00:00:00",
 						INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
@@ -988,7 +988,7 @@ class SearchCore
         $sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`, pl.`available_now`, pl.`available_later`,
 					MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` manufacturer_name, 1 position,
 					DATEDIFF(
-						p.`published_date`,
+						p.`date_novelty`,
 						DATE_SUB(
 							"' . date('Y-m-d') . ' 00:00:00",
 							INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY

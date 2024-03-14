@@ -1144,7 +1144,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->createProductStockInformation($product),
             $this->createVirtualProductFile($product),
             $product['cover_thumbnail'] ?? self::COVER_URL,
-            new DateTime($product->published_date)
+            new DateTime($product->date_novelty)
         );
     }
 

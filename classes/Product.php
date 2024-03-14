@@ -247,7 +247,7 @@ class ProductCore extends ObjectModel
     public $date_upd;
 
     /** @var string Object publication date in mysql format Y-m-d H:i:s */
-    public $published_date;
+    public $date_novelty;
 
     /** @var array Tags data */
     public $tags;
@@ -532,7 +532,7 @@ class ProductCore extends ObjectModel
             'advanced_stock_management' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'],
-            'published_date' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'],
+            'date_novelty' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'],
             'pack_stock_type' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'],
 
             /* Lang fields */
@@ -778,7 +778,7 @@ class ProductCore extends ObjectModel
             $this->product_type = ProductType::TYPE_VIRTUAL;
         }
 
-        $this->published_date = date('Y-m-d H:i:s');
+        $this->date_novelty = date('Y-m-d H:i:s');
 
         if (!parent::add($autodate, $null_values)) {
             return false;
@@ -1696,7 +1696,7 @@ class ProductCore extends ObjectModel
             FROM `' . _DB_PREFIX_ . 'product` p
             ' . Shop::addSqlAssociation('product', 'p') . '
             WHERE p.id_product = ' . (int) $idProduct . '
-            AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`published_date`) < ' . $nbDaysNewProduct;
+            AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_novelty`) < ' . $nbDaysNewProduct;
 
         return (bool) Db::getInstance()->getValue($query, false);
     }
@@ -2804,7 +2804,7 @@ class ProductCore extends ObjectModel
                     FROM `' . _DB_PREFIX_ . 'product` p
                     ' . Shop::addSqlAssociation('product', 'p') . '
                     WHERE product_shop.`active` = 1
-                    AND DATEDIFF(product_shop.`published_date`, DATE_SUB("' . $now . '", INTERVAL ' . $nb_days_new_product . ' DAY)) > 0
+                    AND DATEDIFF(product_shop.`date_novelty`, DATE_SUB("' . $now . '", INTERVAL ' . $nb_days_new_product . ' DAY)) > 0
                     ' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
                     ' . $sql_groups;
 
@@ -2814,7 +2814,7 @@ class ProductCore extends ObjectModel
         $sql->select(
             'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
             pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
-            (DATEDIFF(product_shop.`published_date`,
+            (DATEDIFF(product_shop.`date_novelty`,
                 DATE_SUB(
                     "' . $now . '",
                     INTERVAL ' . $nb_days_new_product . ' DAY
@@ -2839,7 +2839,7 @@ class ProductCore extends ObjectModel
         if ($front) {
             $sql->where('product_shop.`visibility` IN ("both", "catalog")');
         }
-        $sql->where('DATEDIFF(product_shop.`published_date`,
+        $sql->where('DATEDIFF(product_shop.`date_novelty`,
             DATE_SUB(
                 "' . $now . '",
                 INTERVAL ' . $nb_days_new_product . ' DAY
@@ -2977,7 +2977,7 @@ class ProductCore extends ObjectModel
             $sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
                         pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
                         p.`ean13`, p.`isbn`, p.`upc`, p.`mpn`, image_shop.`id_image` id_image, il.`legend`,
-                        DATEDIFF(product_shop.`published_date`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
+                        DATEDIFF(product_shop.`date_novelty`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
                         INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . '
                             DAY)) > 0 AS new
                     FROM `' . _DB_PREFIX_ . 'product` p
@@ -3109,7 +3109,7 @@ class ProductCore extends ObjectModel
             pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
             pl.`name`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
             DATEDIFF(
-                p.`published_date`,
+                p.`date_novelty`,
                 DATE_SUB(
                     "' . date('Y-m-d') . ' 00:00:00",
                     INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
@@ -4414,7 +4414,7 @@ class ProductCore extends ObjectModel
                     pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
                     image_shop.`id_image` id_image, il.`legend`, m.`name` as manufacturer_name, cl.`name` AS category_default, IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
                     DATEDIFF(
-                        p.`published_date`,
+                        p.`date_novelty`,
                         DATE_SUB(
                             "' . date('Y-m-d') . ' 00:00:00",
                             INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY

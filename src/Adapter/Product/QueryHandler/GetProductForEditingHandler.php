@@ -465,6 +465,6 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
 
     private function getPublishedDate(Product $product): DateTimeInterface
     {
-        return new DateTime($product->published_date);
+        return new DateTime($product->date_novelty);
     }
 }

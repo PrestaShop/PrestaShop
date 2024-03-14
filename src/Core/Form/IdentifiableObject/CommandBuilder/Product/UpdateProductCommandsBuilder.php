@@ -106,7 +106,7 @@ class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
     {
         $config
             ->addField('[description][manufacturer]', 'setManufacturerId', DataField::TYPE_INT)
-            ->addMultiShopField('[options][published_date]', 'setPublishedDate', DataField::TYPE_DATETIME)
+            ->addMultiShopField('[options][date_novelty]', 'setPublishedDate', DataField::TYPE_DATETIME)
             ->addMultiShopField('[options][visibility][online_only]', 'setOnlineOnly', DataField::TYPE_BOOL)
             ->addMultiShopField('[options][visibility][visibility]', 'setVisibility', DataField::TYPE_STRING)
             ->addMultiShopField('[options][visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)

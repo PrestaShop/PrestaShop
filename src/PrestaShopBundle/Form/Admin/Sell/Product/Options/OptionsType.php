@@ -43,10 +43,10 @@ class OptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('published_date', DatePickerType::class, [
+            ->add('date_novelty', DatePickerType::class, [
                 'required' => false,
-                'label' => $this->trans('Date of publication', 'Admin.Catalog.Feature'),
-                'label_subtitle' => $this->trans('When do you want your product to appear?', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Label to be defined', 'Admin.Catalog.Feature'),
+                'label_subtitle' => $this->trans('Label subtitle to be defined', 'Admin.Catalog.Feature'),
                 'modify_all_shops' => true,
                 'attr' => ['placeholder' => 'YYYY-MM-DD'],
                 'label_tag_name' => 'h3',
