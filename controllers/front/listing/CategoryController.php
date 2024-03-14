@@ -107,15 +107,16 @@ class CategoryControllerCore extends ProductListingFrontController
                 case RedirectType::TYPE_GONE:
                     header('HTTP/1.1 410 Gone');
                     header('Status: 410 Gone');
-                    $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
+                    $this->errors[] = $this->trans('This category is no longer available.', [], 'Shop.Notifications.Error');
                     $this->setTemplate('errors/410');
+                    $this->notFound = true;
 
                     break;
                 case RedirectType::TYPE_NOT_FOUND:
                 default:
                     header('HTTP/1.1 404 Not Found');
                     header('Status: 404 Not Found');
-                    $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
+                    $this->errors[] = $this->trans('This category is no longer available.', [], 'Shop.Notifications.Error');
                     $this->setTemplate('errors/404');
                     $this->notFound = true;
 

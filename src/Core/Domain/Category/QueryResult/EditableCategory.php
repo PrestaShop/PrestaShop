@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTargetInformation;
+use PrestaShop\PrestaShop\Core\Domain\QueryResult\RedirectTargetInformation;
 
 /**
  * Stores category data needed for editing.

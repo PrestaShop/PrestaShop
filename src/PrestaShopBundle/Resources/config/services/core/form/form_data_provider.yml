@@ -49,8 +49,6 @@ services:
       - '@prestashop.adapter.group.group_data_provider'
       - '@prestashop.adapter.shop.url.category_provider'
       - '@router.default'
-      - '@prestashop.adapter.data_provider.category'
-      - '@prestashop.adapter.legacy.context'
 
   prestashop.core.form.identifiable_object.data_provider.contact_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ContactFormDataProvider'

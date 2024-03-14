@@ -36,9 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectType as CategoryRedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTargetInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType as ProductRedirectType;
+use PrestaShop\PrestaShop\Core\Domain\QueryResult\RedirectTargetInformation;
 
 /**
  * Build details on the product target based on the configuration (redirection type and entity id)

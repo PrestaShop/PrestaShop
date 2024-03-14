@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Category\EventListener;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectType;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
@@ -60,18 +60,8 @@ class RedirectOptionListener implements EventSubscriberInterface
         $form = $event->getForm();
         $targetField = $form->get('target');
         $targetOptions = $targetField->getConfig()->getOptions();
-        $dataType = $data['type'] ?? RedirectType::TYPE_NOT_FOUND;
-
-        // Adapt target options
-        $targetOptions['entity_type'] = 'category';
-        $targetOptions['label'] = $this->getEntityAttribute($targetOptions, 'label');
-        $targetOptions['placeholder'] = $this->getEntityAttribute($targetOptions, 'placeholder');
-        $targetOptions['help'] = $this->getEntityAttribute($targetOptions, 'help');
-        $targetOptions['remote_url'] = $this->getEntityAttribute($targetOptions, 'search-url');
-        $targetOptions['filtered_identities'] = json_decode($this->getEntityAttribute($targetOptions, 'filtered'));
-        if (RedirectType::TYPE_NOT_FOUND === $dataType || RedirectType::TYPE_GONE === $dataType ||
-            RedirectType::TYPE_DEFAULT === $dataType || RedirectType::TYPE_GONE_DISPLAYED === $dataType ||
-            RedirectType::TYPE_SUCCESS_DISPLAYED === $dataType || RedirectType::TYPE_NOT_FOUND_DISPLAYED === $dataType) {
+        $dataType = $data['type'] ?? $form->get('type')->getConfig()->getOption('default_empty_data');
+        if (RedirectType::TYPE_NOT_FOUND === $dataType || RedirectType::TYPE_GONE === $dataType) {
             $targetOptions['row_attr']['class'] = 'd-none';
         }
 
@@ -79,18 +69,5 @@ class RedirectOptionListener implements EventSubscriberInterface
         $cloner = new FormCloner();
         $clonedForm = $cloner->cloneForm($targetField, $targetOptions);
         $form->add($clonedForm);
-    }
-
-    /**
-     * @param array $targetOptions
-     * @param string $attributeName
-     *
-     * @return string
-     */
-    private function getEntityAttribute(array $targetOptions, string $attributeName): string
-    {
-        $dataAttribute = sprintf('data-%s', $attributeName);
-
-        return $targetOptions['attr'][$dataAttribute] ?? '';
     }
 }

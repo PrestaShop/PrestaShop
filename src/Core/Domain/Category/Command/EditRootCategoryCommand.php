@@ -104,10 +104,7 @@ class EditRootCategoryCommand
      */
     private $thumbnailImage;
 
-    /**
-     * @var RedirectOption|null
-     */
-    private $redirectOption;
+    private ?RedirectOption $redirectOption = null;
 
     /**
      * @param int $categoryId

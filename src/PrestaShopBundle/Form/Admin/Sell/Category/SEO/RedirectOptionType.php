@@ -79,6 +79,7 @@ class RedirectOptionType extends TranslatorAwareType
                 'required' => false,
                 'placeholder' => false, // Guaranties that no empty value is added in options
                 'choices' => $choices,
+                'default_empty_data' => $options['isRootCategory'] ? RedirectType::TYPE_NOT_FOUND : RedirectType::TYPE_TEMPORARY,
             ]);
 
         if (true !== $options['isRootCategory']) {
@@ -87,13 +88,11 @@ class RedirectOptionType extends TranslatorAwareType
                     'required' => false,
                     'limit' => 1,
                     'min_length' => 3,
-                    'attr' => [
-                        'data-label' => $this->trans('Target category', 'Admin.Catalog.Feature'),
-                        'data-placeholder' => $this->trans('To which category should the page redirect?', 'Admin.Catalog.Help'),
-                        'data-search-url' => $this->router->generate('admin_categories_get_ajax_categories', ['query' => '__QUERY__']),
-                        'data-help' => $this->trans('By default, the main category will be used if no category is selected.', 'Admin.Catalog.Help'),
-                        'data-filtered' => json_encode([$this->homeCategoryId]),
-                    ],
+                    'label' => false,
+                    'remote_url' => $this->router->generate('admin_categories_get_ajax_categories', ['query' => '__QUERY__']),
+                    'placeholder' => $this->trans('To which category should the page redirect?', 'Admin.Catalog.Help'),
+                    'help' => $this->trans('By default, the main category will be used if no category is selected.', 'Admin.Catalog.Help'),
+                    'filtered_identities' => [$this->homeCategoryId],
                 ]);
 
             // This will transform the target ID from model data into an array adapted for EntitySearchInputType

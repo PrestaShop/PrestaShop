@@ -57,7 +57,7 @@ abstract class AbstractEditCategoryHandler extends AbstractObjectModelHandler
         $redirectType = $redirectOption->getRedirectType();
         $redirectTarget = $redirectOption->getRedirectTarget();
 
-        if ($redirectType->isCategoryType()) {
+        if ($redirectType->isCategoryType() && !$redirectTarget->isNoTarget()) {
             $this->categoryRepository->assertCategoryExists(new CategoryId($redirectTarget->getValue()));
         } elseif (!$redirectType->isCategoryType() && !$redirectTarget->isNoTarget()) {
             throw new CategoryConstraintException(sprintf(

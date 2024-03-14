@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\QueryResult;
 
 /**
  * Details about the entity used for product redirection (can be a product or a category)

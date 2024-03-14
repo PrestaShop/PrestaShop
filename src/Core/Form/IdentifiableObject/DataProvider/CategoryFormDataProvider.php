@@ -44,8 +44,6 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         private readonly GroupDataProvider $groupDataProvider,
         private readonly CategoryProvider $categoryProvider,
         private readonly Router $router,
-        private readonly CategoryDataProvider $categoryDataProvider,
-        private readonly LegacyContext $legacyContext,
         private readonly ShopContext $shopContext,
     ) {
     }
@@ -109,23 +107,12 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
     {
         $allGroupIds = $this->groupDataProvider->getAllGroupIds();
 
-        $rootCategory = $this->categoryDataProvider->getRootCategory();
-        $isRoot = $this->router->match($this->router->getContext()->getPathInfo())['_route'] === 'admin_categories_create_root';
-
         return [
             'id_parent' => $this->shopContext->getCategoryId(),
             'group_association' => $allGroupIds,
             'shop_association' => $this->shopContext->getAssociatedShopIds(),
             'active' => true,
             'seo_preview' => $this->categoryProvider->getUrl(0, '{friendly-url}'),
-            'redirect_option' => [
-                'type' => $isRoot ? RedirectType::TYPE_NOT_FOUND : RedirectType::TYPE_CATEGORY_PERMANENT,
-                'target' => [
-                    'id' => $isRoot ? 0 : $rootCategory->id,
-                    'name' => $isRoot ? '' : $rootCategory->name,
-                    'image' => $isRoot ? '' : $this->legacyContext->getContext()->link->getCatImageLink($rootCategory->name, $rootCategory->id),
-                ],
-            ],
         ];
     }
 

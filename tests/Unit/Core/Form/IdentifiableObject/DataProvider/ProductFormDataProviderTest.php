@@ -61,7 +61,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformati
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTargetInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
@@ -76,6 +75,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\QueryResult\RedirectTargetInformation;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;

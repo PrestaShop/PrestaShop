@@ -39,9 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryPreview;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPreview;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTargetInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Domain\QueryResult\RedirectTargetInformation;
 
 class RedirectTargetProviderTest extends TestCase
 {

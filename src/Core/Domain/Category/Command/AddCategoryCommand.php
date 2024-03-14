@@ -100,10 +100,7 @@ class AddCategoryCommand
      */
     private $thumbnailImage;
 
-    /**
-     * @var ?RedirectOption
-     */
-    private $redirectOption;
+    private ?RedirectOption $redirectOption = null;
 
     /**
      * @param string[] $localizedNames

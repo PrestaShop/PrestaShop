@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
+use PrestaShop\PrestaShop\Core\Domain\QueryResult\RedirectTargetInformation;
 
 /**
  * Transfers data about Product SEO options

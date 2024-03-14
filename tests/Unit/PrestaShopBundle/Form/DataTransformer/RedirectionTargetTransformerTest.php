@@ -30,7 +30,7 @@ namespace Tests\Unit\PrestaShopBundle\Form\DataTransformer;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RedirectTargetInformation;
+use PrestaShop\PrestaShop\Core\Domain\QueryResult\RedirectTargetInformation;
 use PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer;
 
 class RedirectionTargetTransformerTest extends TestCase
