@@ -27,7 +27,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
-import foMerchandiseReturnsPage from '@pages/FO/classic/myAccount/merchandiseReturns';
+import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import addCustomerPage from '@pages/BO/customers/add';
 

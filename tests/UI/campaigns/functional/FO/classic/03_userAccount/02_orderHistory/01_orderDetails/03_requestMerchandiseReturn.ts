@@ -20,7 +20,7 @@ import invoicesPage from '@pages/BO/orders/invoices';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
-import foMerchandiseReturnsPage from '@pages/FO/classic/myAccount/merchandiseReturns';
+import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 
 // Import data
 import Customers from '@data/demo/customers';
