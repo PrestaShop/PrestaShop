@@ -331,8 +331,8 @@ CREATE TABLE `PREFIX_category` (
   `date_upd` datetime NOT NULL,
   `redirect_type` ENUM(
     '404', '410',
-    '301-category', '302-category'
-    ) NOT NULL DEFAULT '301-category',
+    '301', '302'
+    ) NOT NULL DEFAULT '301',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `position` int(10) unsigned NOT NULL DEFAULT '0',
   `is_root_category` tinyint(1) NOT NULL DEFAULT '0',

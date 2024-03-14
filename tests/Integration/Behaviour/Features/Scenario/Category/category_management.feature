@@ -43,7 +43,7 @@ Feature: Category Management
       | meta title[fr-FR]             | meta title french              |
       | meta keywords[en-US]          | meta,keyword,english           |
       | meta keywords[fr-FR]          | meta,keyword,french            |
-      | redirect type                 | 301-category                   |
+      | redirect type                 | 301                            |
       | redirect target               | home-accessories               |
     Then category "category1" should have following details:
       | name[en-US]                   | PC parts                       |
@@ -64,7 +64,7 @@ Feature: Category Management
       | meta title[fr-FR]             | meta title french              |
       | meta keywords[en-US]          | meta,keyword,english           |
       | meta keywords[fr-FR]          | meta,keyword,french            |
-      | redirect type                 | 301-category                   |
+      | redirect type                 | 301                            |
       | redirect target               | home-accessories               |
 
   Scenario: Edit category
@@ -75,7 +75,7 @@ Feature: Category Management
       | parent category     | home             |
       | link rewrite[en-US] | mobile-phones-en |
       | link rewrite[fr-FR] | mobile-phones-fr |
-      | redirect type       | 301-category     |
+      | redirect type       | 301              |
       | redirect target     | home             |
     And category "category2" should have following details:
       | name[en-US]                   | Mobile phones                         |
@@ -96,7 +96,7 @@ Feature: Category Management
       | meta title[fr-FR]             |                                       |
       | meta keywords[en-US]          |                                       |
       | meta keywords[fr-FR]          |                                       |
-      | redirect type                 | 301-category                          |
+      | redirect type                 | 301                                   |
       | redirect target               | home                                  |
     When I edit category "category2" with following details:
       | name[en-US]                   | Mobile phones super            |

@@ -48,12 +48,12 @@ class RedirectType
     /**
      * Represents value of permanent redirection to a category
      */
-    public const TYPE_CATEGORY_PERMANENT = '301-category';
+    public const TYPE_CATEGORY_PERMANENT = '301';
 
     /**
      * Represents value of temporary redirection to a category
      */
-    public const TYPE_CATEGORY_TEMPORARY = '302-category';
+    public const TYPE_CATEGORY_TEMPORARY = '302';
 
     /**
      * Available redirection types
