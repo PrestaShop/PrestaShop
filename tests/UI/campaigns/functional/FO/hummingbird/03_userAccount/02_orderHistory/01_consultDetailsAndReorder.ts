@@ -30,7 +30,7 @@ import Products from '@data/demo/products';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_consultOrderList';
+const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_consultDetailsAndReorder';
 
 /*
 Pre-condition:
@@ -49,7 +49,7 @@ Post-condition
 - Delete the theme hummingbird
  */
 
-describe('FO - Account - Order history : Consult order list', async () => {
+describe('FO - Account - Order history : Consult details and reorder', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
