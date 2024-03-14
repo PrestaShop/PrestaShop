@@ -16,6 +16,8 @@ class Home extends HomePage {
 
   private readonly addToCartIcon: (number: number) => string;
 
+  private readonly productColor: (number: number, color: string) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on home page
@@ -34,6 +36,8 @@ class Home extends HomePage {
     this.productArticle = (number: number) => `#content section.featured-products div.container div article:nth-child(${number})`;
     this.addToCartIcon = (number: number) => `${this.productArticle(number)} button[data-button-action='add-to-cart']`;
     this.productAddToWishlist = (number: number) => `${this.productArticle(number)} button.wishlist-button-add`;
+    this.productColor = (number: number, color: string) => `${this.productArticle(number)} div.product-miniature-variants`
+      + ` a[title='${color}']`;
 
     // Wishlist modal
     this.wishlistModal = '.wishlist-add-to .wishlist-modal.show';
@@ -102,12 +106,23 @@ class Home extends HomePage {
   }
 
   /**
-   *
+   * Add product to cart
    * @param page {Page} Browser tab
    * @param nthProduct {number} Product row in the list
    */
   async addProductToCart(page: Page, nthProduct: number): Promise<void> {
     await this.waitForSelectorAndClick(page, this.addToCartIcon(nthProduct));
+  }
+
+  /**
+   * Select product color
+   * @param page {Page} Browser tab
+   * @param nthProduct {number} Product row in the list
+   * @param color {string} Color to select
+   * @return {Promise<void>}
+   */
+  async selectProductColor(page: Page, nthProduct: number, color: string) {
+    await this.clickAndWaitForURL(page, this.productColor(nthProduct, color));
   }
 }
 
