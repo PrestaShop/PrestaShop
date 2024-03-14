@@ -31,7 +31,7 @@
 		<th class="header small" valign="middle">{l s='Date' d='Shop.Pdf' pdf='true'}</th>
 	</tr>
 	<tr>
-		<td class="center small white">{'%06d'|sprintf:$order_return->id}</td>
+		<td class="center small white">{sprintf('%06d', $order_return->id)}</td>
 		<td class="center small white">{dateFormat date=$order_return->date_add full=0}</td>
 	</tr>
 </table>
