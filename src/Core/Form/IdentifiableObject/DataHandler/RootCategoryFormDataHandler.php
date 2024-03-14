@@ -86,7 +86,6 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
      * @return AddRootCategoryCommand
      *
      * @throws CategoryConstraintException
-     * @throws ProductConstraintException
      */
     public function createAddRootCategoryCommand(array $data): AddRootCategoryCommand
     {
@@ -125,7 +124,6 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
      * @return EditRootCategoryCommand
      *
      * @throws CategoryConstraintException
-     * @throws ProductConstraintException
      */
     private function createEditRootCategoryCommand(int $rootCategoryId, array $data): EditRootCategoryCommand
     {

@@ -131,7 +131,6 @@ class RedirectOptionType extends TranslatorAwareType
                     'data-help' => $entityAttributes['help'],
                     'data-filtered' => $entityAttributes['filtered'],
                 ],
-                'alert_message' => $this->getRedirectionAlertMessages(),
             ]);
 
         // This will transform the target ID from model data into an array adapted for EntitySearchInputType
@@ -153,6 +152,7 @@ class RedirectOptionType extends TranslatorAwareType
             ->setDefaults([
                 'required' => false,
                 'label' => $this->trans('Redirection when offline', 'Admin.Catalog.Feature'),
+                'alert_message' => $this->getRedirectionAlertMessages(),
             ])
             ->setRequired([
                 'isRootCategory',

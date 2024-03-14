@@ -86,7 +86,6 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      * @return AddCategoryCommand
      *
      * @throws CategoryConstraintException
-     * @throws ProductConstraintException
      */
     private function createAddCategoryCommand(array $data): AddCategoryCommand
     {
@@ -128,7 +127,6 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      * @return EditCategoryCommand
      *
      * @throws CategoryConstraintException
-     * @throws ProductConstraintException
      */
     private function createEditCategoryCommand(int $categoryId, array $data): EditCategoryCommand
     {

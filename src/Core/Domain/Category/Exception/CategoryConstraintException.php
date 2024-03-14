@@ -70,4 +70,9 @@ class CategoryConstraintException extends CategoryException
      * When category redirect type is invalid
      */
     public const INVALID_REDIRECT_TYPE = 14;
+
+    /**
+     * When category redirect target is invalid
+     */
+    public const INVALID_REDIRECT_TARGET = 15;
 }

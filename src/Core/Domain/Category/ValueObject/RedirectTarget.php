@@ -31,41 +31,49 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 
 /**
- * Holds valid redirect option data
+ * Represent category id to which customer should be redirected in case category is disabled
  */
-class RedirectOption
+class RedirectTarget
 {
-    private RedirectType $redirectType;
-    private RedirectTarget $redirectTarget;
+    public const NO_TARGET = 0;
+
+    private int $value;
+
+    /**
+     * @param int $value
+     *
+     * @throws CategoryConstraintException
+     */
+    public function __construct(int $value)
+    {
+        $this->assertTargetValueIsValid($value);
+        $this->value = $value;
+    }
+
+    public function isNoTarget(): bool
+    {
+        return $this->value === static::NO_TARGET;
+    }
+
+    public function getValue(): int
+    {
+        return $this->value;
+    }
 
     /**
      * @throws CategoryConstraintException
      */
-    public function __construct(string $redirectType, int $redirectTarget)
+    private function assertTargetValueIsValid(int $value): void
     {
-        $this->redirectType = new RedirectType($redirectType);
-        $this->setRedirectTarget($redirectTarget);
-    }
-
-    public function getRedirectType(): RedirectType
-    {
-        return $this->redirectType;
-    }
-
-    public function getRedirectTarget(): RedirectTarget
-    {
-        return $this->redirectTarget;
-    }
-
-    /**
-     * @throws CategoryConstraintException
-     */
-    private function setRedirectTarget(int $value): void
-    {
-        if ($this->redirectType->isTypeNotFound()) {
-            $value = RedirectTarget::NO_TARGET;
+        if ($value === static::NO_TARGET) {
+            return;
         }
 
-        $this->redirectTarget = new RedirectTarget($value);
+        if ($value <= 0) {
+            throw new CategoryConstraintException(
+                sprintf('Invalid redirect target "%d". It cannot be less than or equal to 0', $value),
+                CategoryConstraintException::INVALID_REDIRECT_TARGET
+            );
+        }
     }
 }

@@ -117,6 +117,7 @@ class CategoryControllerCore extends ProductListingFrontController
                     header('Status: 404 Not Found');
                     $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
                     $this->setTemplate('errors/404');
+                    $this->notFound = true;
 
                     break;
             }
