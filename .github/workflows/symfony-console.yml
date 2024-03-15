@@ -58,6 +58,38 @@ jobs:
           ./bin/console cache:clear --env=dev --no-warmup --app-id=${{ matrix.app-id }}
           ./bin/console cache:clear --env=prod --no-warmup --app-id=${{ matrix.app-id }}
 
+      - name: Check app listeners for OAuth API
+        if: matrix.app-id == 'oauth-api'
+        run: |
+          apiListeners=$(./bin/console debug:event-dispatcher kernel.request --app-id=oauth-api | grep 'PrestaShopBundle\\EventListener\\API' | wc -l)
+          adminListeners=$(./bin/console debug:event-dispatcher kernel.request --app-id=oauth-api | grep 'PrestaShopBundle\\EventListener\\Admin' | wc -l)
+          echo $apiListeners API listeners detected
+          echo $adminListeners Admin listeners detected
+          if [ $adminListeners -ne 0 ]; then
+            echo No admin listeners should be present
+            exit 1
+          fi
+          if [ $apiListeners -eq 0 ]; then
+            echo No API listeners detected
+            exit 1
+          fi
+
+      - name: Check app listeners for Admin
+        if: matrix.app-id == 'admin'
+        run: |
+          apiListeners=$(./bin/console debug:event-dispatcher kernel.request --app-id=admin | grep 'PrestaShopBundle\\EventListener\\API' | wc -l)
+          adminListeners=$(./bin/console debug:event-dispatcher kernel.request --app-id=admin | grep 'PrestaShopBundle\\EventListener\\Admin' | wc -l)
+          echo $apiListeners API listeners detected
+          echo $adminListeners Admin listeners detected
+          if [ $adminListeners -eq 0 ]; then
+            echo No admin listeners detected
+            exit 1
+          fi
+          if [ $apiListeners -ne 0 ]; then
+            echo No API listeners should be present
+            exit 1
+          fi
+
       # Now install the shop
       - name: Setup Environment
         timeout-minutes: 15
