@@ -140,6 +140,23 @@ class GeneralType extends TranslatorAwareType
                 ),
                 'required' => false,
             ])
+            ->add('product_breadcrumb_category', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Category used in breadcrumbs',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'choices' => [
+                    $this->trans('Product default category', 'Admin.Shopparameters.Feature') => 'default',
+                    $this->trans('Category the product was accessed from', 'Admin.Shopparameters.Feature') => 'current',
+                ],
+                'choice_translation_domain' => 'Admin.Global',
+                'placeholder' => false,
+                'help' => $this->trans(
+                    'Select which category to display on the product page breadcrumbs. It can be the product\'s default category or the category the customer came from.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'required' => false,
+            ])
             ->add('default_status', SwitchType::class, [
                 'label' => $this->trans(
                     'Activate new products by default',
