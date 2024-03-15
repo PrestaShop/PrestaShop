@@ -13,6 +13,10 @@ export default {
     tag: 'ps_cashondelivery',
     name: 'Cash on delivery (COD)',
   }),
+  psCategoryProducts: new ModuleData({
+    tag: 'ps_categoryproducts',
+    name: 'Products in the same category',
+  }),
   psCheckPayment: new ModuleData({
     tag: 'ps_checkpayment',
     name: 'Payments by check',
