@@ -111,10 +111,6 @@ describe('FO - Checkout : Show details', async () => {
     it('should check the first product details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstProductDetails', baseContext);
       const result = await checkoutPage.getProductDetails(page, 1);
-      console.log(result.image);
-      console.log(result.name);
-      console.log('Quantity', result.quantity);
-      console.log(result.price);
       await Promise.all([
         expect(result.image).to.contains(Products.demo_1.coverImage),
         expect(result.name).to.equal(Products.demo_1.name),
