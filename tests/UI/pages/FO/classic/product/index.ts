@@ -27,7 +27,7 @@ class Product extends FOBasePage {
 
   private readonly productFlag: (flag: string) => string;
 
-  private readonly productName: string;
+  protected productName: string;
 
   private readonly productCoverImg: string;
 
@@ -37,7 +37,7 @@ class Product extends FOBasePage {
 
   private readonly productQuantity: string;
 
-  private readonly shortDescription: string;
+  protected shortDescription: string;
 
   private readonly productDescription: string;
 
@@ -81,7 +81,7 @@ class Product extends FOBasePage {
 
   private readonly pinterestSocialSharing: string;
 
-  private readonly productPricesBlock: string;
+  protected productPricesBlock: string;
 
   private readonly discountAmountSpan: string;
 
@@ -91,7 +91,7 @@ class Product extends FOBasePage {
 
   private readonly packProductsPrice: string;
 
-  private readonly productPrice: string;
+  protected productPrice: string;
 
   private readonly taxShippingDeliveryBlock: string;
 

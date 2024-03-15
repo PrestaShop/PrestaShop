@@ -53,23 +53,23 @@ class CheckoutPage extends FOBasePage {
 
   private readonly noPaymentNeededElement: string;
 
-  private readonly itemsNumber: string;
+  protected itemsNumber: string;
 
-  private readonly showDetailsLink: string;
+  protected showDetailsLink: string;
 
   private readonly productList: string;
 
-  private readonly productRowLink: (productRow: number) => string;
+  protected productRowLink: (productRow: number) => string;
 
-  private readonly productDetailsImage: (productRow: number) => string;
+  protected productDetailsImage: (productRow: number) => string;
 
-  private readonly productDetailsName: (productRow: number) => string;
+  protected productDetailsName: (productRow: number) => string;
 
-  private readonly productDetailsQuantity: (productRow: number) => string;
+  protected productDetailsQuantity: (productRow: number) => string;
 
-  private readonly productDetailsPrice: (productRow: number) => string;
+  protected productDetailsPrice: (productRow: number) => string;
 
-  private readonly productDetailsAttributes: (productRow: number) => string;
+  protected productDetailsAttributes: (productRow: number) => string;
 
   public readonly noPaymentNeededText: string;
 
@@ -113,7 +113,7 @@ class CheckoutPage extends FOBasePage {
 
   protected signInHyperLink: string;
 
-  private readonly checkoutSummary: string;
+  protected checkoutSummary: string;
 
   private readonly checkoutPromoBlock: string;
 
@@ -372,7 +372,7 @@ class CheckoutPage extends FOBasePage {
     this.productList = '#cart-summary-product-list';
     this.productRowLink = (productRow: number) => `${this.productList} ul li:nth-child(${productRow})`;
     this.productDetailsImage = (productRow: number) => `${this.productRowLink(productRow)} div.media-left a img`;
-    this.productDetailsName = (productRow: number) => `${this.productRowLink(productRow)} div.media-body span.product-name`;
+    this.productDetailsName = (productRow: number) => `${this.productRowLink(productRow)} div span.product-name`;
     this.productDetailsQuantity = (productRow: number) => `${this.productRowLink(productRow)} `
       + 'div.media-body span.product-quantity';
     this.productDetailsPrice = (productRow: number) => `${this.productRowLink(productRow)} div.media-body `
@@ -958,7 +958,7 @@ class CheckoutPage extends FOBasePage {
     return (await page
       .locator(this.deliveryOptionAllPricesSpan)
       .allTextContents())
-      .filter((el: string|null): el is string => el !== null);
+      .filter((el: string | null): el is string => el !== null);
   }
 
   /**

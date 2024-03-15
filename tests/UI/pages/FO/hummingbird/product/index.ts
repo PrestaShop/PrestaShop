@@ -14,6 +14,12 @@ class ProductPage extends Product {
     super('hummingbird');
 
     this.proceedToCheckoutButton = '#blockcart-modal div.cart-footer-actions a';
+    this.productName = '#content-wrapper h1.product__name';
+    this.shortDescription = 'div.product__description-short';
+
+    // Product prices block
+    this.productPricesBlock = 'div.product__prices';
+    this.productPrice = `${this.productPricesBlock} .product__current-price`;
   }
 }
 

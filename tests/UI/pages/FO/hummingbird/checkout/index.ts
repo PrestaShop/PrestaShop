@@ -1,5 +1,7 @@
 // Import FO pages
 import {CheckoutPage} from '@pages/FO/classic/checkout';
+import type {Page} from 'playwright';
+import {ProductDetailsBasic} from '@data/types/product';
 
 /**
  * Cart page, contains functions that can be used on the page
@@ -7,6 +9,8 @@ import {CheckoutPage} from '@pages/FO/classic/checkout';
  * @extends FOBasePage
  */
 class Checkout extends CheckoutPage {
+  private readonly productDetailsBody: (productRow: number) => string;
+
   /**
    * @constructs
    */
@@ -56,6 +60,30 @@ class Checkout extends CheckoutPage {
 
     // Checkout summary selectors
     this.shippingValueSpan = '#cart-subtotal-shipping span.cart-summary__value';
+    this.itemsNumber = `${this.checkoutSummary} div.cart-summary__products.js-cart-summary-products p:nth-child(1)`;
+    this.showDetailsLink = `${this.checkoutSummary} a.cart-summary__show.js-show-details`;
+    this.productDetailsBody = (productRow: number) => `${this.productRowLink(productRow)} div.cart-summary__product__body`;
+    this.productDetailsImage = (productRow: number) => `${this.productRowLink(productRow)} div.cart-summary__product__image`
+      + ' a img';
+    this.productDetailsPrice = (productRow: number) => `${this.productRowLink(productRow)} div.cart-summary__product__current `
+      + 'span.price';
+    this.productDetailsAttributes = (productRow: number) => `${this.productRowLink(productRow)} div.cart-summary__product__body `
+      + 'div.product-line-info:nth-child(2)';
+  }
+
+  /**
+   * Get product details
+   * @param page {Page} Browser tab
+   * @param productRow {number} Product row in details block
+   * @returns {Promise<ProductDetailsBasic>
+   */
+  async getProductDetails(page: Page, productRow: number): Promise<ProductDetailsBasic> {
+    return {
+      image: await this.getAttributeContent(page, this.productDetailsImage(productRow), 'srcset') ?? '',
+      name: await this.getTextContent(page, this.productDetailsName(productRow)),
+      quantity: parseInt((await this.getTextContent(page, this.productDetailsBody(productRow))).split('Quantity x')[1], 10),
+      price: await this.getPriceFromText(page, this.productDetailsPrice(productRow)),
+    };
   }
 }
 
