@@ -36,7 +36,7 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
-    apiContext = await helper.createAPIContext(global.BO.URL);
+    apiContext = await helper.createAPIContext(global.API.URL);
   });
 
   after(async () => {
@@ -98,24 +98,24 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
   });
 
   describe('Authorization Endpoint', async () => {
-    it('should request the endpoint /admin-dev/api/oauth2/token with method GET', async function () {
+    it('should request the endpoint /access_token with method GET', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodGET', baseContext);
 
-      const apiResponse = await apiContext.get('api/oauth2/token');
+      const apiResponse = await apiContext.get('access_token');
       expect(apiResponse.status()).to.eq(405);
     });
 
-    it('should request the endpoint /admin-dev/api/oauth2/token with method POST', async function () {
+    it('should request the endpoint /access_token with method POST', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodPOST', baseContext);
 
-      const apiResponse = await apiContext.post('api/oauth2/token');
+      const apiResponse = await apiContext.post('access_token');
       expect(apiResponse.status()).to.eq(400);
     });
 
-    it('should request the endpoint /admin-dev/api/oauth2/token with method POST with unuseful data', async function () {
+    it('should request the endpoint /access_token with method POST with unuseful data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodPOSTUnusefulData', baseContext);
 
-      const apiResponse = await apiContext.post('api/oauth2/token', {
+      const apiResponse = await apiContext.post('access_token', {
         form: {
           notUsed: 'notUsed',
         },
@@ -123,10 +123,10 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
       expect(apiResponse.status()).to.eq(400);
     });
 
-    it('should request the endpoint /admin-dev/api/oauth2/token with method POST with invalid data', async function () {
+    it('should request the endpoint /access_token with method POST with invalid data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodPOSTInvalidData', baseContext);
 
-      const apiResponse = await apiContext.post('api/oauth2/token', {
+      const apiResponse = await apiContext.post('access_token', {
         form: {
           client_id: 'bad_client_id',
           client_secret: 'bad_client_secret',
@@ -136,10 +136,10 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
       expect(apiResponse.status()).to.eq(401);
     });
 
-    it('should request the endpoint /admin-dev/api/oauth2/token with method POST with valid + unuseful data', async function () {
+    it('should request the endpoint /access_token with method POST with valid + unuseful data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodPOSTValidAndUnusefulData', baseContext);
 
-      const apiResponse = await apiContext.post('api/oauth2/token', {
+      const apiResponse = await apiContext.post('access_token', {
         form: {
           client_id: clientClient.clientId,
           client_secret: clientSecret,
@@ -150,10 +150,10 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
       expect(apiResponse.status()).to.eq(200);
     });
 
-    it('should request the endpoint /admin-dev/api/oauth2/token with method POST with valid data', async function () {
+    it('should request the endpoint /access_token with method POST with valid data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthWithMethodPOSTValidData', baseContext);
 
-      const apiResponse = await apiContext.post('api/oauth2/token', {
+      const apiResponse = await apiContext.post('access_token', {
         form: {
           client_id: clientClient.clientId,
           client_secret: clientSecret,

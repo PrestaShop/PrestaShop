@@ -33,7 +33,7 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
     browserContext = await helpers.createBrowserContext(this.browser);
     page = await helpers.newTab(browserContext);
 
-    apiContext = await helpers.createAPIContext(global.BO.URL);
+    apiContext = await helpers.createAPIContext(global.API.URL);
 
     if (!global.GENERATE_FAILED_STEPS) {
       /*
@@ -138,23 +138,23 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       expect(textResult).to.be.eq(keycloakConnectorDemo.successfulUpdateMessage);
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status/1 without access token', async function () {
+    it('should request the endpoint /hook-status/1 without access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithoutAccessToken', baseContext);
 
       this.skip();
 
-      const apiResponse = await apiContext.get('api/hook-status/1');
+      const apiResponse = await apiContext.get('hook-status/1');
       expect(apiResponse.status()).to.eq(401);
       expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
       expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status/1 with invalid access token', async function () {
+    it('should request the endpoint /hook-status/1 with invalid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithInvalidAccessToken', baseContext);
 
       this.skip();
 
-      const apiResponse = await apiContext.get('api/hook-status/1', {
+      const apiResponse = await apiContext.get('hook-status/1', {
         headers: {
           Authorization: 'Bearer INVALIDTOKEN',
         },
@@ -164,12 +164,12 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status/1 with expired access token', async function () {
+    it('should request the endpoint /hook-status/1 with expired access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithExpiredAccessToken', baseContext);
 
       this.skip();
 
-      const apiResponse = await apiContext.get('api/hook-status/1', {
+      const apiResponse = await apiContext.get('hook-status/1', {
         headers: {
           Authorization: `Bearer ${accessTokenExpiredKeycloak}`,
         },
@@ -180,12 +180,12 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status/1 with valid access token', async function () {
+    it('should request the endpoint /hook-status/1 with valid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithValidAccessToken', baseContext);
 
       this.skip();
 
-      const apiResponse = await apiContext.get('api/hook-status/1', {
+      const apiResponse = await apiContext.get('hook-status/1', {
         headers: {
           Authorization: `Bearer ${accessTokenKeycloak}`,
         },

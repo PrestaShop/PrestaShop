@@ -21,7 +21,7 @@ import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_API_endpoints_hook_getAPIHookStatusId';
 
-describe('API : GET /api/hook-status/{id}', async () => {
+describe('API : GET /hook-status/{id}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -43,7 +43,7 @@ describe('API : GET /api/hook-status/{id}', async () => {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
-    apiContext = await helper.createAPIContext(global.BO.URL);
+    apiContext = await helper.createAPIContext(global.API.URL);
   });
 
   after(async () => {
@@ -103,10 +103,10 @@ describe('API : GET /api/hook-status/{id}', async () => {
       expect(clientSecret.length).to.be.gt(0);
     });
 
-    it('should request the endpoint /admin-dev/api/oauth2/token', async function () {
+    it('should request the endpoint /access_token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
-      const apiResponse = await apiContext.post('api/oauth2/token', {
+      const apiResponse = await apiContext.post('access_token', {
         form: {
           client_id: clientData.clientId,
           client_secret: clientSecret,
@@ -153,10 +153,10 @@ describe('API : GET /api/hook-status/{id}', async () => {
   });
 
   describe('API : Check Data', async () => {
-    it('should request the endpoint /admin-dev/api/hook-status/{id}', async function () {
+    it('should request the endpoint /hook-status/{id}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get(`api/hook-status/${idHook}`, {
+      const apiResponse = await apiContext.get(`hook-status/${idHook}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

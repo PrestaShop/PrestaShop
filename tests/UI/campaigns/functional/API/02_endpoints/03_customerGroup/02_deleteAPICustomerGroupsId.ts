@@ -24,7 +24,7 @@ import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_API_endpoints_customerGroup_deleteAPICustomerGroupsId';
 
-describe('API : DELETE /api/customers/group/{customerGroupId}', async () => {
+describe('API : DELETE /customers/group/{customerGroupId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -46,7 +46,7 @@ describe('API : DELETE /api/customers/group/{customerGroupId}', async () => {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
-    apiContext = await helper.createAPIContext(global.BO.URL);
+    apiContext = await helper.createAPIContext(global.API.URL);
   });
 
   after(async () => {
@@ -106,10 +106,10 @@ describe('API : DELETE /api/customers/group/{customerGroupId}', async () => {
       expect(clientSecret.length).to.be.gt(0);
     });
 
-    it('should request the endpoint /admin-dev/api/oauth2/token', async function () {
+    it('should request the endpoint /access_token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
-      const apiResponse = await apiContext.post('api/oauth2/token', {
+      const apiResponse = await apiContext.post('access_token', {
         form: {
           client_id: clientData.clientId,
           client_secret: clientSecret,
@@ -197,10 +197,10 @@ describe('API : DELETE /api/customers/group/{customerGroupId}', async () => {
   });
 
   describe('API : Delete the Customer Group', async () => {
-    it('should request the endpoint /api/customers/group/{customerGroupId}', async function () {
+    it('should request the endpoint /customers/group/{customerGroupId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.delete(`api/customers/group/${idCustomerGroup}`, {
+      const apiResponse = await apiContext.delete(`customers/group/${idCustomerGroup}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
