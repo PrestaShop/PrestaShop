@@ -105,6 +105,9 @@ class AttributeType extends TranslatorAwareType
             $builder->add('color', ColorType::class, [
                 'label' => $this->trans('Color', 'Admin.Global'),
                 'required' => false,
+                'attr' => [
+                    'class' => 'custom-color',
+                ],
             ])->add('texture', FileType::class, [
                 'label' => $this->trans('Texture', 'Admin.Global'),
                 'required' => false,
