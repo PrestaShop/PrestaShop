@@ -32,6 +32,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use PrestaShopBundle\EventListener\API\Context\ShopContextListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,6 +42,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
 {
     private const DEFAULT_SHOP_ID = 42;
     private const QUERY_SHOP_ID = 51;
+    private const QUERY_SHOP_GROUP_ID = 69;
 
     public function testShopContextWhenMultishopDisabled(): void
     {
@@ -93,6 +95,12 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
 
     public function getMultishopRequests(): iterable
     {
+        yield 'access token endpoint uses default shop as fallback, even if no shop context parameter is specified' => [
+            new Request([], [], ['_controller' => AccessTokenController::class]),
+            ShopConstraint::shop(self::DEFAULT_SHOP_ID),
+            self::DEFAULT_SHOP_ID,
+        ];
+
         yield 'single shop query parameter' => [
             new Request(['shopId' => self::QUERY_SHOP_ID]),
             ShopConstraint::shop(self::QUERY_SHOP_ID),
@@ -112,25 +120,25 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         ];
 
         yield 'shop group query parameter' => [
-            new Request(['shopGroupId' => self::QUERY_SHOP_ID]),
-            ShopConstraint::shopGroup(self::QUERY_SHOP_ID),
+            new Request(['shopGroupId' => self::QUERY_SHOP_GROUP_ID]),
+            ShopConstraint::shopGroup(self::QUERY_SHOP_GROUP_ID),
             self::DEFAULT_SHOP_ID,
         ];
 
         yield 'shop group request parameter' => [
-            new Request([], ['shopGroupId' => self::QUERY_SHOP_ID]),
-            ShopConstraint::shopGroup(self::QUERY_SHOP_ID),
+            new Request([], ['shopGroupId' => self::QUERY_SHOP_GROUP_ID]),
+            ShopConstraint::shopGroup(self::QUERY_SHOP_GROUP_ID),
             self::DEFAULT_SHOP_ID,
         ];
 
         yield 'shop group attribute parameter' => [
-            new Request([], [], ['shopGroupId' => self::QUERY_SHOP_ID]),
-            ShopConstraint::shopGroup(self::QUERY_SHOP_ID),
+            new Request([], [], ['shopGroupId' => self::QUERY_SHOP_GROUP_ID]),
+            ShopConstraint::shopGroup(self::QUERY_SHOP_GROUP_ID),
             self::DEFAULT_SHOP_ID,
         ];
 
         yield 'all shops query parameter true' => [
-            new Request(['allShops' => true], [], ['_controller' => 'api_platform.action.placeholder']),
+            new Request(['allShops' => true]),
             ShopConstraint::allShops(),
             self::DEFAULT_SHOP_ID,
         ];

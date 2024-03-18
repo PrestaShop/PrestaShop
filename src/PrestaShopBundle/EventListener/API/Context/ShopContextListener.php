@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -99,6 +100,12 @@ class ShopContextListener
         // Parameter allShops indicate the all shops context regardless of its value, it can be empty it's enough
         if ($request->query->has('allShops') || $request->request->has('allShops') || $request->attributes->has('allShops')) {
             return ShopConstraint::allShops();
+        }
+
+        // Special use case when calling the access token controller, we don't want to block the endpoint even if no
+        // context parameters as specified, so we use the default shop as a fallback
+        if ($request->attributes->get('_controller') === AccessTokenController::class) {
+            return ShopConstraint::shop($this->getConfiguredDefaultShopId());
         }
 
         return null;
