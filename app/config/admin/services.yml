@@ -105,3 +105,9 @@ services:
       $legacyBuilders: !tagged_iterator core.legacy_context_builder
     tags:
       - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+  # SSL middleware
+  PrestaShopBundle\EventListener\Admin\SSLMiddlewareListener:
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

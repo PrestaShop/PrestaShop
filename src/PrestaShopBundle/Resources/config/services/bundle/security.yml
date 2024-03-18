@@ -36,13 +36,6 @@ services:
     alias: PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer
     public: false
 
-  # SSL middleware
-  PrestaShopBundle\Security\SslMiddleware:
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
   prestashop.security.password_hasher.factory:
     class: Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory
     arguments:

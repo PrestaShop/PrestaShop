@@ -26,37 +26,27 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Security;
+namespace PrestaShopBundle\EventListener\API;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShopBundle\EventListener\ExternalApiTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * Middleware that is triggered during `kernel.request` event on Symfony routing process, to redirect to HTTPS in some cases.
+ * Middleware that is triggered during `kernel.request` event on Symfony routing process, to trigger error response when
+ * proper environment does not meet the requirements.
  *
- * If PS_SSL_ENABLED & (PS_SSL_ENABLED_EVERYWHERE | REFERER is HTTPS)
- * Then redirect to the equivalent URL to HTTPS.
- * If the request is an API call, we always redirect to HTTPS and to TLSv1.2+ if we detect a previous version
+ * For APi requests we force HTTPs protocol with TLSv1.2+
  */
-class SslMiddleware
+class SSLMiddlewareListener
 {
-    use ExternalApiTrait;
-
     private const AVAILABLE_SECURE_PROTOCOLS = ['tls/1.2', 'tls/1.3'];
 
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
+    public function __construct(
+        private readonly ConfigurationInterface $configuration
+    ) {
     }
 
     /**
@@ -68,54 +58,18 @@ class SslMiddleware
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        // already SSL, do nothing more
-        if ($this->isSSLrequirementsMet($event->getRequest())) {
+        // If constant that forces the check is disabled ignore the protection
+        if ($this->configuration->get('_PS_API_FORCE_TLS_VERSION_') === false) {
             return;
         }
 
-        //If It's an API call and not using https, redirect to https
-        if ($this->isExternalApiRequest($event->getRequest()) && !$event->getRequest()->isSecure()) {
+        // If protocol is not even HTTPs specify it should be used
+        if (!$event->getRequest()->isSecure()) {
             $this->useSecureProtocol($event);
-
-            return;
-        }
-
-        //If It's an API call and not using TLS 1.2+, display error message
-        if ($this->isExternalApiRequest($event->getRequest())) {
+        } elseif (!$this->isTLSVersionAccepted($event->getRequest())) {
+            // HTTPs is not enough the proper TLS should also be used, if not it should be upgraded
             $this->upgradeProtocol($event);
-
-            return;
         }
-
-        //If It's Sf route and SSL enabled and forced, redirect to https
-        $enabled = (1 === (int) $this->configuration->get('PS_SSL_ENABLED'));
-        $forced = (1 === (int) $this->configuration->get('PS_SSL_ENABLED_EVERYWHERE'));
-        $serverParams = $event->getRequest()->server;
-        $refererSsl = ($serverParams->has('HTTP_REFERER') && str_starts_with($serverParams->get('HTTP_REFERER'), 'https'));
-
-        if ($enabled && ($forced || $refererSsl)) {
-            $this->redirectToSsl($event);
-        }
-    }
-
-    private function redirectToSsl(RequestEvent $event): void
-    {
-        $status = $event->getRequest()->isMethod('GET') ? 302 : 308;
-        $redirect = str_replace('http://', 'https://', $event->getRequest()->getUri());
-        $event->setResponse(new RedirectResponse($redirect, $status));
-    }
-
-    private function isSSLrequirementsMet(Request $request): bool
-    {
-        if ($this->isExternalApiRequest($request)) {
-            if ($this->configuration->get('_PS_API_FORCE_TLS_VERSION_') === false) {
-                return true;
-            }
-
-            return $this->isTLSVersionAccepted($request);
-        }
-
-        return $request->isSecure();
     }
 
     private function isTLSVersionAccepted(Request $request): bool

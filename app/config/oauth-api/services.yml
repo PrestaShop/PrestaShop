@@ -42,3 +42,9 @@ services:
         - '@PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder'
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 5 }
+
+  # SSL middleware
+  PrestaShopBundle\EventListener\API\SSLMiddlewareListener:
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
