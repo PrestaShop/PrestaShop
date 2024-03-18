@@ -165,6 +165,8 @@ class Product extends FOBasePage {
 
   private readonly productInPackQuantity: (productInList: number) => string;
 
+  private readonly productsBlock: (blockName: string) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on product page
@@ -262,6 +264,8 @@ class Product extends FOBasePage {
     this.productInPackPrice = (productInList: number) => `${this.productInPackList(productInList)} div.pack-product-price`;
     this.productInPackQuantity = (productInList: number) => `${this.productInPackList(productInList)}`
       + ' div.pack-product-quantity';
+
+    this.productsBlock = (blockName: string) => `#content-wrapper section[data-type="${blockName}"]`;
   }
 
   // Methods
@@ -868,6 +872,16 @@ class Product extends FOBasePage {
    */
   async getWarningMessage(page: Page): Promise<string> {
     return this.getTextContent(page, this.warningMessage);
+  }
+
+  /**
+   * Has products block
+   * @param blockName {'categoryproducts'} The block name in the page
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async hasProductsBlock(page: Page, blockName: 'categoryproducts'): Promise<boolean> {
+    return (await page.locator(this.productsBlock(blockName)).count()) > 0;
   }
 }
 
