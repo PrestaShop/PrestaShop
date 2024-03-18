@@ -14,8 +14,12 @@ import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
 import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
 
 // Import data
-import Titles from '@data/demo/titles';
 import TitleData from '@data/faker/title';
+
+import {
+  // Import data
+  dataTitles,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -80,17 +84,17 @@ describe('BO _ Shop Parameters - Customer Settings : Filter, sort and pagination
     const tests = [
       {
         args: {
-          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_gender', filterValue: Titles.Mrs.id.toString(),
+          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_gender', filterValue: dataTitles.Mrs.id.toString(),
         },
       },
       {
         args: {
-          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: Titles.Mrs.name,
+          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: dataTitles.Mrs.name,
         },
       },
       {
         args: {
-          testIdentifier: 'filterGender', filterType: 'select', filterBy: 'type', filterValue: Titles.Mrs.gender,
+          testIdentifier: 'filterGender', filterType: 'select', filterBy: 'type', filterValue: dataTitles.Mrs.gender,
         },
       },
     ];

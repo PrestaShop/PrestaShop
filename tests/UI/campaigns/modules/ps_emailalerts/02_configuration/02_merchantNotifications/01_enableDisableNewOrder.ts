@@ -23,11 +23,15 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 // Import data
-import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import Modules from '@data/demo/modules';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -60,7 +64,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
 
   // New order by customer data
   const orderData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
@@ -154,7 +158,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);

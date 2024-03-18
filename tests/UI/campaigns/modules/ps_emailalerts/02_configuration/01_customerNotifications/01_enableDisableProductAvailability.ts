@@ -32,12 +32,16 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import Customers from '@data/demo/customers';
 import Modules from '@data/demo/modules';
 import ProductData from '@data/faker/product';
 import MailDevEmail from '@data/types/maildevEmail';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
@@ -262,7 +266,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     it('should login on the Front Office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFrontOffice', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foProductPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);

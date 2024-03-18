@@ -25,12 +25,16 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 import TaxRuleData from '@data/faker/taxRule';
 import TaxRulesGroupData from '@data/faker/taxRulesGroup';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -254,7 +258,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, Customers.johnDoe);
+        await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
       });
 
       it('should go to delivery step', async function () {

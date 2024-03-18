@@ -21,10 +21,14 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Countries from '@data/demo/countries';
-import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import Carriers from '@data/demo/carriers';
 import CartRuleData from '@data/faker/cartRule';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -222,7 +226,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
 
       await checkoutPage.clickOnSignIn(page);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
+      const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 

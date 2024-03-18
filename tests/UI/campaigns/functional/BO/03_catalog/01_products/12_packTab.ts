@@ -22,11 +22,15 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import ProductData from '@data/faker/product';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -353,7 +357,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await cartPage.clickOnProceedToCheckout(page);
       // Connect
       await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.customerLogin(page, Customers.johnDoe);
+      await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);

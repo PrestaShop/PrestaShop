@@ -23,12 +23,16 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
-import Customers from '@data/demo/customers';
 import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -61,7 +65,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
   const today: string = date.getDateFormat('mm/dd/yyyy');
   // New order by customer data
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
@@ -108,10 +112,10 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrder1', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should get the order ID', async function () {
@@ -171,7 +175,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     it('should sign in with customer credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -272,10 +276,10 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrder2', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should go to the first order page', async function () {
@@ -378,10 +382,10 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       it('should filter the Orders table by the default customer and check the result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterOrder0${index}`, baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+        await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
         const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-        expect(textColumn).to.contains(Customers.johnDoe.lastName);
+        expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
       });
 
       it('should go to the first order page', async function () {

@@ -18,11 +18,15 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
-import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -44,7 +48,7 @@ describe('FO - Account - Order details : Download invoice', async () => {
   let fileName: string;
 
   const orderData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
@@ -136,7 +140,7 @@ describe('FO - Account - Order details : Download invoice', async () => {
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

@@ -20,11 +20,15 @@ import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 
 // Import data
-import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderStatuses from '@data/demo/orderStatuses';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -49,7 +53,7 @@ describe('FO - Account - Order history : download invoice', async () => {
   let fileName: string;
 
   const orderData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
@@ -144,7 +148,7 @@ describe('FO - Account - Order history : download invoice', async () => {
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

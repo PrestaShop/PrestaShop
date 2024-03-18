@@ -1,13 +1,17 @@
-import Groups from '@data/demo/groups';
-import Titles from '@data/demo/titles';
 import type GroupData from '@data/faker/group';
 import type TitleData from '@data/faker/title';
 import type CustomerCreator from '@data/types/customer';
 
+import {
+  // Import data
+  dataGroups,
+  dataTitles,
+} from '@prestashop-core/ui-testing';
+
 import {faker} from '@faker-js/faker';
 
-const genders: string[] = Object.values(Titles).map((title: TitleData) => title.name);
-const groups: string[] = Object.values(Groups).map((group: GroupData) => group.name);
+const genders: string[] = Object.values(dataTitles).map((title: TitleData) => title.name);
+const groups: string[] = Object.values(dataGroups).map((group: GroupData) => group.name);
 const risksRating: string[] = ['None', 'Low', 'Medium', 'High'];
 
 /**

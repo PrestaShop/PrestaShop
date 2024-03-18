@@ -24,10 +24,14 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {productPage} from '@pages/FO/classic/product';
 
 // Import data
-import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
@@ -113,7 +117,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFoToOrder', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -219,7 +223,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
     it('Should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -250,7 +254,9 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       numberOfEmails = allEmails.length;
       expect(allEmails[numberOfEmails - 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Message from a customer`);
       expect(allEmails[numberOfEmails - 1].text).to.contains('You have received a new message')
-        .and.to.contains(`Customer: ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName} (${Customers.johnDoe.email})`)
+        .and.to.contains(
+          `Customer: ${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName} (${dataCustomers.johnDoe.email})`,
+        )
         .and.to.contains(messageSend);
     });
   });
@@ -277,14 +283,14 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
 
       const email = await customerServicePage.getTextColumn(page, 1, 'customer');
-      expect(email).to.contain(`${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`);
+      expect(email).to.contain(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
     });
 
     it('should check customer email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
       const email = await customerServicePage.getTextColumn(page, 1, 'a!email');
-      expect(email).to.contain(Customers.johnDoe.email);
+      expect(email).to.contain(dataCustomers.johnDoe.email);
     });
 
     it('should check message type', async function () {

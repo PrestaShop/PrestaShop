@@ -9,8 +9,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 import emailPage from '@pages/BO/advancedParameters/email';
 import dashboardPage from '@pages/BO/dashboard';
 
-// Import data
-import Customers from '@data/demo/customers';
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -60,8 +62,8 @@ function setupSmtpConfigTest(baseContext: string = 'commonTests-configSMTP'): vo
       const alertSuccessMessage = await emailPage.setupSmtpParameters(
         page,
         smtpServer,
-        Customers.johnDoe.email,
-        Customers.johnDoe.password,
+        dataCustomers.johnDoe.email,
+        dataCustomers.johnDoe.password,
         smtpPort.toString(),
       );
       expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);

@@ -19,9 +19,13 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import Customers from '@data/demo/customers';
 import Languages from '@data/demo/languages';
 import PaymentMethods from '@data/demo/paymentMethods';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -90,7 +94,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
 
       // Personal information step - Login
       await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.customerLogin(page, Customers.johnDoe);
+      await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
     });
 
     it('should go to delivery step', async function () {
@@ -177,7 +181,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
             identifier: 'filterByRecipient',
             filterType: 'input',
             filterBy: 'recipient',
-            filterValue: Customers.johnDoe.email,
+            filterValue: dataCustomers.johnDoe.email,
           },
       },
       {

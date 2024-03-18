@@ -20,12 +20,16 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import viewCustomerPage from '@pages/BO/customers/view';
 
 // import data
-import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import PaymentMethods from '@data/demo/paymentMethods';
 import CustomerData from '@data/faker/customer';
 import AddressData from '@data/faker/address';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -54,7 +58,7 @@ describe('BO - Header : Check notifications', async () => {
   let page: Page;
 
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
@@ -147,7 +151,7 @@ describe('BO - Header : Check notifications', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

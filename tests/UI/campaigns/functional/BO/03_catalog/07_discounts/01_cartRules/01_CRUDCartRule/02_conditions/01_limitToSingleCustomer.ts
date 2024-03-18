@@ -23,7 +23,11 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';
-import Customers from '@data/demo/customers';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -51,7 +55,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
   const expirationDate: string = date.getDateFormat('mm/dd/yyyy', 'future');
   const newCartRuleData: CartRuleData = new CartRuleData({
     name: 'Cart rule limit to single customer',
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     discountType: 'Percent',
     discountPercent: 20,
     dateFrom: pastDate,
@@ -125,7 +129,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

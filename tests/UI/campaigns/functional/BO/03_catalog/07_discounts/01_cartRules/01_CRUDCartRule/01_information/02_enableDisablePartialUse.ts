@@ -21,8 +21,12 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 // Import data
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
-import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -162,7 +166,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         await checkoutPage.clickOnSignIn(page);
 
-        const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
+        const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
         expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
       });
 
@@ -264,7 +268,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         const customer = await addCartRulePage.getLimitSingleCustomer(page);
         expect(customer).to.equal(
-          `${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName} (${Customers.johnDoe.email})`);
+          `${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName} (${dataCustomers.johnDoe.email})`);
       });
 
       it('should check the cart rule amount value', async function () {

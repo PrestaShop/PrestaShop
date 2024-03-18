@@ -1,4 +1,7 @@
-import Customers from '@data/demo/customers';
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 import {Page} from 'playwright';
 
 /**
@@ -34,8 +37,8 @@ const loginBO = async function (page: Page): Promise<void> {
 const loginFO = async function (page: Page): Promise<void> {
   const currentUrl: string = page.url();
 
-  await page.locator('#login-form input[name=email]').fill(Customers.johnDoe.email);
-  await page.locator('#login-form input[name=password]').fill(Customers.johnDoe.password);
+  await page.locator('#login-form input[name=email]').fill(dataCustomers.johnDoe.email);
+  await page.locator('#login-form input[name=password]').fill(dataCustomers.johnDoe.password);
 
   await Promise.all([
     page.locator('#submit-login').click(),

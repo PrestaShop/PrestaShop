@@ -1,6 +1,10 @@
-import Groups from '@data/demo/groups';
 import type GroupData from '@data/faker/group';
 import type {CategoryCreator} from '@data/types/category';
+
+import {
+  // Import data
+  dataGroups,
+} from '@prestashop-core/ui-testing';
 
 import {faker} from '@faker-js/faker';
 
@@ -61,7 +65,7 @@ export default class CategoryData {
 
     /** @type {GroupData} Customer group that could access to the category */
     this.groupAccess = categoryToCreate.groupAccess
-      || faker.helpers.arrayElement([Groups.customer, Groups.guest, Groups.visitor]);
+      || faker.helpers.arrayElement([dataGroups.customer, dataGroups.guest, dataGroups.visitor]);
 
     /** @type {string|null} Category cover image of the category */
     this.coverImage = categoryToCreate.coverImage || null;

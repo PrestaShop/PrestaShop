@@ -17,9 +17,13 @@ import {loginPage} from '@pages/FO/classic/login';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -120,7 +124,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
     it('should sign in by default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
