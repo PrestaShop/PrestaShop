@@ -19,7 +19,6 @@ parameters:
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
-  api_base_path: !php/const PrestaShopBundle\Api\Api::API_BASE_PATH
   prestashop.controllers_all_shop_context:
     - AdminAccess
     - AdminFeatureFlag
