@@ -15,8 +15,10 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Customers from '@data/demo/customers';
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -114,7 +116,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
 
-        const isStepLoginComplete = await checkoutPage.customerLogin(page, Customers.johnDoe);
+        const isStepLoginComplete = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
         expect(isStepLoginComplete, 'Step Personal information is not complete').to.eq(true);
       }
     });

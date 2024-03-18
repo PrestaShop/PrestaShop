@@ -33,7 +33,11 @@ import Products from '@data/demo/products';
 import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
 import Addresses from '@data/demo/address';
 import OrderData from '@data/faker/order';
-import CustomerData from '@data/demo/customers';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -68,7 +72,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
   let mailListener: MailDev;
   const todayDate: string = date.getDateFormat('mm/dd/yyyy');
   const orderData: OrderData = new OrderData({
-    customer: CustomerData.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
@@ -167,7 +171,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, CustomerData.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

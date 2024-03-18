@@ -20,8 +20,12 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 
 // Import data
 import ProductData from '@data/faker/product';
-import Customers from '@data/demo/customers';
 import Carriers from '@data/demo/carriers';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -339,7 +343,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await checkoutPage.clickOnSignIn(page);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
+      const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 

@@ -21,9 +21,13 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import OrderStatuses from '@data/demo/orderStatuses';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -128,7 +132,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
         it('should sign in with default customer', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `signInFO${index}`, baseContext);
 
-          await foLoginPage.customerLogin(page, Customers.johnDoe);
+          await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
           const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

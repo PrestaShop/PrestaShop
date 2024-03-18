@@ -15,8 +15,12 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -78,7 +82,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
   it('should sign in with customer credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-    await loginPage.customerLogin(page, Customers.johnDoe);
+    await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

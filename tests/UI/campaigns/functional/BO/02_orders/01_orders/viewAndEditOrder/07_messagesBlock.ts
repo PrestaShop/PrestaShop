@@ -21,12 +21,16 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
-import Customers from '@data/demo/customers';
 import Employees from '@data/demo/employees';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import type {OrderHistoryMessage, OrderMessage} from '@data/types/order';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -56,7 +60,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
   const secondMessageData: OrderMessage = {orderMessage: 'Delay', displayToCustomer: false, message: 'test message visibility'};
   // New order by customer data
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
@@ -107,13 +111,13 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
       expect(numberOfOrders).to.be.above(0);
     });
 
-    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
@@ -190,7 +194,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo1', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -312,7 +316,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo2', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -379,7 +383,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
 
       textMessage = await orderPageMessagesBlock.getTextMessage(page, 3, 'customer');
       expect(textMessage, 'Sender or date is not correct!')
-        .to.contains(`${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName} ${today}`)
+        .to.contains(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName} ${today}`)
         .and.to.contains(messageToSendData.message);
     });
   });

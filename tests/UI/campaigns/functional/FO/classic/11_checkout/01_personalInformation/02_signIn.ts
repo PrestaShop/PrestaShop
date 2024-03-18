@@ -9,8 +9,12 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 // Import data
-import Customers from '@data/demo/customers';
 import CustomerData from '@data/faker/customer';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -86,7 +90,7 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
   it('should sign in with customer credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signIn', baseContext);
 
-    const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
+    const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
     expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
   });
 
@@ -96,7 +100,7 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
     await checkoutPage.clickOnEditPersonalInformationStep(page);
 
     const customerIdentity = await checkoutPage.getCustomerIdentity(page);
-    expect(customerIdentity).to.equal(`Connected as ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}.`);
+    expect(customerIdentity).to.equal(`Connected as ${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}.`);
   });
 
   it('should check the existence of the text message \'If you sign out now, your cart will be emptied.\'', async function () {

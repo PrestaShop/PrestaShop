@@ -12,9 +12,13 @@ import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
-import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -60,7 +64,7 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
   it('should sign In in FO with default account', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
-    await loginPage.customerLogin(page, Customers.johnDoe);
+    await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
     const connected = await homePage.isCustomerConnected(page);
     expect(connected, 'Customer is not connected in FO').to.eq(true);

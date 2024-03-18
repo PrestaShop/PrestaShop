@@ -23,10 +23,14 @@ import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
-import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import PaymentMethods from '@data/demo/paymentMethods';
 import MessageData from '@data/faker/message';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -53,7 +57,7 @@ describe('FO - Order confirmation : Contact us', async () => {
   const contactUsData: MessageData = new MessageData({
     subject: 'Customer service',
     message: 'Test message to customer service for order reference',
-    emailAddress: Customers.johnDoe.email,
+    emailAddress: dataCustomers.johnDoe.email,
     reference: '',
   });
 
@@ -98,7 +102,7 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
@@ -197,7 +201,7 @@ describe('FO - Order confirmation : Contact us', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTheFormInfos', baseContext);
 
       const emailFieldValue = await contactUsPage.getEmailFieldValue(page);
-      expect(emailFieldValue).to.contains(Customers.johnDoe.email);
+      expect(emailFieldValue).to.contains(dataCustomers.johnDoe.email);
     });
 
     it('should send the message', async function () {

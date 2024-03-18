@@ -20,11 +20,15 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
-import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -58,7 +62,7 @@ describe('BO - orders : Update order status', async () => {
   let mailListener: MailDev;
 
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
@@ -258,7 +262,7 @@ describe('BO - orders : Update order status', async () => {
           it('should sign in with default customer', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `sighInFoToCheckStatus${index}`, baseContext);
 
-            await foLoginPage.customerLogin(page, Customers.johnDoe);
+            await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
             const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
             expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

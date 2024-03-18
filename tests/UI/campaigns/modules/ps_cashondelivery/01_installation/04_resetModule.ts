@@ -18,8 +18,12 @@ import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
-import Customers from '@data/demo/customers';
 import Modules from '@data/demo/modules';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -107,7 +111,7 @@ describe('Cash on delivery (COD) module - Reset module', async () => {
   it('should sign in with default customer', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-    await foLoginPage.customerLogin(page, Customers.johnDoe);
+    await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
     const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
     expect(isCustomerConnected).to.eq(true);

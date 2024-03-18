@@ -1,11 +1,15 @@
-import Groups from '@data/demo/groups';
 import type GroupData from '@data/faker/group';
 import ImportData from '@data/faker/import';
 import type {ImportCustomer} from '@data/types/import';
 
+import {
+  // Import data
+  dataGroups,
+} from '@prestashop-core/ui-testing';
+
 import {faker} from '@faker-js/faker';
 
-const groups: string[] = Object.values(Groups).map((group: GroupData) => group.name);
+const groups: string[] = Object.values(dataGroups).map((group: GroupData) => group.name);
 
 const records: ImportCustomer[] = [];
 

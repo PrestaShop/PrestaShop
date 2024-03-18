@@ -25,10 +25,14 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
-import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 import type MailDevEmail from '@data/types/maildevEmail';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -237,7 +241,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, Customers.johnDoe);
+        await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
       });
 
       it('should go to payment step', async function () {

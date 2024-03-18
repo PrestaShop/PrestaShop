@@ -20,9 +20,13 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
-import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -183,7 +187,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
         it('should sign in with default customer', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighInFO${index}`, baseContext);
 
-          await foLoginPage.customerLogin(page, Customers.johnDoe);
+          await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
           const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

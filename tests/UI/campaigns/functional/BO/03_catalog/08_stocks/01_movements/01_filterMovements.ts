@@ -28,12 +28,16 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Categories from '@data/demo/categories';
-import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import EmployeeData from '@data/faker/employee';
 import {ProductCombinationBulk} from '@data/types/product';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -176,7 +180,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, Customers.johnDoe);
+        await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
       });
 
       it('should go to delivery step', async function () {

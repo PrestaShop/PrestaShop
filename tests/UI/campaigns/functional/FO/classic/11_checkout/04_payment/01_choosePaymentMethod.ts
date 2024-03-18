@@ -15,9 +15,13 @@ import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
-import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import PaymentMethodData from '@data/faker/paymentMethod';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -106,7 +110,7 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
 
           await checkoutPage.clickOnSignIn(page);
 
-          const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
+          const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
           expect(isCustomerConnected, 'Customer is connected').to.eq(true);
         });
       }

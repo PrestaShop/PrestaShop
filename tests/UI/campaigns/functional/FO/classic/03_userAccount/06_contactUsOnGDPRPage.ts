@@ -18,9 +18,13 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import gdprPersonalDataPage from '@pages/FO/classic/myAccount/gdprPersonalData';
 
 // Import demo data
-import Customers from '@data/demo/customers';
 import Orders from '@data/demo/orders';
 import MessageData from '@data/faker/message';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -32,10 +36,10 @@ describe('FO - Account : Contact us on GDPR page', async () => {
   let page: Page;
 
   const contactUsData: MessageData = new MessageData({
-    firstName: Customers.johnDoe.firstName,
-    lastName: Customers.johnDoe.lastName,
+    firstName: dataCustomers.johnDoe.firstName,
+    lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: Customers.johnDoe.email,
+    emailAddress: dataCustomers.johnDoe.email,
     reference: Orders.firstOrder.reference,
   });
 
@@ -74,7 +78,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
   it('should sign in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-    await loginPage.customerLogin(page, Customers.johnDoe);
+    await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
     const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

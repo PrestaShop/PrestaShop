@@ -27,12 +27,16 @@ import {returnDetailsPage} from '@pages/FO/classic/myAccount/returnDetails';
 
 // Import data
 import Addresses from '@data/demo/address';
-import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -62,7 +66,7 @@ describe('FO - Account : Check order return PDF', async () => {
   const today: string = date.getDateFormat('mm/dd/yyyy');
   // New order by customer data
   const orderData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
@@ -109,10 +113,10 @@ describe('FO - Account : Check order return PDF', async () => {
     it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrder', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should get the order ID', async function () {
@@ -192,7 +196,7 @@ describe('FO - Account : Check order return PDF', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'logonFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
@@ -413,8 +417,8 @@ describe('FO - Account : Check order return PDF', async () => {
       it('should check the Billing & delivery address', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, `Billing & Delivery Address,,${Customers.johnDoe.firstName}`
-          + ` ${Customers.johnDoe.lastName},${Addresses.second.company},${Addresses.second.address},`
+        const isVisible = await files.isTextInPDF(filePath, `Billing & Delivery Address,,${dataCustomers.johnDoe.firstName}`
+          + ` ${dataCustomers.johnDoe.lastName},${Addresses.second.company},${Addresses.second.address},`
           + `${Addresses.second.secondAddress},${Addresses.second.postalCode} ${Addresses.second.city}`
           + `,${Addresses.second.country},${Addresses.second.phone},,`);
 

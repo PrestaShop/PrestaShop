@@ -19,7 +19,11 @@ import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
 // Import data
 import Countries from '@data/demo/countries';
-import Customers from '@data/demo/customers';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -131,7 +135,7 @@ describe('BO - International - Countries : Restrict country selections in front 
       await testContext.addContextItem(this, 'testIdentifier', `login${index}`, baseContext);
 
       await homePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);

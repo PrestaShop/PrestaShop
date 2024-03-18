@@ -23,10 +23,14 @@ import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Frame, Page} from 'playwright';
@@ -172,10 +176,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should search for default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkExistentCustomerCard1', baseContext);
 
-      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
+      await addOrderPage.searchCustomer(page, dataCustomers.johnDoe.email);
 
       const customerName = await addOrderPage.getCustomerNameFromResult(page, 1);
-      expect(customerName).to.contains(`${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`);
+      expect(customerName).to.contains(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
     });
 
     it('should click on the choose button of the default customer', async function () {
@@ -282,7 +286,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should sign in with customer credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -395,10 +399,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should search for default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkExistentCustomerCard2', baseContext);
 
-      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
+      await addOrderPage.searchCustomer(page, dataCustomers.johnDoe.email);
 
       const customerName = await addOrderPage.getCustomerNameFromResult(page, 1);
-      expect(customerName).to.contains(`${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`);
+      expect(customerName).to.contains(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
     });
 
     it('should click on the choose button of the default customer', async function () {
@@ -466,8 +470,8 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       const customerInformation = await viewShoppingCartPage
         .getCustomerInformation(shoppingCartPage!);
       expect(customerInformation)
-        .to.contains(`${Customers.johnDoe.socialTitle} ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`)
-        .and.to.contains(Customers.johnDoe.email)
+        .to.contains(`${dataCustomers.johnDoe.socialTitle} ${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`)
+        .and.to.contains(dataCustomers.johnDoe.email)
         .and.to.contains(todayCartFormat);
     });
 

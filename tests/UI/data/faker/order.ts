@@ -1,4 +1,3 @@
-import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import AddressData from '@data/faker/address';
@@ -6,6 +5,11 @@ import CustomerData from '@data/faker/customer';
 import OrderStatusData from '@data/faker/orderStatus';
 import PaymentMethodData from '@data/faker/paymentMethod';
 import {OrderCreator, OrderDeliveryOption, OrderProduct} from '@data/types/order';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {faker} from '@faker-js/faker';
 
@@ -64,7 +68,7 @@ export default class OrderData {
     this.delivery = valueToCreate.delivery || 'France';
 
     /** @type {CustomerData} */
-    this.customer = valueToCreate.customer || Customers.johnDoe;
+    this.customer = valueToCreate.customer || dataCustomers.johnDoe;
 
     /** @type {number} */
     this.totalPaid = valueToCreate.totalPaid || 0;

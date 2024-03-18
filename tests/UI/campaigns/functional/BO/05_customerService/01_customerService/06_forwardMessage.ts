@@ -28,10 +28,14 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import PaymentMethods from '@data/demo/paymentMethods';
-import Customers from '@data/demo/customers';
 import MessageData from '@data/faker/message';
 import EmployeeData from '@data/faker/employee';
 import type MailDevEmail from '@data/types/maildevEmail';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import MailDev from 'maildev';
@@ -117,7 +121,7 @@ describe('BO - Customer Service : Forward message', async () => {
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, dataCustomers.johnDoe);
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });

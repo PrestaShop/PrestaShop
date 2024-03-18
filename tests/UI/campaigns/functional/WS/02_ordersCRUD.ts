@@ -26,11 +26,15 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import Address from '@data/demo/address';
-import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import {WebservicePermission} from '@data/types/webservice';
 import getOrderXml from '@data/xml/order';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';
 import chaiString from 'chai-string';
@@ -51,7 +55,7 @@ describe('WS - Orders : CRUD', async () => {
   let idShoppingCart: number;
 
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     deliveryAddress: Address.second,
     invoiceAddress: Address.third,
     products: [

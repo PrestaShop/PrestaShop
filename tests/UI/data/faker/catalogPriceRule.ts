@@ -1,13 +1,17 @@
 import Countries from '@data/demo/countries';
-import Groups from '@data/demo/groups';
 import type CountryData from '@data/faker/country';
 import type GroupData from '@data/faker/group';
 import type CatalogPriceRuleCreator from '@data/types/catalogPriceRule';
 
+import {
+  // Import data
+  dataGroups,
+} from '@prestashop-core/ui-testing';
+
 import {faker} from '@faker-js/faker';
 
 const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
-const groupAccessNames: string[] = Object.values(Groups).map((group: GroupData) => group.name);
+const groupAccessNames: string[] = Object.values(dataGroups).map((group: GroupData) => group.name);
 
 const currencies: string[] = ['All currencies', 'Euro'];
 const reductionType: string[] = ['Amount', 'Percentage'];

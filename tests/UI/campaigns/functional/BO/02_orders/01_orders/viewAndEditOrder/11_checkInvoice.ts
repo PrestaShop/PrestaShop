@@ -27,12 +27,16 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import data
 import Addresses from '@data/demo/address';
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import ProductData from '@data/faker/product';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -78,7 +82,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   const prefixNewProduct: string = 'TOTEST';
   // First order by customer data
   const firstOrderByCustomer: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
@@ -102,7 +106,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   });
   // Second order by customer
   const secondOrderByCustomer: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: customizedProduct,
@@ -301,13 +305,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         expect(numberOfOrders).to.be.above(0);
       });
 
-      it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+      it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+        await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
         const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-        expect(textColumn).to.contains(Customers.johnDoe.lastName);
+        expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
       });
 
       it('should view the order', async function () {
@@ -577,13 +581,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         expect(numberOfOrders).to.be.above(0);
       });
 
-      it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+      it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer2', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+        await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
         const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-        expect(textColumn).to.contains(Customers.johnDoe.lastName);
+        expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
       });
 
       it('should view the order', async function () {

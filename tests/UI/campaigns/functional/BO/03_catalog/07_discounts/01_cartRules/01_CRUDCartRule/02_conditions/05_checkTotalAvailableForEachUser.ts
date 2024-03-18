@@ -21,10 +21,14 @@ import {productPage} from '@pages/FO/classic/product';
 import {loginPage} from '@pages/FO/classic/login';
 
 // Import data
-import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -167,7 +171,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
 
           await checkoutPage.clickOnSignIn(page);
 
-          const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
+          const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
           expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
