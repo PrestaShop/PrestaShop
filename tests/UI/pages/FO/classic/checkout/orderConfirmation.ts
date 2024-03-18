@@ -19,9 +19,9 @@ class OrderConfirmationPage extends FOBasePage {
 
   private readonly orderSummaryContent: string;
 
-  private readonly orderReferenceValue: string;
+  protected orderReferenceValue: string;
 
-  private readonly customerSupportLink: string;
+  protected customerSupportLink: string;
 
   private readonly orderConfirmationTable: string;
 
