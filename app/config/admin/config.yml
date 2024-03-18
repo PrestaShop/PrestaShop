@@ -8,3 +8,4 @@ framework:
   router:
     resource: "%kernel.project_dir%/app/config/admin/routing.yml"
     strict_requirements: ~
+  error_controller: PrestaShopBundle\Controller\Admin\ErrorController::showAction

@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeComma
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Manages Error pages (e.g. 500)
@@ -51,5 +52,10 @@ class ErrorController extends PrestaShopAdminController
         return $this->redirect(
             $request->request->get('_redirect_url')
         );
+    }
+
+    public function showAction(): Response
+    {
+        return $this->render('@PrestaShop/Admin/Exception/error.html.twig');
     }
 }
