@@ -114,7 +114,7 @@
     "chai-string": "^1.5.0",
     "csv-writer": "^1.6.0",
     "dotenv": "^16.4.5",
-    "fast-xml-parser": "^4.3.5",
+    "fast-xml-parser": "^4.3.6",
     "jpeg-js": "^0.4.4",
     "js-image-generator": "^1.0.4",
     "libsodium-wrappers": "^0.7.13",
