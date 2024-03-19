@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Options;
+namespace PrestaShop\PrestaShop\Adapter\SEO;
 
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;

@@ -31,7 +31,7 @@ use Db;
 use ImageManager;
 use ImageType;
 use PDO;
-use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
+use PrestaShop\PrestaShop\Adapter\SEO\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;

@@ -2,7 +2,7 @@ services:
   _defaults:
     public: false
 
-  PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider:
+  PrestaShop\PrestaShop\Adapter\SEO\RedirectTargetProvider:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository'
       - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository'
