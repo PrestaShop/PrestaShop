@@ -70,8 +70,6 @@ Changelog for PrestaShop 8
     - #34954: Fix Link->getModuleLink() function for other shop contexts (by @hherreros-webimpacto)
     - #35321: Fix display of categories from other shops (by @kpodemski)
     - #34873: Prevent uncheck cast (by @gross-nvs)
-    - #GHSA-vr7m-r9vm-m4wf:  (by @matthieu-rolland)
-    - #GHSA-xgpm-q3mq-46rq:  (by @matthieu-rolland)
   - Refactoring:
     - #35456: Comment cart and quantity methods (by @Hlavtox)
     - #35215: Fix alias hooks and add the missing ones (by @Hlavtox)
