@@ -503,7 +503,7 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToSubCategory(page: Page, categoryID: number, subCategoryID: number): Promise<void> {
-    await page.locator(this.categoryMenu(categoryID)).hover();
+    await page.locator(this.categoryMenu(categoryID)).first().hover();
     await this.clickAndWaitForURL(page, this.categoryMenu(subCategoryID));
   }
 

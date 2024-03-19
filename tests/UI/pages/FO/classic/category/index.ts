@@ -42,11 +42,11 @@ class CategoryPage extends FOBasePage {
 
   private readonly valueToSortBy: (sortBy: string) => string;
 
-  private readonly sideBlockCategories: string;
+  protected sideBlockCategories: string;
 
-  private readonly sideBlockCategoriesItem: string;
+  protected sideBlockCategoriesItem: string;
 
-  private readonly sideBlockCategory: (text: string) => string;
+  protected sideBlockCategory: (text: string) => string;
 
   private readonly subCategoriesList: string;
 
@@ -76,7 +76,7 @@ class CategoryPage extends FOBasePage {
 
   private readonly searchFilter: (facetType: string) => string;
 
-  private readonly searchFiltersCheckbox: (facetType: string) => string;
+  protected searchFiltersCheckbox: (facetType: string) => string;
 
   private readonly searchFiltersRadio: (facetType: string) => string;
 

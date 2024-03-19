@@ -89,7 +89,7 @@ class Home extends HomePage {
    * @param blockName {string} The block name in the page
    * @return {Promise<void>}
    */
-  async clickOnAllProductsButton(page: Page, blockName: string = 'featured-products'): Promise<void> {
+  async goToAllProductsPage(page: Page, blockName: string = 'featured-products'): Promise<void> {
     await this.clickAndWaitForURL(page, this.allProductsBlockLink(blockName));
   }
 
