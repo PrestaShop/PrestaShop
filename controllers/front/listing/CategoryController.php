@@ -90,7 +90,7 @@ class CategoryControllerCore extends ProductListingFrontController
         if (!Validate::isLoadedObject($this->category) || !$this->category->active || !$this->category->existsInShop($this->context->shop->id)) {
             if (!$this->category->id_type_redirected) {
                 if (in_array($this->category->redirect_type, [RedirectType::TYPE_CATEGORY_PERMANENT, RedirectType::TYPE_CATEGORY_TEMPORARY])) {
-                    $this->category->id_type_redirected = $this->category->id_category_default;
+                    $this->category->id_type_redirected = Category::getRootCategory()->id;
                 }
             }
 
