@@ -36,6 +36,7 @@ if (!defined('_PS_FRONT_DIR_')) {
 }
 
 // Include some configurations & composer autoload
+define('_PS_APP_ID_', 'front');
 require_once _PS_FRONT_DIR_ . '/config/config.inc.php';
 require_once _PS_FRONT_DIR_ . '/vendor/autoload.php';
 

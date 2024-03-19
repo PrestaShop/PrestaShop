@@ -296,6 +296,21 @@ abstract class AppKernel extends Kernel
     }
 
     /**
+     * Add default kernel parameters like kernel.app_id
+     *
+     * @return array
+     */
+    protected function getKernelParameters(): array
+    {
+        return array_merge(
+            parent::getKernelParameters(),
+            [
+                'kernel.app_id' => $this->getAppId(),
+            ],
+        );
+    }
+
+    /**
      * Enable auto loading of module Composer autoloader if needed.
      * Need to be done as earlier as possible in application lifecycle.
      *

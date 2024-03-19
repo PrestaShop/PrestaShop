@@ -28,6 +28,7 @@ use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+define('_PS_APP_ID_', 'oauth-api');
 require __DIR__ . '/../config/config.inc.php';
 
 //small test to clear cache after upgrade
