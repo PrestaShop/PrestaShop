@@ -69,6 +69,7 @@ $(() => {
     resetEditor();
   });
 
+  $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
   form.switchLanguage($('#form_switch_language').val());
 });
 
@@ -88,7 +89,7 @@ function resetEditor() {
       setTimeout(() => {
         editor.execCommand('mceInsertContent', false, '');
         editor.execCommand('mceAutoResize');
-      }, 300);
+      }, 250);
     }
   });
 }
