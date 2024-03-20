@@ -155,7 +155,7 @@ class OrderInvoiceCore extends ObjectModel
         $id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT `id_order_invoice`
             FROM `' . _DB_PREFIX_ . 'order_invoice`
-            WHERE `number` = ' . (int)$id_invoice . (($id_order) ? ' && `id_order` = ' . (int) $id_order : '')
+            WHERE `number` = ' . (int) $id_invoice . (($id_order) ? ' && `id_order` = ' . (int) $id_order : '')
         );
 
         return $id_order_invoice ? new OrderInvoice((int) $id_order_invoice) : false;
