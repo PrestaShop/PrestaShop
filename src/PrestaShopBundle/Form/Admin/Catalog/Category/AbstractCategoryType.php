@@ -318,6 +318,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
             ])
             ->add('redirect_option', RedirectOptionType::class, [
+                'id_category' => $options['id_category'] ?? 0,
                 'isRootCategory' => $this instanceof RootCategoryType,
                 'alert_message' => $this->getRedirectionAlertMessages(),
             ])

@@ -59,15 +59,15 @@ class RedirectOptionType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $choices = [
-            $this->trans('No redirection (410), display error page', 'Admin.Catalog.Feature') => RedirectType::TYPE_GONE,
             $this->trans('No redirection (404), display error page', 'Admin.Catalog.Feature') => RedirectType::TYPE_NOT_FOUND,
+            $this->trans('No redirection (410), display error page', 'Admin.Catalog.Feature') => RedirectType::TYPE_GONE,
         ];
 
         if (true !== $options['isRootCategory']) {
             $choices = array_merge(
                 [
-                    $this->trans('Permanent redirection to a category (301)', 'Admin.Catalog.Feature') => RedirectType::TYPE_PERMANENT,
                     $this->trans('Temporary redirection to a category (302)', 'Admin.Catalog.Feature') => RedirectType::TYPE_TEMPORARY,
+                    $this->trans('Permanent redirection to a category (301)', 'Admin.Catalog.Feature') => RedirectType::TYPE_PERMANENT,
                 ],
                 $choices,
             );
@@ -92,7 +92,7 @@ class RedirectOptionType extends TranslatorAwareType
                     'remote_url' => $this->router->generate('admin_categories_get_ajax_categories', ['query' => '__QUERY__']),
                     'placeholder' => $this->trans('To which category should the page redirect?', 'Admin.Catalog.Help'),
                     'help' => $this->trans('By default, the root category will be used if no category is selected.', 'Admin.Catalog.Help'),
-                    'filtered_identities' => [$this->homeCategoryId],
+                    'filtered_identities' => [$options['id_category'], $this->homeCategoryId],
                 ]);
 
             // This will transform the target ID from model data into an array adapted for EntitySearchInputType
@@ -114,11 +114,13 @@ class RedirectOptionType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'required' => false,
-                'label' => $this->trans('Redirection when offline', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Redirection when not displayed', 'Admin.Catalog.Feature'),
             ])
             ->setRequired([
                 'isRootCategory',
+                'id_category',
             ])
-            ->setAllowedTypes('isRootCategory', 'bool');
+            ->setAllowedTypes('isRootCategory', 'bool')
+            ->setAllowedTypes('id_category', 'int');
     }
 }

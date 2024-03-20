@@ -26,7 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\Category\CategoryProductSearchProvider;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Category\CategoryPresenter;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
@@ -89,17 +89,17 @@ class CategoryControllerCore extends ProductListingFrontController
 
         if (!Validate::isLoadedObject($this->category) || !$this->category->active || !$this->category->existsInShop($this->context->shop->id)) {
             if (!$this->category->id_type_redirected) {
-                if (in_array($this->category->redirect_type, [RedirectType::TYPE_CATEGORY_PERMANENT, RedirectType::TYPE_CATEGORY_TEMPORARY])) {
+                if (in_array($this->category->redirect_type, [RedirectType::TYPE_PERMANENT, RedirectType::TYPE_TEMPORARY])) {
                     $this->category->id_type_redirected = Category::getRootCategory()->id;
                 }
             }
 
             switch ($this->category->redirect_type) {
-                case RedirectType::TYPE_CATEGORY_PERMANENT:
+                case RedirectType::TYPE_PERMANENT:
                     header('HTTP/1.1 301 Moved Permanently');
                     header('Location: ' . $this->context->link->getCategoryLink($this->category->id_type_redirected));
                     exit;
-                case RedirectType::TYPE_CATEGORY_TEMPORARY:
+                case RedirectType::TYPE_TEMPORARY:
                     header('HTTP/1.1 302 Moved Temporarily');
                     header('Cache-Control: no-cache');
                     header('Location: ' . $this->context->link->getCategoryLink($this->category->id_type_redirected));
