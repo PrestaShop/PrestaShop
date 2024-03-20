@@ -80,7 +80,7 @@ function resetEditor() {
   $(languageEditorsSelector).each((index, textarea) => {
     if (window.tinyMCE) {
       const editor = window.tinyMCE.get(textarea.id);
-      if (editor) {
+      if (!editor) {
         return;
       }
       // Reset content to force refresh of editor
