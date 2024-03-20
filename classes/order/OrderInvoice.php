@@ -138,7 +138,7 @@ class OrderInvoiceCore extends ObjectModel
         ' . ($this->id && $this->number ? ' AND od.`id_order_invoice` = ' . (int) $this->id : '') . ' ORDER BY od.`product_name`');
     }
 
-    public static function getInvoiceByNumber($id_invoice)
+    public static function getInvoiceByNumber($id_invoice, $id_order = false)
     {
         if (is_numeric($id_invoice)) {
             $id_invoice = (int) $id_invoice;
@@ -155,7 +155,7 @@ class OrderInvoiceCore extends ObjectModel
         $id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT `id_order_invoice`
             FROM `' . _DB_PREFIX_ . 'order_invoice`
-            WHERE number = ' . (int) $id_invoice
+            WHERE `number` = ' . (int)$id_invoice . (($id_order) ? ' && `id_order` = ' . (int) $id_order : '')
         );
 
         return $id_order_invoice ? new OrderInvoice((int) $id_order_invoice) : false;
