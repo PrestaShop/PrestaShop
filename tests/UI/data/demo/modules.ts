@@ -33,7 +33,7 @@ export default {
   psFacetedSearch: new ModuleData({
     tag: 'ps_facetedsearch',
     name: 'Faceted search',
-    releaseZip: 'https://github.com/PrestaShop/ps_facetedsearch/releases/download/v3.14.1/ps_facetedsearch.zip',
+    releaseZip: 'https://github.com/PrestaShop/ps_facetedsearch/releases/download/v3.15.1/ps_facetedsearch.zip',
   }),
   psNewProducts: new ModuleData({
     tag: 'ps_newproducts',
@@ -42,7 +42,7 @@ export default {
   psThemeCusto: new ModuleData({
     tag: 'ps_themecusto',
     name: 'Theme Customization',
-    releaseZip: 'https://github.com/PrestaShop/ps_themecusto/releases/download/v1.2.3/ps_themecusto.zip',
+    releaseZip: 'https://github.com/PrestaShop/ps_themecusto/releases/download/v1.2.4/ps_themecusto.zip',
   }),
   contactForm: new ModuleData({
     tag: 'contactform',
