@@ -72,7 +72,7 @@ describe('FO - Home Page : Display some products', async () => {
     it('should check All products link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllPopularProductsLink', baseContext);
 
-      await homePage.clickOnAllProductsButton(page, 'featured-products');
+      await homePage.goToAllProductsPage(page, 'featured-products');
 
       const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -122,7 +122,7 @@ describe('FO - Home Page : Display some products', async () => {
     it('should check All new products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllNewProductsLink', baseContext);
 
-      await homePage.clickOnAllProductsButton(page, 'new-products');
+      await homePage.goToAllProductsPage(page, 'new-products');
 
       const pageTitle = await newProductsPage.getPageTitle(page);
       expect(pageTitle).to.equal(newProductsPage.pageTitle);

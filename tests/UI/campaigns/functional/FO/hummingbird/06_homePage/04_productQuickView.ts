@@ -198,7 +198,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
-      await homePage.clickOnAllProductsButton(page);
+      await homePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);

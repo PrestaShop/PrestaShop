@@ -93,7 +93,7 @@ describe('FO - Home Page : Display all products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
       await homePage.changeLanguage(page, 'en');
-      await homePage.clickOnAllProductsButton(page, 'featured-products');
+      await homePage.goToAllProductsPage(page, 'featured-products');
 
       const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);

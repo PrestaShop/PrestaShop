@@ -436,7 +436,7 @@ export default class CommonPage {
 
     await Promise.all([
       page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil, timeout}),
-      page.locator(selector).click(),
+      page.locator(selector).first().click(),
     ]);
   }
 
