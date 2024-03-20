@@ -201,31 +201,34 @@ class AdminCartRulesControllerCore extends AdminController
             }
 
             // These are checkboxes (which aren't sent through POST when they are not checked), so they are forced to 0
+            $restrictions_selected = false;
             foreach (['country', 'carrier', 'group', 'cart_rule', 'product', 'shop'] as $type) {
                 if (!Tools::getValue($type . '_restriction')) {
                     $_POST[$type . '_restriction'] = 0;
+                } elseif ($type !== 'shop') { // shop restriction is forced to be checked, thus we do not take it into account
+                    $restrictions_selected = true;
                 }
             }
 
+            // At least one of these is compulsory: code, customer or any restriction. If none of these are present, the cart rule applies to all carts !
+            if (empty(Tools::getValue('id_cart_rule')) &&
+                !$restrictions_selected &&
+                empty(Tools::getValue('id_customer')) && empty(Tools::getValue('code')) && empty(Tools::getValue('minimum_amount'))
+                && Tools::getValue('date_from') < date('Y-m-d H:i:s')
+            ) {
+                $this->errors[] = $this->trans('The starting time is in the past. To avoid any issue, create a promo code, select a condition or set a starting time in the future.', [], 'Admin.Catalog.Notification');
+            }
+
+            $restrictions = [
+                'country' => $this->trans('Country selection', [], 'Admin.Catalog.Feature'),
+                'carrier' => $this->trans('Carrier selection', [], 'Admin.Catalog.Feature'),
+                'group' => $this->trans('Customer group selection', [], 'Admin.Catalog.Feature'),
+                'shop' => $this->trans('Shop selection', [], 'Admin.Catalog.Feature'),
+            ];
             // If the restriction is checked, but no item is selected, raise an error
-            foreach (['country', 'carrier', 'group', 'shop'] as $type) {
+            foreach ($restrictions as $type => $restriction_name) {
                 if (Tools::getValue($type . '_restriction') && empty(Tools::getValue($type . '_select'))) {
-                    switch ($type) {
-                        case 'country':
-                            $restriction_name = $this->trans('Country selection', [], 'Admin.Catalog.Feature');
-                            break;
-                        case 'carrier':
-                            $restriction_name = $this->trans('Carrier selection', [], 'Admin.Catalog.Feature');
-                            break;
-                        case 'group':
-                            $restriction_name = $this->trans('Customer group selection', [], 'Admin.Catalog.Feature');
-                            break;
-                        case 'shop':
-                        default:
-                            $restriction_name = $this->trans('Store selection', [], 'Admin.Catalog.Feature');
-                            break;
-                    }
-                    $this->errors[] = $this->trans('The "%s" restriction is checked, but no item is selected.', [$restriction_name], 'Admin.Catalog.Notification');
+                    $this->errors[] = $this->trans('The "%s" restriction is checked but no item is selected.', [$restriction_name], 'Admin.Catalog.Notification');
                 }
             }
 
@@ -732,6 +735,24 @@ class AdminCartRulesControllerCore extends AdminController
         $shops = $current_object->getAssociatedRestrictions('shop', false, false);
         $cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, 0, $limit);
         $carriers = $current_object->getAssociatedRestrictions('carrier', true, true);
+
+        // If the cart rule applies to all carts then display a warning
+        if (empty($current_object->code) &&
+            empty($current_object->country_restriction) &&
+            empty($current_object->carrier_restriction) &&
+            empty($current_object->group_restriction) &&
+            empty($current_object->cart_rule_restriction) &&
+            empty($current_object->product_restriction) &&
+            empty($current_object->id_customer) &&
+            $current_object->minimum_amount == 0 &&
+            $current_object->date_to > date('Y-m-d H:i:s')
+        ) {
+            $this->displayWarning($this->trans(
+                'This voucher will automatically apply to all orders, without conditions, from %date% at %time%.',
+                ['%date%' => date(Context::getContext()->language->date_format_lite, strtotime($current_object->date_from)), '%time%' => date('H:i:s', strtotime($current_object->date_from))],
+                'Admin.Catalog.Notification')
+            );
+        }
 
         foreach ($carriers as &$carriers2) {
             $prev_id_carrier = 0;
