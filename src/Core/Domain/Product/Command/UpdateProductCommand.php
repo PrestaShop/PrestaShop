@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\LowStockThreshold;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Dimension;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Gtin;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -186,10 +186,7 @@ class UpdateProductCommand
      */
     private $upc;
 
-    /**
-     * @var Ean13|null
-     */
-    private $ean13;
+    private ?Gtin $gtin = null;
 
     /**
      * @var string|null
@@ -769,21 +766,35 @@ class UpdateProductCommand
     }
 
     /**
-     * @return Ean13|null
+     * @deprecated since 9.0 will be removed in 10.0
+     *
+     * @return Gtin|null
      */
-    public function getEan13(): ?Ean13
+    public function getEan13(): ?Gtin
     {
-        return $this->ean13;
+        return $this->getGtin();
     }
 
     /**
-     * @param string $ean13
+     * @deprecated since 9.0 will be removed in 10.0
+     *
+     * @param string $gtin
      *
      * @return self
      */
-    public function setEan13(string $ean13): self
+    public function setEan13(string $gtin): self
     {
-        $this->ean13 = new Ean13($ean13);
+        return $this->setGtin($gtin);
+    }
+
+    public function getGtin(): ?Gtin
+    {
+        return $this->gtin;
+    }
+
+    public function setGtin(string $gtin): self
+    {
+        $this->gtin = new Gtin($gtin);
 
         return $this;
     }

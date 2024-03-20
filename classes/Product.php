@@ -29,7 +29,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Gtin;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
@@ -457,7 +457,7 @@ class ProductCore extends ObjectModel
             'depth' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
             'weight' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
             'quantity_discount' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => Ean13::MAX_LENGTH],
+            'ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isGtin', 'size' => Gtin::MAX_LENGTH],
             'isbn' => ['type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => Isbn::MAX_LENGTH],
             'upc' => ['type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => Upc::MAX_LENGTH],
             'mpn' => ['type' => self::TYPE_STRING, 'validate' => 'isMpn', 'size' => ProductSettings::MAX_MPN_LENGTH],
@@ -7619,27 +7619,32 @@ class ProductCore extends ObjectModel
         );
     }
 
+    public static function getIdByEan13($ean13)
+    {
+        return self::getIdByGtin($ean13);
+    }
+
     /**
-     * For a given ean13 reference, returns the corresponding id.
+     * For a given gtin reference, returns the corresponding id.
      *
-     * @param string $ean13
+     * @param string $gtin
      *
      * @return int|string Product identifier
      */
-    public static function getIdByEan13($ean13)
+    public static function getIdByGtin($gtin)
     {
-        if (empty($ean13)) {
+        if (empty($gtin)) {
             return 0;
         }
 
-        if (!Validate::isEan13($ean13)) {
+        if (!Validate::isGtin($gtin)) {
             return 0;
         }
 
         $query = new DbQuery();
         $query->select('p.id_product');
         $query->from('product', 'p');
-        $query->where('p.ean13 = \'' . pSQL($ean13) . '\'');
+        $query->where('p.ean13 = \'' . pSQL($gtin) . '\'');
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }

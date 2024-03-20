@@ -43,8 +43,8 @@ class DetailsFiller implements CombinationFillerInterface
     {
         $updatableProperties = [];
 
-        if (null !== $command->getEan13()) {
-            $combination->ean13 = $command->getEan13()->getValue();
+        if (null !== $command->getGtin()) {
+            $combination->ean13 = $command->getGtin()->getValue();
             $updatableProperties[] = 'ean13';
         }
 

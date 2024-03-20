@@ -153,7 +153,7 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     private function validateDetails(Product $product): void
     {
-        $this->validateProductProperty($product, 'ean13', ProductConstraintException::INVALID_EAN_13);
+        $this->validateProductProperty($product, 'ean13', ProductConstraintException::INVALID_GTIN);
         $this->validateProductProperty($product, 'isbn', ProductConstraintException::INVALID_ISBN);
         $this->validateProductProperty($product, 'mpn', ProductConstraintException::INVALID_MPN);
         $this->validateProductProperty($product, 'reference', ProductConstraintException::INVALID_REFERENCE);

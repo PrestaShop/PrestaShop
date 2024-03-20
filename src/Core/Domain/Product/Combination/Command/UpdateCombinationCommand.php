@@ -33,7 +33,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\LowStockThreshold;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Gtin;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
@@ -60,9 +60,9 @@ class UpdateCombinationCommand
     private $isDefault;
 
     /**
-     * @var Ean13|null
+     * @var Gtin|null
      */
-    private $ean13;
+    private $gtin;
 
     /**
      * @var Isbn|null
@@ -181,21 +181,43 @@ class UpdateCombinationCommand
     }
 
     /**
-     * @return Ean13|null
+     * @deprecated since 9.0 will be removed in 10.0
+     *
+     * @return Gtin|null
      */
-    public function getEan13(): ?Ean13
+    public function getEan13(): ?Gtin
     {
-        return $this->ean13;
+        return $this->getGtin();
     }
 
     /**
-     * @param string $ean13
+     * @deprecated since 9.0 will be removed in 10.0
+     *
+     * @param string $gtin
      *
      * @return $this
      */
-    public function setEan13(string $ean13): self
+    public function setEan13(string $gtin): self
     {
-        $this->ean13 = new Ean13($ean13);
+        return $this->setGtin($gtin);
+    }
+
+    /**
+     * @return Gtin|null
+     */
+    public function getGtin(): ?Gtin
+    {
+        return $this->gtin;
+    }
+
+    /**
+     * @param string $gtin
+     *
+     * @return $this
+     */
+    public function setGtin(string $gtin): self
+    {
+        $this->gtin = new Gtin($gtin);
 
         return $this;
     }

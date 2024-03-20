@@ -138,7 +138,7 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         }
         // References
         if (isset($dataRows['ean13'])) {
-            $command->setEan13($dataRows['ean13']);
+            $command->setGtin($dataRows['ean13']);
         }
         if (isset($dataRows['isbn'])) {
             $command->setIsbn($dataRows['isbn']);

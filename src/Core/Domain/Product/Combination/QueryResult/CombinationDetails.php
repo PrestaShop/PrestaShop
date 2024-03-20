@@ -38,7 +38,7 @@ class CombinationDetails
     /**
      * @var string
      */
-    private $ean13;
+    private $gtin;
 
     /**
      * @var string
@@ -66,7 +66,7 @@ class CombinationDetails
     private $impactOnWeight;
 
     /**
-     * @param string $ean13
+     * @param string $gtin this is the new renamed ean13
      * @param string $isbn
      * @param string $mpn
      * @param string $reference
@@ -74,14 +74,14 @@ class CombinationDetails
      * @param DecimalNumber $impactOnWeight
      */
     public function __construct(
-        string $ean13,
+        string $gtin,
         string $isbn,
         string $mpn,
         string $reference,
         string $upc,
         DecimalNumber $impactOnWeight
     ) {
-        $this->ean13 = $ean13;
+        $this->gtin = $gtin;
         $this->isbn = $isbn;
         $this->mpn = $mpn;
         $this->reference = $reference;
@@ -92,9 +92,14 @@ class CombinationDetails
     /**
      * @return string
      */
+    public function getGtin(): string
+    {
+        return $this->gtin;
+    }
+
     public function getEan13(): string
     {
-        return $this->ean13;
+        return $this->getGtin();
     }
 
     /**
