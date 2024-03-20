@@ -66,9 +66,9 @@ $(() => {
   $('#form-nav').on('click', '.nav-item', () => {
     $('[data-toggle="tooltip"]').tooltip('hide');
     $('[data-toggle="popover"]').popover('hide');
+    resetEditor();
   });
 
-  $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
   form.switchLanguage($('#form_switch_language').val());
 });
 
@@ -80,11 +80,15 @@ function resetEditor() {
   $(languageEditorsSelector).each((index, textarea) => {
     if (window.tinyMCE) {
       const editor = window.tinyMCE.get(textarea.id);
-
       if (editor) {
-        // Reset content to force refresh of editor
-        editor.setContent(editor.getContent());
+        return;
       }
+      // Reset content to force refresh of editor
+      editor.setContent(editor.getContent());
+      setTimeout(() => {
+        editor.execCommand('mceInsertContent', false, '');
+        editor.execCommand('mceAutoResize');
+      }, 300);
     }
   });
 }
