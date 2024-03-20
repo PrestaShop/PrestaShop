@@ -82,10 +82,13 @@ function resetEditor() {
     if (!window.tinyMCE) {
       return;
     }
+
     const editor = window.tinyMCE.get(textarea.id);
+
     if (!editor) {
       return;
     }
+
     // Reset content to force refresh of editor
     editor.setContent(editor.getContent());
     setTimeout(() => {
