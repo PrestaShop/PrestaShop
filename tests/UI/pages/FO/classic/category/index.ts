@@ -58,7 +58,7 @@ class CategoryPage extends FOBasePage {
 
   private readonly productTitle: (number: number) => string;
 
-  private readonly productPrice: (number: number) => string;
+  protected productPrice: (number: number) => string;
 
   private readonly productAttribute: (number: number, attribute: string) => string;
 
@@ -72,7 +72,7 @@ class CategoryPage extends FOBasePage {
 
   private readonly categoryDescription: string;
 
-  private readonly searchFilters: string;
+  protected searchFilters: string;
 
   private readonly searchFilter: (facetType: string) => string;
 
@@ -82,13 +82,13 @@ class CategoryPage extends FOBasePage {
 
   private readonly searchFiltersDropdown: (facetType: string) => string;
 
-  private readonly closeOneFilter: (row: number) => string;
+  protected closeOneFilter: (row: number) => string;
 
-  private readonly searchFiltersSlider: string;
+  protected searchFiltersSlider: string;
 
   private readonly searchFilterPriceValues: string;
 
-  private readonly clearAllFiltersLink: string;
+  protected clearAllFiltersLink: string;
 
   private readonly activeSearchFilters: string;
 
@@ -563,7 +563,7 @@ class CategoryPage extends FOBasePage {
    * @return {Promise<void>}
    */
   async filterByPrice(page: Page, minPrice: number, maxPrice: number, filterFrom: number, filterTo: number): Promise<void> {
-    const sliderTrack = page.locator(this.searchFiltersSlider);
+    const sliderTrack = await page.locator(this.searchFiltersSlider);
     const sliderOffsetWidth = await sliderTrack.evaluate((el) => el.getBoundingClientRect().width);
     const pxOneEuro = sliderOffsetWidth / (maxPrice - minPrice);
 

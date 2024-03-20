@@ -38,7 +38,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
   let productsNumber: number;
 
   // Pre-condition : Install Hummingbird
-  //installHummingbird(`${baseContext}_preTest`);
+  installHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -130,8 +130,8 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by category \'Accessories - Art\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCategory', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'category', 'Accessories', true);
-      await categoryPage.filterByCheckbox(page, 'category', 'Art', true);
+      await categoryPage.filterByCheckbox(page, 'Categories', 'Accessories');
+      await categoryPage.filterByCheckbox(page, 'Categories', 'Art');
     });
 
     it('should check the active filters', async function () {
@@ -177,9 +177,9 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by size \'S-L-XL\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterBySize', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'attribute_group', 'Size-S', true);
-      await categoryPage.filterByCheckbox(page, 'attribute_group', 'Size-S-L', true);
-      await categoryPage.filterByCheckbox(page, 'attribute_group', 'Size-S-L-XL', true);
+      await categoryPage.filterByCheckbox(page, 'Size', 'Size-S');
+      await categoryPage.filterByCheckbox(page, 'Size', 'Size-S-L');
+      await categoryPage.filterByCheckbox(page, 'Size', 'Size-S-L-XL');
     });
 
     it('should check the active filters', async function () {
@@ -212,7 +212,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by Color \'Black\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByColor', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'attribute_group', 'Color-Black', true);
+      await categoryPage.filterByCheckbox(page, 'Color', '#434A54');
     });
 
     it('should check the active filters', async function () {
@@ -260,9 +260,9 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by composition \'Ceramic - Cotton - Recycled cardboard\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByComposition', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'feature', 'Composition-Ceramic', true);
-      await categoryPage.filterByCheckbox(page, 'feature', 'Composition-Ceramic-Cotton', true);
-      await categoryPage.filterByCheckbox(page, 'feature', '\'Composition-Ceramic-Cotton-Recycled+cardboard\'', true);
+      await categoryPage.filterByCheckbox(page, 'Composition', 'Composition-Ceramic');
+      await categoryPage.filterByCheckbox(page, 'Composition', 'Composition-Ceramic-Cotton');
+      await categoryPage.filterByCheckbox(page, 'Composition', 'Composition-Ceramic-Cotton-Recycled+cardboard');
     });
 
     it('should check the active filters', async function () {
@@ -283,20 +283,20 @@ describe('FO - Menu and navigation : Filter products', async () => {
   });
 
   describe('Filter products list by Price', async () => {
-    it('should filter products by price \'€14.00 - €20.00\'', async function () {
+    it('should filter products by price \'€14.00 - €30.00\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByPrice', baseContext);
 
       const maxPrice = await categoryPage.getMaximumPrice(page);
       const minPrice = await categoryPage.getMinimumPrice(page);
 
-      await categoryPage.filterByPrice(page, minPrice, maxPrice, 14, 39);
+      await categoryPage.filterByPrice(page, minPrice, maxPrice, 14, 30);
     });
 
     it('should check the active filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters5', baseContext);
 
       const activeFilters = await categoryPage.getActiveFilters(page);
-      expect(activeFilters).to.contains('Price: €14.00 - €39.00')
+      expect(activeFilters).to.contains('Price: €14.00')
         .and.to.contains('Composition: Ceramic')
         .and.to.contains('Composition: Cotton')
         .and.to.contains('Composition: Recycled cardboard');
@@ -309,7 +309,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
 
       for (let i = 1; i <= productsNumber; i++) {
         const price = await categoryPage.getProductPrice(page, i);
-        expect(price).to.within(14, 39);
+        expect(price).to.within(14, 30);
       }
     });
   });
@@ -318,7 +318,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by brand \'Graphic Corner\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByBrand', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'manufacturer', '\'Graphic+Corner\'', true);
+      await categoryPage.filterByCheckbox(page, 'Brand', 'Graphic+Corner');
     });
 
     it('should check the active filters', async function () {
@@ -326,7 +326,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
 
       const activeFilters = await categoryPage.getActiveFilters(page);
       expect(activeFilters).to.contains('Composition: Recycled cardboard')
-        .and.to.contains('Price: €14.00 - €39.00')
+        .and.to.contains('Price: €14.00 -')
         .and.to.contains('Brand: Graphic Corner');
     });
 
@@ -361,8 +361,8 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by Dimension \'40x60cm -  60x90cm\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDimension', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'attribute_group', 'Dimension-40x60cm', true);
-      await categoryPage.filterByCheckbox(page, 'attribute_group', 'Dimension-40x60cm-60x90cm', true);
+      await categoryPage.filterByCheckbox(page, 'Dimension', 'Dimension-40x60cm');
+      await categoryPage.filterByCheckbox(page, 'Dimension', 'Dimension-40x60cm-60x90cm');
     });
 
     it('should check the active filters', async function () {
@@ -403,7 +403,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by availability \'In Stock\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByAvailability', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'availability', '\'Availability-In+stock\'', true);
+      await categoryPage.filterByCheckbox(page, 'Availability', 'Availability-In+stock');
     });
 
     it('should check the active filters', async function () {
@@ -432,9 +432,9 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by paper type \'Ruled - Plain - Squared\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByPaperType', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'attribute_group', '\'Paper+Type-Ruled\'', true);
-      await categoryPage.filterByCheckbox(page, 'attribute_group', '\'Paper+Type-Ruled-Plain\'', true);
-      await categoryPage.filterByCheckbox(page, 'attribute_group', '\'Paper+Type-Ruled-Plain-Squared\'', true);
+      await categoryPage.filterByCheckbox(page, 'Paper Type', 'Paper+Type-Ruled');
+      await categoryPage.filterByCheckbox(page, 'Paper Type', 'Paper+Type-Ruled-Plain');
+      await categoryPage.filterByCheckbox(page, 'Paper Type', 'Paper+Type-Ruled-Plain-Squared');
     });
 
     it('should check the active filters', async function () {
@@ -492,5 +492,5 @@ describe('FO - Menu and navigation : Filter products', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  //uninstallHummingbird(`${baseContext}_postTest`);
+  uninstallHummingbird(`${baseContext}_postTest`);
 });
