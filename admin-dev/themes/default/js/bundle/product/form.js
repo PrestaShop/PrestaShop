@@ -79,18 +79,19 @@ $(() => {
 function resetEditor() {
   const languageEditorsSelector = '.summary-description-container div.translation-field.active textarea.autoload_rte';
   $(languageEditorsSelector).each((index, textarea) => {
-    if (window.tinyMCE) {
-      const editor = window.tinyMCE.get(textarea.id);
-      if (!editor) {
-        return;
-      }
-      // Reset content to force refresh of editor
-      editor.setContent(editor.getContent());
-      setTimeout(() => {
-        editor.execCommand('mceInsertContent', false, '');
-        editor.execCommand('mceAutoResize');
-      }, 250);
+    if (!window.tinyMCE) {
+      return;
     }
+    const editor = window.tinyMCE.get(textarea.id);
+    if (!editor) {
+      return;
+    }
+    // Reset content to force refresh of editor
+    editor.setContent(editor.getContent());
+    setTimeout(() => {
+      editor.execCommand('mceInsertContent', false, '');
+      editor.execCommand('mceAutoResize');
+    }, 250);
   });
 }
 
