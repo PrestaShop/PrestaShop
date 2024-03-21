@@ -85,7 +85,7 @@ class AttributeGroupType extends TranslatorAwareType
                         ]),
                     ],
                 ],
-                'help' => $this->trans('Your internal name for this attribute.', 'Admin.Catalog.Help')
+                'help' => $this->trans('The public name for this attribute, displayed to the customers.', 'Admin.Catalog.Help')
                     . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
                     . ' ' . TypedRegexValidator::CATALOG_CHARS,
             ])
