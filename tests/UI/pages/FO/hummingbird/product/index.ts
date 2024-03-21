@@ -16,6 +16,7 @@ class ProductPage extends Product {
     this.proceedToCheckoutButton = '#blockcart-modal div.cart-footer-actions a';
     this.productName = '#content-wrapper h1.product__name';
     this.shortDescription = 'div.product__description-short';
+    this.productFlags = '#product-images  ul.product-flags';
 
     // Product prices block
     this.productPricesBlock = 'div.product__prices';

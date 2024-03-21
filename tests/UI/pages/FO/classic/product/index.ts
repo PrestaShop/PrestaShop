@@ -23,7 +23,7 @@ class Product extends FOBasePage {
 
   private readonly warningMessage: string;
 
-  private readonly productFlags: string;
+  protected productFlags: string;
 
   private readonly productFlag: (flag: string) => string;
 
