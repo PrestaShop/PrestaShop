@@ -26,7 +26,8 @@ services:
   prestashop.adapter.environment:
     class: PrestaShop\PrestaShop\Adapter\Environment
     arguments:
-      - !php/const _PS_MODE_DEV_
+      - !php/const _PS_SYMFONY_DEBUG_
+      - !php/const _PS_ENV_
 
   prestashop.adapter.validate:
     class: PrestaShop\PrestaShop\Adapter\Validate

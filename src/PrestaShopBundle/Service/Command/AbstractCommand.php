@@ -55,7 +55,7 @@ abstract class AbstractCommand
 
             if (null === $kernel) {
                 require_once _PS_ROOT_DIR_ . '/app/AdminKernel.php';
-                $kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
+                $kernel = new AdminKernel(_PS_ENV_, _PS_SYMFONY_DEBUG_);
             }
         }
 

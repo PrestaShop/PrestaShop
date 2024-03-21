@@ -70,7 +70,7 @@ $dotEnvFile = dirname(__FILE__, 2) . '/.env';
     ->loadEnv($dotEnvFile)
 ;
 
-$kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
+$kernel = new AdminKernel(_PS_ENV_, _PS_SYMFONY_DEBUG_);
 // When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
 //Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();

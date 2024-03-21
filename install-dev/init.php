@@ -95,7 +95,7 @@ if (file_exists(_PS_CORE_DIR_ . '/app/config/parameters.php')) {
 
     global $kernel;
     try {
-        $kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
+        $kernel = new AdminKernel(_PS_ENV_, _PS_SYMFONY_DEBUG_);
         $kernel->boot();
     } catch (DBALException $e) {
         /*

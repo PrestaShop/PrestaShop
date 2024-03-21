@@ -35,6 +35,13 @@
 if (!defined('_PS_MODE_DEV_')) {
     define('_PS_MODE_DEV_', true);
 }
+if (!defined('_PS_SYMFONY_DEBUG_')) {
+    if (_PS_MODE_DEV_) {
+        define('_PS_SYMFONY_DEBUG_', false);
+    } else {
+        define('_PS_SYMFONY_DEBUG_', false);
+    }
+}
 if (!defined('_PS_DISPLAY_COMPATIBILITY_WARNING_')) {
     define('_PS_DISPLAY_COMPATIBILITY_WARNING_', true);
 }
