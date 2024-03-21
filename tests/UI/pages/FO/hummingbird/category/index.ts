@@ -41,6 +41,9 @@ class Category extends CategoryPage {
     this.searchFilterPriceSlider = 'div.faceted-slider';
     this.searchFiltersSlider = 'div.noUi-base';
     this.closeOneFilter = (row: number) => `#js-active-search-filters ul li:nth-child(${row + 1}) a i`;
+
+    // Pagination selectors
+    this.pagesList = 'ul.pagination';
   }
 
   /**

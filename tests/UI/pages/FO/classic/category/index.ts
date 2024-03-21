@@ -26,7 +26,7 @@ class CategoryPage extends FOBasePage {
 
   protected productListDiv: string;
 
-  private readonly pagesList: string;
+  protected pagesList: string;
 
   protected productItemListDiv: string;
 
@@ -145,8 +145,8 @@ class CategoryPage extends FOBasePage {
     // Pagination selectors
     this.pagesList = '.page-list';
     this.paginationText = `${this.productListDiv} .pagination div:nth-child(1)`;
-    this.paginationNext = '#js-product-list nav.pagination a[rel=\'next\']';
-    this.paginationPrevious = '#js-product-list nav.pagination a[rel=\'prev\']';
+    this.paginationNext = '#js-product-list nav a[rel=\'next\']';
+    this.paginationPrevious = '#js-product-list nav a[rel=\'prev\']';
 
     this.categoryDescription = '#category-description';
 
