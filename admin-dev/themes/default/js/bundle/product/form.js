@@ -67,6 +67,7 @@ $(document).ready(() => {
   $('#form-nav').on('click', '.nav-item', () => {
     $('[data-toggle="tooltip"]').tooltip('hide');
     $('[data-toggle="popover"]').popover('hide');
+    resetEditor();
   });
 
   $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
@@ -77,16 +78,24 @@ $(document).ready(() => {
  * Reset active tinyMce editor (triggered when switch language, or switching tabs)
  */
 function resetEditor() {
+  if (!window.tinyMCE) {
+    return;
+  }
+
   const languageEditorsSelector = '.summary-description-container div.translation-field.active textarea.autoload_rte';
   $(languageEditorsSelector).each((index, textarea) => {
-    if (window.tinyMCE) {
-      const editor = window.tinyMCE.get(textarea.id);
+    const editor = window.tinyMCE.get(textarea.id);
 
-      if (editor) {
-        // Reset content to force refresh of editor
-        editor.setContent(editor.getContent());
-      }
+    if (!editor) {
+      return;
     }
+
+    // Reset content to force refresh of editor
+    editor.setContent(editor.getContent());
+    setTimeout(() => {
+      editor.execCommand('mceInsertContent', false, '');
+      editor.execCommand('mceAutoResize');
+    }, 250);
   });
 }
 
