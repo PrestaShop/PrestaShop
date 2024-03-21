@@ -2860,7 +2860,7 @@ class AdminProductsControllerCore extends AdminController
 
                 $error = 0;
 
-                if (!ImageManager::resize($file['save_path'], $new_path . '.' . $image->image_format, null, null, 'jpg', false, $error)) {
+                if (!ImageManager::resize($file['save_path'], $new_path . '.' . $image->image_format, null, null, 'jpg', true, $error)) {
                     switch ($error) {
                         case ImageManager::ERROR_FILE_NOT_EXIST:
                             $file['error'] = $this->trans('An error occurred while copying image, the file does not exist anymore.', [], 'Admin.Catalog.Notification');
