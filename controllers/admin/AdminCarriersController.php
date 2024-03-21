@@ -70,6 +70,11 @@ class AdminCarriersControllerCore extends AdminController
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
             ],
+            'id_reference' => [
+                'title' => $this->trans('Reference', [], 'Admin.Global'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+            ],
             'name' => [
                 'title' => $this->trans('Name', [], 'Admin.Global'),
             ],
