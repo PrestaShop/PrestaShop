@@ -113,6 +113,7 @@ smartyRegisterFunction($smarty, 'modifier', 'rand', 'rand');
 smartyRegisterFunction($smarty, 'modifier', 'sizeof', 'sizeof');
 smartyRegisterFunction($smarty, 'modifier', 'str_replace', 'str_replace');
 smartyRegisterFunction($smarty, 'modifier', 'stripslashes', 'stripslashes');
+smartyRegisterFunction($smarty, 'modifier', 'strstr', 'strstr');
 smartyRegisterFunction($smarty, 'modifier', 'strtolower', 'strtolower');
 smartyRegisterFunction($smarty, 'modifier', 'strval', 'strval');
 smartyRegisterFunction($smarty, 'modifier', 'substr', 'substr');
@@ -160,7 +161,7 @@ function smartyHook($params, &$smarty)
     $id_module = null;
     $hook_params = $params;
     $hook_params['smarty'] = $smarty;
-    if (!empty($params['mod'])) {
+    if (!empty ($params['mod'])) {
         $module = Module::getInstanceByName($params['mod']);
         unset($hook_params['mod']);
         if ($module && $module->id) {
@@ -171,7 +172,7 @@ function smartyHook($params, &$smarty)
             return '';
         }
     }
-    if (!empty($params['excl'])) {
+    if (!empty ($params['excl'])) {
         $result = '';
         $modules = Hook::getHookModuleExecList($hook_params['h']);
 
