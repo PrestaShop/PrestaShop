@@ -17,12 +17,10 @@ import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 
-// Import data
-import ModuleData from '@data/faker/module';
-
 import {
   // Import data
   dataCustomers,
+  FakerModule,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -44,7 +42,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const moduleInformation: ModuleData = new ModuleData({
+  const moduleInformation: FakerModule = new FakerModule({
     tag: 'ps_emailsubscription',
     name: 'Newsletter subscription',
   });

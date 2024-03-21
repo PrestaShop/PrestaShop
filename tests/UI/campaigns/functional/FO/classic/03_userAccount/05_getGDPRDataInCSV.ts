@@ -27,11 +27,15 @@ import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import {productPage} from '@pages/FO/classic/product';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
 import MessageData from '@data/faker/message';
-import CustomerData from '@data/faker/customer';
+
+import {
+  // Import data
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -65,13 +69,13 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   let ipAddress: string;
   let connectionOrigin: string;
 
-  const customerData: CustomerData = new CustomerData({
+  const customerData: FakerCustomer = new FakerCustomer({
     firstName: 'Marc',
     lastName: 'Beier',
     email: 'presta@prestashop.com',
   });
   const date: Date = new Date();
-  const addressData: AddressData = new AddressData({
+  const addressData: FakerAddress = new FakerAddress({
     firstName: 'Marc',
     lastName: 'Beier',
     country: 'France',
@@ -517,7 +521,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

@@ -27,7 +27,6 @@ import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
 import MessageData from '@data/faker/message';
 import EmployeeData from '@data/faker/employee';
 import type MailDevEmail from '@data/types/maildevEmail';
@@ -35,6 +34,7 @@ import type MailDevEmail from '@data/types/maildevEmail';
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -182,7 +182,7 @@ describe('BO - Customer Service : Forward message', async () => {
     it('should Pay and confirm order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
       expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);

@@ -12,12 +12,10 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 
-// Import data
-import CustomerData from '@data/faker/customer';
-
 import {
   // Import data
   dataCustomers,
+  FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -43,9 +41,9 @@ describe('BO - Orders - Create order : Search and view customer details from new
   let page: Page;
   let customerIframe: Frame|null;
 
-  const nonExistentCustomer: CustomerData = new CustomerData();
-  const disabledCustomer: CustomerData = new CustomerData({enabled: false});
-  const newCustomer: CustomerData = new CustomerData({
+  const nonExistentCustomer: FakerCustomer = new FakerCustomer();
+  const disabledCustomer: FakerCustomer = new FakerCustomer({enabled: false});
+  const newCustomer: FakerCustomer = new FakerCustomer({
     firstName: 'Jane',
     lastName: 'DOE',
     defaultCustomerGroup: 'Customer',

@@ -10,8 +10,10 @@ import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 
-// Import data
-import OrderStatuses from '@data/demo/orderStatuses';
+import {
+  // Import data
+  dataOrderStatuses,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -72,14 +74,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Quick edit order st
     numberOfOrderStatuses = await statusesPage.resetAndGetNumberOfLines(page, tableName);
     expect(numberOfOrderStatuses).to.be.above(0);
 
-    await statusesPage.filterTable(page, tableName, 'input', 'name', OrderStatuses.shipped.name);
+    await statusesPage.filterTable(page, tableName, 'input', 'name', dataOrderStatuses.shipped.name);
 
     const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
     expect(numberOfLinesAfterFilter).to.be.above(0);
 
     for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
       const textColumn = await statusesPage.getTextColumn(page, tableName, row, 'name');
-      expect(textColumn).to.contains(OrderStatuses.shipped.name);
+      expect(textColumn).to.contains(dataOrderStatuses.shipped.name);
     }
   });
 

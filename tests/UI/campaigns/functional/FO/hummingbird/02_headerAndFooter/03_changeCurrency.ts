@@ -17,8 +17,11 @@ import homePage from '@pages/FO/hummingbird/home';
 import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
 // Import data
-import Currencies from '@data/demo/currencies';
 import Products from '@data/demo/products';
+
+import {
+  dataCurrencies,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -76,7 +79,7 @@ describe('FO - Header and Footer : Change currency', async () => {
     });
 
     // Pre-condition: Create currency
-    createCurrencyTest(Currencies.mad, `${baseContext}_preTest_2`);
+    createCurrencyTest(dataCurrencies.mad, `${baseContext}_preTest_2`);
 
     describe('Filter by iso code of currency and get the exchange rate value ', async () => {
       it('should login in BO', async function () {
@@ -106,11 +109,11 @@ describe('FO - Header and Footer : Change currency', async () => {
         expect(pageTitle).to.contains(currenciesPage.pageTitle);
       });
 
-      it(`should get the currency exchange rate value '${Currencies.mad.isoCode}'`, async function () {
+      it(`should get the currency exchange rate value '${dataCurrencies.mad.isoCode}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getExchangeRate', baseContext);
 
         // Filter
-        await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.mad.isoCode);
+        await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
 
         // Check exchange rate
         exchangeRateValue = await currenciesPage.getExchangeRateValue(page, 1);
@@ -132,10 +135,10 @@ describe('FO - Header and Footer : Change currency', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'changeFoCurrency', baseContext);
 
         // Check currency
-        await homePage.changeCurrency(page, Currencies.mad.isoCode, Currencies.mad.symbol);
+        await homePage.changeCurrency(page, dataCurrencies.mad.isoCode, dataCurrencies.mad.symbol);
 
         const shopCurrency = await homePage.getDefaultCurrency(page);
-        expect(shopCurrency).to.contains(Currencies.mad.isoCode);
+        expect(shopCurrency).to.contains(dataCurrencies.mad.isoCode);
       });
 
       it('should search product', async function () {
@@ -150,10 +153,10 @@ describe('FO - Header and Footer : Change currency', async () => {
       it('should check the product price', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice', baseContext);
 
-        const newExchangeRateValue = (exchangeRateValue * Products.demo_11.finalPrice).toFixed(Currencies.mad.decimals);
+        const newExchangeRateValue = (exchangeRateValue * Products.demo_11.finalPrice).toFixed(dataCurrencies.mad.decimals);
 
         const productPrice = await searchResultsPage.getProductPrice(page);
-        expect(productPrice).to.contains(`${Currencies.mad.symbol}${newExchangeRateValue}`);
+        expect(productPrice).to.contains(`${dataCurrencies.mad.symbol}${newExchangeRateValue}`);
       });
 
       it('should switch back to the default currency', async function () {
@@ -165,25 +168,25 @@ describe('FO - Header and Footer : Change currency', async () => {
         );
 
         // Check currency
-        await homePage.changeCurrency(page, Currencies.euro.isoCode, Currencies.euro.symbol);
+        await homePage.changeCurrency(page, dataCurrencies.euro.isoCode, dataCurrencies.euro.symbol);
 
         const shopCurrency = await homePage.getDefaultCurrency(page);
-        expect(shopCurrency).to.contains(Currencies.euro.isoCode);
+        expect(shopCurrency).to.contains(dataCurrencies.euro.isoCode);
       });
 
       it('should check the product price', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice2', baseContext);
 
-        const exchangeRate = Math.round(Currencies.euro.exchangeRate * Products.demo_11.finalPrice);
+        const exchangeRate = Math.round(dataCurrencies.euro.exchangeRate * Products.demo_11.finalPrice);
 
         const productPrice = await searchResultsPage.getProductPrice(page);
-        expect(productPrice).to.contains(`${Currencies.euro.symbol}${exchangeRate}`);
+        expect(productPrice).to.contains(`${dataCurrencies.euro.symbol}${exchangeRate}`);
       });
     });
   });
 
   // Post-condition - Delete currency
-  deleteCurrencyTest(Currencies.mad, `${baseContext}_postTest_1`);
+  deleteCurrencyTest(dataCurrencies.mad, `${baseContext}_postTest_1`);
 
   // Post-condition : Uninstall Hummingbird
   uninstallHummingbird(`${baseContext}_postTest_2`);

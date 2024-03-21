@@ -1,16 +1,16 @@
-import Countries from '@data/demo/countries';
-import CountryData from '@data/faker/country';
 import ImportData from '@data/faker/import';
 import type {ImportAddress} from '@data/types/import';
 
 import {
   // Import data
+  dataCountries,
   dataCustomers,
+  type FakerCountry,
 } from '@prestashop-core/ui-testing';
 
 import {fakerFR as faker} from '@faker-js/faker';
 
-const countriesNames = Object.values(Countries).map((country: CountryData) => country.name);
+const countriesNames = Object.values(dataCountries).map((country: FakerCountry) => country.name);
 
 const records: ImportAddress[] = [];
 

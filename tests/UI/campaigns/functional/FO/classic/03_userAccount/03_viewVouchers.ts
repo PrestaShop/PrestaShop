@@ -16,7 +16,11 @@ import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouche
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';
-import CustomerData from '@data/faker/customer';
+
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -41,7 +45,7 @@ describe('FO - Account : View vouchers', async () => {
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
   const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
   const expirationDate: string = date.getDateFormat('mm/dd/yyyy', 'future');
-  const customerData: CustomerData = new CustomerData({});
+  const customerData: FakerCustomer = new FakerCustomer({});
   const firstCartRule: CartRuleData = new CartRuleData({
     code: 'promo20',
     customer: customerData,

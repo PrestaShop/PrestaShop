@@ -27,8 +27,6 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import data
 import Addresses from '@data/demo/address';
 import Carriers from '@data/demo/carriers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import ProductData from '@data/faker/product';
 import OrderData from '@data/faker/order';
@@ -36,6 +34,8 @@ import OrderData from '@data/faker/order';
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -89,7 +89,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   // Customized product data
   const customizedProduct: ProductData = new ProductData({
@@ -113,7 +113,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   // Virtual product data
   const virtualProduct: ProductData = new ProductData({
@@ -358,11 +358,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
       });
 
-      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
+      it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus1', baseContext);
 
-        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-        expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
+        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+        expect(textResult).to.equal(dataOrderStatuses.paymentAccepted.name);
       });
 
       it('should check that there is no carrier', async function () {
@@ -601,11 +601,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     });
 
     describe('Create invoice', async () => {
-      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
+      it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus2', baseContext);
 
-        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-        expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
+        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+        expect(textResult).to.equal(dataOrderStatuses.paymentAccepted.name);
       });
 
       it('should get the invoice file name', async function () {

@@ -10,20 +10,24 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
+import {
+  // Import data
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
+
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import type AddressData from '@data/faker/address';
-import type CustomerData from '@data/faker/customer';
 
 let browserContext: BrowserContext;
 let page: Page;
 
 /**
  * Function to create account in FO
- * @param customerData {CustomerData} Data to set when creating the account
+ * @param customerData {FakerCustomer} Data to set when creating the account
  * @param baseContext {string} String to identify the test
  */
-function createAccountTest(customerData: CustomerData, baseContext: string = 'commonTests-createAccountTest'): void {
+function createAccountTest(customerData: FakerCustomer, baseContext: string = 'commonTests-createAccountTest'): void {
   describe('PRE-TEST: Create account on FO', async () => {
     // before and after functions
     before(async function () {
@@ -79,8 +83,8 @@ function createAccountTest(customerData: CustomerData, baseContext: string = 'co
 }
 
 function createAddressTest(
-  customerLoginData: CustomerData,
-  addressData: AddressData,
+  customerLoginData: FakerCustomer,
+  addressData: FakerAddress,
   baseContext: string = 'commonTests-createAddressTest',
 ): void {
   describe('PRE-TEST: Create address on FO', async () => {

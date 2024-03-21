@@ -22,13 +22,11 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import CarrierData from '@data/faker/carrier';
-
 import {
   // Import data
   dataCustomers,
   dataGroups,
+  FakerCarrier,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -51,7 +49,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
   let page: Page;
   let newCarrierID: number = 0;
 
-  const createCarrierData: CarrierData = new CarrierData({
+  const createCarrierData: FakerCarrier = new FakerCarrier({
     freeShipping: false,
     allZones: true,
     handlingCosts: true,

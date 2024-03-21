@@ -14,14 +14,14 @@ import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -57,7 +57,7 @@ describe('BO - Customers - Outstanding : View order', async () => {
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-Condition : Enable B2B
@@ -113,7 +113,7 @@ describe('BO - Customers - Outstanding : View order', async () => {
     it('should update order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
+      const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
       expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
     });
 
@@ -121,7 +121,7 @@ describe('BO - Customers - Outstanding : View order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusBO', baseContext);
 
       const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-      expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
+      expect(orderStatus, 'Order status was not updated').to.equal(dataOrderStatuses.paymentAccepted.name);
     });
   });
 

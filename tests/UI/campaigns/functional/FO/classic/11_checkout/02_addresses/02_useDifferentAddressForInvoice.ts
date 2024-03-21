@@ -19,10 +19,14 @@ import {checkoutPage as foCheckoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
+
+import {
+  // Import data
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -47,9 +51,9 @@ Check that the 2 addresses are different
 
 describe('FO - Guest checkout: Use different invoice address', async () => {
   // Create faker data
-  const guestData: CustomerData = new CustomerData({password: ''});
-  const deliveryAddress: AddressData = new AddressData({country: 'France'});
-  const invoiceAddress: AddressData = new AddressData({country: 'France'});
+  const guestData: FakerCustomer = new FakerCustomer({password: ''});
+  const deliveryAddress: FakerAddress = new FakerAddress({country: 'France'});
+  const invoiceAddress: FakerAddress = new FakerAddress({country: 'France'});
 
   let browserContext: BrowserContext;
   let page: Page;
@@ -127,7 +131,7 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
       // Payment step - Choose payment step
-      await foCheckoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await foCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message

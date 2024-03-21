@@ -11,8 +11,10 @@ import localizationPage from '@pages/BO/international/localization';
 import addressesPage from '@pages/BO/customers/addresses';
 import addAddressPage from '@pages/BO/customers/addresses/add';
 
-// Import Data
-import Countries from '@data/demo/countries';
+import {
+  // Import data
+  dataCountries,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -33,7 +35,7 @@ describe('BO - International - Localization : Update default country', async () 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const countriesToTest: string[] = [Countries.netherlands.name, Countries.france.name];
+  const countriesToTest: string[] = [dataCountries.netherlands.name, dataCountries.france.name];
 
   // before and after functions
   before(async function () {

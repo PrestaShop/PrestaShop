@@ -11,13 +11,6 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
-// Import data
-import PaymentMethods from '@data/demo/paymentMethods';
-import AddressData from '@data/faker/address';
-
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-
 // Import BO pages
 import customersPage from '@pages/BO/customers';
 import addressesPage from '@pages/BO/customers/addresses';
@@ -25,13 +18,18 @@ import viewCustomerPage from '@pages/BO/customers/view';
 
 // Import data
 import Products from '@data/demo/products';
-import CustomerData from '@data/faker/customer';
 import OrderData from '@data/faker/order';
 
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
 } from '@prestashop-core/ui-testing';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_customerBlock';
 
@@ -58,11 +56,11 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
   let customerID: number = 0;
   let addressID: string = '0';
 
-  const customerData: CustomerData = new CustomerData();
-  const firstAddressData: AddressData = new AddressData({firstName: 'first', country: 'France'});
-  const secondAddressData: AddressData = new AddressData({firstName: 'second', country: 'France'});
-  const editShippingAddressData: AddressData = new AddressData({country: 'France'});
-  const editInvoiceAddressData: AddressData = new AddressData({country: 'France'});
+  const customerData: FakerCustomer = new FakerCustomer();
+  const firstAddressData: FakerAddress = new FakerAddress({firstName: 'first', country: 'France'});
+  const secondAddressData: FakerAddress = new FakerAddress({firstName: 'second', country: 'France'});
+  const editShippingAddressData: FakerAddress = new FakerAddress({country: 'France'});
+  const editInvoiceAddressData: FakerAddress = new FakerAddress({country: 'France'});
   const privateNote: string = 'Test private note';
   // New order by customer data
   const orderData: OrderData = new OrderData({
@@ -73,10 +71,10 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   // Customer login data
-  const customerLoginData = new CustomerData({
+  const customerLoginData = new FakerCustomer({
     email: customerData.email,
     password: customerData.password,
   });

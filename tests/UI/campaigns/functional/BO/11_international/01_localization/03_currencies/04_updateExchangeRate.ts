@@ -11,8 +11,9 @@ import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 
-// Import data
-import Currencies from '@data/demo/currencies';
+import {
+  dataCurrencies,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -84,7 +85,7 @@ describe('BO - International - Currencies : Update exchange rate', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'createOfficialCurrency', baseContext);
 
       // Create and check successful message
-      const textResult = await addCurrencyPage.addOfficialCurrency(page, Currencies.mad);
+      const textResult = await addCurrencyPage.addOfficialCurrency(page, dataCurrencies.mad);
       expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
 
       // Check number of currencies after creation
@@ -94,18 +95,18 @@ describe('BO - International - Currencies : Update exchange rate', async () => {
   });
 
   describe('Update exchange rates', async () => {
-    it(`should filter by iso code of currency '${Currencies.mad.isoCode}'`, async function () {
+    it(`should filter by iso code of currency '${dataCurrencies.mad.isoCode}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       // Filter
-      await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.mad.isoCode);
+      await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
 
       const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
       expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
 
       // Check currency to delete
       const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-      expect(textColumn).to.contains(Currencies.mad.isoCode);
+      expect(textColumn).to.contains(dataCurrencies.mad.isoCode);
     });
 
     it('should go to the created currency page', async function () {
@@ -133,17 +134,17 @@ describe('BO - International - Currencies : Update exchange rate', async () => {
       expect(textResult).to.contains(currenciesPage.successfulUpdateMessage);
     });
 
-    it(`should filter by iso code of currency '${Currencies.mad.isoCode}'`, async function () {
+    it(`should filter by iso code of currency '${dataCurrencies.mad.isoCode}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToCheckValue', baseContext);
 
       // Filter
-      await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.mad.isoCode);
+      await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
 
       const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-      expect(textColumn).to.contains(Currencies.mad.isoCode);
+      expect(textColumn).to.contains(dataCurrencies.mad.isoCode);
     });
 
-    it(`should check that the exchange rate of currency '${Currencies.mad.isoCode}' is updated`, async function () {
+    it(`should check that the exchange rate of currency '${dataCurrencies.mad.isoCode}' is updated`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkExchangeRates', baseContext);
 
       const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'conversion_rate');
@@ -152,18 +153,18 @@ describe('BO - International - Currencies : Update exchange rate', async () => {
   });
 
   describe('Delete currency created', async () => {
-    it(`should filter by iso code of currency '${Currencies.mad.isoCode}'`, async function () {
+    it(`should filter by iso code of currency '${dataCurrencies.mad.isoCode}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.mad.isoCode);
+      await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
 
       const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
       expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
 
       // Check currency to delete
       const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-      expect(textColumn).to.contains(Currencies.mad.isoCode);
+      expect(textColumn).to.contains(dataCurrencies.mad.isoCode);
     });
 
     it('should delete currency', async function () {

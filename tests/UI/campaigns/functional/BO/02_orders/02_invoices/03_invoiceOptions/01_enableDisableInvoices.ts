@@ -13,14 +13,14 @@ import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -46,7 +46,7 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create order in FO
@@ -67,7 +67,7 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
       args: {
         action: 'Disable',
         status: false,
-        orderStatus: OrderStatuses.shipped.name,
+        orderStatus: dataOrderStatuses.shipped.name,
         isInvoiceCreated: 'no invoice document created',
       },
     },
@@ -75,7 +75,7 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
       args: {
         action: 'Enable',
         status: true,
-        orderStatus: OrderStatuses.paymentAccepted.name,
+        orderStatus: dataOrderStatuses.paymentAccepted.name,
         isInvoiceCreated: 'an invoice document created',
       },
     },

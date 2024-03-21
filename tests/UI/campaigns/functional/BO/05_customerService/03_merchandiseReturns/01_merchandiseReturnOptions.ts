@@ -23,13 +23,11 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
-
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -130,7 +128,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -216,11 +214,11 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
       });
 
-      it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+      it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-        const result = await viewOrderBasePage.modifyOrderStatus(page, OrderStatuses.shipped.name);
-        expect(result).to.equal(OrderStatuses.shipped.name);
+        const result = await viewOrderBasePage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+        expect(result).to.equal(dataOrderStatuses.shipped.name);
       });
 
       it('should check if the button \'Return products\' is visible', async function () {

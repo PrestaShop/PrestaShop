@@ -20,13 +20,11 @@ import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import PaymentMethods from '@data/demo/paymentMethods';
-import OrderStatuses from '@data/demo/orderStatuses';
-
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -175,7 +173,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           await testContext.addContextItem(this, 'testIdentifier', `confirmOrder${index}`, baseContext);
 
           // Payment step - Choose payment step
-          await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+          await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -225,11 +223,11 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
         });
 
-        it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+        it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-          const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-          expect(result).to.equal(OrderStatuses.shipped.name);
+          const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+          expect(result).to.equal(dataOrderStatuses.shipped.name);
         });
 
         it('should download the delivery slip', async function () {

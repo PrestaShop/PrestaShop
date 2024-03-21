@@ -25,8 +25,6 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import Modules from '@data/demo/modules';
@@ -34,6 +32,8 @@ import Modules from '@data/demo/modules';
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -75,7 +75,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
         quantity: 3,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create first order
@@ -155,7 +155,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     });
   });
 
-  describe(`BO: Change the first created orders status to '${OrderStatuses.delivered.name}'`, async () => {
+  describe(`BO: Change the first created orders status to '${dataOrderStatuses.delivered.name}'`, async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -183,15 +183,15 @@ describe('Mail alerts module - Enable/Disable return', async () => {
       expect(orderReference).to.not.eq(null);
     });
 
-    it(`should change the order status to '${OrderStatuses.delivered.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await ordersPage.setOrderStatus(page, 1, OrderStatuses.delivered);
+      const result = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
       expect(result).to.equal(ordersPage.successfulUpdateMessage);
     });
   });
 
-  describe(`BO: Change the second created orders status to '${OrderStatuses.delivered.name}'`, async () => {
+  describe(`BO: Change the second created orders status to '${dataOrderStatuses.delivered.name}'`, async () => {
     it('should get the second order ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderID2', baseContext);
 
@@ -206,10 +206,10 @@ describe('Mail alerts module - Enable/Disable return', async () => {
       expect(orderReference).to.not.eq(null);
     });
 
-    it(`should change the order status to '${OrderStatuses.delivered.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus2', baseContext);
 
-      const result = await ordersPage.setOrderStatus(page, 2, OrderStatuses.delivered);
+      const result = await ordersPage.setOrderStatus(page, 2, dataOrderStatuses.delivered);
       expect(result).to.equal(ordersPage.successfulUpdateMessage);
     });
   });

@@ -1,14 +1,14 @@
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
-import OrderStatusData from '@data/faker/orderStatus';
-import PaymentMethodData from '@data/faker/paymentMethod';
 import {OrderCreator, OrderDeliveryOption, OrderProduct} from '@data/types/order';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+  type FakerOrderStatus,
+  type FakerPaymentMethod,
 } from '@prestashop-core/ui-testing';
 
 import {faker} from '@faker-js/faker';
@@ -26,17 +26,17 @@ export default class OrderData {
 
   public readonly delivery: string;
 
-  public readonly customer: CustomerData;
+  public readonly customer: FakerCustomer;
 
   public readonly totalPaid: number;
 
-  public readonly paymentMethod: PaymentMethodData;
+  public readonly paymentMethod: FakerPaymentMethod;
 
-  public readonly status: OrderStatusData;
+  public readonly status: FakerOrderStatus;
 
-  public readonly deliveryAddress: AddressData;
+  public readonly deliveryAddress: FakerAddress;
 
-  public readonly invoiceAddress: AddressData;
+  public readonly invoiceAddress: FakerAddress;
 
   public readonly products: OrderProduct[];
 
@@ -67,23 +67,23 @@ export default class OrderData {
     /** @type {string} */
     this.delivery = valueToCreate.delivery || 'France';
 
-    /** @type {CustomerData} */
+    /** @type {FakerCustomer} */
     this.customer = valueToCreate.customer || dataCustomers.johnDoe;
 
     /** @type {number} */
     this.totalPaid = valueToCreate.totalPaid || 0;
 
-    /** @type {PaymentMethodData} */
-    this.paymentMethod = valueToCreate.paymentMethod || PaymentMethods.checkPayment;
+    /** @type {FakerPaymentMethod} */
+    this.paymentMethod = valueToCreate.paymentMethod || dataPaymentMethods.checkPayment;
 
-    /** @type {OrderStatusData|null} */
-    this.status = valueToCreate.status || OrderStatuses.paymentAccepted;
+    /** @type {FakerOrderStatus|null} */
+    this.status = valueToCreate.status || dataOrderStatuses.paymentAccepted;
 
-    /** @type {AddressData} */
-    this.deliveryAddress = valueToCreate.deliveryAddress || new AddressData();
+    /** @type {FakerCustomer} */
+    this.deliveryAddress = valueToCreate.deliveryAddress || new FakerAddress();
 
-    /** @type {AddressData} */
-    this.invoiceAddress = valueToCreate.invoiceAddress || new AddressData();
+    /** @type {FakerCustomer} */
+    this.invoiceAddress = valueToCreate.invoiceAddress || new FakerAddress();
 
     /** @type {OrderProduct[]} */
     this.products = valueToCreate.products || [];

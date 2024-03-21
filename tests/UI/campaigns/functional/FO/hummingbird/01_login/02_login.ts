@@ -9,12 +9,10 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 import homePage from '@pages/FO/hummingbird/home';
 import loginPage from '@pages/FO/hummingbird/login';
 
-// Import data
-import CustomerData from '@data/faker/customer';
-
 import {
   // Import data
   dataCustomers,
+  FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -26,9 +24,9 @@ describe('FO - Login : Login in FO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const firstCredentialsData: CustomerData = new CustomerData();
-  const secondCredentialsData: CustomerData = new CustomerData({password: dataCustomers.johnDoe.password});
-  const thirdCredentialsData: CustomerData = new CustomerData({email: dataCustomers.johnDoe.email});
+  const firstCredentialsData: FakerCustomer = new FakerCustomer();
+  const secondCredentialsData: FakerCustomer = new FakerCustomer({password: dataCustomers.johnDoe.password});
+  const thirdCredentialsData: FakerCustomer = new FakerCustomer({email: dataCustomers.johnDoe.email});
 
   // Pre-condition : Install Hummingbird
   installHummingbird(`${baseContext}_preTest_1`);

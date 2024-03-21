@@ -22,13 +22,13 @@ import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 
 // Import data
-import Currencies from '@data/demo/currencies';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 import ProductData from '@data/faker/product';
 
 import {
   // Import data
+  dataCurrencies,
   dataCustomers,
 } from '@prestashop-core/ui-testing';
 
@@ -198,7 +198,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   enableEcoTaxTest(`${baseContext}_preTest_1`);
 
   // Pre-condition: Create currency
-  createCurrencyTest(Currencies.mad, `${baseContext}_preTest_2`);
+  createCurrencyTest(dataCurrencies.mad, `${baseContext}_preTest_2`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -706,7 +706,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   disableEcoTaxTest(`${baseContext}_postTest_2`);
 
   // Post-condition: Delete currency
-  deleteCurrencyTest(Currencies.mad, `${baseContext}_postTest_3`);
+  deleteCurrencyTest(dataCurrencies.mad, `${baseContext}_postTest_3`);
 
   // Post-condition: Delete cart rule
   deleteCartRuleTest(newCartRuleData.name, `${baseContext}_postTest_4`);

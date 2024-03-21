@@ -13,11 +13,15 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -39,8 +43,8 @@ describe('BO - Orders : View guest from orders page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const customerData: CustomerData = new CustomerData({password: ''});
-  const addressData: AddressData = new AddressData({country: 'France'});
+  const customerData: FakerCustomer = new FakerCustomer({password: ''});
+  const addressData: FakerAddress = new FakerAddress({country: 'France'});
   // New order by guest data
   const orderByGuestData: OrderData = new OrderData({
     customer: customerData,
@@ -51,7 +55,7 @@ describe('BO - Orders : View guest from orders page', async () => {
       },
     ],
     deliveryAddress: addressData,
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create order by guest in FO

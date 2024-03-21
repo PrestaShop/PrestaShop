@@ -18,7 +18,10 @@ import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 // Import data
 import Languages from '@data/demo/languages';
 import APIClientData from '@data/faker/APIClient';
-import GroupData from '@data/faker/group';
+
+import {
+  FakerGroup,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
@@ -42,10 +45,10 @@ describe('API : PUT /api/customers/group/{customerGroupId}', async () => {
       clientScope,
     ],
   });
-  const createGroupData: GroupData = new GroupData({
+  const createGroupData: FakerGroup = new FakerGroup({
     priceDisplayMethod: 'Tax included',
   });
-  const updateGroupData: GroupData = new GroupData({
+  const updateGroupData: FakerGroup = new FakerGroup({
     name: 'Customer Group EN',
     frName: 'Customer Group FR',
     discount: 42,

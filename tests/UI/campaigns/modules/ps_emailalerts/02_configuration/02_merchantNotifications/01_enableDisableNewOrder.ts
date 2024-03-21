@@ -23,7 +23,6 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import Modules from '@data/demo/modules';
@@ -31,6 +30,7 @@ import Modules from '@data/demo/modules';
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -71,7 +71,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
         quantity: 3,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-Condition : Setup config SMTP

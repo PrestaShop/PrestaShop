@@ -14,8 +14,9 @@ import addCurrencyPage from '@pages/BO/international/currencies/add';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 
-// Import data
-import Currencies from '@data/demo/currencies';
+import {
+  dataCurrencies,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -91,7 +92,7 @@ describe('BO - International - Currencies : Create unofficial currency and check
       await testContext.addContextItem(this, 'testIdentifier', 'createUnofficialCurrency', baseContext);
 
       // Check successful message after creation
-      const textResult = await addCurrencyPage.createUnOfficialCurrency(page, Currencies.toman);
+      const textResult = await addCurrencyPage.createUnOfficialCurrency(page, dataCurrencies.toman);
       expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
 
       // Check number of currencies after creation
@@ -100,12 +101,12 @@ describe('BO - International - Currencies : Create unofficial currency and check
     });
 
     it(
-      `should filter by iso code of currency '${Currencies.toman.isoCode}' and check values created in table`,
+      `should filter by iso code of currency '${dataCurrencies.toman.isoCode}' and check values created in table`,
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCurrencyValues', baseContext);
 
         // Filter
-        await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.toman.isoCode);
+        await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.toman.isoCode);
 
         // Check number of element
         const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
@@ -113,11 +114,11 @@ describe('BO - International - Currencies : Create unofficial currency and check
 
         const createdCurrency = await currenciesPage.getCurrencyFromTable(page, 1);
         await Promise.all([
-          expect(createdCurrency.name).to.contains(Currencies.toman.name),
-          expect(createdCurrency.symbol).to.contains(Currencies.toman.symbol),
-          expect(createdCurrency.isoCode).to.contains(Currencies.toman.isoCode),
+          expect(createdCurrency.name).to.contains(dataCurrencies.toman.name),
+          expect(createdCurrency.symbol).to.contains(dataCurrencies.toman.symbol),
+          expect(createdCurrency.isoCode).to.contains(dataCurrencies.toman.isoCode),
           expect(createdCurrency.exchangeRate).to.be.above(0),
-          expect(createdCurrency.enabled).to.be.equal(Currencies.toman.enabled),
+          expect(createdCurrency.enabled).to.be.equal(dataCurrencies.toman.enabled),
         ]);
       },
     );
@@ -136,10 +137,10 @@ describe('BO - International - Currencies : Create unofficial currency and check
       await testContext.addContextItem(this, 'testIdentifier', 'changeFoCurrency1', baseContext);
 
       // Check currency
-      await foHomePage.changeCurrency(page, Currencies.toman.isoCode, Currencies.toman.symbol);
+      await foHomePage.changeCurrency(page, dataCurrencies.toman.isoCode, dataCurrencies.toman.symbol);
 
       const shopCurrency = await foHomePage.getDefaultCurrency(page);
-      expect(shopCurrency).to.contain(Currencies.toman.isoCode);
+      expect(shopCurrency).to.contain(dataCurrencies.toman.isoCode);
     });
 
     it('should go back to BO', async function () {
@@ -160,11 +161,11 @@ describe('BO - International - Currencies : Create unofficial currency and check
   });
 
   describe('Disable and check currency in FO', async () => {
-    it(`should filter by iso code of currency '${Currencies.toman.isoCode}'`, async function () {
+    it(`should filter by iso code of currency '${dataCurrencies.toman.isoCode}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDisableCurrency', baseContext);
 
       // Filter
-      await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.toman.isoCode);
+      await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.toman.isoCode);
 
       // Check number of currencies
       const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
@@ -172,7 +173,7 @@ describe('BO - International - Currencies : Create unofficial currency and check
 
       // Check currency created
       const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-      expect(textColumn).to.contains(Currencies.toman.isoCode);
+      expect(textColumn).to.contains(dataCurrencies.toman.isoCode);
     });
 
     it('should disable currency', async function () {
@@ -225,18 +226,18 @@ describe('BO - International - Currencies : Create unofficial currency and check
   });
 
   describe('Delete currency created ', async () => {
-    it(`should filter by iso code of currency '${Currencies.toman.isoCode}'`, async function () {
+    it(`should filter by iso code of currency '${dataCurrencies.toman.isoCode}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.toman.isoCode);
+      await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.toman.isoCode);
 
       // Check number of currencies
       const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
       expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
 
       const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-      expect(textColumn).to.contains(Currencies.toman.isoCode);
+      expect(textColumn).to.contains(dataCurrencies.toman.isoCode);
     });
 
     it('should delete currency', async function () {

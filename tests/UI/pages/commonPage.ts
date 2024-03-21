@@ -1,5 +1,8 @@
 // Import data
-import type {PageWaitForSelectorOptionsState, WaitForNavigationWaitUntil} from '@data/types/playwright';
+import {
+  type PageWaitForSelectorOptionsState,
+  type WaitForNavigationWaitUntil,
+} from '@prestashop-core/ui-testing';
 
 import type {
   BrowserContext, ElementHandle, JSHandle, FileChooser, Frame, Page, Locator,

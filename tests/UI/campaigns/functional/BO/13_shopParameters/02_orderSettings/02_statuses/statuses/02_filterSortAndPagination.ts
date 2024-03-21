@@ -11,8 +11,10 @@ import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 
-// Import data
-import OrderStatuses from '@data/demo/orderStatuses';
+import {
+  // Import data
+  dataOrderStatuses,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -83,7 +85,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_order_state',
-            filterValue: OrderStatuses.paymentAccepted.id.toString(),
+            filterValue: dataOrderStatuses.paymentAccepted.id.toString(),
             filterTypeOf: 'numeric',
           },
       },
@@ -93,7 +95,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: OrderStatuses.shipped.name,
+            filterValue: dataOrderStatuses.shipped.name,
             filterTypeOf: 'string',
           },
       },
@@ -133,7 +135,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
             testIdentifier: 'filterByEmailTemplate',
             filterType: 'input',
             filterBy: 'template',
-            filterValue: OrderStatuses.canceled.emailTemplate,
+            filterValue: dataOrderStatuses.canceled.emailTemplate,
             filterTypeOf: 'string',
           },
       },

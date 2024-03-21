@@ -3,9 +3,13 @@ import BOBasePage from '@pages/BO/BObasePage';
 import addCustomerPage from '@pages/BO/customers/add';
 
 // Import data
-import type CustomerData from '@data/faker/customer';
 import type ProductData from '@data/faker/product';
-import type OrderStatusData from '@data/faker/orderStatus';
+
+import {
+  // Import data
+  type FakerCustomer,
+  type FakerOrderStatus,
+} from '@prestashop-core/ui-testing';
 
 import type {Frame, Page} from 'playwright';
 import OrderData from '@data/faker/order';
@@ -412,14 +416,14 @@ class AddOrder extends BOBasePage {
   /**
    * Click on add new customer and new customer iFrame
    * @param page {Page} Browser tab
-   * @param customerData {CustomerData} Customer data fake object
+   * @param customerData {FakerCustomer} Customer data fake object
    * @returns {Promise<string>}
    */
-  async addNewCustomer(page: Page, customerData: CustomerData): Promise<string> {
+  async addNewCustomer(page: Page, customerData: FakerCustomer): Promise<string> {
     await page.locator(this.addCustomerLink).click();
     await this.waitForVisibleSelector(page, this.iframe);
 
-    const customerFrame = await page.frame({url: /sell\/customers\/new/gmi});
+    const customerFrame = page.frame({url: /sell\/customers\/new/gmi});
 
     if (!customerFrame) {
       throw new Error('The customerFrame doesn\'t exist!');
@@ -1185,10 +1189,10 @@ class AddOrder extends BOBasePage {
   /**
    * Set order status
    * @param page {Page} Browser tab
-   * @param orderStatus {OrderStatusData} Order status to choose
+   * @param orderStatus {FakerOrderStatus} Order status to choose
    * @returns {Promise<void>}
    */
-  async setOrderStatus(page: Page, orderStatus: OrderStatusData): Promise<void> {
+  async setOrderStatus(page: Page, orderStatus: FakerOrderStatus): Promise<void> {
     await this.selectByVisibleText(page, this.orderStatusSelect, orderStatus.name);
   }
 
@@ -1212,10 +1216,10 @@ class AddOrder extends BOBasePage {
    * Set summary block
    * @param page {Page} Browser tab
    * @param paymentMethodModuleName {string} Payment method to choose
-   * @param orderStatus {OrderStatusData} Order status to choose
+   * @param orderStatus {FakerOrderStatus} Order status to choose
    * @returns {Promise<void>}
    */
-  async setSummaryAndCreateOrder(page: Page, paymentMethodModuleName: string, orderStatus: OrderStatusData): Promise<void> {
+  async setSummaryAndCreateOrder(page: Page, paymentMethodModuleName: string, orderStatus: FakerOrderStatus): Promise<void> {
     await this.setPaymentMethod(page, paymentMethodModuleName);
     await this.setOrderStatus(page, orderStatus);
     await this.clickOnCreateOrderButton(page);

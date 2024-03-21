@@ -24,12 +24,12 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import Products from '@data/demo/products';
-import PaymentMethods from '@data/demo/paymentMethods';
 import MessageData from '@data/faker/message';
 
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -168,7 +168,7 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should Pay by back wire and confirm order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
       const pageTitle = await orderConfirmationPage.getPageTitle(page);
       expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
 

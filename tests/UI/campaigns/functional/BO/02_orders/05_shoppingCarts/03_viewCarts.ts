@@ -17,12 +17,16 @@ import shoppingCartViewPage from '@pages/BO/orders/shoppingCarts/view';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -49,7 +53,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
   let numberOfShoppingCarts: number;
   let orderId: number;
 
-  const customerData: CustomerData = new CustomerData();
+  const customerData: FakerCustomer = new FakerCustomer();
   const orderData: OrderData = new OrderData({
     customer: customerData,
     products: [
@@ -59,7 +63,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       },
     ],
   });
-  const addressData: AddressData = new AddressData({
+  const addressData: FakerAddress = new FakerAddress({
     email: customerData.email,
     country: 'France',
   });
@@ -151,7 +155,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartInformationBlock1', baseContext);
 
       const orderInformation = await shoppingCartViewPage.getOrderInformation(page);
-      await expect(orderInformation).to.contains('The customer has not proceeded to checkout yet.');
+      expect(orderInformation).to.contains('The customer has not proceeded to checkout yet.');
 
       const hasButtonCreateOrderFromCart = await shoppingCartViewPage.hasButtonCreateOrderFromCart(page);
       expect(hasButtonCreateOrderFromCart).to.eq(true);
@@ -201,9 +205,9 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'fillAndCreateOrder', baseContext);
 
       // Choose payment method
-      await addOrderPage.setPaymentMethod(page, PaymentMethods.checkPayment.moduleName);
+      await addOrderPage.setPaymentMethod(page, dataPaymentMethods.checkPayment.moduleName);
       // Set order status
-      await addOrderPage.setOrderStatus(page, OrderStatuses.paymentAccepted);
+      await addOrderPage.setOrderStatus(page, dataOrderStatuses.paymentAccepted);
       // Create the order
       await addOrderPage.clickOnCreateOrderButton(page);
 

@@ -1,6 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type StateData from '@data/faker/state';
+import {
+  type FakerState,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -51,10 +53,10 @@ class AddState extends BOBasePage {
   /**
    * Fill form for add/edit state
    * @param page {Page} Browser tab
-   * @param stateData {StateData} Data to set on new/edit state form
+   * @param stateData {FakerState} Data to set on new/edit state form
    * @returns {Promise<string>}
    */
-  async createEditState(page: Page, stateData: StateData): Promise<string> {
+  async createEditState(page: Page, stateData: FakerState): Promise<string> {
     // Fill form
     await this.setValue(page, this.nameInput, stateData.name);
     await this.setValue(page, this.isoCodeInput, stateData.isoCode);

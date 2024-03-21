@@ -16,14 +16,14 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -55,7 +55,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition - Create order by default customer
@@ -326,11 +326,11 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       expect(amountValue).to.not.equal('');
     });
 
-    it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusPaymentAccepted', baseContext);
 
-      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-      expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
+      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+      expect(textResult).to.equal(dataOrderStatuses.paymentAccepted.name);
     });
 
     it('should check that the button \'Enter payment\' is not visible', async function () {
@@ -340,11 +340,11 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       expect(isVisible).to.eq(false);
     });
 
-    it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusShipped', baseContext);
 
-      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      expect(textResult).to.equal(OrderStatuses.shipped.name);
+      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      expect(textResult).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should check that documents number is equal to 2', async function () {

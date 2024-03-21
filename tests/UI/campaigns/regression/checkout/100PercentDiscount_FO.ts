@@ -20,8 +20,12 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';
-import CustomerData from '@data/faker/customer';
-import AddressData from '@data/faker/address';
+
+import {
+  // Import data
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -50,8 +54,8 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
     discountPercent: 100,
     freeShipping: true,
   });
-  const customerData: CustomerData = new CustomerData({password: ''});
-  const addressData: AddressData = new AddressData({country: 'France'});
+  const customerData: FakerCustomer = new FakerCustomer({password: ''});
+  const addressData: FakerAddress = new FakerAddress({country: 'France'});
 
   // before and after functions
   before(async function () {

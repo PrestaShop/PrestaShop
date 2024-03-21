@@ -1,6 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import TaxData from '@data/faker/tax';
+import {
+  FakerTax,
+} from '@prestashop-core/ui-testing';
 
 import {Page} from 'playwright';
 
@@ -75,10 +77,10 @@ class AddTax extends BOBasePage {
   /**
    * Fill form for add/edit tax
    * @param page {Page} Browser tab
-   * @param taxData {TaxData} Data to set on new/edit tax page
+   * @param taxData {FakerTax} Data to set on new/edit tax page
    * @returns {Promise<string>}
    */
-  async createEditTax(page: Page, taxData: TaxData): Promise<string> {
+  async createEditTax(page: Page, taxData: FakerTax): Promise<string> {
     await this.changeInputLanguage(page, 'en');
     await this.setValue(page, this.nameEnInput, taxData.name);
     await this.changeInputLanguage(page, 'fr');

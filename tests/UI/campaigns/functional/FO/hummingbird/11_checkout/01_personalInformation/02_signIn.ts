@@ -11,12 +11,10 @@ import productPage from '@pages/FO/hummingbird/product';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 
-// Import data
-import CustomerData from '@data/faker/customer';
-
 import {
   // Import data
   dataCustomers,
+  FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -41,7 +39,7 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const credentialsData: CustomerData = new CustomerData();
+  const credentialsData: FakerCustomer = new FakerCustomer();
 
   // Pre-condition : Install Hummingbird
   installHummingbird(`${baseContext}_preTest`);

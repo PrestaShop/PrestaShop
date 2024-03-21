@@ -17,7 +17,10 @@ import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
 // Import data
 import APIClientData from '@data/faker/APIClient';
-import GroupData from '@data/faker/group';
+
+import {
+  FakerGroup,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
@@ -40,7 +43,7 @@ describe('API : DELETE /api/customers/group/{customerGroupId}', async () => {
       clientScope,
     ],
   });
-  const createGroupData: GroupData = new GroupData();
+  const createGroupData: FakerGroup = new FakerGroup();
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

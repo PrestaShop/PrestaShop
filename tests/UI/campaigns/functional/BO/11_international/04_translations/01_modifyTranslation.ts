@@ -29,11 +29,11 @@ import loginPageHummingbird from '@pages/FO/hummingbird/login';
 // Import data
 import Languages from '@data/demo/languages';
 import Modules from '@data/demo/modules';
-import CustomerData from '@data/faker/customer';
 
 import {
   // Import data
   dataCustomers,
+  FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -48,7 +48,7 @@ describe('BO - International - Translation : Modify translation', async () => {
   let page: Page;
   let newMail: MailDevEmail;
   let mailListener: MailDev;
-  const customerData: CustomerData = new CustomerData();
+  const customerData: FakerCustomer = new FakerCustomer();
 
   // Pre-Condition: Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);

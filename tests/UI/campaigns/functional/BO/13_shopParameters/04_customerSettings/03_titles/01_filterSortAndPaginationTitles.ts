@@ -13,12 +13,10 @@ import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
 import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
 
-// Import data
-import TitleData from '@data/faker/title';
-
 import {
   // Import data
   dataTitles,
+  FakerTitle,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -190,7 +188,7 @@ describe('BO _ Shop Parameters - Customer Settings : Filter, sort and pagination
   describe('Create 9 titles', async () => {
     const creationTests: number[] = new Array(9).fill(0, 0, 9);
     creationTests.forEach((value: number, index: number) => {
-      const titleToCreate: TitleData = new TitleData({name: `toSortAndPaginate${index}`, imageName: 'image.png'});
+      const titleToCreate: FakerTitle = new FakerTitle({name: `toSortAndPaginate${index}`, imageName: 'image.png'});
 
       it('should go to add new title page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewTitle${index}`, baseContext);

@@ -16,12 +16,12 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
 import Products from '@data/demo/products';
-import PaymentMethods from '@data/demo/paymentMethods';
 import OrderData from '@data/faker/order';
 
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -54,7 +54,7 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create order
@@ -142,7 +142,7 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
     it('should Pay by bank wire and confirm order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmReorder', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       const pageTitle = await orderConfirmationPage.getPageTitle(page);
       expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);

@@ -24,11 +24,15 @@ import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import Languages from '@data/demo/languages';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
+
+import {
+  // Import data
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -53,10 +57,10 @@ describe('BO - Customers - Customers : View information about customer', async (
 
   const today: string = date.getDateFormat('mm/dd/yyyy');
   // Init data
-  const createCustomerData: CustomerData = new CustomerData({defaultCustomerGroup: 'Customer'});
-  const editCustomerData: CustomerData = new CustomerData({defaultCustomerGroup: 'Visitor'});
-  const address: AddressData = new AddressData({city: 'Paris', country: 'France'});
-  const createAddressData: AddressData = new AddressData({country: 'France'});
+  const createCustomerData: FakerCustomer = new FakerCustomer({defaultCustomerGroup: 'Customer'});
+  const editCustomerData: FakerCustomer = new FakerCustomer({defaultCustomerGroup: 'Visitor'});
+  const address: FakerAddress = new FakerAddress({city: 'Paris', country: 'France'});
+  const createAddressData: FakerAddress = new FakerAddress({country: 'France'});
 
   // Get customer birthdate format 'mm/dd/yyyy'
   const mmBirth: string = `0${createCustomerData.monthOfBirth}`.slice(-2);
@@ -259,7 +263,7 @@ describe('BO - Customers - Customers : View information about customer', async (
     it('should choose the payment method and confirm the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'choosePaymentMethod', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -358,7 +362,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       const carts = await viewCustomerPage.getTextFromElement(page, 'Orders');
       expect(carts).to.contains(today);
       expect(carts).to.contains('Bank transfer');
-      expect(carts).to.contains(OrderStatuses.awaitingBankWire.name);
+      expect(carts).to.contains(dataOrderStatuses.awaitingBankWire.name);
       expect(carts).to.contains('€0.00');
     });
 
@@ -481,8 +485,8 @@ describe('BO - Customers - Customers : View information about customer', async (
     it('should modify order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyOrderStatus', baseContext);
 
-      const result = await orderPageCustomerBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      expect(result).to.equal(OrderStatuses.shipped.name);
+      const result = await orderPageCustomerBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should go to \'Customers > Customers\' page', async function () {
@@ -523,7 +527,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       const carts = await viewCustomerPage.getTextFromElement(page, 'Orders');
       expect(carts).to.contains(today);
       expect(carts).to.contains('Bank transfer');
-      expect(carts).to.contains(OrderStatuses.shipped.name);
+      expect(carts).to.contains(dataOrderStatuses.shipped.name);
       expect(carts).to.contains(Products.demo_1.finalPrice);
     });
 

@@ -18,12 +18,10 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
-// Import data
-import CountryData from '@data/faker/country';
-
 import {
   // Import data
   dataCustomers,
+  FakerCountry,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -45,7 +43,7 @@ describe('BO - International - Countries : CRUD country', async () => {
   let page: Page;
   let numberOfCountries: number = 0;
 
-  const countryDataIncorrectDate: CountryData = new CountryData({
+  const countryDataIncorrectDate: FakerCountry = new FakerCountry({
     name: 'countryTest',
     isoCode: 'MC',
     callPrefix: '+99',
@@ -53,7 +51,7 @@ describe('BO - International - Countries : CRUD country', async () => {
     zipCodeFormat: 'NNNN',
     active: true,
   });
-  const createCountryData: CountryData = new CountryData({
+  const createCountryData: FakerCountry = new FakerCountry({
     name: 'countryTest',
     isoCode: 'CT',
     callPrefix: '216',
@@ -61,7 +59,7 @@ describe('BO - International - Countries : CRUD country', async () => {
     zipCodeFormat: 'NNNN',
     active: true,
   });
-  const editCountryData: CountryData = new CountryData({
+  const editCountryData: FakerCountry = new FakerCountry({
     name: 'countryTestEdit',
     isoCode: 'CT',
     callPrefix: '333',

@@ -1,10 +1,10 @@
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import OrderData from '@data/faker/order';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 export default {
@@ -15,8 +15,8 @@ export default {
     delivery: 'United States',
     customer: dataCustomers.johnDoe,
     totalPaid: 61.80,
-    paymentMethod: PaymentMethods.checkPayment,
-    status: OrderStatuses.canceled,
+    paymentMethod: dataPaymentMethods.checkPayment,
+    status: dataOrderStatuses.canceled,
   }),
   secondOrder: new OrderData({
     id: 2,
@@ -25,8 +25,8 @@ export default {
     delivery: 'United States',
     customer: dataCustomers.johnDoe,
     totalPaid: 69.90,
-    paymentMethod: PaymentMethods.checkPayment,
-    status: OrderStatuses.awaitingCheckPayment,
+    paymentMethod: dataPaymentMethods.checkPayment,
+    status: dataOrderStatuses.awaitingCheckPayment,
   }),
   thirdOrder: new OrderData({
     id: 3,
@@ -35,8 +35,8 @@ export default {
     delivery: 'United States',
     customer: dataCustomers.johnDoe,
     totalPaid: 14.90,
-    paymentMethod: PaymentMethods.checkPayment,
-    status: OrderStatuses.paymentError,
+    paymentMethod: dataPaymentMethods.checkPayment,
+    status: dataOrderStatuses.paymentError,
   }),
   fourthOrder: new OrderData({
     id: 4,
@@ -45,8 +45,8 @@ export default {
     delivery: 'United States',
     customer: dataCustomers.johnDoe,
     totalPaid: 14.90,
-    paymentMethod: PaymentMethods.checkPayment,
-    status: OrderStatuses.awaitingCheckPayment,
+    paymentMethod: dataPaymentMethods.checkPayment,
+    status: dataOrderStatuses.awaitingCheckPayment,
   }),
   fifthOrder: new OrderData({
     id: 5,
@@ -55,7 +55,7 @@ export default {
     delivery: 'United States',
     customer: dataCustomers.johnDoe,
     totalPaid: 20.90,
-    paymentMethod: PaymentMethods.wirePayment,
-    status: OrderStatuses.awaitingCheckPayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
+    status: dataOrderStatuses.awaitingCheckPayment,
   }),
 };

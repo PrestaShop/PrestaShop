@@ -17,13 +17,11 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
-
 import {
   // Import data
   dataCustomers,
+  FakerAddress,
+  FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -37,9 +35,9 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
 
   let numberOfCustomers: number = 0;
 
-  const address: AddressData = new AddressData({city: 'Paris', country: 'France'});
-  const visitorData: CustomerData = new CustomerData({defaultCustomerGroup: 'Visitor'});
-  const guestData: CustomerData = new CustomerData({defaultCustomerGroup: 'Guest'});
+  const address: FakerAddress = new FakerAddress({city: 'Paris', country: 'France'});
+  const visitorData: FakerCustomer = new FakerCustomer({defaultCustomerGroup: 'Visitor'});
+  const guestData: FakerCustomer = new FakerCustomer({defaultCustomerGroup: 'Guest'});
 
   // before and after functions
   before(async function () {

@@ -15,13 +15,13 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import data
 import OrderData from '@data/faker/order';
 import Products from '@data/demo/products';
-import PaymentMethods from '@data/demo/paymentMethods';
 import OrderShippingData from '@data/faker/orderShipping';
 import Carriers from '@data/demo/carriers';
 
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -41,7 +41,7 @@ describe('BO - Shop Parameters - Order Settings : Recalculate shipping costs aft
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   const shippingDetailsData: OrderShippingData = new OrderShippingData({

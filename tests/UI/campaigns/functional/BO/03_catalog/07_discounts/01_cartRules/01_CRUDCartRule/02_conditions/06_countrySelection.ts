@@ -20,13 +20,13 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import Countries from '@data/demo/countries';
 import Products from '@data/demo/products';
 import Carriers from '@data/demo/carriers';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
   // Import data
+  dataCountries,
   dataCustomers,
 } from '@prestashop-core/ui-testing';
 
@@ -57,7 +57,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
     name: 'Cart rule country selection',
     code: '4QABV6L3',
     countrySelection: true,
-    countryIDToRemove: Countries.france.id,
+    countryIDToRemove: dataCountries.france.id,
     discountType: 'Amount',
     discountAmount: {
       value: 15,
@@ -80,7 +80,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  describe(`BO : Enable the country '${Countries.unitedStates.name}'`, async () => {
+  describe(`BO : Enable the country '${dataCountries.unitedStates.name}'`, async () => {
     it('should go to \'International > Locations\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
@@ -111,16 +111,16 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       expect(numberOfCountries).to.be.above(0);
     });
 
-    it(`should search for the country '${Countries.unitedStates.name}'`, async function () {
+    it(`should search for the country '${dataCountries.unitedStates.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToEnable', baseContext);
 
-      await countriesPage.filterTable(page, 'input', 'b!name', Countries.unitedStates.name);
+      await countriesPage.filterTable(page, 'input', 'b!name', dataCountries.unitedStates.name);
 
       const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
       const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
-      expect(textColumn).to.equal(Countries.unitedStates.name);
+      expect(textColumn).to.equal(dataCountries.unitedStates.name);
     });
 
     it('should enable the country', async function () {

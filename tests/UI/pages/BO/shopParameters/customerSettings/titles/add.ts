@@ -1,8 +1,9 @@
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
 
-// Import data
-import TitleData from '@data/faker/title';
+import {
+  type FakerTitle,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -86,10 +87,10 @@ class AddTitle extends BOBasePage {
   /**
    * Fill title form and get successful message
    * @param page {Page} Browser tab
-   * @param titleData {TitleData} Data to set on create/edit title form
+   * @param titleData {FakerTitle} Data to set on create/edit title form
    * @return {Promise<string>}
    */
-  async createEditTitle(page: Page, titleData: TitleData): Promise<string> {
+  async createEditTitle(page: Page, titleData: FakerTitle): Promise<string> {
     const genders: string[] = ['Male', 'Female', 'Neutral'];
 
     await this.changeLanguage(page, 'en');

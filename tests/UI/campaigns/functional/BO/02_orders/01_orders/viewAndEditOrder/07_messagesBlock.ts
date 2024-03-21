@@ -22,7 +22,6 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
 import Employees from '@data/demo/employees';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import type {OrderHistoryMessage, OrderMessage} from '@data/types/order';
@@ -30,6 +29,7 @@ import type {OrderHistoryMessage, OrderMessage} from '@data/types/order';
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -67,7 +67,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   const messageToSendData: OrderHistoryMessage = {product: '', message: 'Test customer message'};
 

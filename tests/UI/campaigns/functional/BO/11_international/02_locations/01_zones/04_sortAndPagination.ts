@@ -11,8 +11,9 @@ import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import addZonePage from '@pages/BO/international/locations/add';
 
-// Import data
-import ZoneData from '@data/faker/zone';
+import {
+  FakerZone,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -126,7 +127,7 @@ describe('BO - International - Zones : Sort and pagination', async () => {
 
   creationTests.forEach((test: number, index: number) => {
     describe(`Create zone n°${index + 1} in BO`, async () => {
-      const createZoneData = new ZoneData({name: `todelete${index}`});
+      const createZoneData: FakerZone = new FakerZone({name: `todelete${index}`});
 
       it('should go to add new zone page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddZonePage${index}`, baseContext);

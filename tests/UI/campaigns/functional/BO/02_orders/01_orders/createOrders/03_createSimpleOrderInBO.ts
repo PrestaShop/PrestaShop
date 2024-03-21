@@ -16,14 +16,14 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import data
 import Addresses from '@data/demo/address';
 import Carriers from '@data/demo/carriers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -65,8 +65,8 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       name: `${Carriers.default.name} - ${Carriers.default.delay}`,
       freeShipping: true,
     },
-    paymentMethod: PaymentMethods.checkPayment,
-    status: OrderStatuses.paymentAccepted,
+    paymentMethod: dataPaymentMethods.checkPayment,
+    status: dataOrderStatuses.paymentAccepted,
     totalPrice: (Products.demo_5.priceTaxExcluded * 4) * 1.2, // Price tax included
   });
 

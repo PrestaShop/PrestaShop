@@ -11,8 +11,10 @@ import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import OrderStatuses from '@data/demo/orderStatuses';
+import {
+  // Import data
+  dataOrderStatuses,
+} from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';
 import chaiString from 'chai-string';
@@ -111,11 +113,11 @@ describe('BO - Orders - Invoices : Enable/Disable current year', async () => {
         expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
-      it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+      it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateStatusEnabledCurrentYearInTheEnd', baseContext);
 
-        const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-        expect(result).to.equal(OrderStatuses.shipped.name);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+        expect(result).to.equal(dataOrderStatuses.shipped.name);
       });
 
       it('should check that the invoice file name contain current year at the end', async function () {

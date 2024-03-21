@@ -22,14 +22,14 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import ProductData from '@data/faker/product';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
@@ -368,7 +368,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       expect(isStepDeliveryComplete).to.be.eq(true);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -403,7 +403,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
     });
   });
 
-  describe(`Set the order to ${OrderStatuses.delivered.name} & check stock`, async () => {
+  describe(`Set the order to ${dataOrderStatuses.delivered.name} & check stock`, async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -420,7 +420,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
     it('should update order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult: string = await ordersPage.setOrderStatus(page, 1, OrderStatuses.delivered);
+      const textResult: string = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
       expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
     });
 
@@ -507,7 +507,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       expect(isStepDeliveryComplete).to.be.eq(true);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

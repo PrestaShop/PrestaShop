@@ -16,13 +16,17 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import OrderData from '@data/faker/order';
 import {OrderHistory} from '@data/types/order';
 import Products from '@data/demo/products';
+
+import {
+  // Import data
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -48,8 +52,8 @@ describe('FO - Account - Order history : Consult order list', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const customerData: CustomerData = new CustomerData();
-  const addressData: AddressData = new AddressData({
+  const customerData: FakerCustomer = new FakerCustomer();
+  const addressData: FakerAddress = new FakerAddress({
     email: customerData.email,
     country: 'France',
   });
@@ -61,7 +65,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   const today: string = date.getDateFormat('mm/dd/yyyy');
 
@@ -155,8 +159,8 @@ describe('FO - Account - Order history : Consult order list', async () => {
         expect(result.reference).not.null,
         expect(result.date).to.equal(today),
         expect(result.price).to.equal(`€${Products.demo_1.finalPrice}`),
-        expect(result.paymentType).to.equal(PaymentMethods.wirePayment.displayName),
-        expect(result.status).to.equal(OrderStatuses.awaitingBankWire.name),
+        expect(result.paymentType).to.equal(dataPaymentMethods.wirePayment.displayName),
+        expect(result.status).to.equal(dataOrderStatuses.awaitingBankWire.name),
         expect(result.invoice).to.equal('-'),
       ]);
     });

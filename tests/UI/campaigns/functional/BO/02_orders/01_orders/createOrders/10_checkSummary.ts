@@ -19,8 +19,6 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 import type MailDevEmail from '@data/types/maildevEmail';
@@ -28,6 +26,8 @@ import type MailDevEmail from '@data/types/maildevEmail';
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -65,7 +65,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
       tax: 'Tax excluded',
     },
   });
-  const paymentMethodModuleName: string = PaymentMethods.checkPayment.moduleName;
+  const paymentMethodModuleName: string = dataPaymentMethods.checkPayment.moduleName;
   const orderMessage: string = 'Test order message';
 
   // Pre-condition: Create cart rule with code
@@ -324,7 +324,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnCreateOrder3', baseContext);
 
           await addOrderPage.setPaymentMethod(page, paymentMethodModuleName);
-          await addOrderPage.setOrderStatus(page, OrderStatuses.paymentAccepted);
+          await addOrderPage.setOrderStatus(page, dataOrderStatuses.paymentAccepted);
 
           const isOrderCreated = await addOrderPage.clickOnCreateOrderButton(page, true);
           expect(isOrderCreated, 'The order is created!').to.eq(true);

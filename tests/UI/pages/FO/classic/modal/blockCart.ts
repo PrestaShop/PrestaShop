@@ -2,8 +2,11 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 // Import data
-import CartProductDetails from '@data/types/cart';
 import {ProductAttribute} from '@data/types/product';
+
+import {
+  type CartProductDetails,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 

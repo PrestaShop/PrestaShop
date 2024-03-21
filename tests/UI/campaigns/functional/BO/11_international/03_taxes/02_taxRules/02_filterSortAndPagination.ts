@@ -13,8 +13,12 @@ import taxRulesPage from '@pages/BO/international/taxes/taxRules';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 
 // Import data
-import TaxRules from '@data/demo/taxRule';
 import TaxRulesGroupData from '@data/faker/taxRulesGroup';
+
+import {
+  // Import data
+  dataTaxRules,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -85,7 +89,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_tax_rules_group',
-            filterValue: TaxRules[3].id.toString(),
+            filterValue: dataTaxRules[3].id.toString(),
           },
       },
       {
@@ -94,7 +98,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: TaxRules[1].name,
+            filterValue: dataTaxRules[1].name,
           },
       },
       {

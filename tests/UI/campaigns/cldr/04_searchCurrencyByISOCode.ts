@@ -12,9 +12,10 @@ import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 
-// Import data
-import Currencies from '@data/demo/currencies';
-import CurrencyData from '@data/faker/currency';
+import {
+  dataCurrencies,
+  type FakerCurrency,
+} from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';
 import chaiString from 'chai-string';
@@ -29,11 +30,11 @@ describe('CLDR : Search a currency by ISO code', async () => {
   let page: Page;
   let numberOfCurrencies: number;
 
-  const installedCurrencies: CurrencyData[] = [
-    Currencies.usd,
-    Currencies.pyg,
-    Currencies.jpy,
-    Currencies.gbp,
+  const installedCurrencies: FakerCurrency[] = [
+    dataCurrencies.usd,
+    dataCurrencies.pyg,
+    dataCurrencies.jpy,
+    dataCurrencies.gbp,
   ];
 
   before(async function () {
@@ -79,7 +80,7 @@ describe('CLDR : Search a currency by ISO code', async () => {
     expect(numberOfCurrencies).to.be.above(0);
   });
 
-  installedCurrencies.forEach((currency: CurrencyData, index: number) => {
+  installedCurrencies.forEach((currency: FakerCurrency, index: number) => {
     it('should go to create new currency page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCurrencyPage${currency.isoCode}`, baseContext);
 
@@ -114,7 +115,7 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Check currency
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    expect(textColumn).to.contains(Currencies.euro.isoCode);
+    expect(textColumn).to.contains(dataCurrencies.euro.isoCode);
   });
 
   it('should filter by iso code "US"', async function () {
@@ -129,7 +130,7 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Check currency
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    expect(textColumn).to.contains(Currencies.usd.isoCode);
+    expect(textColumn).to.contains(dataCurrencies.usd.isoCode);
   });
 
   it('should filter by iso code "PY"', async function () {
@@ -145,10 +146,10 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Check currencies
     const textColumnRow1 = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    expect(textColumnRow1).to.contains(Currencies.jpy.isoCode);
+    expect(textColumnRow1).to.contains(dataCurrencies.jpy.isoCode);
 
     const textColumnRow2 = await currenciesPage.getTextColumnFromTableCurrency(page, 2, 'iso_code');
-    expect(textColumnRow2).to.contains(Currencies.pyg.isoCode);
+    expect(textColumnRow2).to.contains(dataCurrencies.pyg.isoCode);
   });
 
   it('should filter by iso code "P"', async function () {
@@ -164,13 +165,13 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Check currencies
     const textColumnRow1 = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    expect(textColumnRow1).to.contains(Currencies.gbp.isoCode);
+    expect(textColumnRow1).to.contains(dataCurrencies.gbp.isoCode);
 
     const textColumnRow2 = await currenciesPage.getTextColumnFromTableCurrency(page, 2, 'iso_code');
-    expect(textColumnRow2).to.contains(Currencies.jpy.isoCode);
+    expect(textColumnRow2).to.contains(dataCurrencies.jpy.isoCode);
 
     const textColumnRow3 = await currenciesPage.getTextColumnFromTableCurrency(page, 3, 'iso_code');
-    expect(textColumnRow3).to.contains(Currencies.pyg.isoCode);
+    expect(textColumnRow3).to.contains(dataCurrencies.pyg.isoCode);
   });
 
   it('should filter by iso code "ABC"', async function () {
@@ -196,7 +197,7 @@ describe('CLDR : Search a currency by ISO code', async () => {
   });
 
   // Post-condition - Delete currencies
-  installedCurrencies.forEach((currency: CurrencyData, index: number) => {
+  installedCurrencies.forEach((currency: FakerCurrency, index: number) => {
     deleteCurrencyTest(currency, `${baseContext}_postTest_${index}`);
   });
 });

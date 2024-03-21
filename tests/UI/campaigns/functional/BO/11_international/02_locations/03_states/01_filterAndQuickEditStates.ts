@@ -10,8 +10,10 @@ import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import statesPage from '@pages/BO/international/locations/states';
 
-// Import data
-import States from '@data/demo/states';
+import {
+  // Import data
+  dataStates,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -78,7 +80,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
           testIdentifier: 'filterId',
           filterType: 'input',
           filterBy: 'id_state',
-          filterValue: States.california.id.toString(),
+          filterValue: dataStates.california.id.toString(),
         },
       },
       {
@@ -86,7 +88,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
           testIdentifier: 'filterName',
           filterType: 'input',
           filterBy: 'name',
-          filterValue: States.bari.name,
+          filterValue: dataStates.bari.name,
         },
       },
       {
@@ -94,7 +96,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
           testIdentifier: 'filterIsoCode',
           filterType: 'input',
           filterBy: 'iso_code',
-          filterValue: States.california.isoCode,
+          filterValue: dataStates.california.isoCode,
         },
       },
       {
@@ -102,7 +104,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
           testIdentifier: 'filterZone',
           filterType: 'select',
           filterBy: 'id_zone',
-          filterValue: States.bihar.zone,
+          filterValue: dataStates.bihar.zone,
         },
       },
       {
@@ -110,7 +112,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
           testIdentifier: 'filterCountry',
           filterType: 'select',
           filterBy: 'id_country',
-          filterValue: States.california.country,
+          filterValue: dataStates.california.country,
         },
       },
       {
@@ -118,7 +120,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
           testIdentifier: 'filterStatus',
           filterType: 'select',
           filterBy: 'active',
-          filterValue: States.bari.status ? '1' : '0',
+          filterValue: dataStates.bari.status ? '1' : '0',
         },
       },
     ];
@@ -167,14 +169,14 @@ describe('BO - International - States : Filter and quick edit', async () => {
         page,
         'input',
         'name',
-        States.california.name,
+        dataStates.california.name,
       );
 
       const numberOfStatesAfterFilter = await statesPage.getNumberOfElementInGrid(page);
       expect(numberOfStatesAfterFilter).to.be.below(numberOfStates);
 
       const textColumn = await statesPage.getTextColumn(page, 1, 'name');
-      expect(textColumn).to.contains(States.california.name);
+      expect(textColumn).to.contains(dataStates.california.name);
     });
 
     [

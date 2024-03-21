@@ -9,8 +9,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
 
-// Import data
-import tax from '@data/demo/tax';
+import {
+  // Import data
+  dataTaxes,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -65,12 +67,12 @@ describe('BO - International - Taxes : Filter And Quick Edit', async () => {
     const tests = [
       {
         args: {
-          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_tax', filterValue: tax.DefaultFrTax.id.toString(),
+          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_tax', filterValue: dataTaxes.DefaultFrTax.id.toString(),
         },
       },
       {
         args: {
-          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: tax.DefaultFrTax.name,
+          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: dataTaxes.DefaultFrTax.name,
         },
       },
       {
@@ -79,7 +81,7 @@ describe('BO - International - Taxes : Filter And Quick Edit', async () => {
             testIdentifier: 'filterRate',
             filterType: 'input',
             filterBy: 'rate',
-            filterValue: tax.DefaultFrTax.rate,
+            filterValue: dataTaxes.DefaultFrTax.rate,
           },
       },
       {
@@ -88,7 +90,7 @@ describe('BO - International - Taxes : Filter And Quick Edit', async () => {
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: tax.DefaultFrTax.enabled ? '1' : '0',
+            filterValue: dataTaxes.DefaultFrTax.enabled ? '1' : '0',
           },
       },
     ];
@@ -129,13 +131,13 @@ describe('BO - International - Taxes : Filter And Quick Edit', async () => {
     it('should filter by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForQuickEdit', baseContext);
 
-      await taxesPage.filterTaxes(page, 'input', 'name', tax.DefaultFrTax.name);
+      await taxesPage.filterTaxes(page, 'input', 'name', dataTaxes.DefaultFrTax.name);
 
       const numberOfTaxesAfterFilter = await taxesPage.getNumberOfElementInGrid(page);
       expect(numberOfTaxesAfterFilter).to.be.at.most(numberOfTaxes);
 
       const textColumn = await taxesPage.getTextColumnFromTableTaxes(page, 1, 'name');
-      expect(textColumn).to.contains(tax.DefaultFrTax.name);
+      expect(textColumn).to.contains(dataTaxes.DefaultFrTax.name);
     });
 
     [

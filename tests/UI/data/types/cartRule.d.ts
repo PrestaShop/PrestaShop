@@ -1,5 +1,9 @@
-import type CustomerData from '@data/faker/customer';
 import type ProductData from '@data/faker/product';
+
+import {
+  // Import data
+  type FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 type CartRuleCreator = {
   name?: string
@@ -10,7 +14,7 @@ type CartRuleCreator = {
   partialUse?: boolean
   priority?: number
   status?: boolean
-  customer?: CustomerData | null
+  customer?: FakerCustomer | null
   dateFrom?: string | null
   dateTo?: string | null
   minimumAmount?: CartRuleMinimalAmount

@@ -23,13 +23,13 @@ import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -479,7 +479,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartInformationBlock', baseContext);
 
       const orderInformation = await viewShoppingCartPage.getOrderInformation(shoppingCartPage!);
-      await expect(orderInformation).to.contains('The customer has not proceeded to checkout yet.');
+      expect(orderInformation).to.contains('The customer has not proceeded to checkout yet.');
 
       const hasButtonCreateOrderFromCart = await viewShoppingCartPage.hasButtonCreateOrderFromCart(shoppingCartPage!);
       expect(hasButtonCreateOrderFromCart).to.eq(true);
@@ -559,8 +559,8 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
 
       await addOrderPage.setSummaryAndCreateOrder(
         page,
-        PaymentMethods.checkPayment.moduleName,
-        OrderStatuses.paymentAccepted,
+        dataPaymentMethods.checkPayment.moduleName,
+        dataOrderStatuses.paymentAccepted,
       );
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);

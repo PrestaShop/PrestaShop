@@ -14,13 +14,11 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
-// Import data
-import PaymentMethods from '@data/demo/paymentMethods';
-import PaymentMethodData from '@data/faker/paymentMethod';
-
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
+  type FakerPaymentMethod,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -62,10 +60,10 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
 
   describe('Choose a payment method', async () => {
     [
-      PaymentMethods.wirePayment,
-      PaymentMethods.checkPayment,
-      PaymentMethods.cashOnDelivery,
-    ].forEach((test: PaymentMethodData, index: number) => {
+      dataPaymentMethods.wirePayment,
+      dataPaymentMethods.checkPayment,
+      dataPaymentMethods.cashOnDelivery,
+    ].forEach((test: FakerPaymentMethod, index: number) => {
       it('should go to FO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToFo${index}`, baseContext);
 

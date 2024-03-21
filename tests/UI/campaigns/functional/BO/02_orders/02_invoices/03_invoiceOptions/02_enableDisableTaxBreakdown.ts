@@ -25,15 +25,15 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
-import TaxRuleData from '@data/faker/taxRule';
 import TaxRulesGroupData from '@data/faker/taxRulesGroup';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerTaxRule,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -60,12 +60,12 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
   let secondInvoiceFileName: string | null;
 
   const taxRuleGroupToCreate: TaxRulesGroupData = new TaxRulesGroupData();
-  const firstTaxRuleToCreate: TaxRuleData = new TaxRuleData({
+  const firstTaxRuleToCreate: FakerTaxRule = new FakerTaxRule({
     country: 'France',
     behaviour: 'Combine',
     name: 'TVA FR 20%',
   });
-  const secondTaxRuleToCreate: TaxRuleData = new TaxRuleData({
+  const secondTaxRuleToCreate: FakerTaxRule = new FakerTaxRule({
     country: 'France',
     behaviour: 'Combine',
     name: 'TVA FR 10%',
@@ -281,7 +281,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -322,11 +322,11 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
-      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}' and check it`, async function () {
+      it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeOrderStatusTaxBreakdown', baseContext);
 
-        const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-        expect(result).to.equal(OrderStatuses.paymentAccepted.name);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+        expect(result).to.equal(dataOrderStatuses.paymentAccepted.name);
       });
 
       it('should download the invoice', async function () {
