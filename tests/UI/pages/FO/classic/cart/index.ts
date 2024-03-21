@@ -64,9 +64,9 @@ class CartPage extends FOBasePage {
 
   private readonly subtotalDiscountValueSpan: string;
 
-  private readonly cartTotalATI: string;
+  protected cartTotalATI: string;
 
-  private readonly blockPromoDiv: string;
+  protected blockPromoDiv: string;
 
   protected cartSummaryLine: (line: number) => string;
 
@@ -86,9 +86,9 @@ class CartPage extends FOBasePage {
 
   private readonly cartRuleAlertMessage: string;
 
-  private readonly highlightPromoCodeBlock: string;
+  protected highlightPromoCodeBlock: string;
 
-  private readonly highlightPromoCode: string;
+  protected highlightPromoCode: string;
 
   public readonly cartRuleChooseCarrierAlertMessageText: string;
 
@@ -409,7 +409,10 @@ class CartPage extends FOBasePage {
    */
   async clickOnPromoCode(page: Page): Promise<void> {
     await this.waitForSelectorAndClick(page, this.highlightPromoCode);
-    await page.locator(this.addPromoCodeButton).click();
+    await Promise.all([
+      page.locator(this.addPromoCodeButton).click(),
+      page.waitForResponse((response) => response.url().includes('action=refresh')),
+    ]);
   }
 
   /**

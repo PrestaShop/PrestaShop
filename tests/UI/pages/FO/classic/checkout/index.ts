@@ -45,11 +45,9 @@ class CheckoutPage extends FOBasePage {
 
   protected shippingValueSpan: string;
 
-  private readonly blockPromoDiv: string;
+  protected cartSummaryLine: (line: number) => string;
 
-  private readonly cartSummaryLine: (line: number) => string;
-
-  private readonly cartRuleName: (line: number) => string;
+  protected cartRuleName: (line: number) => string;
 
   private readonly discountValue: (line: number) => string;
 
@@ -117,7 +115,7 @@ class CheckoutPage extends FOBasePage {
 
   protected checkoutSummary: string;
 
-  private readonly checkoutPromoBlock: string;
+  protected checkoutPromoBlock: string;
 
   private readonly checkoutHavePromoCodeButton: string;
 
@@ -227,7 +225,7 @@ class CheckoutPage extends FOBasePage {
 
   private readonly invoiceAddressRadioButton: (addressID: number) => string;
 
-  private readonly cartTotalATI: string;
+  protected cartTotalATI: string;
 
   private readonly cartRuleAlertMessage: string;
 
@@ -356,15 +354,14 @@ class CheckoutPage extends FOBasePage {
     this.checkoutSummary = '#js-checkout-summary';
     this.checkoutPromoBlock = `${this.checkoutSummary} div.block-promo`;
     this.checkoutHavePromoCodeButton = `${this.checkoutPromoBlock} p.promo-code-button a`;
-    this.checkoutRemoveDiscountLink = `${this.checkoutPromoBlock} a[data-link-action='remove-voucher'] i`;
+    this.checkoutRemoveDiscountLink = 'a[data-link-action="remove-voucher"] i';
     this.cartTotalATI = '.cart-summary-totals span.value';
     this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
     this.promoCodeArea = '#promo-code';
     this.checkoutHavePromoInputArea = `${this.promoCodeArea} input.promo-input`;
     this.checkoutPromoCodeAddButton = `${this.promoCodeArea} button.btn-primary`;
     this.shippingValueSpan = '#cart-subtotal-shipping span.value';
-    this.blockPromoDiv = '.block-promo';
-    this.cartSummaryLine = (line: number) => `${this.blockPromoDiv} li:nth-child(${line}).cart-summary-line`;
+    this.cartSummaryLine = (line: number) => `${this.checkoutPromoBlock} li:nth-child(${line}).cart-summary-line`;
     this.cartRuleName = (line: number) => `${this.cartSummaryLine(line)} span.label`;
     this.discountValue = (line: number) => `${this.cartSummaryLine(line)} div span`;
 

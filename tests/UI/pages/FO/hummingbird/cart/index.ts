@@ -34,12 +34,18 @@ class Cart extends CartPage {
     this.productSize = (number: number) => `${this.productItem(number)} div.product-line__info.size span.value`;
     this.productColor = (number: number) => `${this.productItem(number)} div.product-line__info.color span.value`;
 
+    // Summary block
+    this.cartTotalATI = 'div.cart-summary__totals span.cart-summary__value';
+
     // Promo code selectors
+    this.blockPromoDiv = 'div.cart-voucher';
     this.promoCodeLink = 'div.cart-voucher button.accordion-button';
     this.promoInput = '#promo-code input[name="discount_name"]';
     this.cartSummaryLine = (line: number) => `div.cart-voucher li:nth-child(${line})`;
     this.cartRuleName = (line: number) => `${this.cartSummaryLine(line)} span.cart-voucher__name`;
     this.discountValue = (line: number) => `${this.cartSummaryLine(line)} div span.fw-bold`;
+    this.highlightPromoCodeBlock = `${this.blockPromoDiv} ul.cart-voucher__offers`;
+    this.highlightPromoCode = `${this.blockPromoDiv} li span.js-code`;
 
     // Notifications
     this.alertMessage = '#js-toast-container div.toast div.toast-body';
