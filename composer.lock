@@ -6314,16 +6314,16 @@
         },
         {
             "name": "prestashop/ps_emailsubscription",
-            "version": "v2.8.1",
+            "version": "v2.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_emailsubscription.git",
-                "reference": "9fe6e3351a5bb1e1c964e004daea1d387b777065"
+                "reference": "ce4e159df07b75423abf6804938dddb51b37a1fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/9fe6e3351a5bb1e1c964e004daea1d387b777065",
-                "reference": "9fe6e3351a5bb1e1c964e004daea1d387b777065",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/ce4e159df07b75423abf6804938dddb51b37a1fa",
+                "reference": "ce4e159df07b75423abf6804938dddb51b37a1fa",
                 "shasum": ""
             },
             "require": {
@@ -6351,22 +6351,22 @@
             "description": "PrestaShop module ps_emailsubscription",
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_emailsubscription/tree/v2.8.1"
+                "source": "https://github.com/PrestaShop/ps_emailsubscription/tree/v2.8.2"
             },
-            "time": "2024-01-11T15:24:10+00:00"
+            "time": "2024-03-07T09:34:54+00:00"
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v3.14.1",
+            "version": "v3.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "3c2b733cee671d021219aff286129c10fa54334f"
+                "reference": "5e06b7eedc5d0e28555e2fbf5cf9b070747e4e60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/3c2b733cee671d021219aff286129c10fa54334f",
-                "reference": "3c2b733cee671d021219aff286129c10fa54334f",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/5e06b7eedc5d0e28555e2fbf5cf9b070747e4e60",
+                "reference": "5e06b7eedc5d0e28555e2fbf5cf9b070747e4e60",
                 "shasum": ""
             },
             "require": {
@@ -6402,9 +6402,9 @@
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v3.14.1"
+                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v3.15.1"
             },
-            "time": "2023-11-20T12:06:04+00:00"
+            "time": "2024-03-01T09:51:40+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
@@ -6992,16 +6992,16 @@
         },
         {
             "name": "prestashop/ps_themecusto",
-            "version": "v1.2.3",
+            "version": "v1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_themecusto.git",
-                "reference": "cfea8fa485c61a05755eadb5f9764f12e666f2a8"
+                "reference": "f6d61045450d0e238c469b15ce699a694ddcf3f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/cfea8fa485c61a05755eadb5f9764f12e666f2a8",
-                "reference": "cfea8fa485c61a05755eadb5f9764f12e666f2a8",
+                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/f6d61045450d0e238c469b15ce699a694ddcf3f7",
+                "reference": "f6d61045450d0e238c469b15ce699a694ddcf3f7",
                 "shasum": ""
             },
             "require": {
@@ -7031,9 +7031,9 @@
             "description": "PrestaShop module ps_themecusto",
             "homepage": "https://github.com/PrestaShop/ps_themecusto",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_themecusto/tree/v1.2.3"
+                "source": "https://github.com/PrestaShop/ps_themecusto/tree/v1.2.4"
             },
-            "time": "2023-05-11T14:00:59+00:00"
+            "time": "2024-03-07T09:35:26+00:00"
         },
         {
             "name": "prestashop/ps_viewedproduct",
@@ -7075,16 +7075,16 @@
         },
         {
             "name": "prestashop/ps_wirepayment",
-            "version": "v2.1.3",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_wirepayment.git",
-                "reference": "951906f13fa533bda005342bfea23844e6b719bc"
+                "reference": "3b75b0c99206b96405248aa82e6a3699dc57993e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_wirepayment/zipball/951906f13fa533bda005342bfea23844e6b719bc",
-                "reference": "951906f13fa533bda005342bfea23844e6b719bc",
+                "url": "https://api.github.com/repos/PrestaShop/ps_wirepayment/zipball/3b75b0c99206b96405248aa82e6a3699dc57993e",
+                "reference": "3b75b0c99206b96405248aa82e6a3699dc57993e",
                 "shasum": ""
             },
             "require": {
@@ -7113,9 +7113,9 @@
             "description": "PrestaShop module ps_wirepayment",
             "homepage": "https://github.com/PrestaShop/ps_wirepayment",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_wirepayment/tree/v2.1.3"
+                "source": "https://github.com/PrestaShop/ps_wirepayment/tree/v2.2.0"
             },
-            "time": "2022-05-19T15:13:42+00:00"
+            "time": "2024-02-29T10:19:58+00:00"
         },
         {
             "name": "prestashop/psgdpr",
