@@ -279,7 +279,7 @@ class UpdateProductCommand
     /**
      * @var DateTimeInterface
      */
-    private $publishedDate;
+    private $dateNew;
 
     /**
      * @param int $productId
@@ -1135,14 +1135,14 @@ class UpdateProductCommand
         return $this;
     }
 
-    public function getPublishedDate(): ?DateTimeInterface
+    public function getDateNew(): ?DateTimeInterface
     {
-        return $this->publishedDate;
+        return $this->dateNew;
     }
 
-    public function setPublishedDate(DateTimeInterface $publishedDate): self
+    public function setDateNew(DateTimeInterface $dateNew): self
     {
-        $this->publishedDate = $publishedDate;
+        $this->dateNew = $dateNew;
 
         return $this;
     }

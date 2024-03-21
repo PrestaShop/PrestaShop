@@ -53,7 +53,7 @@ class ProductForEditing
         private ProductStockInformation $stockInformation,
         private ?VirtualProductFileForEditing $virtualProductFile,
         private string $coverThumbnailUrl,
-        private DateTime $publishedDate
+        private DateTime $dateNew
     ) {
     }
 
@@ -177,8 +177,8 @@ class ProductForEditing
         return $this->coverThumbnailUrl;
     }
 
-    public function getPublishedDate(): DateTime
+    public function getDateNew(): DateTime
     {
-        return $this->publishedDate;
+        return $this->dateNew;
     }
 }

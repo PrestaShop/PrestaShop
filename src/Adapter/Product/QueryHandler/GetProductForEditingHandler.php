@@ -126,7 +126,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             $this->getProductStockInformation($product),
             $this->getVirtualProductFile($product),
             $this->getCover($query->getProductId(), $product->getShopId()),
-            $this->getPublishedDate($product)
+            $this->getDateNew($product)
         );
     }
 
@@ -463,7 +463,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         return $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
     }
 
-    private function getPublishedDate(Product $product): DateTime
+    private function getDateNew(Product $product): DateTime
     {
         return new DateTime($product->date_new);
     }
