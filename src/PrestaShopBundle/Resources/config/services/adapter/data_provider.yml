@@ -11,6 +11,7 @@ services:
       - "@prestashop.adapter.data_provider.module"
       - '@translator'
       - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+      - '@PrestaShop\PrestaShop\Core\Context\ApiClientContext'
     calls:
       - [ setRouter, [ '@router' ] ]
     decorates: prestashop.core.admin.data_provider.module_interface

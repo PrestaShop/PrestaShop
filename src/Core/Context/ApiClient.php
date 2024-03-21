@@ -48,6 +48,11 @@ class ApiClient
         return $this->clientId;
     }
 
+    public function hasScope(string $scope): bool
+    {
+        return in_array($scope, $this->scopes);
+    }
+
     public function getScopes(): array
     {
         return $this->scopes;
