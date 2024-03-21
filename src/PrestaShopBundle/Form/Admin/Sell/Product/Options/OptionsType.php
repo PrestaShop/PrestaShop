@@ -45,8 +45,8 @@ class OptionsType extends TranslatorAwareType
         $builder
             ->add('date_new', DatePickerType::class, [
                 'required' => false,
-                'label' => $this->trans('Label to be defined', 'Admin.Catalog.Feature'),
-                'label_subtitle' => $this->trans('Label subtitle to be defined', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Product as New from', 'Admin.Catalog.Feature'),
+                'label_subtitle' => $this->trans('The date allows you to specify when the product is considered as new. It is used by modules to showcase new products from your catalog or to arrange products by the most recent ones. By default, the date is set to the product creation date for the new date.', 'Admin.Catalog.Feature'),
                 'modify_all_shops' => true,
                 'attr' => ['placeholder' => 'YYYY-MM-DD'],
                 'label_tag_name' => 'h3',
