@@ -93,7 +93,7 @@ function resetEditor() {
     // Reset content to force refresh of editor
     editor.setContent(editor.getContent());
     setTimeout(() => {
-      editor.execCommand('mceInsertContent', false, '');
+      editor.execCommand('mceInsertContent', false, '', {skip_focus: true});
       editor.execCommand('mceAutoResize');
     }, 250);
   });
