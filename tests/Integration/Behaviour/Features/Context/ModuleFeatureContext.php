@@ -48,6 +48,16 @@ class ModuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given the module with technical name :technicalName exists
+     */
+    public function assertModuleExists(string $technicalName): void
+    {
+        $moduleId = (int) Module::getModuleIdByName($technicalName);
+        Assert::assertGreaterThan(0, $moduleId);
+        $this->getSharedStorage()->set($technicalName, $moduleId);
+    }
+
+    /**
      * @Given the module :module is enabled
      */
     public function isTheModuleEnabled(string $module): void

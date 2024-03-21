@@ -10,6 +10,11 @@ services:
       - '@prestashop.adapter.legacy.logger'
       - '@prestashop.core.cache.clearer.cache_clearer_chain'
 
+  PrestaShop\PrestaShop\Adapter\Module\QueryHandler\GetModuleInfosHandler:
+    autowire: true
+    autoconfigure: true
+    public: false
+
   prestashop.adapter.module.self_configurator:
     class: PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator
     arguments:

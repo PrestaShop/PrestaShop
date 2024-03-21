@@ -23,3 +23,10 @@ Feature: Module
     When I bulk enable modules: "ps_featuredproducts"
     Then the module "ps_featuredproducts" is enabled
     And the module "ps_emailsubscription" is enabled
+
+  Scenario: Get module infos
+    Given the module with technical name ps_emailsubscription exists
+    Then module ps_emailsubscription has following infos:
+      | technical_name | ps_emailsubscription |
+      | version        | 2.8.2                |
+      | enabled        | true                 |
