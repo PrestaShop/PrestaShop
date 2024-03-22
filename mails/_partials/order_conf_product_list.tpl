@@ -47,7 +47,7 @@
 						{if count($product['customization']) == 1}
 							<br>
 							{foreach $product['customization'] as $customization}
-								{$customization['customization_text']}
+								{$customization['customization_text'] nofilter}
 							{/foreach}
 						{/if}
 
