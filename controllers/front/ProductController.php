@@ -1330,6 +1330,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
+        if (!$this->product) {
+            return $breadcrumb;
+        }
+
         $categoryDefault = new Category($this->product->id_category_default, $this->context->language->id);
 
         foreach ($categoryDefault->getAllParents() as $category) {
@@ -1347,6 +1351,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'title' => $categoryDefault->name,
                 'url' => $this->context->link->getCategoryLink($categoryDefault),
             ];
+        }
+
+        if (!$this->product) {
+            return $breadcrumb;
         }
 
         $breadcrumb['links'][] = [
