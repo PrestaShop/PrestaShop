@@ -31,6 +31,8 @@ namespace Tests\Unit\PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\ApiPlatform\Metadata\DQBPaginatedList;
 use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
 
@@ -60,6 +62,110 @@ class DQBPaginatedListTest extends TestCase
         $this->assertEquals(QueryListProvider::class, $operation->getProvider());
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
         $this->assertEquals(['json', 'html'], $operation->getFormats());
+    }
+
+    public function testFiltersClass(): void
+    {
+        // Filters mapping parameters in constructor
+        $filtersClass = ProductFilters::class;
+        $operation = new DQBPaginatedList(
+            filtersClass: $filtersClass,
+        );
+
+        $this->assertEquals(['filtersClass' => $filtersClass], $operation->getExtraProperties());
+        $this->assertEquals($filtersClass, $operation->getFiltersClass());
+
+        // Extra properties parameters in constructor
+        $operation = new DQBPaginatedList(
+            extraProperties: ['filtersClass' => $filtersClass],
+        );
+        $this->assertEquals(['filtersClass' => $filtersClass], $operation->getExtraProperties());
+        $this->assertEquals($filtersClass, $operation->getFiltersClass());
+
+        // Extra properties AND CQRS query mapping parameters in constructor, both values are equals no problem
+        $operation = new DQBPaginatedList(
+            extraProperties: ['filtersClass' => $filtersClass],
+            filtersClass: $filtersClass,
+        );
+        $this->assertEquals(['filtersClass' => $filtersClass], $operation->getExtraProperties());
+        $this->assertEquals($filtersClass, $operation->getFiltersClass());
+
+        // Use with method, returned object is a clone All values are replaced
+        $newMapping = LanguageFilters::class;
+        $operation2 = $operation->withFiltersClass($newMapping);
+        $this->assertNotEquals($operation2, $operation);
+        $this->assertEquals(['filtersClass' => $newMapping], $operation2->getExtraProperties());
+        $this->assertEquals($newMapping, $operation2->getFiltersClass());
+        // Initial operation not modified of course
+        $this->assertEquals(['filtersClass' => $filtersClass], $operation->getExtraProperties());
+        $this->assertEquals($filtersClass, $operation->getFiltersClass());
+
+        // When both values are specified, but they are different trigger an exception
+        $caughtException = null;
+        try {
+            new DQBPaginatedList(
+                extraProperties: ['filtersClass' => $filtersClass],
+                filtersClass: $newMapping,
+            );
+        } catch (InvalidArgumentException $e) {
+            $caughtException = $e;
+        }
+
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
+        $this->assertEquals('Specifying an extra property filtersClass and a filtersClass argument that are different is invalid', $caughtException->getMessage());
+    }
+
+    public function testFiltersMapping(): void
+    {
+        // Filters mapping parameters in constructor
+        $filtersMapping = ['[langId]' => '[id_lang]'];
+        $operation = new DQBPaginatedList(
+            filtersMapping: $filtersMapping,
+        );
+
+        $this->assertEquals(['filtersMapping' => $filtersMapping], $operation->getExtraProperties());
+        $this->assertEquals($filtersMapping, $operation->getFiltersMapping());
+
+        // Extra properties parameters in constructor
+        $operation = new DQBPaginatedList(
+            extraProperties: ['filtersMapping' => $filtersMapping],
+        );
+        $this->assertEquals(['filtersMapping' => $filtersMapping], $operation->getExtraProperties());
+        $this->assertEquals($filtersMapping, $operation->getFiltersMapping());
+
+        // Extra properties AND CQRS query mapping parameters in constructor, both values are equals no problem
+        $operation = new DQBPaginatedList(
+            extraProperties: ['filtersMapping' => $filtersMapping],
+            filtersMapping: $filtersMapping,
+        );
+        $this->assertEquals(['filtersMapping' => $filtersMapping], $operation->getExtraProperties());
+        $this->assertEquals($filtersMapping, $operation->getFiltersMapping());
+
+        // Use with method, returned object is a clone All values are replaced
+        $newMapping = ['[queryId' => '[valueObjectId]'];
+        $operation2 = $operation->withFiltersMapping($newMapping);
+        $this->assertNotEquals($operation2, $operation);
+        $this->assertEquals(['filtersMapping' => $newMapping], $operation2->getExtraProperties());
+        $this->assertEquals($newMapping, $operation2->getFiltersMapping());
+        // Initial operation not modified of course
+        $this->assertEquals(['filtersMapping' => $filtersMapping], $operation->getExtraProperties());
+        $this->assertEquals($filtersMapping, $operation->getFiltersMapping());
+
+        // When both values are specified, but they are different trigger an exception
+        $caughtException = null;
+        try {
+            new DQBPaginatedList(
+                extraProperties: ['filtersMapping' => $filtersMapping],
+                filtersMapping: $newMapping,
+            );
+        } catch (InvalidArgumentException $e) {
+            $caughtException = $e;
+        }
+
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
+        $this->assertEquals('Specifying an extra property filtersMapping and a filtersMapping argument that are different is invalid', $caughtException->getMessage());
     }
 
     public function testScopes(): void
