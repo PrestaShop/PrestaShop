@@ -30,7 +30,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-define('_PS_APP_ID_', 'admin');
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
@@ -40,6 +39,7 @@ if (!defined('PS_ADMIN_DIR')) {
 }
 
 require _PS_ADMIN_DIR_ . '/../config/config.inc.php';
+define('_PS_APP_ID_', AdminKernel::APP_ID);
 
 //small test to clear cache after upgrade
 if (Configuration::get('PS_UPGRADE_CLEAR_CACHE')) {

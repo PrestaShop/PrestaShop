@@ -21,7 +21,7 @@ global.BO = {
 };
 
 global.API = {
-  URL: process.env.URL_API || `${global.FO.URL}oauth-api/`,
+  URL: process.env.URL_API || `${global.FO.URL}admin-api/`,
 };
 
 global.PSConfig = {

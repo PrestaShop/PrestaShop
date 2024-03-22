@@ -109,7 +109,7 @@ api_platform:
   enable_entrypoint: false
   enable_swagger: false
   enable_swagger_ui: false
-  # We define mapping here because even though the API routes are oncly accessible via the oauth-api endpoint we still need
+  # We define mapping here because even though the API routes are oncly accessible via the admin-api endpoint we still need
   # to parse the Api Platform resources to extract the scopes
   mapping:
     paths:

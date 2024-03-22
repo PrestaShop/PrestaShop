@@ -248,7 +248,7 @@ class ApiClientController extends FrameworkBundleAdminController
         // Get root url right before the admin folder part
         $rootUrl = substr($uri, 0, strpos($uri, $adminFolderName));
 
-        return $rootUrl . '/oauth-api';
+        return $rootUrl . '/admin-api';
     }
 
     private function getFormHandler(): FormHandlerInterface

@@ -25,8 +25,10 @@
  */
 class AdminKernel extends AppKernel
 {
+    public const APP_ID = 'admin';
+
     public function getAppId(): string
     {
-        return 'admin';
+        return self::APP_ID;
     }
 }

@@ -28,8 +28,8 @@ use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-define('_PS_APP_ID_', 'oauth-api');
 require __DIR__ . '/../config/config.inc.php';
+define('_PS_APP_ID_', AdminAPIKernel::APP_ID);
 
 //small test to clear cache after upgrade
 if (Configuration::get('PS_UPGRADE_CLEAR_CACHE')) {
@@ -60,7 +60,7 @@ $dotEnvFile = dirname(__FILE__, 2) . '/.env';
     ->loadEnv($dotEnvFile)
 ;
 
-$kernel = new OAuthAPIKernel(_PS_ENV_, _PS_MODE_DEV_);
+$kernel = new AdminAPIKernel(_PS_ENV_, _PS_MODE_DEV_);
 // When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
 //Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();

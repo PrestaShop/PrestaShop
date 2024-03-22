@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 
+use AdminAPIKernel;
 use AdminKernel;
 use AppKernel;
 use FrontKernel;
 use Hook;
-use OAuthAPIKernel;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -79,7 +79,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                 set_time_limit(0);
 
                 $environments = ['prod', 'dev'];
-                $applicationKernelClasses = [AdminKernel::class, OAuthAPIKernel::class, FrontKernel::class];
+                $applicationKernelClasses = [AdminKernel::class, AdminAPIKernel::class, FrontKernel::class];
                 $baseCommandLine = 'php -d memory_limit=-1 ' . $kernel->getProjectDir() . '/bin/console ';
                 foreach ($applicationKernelClasses as $applicationKernelClass) {
                     foreach ($environments as $environment) {

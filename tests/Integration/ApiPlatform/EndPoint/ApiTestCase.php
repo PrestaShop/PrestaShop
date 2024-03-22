@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace Tests\Integration\ApiPlatform\EndPoint;
 
+use AdminAPIKernel;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase as ApiPlatformTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
-use OAuthAPIKernel;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\AddApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
@@ -67,7 +67,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
      */
     protected static function getKernelClass(): string
     {
-        return OAuthAPIKernel::class;
+        return AdminAPIKernel::class;
     }
 
     protected static function createClient(array $kernelOptions = [], array $defaultOptions = []): Client

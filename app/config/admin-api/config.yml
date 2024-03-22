@@ -6,7 +6,7 @@ imports:
 
 framework:
   router:
-    resource: "%kernel.project_dir%/app/config/oauth-api/routing.yml"
+    resource: "%kernel.project_dir%/app/config/admin-api/routing.yml"
     strict_requirements: ~
 
 api_platform:

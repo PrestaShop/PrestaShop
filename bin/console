@@ -2,9 +2,8 @@
 <?php
 
 use PrestaShopBundle\Console\PrestaShopApplication;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 
@@ -16,9 +15,9 @@ use Symfony\Component\ErrorHandler\Debug;
 set_time_limit(0);
 
 try {
-  require_once __DIR__ . '/../config/config.inc.php';
+    require_once __DIR__ . '/../config/config.inc.php';
 } catch (PrestaShopException) {
-  // Prevent breaking all CLI command when the shop is not installed
+    // Prevent breaking all CLI command when the shop is not installed
 }
 
 $input = new ArgvInput();
@@ -28,10 +27,10 @@ $debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(['--no-d
 // Handle PrestaShop global option app-id, by default use the Admin kernel
 $appId = $input->getParameterOption(['--app-id'], getenv('APP_ID') ?: 'admin');
 $kernelClass = match ($appId) {
-  'admin' => AdminKernel::class,
-  'front' => FrontKernel::class,
-  'oauth-api' => OAuthAPIKernel::class,
-  default => throw new InvalidArgumentException('Unknown PrestaShop kernel matching the ID ' . $appId),
+    AdminKernel::APP_ID => AdminKernel::class,
+    FrontKernel::APP_ID => FrontKernel::class,
+    AdminAPIKernel::APP_ID => AdminAPIKernel::class,
+    default => throw new InvalidArgumentException('Unknown PrestaShop kernel matching the ID ' . $appId),
 };
 
 if ($debug) {

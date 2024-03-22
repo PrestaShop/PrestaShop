@@ -12,7 +12,7 @@ jobs:
   symfony-console:
     strategy:
       matrix:
-        app-id: [ admin, oauth-api, front ]
+        app-id: [ admin, admin-api, front ]
     permissions:
       contents: read  # for actions/checkout to fetch code
     name: Symfony Console
@@ -59,10 +59,10 @@ jobs:
           ./bin/console cache:clear --env=prod --no-warmup --app-id=${{ matrix.app-id }}
 
       - name: Check app listeners for OAuth API
-        if: matrix.app-id == 'oauth-api'
+        if: matrix.app-id == 'admin-api'
         run: |
-          apiListeners=$(./bin/console debug:event-dispatcher kernel.request --app-id=oauth-api | grep 'PrestaShopBundle\\EventListener\\API' | wc -l)
-          adminListeners=$(./bin/console debug:event-dispatcher kernel.request --app-id=oauth-api | grep 'PrestaShopBundle\\EventListener\\Admin' | wc -l)
+          apiListeners=$(./bin/console debug:event-dispatcher kernel.request --app-id=admin-api | grep 'PrestaShopBundle\\EventListener\\API' | wc -l)
+          adminListeners=$(./bin/console debug:event-dispatcher kernel.request --app-id=admin-api | grep 'PrestaShopBundle\\EventListener\\Admin' | wc -l)
           echo $apiListeners API listeners detected
           echo $adminListeners Admin listeners detected
           if [ $adminListeners -ne 0 ]; then

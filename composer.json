@@ -239,7 +239,7 @@
         "classmap": [
             "app/AppKernel.php",
             "app/AdminKernel.php",
-            "app/OAuthAPIKernel.php",
+            "app/AdminAPIKernel.php",
             "app/FrontKernel.php",
             "app/AppCache.php"
         ]

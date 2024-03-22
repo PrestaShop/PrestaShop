@@ -1,9 +1,9 @@
 imports:
-  - { resource: ../config_test.yml }
+  - { resource: ../config_dev.yml }
   - { resource: config.yml }
 
 framework:
   router:
-    resource: "%kernel.project_dir%/app/config/oauth-api/routing_test.yml"
+    resource: "%kernel.project_dir%/app/config/admin-api/routing_dev.yml"
     strict_requirements: ~
   profiler: { only_exceptions: false }

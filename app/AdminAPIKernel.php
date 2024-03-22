@@ -26,10 +26,12 @@
 
 declare(strict_types=1);
 
-class OAuthAPIKernel extends AppKernel
+class AdminAPIKernel extends AppKernel
 {
+    public const APP_ID = 'admin-api';
+
     public function getAppId(): string
     {
-        return 'oauth-api';
+        return self::APP_ID;
     }
 }

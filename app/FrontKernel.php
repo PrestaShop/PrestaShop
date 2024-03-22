@@ -25,8 +25,10 @@
  */
 class FrontKernel extends AppKernel
 {
+    public const APP_ID = 'front';
+
     public function getAppId(): string
     {
-        return 'front';
+        return self::APP_ID;
     }
 }

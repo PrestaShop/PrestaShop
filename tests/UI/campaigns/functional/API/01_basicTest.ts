@@ -15,7 +15,7 @@ describe('API : Basic Test', async () => {
   });
 
   describe('Basic Test', async () => {
-    it('should request the endpoint /oauth-api', async function () {
+    it('should request the endpoint /admin-api', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestNewApi', baseContext);
 
       const apiResponse = await apiContext.get('');
