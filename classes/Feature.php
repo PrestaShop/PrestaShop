@@ -253,13 +253,32 @@ class FeatureCore extends ObjectModel
      */
     public static function addFeatureImport($name, $position = false)
     {
+        @trigger_error(
+            'addFeatureImport method is deprecated, use getFeatureImport instead.',
+            E_USER_DEPRECATED
+        );
+
+        return self::getFeatureImport($name, $position);
+    }
+
+    /**
+     * Get a feature from import.
+     *
+     * @param string $name Feature name
+     * @param bool|int $position Feature position
+     * @param bool $add_if_not_exists Create feature if not exists
+     *
+     * @return int Feature ID
+     */
+    public static function getFeatureImport($name, $position = false, $add_if_not_exists = true)
+    {
         $rq = Db::getInstance()->getRow('
 			SELECT `id_feature`
 			FROM ' . _DB_PREFIX_ . 'feature_lang
 			WHERE `name` = \'' . pSQL($name) . '\'
 			GROUP BY `id_feature`
 		');
-        if (empty($rq)) {
+        if (empty($rq) && $add_if_not_exists) {
             // Feature doesn't exist, create it
             $feature = new Feature();
             $feature->name = array_fill_keys(Language::getIDs(), (string) $name);
@@ -336,9 +355,9 @@ class FeatureCore extends ObjectModel
 			SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
 			WHERE `position`
 			' . ($way
-                ? '> ' . (int) $moved_feature['position'] . ' AND `position` <= ' . (int) $position
-                : '< ' . (int) $moved_feature['position'] . ' AND `position` >= ' . (int) $position))
-        && Db::getInstance()->execute('
+                    ? '> ' . (int) $moved_feature['position'] . ' AND `position` <= ' . (int) $position
+                    : '< ' . (int) $moved_feature['position'] . ' AND `position` >= ' . (int) $position))
+            && Db::getInstance()->execute('
 			UPDATE `' . _DB_PREFIX_ . 'feature`
 			SET `position` = ' . (int) $position . '
 			WHERE `id_feature`=' . (int) $moved_feature['id_feature']);

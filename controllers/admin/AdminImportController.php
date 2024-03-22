@@ -281,7 +281,10 @@ class AdminImportControllerCore extends AdminController
                     'delete_existing_images' => [
                         'label' => $this->trans('Delete existing images (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Feature'),
                     ],
-                    'features' => ['label' => $this->trans('Feature (Name:Value:Position:Customized)', [], 'Admin.Advparameters.Feature')],
+                    'delete_existing_features' => [
+                        'label' => $this->trans('Delete existing features (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Feature'),
+                    ],
+                    'features' => ['label' => $this->trans('Feature (Name:Value:Position:Customized:Action(add|delete))', [], 'Admin.Advparameters.Feature')],
                     'online_only' => ['label' => $this->trans('Available online only (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Feature')],
                     'condition' => ['label' => $this->trans('Condition', [], 'Admin.Catalog.Feature')],
                     'customizable' => ['label' => $this->trans('Customizable (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Feature')],
@@ -649,10 +652,10 @@ class AdminImportControllerCore extends AdminController
         switch ($last) {
             case 'g':
                 $bytes *= 1024;
-                // no break to fall-through
+            // no break to fall-through
             case 'm':
                 $bytes *= 1024;
-                // no break to fall-through
+            // no break to fall-through
             case 'k':
                 $bytes *= 1024;
         }
@@ -692,9 +695,9 @@ class AdminImportControllerCore extends AdminController
                     break;
                 case UPLOAD_ERR_FORM_SIZE:
                     $_FILES['file']['error'] = $this->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', [], 'Admin.Advparameters.Notification')
-                    . '<br/><a href="' . $this->context->link->getAdminLink('AdminMeta') . '" >
+                        . '<br/><a href="' . $this->context->link->getAdminLink('AdminMeta') . '" >
 					<code>php_value post_max_size 20M</code> ' .
-                    $this->trans('(click to open "Generators" page)', [], 'Admin.Advparameters.Notification') . '</a>';
+                        $this->trans('(click to open "Generators" page)', [], 'Admin.Advparameters.Notification') . '</a>';
 
                     break;
                 case UPLOAD_ERR_PARTIAL:
@@ -2076,6 +2079,13 @@ class AdminImportControllerCore extends AdminController
                 Product::updateDefaultAttribute($product->id);
             }
 
+            //delete existing features if "delete_existing_features" is set to 1
+            if (isset($product->delete_existing_features)) {
+                if ((bool) $product->delete_existing_features) {
+                    $product->deleteProductFeatures();
+                }
+            }
+
             // Features import
             $features = get_object_vars($product);
 
@@ -2089,14 +2099,25 @@ class AdminImportControllerCore extends AdminController
                     $feature_value = isset($tab_feature[1]) ? trim($tab_feature[1]) : '';
                     $position = isset($tab_feature[2]) ? (int) $tab_feature[2] - 1 : false;
                     $custom = isset($tab_feature[3]) ? (int) $tab_feature[3] : false;
+                    $action = (isset($tab_feature[4]) && in_array(trim($tab_feature[4]), ['add', 'delete'])) ? trim($tab_feature[4]) : 'add';
                     if (!empty($feature_name) && !empty($feature_value)) {
-                        $id_feature = (int) Feature::addFeatureImport($feature_name, $position);
-                        $id_product = null;
-                        if ($force_ids || $match_ref) {
-                            $id_product = (int) $product->id;
+                        $id_feature = (int) Feature::getFeatureImport($feature_name, $position, ($action == 'add'));
+
+                        if ($id_feature) {
+                            $id_product = null;
+                            if ($force_ids || $match_ref) {
+                                $id_product = (int) $product->id;
+                            }
+                            $id_feature_value = (int) FeatureValue::getFeatureValueImport($id_feature, $feature_value, $id_product, $id_lang, $custom, ($action == 'add'));
+
+                            if ($id_feature_value) {
+                                if ($action == 'delete') {
+                                    Product::deleteFeatureProductImport($product->id, $id_feature, $id_feature_value);
+                                } else {
+                                    Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
+                                }
+                            }
                         }
-                        $id_feature_value = (int) FeatureValue::addFeatureValueImport($id_feature, $feature_value, $id_product, $id_lang, $custom);
-                        Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
                     }
                 }
             }
@@ -3111,10 +3132,10 @@ class AdminImportControllerCore extends AdminController
                 } else {
                     if (!$validateOnly) {
                         $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
-                            $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
-                            Tools::htmlentitiesUTF8($manufacturer->name),
-                            !empty($manufacturer->id) ? Tools::htmlentitiesUTF8($manufacturer->id) : 'null'
-                        );
+                                $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
+                                Tools::htmlentitiesUTF8($manufacturer->name),
+                                !empty($manufacturer->id) ? Tools::htmlentitiesUTF8($manufacturer->id) : 'null'
+                            );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                         $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '') .
@@ -3140,10 +3161,10 @@ class AdminImportControllerCore extends AdminController
                 } else {
                     if (!$validateOnly) {
                         $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
-                            $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
-                            Tools::htmlentitiesUTF8($supplier->name),
-                            !empty($supplier->id) ? Tools::htmlentitiesUTF8($supplier->id) : 'null'
-                        );
+                                $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
+                                Tools::htmlentitiesUTF8($supplier->name),
+                                !empty($supplier->id) ? Tools::htmlentitiesUTF8($supplier->id) : 'null'
+                            );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                         $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '') .
@@ -3295,10 +3316,10 @@ class AdminImportControllerCore extends AdminController
         if (!$res) {
             if (!$validateOnly) {
                 $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
-                    $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
-                    !empty($info['name']) ? Tools::safeOutput($info['name']) : 'No Name',
-                    !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID'
-                );
+                        $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
+                        !empty($info['name']) ? Tools::safeOutput($info['name']) : 'No Name',
+                        !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID'
+                    );
             }
             if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                 $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '') .
@@ -3386,10 +3407,10 @@ class AdminImportControllerCore extends AdminController
 
             if (!$res) {
                 $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
-                    $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
-                    !empty($info['name']) ? Tools::safeOutput($info['name']) : 'No Name',
-                    !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID'
-                );
+                        $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
+                        !empty($info['name']) ? Tools::safeOutput($info['name']) : 'No Name',
+                        !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID'
+                    );
             } elseif (!$validateOnly) {
                 // Associate supplier to group shop
                 if ($shop_is_feature_active && $supplier->shop) {
@@ -3485,10 +3506,10 @@ class AdminImportControllerCore extends AdminController
 
             if (!$res) {
                 $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
-                    $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
-                    Tools::htmlentitiesUTF8($info['name']),
-                    (isset($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null')
-                );
+                        $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
+                        Tools::htmlentitiesUTF8($info['name']),
+                        (isset($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null')
+                    );
             }
         } else {
             $this->errors[] = $this->trans('Alias is invalid', [], 'Admin.Advparameters.Notification') . ' (' . Tools::htmlentitiesUTF8($alias->name) . ')';
@@ -3656,10 +3677,10 @@ class AdminImportControllerCore extends AdminController
 
             if (!$res) {
                 $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
-                    $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
-                    Tools::htmlentitiesUTF8($info['name']),
-                    (isset($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null')
-                );
+                        $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
+                        Tools::htmlentitiesUTF8($info['name']),
+                        (isset($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null')
+                    );
             }
         } else {
             $id_lang = Language::getIdByIso(Tools::getValue('iso_lang'));

@@ -4535,6 +4535,21 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * @param int $id_product Product identifier
+     * @param int $id_feature Feature identifier
+     * @param int $id_feature_value FeatureValue identifier
+     *
+     * @return bool
+     */
+    public static function deleteFeatureProductImport($id_product, $id_feature, $id_feature_value)
+    {
+        return Db::getInstance()->delete(
+            'feature_product',
+            '`id_feature` = ' . (int) $id_feature . ' AND `id_product` = ' . (int) $id_product . ' AND `id_feature_value` = ' . (int) $id_feature_value
+        );
+    }
+
+    /**
      * Select all features for the object.
      *
      * @return array Array with feature product's data
