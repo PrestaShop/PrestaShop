@@ -15,10 +15,12 @@ import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 
-// Import data
-import PaymentMethods from '@data/demo/paymentMethods';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -48,8 +50,8 @@ Post-condition:
 describe('FO - Checkout - Personal information : Create account', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const guestData: CustomerData = new CustomerData();
-  const addressData: AddressData = new AddressData({country: 'France'});
+  const guestData: FakerCustomer = new FakerCustomer();
+  const addressData: FakerAddress = new FakerAddress({country: 'France'});
   let allEmails: MailDevEmail[];
   let numberOfEmails: number;
   let mailListener: MailDev;
@@ -133,7 +135,7 @@ describe('FO - Checkout - Personal information : Create account', async () => {
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.equal(true);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message

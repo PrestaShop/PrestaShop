@@ -12,12 +12,12 @@ import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -145,7 +145,7 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
   it('should Pay by back wire and confirm order', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
-    await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+    await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
     const pageTitle = await orderConfirmationPage.getPageTitle(page);
     expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);

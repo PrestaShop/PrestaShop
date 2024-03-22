@@ -27,15 +27,15 @@ import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
-import Currencies from '@data/demo/currencies';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 import OrderData from '@data/faker/order';
 
 import {
   // Import data
+  dataCurrencies,
   dataCustomers,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -187,11 +187,11 @@ describe(
         expect(pageTitle).to.contains(currenciesPage.pageTitle);
       });
 
-      it(`should filter by iso code '${Currencies.euro.isoCode}'`, async function () {
+      it(`should filter by iso code '${dataCurrencies.euro.isoCode}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterCurrenciesToChangePrecision', baseContext);
 
         // Filter
-        await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.euro.isoCode);
+        await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.euro.isoCode);
 
         // Check number of currencies
         const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
@@ -304,7 +304,7 @@ describe(
         expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
         // Check the confirmation message
@@ -450,11 +450,11 @@ describe(
           expect(pageTitle).to.contains(currenciesPage.pageTitle);
         });
 
-        it(`should filter by iso code '${Currencies.euro.isoCode}'`, async function () {
+        it(`should filter by iso code '${dataCurrencies.euro.isoCode}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'filterCurrenciesToReset', baseContext);
 
           // Filter
-          await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.euro.isoCode);
+          await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.euro.isoCode);
 
           // Check number of currencies
           const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);

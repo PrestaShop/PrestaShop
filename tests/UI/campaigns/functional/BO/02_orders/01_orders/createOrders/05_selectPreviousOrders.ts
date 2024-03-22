@@ -19,13 +19,17 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import OrderData from '@data/faker/order';
-import OrderStatusData from '@data/faker/orderStatus';
+
+import {
+  // Import data
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+  type FakerOrderStatus,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Frame, Page} from 'playwright';
@@ -54,8 +58,8 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
   let orderIframe: Frame|null;
 
   const today: string = date.getDateFormat('yyyy-mm-dd');
-  const newCustomer: CustomerData = new CustomerData();
-  const newAddress: AddressData = new AddressData({
+  const newCustomer: FakerCustomer = new FakerCustomer();
+  const newAddress: FakerAddress = new FakerAddress({
     email: newCustomer.email,
     country: 'France',
   });
@@ -67,10 +71,10 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
-  const paymentMethodModuleName: string = PaymentMethods.checkPayment.moduleName;
-  const orderStatus: OrderStatusData = OrderStatuses.paymentAccepted;
+  const paymentMethodModuleName: string = dataPaymentMethods.checkPayment.moduleName;
+  const orderStatus: FakerOrderStatus = dataOrderStatuses.paymentAccepted;
 
   // Pre-condition: Create new customer
   createCustomerTest(newCustomer, `${baseContext}_preTest_1`);
@@ -239,7 +243,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should check customer title, name, lastname, reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInfo', baseContext);
 
-      orderIframe = await addOrderPage.getOrderIframe(page, orderID);
+      orderIframe = addOrderPage.getOrderIframe(page, orderID);
       expect(orderIframe).to.not.eq(null);
 
       const customerInfo = await orderPageCustomerBlock.getCustomerInfoBlock(orderIframe!);

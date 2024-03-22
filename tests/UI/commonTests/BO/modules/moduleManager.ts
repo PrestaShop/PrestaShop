@@ -8,12 +8,16 @@ import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 import Modules from '@data/demo/modules';
-import ModuleData from '@data/faker/module';
+
+import {
+  // Import data
+  type FakerModule,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-function installModule(module: ModuleData, baseContext: string = 'commonTests-installModule'): void {
+function installModule(module: FakerModule, baseContext: string = 'commonTests-installModule'): void {
   describe(`Install module ${module.name}`, async () => {
     let browserContext: BrowserContext;
     let page: Page;
@@ -79,7 +83,7 @@ function installModule(module: ModuleData, baseContext: string = 'commonTests-in
   });
 }
 
-function uninstallModule(module: ModuleData, baseContext: string = 'commonTests-uninstallHummingbird'): void {
+function uninstallModule(module: FakerModule, baseContext: string = 'commonTests-uninstallHummingbird'): void {
   describe(`Uninstall module ${module.name}`, async () => {
     let browserContext: BrowserContext;
     let page: Page;

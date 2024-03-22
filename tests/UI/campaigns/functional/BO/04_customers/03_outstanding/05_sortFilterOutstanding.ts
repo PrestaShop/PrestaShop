@@ -17,12 +17,16 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import OrderData from '@data/faker/order';
+
+import {
+  //Import data
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -50,11 +54,11 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
   let numberOutstanding: number;
 
   // New B2B customers
-  const createCustomerData1: CustomerData = new CustomerData();
-  const createCustomerData2: CustomerData = new CustomerData();
-  const createCustomerData3: CustomerData = new CustomerData();
+  const createCustomerData1: FakerCustomer = new FakerCustomer();
+  const createCustomerData2: FakerCustomer = new FakerCustomer();
+  const createCustomerData3: FakerCustomer = new FakerCustomer();
 
-  const customersData: CustomerData[] = [createCustomerData1, createCustomerData2, createCustomerData3];
+  const customersData: FakerCustomer[] = [createCustomerData1, createCustomerData2, createCustomerData3];
 
   // Const used to get today date format
   const today: string = date.getDateFormat('yyyy-mm-dd');
@@ -77,8 +81,8 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
     it('should login to BO', async function () {
       await loginCommon.loginBO(this, page);
     });
-    customersData.forEach((customerData: CustomerData, index: number) => {
-      const addressData: AddressData = new AddressData({
+    customersData.forEach((customerData: FakerCustomer, index: number) => {
+      const addressData: FakerAddress = new FakerAddress({
         email: customerData.email,
         country: 'France',
       });
@@ -91,7 +95,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
           },
         ],
         deliveryAddress: addressData,
-        paymentMethod: PaymentMethods.wirePayment,
+        paymentMethod: dataPaymentMethods.wirePayment,
       });
 
       // Pre-Condition : Create new B2B customer
@@ -125,7 +129,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         it('should update order status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus_${index}`, baseContext);
 
-          const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
+          const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
           expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
         });
 
@@ -133,7 +137,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
           await testContext.addContextItem(this, 'testIdentifier', `checkStatusBO_${index}`, baseContext);
 
           const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-          expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
+          expect(orderStatus, 'Order status was not updated').to.equal(dataOrderStatuses.paymentAccepted.name);
         });
       });
     });
@@ -389,7 +393,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
   });
 
   // Post-Condition: Delete created customers by bulk action
-  customersData.forEach((customerData: CustomerData, index: number) => {
+  customersData.forEach((customerData: FakerCustomer, index: number) => {
     bulkDeleteCustomersTest('email', customerData.email, `${baseContext}_postTest_${index + 1}`);
   });
 

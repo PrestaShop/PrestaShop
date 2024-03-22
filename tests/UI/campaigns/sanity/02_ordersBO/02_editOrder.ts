@@ -10,8 +10,10 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
-// Import data
-import OrderStatuses from '@data/demo/orderStatuses';
+import {
+  // Import data
+  dataOrderStatuses,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -75,8 +77,8 @@ describe('BO - Orders - Orders : Edit Order BO', async () => {
   it('should modify the order status and check the validation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editOrderStatus', baseContext);
 
-    const orderStatus = await orderPageProductsBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-    expect(orderStatus).to.equal(OrderStatuses.paymentAccepted.name);
+    const orderStatus = await orderPageProductsBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+    expect(orderStatus).to.equal(dataOrderStatuses.paymentAccepted.name);
   });
 
   // Logout from BO

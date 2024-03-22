@@ -5,15 +5,17 @@ import testContext from '@utils/testContext';
 import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 
-// Import data
-import type CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {Context} from 'mocha';
 import type {Page} from 'playwright';
 
 export default {
-  async loginFO(mochaContext: Context, page: Page, customer: CustomerData): Promise<void> {
+  async loginFO(mochaContext: Context, page: Page, customer: FakerCustomer): Promise<void> {
     await testContext.addContextItem(mochaContext, 'testIdentifier', 'loginFO');
 
     await loginPage.goTo(page, global.FO.URL);

@@ -17,14 +17,14 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import OrderStatusData from '@data/faker/orderStatus';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  type FakerOrderStatus,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -65,8 +65,8 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     tax: 'None',
     isRecyclablePackage: false,
   };
-  const paymentMethodModuleName: string = PaymentMethods.checkPayment.moduleName;
-  const orderStatus: OrderStatusData = OrderStatuses.paymentAccepted;
+  const paymentMethodModuleName: string = dataPaymentMethods.checkPayment.moduleName;
+  const orderStatus: FakerOrderStatus = dataOrderStatuses.paymentAccepted;
   const giftMessage: string = 'Gift message to test';
 
   before(async function () {

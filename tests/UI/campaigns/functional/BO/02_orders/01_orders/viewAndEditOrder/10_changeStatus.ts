@@ -13,14 +13,14 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -51,7 +51,7 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-Condition : Create order from FO
@@ -129,7 +129,7 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'selectSameStatus', baseContext);
 
       const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
-      expect(actualStatus).to.be.equal(OrderStatuses.awaitingBankWire.name);
+      expect(actualStatus).to.be.equal(dataOrderStatuses.awaitingBankWire.name);
 
       await orderPageTabListBlock.selectOrderStatus(page, actualStatus);
     });
@@ -162,11 +162,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       expect(isButtonVisible, 'Partial refund button is visible!').to.eq(false);
     });
 
-    it(`should select the status '${OrderStatuses.canceled.name}'`, async function () {
+    it(`should select the status '${dataOrderStatuses.canceled.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectCanceledStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.canceled.name);
-      expect(result).to.equal(OrderStatuses.canceled.name);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.canceled.name);
+      expect(result).to.equal(dataOrderStatuses.canceled.name);
     });
 
     it('should check that the statuses number is equal to 2', async function () {
@@ -176,11 +176,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       expect(statusesNumber).to.be.equal(2);
     });
 
-    it(`should check that the actual status is '${OrderStatuses.canceled.name}'`, async function () {
+    it(`should check that the actual status is '${dataOrderStatuses.canceled.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkActualStatus', baseContext);
 
       const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
-      expect(actualStatus).to.be.equal(OrderStatuses.canceled.name);
+      expect(actualStatus).to.be.equal(dataOrderStatuses.canceled.name);
     });
 
     it('should check that \'Partial refund\' button is not visible', async function () {
@@ -204,11 +204,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       expect(isButtonVisible, 'Partial refund button is visible!').to.eq(false);
     });
 
-    it(`should select the status '${OrderStatuses.paymentAccepted.name}'`, async function () {
+    it(`should select the status '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectPaymentAcceptedStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-      expect(result).to.equal(OrderStatuses.paymentAccepted.name);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+      expect(result).to.equal(dataOrderStatuses.paymentAccepted.name);
     });
 
     it('should check that the statuses number is equal to 3', async function () {
@@ -218,11 +218,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       expect(statusesNumber).to.be.equal(3);
     });
 
-    it(`should check that the actual status is '${OrderStatuses.paymentAccepted.name}'`, async function () {
+    it(`should check that the actual status is '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkActualStatus2', baseContext);
 
       const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
-      expect(actualStatus).to.be.equal(OrderStatuses.paymentAccepted.name);
+      expect(actualStatus).to.be.equal(dataOrderStatuses.paymentAccepted.name);
     });
 
     it('should check that \'Partial refund\' button is visible', async function () {
@@ -256,11 +256,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       expect(doesFileExist, 'File is not downloaded!').to.eq(true);
     });
 
-    it(`should select the status '${OrderStatuses.shipped.name}'`, async function () {
+    it(`should select the status '${dataOrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectShippedStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      expect(result).to.equal(OrderStatuses.shipped.name);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should check that the statuses number is equal to 4', async function () {
@@ -270,11 +270,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       expect(statusesNumber).to.be.equal(4);
     });
 
-    it(`should check that the actual status is '${OrderStatuses.shipped.name}'`, async function () {
+    it(`should check that the actual status is '${dataOrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkActualStatus3', baseContext);
 
       const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
-      expect(actualStatus).to.be.equal(OrderStatuses.shipped.name);
+      expect(actualStatus).to.be.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should click on \'View delivery slip\' button and check that the file is downloaded', async function () {

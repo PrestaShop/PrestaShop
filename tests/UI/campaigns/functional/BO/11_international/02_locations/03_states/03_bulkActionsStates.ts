@@ -11,8 +11,9 @@ import zonesPage from '@pages/BO/international/locations';
 import statesPage from '@pages/BO/international/locations/states';
 import addStatePage from '@pages/BO/international/locations/states/add';
 
-// Import data
-import StateData from '@data/faker/state';
+import {
+  FakerState,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,9 +25,9 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
   let page: Page;
   let numberOfStates: number = 0;
 
-  const statesToCreate: StateData[] = [
-    new StateData({name: 'todelete1', isoCode: 'HM', status: false}),
-    new StateData({name: 'todelete2', isoCode: 'BV', status: false}),
+  const statesToCreate: FakerState[] = [
+    new FakerState({name: 'todelete1', isoCode: 'HM', status: false}),
+    new FakerState({name: 'todelete2', isoCode: 'BV', status: false}),
   ];
 
   // before and after functions
@@ -76,7 +77,7 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
   });
 
   describe('Create 2 states in BO', async () => {
-    statesToCreate.forEach((stateToCreate: StateData, index: number) => {
+    statesToCreate.forEach((stateToCreate: FakerState, index: number) => {
       it('should go to add new title page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewStatePage${index + 1}`, baseContext);
 

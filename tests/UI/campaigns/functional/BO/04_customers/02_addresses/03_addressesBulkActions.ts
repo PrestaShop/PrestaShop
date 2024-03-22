@@ -10,8 +10,9 @@ import addressesPage from '@pages/BO/customers/addresses';
 import addAddressPage from '@pages/BO/customers/addresses/add';
 import dashboardPage from '@pages/BO/dashboard';
 
-// Import data
-import AddressData from '@data/faker/address';
+import {
+  FakerAddress,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,7 +25,7 @@ describe('BO - Customers - Addresses : Addresses bulk actions', async () => {
   let page: Page;
   let numberOfAddresses: number = 0;
 
-  const addressData: AddressData = new AddressData({address: 'todelete', email: 'pub@prestashop.com', country: 'France'});
+  const addressData: FakerAddress = new FakerAddress({address: 'todelete', email: 'pub@prestashop.com', country: 'France'});
 
   // before and after functions
   before(async function () {

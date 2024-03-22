@@ -28,13 +28,17 @@ import creditSlipPage from '@pages/FO/hummingbird/myAccount/creditSlips';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import OrderData from '@data/faker/order';
 import type MailDevEmail from '@data/types/maildevEmail';
+
+import {
+  // Import data
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -64,8 +68,8 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   let newMail: MailDevEmail;
   let mailListener: MailDev;
 
-  const customerData: CustomerData = new CustomerData();
-  const addressData: AddressData = new AddressData({
+  const customerData: FakerCustomer = new FakerCustomer();
+  const addressData: FakerAddress = new FakerAddress({
     email: customerData.email,
     country: 'France',
   });
@@ -77,7 +81,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create new account on FO
@@ -197,11 +201,11 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
       });
 
-      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}' and check it`, async function () {
+      it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const result = await viewOrderBasePage.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-        expect(result).to.equal(OrderStatuses.paymentAccepted.name);
+        const result = await viewOrderBasePage.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+        expect(result).to.equal(dataOrderStatuses.paymentAccepted.name);
       });
 
       it('should check if the button \'Partial Refund\' is visible', async function () {
@@ -339,10 +343,10 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
           .to.eq(true);
 
         // Check payment method in pdf
-        const paymentMethodExist = await files.isTextInPDF(filePath, PaymentMethods.wirePayment.displayName);
+        const paymentMethodExist = await files.isTextInPDF(filePath, dataPaymentMethods.wirePayment.displayName);
         expect(
           paymentMethodExist,
-          `Payment Method '${PaymentMethods.wirePayment.displayName}' does not exist in credit slip`,
+          `Payment Method '${dataPaymentMethods.wirePayment.displayName}' does not exist in credit slip`,
         ).to.eq(true);
       });
 

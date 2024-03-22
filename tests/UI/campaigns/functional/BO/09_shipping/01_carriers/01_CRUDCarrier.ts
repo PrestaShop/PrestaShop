@@ -18,12 +18,10 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import CarrierData from '@data/faker/carrier';
-
 import {
   // Import data
   dataCustomers,
+  FakerCarrier,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -44,8 +42,8 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
   let numberOfCarriers: number = 0;
   let carrierID: number = 0;
 
-  const createCarrierData: CarrierData = new CarrierData({freeShipping: false, zoneID: 4, allZones: false});
-  const editCarrierData: CarrierData = new CarrierData({
+  const createCarrierData: FakerCarrier = new FakerCarrier({freeShipping: false, zoneID: 4, allZones: false});
+  const editCarrierData: FakerCarrier = new FakerCarrier({
     freeShipping: false,
     rangeSup: 50,
     allZones: true,

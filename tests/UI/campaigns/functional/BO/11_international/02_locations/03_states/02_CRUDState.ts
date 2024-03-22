@@ -11,8 +11,9 @@ import zonesPage from '@pages/BO/international/locations';
 import statesPage from '@pages/BO/international/locations/states';
 import addStatePage from '@pages/BO/international/locations/states/add';
 
-// Import data
-import StateData from '@data/faker/state';
+import {
+  FakerState,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,8 +25,8 @@ describe('BO - International - States : CRUD state', async () => {
   let page: Page;
   let numberOfStates: number = 0;
 
-  const createStateData: StateData = new StateData();
-  const editStateData: StateData = new StateData();
+  const createStateData: FakerState = new FakerState();
+  const editStateData: FakerState = new FakerState();
 
   // before and after functions
   before(async function () {

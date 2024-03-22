@@ -1,6 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import ModuleData from '@data/faker/module';
+import {
+  // Import data
+  type FakerModule,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -225,10 +228,10 @@ class ModuleManager extends BOBasePage {
   /**
    * Search Module in Page module Catalog
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Tag of the Module
+   * @param module {FakerModule} Tag of the Module
    * @return {Promise<boolean>}
    */
-  async searchModule(page: Page, module: ModuleData): Promise<boolean> {
+  async searchModule(page: Page, module: FakerModule): Promise<boolean> {
     await this.reloadPage(page);
     await page.locator(this.searchModuleTagInput).fill(module.tag);
     await page.locator(this.searchModuleButton).click();
@@ -239,20 +242,20 @@ class ModuleManager extends BOBasePage {
   /**
    * Return if the module is visible
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Tag of the Module
+   * @param module {FakerModule} Tag of the Module
    * @return {Promise<boolean>}
    */
-  async isModuleVisible(page: Page, module: ModuleData): Promise<boolean> {
+  async isModuleVisible(page: Page, module: FakerModule): Promise<boolean> {
     return this.elementVisible(page, this.moduleBlock(module.tag), 10000);
   }
 
   /**
    * Get module name
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Tag of the Module
+   * @param module {FakerModule} Tag of the Module
    * @return {Promise<string>}
    */
-  async getModuleName(page: Page, module: ModuleData): Promise<string> {
+  async getModuleName(page: Page, module: FakerModule): Promise<string> {
     return this.getAttributeContent(page, `${this.moduleBlock(module.tag)} [data-original-title]`, 'data-original-title');
   }
 
@@ -409,7 +412,7 @@ class ModuleManager extends BOBasePage {
   /**
    * Uninstall/install/enable/disable/reset module
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Module data to install/uninstall
+   * @param module {FakerModule} Module data to install/uninstall
    * @param action {string} Action install/uninstall/enable/disable/reset
    * @param cancel {boolean} Cancel the action
    * @param forceDeletion {boolean} Delete module folder after uninstall
@@ -417,7 +420,7 @@ class ModuleManager extends BOBasePage {
    */
   async setActionInModule(
     page: Page,
-    module: ModuleData,
+    module: FakerModule,
     action: string,
     cancel: boolean = false,
     forceDeletion: boolean = false,
@@ -453,9 +456,9 @@ class ModuleManager extends BOBasePage {
   /**
    Returns the main action module action
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Module data
+   * @param module {FakerModule} Module data
    */
-  async getMainActionInModule(page: Page, module: ModuleData): Promise<string> {
+  async getMainActionInModule(page: Page, module: FakerModule): Promise<string> {
     const actions: string[] = [
       'enable',
       'disable',
@@ -477,11 +480,11 @@ class ModuleManager extends BOBasePage {
   /**
    * Returns if the action module modal is visible
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Module data to install/uninstall
+   * @param module {FakerModule} Module data to install/uninstall
    * @param action {string} Action install/uninstall/enable/disable/reset
    * @return {Promise<string | null>}
    */
-  async isModalActionVisible(page: Page, module: ModuleData, action: string): Promise<boolean> {
+  async isModalActionVisible(page: Page, module: FakerModule, action: string): Promise<boolean> {
     return this.elementVisible(page, this.modalConfirmAction(module.tag, action));
   }
 

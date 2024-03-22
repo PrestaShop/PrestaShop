@@ -12,12 +12,10 @@ import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
-// Import data
-import GroupData from '@data/faker/group';
-
 import {
   // Import data
   dataGroups,
+  FakerGroup,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -270,7 +268,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
   describe('Create 18 groups', async () => {
     const creationTests: number[] = new Array(18).fill(0, 0, 18);
     creationTests.forEach((value: number, index: number) => {
-      const groupToCreate: GroupData = new GroupData({name: `toSortAndPaginate${index}`});
+      const groupToCreate: FakerGroup = new FakerGroup({name: `toSortAndPaginate${index}`});
 
       it('should go to add new group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewGroupPage${index}`, baseContext);

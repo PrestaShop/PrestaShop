@@ -13,11 +13,15 @@ import dashboardPage from '@pages/BO/dashboard';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -37,8 +41,8 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
   let browserContext: BrowserContext;
   let page: Page;
 
-  const addressData: AddressData = new AddressData({country: 'France'});
-  const customerData: CustomerData = new CustomerData({password: '', lastName: 'guest'});
+  const addressData: FakerAddress = new FakerAddress({country: 'France'});
+  const customerData: FakerCustomer = new FakerCustomer({password: '', lastName: 'guest'});
   // New order by guest data
   const orderByGuestData: OrderData = new OrderData({
     customer: customerData,
@@ -49,7 +53,7 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
       },
     ],
     deliveryAddress: addressData,
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create 16 orders

@@ -10,8 +10,9 @@ import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import addZonePage from '@pages/BO/international/locations/add';
 
-// Import data
-import ZoneData from '@data/faker/zone';
+import {
+  FakerZone,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -23,8 +24,8 @@ describe('BO - International - Zones : CRUD zone', async () => {
   let page: Page;
   let numberOfZones: number = 0;
 
-  const createZoneData: ZoneData = new ZoneData();
-  const editZoneData: ZoneData = new ZoneData();
+  const createZoneData: FakerZone = new FakerZone();
+  const editZoneData: FakerZone = new FakerZone();
 
   // before and after functions
   before(async function () {

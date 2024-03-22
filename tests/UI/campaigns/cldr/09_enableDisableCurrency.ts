@@ -11,9 +11,10 @@ import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 
-// Import data
-import Currencies from '@data/demo/currencies';
-import CurrencyData from '@data/faker/currency';
+import {
+  dataCurrencies,
+  FakerCurrency,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
@@ -25,9 +26,9 @@ describe('CLDR : Enable/Disable a currency', async () => {
   let page: Page;
   let numberOfCurrencies: number;
 
-  const currencyDollar: CurrencyData = new CurrencyData({
-    name: Currencies.usd.name,
-    isoCode: Currencies.usd.isoCode,
+  const currencyDollar: FakerCurrency = new FakerCurrency({
+    name: dataCurrencies.usd.name,
+    isoCode: dataCurrencies.usd.isoCode,
     enabled: false,
   });
 
@@ -74,11 +75,11 @@ describe('CLDR : Enable/Disable a currency', async () => {
     expect(numberOfCurrencies).to.be.above(0);
   });
 
-  it(`should filter by iso code of currency '${Currencies.euro.isoCode}'`, async function () {
+  it(`should filter by iso code of currency '${dataCurrencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToEurCurrency0', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.euro.isoCode);
+    await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.euro.isoCode);
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
@@ -86,7 +87,7 @@ describe('CLDR : Enable/Disable a currency', async () => {
 
     // Check currency created
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    expect(textColumn).to.contains(Currencies.euro.isoCode);
+    expect(textColumn).to.contains(dataCurrencies.euro.isoCode);
   });
 
   it('should disable the default currency and check the error message', async function () {
@@ -183,11 +184,11 @@ describe('CLDR : Enable/Disable a currency', async () => {
     expect(pageTitle).to.contains(currenciesPage.pageTitle);
   });
 
-  it(`should filter by iso code of currency '${Currencies.euro.isoCode}'`, async function () {
+  it(`should filter by iso code of currency '${dataCurrencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToEurCurrency1', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.euro.isoCode);
+    await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.euro.isoCode);
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
@@ -195,10 +196,10 @@ describe('CLDR : Enable/Disable a currency', async () => {
 
     // Check currency created
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    expect(textColumn).to.contains(Currencies.euro.isoCode);
+    expect(textColumn).to.contains(dataCurrencies.euro.isoCode);
   });
 
-  it(`should disable the currency '${Currencies.euro.isoCode}'`, async function () {
+  it(`should disable the currency '${dataCurrencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableEuroCurrency', baseContext);
 
     const isActionPerformed = await currenciesPage.setStatus(page, 1, false);
@@ -211,7 +212,7 @@ describe('CLDR : Enable/Disable a currency', async () => {
     expect(currencyStatus).to.eq(false);
   });
 
-  it(`should enable the currency '${Currencies.euro.isoCode}'`, async function () {
+  it(`should enable the currency '${dataCurrencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableEuroCurrency', baseContext);
 
     const isActionPerformed = await currenciesPage.setStatus(page, 1, true);
@@ -233,10 +234,13 @@ describe('CLDR : Enable/Disable a currency', async () => {
     expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
-  it(`should choose '${Currencies.euro.isoCode}' as default currency`, async function () {
+  it(`should choose '${dataCurrencies.euro.isoCode}' as default currency`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setEuroAsDefaultCurrency', baseContext);
 
-    const textResult = await localizationPage.setDefaultCurrency(page, `${Currencies.euro.name} (${Currencies.euro.isoCode})`);
+    const textResult = await localizationPage.setDefaultCurrency(
+      page,
+      `${dataCurrencies.euro.name} (${dataCurrencies.euro.isoCode})`,
+    );
     expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
   });
 

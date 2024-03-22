@@ -1,8 +1,10 @@
 // Import FO pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-// Import data
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  type FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -84,10 +86,10 @@ class CreateAccountPage extends FOBasePage {
   /**
    * Create new customer account
    * @param page {Page} Browser tab
-   * @param customer {object} Customer's information (email and password)
+   * @param customer {FakerCustomer} Customer's information (email and password)
    * @returns {Promise<void>}
    */
-  async createAccount(page: Page, customer: CustomerData): Promise<void> {
+  async createAccount(page: Page, customer: FakerCustomer): Promise<void> {
     await this.waitForSelectorAndClick(page, this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2));
     await this.setValue(page, this.firstNameInput, customer.firstName);
     await this.setValue(page, this.lastNameInput, customer.lastName);

@@ -21,14 +21,14 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerAddress,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -60,17 +60,17 @@ describe('BO - Orders - Create order : Choose address', async () => {
   let orderID : number;
 
   // Const used for the payment status
-  const paymentMethodModuleName: string = PaymentMethods.checkPayment.moduleName;
+  const paymentMethodModuleName: string = dataPaymentMethods.checkPayment.moduleName;
   // Variable used to create new address in Pre-condition
-  const newAddressToCreate: AddressData = new AddressData({
+  const newAddressToCreate: FakerAddress = new FakerAddress({
     email: dataCustomers.johnDoe.email,
     lastName: 'test',
     country: 'France',
   });
   // Variable used to edit demo address
-  const addressToEditData: AddressData = new AddressData({country: 'France'});
+  const addressToEditData: FakerAddress = new FakerAddress({country: 'France'});
   // Variable used to add new address from new order page
-  const newAddressData: AddressData = new AddressData({lastName: 'test', country: 'France'});
+  const newAddressData: FakerAddress = new FakerAddress({lastName: 'test', country: 'France'});
 
   // Pre-condition: Create new address
   createAddressTest(newAddressToCreate, `${baseContext}_preTest_1`);
@@ -161,7 +161,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
     it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
-      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, OrderStatuses.paymentAccepted);
+      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, dataOrderStatuses.paymentAccepted);
 
       const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
       expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);

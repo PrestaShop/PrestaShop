@@ -17,16 +17,16 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Currencies from '@data/demo/currencies';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import type {OrderPayment} from '@data/types/order';
 
 import {
   // Import data
+  dataCurrencies,
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -67,7 +67,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   const paymentDataAmountInfTotal: OrderPayment = {
     date: today,
@@ -95,7 +95,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     paymentMethod: 'Bank transfer',
     transactionID: 12640,
     amount: 5.25,
-    currency: Currencies.mad.isoCode,
+    currency: dataCurrencies.mad.isoCode,
   };
   const paymentDataAmountEqualRest: OrderPayment = {
     date: today,
@@ -112,7 +112,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_2`);
 
   // Pre-condition: Create currency
-  createCurrencyTest(Currencies.mad, `${baseContext}_preTest_3`);
+  createCurrencyTest(dataCurrencies.mad, `${baseContext}_preTest_3`);
 
   // before and after functions
   before(async function () {
@@ -348,7 +348,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       const listOfCurrencies = await orderPageMessagesBlock.getCurrencySelectOptions(page);
       expect(listOfCurrencies).to.contain('€')
-        .and.to.contain(Currencies.mad.isoCode);
+        .and.to.contain(dataCurrencies.mad.isoCode);
     });
 
     it('should add payment with new currency', async function () {
@@ -407,11 +407,11 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       expect(paymentsNumber, 'Payments number is not correct! ').to.equal(0);
     });
 
-    it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusPaymentAccepted', baseContext);
 
-      const textResult = await orderPageMessagesBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-      expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
+      const textResult = await orderPageMessagesBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+      expect(textResult).to.equal(dataOrderStatuses.paymentAccepted.name);
     });
 
     it('should check that the payments number is equal to 1', async function () {
@@ -513,5 +513,5 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   });
 
   // Post-condition - Delete currency
-  deleteCurrencyTest(Currencies.mad, `${baseContext}_postTest_1`);
+  deleteCurrencyTest(dataCurrencies.mad, `${baseContext}_postTest_1`);
 });

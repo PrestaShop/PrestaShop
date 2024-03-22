@@ -11,8 +11,10 @@ import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import statesPage from '@pages/BO/international/locations/states';
 
-// Import data
-import Countries from '@data/demo/countries';
+import {
+  // Import data
+  dataCountries,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -96,10 +98,10 @@ describe('BO - International - States : Sort and pagination', async () => {
 
   // 2 : Sort states table
   describe('Sort states table', async () => {
-    it(`should filter by country '${Countries.canada.name}'`, async function () {
+    it(`should filter by country '${dataCountries.canada.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterBeforeSort', baseContext);
 
-      await statesPage.filterStates(page, 'select', 'id_country', Countries.canada.name);
+      await statesPage.filterStates(page, 'select', 'id_country', dataCountries.canada.name);
 
       const paginationNumber = await statesPage.selectPaginationLimit(page, 100);
       expect(paginationNumber).to.contains('(page 1 / 1)');

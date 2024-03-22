@@ -20,11 +20,11 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 
 // Import data
 import Languages from '@data/demo/languages';
-import PaymentMethods from '@data/demo/paymentMethods';
 
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -117,7 +117,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await testContext.addContextItem(this, 'testIdentifier', 'payTheOrder', baseContext);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -208,7 +208,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
             identifier: 'filterBySubject',
             filterType: 'input',
             filterBy: 'subject',
-            filterValue: PaymentMethods.wirePayment.name.toLowerCase(),
+            filterValue: dataPaymentMethods.wirePayment.name.toLowerCase(),
           },
       },
     ];
@@ -267,7 +267,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     it('should filter email list by \'subject\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterBySubjectToDelete', baseContext);
 
-      await emailPage.filterEmailLogs(page, 'input', 'subject', PaymentMethods.wirePayment.name);
+      await emailPage.filterEmailLogs(page, 'input', 'subject', dataPaymentMethods.wirePayment.name);
 
       const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
       expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);

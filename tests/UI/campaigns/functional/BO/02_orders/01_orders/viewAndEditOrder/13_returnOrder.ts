@@ -15,8 +15,6 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import MailDevEmail from '@data/types/maildevEmail';
@@ -24,6 +22,8 @@ import MailDevEmail from '@data/types/maildevEmail';
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -64,7 +64,7 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create order by default customer
@@ -117,10 +117,10 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
       expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it(`should change the order status to '${OrderStatuses.delivered.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await ordersPage.setOrderStatus(page, 1, OrderStatuses.delivered);
+      const result = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
       expect(result).to.equal(ordersPage.successfulUpdateMessage);
     });
 

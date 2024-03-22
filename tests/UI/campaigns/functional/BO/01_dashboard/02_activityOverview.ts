@@ -38,16 +38,16 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
-import OrderStatuses from '@data/demo/orderStatuses';
 import Orders from '@data/demo/orders';
 import ProductData from '@data/faker/product';
 import MessageData from '@data/faker/message';
-import CustomerData from '@data/faker/customer';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -80,7 +80,7 @@ describe('BO - Dashboard : Activity overview', async () => {
     reference: Orders.firstOrder.reference,
   });
 
-  const createCustomerData: CustomerData = new CustomerData({newsletter: true});
+  const createCustomerData: FakerCustomer = new FakerCustomer({newsletter: true});
 
   enableMerchandiseReturns(baseContext);
 
@@ -269,7 +269,7 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -316,7 +316,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should change the first order status to Processing in progress', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeOrderStatus1', baseContext);
 
-        const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.processingInProgress);
+        const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.processingInProgress);
         expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
       });
 
@@ -369,7 +369,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should change the first order status to Delivered', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeOrderStatus2', baseContext);
 
-        const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.delivered);
+        const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
         expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
       });
 

@@ -10,9 +10,9 @@ import {
   boDashboardPage,
   boModuleManagerPage,
   // Import FO pages
-  foCategoryPage,
-  foHomePage,
-  foLoginPage,
+  foClassicCategoryPage,
+  foClassicHomePage,
+  foClassicLoginPage,
   // Import modules
   modBlockwishlistBoMain,
   modBlockwishlistBoStatistics,
@@ -98,36 +98,36 @@ describe('Wishlist module - Statistics tab settings', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
       page = await modBlockwishlistBoStatistics.viewMyShop(page);
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
-      await foHomePage.goToAllProductsPage(page);
+      await foClassicHomePage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await foCategoryPage.isCategoryPage(page);
+      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible).to.eq(true);
     });
 
@@ -136,10 +136,10 @@ describe('Wishlist module - Statistics tab settings', async () => {
       it(`should add product #${idxProduct} to wishlist`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addToFavorite${idxProduct}`, baseContext);
 
-        const textResult = await foCategoryPage.addToWishList(page, idxProduct);
-        expect(textResult).to.be.eq(foCategoryPage.messageAddedToWishlist);
+        const textResult = await foClassicCategoryPage.addToWishList(page, idxProduct);
+        expect(textResult).to.be.eq(foClassicCategoryPage.messageAddedToWishlist);
 
-        const isAddedToWishlist = await foCategoryPage.isAddedToWishlist(page, idxProduct);
+        const isAddedToWishlist = await foClassicCategoryPage.isAddedToWishlist(page, idxProduct);
         expect(isAddedToWishlist).to.eq(true);
       });
     }
@@ -147,9 +147,9 @@ describe('Wishlist module - Statistics tab settings', async () => {
     it('should logout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'foLogout', baseContext);
 
-      await foCategoryPage.logout(page);
+      await foClassicCategoryPage.logout(page);
 
-      const isCustomerConnected = await foHomePage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(false);
     });
   });
@@ -157,7 +157,7 @@ describe('Wishlist module - Statistics tab settings', async () => {
     it('should go to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBoBack', baseContext);
 
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await modBlockwishlistBoStatistics.getPageTitle(page);
       expect(pageTitle).to.contains(modBlockwishlistBoStatistics.pageTitle);

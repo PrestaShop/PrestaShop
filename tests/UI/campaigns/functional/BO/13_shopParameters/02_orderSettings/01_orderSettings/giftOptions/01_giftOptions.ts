@@ -20,13 +20,11 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
-// Import data
-import tax from '@data/demo/tax';
-import PaymentMethods from '@data/demo/paymentMethods';
-
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
+  dataTaxes,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -93,7 +91,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           isGiftWrapping: true,
           giftWrappingPrice: 1,
           isGiftWrappingTax: 'FR Taux standard (20%)',
-          taxValue: parseInt(tax.DefaultFrTax.rate, 10) / 100,
+          taxValue: parseInt(dataTaxes.DefaultFrTax.rate, 10) / 100,
           isRecycledPackaging: false,
         },
     },
@@ -269,7 +267,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
         it('should choose payment method and confirm the order', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `confirmOrder${index}`, baseContext);
 
-          await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+          await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
           expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);

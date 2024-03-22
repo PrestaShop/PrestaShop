@@ -18,11 +18,11 @@ import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import PaymentMethods from '@data/demo/paymentMethods';
 
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -152,7 +152,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     it('should choose a payment method and validate the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'choosePaymentMethod', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle: string = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

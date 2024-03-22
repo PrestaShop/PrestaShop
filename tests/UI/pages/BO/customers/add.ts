@@ -1,6 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  type FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import type {Frame, Page} from 'playwright';
 
@@ -100,10 +103,10 @@ class AddCustomer extends BOBasePage {
   /**
    * Fill form for add/edit customer
    * @param page {Frame|Page} Browser tab
-   * @param customerData {CustomerData} Data to set on new customer form
+   * @param customerData {FakerCustomer} Data to set on new customer form
    * @return {Promise<void>}
    */
-  async fillCustomerForm(page: Frame|Page, customerData: CustomerData): Promise<void> {
+  async fillCustomerForm(page: Frame|Page, customerData: FakerCustomer): Promise<void> {
     // Click on label for social input
     await this.setHiddenCheckboxValue(page, this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
 
@@ -124,10 +127,10 @@ class AddCustomer extends BOBasePage {
   /**
    * Fill form for add/edit B2B customer
    * @param page {Page} Browser tab
-   * @param customerData {CustomerData} Data to set on new customer form
+   * @param customerData {FakerCustomer} Data to set on new customer form
    * @return {Promise<void>}
    */
-  async fillB2BCustomerForm(page: Page, customerData: CustomerData): Promise<void> {
+  async fillB2BCustomerForm(page: Page, customerData: FakerCustomer): Promise<void> {
     // Click on label for social input
     await this.setHiddenCheckboxValue(page, this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
 
@@ -151,11 +154,11 @@ class AddCustomer extends BOBasePage {
   /**
    * Fill form for add/edit customer and get successful message after saving
    * @param page {Frame|Page} Browser tab
-   * @param customerData {CustomerData} Data to set on new customer form
+   * @param customerData {FakerCustomer} Data to set on new customer form
    * @param waitForNavigation {boolean} True if we need save and waitForNavigation, false if not
    * @return {Promise<string>}
    */
-  async createEditCustomer(page: Frame|Page, customerData: CustomerData, waitForNavigation: boolean = true): Promise<string> {
+  async createEditCustomer(page: Frame|Page, customerData: FakerCustomer, waitForNavigation: boolean = true): Promise<string> {
     // Fill form
     await this.fillCustomerForm(page, customerData);
 
@@ -171,10 +174,10 @@ class AddCustomer extends BOBasePage {
   /**
    * Fill form for add/edit B2B customer and get successful message after saving
    * @param page {Page} Browser tab
-   * @param customerData {CustomerData} Data to set on new customer form
+   * @param customerData {FakerCustomer} Data to set on new customer form
    * @return {Promise<string>}
    */
-  async createEditB2BCustomer(page: Page, customerData: CustomerData): Promise<string> {
+  async createEditB2BCustomer(page: Page, customerData: FakerCustomer): Promise<string> {
     // Fill form
     await this.fillB2BCustomerForm(page, customerData);
 

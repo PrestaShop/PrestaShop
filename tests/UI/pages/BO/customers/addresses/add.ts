@@ -1,6 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type AddressData from '@data/faker/address';
+import {
+  type FakerAddress,
+} from '@prestashop-core/ui-testing';
 
 import type {Frame, Page} from 'playwright';
 
@@ -91,14 +93,14 @@ class AddAddress extends BOBasePage {
   /**
    * Fill form for add/edit address
    * @param page {Frame|Page} Browser tab
-   * @param addressData {AddressData} Data to set on new address form
+   * @param addressData {FakerAddress} Data to set on new address form
    * @param save {boolean} True if we need to save the new address, false if not
    * @param waitForNavigation {boolean} True if we need to wait for navigation after save, false if not
    * @returns {Promise<?string>}
    */
   async createEditAddress(
     page: Frame|Page,
-    addressData: AddressData,
+    addressData: FakerAddress,
     save: boolean = true,
     waitForNavigation: boolean = true,
   ): Promise<string|null> {

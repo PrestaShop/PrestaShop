@@ -18,8 +18,12 @@ import passwordReminderPage from '@pages/FO/hummingbird/passwordReminder';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
 
 // Import data
-import CustomerData from '@data/faker/customer';
 import type MailDevEmail from '@data/types/maildevEmail';
+
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -50,9 +54,9 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
   let mailListener: MailDev;
 
   const resetPasswordMailSubject: string = 'Password query confirmation';
-  const customerData: CustomerData = new CustomerData();
+  const customerData: FakerCustomer = new FakerCustomer();
   const newPassword: string = 'new test password';
-  const customerNewPassword: CustomerData = new CustomerData();
+  const customerNewPassword: FakerCustomer = new FakerCustomer();
   customerNewPassword.email = customerData.email;
   customerNewPassword.password = newPassword;
 

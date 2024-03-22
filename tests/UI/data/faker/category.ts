@@ -1,9 +1,9 @@
-import type GroupData from '@data/faker/group';
 import type {CategoryCreator} from '@data/types/category';
 
 import {
   // Import data
   dataGroups,
+  type FakerGroup,
 } from '@prestashop-core/ui-testing';
 
 import {faker} from '@faker-js/faker';
@@ -27,7 +27,7 @@ export default class CategoryData {
 
   public readonly metaDescription: string;
 
-  public readonly groupAccess: GroupData;
+  public readonly groupAccess: FakerGroup;
 
   public readonly coverImage: string | null;
 
@@ -63,7 +63,7 @@ export default class CategoryData {
     /** @type {string} Meta description of the category */
     this.metaDescription = faker.lorem.sentence();
 
-    /** @type {GroupData} Customer group that could access to the category */
+    /** @type {FakerGroup} Customer group that could access to the category */
     this.groupAccess = categoryToCreate.groupAccess
       || faker.helpers.arrayElement([dataGroups.customer, dataGroups.guest, dataGroups.visitor]);
 

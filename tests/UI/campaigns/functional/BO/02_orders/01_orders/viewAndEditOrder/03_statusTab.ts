@@ -19,11 +19,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import Employees from '@data/demo/employees';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import EmployeeData from '@data/faker/employee';
 import OrderData from '@data/faker/order';
 import type MailDevEmail from '@data/types/maildevEmail';
@@ -31,6 +27,10 @@ import type MailDevEmail from '@data/types/maildevEmail';
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -70,8 +70,8 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
 
   const today: string = date.getDateFormat('mm/dd/yyyy');
   const orderNote: string = 'Test order note';
-  const addressData: AddressData = new AddressData({country: 'France'});
-  const customerData: CustomerData = new CustomerData({password: ''});
+  const addressData: FakerAddress = new FakerAddress({country: 'France'});
+  const customerData: FakerCustomer = new FakerCustomer({password: ''});
   // New employee data
   const createEmployeeData: EmployeeData = new EmployeeData({
     defaultPage: 'Dashboard',
@@ -87,7 +87,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   // New order by guest data
   const orderByGuestData: OrderData = new OrderData({
@@ -99,7 +99,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       },
     ],
     deliveryAddress: addressData,
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-Condition: Setup config SMTP
@@ -211,10 +211,10 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       expect(textResult).to.contains(orderPageTabListBlock.errorAssignSameStatus);
     });
 
-    it(`should change the order status to '${OrderStatuses.canceled.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.canceled.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'cancelOrderByStatus', baseContext);
 
-      const textResult = await orderPageTabListBlock.updateOrderStatus(page, OrderStatuses.canceled.name);
+      const textResult = await orderPageTabListBlock.updateOrderStatus(page, dataOrderStatuses.canceled.name);
       expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
     });
 
@@ -229,7 +229,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusName1', baseContext);
 
       const statusName = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'status', 1);
-      expect(statusName).to.be.equal(OrderStatuses.canceled.name);
+      expect(statusName).to.be.equal(dataOrderStatuses.canceled.name);
     });
 
     it('should check the employee name from the table', async function () {
@@ -309,10 +309,10 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusToAccepted', baseContext);
 
-      const textResult = await orderPageTabListBlock.updateOrderStatus(page, OrderStatuses.paymentAccepted.name);
+      const textResult = await orderPageTabListBlock.updateOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
       expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
     });
 
@@ -327,7 +327,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusName2', baseContext);
 
       const statusName = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'status', 1);
-      expect(statusName).to.be.equal(OrderStatuses.paymentAccepted.name);
+      expect(statusName).to.be.equal(dataOrderStatuses.paymentAccepted.name);
     });
 
     it('should check the employee name from the table', async function () {
@@ -344,10 +344,10 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       expect(date).to.contain(today);
     });
 
-    it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusToShipped', baseContext);
 
-      const textResult = await orderPageTabListBlock.updateOrderStatus(page, OrderStatuses.shipped.name);
+      const textResult = await orderPageTabListBlock.updateOrderStatus(page, dataOrderStatuses.shipped.name);
       expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
     });
 

@@ -23,8 +23,11 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 // Import data
 import Products from '@data/demo/products';
 import ProductData from '@data/faker/product';
-import CartProductDetails from '@data/types/cart';
 import type {ProductAttribute, ProductImageUrls} from '@data/types/product';
+
+import {
+  type CartProductDetails,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

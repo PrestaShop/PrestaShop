@@ -13,11 +13,15 @@ import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -38,9 +42,9 @@ describe('BO - Orders : Bulk open on new tab', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const firstCustomerData: CustomerData = new CustomerData();
-  const secondCustomerData: CustomerData = new CustomerData();
-  const addressData: AddressData = new AddressData({country: 'France'});
+  const firstCustomerData: FakerCustomer = new FakerCustomer();
+  const secondCustomerData: FakerCustomer = new FakerCustomer();
+  const addressData: FakerAddress = new FakerAddress({country: 'France'});
   const firstOrderByGuestData: OrderData = new OrderData({
     customer: firstCustomerData,
     products: [
@@ -50,7 +54,7 @@ describe('BO - Orders : Bulk open on new tab', async () => {
       },
     ],
     deliveryAddress: addressData,
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   const secondOrderByGuestData: OrderData = new OrderData({
     customer: secondCustomerData,
@@ -61,7 +65,7 @@ describe('BO - Orders : Bulk open on new tab', async () => {
       },
     ],
     deliveryAddress: addressData,
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create first order in FO

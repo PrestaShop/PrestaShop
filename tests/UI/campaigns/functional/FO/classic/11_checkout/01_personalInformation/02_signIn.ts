@@ -8,12 +8,10 @@ import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
-// Import data
-import CustomerData from '@data/faker/customer';
-
 import {
   // Import data
   dataCustomers,
+  FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -34,7 +32,7 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const credentialsData: CustomerData = new CustomerData();
+  const credentialsData: FakerCustomer = new FakerCustomer();
 
   // before and after functions
   before(async function () {

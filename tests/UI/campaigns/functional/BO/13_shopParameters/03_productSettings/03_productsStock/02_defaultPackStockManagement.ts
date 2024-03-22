@@ -20,12 +20,12 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -244,7 +244,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `confirmTheOrder${index}`, baseContext);
 
           // Payment step - Choose payment step
-          await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+          await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

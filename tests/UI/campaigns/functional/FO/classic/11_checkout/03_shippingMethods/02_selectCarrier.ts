@@ -14,9 +14,13 @@ import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import Products from '@data/demo/products';
+
+import {
+  // Import data
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -37,12 +41,12 @@ Post-condition:
 describe('FO - Checkout - Shipping methods : Select carrier', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const customerData: CustomerData = new CustomerData();
-  const addressData: AddressData = new AddressData({
+  const customerData: FakerCustomer = new FakerCustomer();
+  const addressData: FakerAddress = new FakerAddress({
     email: customerData.email,
     country: 'France',
   });
-  const addressDataInUnitedStates: AddressData = new AddressData({
+  const addressDataInUnitedStates: FakerAddress = new FakerAddress({
     email: customerData.email,
     country: 'United States',
     state: 'Alabama',

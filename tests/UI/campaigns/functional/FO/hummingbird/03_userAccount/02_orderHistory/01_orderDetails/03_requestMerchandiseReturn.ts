@@ -27,13 +27,13 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import Products from '@data/demo/products';
-import PaymentMethods from '@data/demo/paymentMethods';
-import OrderStatuses from '@data/demo/orderStatuses';
 import OrderData from '@data/faker/order';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -67,7 +67,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   const today: string = date.getDateFormat('mm/dd/yyyy');
 
@@ -118,11 +118,11 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${OrderStatuses.delivered.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.delivered.name);
-      expect(result).to.equal(OrderStatuses.delivered.name);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.delivered.name);
+      expect(result).to.equal(dataOrderStatuses.delivered.name);
     });
 
     it('should get the order reference', async function () {

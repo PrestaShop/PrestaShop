@@ -21,8 +21,10 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage as loginFOPage} from '@pages/FO/classic/login';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
-// Import data
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -45,8 +47,8 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
   let mailListener: MailDev;
   let numberOfCustomers: number = 0;
 
-  const firstCustomerToCreate: CustomerData = new CustomerData();
-  const secondCustomerToCreate: CustomerData = new CustomerData();
+  const firstCustomerToCreate: FakerCustomer = new FakerCustomer();
+  const secondCustomerToCreate: FakerCustomer = new FakerCustomer();
 
   // before and after functions
   before(async function () {

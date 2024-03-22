@@ -22,13 +22,13 @@ import viewCustomerPage from '@pages/BO/customers/view';
 // import data
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
-import PaymentMethods from '@data/demo/paymentMethods';
-import CustomerData from '@data/faker/customer';
-import AddressData from '@data/faker/address';
 
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -65,13 +65,13 @@ describe('BO - Header : Check notifications', async () => {
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   const messageSend: string = faker.lorem.sentence().substring(0, 35).trim();
   const messageOption: string = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes[0].values[0]} `
     + `- Color: ${Products.demo_1.attributes[1].values[0]})`;
-  const customerData: CustomerData = new CustomerData({password: ''});
-  const addressData: AddressData = new AddressData({country: 'France'});
+  const customerData: FakerCustomer = new FakerCustomer({password: ''});
+  const addressData: FakerAddress = new FakerAddress({country: 'France'});
   // New order by guest data
   const orderByGuestData: OrderData = new OrderData({
     customer: customerData,
@@ -82,7 +82,7 @@ describe('BO - Header : Check notifications', async () => {
       },
     ],
     deliveryAddress: addressData,
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // PRE-condition : Create order by default customer

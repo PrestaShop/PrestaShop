@@ -9,10 +9,13 @@ import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
 import Products from '@data/demo/products';
-import CartProductDetails from '@data/types/cart';
 import {ProductAttribute} from '@data/types/product';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
+
+import {
+  type CartProductDetails,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';

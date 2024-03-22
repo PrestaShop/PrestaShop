@@ -26,11 +26,11 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
 import ProductData from '@data/faker/product';
-import PaymentMethods from '@data/demo/paymentMethods';
 
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
@@ -163,7 +163,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
     it('should pay the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'payTheOrder', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
       expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);

@@ -7,8 +7,12 @@ import type {
   CartRuleProductSelection,
 } from '@data/types/cartRule';
 
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
+
 import {faker} from '@faker-js/faker';
-import CustomerData from '@data/faker/customer';
 
 const productsNames: string[] = Object.values(Products).map((product: ProductData) => product.name);
 
@@ -33,7 +37,7 @@ export default class CartRuleData {
 
   public readonly status: boolean;
 
-  public readonly customer: CustomerData | null;
+  public readonly customer: FakerCustomer | null;
 
   public readonly dateFrom: string | null;
 

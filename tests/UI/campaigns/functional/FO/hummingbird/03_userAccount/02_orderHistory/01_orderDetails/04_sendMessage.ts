@@ -25,13 +25,13 @@ import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 import productPage from '@pages/FO/hummingbird/product';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 
 import {
   // Import data
   dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -148,7 +148,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message
@@ -190,14 +190,14 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       expect(numberOfOrders).to.be.above(0);
     });
 
-    it(`should update order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
+    it(`should update order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
+      const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
       expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
 
       const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-      expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
+      expect(orderStatus, 'Order status was not updated').to.equal(dataOrderStatuses.paymentAccepted.name);
     });
 
     it('disconnect from BO', async function () {

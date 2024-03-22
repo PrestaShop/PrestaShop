@@ -11,8 +11,10 @@ import dashboardPage from '@pages/BO/dashboard';
 import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
 
-// Import data
-import CarrierData from '@data/faker/carrier';
+import {
+  // Import data
+  FakerCarrier,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -69,7 +71,7 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
     creationTests.forEach((test: number, index: number) => {
       before(() => files.generateImage(`todelete${index}.jpg`));
 
-      const carrierData: CarrierData = new CarrierData({name: `todelete${index}`});
+      const carrierData: FakerCarrier = new FakerCarrier({name: `todelete${index}`});
 
       it('should go to add new carrier page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCarrierPage${index}`, baseContext);

@@ -11,8 +11,9 @@ import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
-// Import data
-import GroupData from '@data/faker/group';
+import {
+  FakerGroup,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,8 +25,8 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete g
   let page: Page;
   let numberOfGroups: number = 0;
 
-  const createGroupData: GroupData = new GroupData();
-  const editGroupData: GroupData = new GroupData();
+  const createGroupData: FakerGroup = new FakerGroup();
+  const editGroupData: FakerGroup = new FakerGroup();
 
   // before and after functions
   before(async function () {

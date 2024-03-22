@@ -25,13 +25,13 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
-import CustomerData from '@data/faker/customer';
 import Products from '@data/demo/products';
 
 import {
   // Import data
   dataCustomers,
+  dataPaymentMethods,
+  FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -43,7 +43,7 @@ const baseContext: string = 'functional_BO_advancedParameters_administration_not
 describe('BO - Advanced Parameters - Administration : Check notifications', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const createCustomerData: CustomerData = new CustomerData();
+  const createCustomerData: FakerCustomer = new FakerCustomer();
   const messageSend: string = faker.lorem.sentence().substring(0, 35).trim();
   const messageOption: string = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes[0].values[0]} `
     + `- Color: ${Products.demo_1.attributes[1].values[0]})`;
@@ -186,7 +186,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

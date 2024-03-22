@@ -14,8 +14,11 @@ import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 // Import data
 import Products from '@data/demo/products';
-import CartProductDetails from '@data/types/cart';
 import {ProductAttribute} from '@data/types/product';
+
+import {
+  type CartProductDetails,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
