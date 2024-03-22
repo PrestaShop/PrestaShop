@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "29d65f94832090c34aad0084d88023af",
+    "content-hash": "0d2270fec6c8af9a94eead07a83dc65b",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5579,16 +5579,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-new-oauth-api",
+            "version": "dev-filters-class",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "a6722ba6687fbab77c3227eac1bb443e63acf142"
+                "reference": "c5872ad07215872dec33f313bf9ebdce5fce406c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/a6722ba6687fbab77c3227eac1bb443e63acf142",
-                "reference": "a6722ba6687fbab77c3227eac1bb443e63acf142",
+                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/c5872ad07215872dec33f313bf9ebdce5fce406c",
+                "reference": "c5872ad07215872dec33f313bf9ebdce5fce406c",
                 "shasum": ""
             },
             "require": {
@@ -5640,9 +5640,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/jolelievre/ps_apiresources/tree/new-oauth-api"
+                "source": "https://github.com/jolelievre/ps_apiresources/tree/filters-class"
             },
-            "time": "2024-03-22T14:38:14+00:00"
+            "time": "2024-03-25T16:42:36+00:00"
         },
         {
             "name": "prestashop/ps_banner",

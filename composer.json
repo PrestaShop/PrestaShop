@@ -71,7 +71,7 @@
         "prestashop/gsitemap": "^4",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^6.0",
-        "prestashop/ps_apiresources": "dev-new-oauth-api",
+        "prestashop/ps_apiresources": "dev-filters-class",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
         "prestashop/ps_brandlist": "^1.0",
