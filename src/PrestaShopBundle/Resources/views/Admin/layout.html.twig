@@ -26,6 +26,8 @@
 {% set showContentHeader = showContentHeader is defined ? showContentHeader : true  %}
 {% set layoutHeaderToolbarBtn = layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [] %}
 {% set metaTitle = meta_title is defined ? meta_title : (layoutTitle is defined ? layoutTitle : '') %}
+{% set displayHeader = displayHeader is defined ? displayHeader : true  %}
+{% set displayFooter = displayFooter is defined ? displayFooter : true  %}
 
 {# if the Symfony layout feature flag is enabled, we display the default layout or the light layout, #}
 {# otherwise we display the legacy layout #}
@@ -44,7 +46,9 @@
       js_router_metadata(),
       meta_title is defined ? meta_title : '',
       use_regular_h1_structure is defined ? use_regular_h1_structure : true,
-      legacyBaseLayout is defined ? legacyBaseLayout : 'layout.tpl'
+      legacyBaseLayout is defined ? legacyBaseLayout : 'layout.tpl',
+      displayHeader,
+      displayFooter
     )
   )
 ) %}
