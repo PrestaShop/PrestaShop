@@ -125,8 +125,8 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       expect(notificationsNumber).to.equal(4);
     });
 
-    it(`should update the quantity for the product ${Products.demo_5.name}`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateDemoQuantity', baseContext);
+    it(`should update the quantity for the product ${Products.demo_12.name}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateDemo12Quantity', baseContext);
 
       await cartPage.editProductQuantity(page, 3, 2);
 
