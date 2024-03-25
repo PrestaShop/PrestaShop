@@ -46,6 +46,8 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
   const productNameEn: string = 'My pack';
   const productNameFr: string = 'Mon pack';
   const productRetailPrice: number = 25.00;
+  // Automatically selected based on the mostly used tax on other products
+  const mostUsedTaxValue: number = 20;
   const productQuantity: number = 4;
   const productStock: number = 100;
 
@@ -292,8 +294,10 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
 
       const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
       expect(productHeaderSummary.priceTaxExc).to.equals(`€${productRetailPrice.toFixed(2)} tax excl.`);
-      expect(productHeaderSummary.priceTaxIncl).to.equals(
-        `€${productRetailPrice.toFixed(2)} tax incl. (tax rule: 0%)`,
+
+      const taxValue = await basicHelper.percentage(productRetailPrice, mostUsedTaxValue);
+      expect(productHeaderSummary.priceTaxIncl).to.equal(
+        `€${(productRetailPrice + taxValue).toFixed(2)} tax incl. (tax rule: ${mostUsedTaxValue}%)`,
       );
     });
 
@@ -311,7 +315,8 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
       const productInformation = await foProductPage.getProductInformation(page);
-      expect(productRetailPrice).to.eq(productInformation.price);
+      const taxValue = await basicHelper.percentage(productRetailPrice, mostUsedTaxValue);
+      expect(productRetailPrice + taxValue).to.eq(productInformation.price);
 
       const productsPrice = await foProductPage.getPackProductsPrice(page);
       const calculatedPrice = (
