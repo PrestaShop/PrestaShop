@@ -47,6 +47,76 @@
         <target>Manage quick accesses</target>
         <note>Line: 165</note>
       </trans-unit>
+      <trans-unit id="60434fac312a307d4f9b9eb03a6c1694">
+        <source>Welcome back %name%</source>
+        <target>Welcome back %name%</target>
+        <note>Line: 388</note>
+      </trans-unit>
+      <trans-unit id="3d8de6fcc09baf73f7175fe59f278ced">
+        <source>Your profile</source>
+        <target>Your profile</target>
+        <note>Line: 389</note>
+      </trans-unit>
+      <trans-unit id="c87aacf5673fada1108c9f809d354311">
+        <source>Sign out</source>
+        <target>Sign out</target>
+        <note>Line: 404</note>
+      </trans-unit>
+      <trans-unit id="4f32a32dea642737580dd71cdfd8d3c0">
+        <source>Quick Access</source>
+        <target>Quick Access</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="6f7579a25b7aba443386a5b86a7900b4">
+        <source>Please name this shortcut:</source>
+        <target>Please name this shortcut:</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
+        <source>Customers</source>
+        <target>Customers</target>
+        <note>Line: 321</note>
+      </trans-unit>
+      <trans-unit id="d7e8f7da874f7ef3f4bae2524ad52bfd">
+        <source>View my store</source>
+        <target>View my store</target>
+        <note>Line: 292</note>
+      </trans-unit>
+      <trans-unit id="3df406952f3377a5e419d4d63abb1b1d">
+        <source>Order number:</source>
+        <target>Order number:</target>
+        <note>Line: 63</note>
+      </trans-unit>
+      <trans-unit id="6fab17d3dc1147f9b170fb8e1aac2fa8">
+        <source>Read this message</source>
+        <target>Read this message</target>
+        <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="94b96a5e5bca774e9f863b3b5fe8cd5d">
+        <source>A new order has been placed on your store.</source>
+        <target>A new order has been placed on your store.</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="9e6da9926052b85bb4f32865c08ec8f9">
+        <source>A new customer registered on your store.</source>
+        <target>A new customer registered on your store.</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="51b356c2e003bc85b101b12904a6c533">
+        <source>A new message was posted on your store.</source>
+        <target>A new message was posted on your store.</target>
+        <note>Line: 69</note>
+      </trans-unit>
+      <trans-unit id="ec3028a12402ab7f43962a6f3a667b6e">
+        <source>Debug mode</source>
+        <target>Debug mode</target>
+        <note>Line: 235</note>
+      </trans-unit>
+      <trans-unit id="38a27c0c7ef7a05e13efa2798ee21533">
+        <source>Maintenance mode</source>
+        <target>Maintenance mode</target>
+        <note>Line: 268</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -76,39 +146,35 @@
         <target>Invoice Number</target>
         <note>Line: 59</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/new-theme/template/components/layout/employee_dropdown.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="60434fac312a307d4f9b9eb03a6c1694">
-        <source>Welcome back %name%</source>
-        <target>Welcome back %name%</target>
-        <note>Line: 34</note>
+      <trans-unit id="13787cfb1a15ae6690a29d3895c54de9">
+        <source>Everywhere</source>
+        <target>Everywhere</target>
+        <note>Line: 36</note>
       </trans-unit>
-      <trans-unit id="3d8de6fcc09baf73f7175fe59f278ced">
-        <source>Your profile</source>
-        <target>Your profile</target>
-        <note>Line: 39</note>
+      <trans-unit id="2e67c0a79d35c15af2436c8d80ca072d">
+        <source>What are you looking for?</source>
+        <target>What are you looking for?</target>
+        <note>Line: 35</note>
       </trans-unit>
-      <trans-unit id="c87aacf5673fada1108c9f809d354311">
-        <source>Sign out</source>
-        <target>Sign out</target>
-        <note>Line: 57</note>
+      <trans-unit id="d79cf3f429596f77db95c65074663a54">
+        <source>Order ID</source>
+        <target>Order ID</target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="fc6dfe4f8b07fc04c99e27425f780754">
+        <source>Cart ID</source>
+        <target>Cart ID</target>
+        <note>Line: 64</note>
+      </trans-unit>
+      <trans-unit id="07403a8bc81d7865c8e040e718ec7828">
+        <source>Module name</source>
+        <target>Module name</target>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/new-theme/template/components/layout/mobile_quickaccess.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="4f32a32dea642737580dd71cdfd8d3c0">
-        <source>Quick Access</source>
-        <target>Quick Access</target>
-        <note>Line: 26</note>
-      </trans-unit>
-      <trans-unit id="6f7579a25b7aba443386a5b86a7900b4">
-        <source>Please name this shortcut:</source>
-        <target>Please name this shortcut:</target>
-        <note>Line: 60</note>
-      </trans-unit>
       <trans-unit id="572e3c9b387943813b5b1cb2f1a96dc3">
         <source>Remove from Quick Access</source>
         <target>Remove from Quick Access</target>
@@ -123,36 +189,6 @@
   </file>
   <file original="admin-dev/themes/new-theme/template/components/layout/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
-        <source>Customers</source>
-        <target>Customers</target>
-        <note>Line: 46</note>
-      </trans-unit>
-      <trans-unit id="13787cfb1a15ae6690a29d3895c54de9">
-        <source>Everywhere</source>
-        <target>Everywhere</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="2e67c0a79d35c15af2436c8d80ca072d">
-        <source>What are you looking for?</source>
-        <target>What are you looking for?</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="d79cf3f429596f77db95c65074663a54">
-        <source>Order ID</source>
-        <target>Order ID</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="fc6dfe4f8b07fc04c99e27425f780754">
-        <source>Cart ID</source>
-        <target>Cart ID</target>
-        <note>Line: 49</note>
-      </trans-unit>
-      <trans-unit id="07403a8bc81d7865c8e040e718ec7828">
-        <source>Module name</source>
-        <target>Module name</target>
-        <note>Line: 50</note>
-      </trans-unit>
       <trans-unit id="f5945546981ef6e50e1fade1b386da04">
         <source>Search (e.g.: product reference, customer name…)</source>
         <target>Search (e.g.: product reference, customer name…)</target>
@@ -200,60 +236,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/new-theme/template/components/layout/shop_list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d7e8f7da874f7ef3f4bae2524ad52bfd">
-        <source>View my store</source>
-        <target>View my store</target>
-        <note>Line: 54</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/new-theme/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3df406952f3377a5e419d4d63abb1b1d">
-        <source>Order number:</source>
-        <target>Order number:</target>
-        <note>Line: 56</note>
-      </trans-unit>
-      <trans-unit id="6fab17d3dc1147f9b170fb8e1aac2fa8">
-        <source>Read this message</source>
-        <target>Read this message</target>
-        <note>Line: 63</note>
-      </trans-unit>
-      <trans-unit id="94b96a5e5bca774e9f863b3b5fe8cd5d">
-        <source>A new order has been placed on your store.</source>
-        <target>A new order has been placed on your store.</target>
-        <note>Line: 55</note>
-      </trans-unit>
-      <trans-unit id="9e6da9926052b85bb4f32865c08ec8f9">
-        <source>A new customer registered on your store.</source>
-        <target>A new customer registered on your store.</target>
-        <note>Line: 60</note>
-      </trans-unit>
-      <trans-unit id="51b356c2e003bc85b101b12904a6c533">
-        <source>A new message was posted on your store.</source>
-        <target>A new message was posted on your store.</target>
-        <note>Line: 62</note>
-      </trans-unit>
       <trans-unit id="7a2e40e90ddbc145f11afacb5eb83ae2">
         <source>Customer name:</source>
         <target>Customer name:</target>
         <note>Line: 61</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/new-theme/template/layout.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ec3028a12402ab7f43962a6f3a667b6e">
-        <source>Debug mode</source>
-        <target>Debug mode</target>
-        <note>Line: 51</note>
-      </trans-unit>
-      <trans-unit id="38a27c0c7ef7a05e13efa2798ee21533">
-        <source>Maintenance mode</source>
-        <target>Maintenance mode</target>
-        <note>Line: 85</note>
       </trans-unit>
     </body>
   </file>
@@ -323,6 +311,11 @@
         <target>Add new quick access</target>
         <note>Line: 135</note>
       </trans-unit>
+      <trans-unit id="e5dc8e5afea0a065948622039358de37">
+        <source>New window</source>
+        <target>New window</target>
+        <note>Line: 69</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/ps_faviconnotificationbo/controllers/admin/AdminConfigureFaviconBoController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -334,26 +327,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mainmenu/ps_mainmenu.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e5dc8e5afea0a065948622039358de37">
-        <source>New window</source>
-        <target>New window</target>
-        <note>Line: 1413</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Multistore/dropdown.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Multistore/header.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2f6bb081ffe242f2f09f5a7fb0ca75aa">
         <source>Search store name</source>
         <target>Search store name</target>
-        <note>Line: 33</note>
+        <note>Line: 67</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Multistore/header.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="a5facb9cd738950e5cb8ba22d8c882d7">
         <source>Customize your multistore header, [1]pick a color[/1] for this store context.</source>
         <target>Customize your multistore header, [1]pick a color[/1] for this store context.</target>

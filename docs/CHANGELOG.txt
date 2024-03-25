@@ -24,6 +24,67 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.1.5 - (2024-03-07)
+####################################
+- Back Office:
+  - Improvement:
+    - #34682: Add more information into cart view page (by @Hlavtox)
+  - Bug fix:
+    - #35384: Fix: Catalog - Stocks - multiple filters not working (by @Codencode)
+    - #35495: Add most used rule group to new products (by @Hlavtox)
+    - #35006: Backport newer method in filemanager (by @Hlavtox)
+    - #35064: Add Length  constraint to MetaType (by @danilocarta)
+    - #34982: Always set HelperKpi source and use conditional refresh (by @PrestaEdit)
+    - #34857: Fix product csv import wiping category assignments, fixes #34601 (by @tswfi)
+- Front Office:
+  - Improvement:
+    - #35483: Bump classic to 2.1.3 (by @Hlavtox)
+  - Bug fix:
+    - #35530: Fix invoice download for non logged in customer (by @Hlavtox)
+    - #35023: Fix: BO - Import/Export - Can't import Store contact (by @Codencode)
+    - #35464: Do not show vouchers that should be hidden (by @Hlavtox)
+    - #35372: Fix A pack set to Decrement products in pack only. cannot be added to cart (by @Codencode)
+    - #35418: Fix: The new password policy is not present in the reset password page #35410 (by @Codencode)
+    - #35166: Validate cart rule actions on load (by @Hlavtox)
+    - #35021: Fix Address form not work properly in customer account area (by @Codencode)
+    - #35134: Implement canonical urls and remove not needed parameters (by @Hlavtox)
+    - #35017: Fix and comment address deletion process (by @Hlavtox)
+    - #34698: Allow Front controller called in cli if ssl is on or maintenance mode is on in 8.1 (by @jf-viguier)
+- Core:
+  - Improvement:
+    - #35554: Update ps_googleanalytics (by @matthieu-rolland)
+    - #35513: Update modules on composer for PS 8.1.5 (patch release) (by @matthieu-rolland)
+    - #35422: Bump version to 8.1.5 (by @Hlavtox)
+    - #35114: Updated PrestaShop Packages (by @github-actions[bot])
+    - #35058: Disable autofill of password for SMTP (by @ShaiMagal)
+    - #35042: Updated PrestaShop Packages (by @github-actions[bot])
+    - #35034: Bump ps emailalerts to v3 (by @Hlavtox)
+    - #35000: Prevent Internal Server Error 500 - opcache_reset with restrict_api (by @ShaiMagal)
+    - #34957: Remove old Czech lower VAT 10% and 15% (by @ShaiMagal)
+    - #34946: Added id_shop param to actionAfterLoadRoutes Hook (by @hherreros-webimpacto)
+    - #34951: Fix CI for `8.1.x` branch after 8.1.3 release (by @boherm)
+  - Bug fix:
+    - #35536: Downgrade ps_googleanalytics (by @matthieu-rolland)
+    - #35351: Fix backup tool creating nulls (by @Hlavtox)
+    - #35322: Fix shipping cost on order details page - backport from v9 (by @kpodemski)
+    - #34954: Fix Link->getModuleLink() function for other shop contexts (by @hherreros-webimpacto)
+    - #35321: Fix display of categories from other shops (by @kpodemski)
+    - #34873: Prevent uncheck cast (by @gross-nvs)
+  - Refactoring:
+    - #35456: Comment cart and quantity methods (by @Hlavtox)
+    - #35215: Fix alias hooks and add the missing ones (by @Hlavtox)
+    - #35217: Bump version to 8.1.4 (by @Hlavtox)
+- Installer:
+  - Improvement:
+    - #35579: Update default catalog 8.1.x (by @ps-jarvis)
+    - #35534: Update default catalog 8.1.x (by @ps-jarvis)
+- Tests:
+  - Refactoring:
+    - #35079: Functional tests - Fix nightly 8.1.x : Fix slider URL (by @nesrineabdmouleh)
+    - #34931: Feat: Backport and add node and dev mode for composite on 8.1.x (by @boubkerbribri)
+    - #34893: Sanity: Fix sanity command to stop after first fail (by @boubkerbribri)
+
+####################################
 #   v8.1.4 - (2024-02-12)
 ####################################
 

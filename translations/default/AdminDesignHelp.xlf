@@ -223,8 +223,7 @@
       <trans-unit id="cabfe7563d12c3e047000dc5703d9709">
         <source>Add new page category</source>
         <target>Add new page category</target>
-        <note>Line: 31
-Comment: Stable feature flags form</note>
+        <note>Line: 31</note>
       </trans-unit>
       <trans-unit id="aa6f77f824eff8e896510f1bbaf9f8e5">
         <source>Add new page</source>

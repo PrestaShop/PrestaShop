@@ -319,8 +319,6 @@ function gencode(size)
   for (var i = 1; i <= size; ++i) {
     getE('code').value += chars.charAt(Math.floor(randomNumbers[i]/2**32 * chars.length));
   }
-
-  getE('cart-rules-highlight').style.display = '';
 }
 
 var tpl_viewing_window = null;

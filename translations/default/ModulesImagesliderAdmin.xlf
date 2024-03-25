@@ -15,52 +15,52 @@
       <trans-unit id="3f80dc2cdd06939d4f5514362067cd86">
         <source>Invalid values</source>
         <target>Invalid values</target>
-        <note>Line: 305</note>
+        <note>Line: 300</note>
       </trans-unit>
       <trans-unit id="a6abafe564d3940cc36ee43e2f09400b">
         <source>Invalid slide</source>
         <target>Invalid slide</target>
-        <note>Line: 309</note>
+        <note>Line: 304</note>
       </trans-unit>
       <trans-unit id="e0ce30bfbf90d2306ecf72f06a83133f">
         <source>Invalid slide state.</source>
         <target>Invalid slide state.</target>
-        <note>Line: 314</note>
+        <note>Line: 309</note>
       </trans-unit>
       <trans-unit id="5c8bedc4c0c9f42d9b0f14340bbe53da">
         <source>Invalid slide ID</source>
         <target>Invalid slide ID</target>
-        <note>Line: 442</note>
+        <note>Line: 437</note>
       </trans-unit>
       <trans-unit id="14f09fd0804a8f1cd0eb757125fc9c28">
         <source>The title is too long.</source>
         <target>The title is too long.</target>
-        <note>Line: 326</note>
+        <note>Line: 321</note>
       </trans-unit>
       <trans-unit id="dc89634d1d28cd4e055531e62047156b">
         <source>The caption is too long.</source>
         <target>The caption is too long.</target>
-        <note>Line: 329</note>
+        <note>Line: 324</note>
       </trans-unit>
       <trans-unit id="4477f672766f6f255f760649af8bd92a">
         <source>The URL is too long.</source>
         <target>The URL is too long.</target>
-        <note>Line: 332</note>
+        <note>Line: 327</note>
       </trans-unit>
       <trans-unit id="62239300ba982b06ab0f1aa7100ad297">
         <source>The description is too long.</source>
         <target>The description is too long.</target>
-        <note>Line: 335</note>
+        <note>Line: 330</note>
       </trans-unit>
       <trans-unit id="980f56796b8bf9d607283de9815fe217">
         <source>The URL format is not correct.</source>
         <target>The URL format is not correct.</target>
-        <note>Line: 338</note>
+        <note>Line: 333</note>
       </trans-unit>
       <trans-unit id="73133ce32267e8c7a854d15258eb17e0">
         <source>Invalid filename.</source>
         <target>Invalid filename.</target>
-        <note>Line: 344</note>
+        <note>Line: 339</note>
       </trans-unit>
       <trans-unit id="0f059227d0a750ce652337d911879671">
         <source>The URL is not set.</source>
@@ -70,112 +70,112 @@
       <trans-unit id="8cf45ba354f4725ec8a0d31164910895">
         <source>The image is not set.</source>
         <target>The image is not set.</target>
-        <note>Line: 354</note>
+        <note>Line: 349</note>
       </trans-unit>
       <trans-unit id="7f82c65d548588c8d5412463c182e450">
         <source>The configuration could not be updated.</source>
         <target>The configuration could not be updated.</target>
-        <note>Line: 436</note>
+        <note>Line: 431</note>
       </trans-unit>
       <trans-unit id="cdf841e01e10cae6355f72e6838808eb">
         <source>The slide could not be added.</source>
         <target>The slide could not be added.</target>
-        <note>Line: 512</note>
+        <note>Line: 507</note>
       </trans-unit>
       <trans-unit id="eb28485b92fbf9201918698245ec6430">
         <source>The slide could not be updated.</source>
         <target>The slide could not be updated.</target>
-        <note>Line: 515</note>
+        <note>Line: 510</note>
       </trans-unit>
       <trans-unit id="ced7338587c502f76917b5a693f848c5">
         <source>Slide information</source>
         <target>Slide information</target>
-        <note>Line: 766</note>
+        <note>Line: 761</note>
       </trans-unit>
       <trans-unit id="e64df1d7c22b9638f084ce8a4aff3ff3">
         <source>Target URL</source>
         <target>Target URL</target>
-        <note>Line: 786</note>
+        <note>Line: 781</note>
       </trans-unit>
       <trans-unit id="272ba7d164aa836995be6319a698be84">
         <source>Caption</source>
         <target>Caption</target>
-        <note>Line: 792</note>
+        <note>Line: 787</note>
       </trans-unit>
       <trans-unit id="44877c6aa8e93fa5a91c9361211464fb">
         <source>Speed</source>
         <target>Speed</target>
-        <note>Line: 892</note>
+        <note>Line: 887</note>
       </trans-unit>
       <trans-unit id="11cd394e1bd88abe611fd331887f0c74">
         <source>The duration of the transition between two slides.</source>
         <target>The duration of the transition between two slides.</target>
-        <note>Line: 896</note>
+        <note>Line: 891</note>
       </trans-unit>
       <trans-unit id="8836d88aaad538c39647aab768d91932">
         <source>Pause on hover</source>
         <target>Pause on hover</target>
-        <note>Line: 900</note>
+        <note>Line: 895</note>
       </trans-unit>
       <trans-unit id="448e0fa7b305331385aef516333e1c65">
         <source>Stop sliding when the mouse cursor is over the slideshow.</source>
         <target>Stop sliding when the mouse cursor is over the slideshow.</target>
-        <note>Line: 902</note>
+        <note>Line: 897</note>
       </trans-unit>
       <trans-unit id="70ab55fc8ac90620143b01c453be77a3">
         <source>Loop forever</source>
         <target>Loop forever</target>
-        <note>Line: 918</note>
+        <note>Line: 913</note>
       </trans-unit>
       <trans-unit id="1072f2a780ebfc87b511a3d0263b5d61">
         <source>Loop or stop after the last slide.</source>
         <target>Loop or stop after the last slide.</target>
-        <note>Line: 920</note>
+        <note>Line: 915</note>
       </trans-unit>
       <trans-unit id="5a3489cc067f89b268b6958bffb98ebf">
         <source>Since multiple languages are activated on your shop, please mind to upload your image for each one of them</source>
         <target>Since multiple languages are activated on your shop, please mind to upload your image for each one of them</target>
-        <note>Line: 1014</note>
+        <note>Line: 1009</note>
       </trans-unit>
       <trans-unit id="c8a1ed10db4201b3ae06ea0aa912028d">
         <source>You cannot manage slides items from a "All Shops" or a "Group Shop" context, select directly the shop you want to edit</source>
         <target>You cannot manage slides items from a "All Shops" or a "Group Shop" context, select directly the shop you want to edit</target>
-        <note>Line: 1022</note>
+        <note>Line: 1017</note>
       </trans-unit>
       <trans-unit id="432ed99c2e808d79c96f892807d33325">
         <source>You can only edit this slide from the shop(s) context: %s</source>
         <target>You can only edit this slide from the shop(s) context: %s</target>
-        <note>Line: 1037</note>
+        <note>Line: 1032</note>
       </trans-unit>
       <trans-unit id="6a1ae4ad1018e00dddb16a2ce30a24f6">
         <source>You cannot add slides from a "All Shops" or a "Group Shop" context</source>
         <target>You cannot add slides from a "All Shops" or a "Group Shop" context</target>
-        <note>Line: 1041</note>
+        <note>Line: 1036</note>
       </trans-unit>
       <trans-unit id="7a5c11dddbb2118d08611a1f0678bb91">
         <source>Unable to get slide shop association information (id_slide: %d)</source>
         <target>Unable to get slide shop association information (id_slide: %d)</target>
-        <note>Line: 1049</note>
+        <note>Line: 1044</note>
       </trans-unit>
       <trans-unit id="298b615220606d42b6ac60269df0d321">
         <source>The modifications will be applied to shop: %s</source>
         <target>The modifications will be applied to shop: %s</target>
-        <note>Line: 1059</note>
+        <note>Line: 1054</note>
       </trans-unit>
       <trans-unit id="aef3662e6419ddaaa0a31df70e3b6557">
         <source>The modifications will be applied to this group: %s</source>
         <target>The modifications will be applied to this group: %s</target>
-        <note>Line: 1061</note>
+        <note>Line: 1056</note>
       </trans-unit>
       <trans-unit id="71063fd397d237e563089c22dd8b69e8">
         <source>The modifications will be applied to all shops and shop groups</source>
         <target>The modifications will be applied to all shops and shop groups</target>
-        <note>Line: 1063</note>
+        <note>Line: 1058</note>
       </trans-unit>
       <trans-unit id="6a5aa2542c21debccd82b2e0038c3d1a">
         <source>This slide is shared with other shops! All shops associated to this slide will apply modifications made here</source>
         <target>This slide is shared with other shops! All shops associated to this slide will apply modifications made here</target>
-        <note>Line: 1075</note>
+        <note>Line: 1070</note>
       </trans-unit>
     </body>
   </file>
