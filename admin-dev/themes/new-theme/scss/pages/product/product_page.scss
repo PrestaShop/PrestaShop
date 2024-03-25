@@ -203,7 +203,8 @@ $product-page-padding-bottom: 80px !default;
       .product-type-preview {
         color: $medium-gray;
         cursor: pointer;
-
+        display: flex;
+        align-items: center;
         &:hover {
           color: $primary;
         }
@@ -388,7 +389,7 @@ $product-page-padding-bottom: 80px !default;
     right: 0;
     bottom: 0;
     left: $size-navbar-width;
-    z-index: 10;
+    z-index: 110;
     display: flex;
     align-items: center;
     background: $white;
@@ -468,10 +469,10 @@ $product-page-padding-bottom: 80px !default;
     // The not-allowed is actually on the parent "under" the buttons that are disabled
     #product_footer_actions {
       cursor: not-allowed;
-      .group-default{
+      .group-default {
         display: flex;
         align-items: center;
-        #product_footer_actions_catalog{
+        #product_footer_actions_catalog {
           display: flex;
           align-items: center;
           .material-icons {
@@ -2686,6 +2687,11 @@ $mobile-menu-height: 2.6rem !default;
             .product-type-preview-label {
               font-size: 0.75rem;
             }
+
+            .switch-widget {
+              display: flex;
+              align-items: center;
+            }
           }
         }
 
@@ -2775,7 +2781,28 @@ $mobile-menu-height: 2.6rem !default;
         }
       }
     }
+
+    .form-group.inline-switch-widget>.input-group {
+      margin-top: 0;
+    }
+
+    #product_details {
+      .form-group.inline-switch-widget > .input-group {
+        margin-top: 0;
+      }
+      .switch-widget {
+        display: flex;
+        align-items: center;
+        h3{
+          margin-bottom: 0;
+        }
+      }
+      #product_details_show_condition{
+        margin-top: 0;
+      }
+    }
   }
+
 
   .combination-page {
     .medium-input {
@@ -2860,6 +2887,7 @@ $mobile-menu-height: 2.6rem !default;
 
           .nav-item {
             margin-bottom: 0;
+            text-wrap: nowrap;
 
             .nav-link {
               padding: 0.8rem 0.5rem;
@@ -2882,7 +2910,6 @@ $mobile-menu-height: 2.6rem !default;
     }
   }
 }
-
 
 // Create product modal
 @import "create_product_modal";
