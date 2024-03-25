@@ -19,6 +19,3 @@ services:
     autowire: true
     arguments:
       - '@PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface'
-
-  PrestaShop\PrestaShop\Core\Security\OAuth2\ApiRequestMatcher:
-    public: false

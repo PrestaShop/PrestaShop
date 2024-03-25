@@ -26,7 +26,7 @@ import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_API_endpoints_product_patchAPIProductId';
 
-describe('API : PATCH /api/product/{productId}', async () => {
+describe('API : PATCH /product/{productId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -53,12 +53,12 @@ describe('API : PATCH /api/product/{productId}', async () => {
   // Pre Condition : Create a product
   createProductTest(createProduct, `${baseContext}_preTest_0`);
 
-  describe('API : PATCH /api/product/{productId}', async () => {
+  describe('API : PATCH /product/{productId}', async () => {
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
       page = await helper.newTab(browserContext);
 
-      apiContext = await helper.createAPIContext(global.BO.URL);
+      apiContext = await helper.createAPIContext(global.API.URL);
     });
 
     after(async () => {
@@ -118,10 +118,10 @@ describe('API : PATCH /api/product/{productId}', async () => {
         expect(clientSecret.length).to.be.gt(0);
       });
 
-      it('should request the endpoint /admin-dev/api/oauth2/token', async function () {
+      it('should request the endpoint /access_token', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
-        const apiResponse = await apiContext.post('api/oauth2/token', {
+        const apiResponse = await apiContext.post('access_token', {
           form: {
             client_id: clientData.clientId,
             client_secret: clientSecret,
@@ -204,13 +204,13 @@ describe('API : PATCH /api/product/{productId}', async () => {
       },
     ].forEach((data: { propertyName: string, propertyValue: boolean|string|object}) => {
       describe(`Update the property \`${data.propertyName}\` with API and check in BO`, async () => {
-        it('should request the endpoint /api/product/{productId}', async function () {
+        it('should request the endpoint /product/{productId}', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `requestEndpoint${data.propertyName}`, baseContext);
 
           const dataPatch: any = {};
           dataPatch[data.propertyName] = data.propertyValue;
 
-          const apiResponse = await apiContext.patch(`api/product/${idProduct}`, {
+          const apiResponse = await apiContext.patch(`product/${idProduct}`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },

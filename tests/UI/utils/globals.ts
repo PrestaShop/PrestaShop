@@ -20,6 +20,10 @@ global.BO = {
   LASTNAME: process.env.LASTNAME || 'Beier',
 };
 
+global.API = {
+  URL: process.env.URL_API || `${global.FO.URL}admin-api/`,
+};
+
 global.PSConfig = {
   parametersFile: process.env.PS_PARAMETERS_FILE || path.resolve(__dirname, '../../../', 'app/config/parameters.php'),
 };

@@ -11,21 +11,21 @@ describe('API : Basic Test', async () => {
   let apiContext: APIRequestContext;
 
   before(async () => {
-    apiContext = await helpers.createAPIContext(global.BO.URL);
+    apiContext = await helpers.createAPIContext(global.API.URL);
   });
 
   describe('Basic Test', async () => {
-    it('should request the endpoint /admin-dev/api/', async function () {
+    it('should request the endpoint /admin-api', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestNewApi', baseContext);
 
-      const apiResponse = await apiContext.get('api/');
+      const apiResponse = await apiContext.get('');
       expect(apiResponse.status()).to.eq(404);
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status', async function () {
+    it('should request the endpoint /hook-status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestNewApiHookStatus', baseContext);
 
-      const apiResponse = await apiContext.get('api/hook-status');
+      const apiResponse = await apiContext.get('hook-status');
       expect(apiResponse.status()).to.eq(405);
     });
   });

@@ -20,7 +20,7 @@ import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_API_endpoints_apiClient_patchAPIApiClientId';
 
-describe('API : PATCH /api/api-client/{apiClientId}', async () => {
+describe('API : PATCH /api-client/{apiClientId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -58,7 +58,7 @@ describe('API : PATCH /api/api-client/{apiClientId}', async () => {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
-    apiContext = await helper.createAPIContext(global.BO.URL);
+    apiContext = await helper.createAPIContext(global.API.URL);
   });
 
   after(async () => {
@@ -118,10 +118,10 @@ describe('API : PATCH /api/api-client/{apiClientId}', async () => {
       expect(clientSecret.length).to.be.gt(0);
     });
 
-    it('should request the endpoint /admin-dev/api/oauth2/token', async function () {
+    it('should request the endpoint /access_token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
-      const apiResponse = await apiContext.post('api/oauth2/token', {
+      const apiResponse = await apiContext.post('access_token', {
         form: {
           client_id: clientData.clientId,
           client_secret: clientSecret,
@@ -237,13 +237,13 @@ describe('API : PATCH /api/api-client/{apiClientId}', async () => {
     },
   ].forEach((data: { propertyName: string, propertyValue: boolean|number|string|string[] }) => {
     describe(`Update the property \`${data.propertyName}\` with API and check in BO`, async () => {
-      it('should request the endpoint /api/api-client/{apiClientId}', async function () {
+      it('should request the endpoint /api-client/{apiClientId}', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `requestEndpoint${data.propertyName}`, baseContext);
 
         const dataPatch: any = {};
         dataPatch[data.propertyName] = data.propertyValue;
 
-        const apiResponse = await apiContext.patch(`api/api-client/${idApiClient}`, {
+        const apiResponse = await apiContext.patch(`api-client/${idApiClient}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

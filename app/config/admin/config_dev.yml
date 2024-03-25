@@ -1,0 +1,9 @@
+imports:
+  - { resource: ../config_dev.yml }
+  - { resource: config.yml }
+
+framework:
+  router:
+    resource: "%kernel.project_dir%/app/config/admin/routing_dev.yml"
+    strict_requirements: true
+  profiler: { only_exceptions: false }

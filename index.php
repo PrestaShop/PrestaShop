@@ -38,6 +38,7 @@ if (!defined('_PS_FRONT_DIR_')) {
 // Include some configurations & composer autoload
 require_once _PS_FRONT_DIR_ . '/config/config.inc.php';
 require_once _PS_FRONT_DIR_ . '/vendor/autoload.php';
+define('_PS_APP_ID_', FrontKernel::APP_ID);
 
 // Load .env file from the root of project if present
 (new Dotenv(false))->loadEnv(_PS_FRONT_DIR_ . '/.env');

@@ -23,7 +23,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 class AdminKernel extends AppKernel
 {
+    public const APP_ID = 'admin';
+
+    public function getAppId(): string
+    {
+        return self::APP_ID;
+    }
 }

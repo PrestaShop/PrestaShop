@@ -19,7 +19,6 @@ parameters:
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
-  api_base_path: !php/const PrestaShopBundle\Api\Api::API_BASE_PATH
   prestashop.controllers_all_shop_context:
     - AdminAccess
     - AdminFeatureFlag
@@ -50,9 +49,6 @@ framework:
   translator:
     fallbacks: [ "default" ]
     paths: "%modules_translation_paths%"
-  router:
-    resource: "%kernel.project_dir%/app/config/routing.yml"
-    strict_requirements: ~
   form: ~
   csrf_protection: ~
   validation: { enable_attributes: true }
@@ -108,29 +104,13 @@ twig:
     disabling_switch_prefix: !php/const PrestaShopBundle\Form\Extension\DisablingSwitchExtension::FIELD_PREFIX
 
 api_platform:
-  title: Backoffice API
-  version: 0.1.0
-  enable_docs: true
+  # API docs is disabled in the Admin environment, it is accessible via the oauth dedicated endpoint
+  enable_docs: false
   enable_entrypoint: false
-  enable_swagger: true
-  enable_swagger_ui: true
-  formats:
-    json: [ 'application/json', 'application/merge-patch+json' ]
-    # Allow this format for other API endpoint than native endpoint (by default we will use json)
-    jsonld: [ 'application/ld+json' ]
-  patch_formats:
-    json: [ 'application/merge-patch+json' ]
-  error_formats:
-    json: [ 'application/json' ]
-  docs_formats:
-    # This is used to allow using the Swagger UI in HTML presentation
-    html: [ 'text/html' ]
-    json: [ 'application/json' ]
+  enable_swagger: false
+  enable_swagger_ui: false
+  # We define mapping here because even though the API routes are oncly accessible via the admin-api endpoint we still need
+  # to parse the Api Platform resources to extract the scopes
   mapping:
     paths:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
-  swagger:
-    api_keys:
-      JWT:
-        name: Authorization
-        type: header

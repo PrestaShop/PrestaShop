@@ -41,15 +41,11 @@ class AuthorizationServerFeatureListenerTest extends ApiTestCase
 {
     private FeatureFlagManager $featureFlagManager;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->featureFlagManager = self::getContainer()->get('PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager');
-    }
+    private array $accessTokenOptions = [];
 
-    protected function tearDown(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::tearDown();
+        parent::setUpBeforeClass();
         ApiClientResetter::resetApiClient();
         FeatureResetter::resetFeatures();
 
@@ -57,46 +53,160 @@ class AuthorizationServerFeatureListenerTest extends ApiTestCase
         FeatureFlagResetter::resetFeatureFlags();
     }
 
-    public function testAuthorizationServerFeatureDisabled()
+    public static function tearDownAfterClass(): void
     {
-        $this->featureFlagManager->disable(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER);
-        self::createApiClient();
-        $bearerToken = $this->getBearerToken();
-        static::createClient()->request('GET', '/api/test/unscoped/product/1', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $bearerToken,
-            ],
-        ]);
+        parent::tearDownAfterClass();
+        ApiClientResetter::resetApiClient();
+        FeatureResetter::resetFeatures();
 
-        self::assertResponseStatusCodeSame(404);
+        ConfigurationResetter::resetConfiguration();
+        FeatureFlagResetter::resetFeatureFlags();
     }
 
-    public function testAuthorizationServerFeatureMultistoreEnabled()
+    protected function setUp(): void
     {
-        self::updateConfiguration(MultistoreConfig::FEATURE_STATUS, 1);
-        self::createApiClient();
-        $bearerToken = $this->getBearerToken();
-        static::createClient()->request('GET', '/api/test/unscoped/product/1', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $bearerToken,
-            ],
-        ]);
-
-        self::assertResponseStatusCodeSame(404);
+        parent::setUp();
+        $this->featureFlagManager = self::getContainer()->get('PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager');
     }
 
-    public function testAuthorizationServerFeatureMultistoreSuccess()
+    public function testGetBearerTokenWhenAuthorizationServerIsEnabled(): string
     {
-        self::updateConfiguration(MultistoreConfig::FEATURE_STATUS, 1);
-        $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE);
         self::createApiClient();
         $bearerToken = $this->getBearerToken();
-        static::createClient()->request('GET', '/api/test/unscoped/product/1', [
+
+        static::createClient()->request('GET', '/test/unscoped/product/1', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $bearerToken,
             ],
         ]);
-
         self::assertResponseStatusCodeSame(200);
+
+        return $bearerToken;
+    }
+
+    /**
+     * @depends testGetBearerTokenWhenAuthorizationServerIsEnabled
+     *
+     * @param string $bearerToken
+     *
+     * @return string
+     */
+    public function testAccessTokenNotFoundAfterDisablingAuthorizationServer(string $bearerToken): string
+    {
+        // Disbale the authorization server feature, we can't even get a token now
+        $this->featureFlagManager->disable(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER);
+        $this->accessTokenOptions = [
+            'extra' => [
+                'parameters' => [
+                    'client_id' => static::CLIENT_ID,
+                    'client_secret' => static::$clientSecret,
+                    'grant_type' => 'client_credentials',
+                    'scope' => [],
+                ],
+            ],
+            'headers' => [
+                'content-type' => 'application/x-www-form-urlencoded',
+            ],
+        ];
+        static::createClient()->request('POST', '/access_token', $this->accessTokenOptions);
+        self::assertResponseStatusCodeSame(404);
+
+        return $bearerToken;
+    }
+
+    /**
+     * @depends testAccessTokenNotFoundAfterDisablingAuthorizationServer
+     *
+     * @param string $bearerToken
+     *
+     * @return string
+     */
+    public function testAuthorizationServerFeatureDisabled(string $bearerToken): string
+    {
+        // Endpoint is also no longer accessible
+        static::createClient()->request('GET', '/test/unscoped/product/1', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $bearerToken,
+            ],
+        ]);
+        self::assertResponseStatusCodeSame(404);
+
+        return $bearerToken;
+    }
+
+    /**
+     * @depends testAuthorizationServerFeatureDisabled
+     *
+     * @param string $bearerToken
+     *
+     * @return string
+     */
+    public function testAuthorizationServerFeatureMultistoreEnabled(string $bearerToken): string
+    {
+        // Multistore enabled but it is not enough
+        self::updateConfiguration(MultistoreConfig::FEATURE_STATUS, 1);
+
+        // Endpoint no longer accessible
+        static::createClient()->request('GET', '/test/unscoped/product/1', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $bearerToken,
+            ],
+        ]);
+        self::assertResponseStatusCodeSame(404);
+        // Access token endpoint no longer accessible either
+        static::createClient()->request('POST', '/access_token', $this->accessTokenOptions);
+        self::assertResponseStatusCodeSame(404);
+
+        return $bearerToken;
+    }
+
+    /**
+     * @depends testAuthorizationServerFeatureMultistoreEnabled
+     *
+     * @param string $bearerToken
+     *
+     * @return string
+     */
+    public function testAuthorizationServerFeatureMultistoreSuccess(string $bearerToken): string
+    {
+        // Enabled feature flag dedicated for authorization in multistore along with authorization server
+        $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER);
+        $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE);
+
+        // Endpoint now accessible again
+        static::createClient()->request('GET', '/test/unscoped/product/1', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $bearerToken,
+            ],
+        ]);
+        self::assertResponseStatusCodeSame(200);
+
+        return $bearerToken;
+    }
+
+    /**
+     * @depends testAuthorizationServerFeatureMultistoreSuccess
+     *
+     * @param string $bearerToken
+     *
+     * @return string
+     */
+    public function testAuthorizationServerWhenMultistoreEnabledButNotDedicatedFeatureFlag(string $bearerToken): string
+    {
+        // Authorization server enabled, but not with multistore specific feature flag
+        $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER);
+        $this->featureFlagManager->disable(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE);
+
+        static::createClient()->request('GET', '/test/unscoped/product/1', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $bearerToken,
+            ],
+        ]);
+        self::assertResponseStatusCodeSame(404);
+        // Access token endpoint no longer accessible either
+        static::createClient()->request('POST', '/access_token', $this->accessTokenOptions);
+        self::assertResponseStatusCodeSame(404);
+
+        return $bearerToken;
     }
 }

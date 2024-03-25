@@ -1,7 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-use Symfony\Bundle\FrameworkBundle\Console\Application;
+use PrestaShopBundle\Console\PrestaShopApplication;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
@@ -14,20 +15,27 @@ use Symfony\Component\ErrorHandler\Debug;
 set_time_limit(0);
 
 try {
-  require_once __DIR__ . '/../config/config.inc.php';
+    require_once __DIR__ . '/../config/config.inc.php';
 } catch (PrestaShopException) {
-  // Prevent breaking all CLI command when the shop is not installed
+    // Prevent breaking all CLI command when the shop is not installed
 }
 
 $input = new ArgvInput();
 $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');
 $debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(['--no-debug', '']) && $env !== 'prod';
 
+// Handle PrestaShop global option app-id, by default use the Admin kernel
+$appId = $input->getParameterOption(['--app-id'], getenv('APP_ID') ?: 'admin');
+$kernelClass = match ($appId) {
+    AdminKernel::APP_ID => AdminKernel::class,
+    FrontKernel::APP_ID => FrontKernel::class,
+    AdminAPIKernel::APP_ID => AdminAPIKernel::class,
+    default => throw new InvalidArgumentException('Unknown PrestaShop kernel matching the ID ' . $appId),
+};
+
 if ($debug) {
     Debug::enable();
 }
-
-require_once __DIR__ . '/../app/AdminKernel.php';
 
 // Loads .env file from the root of project
 $dotEnvFile = dirname(__FILE__, 2) . '/.env';
@@ -37,6 +45,6 @@ $dotEnvFile = dirname(__FILE__, 2) . '/.env';
       ->loadEnv($dotEnvFile)
 ;
 
-$kernel = new AdminKernel($env, $debug);
-$application = new Application($kernel);
+$kernel = new $kernelClass($env, $debug);
+$application = new PrestaShopApplication($kernel);
 $application->run($input);

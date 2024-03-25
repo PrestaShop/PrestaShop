@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\ApiPlatform\EndPoint;
 
+use AdminAPIKernel;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase as ApiPlatformTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\AddApiClientCommand;
@@ -59,6 +60,16 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         self::$clientSecret = null;
     }
 
+    /**
+     * API endpoints are only available in the OAuth application so we force using the proper kernel here.
+     *
+     * @return string
+     */
+    protected static function getKernelClass(): string
+    {
+        return AdminAPIKernel::class;
+    }
+
     protected static function createClient(array $kernelOptions = [], array $defaultOptions = []): Client
     {
         if (!isset($defaultOptions['headers']['accept'])) {
@@ -77,19 +88,20 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         if (null === self::$clientSecret) {
             self::createApiClient($scopes);
         }
-        $parameters = ['parameters' => [
-            'client_id' => static::CLIENT_ID,
-            'client_secret' => static::$clientSecret,
-            'grant_type' => 'client_credentials',
-            'scope' => $scopes,
-        ]];
         $options = [
-            'extra' => $parameters,
+            'extra' => [
+                'parameters' => [
+                    'client_id' => static::CLIENT_ID,
+                    'client_secret' => static::$clientSecret,
+                    'grant_type' => 'client_credentials',
+                    'scope' => $scopes,
+                ],
+            ],
             'headers' => [
                 'content-type' => 'application/x-www-form-urlencoded',
             ],
         ];
-        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
+        $response = static::createClient()->request('POST', '/access_token', $options);
 
         return json_decode($response->getContent())->access_token;
     }

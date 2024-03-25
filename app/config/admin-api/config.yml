@@ -1,0 +1,38 @@
+# Dedicated config for Oauth Endpoint, these are the common rules for all environments (dev, prod, test)
+# They specify the dedicated security rules and routing mostly
+imports:
+  - { resource: security.yml }
+  - { resource: services.yml }
+
+framework:
+  router:
+    resource: "%kernel.project_dir%/app/config/admin-api/routing.yml"
+    strict_requirements: ~
+
+api_platform:
+  title: Backoffice API
+  version: 0.1.0
+  enable_docs: true
+  enable_entrypoint: false
+  enable_swagger: true
+  enable_swagger_ui: true
+  formats:
+    json: [ 'application/json', 'application/merge-patch+json' ]
+    # Allow this format for other API endpoint than native endpoint (by default we will use json)
+    jsonld: [ 'application/ld+json' ]
+  patch_formats:
+    json: [ 'application/merge-patch+json' ]
+  error_formats:
+    json: [ 'application/json' ]
+  docs_formats:
+    # This is used to allow using the Swagger UI in HTML presentation
+    html: [ 'text/html' ]
+    json: [ 'application/json' ]
+  mapping:
+    paths:
+      - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
+  swagger:
+    api_keys:
+      JWT:
+        name: Authorization
+        type: header

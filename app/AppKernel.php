@@ -55,6 +55,8 @@ abstract class AppKernel extends Kernel
      */
     protected $moduleRepository = null;
 
+    abstract public function getAppId(): string;
+
     /**
      * {@inheritdoc}
      */
@@ -184,6 +186,11 @@ abstract class AppKernel extends Kernel
         return dirname(__DIR__) . '/var/logs';
     }
 
+    public function getCacheDir(): string
+    {
+        return $this->getProjectDir() . '/var/cache/' . $this->environment . '/' . $this->getAppId();
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -191,7 +198,7 @@ abstract class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
+        $loader->load($this->getKernelConfigPath());
 
         $activeModules = $this->getModuleRepository()->getActiveModules();
         // We only load translations and services of active modules (not simply installed)
@@ -274,6 +281,37 @@ abstract class AppKernel extends Kernel
     }
 
     /**
+     * If the app has a dedicated config file load it, else load the common one.
+     *
+     * @return string
+     */
+    protected function getKernelConfigPath(): string
+    {
+        $dedicatedConfigFile = $this->getRootDir() . '/config/' . $this->getAppId() . '/config_' . $this->getEnvironment() . '.yml';
+        if (file_exists($dedicatedConfigFile)) {
+            return $dedicatedConfigFile;
+        }
+
+        return $this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml';
+    }
+
+    /**
+     * Add default kernel parameters like kernel.app_id
+     *
+     * @return array
+     */
+    protected function getKernelParameters(): array
+    {
+        return array_merge(
+            parent::getKernelParameters(),
+            [
+                'kernel.app_id' => $this->getAppId(),
+                'prestashop.legacy_cache_dir' => _PS_CACHE_DIR_,
+            ],
+        );
+    }
+
+    /**
      * Enable auto loading of module Composer autoloader if needed.
      * Need to be done as earlier as possible in application lifecycle.
      *
@@ -326,6 +364,12 @@ abstract class AppKernel extends Kernel
 
     protected function waitUntilCacheClearIsOver(): void
     {
+        // CLI environment shouldn't be blocked, this allows for example clearing the cache even when the kernel is blocked for HTTP requests
+        // which is exactly what the SymfonyCacheClearer does.
+        if (Tools::isPHPCLI()) {
+            return;
+        }
+
         if (null !== self::$lockStream) {
             // If lockStream is not null it means we are actually in the process that locked it, we don't wait for anything
             // or the cache clear will never happen
@@ -375,6 +419,6 @@ abstract class AppKernel extends Kernel
      */
     public function getAppType(): string
     {
-        return $this instanceof \AdminKernel ? 'admin' : 'front';
+        return $this instanceof \FrontKernel ? 'front' : 'admin';
     }
 }

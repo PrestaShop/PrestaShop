@@ -1,0 +1,25 @@
+# Security rules for Admin Application
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+  enable_authenticator_manager: true
+  password_hashers:
+    # auto hasher with custom options for all PasswordAuthenticatedUserInterface instances
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+      algorithm: 'auto'
+      cost: 15
+
+    Symfony\Component\Security\Core\User\User: plaintext
+
+  # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+  providers:
+    in_memory:
+      memory: ~
+    admin:
+      id: prestashop.security.admin.provider
+
+  firewalls:
+    # disables authentication for assets and the profiler, adapt it according to your needs
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false

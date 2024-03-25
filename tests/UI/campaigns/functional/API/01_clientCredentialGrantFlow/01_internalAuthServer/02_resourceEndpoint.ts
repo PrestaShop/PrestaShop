@@ -39,7 +39,7 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
-    apiContext = await helper.createAPIContext(global.BO.URL);
+    apiContext = await helper.createAPIContext(global.API.URL);
   });
 
   after(async () => {
@@ -104,7 +104,7 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
     it('should request the authorization endpoint and fetch valid token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthorizationEndpoint', baseContext);
 
-      const apiResponse = await apiContext.post('api/oauth2/token', {
+      const apiResponse = await apiContext.post('access_token', {
         form: {
           client_id: clientClient.clientId,
           client_secret: clientSecret,
@@ -122,17 +122,17 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
       accessTokenExpired = api.setAccessTokenAsExpired(accessToken);
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status/1 without access token', async function () {
+    it('should request the endpoint /hook-status/1 without access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithoutAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('api/hook-status/1');
+      const apiResponse = await apiContext.get('hook-status/1');
       expect(apiResponse.status()).to.eq(401);
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status/1 with invalid access token', async function () {
+    it('should request the endpoint /hook-status/1 with invalid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithInvalidAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('api/hook-status/1', {
+      const apiResponse = await apiContext.get('hook-status/1', {
         headers: {
           Authorization: 'Bearer INVALIDTOKEN',
         },
@@ -142,10 +142,10 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
       expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status/1 with expired access token', async function () {
+    it('should request the endpoint /hook-status/1 with expired access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithExpiredAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('api/hook-status/1', {
+      const apiResponse = await apiContext.get('hook-status/1', {
         headers: {
           Authorization: `Bearer ${accessTokenExpired}`,
         },
@@ -155,10 +155,10 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
       expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status/1 with valid access token', async function () {
+    it('should request the endpoint /hook-status/1 with valid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithValidAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('api/hook-status/1', {
+      const apiResponse = await apiContext.get('hook-status/1', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

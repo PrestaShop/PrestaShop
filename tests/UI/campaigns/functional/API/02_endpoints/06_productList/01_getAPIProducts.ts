@@ -21,7 +21,7 @@ import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_API_endpoints_productList_getAPIProducts';
 
-describe('API : GET /api/products', async () => {
+describe('API : GET /products', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -41,7 +41,7 @@ describe('API : GET /api/products', async () => {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
-    apiContext = await helper.createAPIContext(global.BO.URL);
+    apiContext = await helper.createAPIContext(global.API.URL);
   });
 
   after(async () => {
@@ -101,10 +101,10 @@ describe('API : GET /api/products', async () => {
       expect(clientSecret.length).to.be.gt(0);
     });
 
-    it('should request the endpoint /admin-dev/api/oauth2/token', async function () {
+    it('should request the endpoint /access_token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
-      const apiResponse = await apiContext.post('api/oauth2/token', {
+      const apiResponse = await apiContext.post('access_token', {
         form: {
           client_id: clientData.clientId,
           client_secret: clientSecret,
@@ -125,10 +125,10 @@ describe('API : GET /api/products', async () => {
   });
 
   describe('API : Fetch Data', async () => {
-    it('should request the endpoint /admin-dev/api/products', async function () {
+    it('should request the endpoint /products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get('api/products', {
+      const apiResponse = await apiContext.get('products', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

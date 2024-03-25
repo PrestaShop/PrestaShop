@@ -67,11 +67,15 @@ class ApiClientController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(ApiClientFilters $apiClientFilters): Response
+    public function indexAction(ApiClientFilters $apiClientFilters, Request $request): Response
     {
         $apiClientGridFactory = $this->get('prestashop.core.grid.factory.api_client');
         $apiClientGrid = $apiClientGridFactory->getGrid($apiClientFilters);
         $isAuthorizationServerMultistoreDisabled = $this->isAuthorizationServerMultistoreDisabled();
+
+        $oauthApiBaseUrl = $this->getOAuthApiBaseUrl($request);
+        $htmlDocUrl = $oauthApiBaseUrl . '/docs.html';
+        $jsonDocUrl = $oauthApiBaseUrl . '/docs.json';
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/index.html.twig', [
             'apiClientGrid' => $this->presentGrid($apiClientGrid),
@@ -79,6 +83,8 @@ class ApiClientController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('API Clients', 'Admin.Navigation.Menu'),
             'layoutHeaderToolbarBtn' => $this->getApiClientsToolbarButtons(),
             'isAuthorizationServerMultistoreDisabled' => $isAuthorizationServerMultistoreDisabled,
+            'htmlDocUrl' => $htmlDocUrl,
+            'jsonDocUrl' => $jsonDocUrl,
         ]);
     }
 
@@ -225,6 +231,24 @@ class ApiClientController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_api_clients_index');
+    }
+
+    /**
+     * Returns the OAuth base url based on the request that contains the current URL.
+     * This allows returning an appropriate path even if the BO/Shop was installed in a sub folder.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    private function getOAuthApiBaseUrl(Request $request): string
+    {
+        $uri = $request->getUri();
+        $adminFolderName = '/' . $this->getParameter('prestashop.admin_folder_name');
+        // Get root url right before the admin folder part
+        $rootUrl = substr($uri, 0, strpos($uri, $adminFolderName));
+
+        return $rootUrl . '/admin-api';
     }
 
     private function getFormHandler(): FormHandlerInterface

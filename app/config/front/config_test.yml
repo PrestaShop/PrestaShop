@@ -1,0 +1,6 @@
+imports:
+  - { resource: ../config_test.yml }
+  - { resource: config.yml }
+
+framework:
+  profiler: { only_exceptions: false }
