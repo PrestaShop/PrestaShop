@@ -4065,7 +4065,7 @@ class ProductCore extends ObjectModel
      * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack (unused, you can pass null)
      * @param CartCore|null $cart Pass if you want to reduce the quantity by amount in cart
-     * @param int|null $idCustomization Product customization id (optional)
+     * @param int|bool|null $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
      */
