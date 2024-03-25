@@ -1,8 +1,6 @@
 // Import FO pages
 import {Product} from '@pages/FO/classic/product';
 
-import type {Page} from 'playwright';
-
 /**
  * @class
  * @extends FOBasePage

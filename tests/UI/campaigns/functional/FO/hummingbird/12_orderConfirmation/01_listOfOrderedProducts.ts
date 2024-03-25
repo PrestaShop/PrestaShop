@@ -219,7 +219,8 @@ describe('FO - Order confirmation : List of ordered products', async () => {
         + (2 * Products.demo_12.finalPrice) + Carriers.myCarrier.priceTTC).toFixed(2);
 
       const paymentInformation = await orderConfirmationPage.getPaymentInformation(page);
-      expect(paymentInformation).to.contains(`You have chosen payment by ${dataPaymentMethods.wirePayment.displayName.toLowerCase()}`)
+      expect(paymentInformation).to.contains('You have chosen payment by '
+        + `${dataPaymentMethods.wirePayment.displayName.toLowerCase()}`)
         .and.to.contains(`Amount €${totalToPay}`)
         .and.to.contains(`Please specify your order reference ${orderReference}`);
     });
@@ -230,7 +231,8 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       const orderDetails = await orderConfirmationPage.getOrderDetails(page);
       console.log(orderDetails);
       expect(orderDetails).to.equal(`Order reference: ${orderReference} Payment method: `
-        + `${dataPaymentMethods.wirePayment.displayName} Shipping method: ${Carriers.myCarrier.name} - ${Carriers.myCarrier.delay}`);
+        + `${dataPaymentMethods.wirePayment.displayName} Shipping method: `
+        + `${Carriers.myCarrier.name} - ${Carriers.myCarrier.delay}`);
     });
 
     it('should check the products number', async function () {

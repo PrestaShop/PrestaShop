@@ -150,7 +150,8 @@ describe('FO - Order confirmation : Display of product customization', async () 
       const totalToPay: string = (Products.demo_14.finalPrice + Carriers.myCarrier.priceTTC).toFixed(2);
 
       const paymentInformation = await orderConfirmationPage.getPaymentInformation(page);
-      expect(paymentInformation).to.contains(`You have chosen payment by ${dataPaymentMethods.wirePayment.displayName.toLowerCase()}`)
+      expect(paymentInformation).to.contains('You have chosen payment by '
+        + `${dataPaymentMethods.wirePayment.displayName.toLowerCase()}`)
         .and.to.contains(`Amount €${totalToPay}`);
     });
 
