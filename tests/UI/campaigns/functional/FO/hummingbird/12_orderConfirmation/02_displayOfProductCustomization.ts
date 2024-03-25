@@ -14,11 +14,11 @@ import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmat
 
 // Import data
 import Products from '@data/demo/products';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Carriers from '@data/demo/carriers';
 
 import {
   // Import data
+  dataPaymentMethods,
   dataCustomers,
 } from '@prestashop-core/ui-testing';
 
@@ -133,7 +133,7 @@ describe('FO - Order confirmation : Display of product customization', async () 
     it('should Pay by bank wire and confirm order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       const pageTitle = await orderConfirmationPage.getPageTitle(page);
       expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
@@ -150,7 +150,7 @@ describe('FO - Order confirmation : Display of product customization', async () 
       const totalToPay: string = (Products.demo_14.finalPrice + Carriers.myCarrier.priceTTC).toFixed(2);
 
       const paymentInformation = await orderConfirmationPage.getPaymentInformation(page);
-      expect(paymentInformation).to.contains(`You have chosen payment by ${PaymentMethods.wirePayment.displayName.toLowerCase()}`)
+      expect(paymentInformation).to.contains(`You have chosen payment by ${dataPaymentMethods.wirePayment.displayName.toLowerCase()}`)
         .and.to.contains(`Amount €${totalToPay}`);
     });
 
@@ -158,7 +158,7 @@ describe('FO - Order confirmation : Display of product customization', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderDetails', baseContext);
 
       const orderDetails = await orderConfirmationPage.getOrderDetails(page);
-      expect(orderDetails).to.contains(`${PaymentMethods.wirePayment.displayName} Shipping method: `
+      expect(orderDetails).to.contains(`${dataPaymentMethods.wirePayment.displayName} Shipping method: `
         + `${Carriers.myCarrier.name} - ${Carriers.myCarrier.delay}`);
     });
 
