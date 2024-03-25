@@ -2,6 +2,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 import type {Frame, Page} from 'playwright';
+import type {PageFunction} from 'playwright-core/types/structs';
 import {expect} from 'chai';
 import {ProductFilterMinMax} from '@data/types/product';
 
@@ -549,9 +550,12 @@ class Products extends BOBasePage {
     await page.locator(this.filterByCategoriesExpandButton).click();
 
     // Choose category to filter with
-    const args = {allCategoriesSelector: this.filterByCategoriesLabel, val: categoryName};
+    const args: {
+      allCategoriesSelector: string,
+      val: string,
+    } = {allCategoriesSelector: this.filterByCategoriesLabel, val: categoryName};
     // eslint-disable-next-line no-eval
-    const fn = eval(`({
+    const fn: { categoryClick: PageFunction<{allCategoriesSelector: string, val: string}, boolean> } = eval(`({
       async categoryClick(args) {
         /* eslint-env browser */
         const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
