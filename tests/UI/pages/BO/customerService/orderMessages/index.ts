@@ -326,7 +326,9 @@ class OrderMessages extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
     let i: number = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+    console.log(await this.elementNotVisible(page, sortColumnDiv, 3000));
+    while (await this.elementNotVisible(page, sortColumnDiv, 3000) && i < 3) {
+      console.log('Click');
       await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
