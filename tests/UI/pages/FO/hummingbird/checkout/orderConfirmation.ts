@@ -1,6 +1,7 @@
 // Import FO pages
 import {OrderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {Page} from "playwright";
+
+import type {Page} from 'playwright';
 
 /**
  * Cart page, contains functions that can be used on the page
@@ -33,7 +34,6 @@ class OrderConfirmation extends OrderConfirmationPage {
     this.customizationModal = 'div[id*="product-customization-modal"]';
     this.customizationModalBody = 'div[id*="product-customization-modal"] div.modal-body';
     this.customizationModalCloseButton = 'div[id*="product-customization-modal"] div.modal-header button';
-
   }
 
   /**
