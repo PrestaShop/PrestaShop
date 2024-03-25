@@ -144,13 +144,6 @@ class OrderDetailCore extends ObjectModel
     public $download_deadline;
 
     /**
-     * @var string
-     *
-     * @deprecated Order Detail Tax is saved in order_detail_tax table now
-     */
-    public $tax_name = 'deprecated';
-
-    /**
      * @var float
      *
      * @deprecated Order Detail Tax is saved in order_detail_tax table now
@@ -162,12 +155,6 @@ class OrderDetailCore extends ObjectModel
 
     /** @var int Id tax rules group */
     public $id_tax_rules_group;
-
-    /** @var int Id warehouse
-     *
-     * @deprecated since 9.0, advanced stock management has been completely removed
-     */
-    public $id_warehouse = 0;
 
     /** @var float additional shipping price tax excl */
     public $total_shipping_price_tax_excl;
@@ -196,7 +183,6 @@ class OrderDetailCore extends ObjectModel
         'fields' => [
             'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_order_invoice' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'id_warehouse' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'product_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'product_attribute_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
@@ -221,7 +207,6 @@ class OrderDetailCore extends ObjectModel
             'product_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference'],
             'product_supplier_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference'],
             'product_weight' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
-            'tax_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
             'tax_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'tax_computation_method' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_tax_rules_group' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
@@ -256,7 +241,7 @@ class OrderDetailCore extends ObjectModel
             'download_hash' => [],
             'download_deadline' => [],
         ],
-        'hidden_fields' => ['tax_rate', 'tax_name'],
+        'hidden_fields' => ['tax_rate'],
         'associations' => [
             'taxes' => ['resource' => 'tax', 'getter' => 'getWsTaxes', 'setter' => false,
                 'fields' => ['id' => []],

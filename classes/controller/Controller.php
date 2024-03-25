@@ -764,7 +764,6 @@ abstract class ControllerCore
         if ($controller === null) {
             $controller = get_class($this);
         }
-
         if ($method === null) {
             $bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             $method = $bt[1]['function'];

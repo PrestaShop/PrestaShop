@@ -2125,8 +2125,11 @@ class AdminTranslationsControllerCore extends AdminController
 
         foreach ($files_by_directory['php'] as $dir => $files) {
             foreach ($files as $file) {
-                $exclude_files = ['index.php', 'StockManagerInterface.php',
-                    'TaxManagerInterface.php', 'WebserviceOutputInterface.php', 'WebserviceSpecificManagementInterface.php',
+                $exclude_files = [
+                    'index.php',
+                    'TaxManagerInterface.php',
+                    'WebserviceOutputInterface.php',
+                    'WebserviceSpecificManagementInterface.php',
                 ];
 
                 if (!preg_match('/\.php$/', $file) || in_array($file, $exclude_files)) {

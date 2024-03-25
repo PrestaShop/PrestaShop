@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
-use Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Psr\Log\LoggerInterface;
@@ -89,7 +88,7 @@ class NavBar
     {
         return Tab::checkTabRights($tab['id_tab'])
             && $tab['enabled']
-            && !($tab['class_name'] === 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+            && !($tab['class_name'] === 'AdminStock')
             && $tab['class_name'] !== 'AdminCarrierWizard';
     }
 

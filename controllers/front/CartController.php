@@ -185,7 +185,7 @@ class CartControllerCore extends FrontController
     }
 
     /**
-     * @deprecated 1.7.3.1 the product link is now accessible
+     * @deprecated since 1.7.3.1 the product link is now accessible
      *                     in #quantity_wanted[data-url-update]
      */
     public function displayAjaxProductRefresh()

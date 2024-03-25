@@ -25,7 +25,6 @@
         <field name="product_supplier_reference"/>
         <field name="product_weight"/>
         <field name="tax_computation_method"/>
-        <field name="tax_name"/>
         <field name="tax_rate"/>
         <field name="ecotax"/>
         <field name="ecotax_tax_rate"/>
@@ -50,7 +49,7 @@
                       reduction_amount="0.000000" reduction_amount_tax_incl="0.000000"
                       reduction_amount_tax_excl="0.000000" group_reduction="0.00" product_quantity_discount="0.000000"
                       product_ean13="" product_upc="" product_reference="demo_1" product_supplier_reference=""
-                      product_weight="0.000000" tax_computation_method="0" tax_name="" tax_rate="0.000"
+                      product_weight="0.000000" tax_computation_method="0" tax_rate="0.000"
                       ecotax="0.000000" ecotax_tax_rate="0.000" discount_quantity_applied="0" download_nb="0"
                       download_deadline="0000-00-00 00:00:00" total_price_tax_incl="23.900000"
                       total_price_tax_excl="23.900000" unit_price_tax_incl="23.900000" unit_price_tax_excl="23.900000"
@@ -66,7 +65,7 @@
                       reduction_amount="0.000000" reduction_amount_tax_incl="0.000000"
                       reduction_amount_tax_excl="0.000000" group_reduction="0.00" product_quantity_discount="0.000000"
                       product_ean13="" product_upc="" product_reference="demo_3" product_supplier_reference=""
-                      product_weight="0.000000" tax_computation_method="0" tax_name="" tax_rate="0.000"
+                      product_weight="0.000000" tax_computation_method="0" tax_rate="0.000"
                       ecotax="0.000000" ecotax_tax_rate="0.000" discount_quantity_applied="0" download_nb="0"
                       download_deadline="0000-00-00 00:00:00" total_price_tax_incl="35.900000"
                       total_price_tax_excl="35.900000" unit_price_tax_incl="35.900000" unit_price_tax_excl="35.900000"
@@ -82,7 +81,7 @@
                       reduction_amount="0.000000" reduction_amount_tax_incl="0.000000"
                       reduction_amount_tax_excl="0.000000" group_reduction="0.00" product_quantity_discount="0.000000"
                       product_ean13="" product_upc="" product_reference="demo_5" product_supplier_reference=""
-                      product_weight="0.000000" tax_computation_method="0" tax_name="" tax_rate="0.000"
+                      product_weight="0.000000" tax_computation_method="0" tax_rate="0.000"
                       ecotax="0.000000" ecotax_tax_rate="0.000" discount_quantity_applied="0" download_nb="0"
                       download_deadline="0000-00-00 00:00:00" total_price_tax_incl="158.000000"
                       total_price_tax_excl="158.000000" unit_price_tax_incl="79.000000" unit_price_tax_excl="79.000000"
@@ -98,7 +97,7 @@
                       reduction_percent="0.00" reduction_amount="0.000000" reduction_amount_tax_incl="0.000000"
                       reduction_amount_tax_excl="0.000000" group_reduction="0.00" product_quantity_discount="0.000000"
                       product_ean13="" product_upc="" product_reference="demo_13" product_supplier_reference=""
-                      product_weight="0.000000" tax_computation_method="0" tax_name="" tax_rate="0.000"
+                      product_weight="0.000000" tax_computation_method="0" tax_rate="0.000"
                       ecotax="0.000000" ecotax_tax_rate="0.000" discount_quantity_applied="0" download_nb="0"
                       download_deadline="0000-00-00 00:00:00" total_price_tax_incl="11.900000"
                       total_price_tax_excl="11.900000" unit_price_tax_incl="11.900000" unit_price_tax_excl="11.900000"
@@ -114,7 +113,7 @@
                       reduction_percent="0.00" reduction_amount="0.000000" reduction_amount_tax_incl="0.000000"
                       reduction_amount_tax_excl="0.000000" group_reduction="0.00" product_quantity_discount="0.000000"
                       product_ean13="" product_upc="" product_reference="demo_8" product_supplier_reference=""
-                      product_weight="0.000000" tax_computation_method="0" tax_name="" tax_rate="0.000"
+                      product_weight="0.000000" tax_computation_method="0" tax_rate="0.000"
                       ecotax="0.000000" ecotax_tax_rate="0.000" discount_quantity_applied="0" download_nb="0"
                       download_deadline="0000-00-00 00:00:00" total_price_tax_incl="12.900000"
                       total_price_tax_excl="12.900000" unit_price_tax_incl="12.900000" unit_price_tax_excl="12.900000"
@@ -130,7 +129,7 @@
                       reduction_percent="0.00" reduction_amount="0.000000" reduction_amount_tax_incl="0.000000"
                       reduction_amount_tax_excl="0.000000" group_reduction="0.00" product_quantity_discount="0.000000"
                       product_ean13="" product_upc="" product_reference="demo_8" product_supplier_reference=""
-                      product_weight="0.000000" tax_computation_method="0" tax_name="" tax_rate="0.000"
+                      product_weight="0.000000" tax_computation_method="0" tax_rate="0.000"
                       ecotax="0.000000" ecotax_tax_rate="0.000" discount_quantity_applied="0" download_nb="0"
                       download_deadline="0000-00-00 00:00:00" total_price_tax_incl="12.900000"
                       total_price_tax_excl="12.900000" unit_price_tax_incl="12.900000" unit_price_tax_excl="12.900000"
@@ -146,7 +145,7 @@
                       reduction_percent="0.00" reduction_amount="0.000000" reduction_amount_tax_incl="0.000000"
                       reduction_amount_tax_excl="0.000000" group_reduction="0.00" product_quantity_discount="0.000000"
                       product_ean13="" product_upc="" product_reference="demo_16" product_supplier_reference=""
-                      product_weight="0.000000" tax_computation_method="0" tax_name="" tax_rate="0.000"
+                      product_weight="0.000000" tax_computation_method="0" tax_rate="0.000"
                       ecotax="0.000000" ecotax_tax_rate="0.000" discount_quantity_applied="0" download_nb="0"
                       download_deadline="0000-00-00 00:00:00" total_price_tax_incl="18.900000"
                       total_price_tax_excl="18.900000" unit_price_tax_incl="18.900000" unit_price_tax_excl="18.900000"

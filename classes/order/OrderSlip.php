@@ -184,7 +184,9 @@ class OrderSlipCore extends ObjectModel
      *
      * @param int $id_order_detail
      *
-     * @deprecated This method should not be used any more because sometimes OrderSlip is not created, you should use the OrderDetail::total_refunded_tax_excl/incl fields instead
+     * @deprecated This method should not be used any more because sometimes OrderSlip is not created,
+     *             you should use the OrderDetail::total_refunded_tax_excl/incl fields instead. However,
+     *             it's currently still used in the core in some places.
      */
     public static function getProductSlipResume($id_order_detail)
     {

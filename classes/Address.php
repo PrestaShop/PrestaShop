@@ -38,12 +38,6 @@ class AddressCore extends ObjectModel
     /** @var int Supplier ID which address belongs to */
     public $id_supplier = null;
 
-    /** @var int Id warehouse the address belongs to
-     *
-     * @deprecated since 9.0, advanced stock management has been completely removed
-     */
-    public $id_warehouse = 0;
-
     /** @var int Country ID */
     public $id_country;
 
@@ -126,7 +120,6 @@ class AddressCore extends ObjectModel
             'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
             'id_manufacturer' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
             'id_supplier' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
-            'id_warehouse' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
             'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_state' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'],
             'alias' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
