@@ -201,10 +201,11 @@ $product-page-padding-bottom: 80px !default;
       }
 
       .product-type-preview {
-        color: $medium-gray;
-        cursor: pointer;
         display: flex;
         align-items: center;
+        color: $medium-gray;
+        cursor: pointer;
+
         &:hover {
           color: $primary;
         }
@@ -440,8 +441,8 @@ $product-page-padding-bottom: 80px !default;
         order: 2;
 
         .footer-buttons-container {
-          justify-content: flex-end;
           align-items: center;
+          justify-content: flex-end;
         }
       }
 
@@ -469,12 +470,15 @@ $product-page-padding-bottom: 80px !default;
     // The not-allowed is actually on the parent "under" the buttons that are disabled
     #product_footer_actions {
       cursor: not-allowed;
+
       .group-default {
         display: flex;
         align-items: center;
+
         #product_footer_actions_catalog {
           display: flex;
           align-items: center;
+
           .material-icons {
             margin-top: 0;
           }
@@ -497,9 +501,11 @@ $product-page-padding-bottom: 80px !default;
 
   .customization-field-row {
     gap: 16px;
+
     @include media-breakpoint-up("md") {
       gap: 0;
     }
+
     .alert {
       margin-top: 0.75rem;
     }
@@ -2787,7 +2793,7 @@ $mobile-menu-height: 2.6rem !default;
       }
     }
 
-    .form-group.inline-switch-widget>.input-group {
+    .form-group.inline-switch-widget > .input-group {
       margin-top: 0;
     }
 
@@ -2795,33 +2801,42 @@ $mobile-menu-height: 2.6rem !default;
       .form-group.inline-switch-widget > .input-group {
         margin-top: 0;
       }
+
       .switch-widget {
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         @include media-breakpoint-up("md") {
           justify-content: flex-start;
         }
+
         h3{
           margin-bottom: 0;
         }
       }
+
       #product_details_show_condition{
         margin-top: 0;
       }
+
       .customization-field-switch{
+
         .ps-switch {
+
           .slide-button {
             right: 0;
           }
+
           label {
-            text-align: right;
             right: 0;
-            padding-left: 0;
             padding-right: 2.8rem;
+            padding-left: 0;
+            text-align: right;
           }
         }
       }
+
       .remove-customization-btn {
         padding: 8px 0;
       }
