@@ -54,11 +54,6 @@
         <target>%price% tax excl.</target>
         <note>Line: 110</note>
       </trans-unit>
-      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
-        <source>Free</source>
-        <target>Free</target>
-        <note>Line: 92</note>
-      </trans-unit>
     </body>
   </file>
   <file original="classes/form/CustomerAddressForm.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -66,7 +61,7 @@
       <trans-unit id="0bf3928d84fde940f6feafac75062280">
         <source>My Address</source>
         <target>My Address</target>
-        <note>Line: 164</note>
+        <note>Line: 167</note>
       </trans-unit>
     </body>
   </file>
@@ -118,31 +113,6 @@
   </file>
   <file original="src/Adapter/Presenter/Cart/CartPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="96b0141273eabab320119c467cdcaf17">
-        <source>Total</source>
-        <target>Total</target>
-        <note>Line: 400</note>
-      </trans-unit>
-      <trans-unit id="adc852563bca51fb6b10c7905010406d">
-        <source>Total (tax incl.)</source>
-        <target>Total (tax incl.)</target>
-        <note>Line: 408</note>
-      </trans-unit>
-      <trans-unit id="8faf99e02e4d0ccb4dd933404f87a4ea">
-        <source>Total (tax excl.)</source>
-        <target>Total (tax excl.)</target>
-        <note>Line: 414</note>
-      </trans-unit>
-      <trans-unit id="2194aaec8cc7086ab0e93f74547e5f53">
-        <source>Subtotal</source>
-        <target>Subtotal</target>
-        <note>Line: 341</note>
-      </trans-unit>
-      <trans-unit id="484f5a79672cebe198ebdde45a1d672f">
-        <source>Gift wrapping</source>
-        <target>Gift wrapping</target>
-        <note>Line: 364</note>
-      </trans-unit>
       <trans-unit id="40d906eb5dd9a2734d0c20c437e2ff68">
         <source>Discount(s)</source>
         <target>Discount(s)</target>
@@ -180,8 +150,32 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/Adapter/Presenter/Order/OrderDetailLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
+        <source>Free</source>
+        <target>Free</target>
+        <note>Line: 236</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Adapter/Presenter/Order/OrderLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="96b0141273eabab320119c467cdcaf17">
+        <source>Total</source>
+        <target>Total</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="adc852563bca51fb6b10c7905010406d">
+        <source>Total (tax incl.)</source>
+        <target>Total (tax incl.)</target>
+        <note>Line: 264</note>
+      </trans-unit>
+      <trans-unit id="8faf99e02e4d0ccb4dd933404f87a4ea">
+        <source>Total (tax excl.)</source>
+        <target>Total (tax excl.)</target>
+        <note>Line: 274</note>
+      </trans-unit>
       <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
         <source>Total paid</source>
         <target>Total paid</target>
@@ -191,6 +185,16 @@
   </file>
   <file original="src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="2194aaec8cc7086ab0e93f74547e5f53">
+        <source>Subtotal</source>
+        <target>Subtotal</target>
+        <note>Line: 82</note>
+      </trans-unit>
+      <trans-unit id="484f5a79672cebe198ebdde45a1d672f">
+        <source>Gift wrapping</source>
+        <target>Gift wrapping</target>
+        <note>Line: 196</note>
+      </trans-unit>
       <trans-unit id="104d9898c04874d0fbac36e125fa1369">
         <source>Discount</source>
         <target>Discount</target>
@@ -351,11 +355,6 @@
         <source>Total products</source>
         <target>Total products</target>
         <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
-        <source>Quantity</source>
-        <target>Quantity</target>
-        <note>Line: 30</note>
       </trans-unit>
     </body>
   </file>
@@ -567,6 +566,11 @@
   </file>
   <file original="themes/classic/templates/customer/discount.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Line: 72</note>
+      </trans-unit>
       <trans-unit id="ca0dbad92a874b2f69b549293387925e">
         <source>Code</source>
         <target>Code</target>

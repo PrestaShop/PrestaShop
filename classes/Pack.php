@@ -255,13 +255,16 @@ class PackCore extends Product
     }
 
     /**
-     * Returns the available quantity of a given pack (this method already have decreased products in cart).
+     * Returns the available quantity of a given pack.
+     *
+     * By default, it returns the TRUE quantity in stock. If you want to, you can pass a $cart parameter
+     * and the quantity in stock will be reduced by the quantity there is in the cart.
      *
      * @param int $idProduct Product id
      * @param int|null $idProductAttribute Product attribute id (optional)
-     * @param bool|null $cacheIsPack
-     * @param CartCore|null $cart
-     * @param bool|int|null $idCustomization Product customization id (optional)
+     * @param bool|null $cacheIsPack (unused, you can pass null)
+     * @param CartCore|null $cart Pass if you want to reduce the quantity by amount in cart
+     * @param int|null $idCustomization Product customization id (optional)
      *
      * @return int
      *
@@ -284,10 +287,8 @@ class PackCore extends Product
         // Initialize
         $product = new Product($idProduct, false);
         $packQuantity = 0;
-        $packQuantityInStock = StockAvailable::getQuantityAvailableByProduct(
-            $idProduct,
-            $idProductAttribute
-        );
+
+        // We get the pack stock calculation type it has set up
         $packStockType = $product->pack_stock_type;
         $allPackStockType = [
             self::STOCK_TYPE_PACK_ONLY,
@@ -300,20 +301,30 @@ class PackCore extends Product
             throw new PrestaShopException('Unknown pack stock type');
         }
 
-        // If no pack stock or shop default, set it
-        if (empty($packStockType)
-            || $packStockType == self::STOCK_TYPE_DEFAULT
-        ) {
+        /*
+         * Now, we have resolved how we will calculate the stock of this pack. It can be one of the following.
+         *
+         * STOCK_TYPE_PACK_ONLY	- pack 1pcs + product A 10pcs + product B 20pcs = 1pcs
+         * STOCK_TYPE_PRODUCTS_ONLY - pack 1pcs + product A 10pcs + product B 20pcs = 10 pcs
+         * STOCK_TYPE_PACK_BOTH - pack 1pcs + product A 10pcs + product B 20pcs = 1 pcs
+         */
+
+        // If no pack stock or shop default, set it from configuration
+        if (empty($packStockType) || $packStockType == self::STOCK_TYPE_DEFAULT) {
             $packStockType = Configuration::get('PS_PACK_STOCK_TYPE');
         }
 
-        // Initialize with pack quantity if not only products
+        // If the quantity of the pack depends only on the pack or both packs and products,
+        // we need to load the quantity of the pack from stock_available table.
         if (in_array($packStockType, [self::STOCK_TYPE_PACK_ONLY, self::STOCK_TYPE_PACK_BOTH])) {
-            $packQuantity = $packQuantityInStock;
+            $packQuantity = StockAvailable::getQuantityAvailableByProduct(
+                $idProduct,
+                $idProductAttribute
+            );
         }
 
-        // Set pack quantity to the minimum quantity of pack, or
-        // product pack
+        // If the quantity of the pack depends on the products inside, or both pack and products,
+        // we need to set the pack quantity to the lowest quantity of products inside.
         if (in_array($packStockType, [self::STOCK_TYPE_PACK_BOTH, self::STOCK_TYPE_PRODUCTS_ONLY])) {
             $items = array_values(Pack::getItems($idProduct, Configuration::get('PS_LANG_DEFAULT')));
 
@@ -323,6 +334,7 @@ class PackCore extends Product
 
                 // Initialize packQuantity with the first product quantity
                 // if pack decrement stock type is products only
+                // @todo This is probably not needed because $packQuantity is always initialized to zero.
                 if ($index === 0
                     && $packStockType == self::STOCK_TYPE_PRODUCTS_ONLY
                 ) {
@@ -331,6 +343,7 @@ class PackCore extends Product
                     continue;
                 }
 
+                // If the quantity of the individual item is lower than what we currently calculated, it's our new quantity.
                 if ($nbPackAvailableForItem < $packQuantity) {
                     $packQuantity = $nbPackAvailableForItem;
                 }

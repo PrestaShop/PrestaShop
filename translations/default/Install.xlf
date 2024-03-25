@@ -101,96 +101,6 @@
         <target>Sports and Entertainment</target>
         <note>Line: 220</note>
       </trans-unit>
-      <trans-unit id="21084da7c0a49b229bd7f905e93d4aaa">
-        <source>Lingerie and Adult</source>
-        <target>Lingerie and Adult</target>
-        <note>Line: 202</note>
-      </trans-unit>
-      <trans-unit id="0fe4ca3df29658482098bb33a2ff66e5">
-        <source>Animals and Pets</source>
-        <target>Animals and Pets</target>
-        <note>Line: 203</note>
-      </trans-unit>
-      <trans-unit id="9e4359f35054190eba36e09466e39d01">
-        <source>Art and Culture</source>
-        <target>Art and Culture</target>
-        <note>Line: 204</note>
-      </trans-unit>
-      <trans-unit id="066cd752c82ddc6231a9723b5822a945">
-        <source>Babies</source>
-        <target>Babies</target>
-        <note>Line: 205</note>
-      </trans-unit>
-      <trans-unit id="41a081c3f3042ac40117cf295350870d">
-        <source>Beauty and Personal Care</source>
-        <target>Beauty and Personal Care</target>
-        <note>Line: 206</note>
-      </trans-unit>
-      <trans-unit id="f2b545a8abb14f8706f808a79277c061">
-        <source>Cars</source>
-        <target>Cars</target>
-        <note>Line: 207</note>
-      </trans-unit>
-      <trans-unit id="39bb2fdc532f8984d8348863c86ebfca">
-        <source>Computer Hardware and Software</source>
-        <target>Computer Hardware and Software</target>
-        <note>Line: 208</note>
-      </trans-unit>
-      <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
-        <source>Download</source>
-        <target>Download</target>
-        <note>Line: 209</note>
-      </trans-unit>
-      <trans-unit id="33cb31c5505618a808d3bcd7490a793c">
-        <source>Flowers, Gifts and Crafts</source>
-        <target>Flowers, Gifts and Crafts</target>
-        <note>Line: 211</note>
-      </trans-unit>
-      <trans-unit id="0570b6d9de5c37a026e69c6987fc27f6">
-        <source>Food and beverage</source>
-        <target>Food and beverage</target>
-        <note>Line: 212</note>
-      </trans-unit>
-      <trans-unit id="4b73b8913afcdf06d9f49c176306d950">
-        <source>HiFi, Photo and Video</source>
-        <target>HiFi, Photo and Video</target>
-        <note>Line: 213</note>
-      </trans-unit>
-      <trans-unit id="2e9d6500d9b2a65985a621f0f0afdeb3">
-        <source>Home and Garden</source>
-        <target>Home and Garden</target>
-        <note>Line: 214</note>
-      </trans-unit>
-      <trans-unit id="83dd3493957bcd92a37bc39111f670b8">
-        <source>Home Appliances</source>
-        <target>Home Appliances</target>
-        <note>Line: 215</note>
-      </trans-unit>
-      <trans-unit id="565631402af79df42f22a117b0d6f1a5">
-        <source>Jewelry</source>
-        <target>Jewelry</target>
-        <note>Line: 216</note>
-      </trans-unit>
-      <trans-unit id="18848d605251b3627014c6a58c14c449">
-        <source>Mobile and Telecom</source>
-        <target>Mobile and Telecom</target>
-        <note>Line: 217</note>
-      </trans-unit>
-      <trans-unit id="992a0f0542384f1ee5ef51b7cf4ae6c4">
-        <source>Services</source>
-        <target>Services</target>
-        <note>Line: 218</note>
-      </trans-unit>
-      <trans-unit id="4ef7205b13f6821177d0dbc2fb90f79e">
-        <source>Shoes and accessories</source>
-        <target>Shoes and accessories</target>
-        <note>Line: 219</note>
-      </trans-unit>
-      <trans-unit id="1fb0f99b55e6c2be35aed72ebe38c245">
-        <source>Travel</source>
-        <target>Travel</target>
-        <note>Line: 221</note>
-      </trans-unit>
       <trans-unit id="f0a0d906028bd455cb67ef7f5b5d0650">
         <source>Fashion and Accessories</source>
         <target>Fashion and Accessories</target>
@@ -422,16 +332,6 @@ Comment: We fill the process step used for Ajax queries</note>
   </file>
   <file original="install-dev/theme/views/configure.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
-        <source>Yes</source>
-        <target>Yes</target>
-        <note>Line: 88</note>
-      </trans-unit>
-      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
-        <source>No</source>
-        <target>No</target>
-        <note>Line: 92</note>
-      </trans-unit>
       <trans-unit id="c075a7d57ac5f08683a1a0a1d3425e94">
         <source>Information about your Store</source>
         <target>Information about your Store</target>
@@ -550,6 +450,16 @@ Comment: We fill the process step used for Ajax queries</note>
         <source>Content of your store</source>
         <target>Content of your store</target>
         <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
+        <source>Yes</source>
+        <target>Yes</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
+        <source>No</source>
+        <target>No</target>
+        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="82da52196edba4e07eb729fa3560027f">
         <source>Installation of theme</source>
@@ -908,6 +818,96 @@ Comment: We fill the process step used for Ajax queries</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="21084da7c0a49b229bd7f905e93d4aaa">
+        <source>Lingerie and Adult</source>
+        <target>Lingerie and Adult</target>
+        <note>Line: 234</note>
+      </trans-unit>
+      <trans-unit id="0fe4ca3df29658482098bb33a2ff66e5">
+        <source>Animals and Pets</source>
+        <target>Animals and Pets</target>
+        <note>Line: 220</note>
+      </trans-unit>
+      <trans-unit id="9e4359f35054190eba36e09466e39d01">
+        <source>Art and Culture</source>
+        <target>Art and Culture</target>
+        <note>Line: 221</note>
+      </trans-unit>
+      <trans-unit id="066cd752c82ddc6231a9723b5822a945">
+        <source>Babies</source>
+        <target>Babies</target>
+        <note>Line: 222</note>
+      </trans-unit>
+      <trans-unit id="41a081c3f3042ac40117cf295350870d">
+        <source>Beauty and Personal Care</source>
+        <target>Beauty and Personal Care</target>
+        <note>Line: 223</note>
+      </trans-unit>
+      <trans-unit id="f2b545a8abb14f8706f808a79277c061">
+        <source>Cars</source>
+        <target>Cars</target>
+        <note>Line: 224</note>
+      </trans-unit>
+      <trans-unit id="39bb2fdc532f8984d8348863c86ebfca">
+        <source>Computer Hardware and Software</source>
+        <target>Computer Hardware and Software</target>
+        <note>Line: 225</note>
+      </trans-unit>
+      <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
+        <source>Download</source>
+        <target>Download</target>
+        <note>Line: 226</note>
+      </trans-unit>
+      <trans-unit id="33cb31c5505618a808d3bcd7490a793c">
+        <source>Flowers, Gifts and Crafts</source>
+        <target>Flowers, Gifts and Crafts</target>
+        <note>Line: 228</note>
+      </trans-unit>
+      <trans-unit id="0570b6d9de5c37a026e69c6987fc27f6">
+        <source>Food and beverage</source>
+        <target>Food and beverage</target>
+        <note>Line: 229</note>
+      </trans-unit>
+      <trans-unit id="4b73b8913afcdf06d9f49c176306d950">
+        <source>HiFi, Photo and Video</source>
+        <target>HiFi, Photo and Video</target>
+        <note>Line: 230</note>
+      </trans-unit>
+      <trans-unit id="2e9d6500d9b2a65985a621f0f0afdeb3">
+        <source>Home and Garden</source>
+        <target>Home and Garden</target>
+        <note>Line: 231</note>
+      </trans-unit>
+      <trans-unit id="83dd3493957bcd92a37bc39111f670b8">
+        <source>Home Appliances</source>
+        <target>Home Appliances</target>
+        <note>Line: 232</note>
+      </trans-unit>
+      <trans-unit id="565631402af79df42f22a117b0d6f1a5">
+        <source>Jewelry</source>
+        <target>Jewelry</target>
+        <note>Line: 233</note>
+      </trans-unit>
+      <trans-unit id="18848d605251b3627014c6a58c14c449">
+        <source>Mobile and Telecom</source>
+        <target>Mobile and Telecom</target>
+        <note>Line: 235</note>
+      </trans-unit>
+      <trans-unit id="992a0f0542384f1ee5ef51b7cf4ae6c4">
+        <source>Services</source>
+        <target>Services</target>
+        <note>Line: 236</note>
+      </trans-unit>
+      <trans-unit id="4ef7205b13f6821177d0dbc2fb90f79e">
+        <source>Shoes and accessories</source>
+        <target>Shoes and accessories</target>
+        <note>Line: 237</note>
+      </trans-unit>
+      <trans-unit id="1fb0f99b55e6c2be35aed72ebe38c245">
+        <source>Travel</source>
+        <target>Travel</target>
+        <note>Line: 239</note>
+      </trans-unit>
       <trans-unit id="8bdd8b2357d516da5b81eb16746ba9a9">
         <source>Fashion and accessories</source>
         <target>Fashion and accessories</target>
@@ -1081,15 +1081,15 @@ Comment: We fill the process step used for Ajax queries</note>
         <target>"%class%" must be an instance of "InstallXmlLoader"</target>
         <note>Line: 1107</note>
       </trans-unit>
-      <trans-unit id="6c16e88afa7f92cfe15e74a1fbe9c250">
-        <source><![CDATA[SQL error on query <i>%query%</i>]]></source>
-        <target><![CDATA[SQL error on query <i>%query%</i>]]></target>
-        <note>Line: 328</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Install/XmlLoader.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="6c16e88afa7f92cfe15e74a1fbe9c250">
+        <source><![CDATA[SQL error on query <i>%query%</i>]]></source>
+        <target><![CDATA[SQL error on query <i>%query%</i>]]></target>
+        <note>Line: 1266</note>
+      </trans-unit>
       <trans-unit id="5b56439cb79f3a01ae56d92e52be2218">
         <source><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></source>
         <target><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></target>

@@ -14,12 +14,12 @@
       <trans-unit id="30a367ba686890c829937e768d588b8f">
         <source>You cannot set 0 or a negative position, the minimum is 1.</source>
         <target>You cannot set 0 or a negative position, the minimum is 1.</target>
-        <note>Line: 7211</note>
+        <note>Line: 7233</note>
       </trans-unit>
       <trans-unit id="cf99dad7d7306d9ac01ba5a2e2d2c715">
         <source>You cannot set a position greater than the total number of products in the category, starting at 1.</source>
         <target>You cannot set a position greater than the total number of products in the category, starting at 1.</target>
-        <note>Line: 7232</note>
+        <note>Line: 7254</note>
       </trans-unit>
     </body>
   </file>
@@ -78,15 +78,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="classes/webservice/WebserviceSpecificManagementAttachments.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8a23b9ee3a4502a0de3fc32c5ba7aa65">
-        <source>Failed to copy the file.</source>
-        <target>Failed to copy the file.</target>
-        <note>Line: 363</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="815e471ea2970db0b63b9b09feacc70f">
@@ -126,37 +117,42 @@
       <trans-unit id="fdf5ec6ad9d20c9985038e5d6521159f">
         <source>The voucher cannot end before it begins.</source>
         <target>The voucher cannot end before it begins.</target>
-        <note>Line: 244</note>
+        <note>Line: 249</note>
       </trans-unit>
       <trans-unit id="5c7f52b03569889081067d1413b5edbd">
         <source>The minimum amount cannot be lower than zero.</source>
         <target>The minimum amount cannot be lower than zero.</target>
-        <note>Line: 247</note>
+        <note>Line: 252</note>
       </trans-unit>
       <trans-unit id="93c331edf337bac96fcbac751a492fe1">
         <source>Reduction percentage must be between 0% and 100%</source>
         <target>Reduction percentage must be between 0% and 100%</target>
-        <note>Line: 250</note>
+        <note>Line: 255</note>
       </trans-unit>
       <trans-unit id="a3ad09e600d30676504b705e29be782d">
         <source>Reduction amount cannot be lower than zero.</source>
         <target>Reduction amount cannot be lower than zero.</target>
-        <note>Line: 253</note>
+        <note>Line: 258</note>
       </trans-unit>
       <trans-unit id="7f5ef3543345170784cc954cffa697d6">
         <source>This cart rule code is already used (conflict with cart rule %rulename%)</source>
         <target>This cart rule code is already used (conflict with cart rule %rulename%)</target>
-        <note>Line: 256</note>
+        <note>Line: 261</note>
       </trans-unit>
       <trans-unit id="bbc6a34f03def2d56def8e7685a3fcae">
         <source>An action is required for this cart rule.</source>
         <target>An action is required for this cart rule.</target>
-        <note>Line: 259</note>
+        <note>Line: 264</note>
       </trans-unit>
       <trans-unit id="b4be93136a337fcef40c9eb87004c9d0">
         <source>No product has been found.</source>
         <target>No product has been found.</target>
-        <note>Line: 672</note>
+        <note>Line: 677</note>
+      </trans-unit>
+      <trans-unit id="e9e6c1ea4c16a7bd1b64b53209a8659f">
+        <source>Product with required customization fields cannot be used as a gift.</source>
+        <target>Product with required customization fields cannot be used as a gift.</target>
+        <note>Line: 244</note>
       </trans-unit>
     </body>
   </file>
@@ -165,42 +161,47 @@
       <trans-unit id="c1a4c1b929c4f5c81f80ece2d7b196aa">
         <source>Invalid product</source>
         <target>Invalid product</target>
-        <note>Line: 477</note>
+        <note>Line: 476</note>
       </trans-unit>
       <trans-unit id="e5b55dc69d10c8673f9d5db587591526">
         <source>Invalid combination</source>
         <target>Invalid combination</target>
-        <note>Line: 392</note>
+        <note>Line: 391</note>
       </trans-unit>
       <trans-unit id="7cc92687130ea12abb80556681538001">
         <source>An error occurred during the image upload process.</source>
         <target>An error occurred during the image upload process.</target>
-        <note>Line: 448</note>
+        <note>Line: 447</note>
       </trans-unit>
       <trans-unit id="b164de93448b61c61dd1c0f68c2c5884">
         <source>An order has already been placed with this cart.</source>
         <target>An order has already been placed with this cart.</target>
-        <note>Line: 475</note>
+        <note>Line: 474</note>
       </trans-unit>
       <trans-unit id="89ecb554b799211aca0441e691419963">
         <source>This product cannot be added to the cart.</source>
         <target>This product cannot be added to the cart.</target>
-        <note>Line: 498</note>
+        <note>Line: 497</note>
       </trans-unit>
       <trans-unit id="de10fc28511b894f704c1a67fcff7b4f">
         <source>You already have the maximum quantity available for this product.</source>
         <target>You already have the maximum quantity available for this product.</target>
-        <note>Line: 510</note>
+        <note>Line: 509</note>
       </trans-unit>
       <trans-unit id="fac7c1f73a2c97252e59cac143ae1930">
         <source>Invalid voucher.</source>
         <target>Invalid voucher.</target>
-        <note>Line: 660</note>
+        <note>Line: 659</note>
       </trans-unit>
       <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
         <source>There are not enough products in stock.</source>
         <target>There are not enough products in stock.</target>
-        <note>Line: 491</note>
+        <note>Line: 490</note>
+      </trans-unit>
+      <trans-unit id="01816dd287bcb3b88ad3f63970ce045f">
+        <source>Invalid quantity</source>
+        <target>Invalid quantity</target>
+        <note>Line: 478</note>
       </trans-unit>
     </body>
   </file>
@@ -215,11 +216,6 @@
         <source>Error while creating additional image</source>
         <target>Error while creating additional image</target>
         <note>Line: 2853</note>
-      </trans-unit>
-      <trans-unit id="01816dd287bcb3b88ad3f63970ce045f">
-        <source>Invalid quantity</source>
-        <target>Invalid quantity</target>
-        <note>Line: 1593</note>
       </trans-unit>
       <trans-unit id="64985418ce04cf0225e600592044206c">
         <source>We were unable to associate this attachment to a product.</source>
@@ -497,7 +493,7 @@
       <trans-unit id="15d30198621ad33274fc94b08cff5009">
         <source>Could not delete #%i</source>
         <target>Could not delete #%i</target>
-        <note>Line: 171</note>
+        <note>Line: 165</note>
       </trans-unit>
     </body>
   </file>
@@ -685,6 +681,11 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttachmentController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="8a23b9ee3a4502a0de3fc32c5ba7aa65">
+        <source>Failed to copy the file.</source>
+        <target>Failed to copy the file.</target>
+        <note>Line: 376</note>
+      </trans-unit>
       <trans-unit id="99a6e6a05b8d706aeddf480c7e492949">
         <source>Invalid description for %s language</source>
         <target>Invalid description for %s language</target>
@@ -738,11 +739,6 @@
         <target><![CDATA[The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
         <note>Line: 826</note>
       </trans-unit>
-      <trans-unit id="60df675f17670057ec657783db03d35e">
-        <source>Unable to resize one or more of your pictures.</source>
-        <target>Unable to resize one or more of your pictures.</target>
-        <note>Line: 717</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -770,6 +766,11 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="60df675f17670057ec657783db03d35e">
+        <source>Unable to resize one or more of your pictures.</source>
+        <target>Unable to resize one or more of your pictures.</target>
+        <note>Line: 539</note>
+      </trans-unit>
       <trans-unit id="3aff310e32cb7bb2d1affd97920c9f4b">
         <source><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
         <target><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
@@ -787,7 +788,7 @@
       <trans-unit id="891d308560a0cca2452fd2f482dded8c">
         <source><![CDATA[Product customization could not be found. Go to Catalog > Products to customize the product.]]></source>
         <target><![CDATA[Product customization could not be found. Go to Catalog > Products to customize the product.]]></target>
-        <note>Line: 580</note>
+        <note>Line: 581</note>
       </trans-unit>
     </body>
   </file>
@@ -1101,13 +1102,17 @@ Comment: "It" refers to the option "Force update of friendly URL"</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_block.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4f11b2e8a220dab912231e74a3dfea5d">
         <source>What do you want to do with the products associated with this category?</source>
         <target>What do you want to do with the products associated with this category?</target>
-        <note>Line: 28</note>
+        <note>Line: 31</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="332a0777d848606eb5f63149d0bb1105">
         <source>Note that if they have another category, your products will logically remain associated with it.</source>
         <target>Note that if they have another category, your products will logically remain associated with it.</target>
@@ -1194,12 +1199,12 @@ Comment: "It" refers to the option "Force update of friendly URL"</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_4_layout.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b385b71f1d14c0afa6d7ca6cb18927b3">
         <source>There is no attachment yet.</source>
         <target>There is no attachment yet.</target>
-        <note>Line: 419</note>
+        <note>Line: 613</note>
       </trans-unit>
     </body>
   </file>

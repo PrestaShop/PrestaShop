@@ -11,15 +11,15 @@ Feature: Update product price fields from Back Office (BO) when default country 
       | name[en-US] | magic staff |
       | type        | standard    |
     And product product1 should have following prices information:
-      | price              | 0     |
-      | price_tax_included | 0     |
-      | ecotax             | 0     |
-      | tax rules group    |       |
-      | on_sale            | false |
-      | wholesale_price    | 0     |
-      | unit_price         | 0     |
-      | unit_price_ratio   | 0     |
-      | unity              |       |
+      | price              | 0               |
+      | price_tax_included | 0               |
+      | ecotax             | 0               |
+      | tax rules group    | US-FL Rate (6%) |
+      | on_sale            | false           |
+      | wholesale_price    | 0               |
+      | unit_price         | 0               |
+      | unit_price_ratio   | 0               |
+      | unity              |                 |
 
   Scenario: I update product prices
     And tax rules group named "US-AL Rate (4%)" exists
@@ -142,85 +142,85 @@ Feature: Update product price fields from Back Office (BO) when default country 
       | price      | 200 |
       | unit_price | 300 |
     And product product1 should have following prices information:
-      | price                   | 200      |
-      | price_tax_included      | 200      |
-      | ecotax                  | 0        |
-      | tax rules group         |          |
-      | on_sale                 | false    |
-      | wholesale_price         | 0        |
-      | unit_price              | 300      |
-      | unit_price_tax_included | 300      |
-      | unit_price_ratio        | 0.666666 |
-      | unity                   |          |
+      | price                   | 200             |
+      | price_tax_included      | 212             |
+      | ecotax                  | 0               |
+      | tax rules group         | US-FL Rate (6%) |
+      | on_sale                 | false           |
+      | wholesale_price         | 0               |
+      | unit_price              | 300             |
+      | unit_price_tax_included | 318             |
+      | unit_price_ratio        | 0.666666        |
+      | unity                   |                 |
     When I update product "product1" with following values:
       | price      | 0 |
     Then product product1 should have following prices information:
-      | price                   | 0     |
-      | price_tax_included      | 0     |
-      | ecotax                  | 0     |
-      | tax rules group         |       |
-      | on_sale                 | false |
-      | wholesale_price         | 0     |
-      | unit_price              | 0     |
-      | unit_price_tax_included | 0     |
-      | unit_price_ratio        | 0     |
-      | unity                   |       |
+      | price                   | 0               |
+      | price_tax_included      | 0               |
+      | ecotax                  | 0               |
+      | tax rules group         | US-FL Rate (6%) |
+      | on_sale                 | false           |
+      | wholesale_price         | 0               |
+      | unit_price              | 0               |
+      | unit_price_tax_included | 0               |
+      | unit_price_ratio        | 0               |
+      | unity                   |                 |
     # Even if you try to update unit price it remains zero because price is still zero
     When I update product "product1" with following values:
       | unit_price | 300 |
     Then product product1 should have following prices information:
-      | price                   | 0     |
-      | price_tax_included      | 0     |
-      | ecotax                  | 0     |
-      | tax rules group         |       |
-      | on_sale                 | false |
-      | wholesale_price         | 0     |
-      | unit_price              | 0     |
-      | unit_price_tax_included | 0     |
-      | unit_price_ratio        | 0     |
-      | unity                   |       |
+      | price                   | 0               |
+      | price_tax_included      | 0               |
+      | ecotax                  | 0               |
+      | tax rules group         | US-FL Rate (6%) |
+      | on_sale                 | false           |
+      | wholesale_price         | 0               |
+      | unit_price              | 0               |
+      | unit_price_tax_included | 0               |
+      | unit_price_ratio        | 0               |
+      | unity                   |                 |
 
   Scenario: I update product unit price when product price is 0 even if unit price was being modified
     When I update product "product1" with following values:
       | price      | 200 |
       | unit_price | 300 |
     And product product1 should have following prices information:
-      | price                   | 200      |
-      | price_tax_included      | 200      |
-      | ecotax                  | 0        |
-      | tax rules group         |          |
-      | on_sale                 | false    |
-      | wholesale_price         | 0        |
-      | unit_price              | 300      |
-      | unit_price_tax_included | 300      |
-      | unit_price_ratio        | 0.666666 |
-      | unity                   |          |
+      | price                   | 200             |
+      | price_tax_included      | 212             |
+      | ecotax                  | 0               |
+      | tax rules group         | US-FL Rate (6%) |
+      | on_sale                 | false           |
+      | wholesale_price         | 0               |
+      | unit_price              | 300             |
+      | unit_price_tax_included | 318             |
+      | unit_price_ratio        | 0.666666        |
+      | unity                   |                 |
     When I update product "product1" with following values:
       | price      | 0   |
       | unit_price | 300 |
     And product product1 should have following prices information:
-      | price                   | 0     |
-      | price_tax_included      | 0     |
-      | ecotax                  | 0     |
-      | tax rules group         |       |
-      | on_sale                 | false |
-      | wholesale_price         | 0     |
-      | unit_price              | 0     |
-      | unit_price_tax_included | 0     |
-      | unit_price_ratio        | 0     |
-      | unity                   |       |
+      | price                   | 0               |
+      | price_tax_included      | 0               |
+      | ecotax                  | 0               |
+      | tax rules group         | US-FL Rate (6%) |
+      | on_sale                 | false           |
+      | wholesale_price         | 0               |
+      | unit_price              | 0               |
+      | unit_price_tax_included | 0               |
+      | unit_price_ratio        | 0               |
+      | unity                   |                 |
 
   Scenario: I update product tax the price tax included and unit price tax included is impacted
     When I update product "product1" with following values:
       | price      | 20  |
       | unit_price | 500 |
     Then product product1 should have following prices information:
-      | price                   | 20   |
-      | price_tax_included      | 20   |
-      | unit_price              | 500  |
-      | unit_price_tax_included | 500  |
-      | unit_price_ratio        | 0.04 |
-      | tax rules group         |      |
+      | price                   | 20              |
+      | price_tax_included      | 21.20           |
+      | unit_price              | 500             |
+      | unit_price_tax_included | 530             |
+      | unit_price_ratio        | 0.04            |
+      | tax rules group         | US-FL Rate (6%) |
     When I update product "product1" with following values:
       | tax rules group | US-AL Rate (4%) |
     Then product product1 should have following prices information:
