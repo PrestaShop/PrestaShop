@@ -496,6 +496,10 @@ $product-page-padding-bottom: 80px !default;
   }
 
   .customization-field-row {
+    gap: 16px;
+    @include media-breakpoint-up("md") {
+      gap: 0;
+    }
     .alert {
       margin-top: 0.75rem;
     }
@@ -566,6 +570,7 @@ $product-page-padding-bottom: 80px !default;
   }
 
   .product-feature {
+    gap: 16px;
     align-items: flex-end;
     margin-bottom: 1rem;
 
@@ -2793,12 +2798,32 @@ $mobile-menu-height: 2.6rem !default;
       .switch-widget {
         display: flex;
         align-items: center;
+        justify-content: space-between;
+        @include media-breakpoint-up("md") {
+          justify-content: flex-start;
+        }
         h3{
           margin-bottom: 0;
         }
       }
       #product_details_show_condition{
         margin-top: 0;
+      }
+      .customization-field-switch{
+        .ps-switch {
+          .slide-button {
+            right: 0;
+          }
+          label {
+            text-align: right;
+            right: 0;
+            padding-left: 0;
+            padding-right: 2.8rem;
+          }
+        }
+      }
+      .remove-customization-btn {
+        padding: 8px 0;
       }
     }
   }
