@@ -29,7 +29,7 @@
   <div class="alert alert-info" role="alert">
     <p class="alert-text">
       {{ 'PrestaShop provides numerous APIs if you need you can see their details in the dedicated automated documentation:'|trans({}, 'Admin.Advparameters.Feature') }}
-      <ul>
+      <ul class="mt-1">
         <li>
           <a target="_blank" href="{{ htmlDocUrl }}">
             {{ 'API Documentation (HTML format)'|trans({}, 'Admin.Advparameters.Feature') }}
@@ -41,6 +41,9 @@
           </a>
         </li>
       </ul>
+    </p>
+    <p class="mt-1">
+      {{ 'Please ensure that your server allows the use of PUT, PATCH, and DELETE requests for the API to function properly.'|trans({}, 'Admin.Advparameters.Feature') }}
     </p>
   </div>
 
