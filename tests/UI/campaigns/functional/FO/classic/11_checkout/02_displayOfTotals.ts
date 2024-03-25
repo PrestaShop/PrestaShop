@@ -4,17 +4,16 @@ import testContext from '@utils/testContext';
 import date from '@utils/date';
 
 // Import common tests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
-import homePage from '@pages/FO/hummingbird/home';
-import checkoutPage from '@pages/FO/hummingbird/checkout';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
-import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
-import foLoginPage from '@pages/FO/hummingbird/login';
+import {cartPage} from '@pages/FO/classic/cart';
+import {homePage} from '@pages/FO/classic/home';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
+import {searchResultsPage} from '@pages/FO/classic/searchResults';
+import {loginPage} from '@pages/FO/classic/login';
 
 // Import data
 import Products from '@data/demo/products';
@@ -28,11 +27,10 @@ import Carriers from '@data/demo/carriers';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_hummingbird_checkout_displayOfTotals';
+const baseContext: string = 'functional_FO_classic_checkout_displayOfTotals';
 
 /*
 Pre-condition:
-- Install the theme hummingbird
 - Create new cart rule
 Scenario:
 - Add product to cart
@@ -41,7 +39,6 @@ Scenario:
 - Proceed to checkout
 - Choose carrier and check details
 Post-condition:
-- Uninstall the theme hummingbird
 - Delete created cart rule
  */
 
@@ -67,10 +64,7 @@ describe('FO - Checkout : Display of totals', async () => {
   });
 
   // Pre-condition: Create cart rule with code
-  createCartRuleTest(cartRuleWithCodeData, `${baseContext}_preTest_1`);
-
-  // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_2`);
+  createCartRuleTest(cartRuleWithCodeData, baseContext);
 
   describe('Display total', async () => {
     before(async function () {
@@ -97,16 +91,16 @@ describe('FO - Checkout : Display of totals', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await loginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(loginPage.pageTitle);
     });
 
     it('should sign in with created customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await loginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -217,9 +211,6 @@ describe('FO - Checkout : Display of totals', async () => {
     });
   });
 
-  // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_1`);
-
   // Post-condition: Delete created cart rule
-  deleteCartRuleTest(cartRuleWithCodeData.name, `${baseContext}_postTest_2`);
+  deleteCartRuleTest(cartRuleWithCodeData.name, baseContext);
 });
