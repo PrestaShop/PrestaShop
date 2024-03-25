@@ -2,6 +2,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 import type {Page} from 'playwright';
+import type {ProductOrderConfirmation} from '@data/types/product';
 
 /**
  * Order confirmation page, contains functions that can be used on the page
@@ -112,6 +113,36 @@ class OrderConfirmationPage extends FOBasePage {
    */
   async getGiftWrappingValue(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.giftWrappingRow);
+  }
+
+  /**
+   * Get payment information
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getPaymentInformation(page: Page): Promise<string> {
+    return this.getTextContent(page, '#content-wrapper div:nth-child(2) div.card-body');
+  }
+
+  /**
+   * Get order details
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getOrderDetails(page: Page): Promise<string> {
+    return this.getTextContent(page, 'div.order-confirmation__details ul.order-details');
+  }
+
+  async getNumberOfProducts(page: Page): Promise<number> {
+    return page.locator('div.order-confirmation__items div.item').count();
+  }
+
+  async getProductDetailsInRow(page: Page, row: number): Promise<ProductOrderConfirmation> {
+    return {
+      image: await this.getAttributeContent(page, `div.order-confirmation__items div.item:nth-child(${row}) div.item__image img`, 'srcset'),
+      details: await this.getTextContent(page, `div.order-confirmation__items div.item:nth-child(${row}) div.item__details`),
+      prices: await this.getTextContent(page, `div.order-confirmation__items div.item:nth-child(${row}) div.item__prices`),
+    };
   }
 }
 

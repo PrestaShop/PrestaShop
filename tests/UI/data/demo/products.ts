@@ -57,6 +57,7 @@ export default {
     name: 'The adventure begins Framed poster',
     reference: 'demo_5',
     category: 'Art',
+    coverImage: 'the-adventure-begins-framed-poster.jpg',
     price: 34.8,
     priceTaxExcluded: 29.00,
     quantity: 1500,

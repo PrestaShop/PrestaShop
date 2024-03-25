@@ -57,6 +57,7 @@ class Checkout extends CheckoutPage {
       + ' > span.delivery-option__center';
     this.deliveryStepCarrierPrice = (carrierID: number) => `${this.deliveryOption(carrierID)} div.row`
       + ' > span.delivery-option__right';
+    // Payment methods selectors
 
     // Checkout summary selectors
     this.shippingValueSpan = '#cart-subtotal-shipping span.cart-summary__value';

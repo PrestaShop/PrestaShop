@@ -41,7 +41,7 @@ class Product extends FOBasePage {
 
   private readonly productDescription: string;
 
-  private readonly customizedTextarea: string;
+  protected customizedTextarea: string;
 
   private readonly saveCustomizationButton: string;
 
@@ -621,12 +621,12 @@ class Product extends FOBasePage {
     page: Page,
     quantity: number = 1,
     combination: ProductAttribute[] = [],
-    proceedToCheckout: boolean|null = true,
+    proceedToCheckout: boolean | null = true,
     customizedText: string = 'text',
   ): Promise<void> {
     await this.selectAttributes(page, quantity, combination);
     if (quantity !== 1) {
-      await this.setValue(page, this.productQuantity, quantity.toString());
+      await this.setValue(page, this.productQuantity, quantity);
     }
 
     if (await this.elementVisible(page, this.customizedTextarea, 2000)) {

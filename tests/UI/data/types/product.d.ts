@@ -219,6 +219,12 @@ type ProductStockMovement = {
   employee: string
 };
 
+type ProductOrderConfirmation = {
+  image: string
+  details: string
+  prices: string
+};
+
 export {
   ProductAttribute,
   ProductAttributes,
@@ -246,4 +252,5 @@ export {
   ProductFeatures,
   ProductFiles,
   ProductCustomizations,
+  ProductOrderConfirmation,
 };
