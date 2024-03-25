@@ -440,6 +440,7 @@ $product-page-padding-bottom: 80px !default;
 
         .footer-buttons-container {
           justify-content: flex-end;
+          align-items: center;
         }
       }
 
@@ -467,6 +468,17 @@ $product-page-padding-bottom: 80px !default;
     // The not-allowed is actually on the parent "under" the buttons that are disabled
     #product_footer_actions {
       cursor: not-allowed;
+      .group-default{
+        display: flex;
+        align-items: center;
+        #product_footer_actions_catalog{
+          display: flex;
+          align-items: center;
+          .material-icons {
+            margin-top: 0;
+          }
+        }
+      }
     }
   }
 
