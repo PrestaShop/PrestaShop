@@ -171,7 +171,7 @@ if ($cookie_lifetime > 0) {
     $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 }
 
-$force_ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+$force_ssl = Configuration::get('PS_SSL_ENABLED');
 if (defined('_PS_ADMIN_DIR_')) {
     $cookie = new Cookie('psAdmin', '', $cookie_lifetime, null, false, $force_ssl);
 } else {
