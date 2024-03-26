@@ -91,15 +91,19 @@
         <target>Birthdate</target>
         <note>Line: 207</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="classes/form/CustomerLoginFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
         <source>Email</source>
         <target>Email</target>
-        <note>Line: 167</note>
+        <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="dc647eb65e6711e155375218212b3964">
         <source>Password</source>
         <target>Password</target>
-        <note>Line: 180</note>
+        <note>Line: 60</note>
       </trans-unit>
     </body>
   </file>
@@ -124,6 +128,11 @@
         <source>Message</source>
         <target>Message</target>
         <note>Line: 101</note>
+      </trans-unit>
+      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
+        <source>Email address</source>
+        <target>Email address</target>
+        <note>Line: 58</note>
       </trans-unit>
     </body>
   </file>
@@ -202,15 +211,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/customer/password-email.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
-        <source>Email address</source>
-        <target>Email address</target>
-        <note>Line: 53</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/classic/templates/customer/password-new.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3544848f820b9d94a3f3871a382cf138">
@@ -221,7 +221,7 @@
       <trans-unit id="f4d1ea475eaa85102e2b4e6d95da84bd">
         <source>Confirmation</source>
         <target>Confirmation</target>
-        <note>Line: 63</note>
+        <note>Line: 72</note>
       </trans-unit>
     </body>
   </file>

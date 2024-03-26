@@ -15,22 +15,22 @@
       <trans-unit id="2d125dc25b158f28a1960bd96a9fa8d1">
         <source>%s points</source>
         <target>%s points</target>
-        <note>Line: 200</note>
+        <note>Line: 199</note>
       </trans-unit>
       <trans-unit id="8c804960da61b637c548c951652b0cac">
         <source>Average Cart Value</source>
         <target>Average Cart Value</target>
-        <note>Line: 317</note>
+        <note>Line: 316</note>
       </trans-unit>
       <trans-unit id="e4c3da18c66c0147144767efeb59198f">
         <source>Conversion Rate</source>
         <target>Conversion Rate</target>
-        <note>Line: 319</note>
+        <note>Line: 318</note>
       </trans-unit>
       <trans-unit id="46418a037045b91e6715c4da91a2a269">
         <source>%s (previous period)</source>
         <target>%s (previous period)</target>
-        <note>Line: 340</note>
+        <note>Line: 339</note>
       </trans-unit>
       <trans-unit id="c3589c1fa565aa3045bec012e24ff538">
         <source>Enrich your dashboard: display a graphical representation of your store’s development.</source>

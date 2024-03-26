@@ -26,6 +26,10 @@ inputs:
     required: false
     description: True to enable Developer mode
     default: 'false'
+  DISABLE_MAKE:
+    required: false
+    description: true to disable Make
+    default: 'false'
   BO_LAYOUT:
     required: false
     description: Choose between Legacy and Symfony layout
@@ -68,6 +72,7 @@ runs:
     - name: Build and Run shop with docker
       shell: bash
       env:
+        DISABLE_MAKE: ${{ (inputs.DISABLE_MAKE == 'true') && '1' || '0' }}
         PS_ENABLE_SSL: ${{ (inputs.ENABLE_SSL == 'true') && '1' || '0' }}
         PS_INSTALL_AUTO: ${{ (inputs.INSTALL_AUTO == 'true') && '1' || '0' }}
         PS_USE_DOCKER_MAILDEV: 0

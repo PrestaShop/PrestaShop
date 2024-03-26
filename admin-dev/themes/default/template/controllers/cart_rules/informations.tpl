@@ -87,7 +87,7 @@
 	</div>
 </div>
 
-<div class="form-group" id="cart-rules-highlight"{if !$currentTab->getFieldValue($currentObject, 'code')} style="display: none;"{/if}>
+<div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 		title="{l|escape s='If the voucher is not yet in the cart, it will be displayed in the cart summary.' d='Admin.Catalog.Help'}">
@@ -150,9 +150,4 @@
 </div>
 <script type="text/javascript">
 	$(".textarea-autosize").autosize();
-	$(function() {
-    $('#code').on('keyup change', function() {
-      $('#cart-rules-highlight').toggle($(this).val() !== "");
-    });
-  });
 </script>
