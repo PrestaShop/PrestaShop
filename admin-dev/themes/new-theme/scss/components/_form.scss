@@ -249,6 +249,8 @@
   }
 }
 
-input[type="color"].custom-color {
-  height: 1.375rem !important;
+.color-widget {
+  input[type="color"] {
+    height: 1.375rem !important;
+  }
 }
