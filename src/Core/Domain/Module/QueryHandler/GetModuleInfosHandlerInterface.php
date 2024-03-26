@@ -26,40 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Context;
+namespace PrestaShop\PrestaShop\Core\Domain\Module\QueryHandler;
 
-class ApiClient
+use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
+use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
+
+interface GetModuleInfosHandlerInterface
 {
-    public function __construct(
-        private int $id,
-        private string $clientId,
-        private array $scopes,
-        private int $shopId
-    ) {
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getClientId(): string
-    {
-        return $this->clientId;
-    }
-
-    public function hasScope(string $scope): bool
-    {
-        return in_array($scope, $this->scopes);
-    }
-
-    public function getScopes(): array
-    {
-        return $this->scopes;
-    }
-
-    public function getShopId(): int
-    {
-        return $this->shopId;
-    }
+    public function handle(GetModuleInfos $query): ModuleInfos;
 }

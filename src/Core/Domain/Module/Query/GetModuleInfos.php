@@ -26,40 +26,25 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Context;
+namespace PrestaShop\PrestaShop\Core\Domain\Module\Query;
 
-class ApiClient
+use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleId;
+
+/**
+ * Get module information
+ */
+class GetModuleInfos
 {
+    private ModuleId $moduleId;
+
     public function __construct(
-        private int $id,
-        private string $clientId,
-        private array $scopes,
-        private int $shopId
+        int $moduleId,
     ) {
+        $this->moduleId = new ModuleId($moduleId);
     }
 
-    public function getId(): int
+    public function getModuleId(): ModuleId
     {
-        return $this->id;
-    }
-
-    public function getClientId(): string
-    {
-        return $this->clientId;
-    }
-
-    public function hasScope(string $scope): bool
-    {
-        return in_array($scope, $this->scopes);
-    }
-
-    public function getScopes(): array
-    {
-        return $this->scopes;
-    }
-
-    public function getShopId(): int
-    {
-        return $this->shopId;
+        return $this->moduleId;
     }
 }

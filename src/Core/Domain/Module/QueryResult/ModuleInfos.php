@@ -26,40 +26,35 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Context;
+namespace PrestaShop\PrestaShop\Core\Domain\Module\QueryResult;
 
-class ApiClient
+class ModuleInfos
 {
     public function __construct(
-        private int $id,
-        private string $clientId,
-        private array $scopes,
-        private int $shopId
+        private readonly int $moduleId,
+        private readonly string $technicalName,
+        private readonly string $version,
+        private readonly bool $enabled,
     ) {
     }
 
-    public function getId(): int
+    public function getModuleId(): int
     {
-        return $this->id;
+        return $this->moduleId;
     }
 
-    public function getClientId(): string
+    public function getTechnicalName(): string
     {
-        return $this->clientId;
+        return $this->technicalName;
     }
 
-    public function hasScope(string $scope): bool
+    public function getVersion(): string
     {
-        return in_array($scope, $this->scopes);
+        return $this->version;
     }
 
-    public function getScopes(): array
+    public function isEnabled(): bool
     {
-        return $this->scopes;
-    }
-
-    public function getShopId(): int
-    {
-        return $this->shopId;
+        return $this->enabled;
     }
 }

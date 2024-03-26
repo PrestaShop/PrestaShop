@@ -31,6 +31,7 @@ services:
       - '@prestashop.adapter.legacy_db'
       - '@prestashop.core.addon.theme.theme_validator'
       - '@logger'
+      - '@PrestaShop\PrestaShop\Core\Context\ApiClientContext'
 
   prestashop.core.addon.theme.theme_manager:
     class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager

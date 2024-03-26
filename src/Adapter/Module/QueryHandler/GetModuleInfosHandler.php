@@ -26,40 +26,30 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Context;
+namespace PrestaShop\PrestaShop\Adapter\Module\QueryHandler;
 
-class ApiClient
+use Module;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
+use PrestaShop\PrestaShop\Core\Domain\Module\QueryHandler\GetModuleInfosHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
+
+#[AsQueryHandler]
+class GetModuleInfosHandler implements GetModuleInfosHandlerInterface
 {
-    public function __construct(
-        private int $id,
-        private string $clientId,
-        private array $scopes,
-        private int $shopId
-    ) {
-    }
-
-    public function getId(): int
+    public function handle(GetModuleInfos $query): ModuleInfos
     {
-        return $this->id;
-    }
+        $module = Module::getInstanceById($query->getModuleId()->getValue());
+        if (empty($module)) {
+            throw new ModuleNotFoundException('Cannot find Module with ID ' . $query->getModuleId()->getValue());
+        }
 
-    public function getClientId(): string
-    {
-        return $this->clientId;
-    }
-
-    public function hasScope(string $scope): bool
-    {
-        return in_array($scope, $this->scopes);
-    }
-
-    public function getScopes(): array
-    {
-        return $this->scopes;
-    }
-
-    public function getShopId(): int
-    {
-        return $this->shopId;
+        return new ModuleInfos(
+            (int) $module->id,
+            $module->name,
+            $module->version,
+            (bool) $module->active,
+        );
     }
 }

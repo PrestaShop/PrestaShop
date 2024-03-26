@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use Context;
 use Employee;
 use Module as LegacyModule;
+use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Routing\Router;
@@ -77,23 +78,6 @@ class AdminModuleDataProvider implements ModuleInterface
     private $router = null;
 
     /**
-     * @var ModuleDataProvider
-     */
-    private $moduleProvider;
-
-    /**
-     * @var Employee|null
-     */
-    private $employee;
-
-    /**
-     * Translator.
-     *
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var array
      */
     protected $catalog_modules = [];
@@ -108,14 +92,15 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     public $failed = false;
 
+    private readonly ApiClientContext $apiClientContext;
+
     public function __construct(
-        ModuleDataProvider $modulesProvider,
-        TranslatorInterface $translator,
-        Employee $employee = null
+        private readonly ModuleDataProvider $moduleProvider,
+        private readonly TranslatorInterface $translator,
+        private readonly ?Employee $employee = null,
+        ApiClientContext $apiClientContext = null,
     ) {
-        $this->moduleProvider = $modulesProvider;
-        $this->translator = $translator;
-        $this->employee = $employee;
+        $this->apiClientContext = $apiClientContext ?? new ApiClientContext(null);
     }
 
     /**
@@ -171,6 +156,17 @@ class AdminModuleDataProvider implements ModuleInterface
     {
         if (Tools::isPHPCLI()) {
             return true;
+        }
+
+        // If an API Client is connected (therefore accessible vie APIClientContext) we also perform hard coded check based on the module_write
+        // scope, so far in API the granularity of scopes is less accurate than the roles in the BO This is a quick solution, but if the scopes
+        // related to module management evolve this code will also have to be maintained or refactored for a better solution
+        if ($this->apiClientContext->getApiClient() && $this->apiClientContext->getApiClient()->hasScope('module_write')) {
+            return true;
+        }
+
+        if (!$this->employee) {
+            return false;
         }
 
         if (in_array($action, ['install', 'upgrade'])) {
