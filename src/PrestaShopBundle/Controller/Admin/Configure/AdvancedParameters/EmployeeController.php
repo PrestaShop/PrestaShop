@@ -352,9 +352,11 @@ class EmployeeController extends FrameworkBundleAdminController
         $isRestrictedAccess = $formAccessChecker->isRestrictedAccess((int) $employeeId);
 
         try {
+            $employeeDataProvider = $this->get('prestashop.adapter.employee.data_provider');
             $employeeForm = $this->getEmployeeFormBuilder()->getFormFor((int) $employeeId, [], [
                 'is_restricted_access' => $isRestrictedAccess,
                 'is_for_editing' => true,
+                'is_super_admin' => $employeeDataProvider->isSuperAdmin((int) $employeeId),
             ]);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
