@@ -524,12 +524,15 @@ $product-page-padding-bottom: 80px !default;
       margin-bottom: 1.25rem;
     }
 
-    .money-type {
-      max-width: 20rem;
-    }
+    @include media-breakpoint-up(md) {
 
-    &.select-widget {
-      max-width: 20rem;
+      .money-type {
+        max-width: 20rem;
+      }
+  
+      &.select-widget {
+        max-width: 20rem;
+      }
     }
 
     @include media-breakpoint-down("sm") {
@@ -2841,16 +2844,6 @@ $mobile-menu-height: 2.6rem !default;
         padding: 8px 0;
       }
     }
-
-    #product_stock{
-
-      #product_stock_options {
-
-        #product_stock_options_disabling_switch_low_stock_threshold {
-            margin-top: 7px;
-        }
-      }
-    }
   }
 
   .combination-page {
@@ -2905,6 +2898,44 @@ $mobile-menu-height: 2.6rem !default;
       }
     }
   }
+}
+
+@include media-breakpoint-down(md) {
+  #product_pricing {
+
+    #product_pricing_retail_price {
+      flex-direction: column;
+      gap:  1rem;
+
+      .retail-price-tax-excluded {
+        margin-left: 3rem;
+      }
+    }
+
+    #product_pricing_priority_management_priorities,
+    #product_pricing_summary {
+      flex-direction: column;
+    }
+
+    #product_pricing_priority_management_use_custom_priority {
+      .form-check-label {
+        flex-wrap: wrap;
+      }
+    }
+
+    #product_pricing_unit_price {
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+    }
+
+  }
+}
+
+.form-horizontal span.ps-switch:not(.ps-switch-lg) {
+  margin-top: 7px;
 }
 
 @media only screen and (min-width: 320px) and (max-width: 1450px) {
