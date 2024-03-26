@@ -52,9 +52,7 @@ class AttributeGroupValidator extends AbstractObjectModelValidator
      */
     public function validate(AttributeGroup $attributeGroup): void
     {
-        $this->validateObjectModelLocalizedProperty($attributeGroup, 'name', AttributeGroupConstraintException::class, AttributeGroupConstraintException::EMPTY_NAME);
         $this->validateObjectModelLocalizedProperty($attributeGroup, 'name', AttributeGroupConstraintException::class, AttributeGroupConstraintException::INVALID_NAME);
-        $this->validateObjectModelLocalizedProperty($attributeGroup, 'public_name', AttributeGroupConstraintException::class, AttributeGroupConstraintException::EMPTY_PUBLIC_NAME);
         $this->validateObjectModelLocalizedProperty($attributeGroup, 'public_name', AttributeGroupConstraintException::class, AttributeGroupConstraintException::INVALID_PUBLIC_NAME);
         $this->validateObjectModelProperty($attributeGroup, 'group_type', AttributeGroupConstraintException::class, AttributeGroupConstraintException::INVALID_TYPE);
         $this->validateShopsExists($attributeGroup->id_shop_list);
