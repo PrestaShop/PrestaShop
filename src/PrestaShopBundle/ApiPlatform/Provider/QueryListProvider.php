@@ -97,7 +97,7 @@ class QueryListProvider implements ProviderInterface
         /** @var DoctrineQueryBuilderInterface $queryBuilder * */
         $queryBuilder = $this->container->get($queryBuilderDefinition);
 
-        $filter = $this->createFilters($context, $operation->getExtraProperties()['filterClass']);
+        $filter = $this->createFilters($context, $operation);
 
         $count = (int) $queryBuilder->getCountQueryBuilder($filter)->executeQuery()->fetchOne();
 
@@ -125,11 +125,21 @@ class QueryListProvider implements ProviderInterface
         );
     }
 
-    private function createFilters(array $context, string $filterClass): Filters
+    private function createFilters(array $context, Operation $operation): Filters
     {
+        $filtersClass = $operation->getExtraProperties()['filtersClass'] ?? Filters::class;
+        $filtersMapping = $operation->getExtraProperties()['filtersMapping'] ?? [];
+
         $queryParameters = $context['filters'] ?? [];
+        $paginationFilters = $queryParameters['filters'] ?? [];
+        $paginationFilters = $this->domainSerializer->normalize(
+            $paginationFilters,
+            null,
+            [DomainSerializer::NORMALIZATION_MAPPING => $filtersMapping]
+        );
+
         $paginationParameters = [
-            'filters' => $queryParameters['filters'] ?? [],
+            'filters' => $paginationFilters,
             'orderBy' => array_key_exists('orderBy', $queryParameters) ? $queryParameters['orderBy'] : null,
             'sortOrder' => array_key_exists('sortOrder', $queryParameters) ? $queryParameters['sortOrder'] : 'asc',
             'offset' => array_key_exists('offset', $queryParameters) ? (int) $queryParameters['offset'] : null,
@@ -149,7 +159,7 @@ class QueryListProvider implements ProviderInterface
         // We force filter ID as empty string to avoid using a prefix in the query parameters (eg: we want limit=10 not product[limit]=10)
         $this->filtersBuilder->setConfig([
             'filter_id' => '',
-            'filters_class' => $filterClass,
+            'filters_class' => $filtersClass,
             'request' => $request,
             'shop_constraint' => $this->shopContext->getShopConstraint(),
         ]);

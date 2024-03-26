@@ -114,25 +114,32 @@ class DQBPaginatedList extends AbstractCQRSOperation implements CollectionOperat
         array $scopes = [],
         ?array $ApiResourceMapping = null,
         ?string $queryBuilder = null,
-        ?string $filterClass = null,
+        ?string $filtersClass = null,
+        ?array $filtersMapping = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_GET;
         $passedArguments['provider'] = $provider ?? QueryListProvider::class;
-        $passedArguments['filterClass'] = $filterClass ?? Filters::class;
+        $passedArguments['filtersClass'] = $filtersClass ?? Filters::class;
 
         if (!empty($queryBuilder)) {
             $this->checkArgumentAndExtraParameterValidity('queryBuilder', $queryBuilder, $passedArguments['extraProperties']);
             $passedArguments['extraProperties']['queryBuilder'] = $queryBuilder;
         }
 
-        if (!empty($filterClass)) {
-            $this->checkArgumentAndExtraParameterValidity('filterClass', $filterClass, $passedArguments['extraProperties']);
-            $passedArguments['extraProperties']['filterClass'] = $filterClass;
+        if (!empty($filtersClass)) {
+            $this->checkArgumentAndExtraParameterValidity('filtersClass', $filtersClass, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['filtersClass'] = $filtersClass;
+        }
+
+        if (!empty($filtersMapping)) {
+            $this->checkArgumentAndExtraParameterValidity('filtersMapping', $filtersMapping, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['filtersMapping'] = $filtersMapping;
         }
 
         unset($passedArguments['queryBuilder']);
-        unset($passedArguments['filterClass']);
+        unset($passedArguments['filtersClass']);
+        unset($passedArguments['filtersMapping']);
 
         parent::__construct(...$passedArguments);
     }
@@ -150,15 +157,28 @@ class DQBPaginatedList extends AbstractCQRSOperation implements CollectionOperat
         return $self;
     }
 
-    public function getFilterClass(): ?string
+    public function getFiltersClass(): ?string
     {
-        return $this->extraProperties['filterClass'];
+        return $this->extraProperties['filtersClass'];
     }
 
-    public function withFilterClass(string $filterClass): static
+    public function withFiltersClass(string $filtersClass): static
     {
         $self = clone $this;
-        $self->extraProperties['filterClass'] = $filterClass;
+        $self->extraProperties['filtersClass'] = $filtersClass;
+
+        return $self;
+    }
+
+    public function getFiltersMapping(): ?array
+    {
+        return $this->extraProperties['filtersMapping'];
+    }
+
+    public function withFiltersMapping(array $filtersMapping): static
+    {
+        $self = clone $this;
+        $self->extraProperties['filtersMapping'] = $filtersMapping;
 
         return $self;
     }
