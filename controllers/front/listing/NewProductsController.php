@@ -65,7 +65,7 @@ class NewProductsControllerCore extends ProductListingFrontController
         $query = new ProductSearchQuery();
         $query
             ->setQueryType('new-products')
-            ->setSortOrder(new SortOrder('product', 'date_add', 'desc'));
+            ->setSortOrder(new SortOrder('product', 'date_new', 'desc'));
 
         return $query;
     }
