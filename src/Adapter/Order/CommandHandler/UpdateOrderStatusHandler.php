@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -62,7 +63,7 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
 
         $currentOrderState = $order->getCurrentOrderState();
 
-        if ($currentOrderState->id == $orderState->id) {
+        if ($currentOrderState && $currentOrderState->id == $orderState->id) {
             throw new OrderException('The order has already been assigned this status.');
         }
 
