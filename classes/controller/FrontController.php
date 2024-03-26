@@ -525,6 +525,7 @@ class FrontControllerCore extends Controller
             'static_token' => Tools::getToken(false),
             'token' => Tools::getToken(),
             'debug' => _PS_MODE_DEV_,
+            'device' => $this->getTemplateVarDevice(),
         ];
 
         // An array [module_name => module_output] will be returned
@@ -548,6 +549,15 @@ class FrontControllerCore extends Controller
         Media::addJsDef([
             'prestashop' => $this->buildFrontEndObject($templateVars),
         ]);
+    }
+
+    protected function getTemplateVarDevice(): array
+    {
+        return [
+            'is_mobile' => $this->context->isMobile(),
+            'is_tablet' => $this->context->isTablet(),
+            'type' => $this->context->getDevice(),
+        ];
     }
 
     /**
