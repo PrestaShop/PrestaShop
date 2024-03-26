@@ -114,6 +114,7 @@ class StylesheetManagerCore extends AbstractAssetManager
     {
         $media = $this->getSanitizedMedia($media);
 
+        $srcPath = $fullPath;
         $fullPath = $version ? $fullPath . '?' . $version : $fullPath;
 
         if ('remote' === $server) {
@@ -127,7 +128,7 @@ class StylesheetManagerCore extends AbstractAssetManager
         $this->list[$type][$id] = [
             'id' => $id,
             'type' => $type,
-            'path' => $fullPath,
+            'path' => $srcPath,
             'uri' => $uri,
             'media' => $media,
             'priority' => $priority,
