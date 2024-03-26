@@ -44,6 +44,13 @@ class SSLMiddlewareListener
 {
     private const AVAILABLE_SECURE_PROTOCOLS = ['tls/1.2', 'tls/1.3'];
 
+    private const NOT_PROTECTED_ROUTES = [
+        '/^api_doc$/',
+        '/^_wdt$/',
+        '/^_profiler.*$/',
+        '/^_preview_error$/',
+    ];
+
     public function __construct(
         private readonly ConfigurationInterface $configuration
     ) {
@@ -58,6 +65,21 @@ class SSLMiddlewareListener
      */
     public function onKernelRequest(RequestEvent $event): void
     {
+        // Only main request are protected, this way sub requests like partial fragments work correctly
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
+        // Some routes don't need to be protected by HTTPs (Swagger doc, profiler and debugging routes, ...)
+        $route = $event->getRequest()->attributes->get('_route');
+        if (!empty($route)) {
+            foreach (self::NOT_PROTECTED_ROUTES as $routePattern) {
+                if (preg_match($routePattern, $route)) {
+                    return;
+                }
+            }
+        }
+
         // If constant that forces the check is disabled ignore the protection
         if ($this->configuration->get('_PS_API_FORCE_TLS_VERSION_') === false) {
             return;
