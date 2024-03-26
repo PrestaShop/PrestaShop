@@ -154,7 +154,7 @@ class FrontControllerCore extends Controller
 
         parent::__construct();
 
-        if (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) {
+        if (Configuration::get('PS_SSL_ENABLED')) {
             $this->ssl = true;
         }
 

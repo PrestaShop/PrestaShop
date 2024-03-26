@@ -98,30 +98,18 @@ class PreferencesType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $configuration = $this->configuration;
-        $isSslEnabled = (bool) $configuration->get('PS_SSL_ENABLED');
 
         if ($this->requestStack->getCurrentRequest()->isSecure()) {
             $builder->add('enable_ssl', SwitchType::class, [
                 'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
-                    'If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for customer account identification and order processing.',
+                    'If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for all the pages of your shop.',
                     'Admin.Shopparameters.Help'
                 ),
             ]);
         }
 
         $builder
-            ->add('enable_ssl_everywhere', SwitchType::class, [
-                'disabled' => !$isSslEnabled,
-                'label' => $this->trans(
-                    'Enable SSL on all pages',
-                    'Admin.Shopparameters.Feature'
-                ),
-                'help' => $this->trans(
-                    'When enabled, all the pages of your shop will be SSL-secured.',
-                    'Admin.Shopparameters.Help'
-                ),
-            ])
             ->add('enable_token', SwitchType::class, [
                 'disabled' => !$this->isContextDependantOptionEnabled(),
                 'label' => $this->trans(
