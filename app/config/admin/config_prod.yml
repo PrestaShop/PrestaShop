@@ -1,3 +1,6 @@
 imports:
   - { resource: ../config_prod.yml }
   - { resource: config.yml }
+
+framework:
+  error_controller: PrestaShopBundle\Controller\Admin\ErrorController::showAction
