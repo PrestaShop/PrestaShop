@@ -2841,8 +2841,17 @@ $mobile-menu-height: 2.6rem !default;
         padding: 8px 0;
       }
     }
-  }
 
+    #product_stock{
+
+      #product_stock_options {
+
+        #product_stock_options_disabling_switch_low_stock_threshold {
+            margin-top: 7px;
+        }
+      }
+    }
+  }
 
   .combination-page {
     .medium-input {
