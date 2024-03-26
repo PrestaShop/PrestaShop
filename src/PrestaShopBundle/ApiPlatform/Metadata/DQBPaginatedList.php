@@ -116,6 +116,7 @@ class DQBPaginatedList extends AbstractCQRSOperation implements CollectionOperat
         ?string $queryBuilder = null,
         ?string $filtersClass = null,
         ?array $filtersMapping = null,
+        ?bool $experimentalOperation = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_GET;

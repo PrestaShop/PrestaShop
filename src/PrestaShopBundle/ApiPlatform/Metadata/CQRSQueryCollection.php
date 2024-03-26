@@ -115,6 +115,7 @@ class CQRSQueryCollection extends AbstractCQRSOperation implements CollectionOpe
         array $scopes = [],
         ?array $CQRSQueryMapping = null,
         ?array $ApiResourceMapping = null,
+        ?bool $experimentalOperation = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_GET;

@@ -116,6 +116,7 @@ class CQRSCommand extends AbstractCQRSOperation
         ?array $CQRSQueryMapping = null,
         ?array $ApiResourceMapping = null,
         ?array $CQRSCommandMapping = null,
+        ?bool $experimentalOperation = null,
     ) {
         $passedArguments = \get_defined_vars();
 
