@@ -2,6 +2,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 import type {Page} from 'playwright';
+import type {ProductOrderConfirmation} from '@data/types/product';
 
 /**
  * Order confirmation page, contains functions that can be used on the page
@@ -24,6 +25,20 @@ class OrderConfirmationPage extends FOBasePage {
   protected customerSupportLink: string;
 
   private readonly orderConfirmationTable: string;
+
+  private readonly paymentInformationBody: string;
+
+  private readonly orderDetails: string;
+
+  private readonly numberOfOrderedProducts: string;
+
+  private readonly productRow: (row: number) => string;
+
+  private readonly productRowImage: (row: number) => string;
+
+  private readonly productRowDetails: (row: number) => string;
+
+  private readonly productRowPrices: (row: number) => string;
 
   private readonly giftWrappingRow: string;
 
@@ -51,6 +66,13 @@ class OrderConfirmationPage extends FOBasePage {
     this.giftWrappingRow = `${this.orderConfirmationTable} tr:nth-child(3)`;
     this.orderDetailsTable = 'div#order-details';
     this.paymentMethodRow = `${this.orderDetailsTable} li:nth-child(2)`;
+    this.paymentInformationBody = '#content-wrapper div:nth-child(2) div.card-body';
+    this.orderDetails = 'div.order-confirmation__details ul.order-details';
+    this.numberOfOrderedProducts = 'div.order-confirmation__items div.item';
+    this.productRow = (row: number) => `div.order-confirmation__items div.item:nth-child(${row})`;
+    this.productRowImage = (row: number) => `${this.productRow(row)} div.item__image img`;
+    this.productRowDetails = (row: number) => `${this.productRow(row)} div.item__details`;
+    this.productRowPrices = (row: number) => `${this.productRow(row)} div.item__prices`;
   }
 
   /*
@@ -112,6 +134,47 @@ class OrderConfirmationPage extends FOBasePage {
    */
   async getGiftWrappingValue(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.giftWrappingRow);
+  }
+
+  /**
+   * Get payment information
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getPaymentInformation(page: Page): Promise<string> {
+    return this.getTextContent(page, this.paymentInformationBody);
+  }
+
+  /**
+   * Get order details
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getOrderDetails(page: Page): Promise<string> {
+    return this.getTextContent(page, this.orderDetails);
+  }
+
+  /**
+   * Get number of products
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getNumberOfProducts(page: Page): Promise<number> {
+    return page.locator(this.numberOfOrderedProducts).count();
+  }
+
+  /**
+   * Get product details in row
+   * @param page {Page} Browser tab
+   * @param row {number} Row of product
+   * @returns {Promise<ProductOrderConfirmation>}
+   */
+  async getProductDetailsInRow(page: Page, row: number): Promise<ProductOrderConfirmation> {
+    return {
+      image: await this.getAttributeContent(page, this.productRowImage(row), 'srcset'),
+      details: await this.getTextContent(page, this.productRowDetails(row)),
+      prices: await this.getTextContent(page, this.productRowPrices(row)),
+    };
   }
 }
 
