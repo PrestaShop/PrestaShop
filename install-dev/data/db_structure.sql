@@ -1220,6 +1220,7 @@ CREATE TABLE `PREFIX_orders` (
   `id_cart` int(10) unsigned NOT NULL,
   `id_currency` int(10) unsigned NOT NULL,
   `id_address_delivery` int(10) unsigned NOT NULL,
+  `invoice` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `id_address_invoice` int(10) unsigned NOT NULL,
   `current_state` int(10) unsigned NOT NULL,
   `secure_key` varchar(32) NOT NULL DEFAULT '-1',

@@ -171,11 +171,13 @@
               </a>
 
               <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" id="js-invoice-address-edit-btn"
-                   href="{{ path('admin_order_addresses_edit', {'orderId': orderForViewing.id, 'addressType': 'invoice', 'liteDisplaying': 1, 'submitFormAjax': 1}) }}"
-                >
-                  {{ 'Edit existing address'|trans({}, 'Admin.Actions') }}
-                </a>
+	        {% if orderForViewing.invoice %}
+                  <a class="dropdown-item" id="js-invoice-address-edit-btn"
+                     href="{{ path('admin_order_addresses_edit', {'orderId': orderForViewing.id, 'addressType': 'invoice', 'liteDisplaying': 1, 'submitFormAjax': 1}) }}"
+                  >
+                    {{ 'Edit existing address'|trans({}, 'Admin.Actions') }}
+                  </a>
+                {% endif %}
 
                 <a href="#"
                    class="dropdown-item js-update-customer-address-modal-btn"
@@ -189,9 +191,11 @@
             {% endif %}
           </div>
 
-          {% for line in orderForViewing.invoiceAddressFormatted|split("\n") %}
-            <p class="mb-0">{{ line }}</p>
-          {% endfor %}
+	  {% if orderForViewing.invoice %}
+            {% for line in orderForViewing.invoiceAddressFormatted|split("\n") %}
+              <p class="mb-0">{{ line }}</p>
+            {% endfor %}
+	  {% endif %}
         </div>
       </div>
     </div>
