@@ -96,28 +96,6 @@ services:
     public: false
     tags: [ 'container.env_var_processor' ]
 
-  PrestaShopBundle\ApiPlatform\Provider\QueryProvider:
-    tags: [ 'api_platform.state_provider' ]
-    public: false
-    autowire: true
-    arguments:
-      - '@prestashop.core.query_bus'
-
-  PrestaShopBundle\ApiPlatform\Processor\CommandProcessor:
-    tags: [ 'api_platform.state_processor' ]
-    public: false
-    autowire: true
-    arguments:
-      - '@prestashop.core.command_bus'
-
-  PrestaShopBundle\ApiPlatform\Provider\QueryListProvider:
-    tags: [ 'api_platform.state_provider' ]
-    public: false
-    autowire: true
-    arguments:
-      $filtersBuilder: '@prestashop.core.api.search.builder'
-      $requestStack: '@request_stack'
-
   PrestaShopBundle\Security\Admin\SessionRenewer:
     arguments:
       $storage: "@security.csrf.token_storage"
@@ -135,19 +113,3 @@ services:
       - '@doctrine.orm.entity_manager'
 
   PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface: '@PrestaShopBundle\Service\Database\TransactionManager'
-
-  PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor:
-    public: false
-    autowire: true
-    arguments:
-      $moduleDir: '%prestashop.module_dir%'
-      $installedModules: '%prestashop.installed_modules%'
-      $enabledModules: '%prestashop.active_modules%'
-      $projectDir: '%kernel.project_dir%'
-
-  PrestaShopBundle\ApiPlatform\Scopes\CachedApiResourceScopesExtractor:
-    public: false
-    autowire: true
-    decorates: PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor
-
-  PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface: '@PrestaShopBundle\ApiPlatform\Scopes\CachedApiResourceScopesExtractor'
