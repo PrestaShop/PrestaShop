@@ -2906,6 +2906,12 @@ $mobile-menu-height: 2.6rem !default;
 }
 
 @include media-breakpoint-down(md) {
+  #product_stock {
+    #product_stock_quantities_delta_quantity {
+      flex-direction: column;
+    }
+  }
+
   #product_pricing {
 
     #product_pricing_retail_price {
