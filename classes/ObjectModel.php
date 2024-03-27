@@ -1171,7 +1171,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         static $ps_allow_html_iframe = null;
 
         if ($ps_lang_default === null) {
-            $ps_lang_default = Configuration::get('PS_LANG_DEFAULT');
+            $ps_lang_default = $this->id_lang;
         }
 
         if ($ps_allow_html_iframe === null) {
