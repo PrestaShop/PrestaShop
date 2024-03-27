@@ -48,15 +48,16 @@ class GetOrderForViewing
 
     /**
      * @param int $orderId
-     * @param string $productsSorting
+     * @param array $productsSortingFields
+     * @param string $productsSortingOrder
      *
-     * @throws OrderException
      * @throws InvalidSortingException
+     * @throws OrderException
      */
-    public function __construct(int $orderId, string $productsSorting = QuerySorting::ASC)
+    public function __construct(int $orderId, array $productsSortingFields = ['date_add'], string $productsSortingOrder = QuerySorting::DESC)
     {
         $this->orderId = new OrderId($orderId);
-        $this->productsSorting = new QuerySorting($productsSorting);
+        $this->productsSorting = new QuerySorting($productsSortingFields, $productsSortingOrder);
     }
 
     /**
