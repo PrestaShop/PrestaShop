@@ -75,6 +75,7 @@ services:
   prestashop.adapter.category.query_handler.get_category_for_editing:
     class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryForEditingHandler
     autoconfigure: true
+    autowire: true
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
 

@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectOption;
 
 /**
  * Creates/updates root category from data submitted in category form
@@ -105,6 +106,13 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
             $command->setAssociatedShopIds($data['shop_association']);
         }
 
+        $redirectOption = new RedirectOption(
+            $data['redirect_option']['type'],
+            $data['redirect_option']['target']['id'] ?? 0
+        );
+
+        $command->setRedirectOption($redirectOption);
+
         return $command;
     }
 
@@ -134,6 +142,13 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
         if (isset($data['shop_association'])) {
             $command->setAssociatedShopIds($data['shop_association']);
         }
+
+        $redirectOption = new RedirectOption(
+            $data['redirect_option']['type'],
+            $data['redirect_option']['target']['id'] ?? 0
+        );
+
+        $command->setRedirectOption($redirectOption);
 
         return $command;
     }

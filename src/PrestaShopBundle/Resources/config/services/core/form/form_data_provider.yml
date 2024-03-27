@@ -43,10 +43,9 @@ services:
 
   prestashop.core.form.identifiable_object.data_provider.category_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CategoryFormDataProvider'
+    autowire: true
     arguments:
       - '@prestashop.core.query_bus'
-      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.getCategory()'
       - '@prestashop.adapter.group.group_data_provider'
       - '@prestashop.adapter.shop.url.category_provider'
       - '@router.default'

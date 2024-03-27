@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\QueryResult\RedirectTargetInformation;
 
 /**
  * Stores category data needed for editing.
@@ -72,6 +73,10 @@ class EditableCategory
      * @var string[]
      */
     private $metaKeywords;
+
+    private string $redirectType;
+
+    private ?RedirectTargetInformation $categoryRedirectTarget;
 
     /**
      * @var string[]
@@ -122,6 +127,8 @@ class EditableCategory
      * @param string[] $metaTitle
      * @param string[] $metaDescription
      * @param string[] $metaKeywords
+     * @param string $redirectType
+     * @param ?RedirectTargetInformation $categoryRedirectTarget
      * @param string[] $linkRewrite
      * @param int[] $groupAssociationIds
      * @param int[] $shopAssociationIds
@@ -141,6 +148,8 @@ class EditableCategory
         array $metaDescription,
         array $metaKeywords,
         array $linkRewrite,
+        string $redirectType,
+        ?RedirectTargetInformation $categoryRedirectTarget,
         array $groupAssociationIds,
         array $shopAssociationIds,
         $isRootCategory,
@@ -165,6 +174,8 @@ class EditableCategory
         $this->isRootCategory = $isRootCategory;
         $this->subCategories = $subCategories;
         $this->additionalDescription = $additionalDescription;
+        $this->redirectType = $redirectType;
+        $this->categoryRedirectTarget = $categoryRedirectTarget;
     }
 
     /**
@@ -245,6 +256,26 @@ class EditableCategory
     public function getLinkRewrite()
     {
         return $this->linkRewrite;
+    }
+
+    public function getRedirectType(): string
+    {
+        return $this->redirectType;
+    }
+
+    public function setRedirectType(string $redirectType): void
+    {
+        $this->redirectType = $redirectType;
+    }
+
+    public function getRedirectTarget(): ?RedirectTargetInformation
+    {
+        return $this->categoryRedirectTarget;
+    }
+
+    public function setRedirectTarget(?RedirectTargetInformation $categoryRedirectTarget): void
+    {
+        $this->categoryRedirectTarget = $categoryRedirectTarget;
     }
 
     /**

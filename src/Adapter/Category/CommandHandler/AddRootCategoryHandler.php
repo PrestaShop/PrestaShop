@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -41,27 +41,14 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
  * Class AddRootCategoryHandler.
  */
 #[AsCommandHandler]
-final class AddRootCategoryHandler extends AbstractObjectModelHandler implements AddRootCategoryHandlerInterface
+final class AddRootCategoryHandler extends AbstractEditCategoryHandler implements AddRootCategoryHandlerInterface
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @var CategoryImageUploader
-     */
-    private $categoryImageUploader;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     */
     public function __construct(
-        ConfigurationInterface $configuration,
-        CategoryImageUploader $categoryImageUploader
+        private readonly ConfigurationInterface $configuration,
+        CategoryImageUploader $categoryImageUploader,
+        CategoryRepository $categoryRepository,
     ) {
-        $this->configuration = $configuration;
-        $this->categoryImageUploader = $categoryImageUploader;
+        parent::__construct($categoryImageUploader, $categoryRepository);
     }
 
     /**
@@ -133,6 +120,10 @@ final class AddRootCategoryHandler extends AbstractObjectModelHandler implements
 
         if (false === $category->validateFieldsLang(false)) {
             throw new CategoryException('Invalid language data for creating root category.');
+        }
+
+        if (null !== $command->getRedirectOption()) {
+            $this->fillWithRedirectOption($category, $command->getRedirectOption());
         }
 
         if (false === $category->save()) {
