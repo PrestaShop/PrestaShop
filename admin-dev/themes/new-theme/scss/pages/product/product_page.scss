@@ -2671,6 +2671,10 @@ $mobile-menu-height: 2.6rem !default;
         .product-header-form {
           padding: 0;
 
+          .header-mobile-toolbar {
+            margin-left: auto;
+          }
+
           #product_header {
             position: relative;
             flex-wrap: nowrap;
@@ -2680,6 +2684,7 @@ $mobile-menu-height: 2.6rem !default;
               position: absolute;
               top: 0;
               margin-left: calc($product-cover-mobile-size + 0.5rem);
+              width: calc(100% - $product-cover-mobile-size - 1rem);
 
               label {
                 margin-bottom: 0.2rem;
