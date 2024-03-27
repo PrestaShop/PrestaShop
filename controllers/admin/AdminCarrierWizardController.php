@@ -548,10 +548,12 @@ class AdminCarrierWizardControllerCore extends AdminController
 
         $tmp_range = $range_obj->getRanges((int) $carrier->id);
         $tpl_vars['ranges'] = [];
+        $tpl_vars['package_weight_by_range'] = [];
         if ($shipping_method != Carrier::SHIPPING_METHOD_FREE) {
             foreach ($tmp_range as $id => $range) {
                 $tpl_vars['ranges'][$range['id_' . $range_table]] = $range;
                 $tpl_vars['ranges'][$range['id_' . $range_table]]['id_range'] = $range['id_' . $range_table];
+                $tpl_vars['package_weight_by_range'][$range['id_' . $range_table]] = $range['package_weight'];
             }
         }
 
@@ -712,6 +714,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         $range_inf = Tools::getValue('range_inf');
         $range_sup = Tools::getValue('range_sup');
         $range_type = Tools::getValue('shipping_method');
+        $package_weight = Tools::getValue('package_weight');
 
         $fees = Tools::getValue('fees');
 
@@ -725,6 +728,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                 $range->id_carrier = (int) $carrier->id;
                 $range->delimiter1 = (float) $delimiter1;
                 $range->delimiter2 = (float) $range_sup[$key];
+                $range->package_weight = (float) $package_weight[$key];
                 $range->save();
 
                 if (!Validate::isLoadedObject($range)) {

@@ -107,6 +107,7 @@ function displayRangeType()
 	{
 		string = string_weight;
 		$('.weight_unit').show();
+		$('.package_weight').show();
 		$('.price_unit').hide();
 	}
 	else
@@ -114,6 +115,7 @@ function displayRangeType()
 		string = string_price;
 		$('.price_unit').show();
 		$('.weight_unit').hide();
+    $('.package_weight').hide();
 	}
 	is_freeClick($('input[name="is_free"]:checked'));
 	$('.range_type').html(string);
@@ -348,6 +350,9 @@ function bind_inputs()
 			$('tr.fees').each(function () {
 				$(this).find('td:eq('+index+')').remove();
 			});
+      $('tr.package_weight').each(function () {
+        $(this).find('td:eq('+index+')').remove();
+      });
 			rebuildTabindex();
 		}
 		return false;
@@ -603,6 +608,9 @@ function add_new_range()
 
 	$('tr.fees').each(function () {
 		$(this).find('td:last').after('<td><div class="input-group fixed-width-md"><span class="input-group-addon currency_sign">'+currency_sign+'</span><input class="form-control" disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /></div></td>');
+	});
+	$('tr.package_weight').each(function () {
+		$(this).find('td:last').after('<td><div class="input-group fixed-width-md"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><input type="text" class="form-control" name="package_weight[]" type="text" /></div></td>');
 	});
 	$('tr.delete_range td:last').after('<td><button class="btn btn-default">'+labelDelete+'</button</td>');
 
