@@ -300,6 +300,7 @@ class HelperUploaderCore extends Uploader
             'name' => $this->getName(),
             'url' => $this->getUrl(),
             'multiple' => $this->isMultiple(),
+            'accept' => $this->getAcceptTypes(),
             'files' => $this->getFiles(),
             'title' => $this->getTitle(),
             'max_files' => $this->getMaxFiles(),
