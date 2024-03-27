@@ -2939,6 +2939,20 @@ $mobile-menu-height: 2.6rem !default;
   }
 }
 
+#categories-modal-content{
+  .form-control-label {
+    margin: 1rem 0;
+  }
+  .category-tree-footer {
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 20px;
+    @include media-breakpoint-down(md) {
+      justify-content: flex-end;
+    }
+  }
+}
+
 .form-horizontal span.ps-switch:not(.ps-switch-lg) {
   margin-top: 7px;
 }
