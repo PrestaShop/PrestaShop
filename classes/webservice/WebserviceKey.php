@@ -43,7 +43,7 @@ class WebserviceKeyCore extends ObjectModel
         'fields' => [
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'key' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 32],
-            'description' => ['type' => self::TYPE_STRING],
+            'description' => ['type' => self::TYPE_STRING, 'size' => 4194303],
         ],
     ];
 

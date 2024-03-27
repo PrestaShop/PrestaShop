@@ -198,7 +198,7 @@ class OrderDetailCore extends ObjectModel
             'product_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'product_attribute_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_customization' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'product_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true],
+            'product_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 4194303],
             'product_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
             'product_quantity_in_stock' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
             'product_quantity_return' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
