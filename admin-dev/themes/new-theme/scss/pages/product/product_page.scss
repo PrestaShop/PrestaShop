@@ -512,9 +512,6 @@ $product-page-padding-bottom: 80px !default;
   }
 
   .form-group {
-    > .alert:not(.alert-unavailable) {
-      max-width: 47.65rem;
-    }
 
     > .help-box {
       margin-top: 0.6rem;
@@ -2510,11 +2507,6 @@ $product-page-padding-bottom: 80px !default;
       }
     }
 
-    h2 {
-      padding-top: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-
     .form-group.row,
     .alert-unavailable {
       margin-bottom: 1rem;
@@ -2906,10 +2898,26 @@ $mobile-menu-height: 2.6rem !default;
 }
 
 @include media-breakpoint-down(md) {
+  #product_shipping{
+
+    #product_shipping_delivery_time_note_type {
+  
+      .form-check-radio .form-check-label {
+        flex-wrap: wrap;
+
+        a {
+          margin-left: -2px;
+          padding: .5rem 0;
+        }
+      }
+    }
+  }
+
   #product_stock {
     #product_stock_quantities_delta_quantity {
       flex-direction: column;
     }
+
   }
 
   #product_pricing {
@@ -2942,6 +2950,19 @@ $mobile-menu-height: 2.6rem !default;
       }
     }
 
+    .specific-price-priorities > div {
+      margin: .5rem 0;
+    }
+  }
+}
+
+#product_details {
+
+  #product_details_features_feature_values {
+    margin-bottom: 0;
+  }
+  .product-feature {
+    margin-bottom: 1rem;
   }
 }
 
@@ -2958,10 +2979,12 @@ $mobile-menu-height: 2.6rem !default;
 }
 
 #product_options{
+
   #product_options_product_suppliers > .row > .col-sm {
     max-width: calc(100% - 30px);
     overflow: auto;
   }
+
   #product_options_product_suppliers table {
     min-width: max-content;
   }
@@ -2970,6 +2993,11 @@ $mobile-menu-height: 2.6rem !default;
 #product-tabs-content {
   .form-contenttab > div > .form-group {
     margin-bottom: 2rem;
+  }
+}
+#product-tabs-content {
+  .form-contenttab > div > .form-group.inline-switch-widget {
+    margin-bottom: 1rem;
   }
 }
 
@@ -2987,8 +3015,19 @@ $mobile-menu-height: 2.6rem !default;
   }
 }
 
+#product_stock_availability > .form-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+  
 .form-horizontal span.ps-switch:not(.ps-switch-lg) {
   margin-top: 7px;
+}
+
+.small.font-secondary a {
+  margin-left: -2px;
 }
 
 @media only screen and (min-width: 320px) and (max-width: 1450px) {
