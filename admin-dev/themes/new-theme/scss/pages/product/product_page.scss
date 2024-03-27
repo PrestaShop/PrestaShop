@@ -521,13 +521,10 @@ $product-page-padding-bottom: 80px !default;
       margin-bottom: 1.25rem;
     }
 
-    @include media-breakpoint-up(md) {
+    @include media-breakpoint-up("md") {
 
+      &.select-widget,
       .money-type {
-        max-width: 20rem;
-      }
-  
-      &.select-widget {
         max-width: 20rem;
       }
     }
@@ -2675,8 +2672,8 @@ $mobile-menu-height: 2.6rem !default;
             .header-name {
               position: absolute;
               top: 0;
-              margin-left: calc($product-cover-mobile-size + 0.5rem);
               width: calc(100% - $product-cover-mobile-size - 1rem);
+              margin-left: calc($product-cover-mobile-size + 0.5rem);
 
               label {
                 margin-bottom: 0.2rem;
@@ -2821,9 +2818,7 @@ $mobile-menu-height: 2.6rem !default;
       }
 
       .customization-field-switch{
-
         .ps-switch {
-
           .slide-button {
             right: 0;
           }
@@ -2899,15 +2894,13 @@ $mobile-menu-height: 2.6rem !default;
 
 @include media-breakpoint-down(md) {
   #product_shipping{
-
     #product_shipping_delivery_time_note_type {
-  
       .form-check-radio .form-check-label {
         flex-wrap: wrap;
 
         a {
+          padding: 0.5rem 0;
           margin-left: -2px;
-          padding: .5rem 0;
         }
       }
     }
@@ -2921,10 +2914,9 @@ $mobile-menu-height: 2.6rem !default;
   }
 
   #product_pricing {
-
     #product_pricing_retail_price {
       flex-direction: column;
-      gap:  1rem;
+      gap: 1rem;
 
       .retail-price-tax-excluded {
         margin-left: 3rem;
@@ -2951,16 +2943,16 @@ $mobile-menu-height: 2.6rem !default;
     }
 
     .specific-price-priorities > div {
-      margin: .5rem 0;
+      margin: 0.5rem 0;
     }
   }
 }
 
 #product_details {
-
   #product_details_features_feature_values {
     margin-bottom: 0;
   }
+
   .product-feature {
     margin-bottom: 1rem;
   }
@@ -2972,6 +2964,7 @@ $mobile-menu-height: 2.6rem !default;
       max-width: calc(100vw - 30px);
     }
   }
+
   .ps-checkboxes-dropdown .dropdown-item .md-checkbox-container  {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2979,7 +2972,6 @@ $mobile-menu-height: 2.6rem !default;
 }
 
 #product_options{
-
   #product_options_product_suppliers > .row > .col-sm {
     max-width: calc(100% - 30px);
     overflow: auto;
@@ -2994,8 +2986,7 @@ $mobile-menu-height: 2.6rem !default;
   .form-contenttab > div > .form-group {
     margin-bottom: 2rem;
   }
-}
-#product-tabs-content {
+
   .form-contenttab > div > .form-group.inline-switch-widget {
     margin-bottom: 1rem;
   }
@@ -3005,6 +2996,7 @@ $mobile-menu-height: 2.6rem !default;
   .form-control-label {
     margin: 1rem 0;
   }
+
   .category-tree-footer {
     display: flex;
     gap: 1rem;
@@ -3016,12 +3008,11 @@ $mobile-menu-height: 2.6rem !default;
 }
 
 #product_stock_availability > .form-group {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
-  
 .form-horizontal span.ps-switch:not(.ps-switch-lg) {
   margin-top: 7px;
 }
