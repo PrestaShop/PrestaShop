@@ -59,6 +59,28 @@
   {% block api_client_listing %}
     {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': apiClientGrid} %}
   {% endblock %}
+
+  {# Configuration form #}
+  {{ form_start(configurationForm, {attr : {class: 'form'}, action: path('admin_api_clients_process_configuration') }) }}
+  {% block administration_form_general %}
+    <div class="card" id="configuration_fieldset_general">
+      <h3 class="card-header">
+        <i class="material-icons">settings</i>
+        {{ 'Configuration'|trans({}, 'Admin.Global') }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_widget(configurationForm) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+  {{ form_end(configurationForm) }}
 {% endblock %}
 
 {% block javascripts %}

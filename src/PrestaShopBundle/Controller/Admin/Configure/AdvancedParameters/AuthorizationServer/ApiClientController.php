@@ -43,11 +43,13 @@ use PrestaShop\PrestaShop\Core\Domain\ApiClient\QueryResult\EditableApiClient;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface as ConfigurationFormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ApiClientFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -63,29 +65,33 @@ class ApiClientController extends FrameworkBundleAdminController
     ) {
     }
 
-    /**
-     * @return Response
-     */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(ApiClientFilters $apiClientFilters, Request $request): Response
     {
-        $apiClientGridFactory = $this->get('prestashop.core.grid.factory.api_client');
-        $apiClientGrid = $apiClientGridFactory->getGrid($apiClientFilters);
-        $isAuthorizationServerMultistoreDisabled = $this->isAuthorizationServerMultistoreDisabled();
+        return $this->renderIndex($apiClientFilters, $request);
+    }
 
-        $oauthApiBaseUrl = $this->getOAuthApiBaseUrl($request);
-        $htmlDocUrl = $oauthApiBaseUrl . '/docs.html';
-        $jsonDocUrl = $oauthApiBaseUrl . '/docs.json';
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    public function processConfigurationAction(ApiClientFilters $apiClientFilters, Request $request): Response
+    {
+        $formHandler = $this->getConfigurationFormHandler();
+        $configurationForm = $formHandler->getForm();
+        $configurationForm->handleRequest($request);
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/index.html.twig', [
-            'apiClientGrid' => $this->presentGrid($apiClientGrid),
-            'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
-            'layoutTitle' => $this->trans('API Clients', 'Admin.Navigation.Menu'),
-            'layoutHeaderToolbarBtn' => $this->getApiClientsToolbarButtons(),
-            'isAuthorizationServerMultistoreDisabled' => $isAuthorizationServerMultistoreDisabled,
-            'htmlDocUrl' => $htmlDocUrl,
-            'jsonDocUrl' => $jsonDocUrl,
-        ]);
+        if ($configurationForm->isSubmitted() && $configurationForm->isValid()) {
+            $data = $configurationForm->getData();
+            $configurationErrors = $formHandler->save($data);
+
+            if (empty($configurationErrors)) {
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_api_clients_index');
+            }
+
+            $this->flashErrors($configurationErrors);
+        }
+
+        return $this->renderIndex($apiClientFilters, $request, $configurationForm);
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_index')]
@@ -251,6 +257,32 @@ class ApiClientController extends FrameworkBundleAdminController
         return $rootUrl . '/admin-api';
     }
 
+    private function renderIndex(ApiClientFilters $apiClientFilters, Request $request, ?FormInterface $configurationForm = null): Response
+    {
+        $apiClientGridFactory = $this->get('prestashop.core.grid.factory.api_client');
+        $apiClientGrid = $apiClientGridFactory->getGrid($apiClientFilters);
+        $isAuthorizationServerMultistoreDisabled = $this->isAuthorizationServerMultistoreDisabled();
+
+        $oauthApiBaseUrl = $this->getOAuthApiBaseUrl($request);
+        $htmlDocUrl = $oauthApiBaseUrl . '/docs.html';
+        $jsonDocUrl = $oauthApiBaseUrl . '/docs.json';
+
+        if (null === $configurationForm) {
+            $configurationForm = $this->getConfigurationFormHandler()->getForm();
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/index.html.twig', [
+            'apiClientGrid' => $this->presentGrid($apiClientGrid),
+            'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
+            'layoutTitle' => $this->trans('API Clients', 'Admin.Navigation.Menu'),
+            'layoutHeaderToolbarBtn' => $this->getApiClientsToolbarButtons(),
+            'isAuthorizationServerMultistoreDisabled' => $isAuthorizationServerMultistoreDisabled,
+            'htmlDocUrl' => $htmlDocUrl,
+            'jsonDocUrl' => $jsonDocUrl,
+            'configurationForm' => $configurationForm,
+        ]);
+    }
+
     private function getFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.api_client_form_handler');
@@ -259,6 +291,11 @@ class ApiClientController extends FrameworkBundleAdminController
     private function getFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.api_client_form_builder');
+    }
+
+    private function getConfigurationFormHandler(): ConfigurationFormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.autorization_server.form_handler');
     }
 
     /**

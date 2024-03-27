@@ -6,6 +6,14 @@ admin_api_clients_index:
     _legacy_controller: AdminAuthorizationServer
     _legacy_link: AdminAuthorizationServer
 
+admin_api_clients_process_configuration:
+  path: /api-clients
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiClientController::processConfigurationAction
+    _legacy_controller: AdminAuthorizationServer
+    _legacy_link: AdminAuthorizationServer
+
 admin_api_clients_create:
   path: /api-clients/create
   methods: [ GET, POST, PATCH ]

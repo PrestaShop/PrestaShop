@@ -298,3 +298,6 @@ services:
   PrestaShop\PrestaShop\Adapter\Admin\ImageConfiguration:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  PrestaShop\PrestaShop\Adapter\AuthorizationServer\AuthorizationServerConfiguration:
+    autowire: true

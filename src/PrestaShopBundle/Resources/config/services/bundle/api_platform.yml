@@ -39,6 +39,7 @@ services:
   # This decorator allows modifying the available ApiPlatform resources based on their configuration (using a custom extra property)
   PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\ExperimentalOperationsMetadataCollectionFactoryDecorator:
     decorates: api_platform.metadata.resource.metadata_collection_factory
+    autowire: true
     arguments:
       $innerFactory: '@.inner'
       $isDebug: '%kernel.debug%'

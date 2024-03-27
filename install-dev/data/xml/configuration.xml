@@ -891,5 +891,8 @@ Country</value>
     <configuration id="PS_PRODUCT_BREADCRUMB_CATEGORY" name="PS_PRODUCT_BREADCRUMB_CATEGORY">
       <value>default</value>
     </configuration>
+    <configuration id="PS_ENABLE_EXPERIMENTAL_API_ENDPOINTS" name="PS_ENABLE_EXPERIMENTAL_API_ENDPOINTS">
+      <value>0</value>
+    </configuration>
   </entities>
 </entity_configuration>

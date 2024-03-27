@@ -32,6 +32,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use Throwable;
 
 /**
  * This factory decorates the ApiPlatform default resource factory. It looks into each operation and checks
@@ -49,6 +51,7 @@ class ExperimentalOperationsMetadataCollectionFactoryDecorator implements Resour
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $innerFactory,
         private readonly bool $isDebug,
+        private readonly ConfigurationInterface $configuration,
     ) {
     }
 
@@ -57,8 +60,8 @@ class ExperimentalOperationsMetadataCollectionFactoryDecorator implements Resour
         // We call the original method since we only want to alter the result of this method.
         $resourceMetadataCollection = $this->innerFactory->create($resourceClass);
 
-        // In debug mode we filter nothing
-        if ($this->isDebug) {
+        // In debug mode we filter nothing, in prod mode we do unless the forcing configuration is enabled
+        if ($this->isDebug || $this->areExperimentalEndpointsEnabled()) {
             return $resourceMetadataCollection;
         }
 
@@ -75,5 +78,21 @@ class ExperimentalOperationsMetadataCollectionFactoryDecorator implements Resour
         }
 
         return $resourceMetadataCollection;
+    }
+
+    /**
+     * This decorator is implied during cache clearing which would fail when the shop is not installed
+     * because the DB config is not set up yet. So we protected the configuration fetching in a try/catch
+     * and return false (default recommended value) in case of an error.
+     *
+     * @return bool
+     */
+    private function areExperimentalEndpointsEnabled(): bool
+    {
+        try {
+            return (bool) $this->configuration->get('PS_ENABLE_EXPERIMENTAL_API_ENDPOINTS');
+        } catch (Throwable) {
+            return false;
+        }
     }
 }
