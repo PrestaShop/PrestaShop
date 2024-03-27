@@ -2939,6 +2939,16 @@ $mobile-menu-height: 2.6rem !default;
   }
 }
 
+#product_options{
+  #product_options_product_suppliers > .row > .col-sm {
+    max-width: calc(100% - 30px);
+    overflow: auto;
+  }
+  #product_options_product_suppliers table {
+    min-width: max-content;
+  }
+}
+
 #product-tabs-content {
   .form-contenttab > div > .form-group {
     margin-bottom: 2rem;
