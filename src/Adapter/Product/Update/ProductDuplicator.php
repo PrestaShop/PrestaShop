@@ -266,6 +266,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             // The duplicated product is disabled and not indexed by default
             $shopProduct->indexed = false;
             $shopProduct->active = false;
+            $shopProduct->date_add = date('Y-m-d H:i:s');
             // Force a copy name to tell the two products apart (for each shop since name can be different on each shop)
             $shopProduct->name = $this->getNewProductName($shopProduct->name);
             // Force ID to update the new product
