@@ -2939,6 +2939,18 @@ $mobile-menu-height: 2.6rem !default;
   }
 }
 
+#product_shipping {
+  #carrier-checkboxes-dropdown {
+    .dropdown-menu {
+      max-width: calc(100vw - 30px);
+    }
+  }
+  .ps-checkboxes-dropdown .dropdown-item .md-checkbox-container  {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 #product_options{
   #product_options_product_suppliers > .row > .col-sm {
     max-width: calc(100% - 30px);
