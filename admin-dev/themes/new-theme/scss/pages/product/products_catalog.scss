@@ -66,6 +66,10 @@
   }
 }
 
+table tr.column-filters td[data-column-id^=id_] input {
+  min-width: 5rem;
+}
+
 // Create product modal
 @import "create_product_modal";
 // Multi shop list
