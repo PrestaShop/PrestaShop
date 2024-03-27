@@ -79,7 +79,7 @@ class RedirectOptionType extends TranslatorAwareType
                 'required' => false,
                 'placeholder' => false, // Guaranties that no empty value is added in options
                 'choices' => $choices,
-                'default_empty_data' => $options['isRootCategory'] ? RedirectType::TYPE_NOT_FOUND : RedirectType::TYPE_TEMPORARY,
+                'default_empty_data' => $options['isRootCategory'] ? RedirectType::TYPE_GONE : RedirectType::TYPE_PERMANENT,
             ]);
 
         if (true !== $options['isRootCategory']) {
