@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02928d8728ffeb508e357c9a8a7e6633",
+    "content-hash": "ef9ebfc365e2cf600ab13b3187f49561",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5579,16 +5579,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-module-endpoint",
+            "version": "dev-experimental-endpoint",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "959b5ffaed7e6b1855a0ab3e5fb36cd7eba6bcdf"
+                "reference": "e4b444522ad0dc07b74614d1c5794f49bb67a846"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/959b5ffaed7e6b1855a0ab3e5fb36cd7eba6bcdf",
-                "reference": "959b5ffaed7e6b1855a0ab3e5fb36cd7eba6bcdf",
+                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/e4b444522ad0dc07b74614d1c5794f49bb67a846",
+                "reference": "e4b444522ad0dc07b74614d1c5794f49bb67a846",
                 "shasum": ""
             },
             "require": {
@@ -5597,7 +5597,7 @@
             "require-dev": {
                 "czproject/git-php": "^4.2",
                 "phpunit/phpunit": "^9.6",
-                "prestashop/php-dev-tools": "^4.2"
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -5640,9 +5640,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/jolelievre/ps_apiresources/tree/module-endpoint"
+                "source": "https://github.com/jolelievre/ps_apiresources/tree/experimental-endpoint"
             },
-            "time": "2024-03-26T12:51:38+00:00"
+            "time": "2024-03-27T13:51:05+00:00"
         },
         {
             "name": "prestashop/ps_banner",
