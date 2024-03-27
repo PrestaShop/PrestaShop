@@ -2939,6 +2939,12 @@ $mobile-menu-height: 2.6rem !default;
   }
 }
 
+#product-tabs-content {
+  .form-contenttab > div > .form-group {
+    margin-bottom: 2rem;
+  }
+}
+
 #categories-modal-content{
   .form-control-label {
     margin: 1rem 0;
