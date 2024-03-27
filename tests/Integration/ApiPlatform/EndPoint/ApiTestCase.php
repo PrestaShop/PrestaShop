@@ -83,7 +83,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         return parent::createClient($kernelOptions, $defaultOptions);
     }
 
-    protected function getBearerToken(array $scopes = []): string
+    protected function getBearerToken(array $scopes = [], array $kernelOptions = []): string
     {
         if (null === self::$clientSecret) {
             self::createApiClient($scopes);
@@ -101,7 +101,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
                 'content-type' => 'application/x-www-form-urlencoded',
             ],
         ];
-        $response = static::createClient()->request('POST', '/access_token', $options);
+        $response = static::createClient($kernelOptions)->request('POST', '/access_token', $options);
 
         return json_decode($response->getContent())->access_token;
     }
