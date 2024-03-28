@@ -71,12 +71,12 @@ describe('API : PATCH /api-client/{apiClientId}', async () => {
     });
 
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -143,12 +143,12 @@ describe('API : PATCH /api-client/{apiClientId}', async () => {
 
   describe('API : Create the API Access', async () => {
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'returnToAuthorizationServerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToAdminAPIPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -178,12 +178,12 @@ describe('API : PATCH /api-client/{apiClientId}', async () => {
     });
 
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'returnToAuthorizationServerPageAfterCreate', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToAdminAPIPageAfterCreate', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -287,7 +287,7 @@ describe('API : PATCH /api-client/{apiClientId}', async () => {
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);

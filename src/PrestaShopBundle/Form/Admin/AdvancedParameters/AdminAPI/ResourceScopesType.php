@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer;
+namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AdminAPI;
 
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopes;

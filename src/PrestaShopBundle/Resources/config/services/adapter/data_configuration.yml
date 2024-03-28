@@ -299,5 +299,5 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
 
-  PrestaShop\PrestaShop\Adapter\AuthorizationServer\AuthorizationServerConfiguration:
+  PrestaShop\PrestaShop\Adapter\AdminAPI\AdminAPIConfiguration:
     autowire: true

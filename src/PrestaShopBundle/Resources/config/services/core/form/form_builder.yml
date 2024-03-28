@@ -334,7 +334,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
     arguments:
-      - 'PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApiClientType'
+      - 'PrestaShopBundle\Form\Admin\AdvancedParameters\AdminAPI\ApiClientType'
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApiClientFormDataProvider'
 
   prestashop.core.form.identifiable_object.builder.image_type_form_builder:

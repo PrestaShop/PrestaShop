@@ -48,7 +48,6 @@ module.exports = {
     attribute_form: './js/pages/attribute/form',
     attribute_group: './js/pages/attribute-group',
     attribute_group_form: './js/pages/attribute-group/form',
-    authorization_server: './js/pages/authorization-server',
     backup: './js/pages/backup',
     carrier: './js/pages/carrier',
     cart_rule: './js/pages/cart-rule',

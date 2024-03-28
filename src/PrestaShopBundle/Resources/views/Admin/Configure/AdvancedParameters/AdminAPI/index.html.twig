@@ -44,11 +44,11 @@
     </p>
   </div>
 
-  {% if isAuthorizationServerMultistoreDisabled %}
+  {% if isAdminAPIMultistoreDisabled %}
     <div class="alert alert-danger" role="alert">
       <p class="alert-text">
-        {{ 'The use of multistore and authorization server  is an experimental feature. You need to
-        enabled the "Authorization server - Multistore" functionality in'|trans({}, 'Admin.Advparameters.Feature') }}
+        {{ 'The use of multistore and Admin API is an experimental feature. You need to
+        enabled the "Admin API - Multistore" functionality in'|trans({}, 'Admin.Advparameters.Feature') }}
         <a href="{{ path('admin_feature_flags_index') }}">
           {{ 'New & Experimental Features'|trans({}, 'Admin.Navigation.Menu') }}
         </a>

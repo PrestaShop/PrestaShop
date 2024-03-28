@@ -38,12 +38,12 @@ function createAPIClientTest(apiClient: APIClientData, baseContext: string = 'co
     });
 
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -79,7 +79,7 @@ function createAPIClientTest(apiClient: APIClientData, baseContext: string = 'co
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
       const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(numberOfAPIClient + 1);
@@ -112,12 +112,12 @@ function deleteAPIClientTest(baseContext: string = 'commonTests-deleteAPIClientT
     });
 
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);

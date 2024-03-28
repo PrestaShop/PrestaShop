@@ -49,7 +49,7 @@ class APIClient extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = `API Clients • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitle = `Admin API • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
 
