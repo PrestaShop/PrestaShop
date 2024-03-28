@@ -33,7 +33,7 @@ trans('Admin API - Multistore', 'Admin.Advparameters.Feature');
 trans('Enable or disable the Admin API when multistore is enabled.', 'Admin.Advparameters.Help');
 
 // Admin Api - Enable experimental endpoints
-trans('Enable experimental endpoints', 'Admin.Advparameters.Feature');
+trans('Admin API - Enable experimental endpoints', 'Admin.Advparameters.Feature');
 trans('Experimental API endpoints are disabled by default in prod environment, this configuration allows to forcefully enable them.', 'Admin.Advparameters.Help');
 
 // Cart rules feature flag

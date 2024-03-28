@@ -91,7 +91,7 @@ class ExperimentalOperationsMetadataCollectionFactoryDecorator implements Resour
     private function areExperimentalEndpointsEnabled(): bool
     {
         try {
-            return $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ENABLE_EXPERIMENTAL_ENDPOINTS);
+            return $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS);
         } catch (Throwable) {
             return false;
         }

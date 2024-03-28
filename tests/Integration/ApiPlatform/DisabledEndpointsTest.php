@@ -88,9 +88,9 @@ class DisabledEndpointsTest extends ApiTestCase
 
         // Update the configuration
         if ($forceExperimentalEndpoints) {
-            $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_ENABLE_EXPERIMENTAL_ENDPOINTS);
+            $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS);
         } else {
-            $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_ENABLE_EXPERIMENTAL_ENDPOINTS);
+            $this->featureFlagManager->disable(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS);
         }
 
         // Scope experimental_scope only exists when the endpoint is enabled
