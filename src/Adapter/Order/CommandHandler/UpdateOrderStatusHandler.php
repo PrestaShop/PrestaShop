@@ -51,9 +51,12 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
         $order = $this->getOrder($command->getOrderId());
         $orderState = $this->getOrderStateObject($command->getNewOrderStatusId());
 
+        /*
+         * Try to load current order status. There may be cases when there is none, for example when something happens
+         * during order creation process. That's why we check for $currentOrderState validity.
+         */
         $currentOrderState = $order->getCurrentOrderState();
-
-        if ($currentOrderState->id == $orderState->id) {
+        if (!empty($currentOrderState) && $currentOrderState->id == $orderState->id) {
             throw new OrderException('The order has already been assigned this status.');
         }
 
@@ -69,10 +72,10 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
 
         $history->changeIdOrderState((int) $orderState->id, $order, $useExistingPayments);
 
-        $carrier = new Carrier($order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
         $templateVars = [];
 
         if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->getShippingNumber()) {
+            $carrier = new Carrier($order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
             $templateVars = [
                 '{followup}' => str_replace('@', $order->getShippingNumber(), $carrier->url),
             ];
