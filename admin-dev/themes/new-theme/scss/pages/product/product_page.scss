@@ -500,7 +500,7 @@ $product-page-padding-bottom: 80px !default;
   }
 
   .customization-field-row {
-    gap: 16px;
+    gap: 1rem;
 
     @include media-breakpoint-up("md") {
       gap: 0;
@@ -573,7 +573,7 @@ $product-page-padding-bottom: 80px !default;
   }
 
   .product-feature {
-    gap: 16px;
+    gap: 1rem;
     align-items: flex-end;
     margin-bottom: 1rem;
 
@@ -2833,7 +2833,7 @@ $mobile-menu-height: 2.6rem !default;
       }
 
       .remove-customization-btn {
-        padding: 8px 0;
+        padding: 0.5rem 0;
       }
     }
   }
