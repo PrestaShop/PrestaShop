@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         app-id: [ admin, admin-api, front ]
+      fail-fast: false
     permissions:
       contents: read  # for actions/checkout to fetch code
     name: Symfony Console

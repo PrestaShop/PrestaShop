@@ -30,6 +30,7 @@ namespace Tests\Unit\PrestaShopBundle\ApiPlatform\Scopes;
 
 use ApiPlatform\Metadata\Resource\Factory\AttributesResourceMetadataCollectionFactory;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopes;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor;
 
@@ -73,8 +74,12 @@ class ApiResourceScopesExtractorTest extends TestCase
 
     private function buildExtractor(): ApiResourceScopesExtractor
     {
+        $environment = $this->createMock(EnvironmentInterface::class);
+        $environment->method('getName')->willReturn('test');
+
         return new ApiResourceScopesExtractor(
             new AttributesResourceMetadataCollectionFactory(),
+            $environment,
             $this->moduleDir,
             ['fake_module', 'disabled_fake_module'],
             ['fake_module'],

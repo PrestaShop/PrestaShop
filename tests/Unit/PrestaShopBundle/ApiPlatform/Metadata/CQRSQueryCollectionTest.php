@@ -320,4 +320,58 @@ class CQRSQueryCollectionTest extends TestCase
             'ApiResourceMapping' => $resourceMapping,
         ], $operation->getExtraProperties());
     }
+
+    public function testExperimentalOperation(): void
+    {
+        // Default value is false (no extra property added)
+        $operation = new CQRSQueryCollection();
+        $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(false, $operation->getExperimentalOperation());
+
+        // Scopes parameters in constructor
+        $operation = new CQRSQueryCollection(
+            experimentalOperation: true,
+        );
+        $this->assertEquals(['experimentalOperation' => true], $operation->getExtraProperties());
+        $this->assertEquals(true, $operation->getExperimentalOperation());
+
+        // Extra properties parameters in constructor
+        $operation = new CQRSQueryCollection(
+            extraProperties: ['experimentalOperation' => false]
+        );
+        $this->assertEquals(['experimentalOperation' => false], $operation->getExtraProperties());
+        $this->assertEquals(false, $operation->getExperimentalOperation());
+
+        // Extra properties AND scopes parameters in constructor, both values get merged but remain unique
+        $operation = new CQRSQueryCollection(
+            extraProperties: ['experimentalOperation' => true],
+            experimentalOperation: true,
+        );
+        $this->assertEquals(['experimentalOperation' => true], $operation->getExtraProperties());
+        $this->assertEquals(true, $operation->getExperimentalOperation());
+
+        // Use with method, returned object is a clone All values are replaced
+        $operation2 = $operation->withExperimentalOperation(false);
+        $this->assertNotEquals($operation2, $operation);
+        $this->assertEquals(['experimentalOperation' => false], $operation2->getExtraProperties());
+        $this->assertEquals(false, $operation2->getExperimentalOperation());
+        // Initial operation not modified of course
+        $this->assertEquals(['experimentalOperation' => true], $operation->getExtraProperties());
+        $this->assertEquals(true, $operation->getExperimentalOperation());
+
+        // When both values are specified, but they are different trigger an exception
+        $caughtException = null;
+        try {
+            new CQRSQueryCollection(
+                extraProperties: ['experimentalOperation' => true],
+                experimentalOperation: false,
+            );
+        } catch (InvalidArgumentException $e) {
+            $caughtException = $e;
+        }
+
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
+        $this->assertEquals('Specifying an extra property experimentalOperation and a experimentalOperation argument that are different is invalid', $caughtException->getMessage());
+    }
 }

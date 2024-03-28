@@ -33,6 +33,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Resource\Factory\AttributesResourceNameCollectionFactory;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
+use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 
 /**
  * This service manually extracts data from the ApiResource classes to get the scopes associated
@@ -48,6 +49,7 @@ class ApiResourceScopesExtractor implements ApiResourceScopesExtractorInterface
 {
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
+        private readonly EnvironmentInterface $environment,
         private readonly string $moduleDir,
         private readonly array $installedModules,
         private readonly array $enabledModules,
@@ -80,9 +82,21 @@ class ApiResourceScopesExtractor implements ApiResourceScopesExtractorInterface
         $resourceScopes = [];
 
         // First extract scopes from the core
-        $coreScopes = $this->extractScopes(new AttributesResourceNameCollectionFactory([
+        $coreMappingPaths = [
             rtrim($this->projectDir, '/') . '/src/PrestaShopBundle/ApiPlatform/Resources',
-        ]));
+        ];
+
+        // In test environment an additional mapping folder is added, but we can't inject api_platform configuration
+        // in this service easily to make it fully dynamic so the extra path is hard-coded here but only in test environment
+        // This could be refactored if we find a ay to properly inject the api_platform config (at least the mapping.paths part)
+        if ($this->environment->getName() === 'test') {
+            $testResources = rtrim($this->projectDir, '/') . '/tests/Resources/ApiPlatform/Resources';
+            if (is_dir($testResources)) {
+                $coreMappingPaths[] = $testResources;
+            }
+        }
+
+        $coreScopes = $this->extractScopes(new AttributesResourceNameCollectionFactory($coreMappingPaths));
         if (!empty($coreScopes)) {
             $resourceScopes[] = ApiResourceScopes::createCoreScopes($coreScopes);
         }

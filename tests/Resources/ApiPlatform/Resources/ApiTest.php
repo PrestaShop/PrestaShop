@@ -47,6 +47,13 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
             scopes: ['product_read'],
             CQRSQueryMapping: ApiTest::QUERY_MAPPING,
         ),
+        new CQRSGet(
+            uriTemplate: '/test/experimental/product/{productId}',
+            CQRSQuery: GetProductForEditing::class,
+            scopes: ['experimental_scope'],
+            CQRSQueryMapping: ApiTest::QUERY_MAPPING,
+            experimentalOperation: true,
+        ),
     ],
 )]
 class ApiTest

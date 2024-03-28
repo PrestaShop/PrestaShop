@@ -114,6 +114,7 @@ class CQRSCreate extends CQRSCommand
         ?array $CQRSQueryMapping = null,
         ?array $ApiResourceMapping = null,
         ?array $CQRSCommandMapping = null,
+        ?bool $experimentalOperation = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_POST;

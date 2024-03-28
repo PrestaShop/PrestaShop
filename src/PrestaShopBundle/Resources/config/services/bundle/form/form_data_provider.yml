@@ -301,3 +301,8 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
       - '@prestashop.core.command_bus'
+
+  prestashop.adapter.authorization_server.form_provider:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\AuthorizationServer\FormDataProvider'
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\AuthorizationServer\AuthorizationServerConfiguration'

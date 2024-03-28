@@ -111,6 +111,7 @@ abstract class AbstractCQRSOperation extends HttpOperation
         array $scopes = [],
         ?array $CQRSQueryMapping = null,
         ?array $ApiResourceMapping = null,
+        ?bool $experimentalOperation = null,
     ) {
         $passedArguments = \get_defined_vars();
 
@@ -134,11 +135,17 @@ abstract class AbstractCQRSOperation extends HttpOperation
             $passedArguments['extraProperties']['ApiResourceMapping'] = $ApiResourceMapping;
         }
 
+        if (null !== $experimentalOperation) {
+            $this->checkArgumentAndExtraParameterValidity('experimentalOperation', $experimentalOperation, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['experimentalOperation'] = $experimentalOperation;
+        }
+
         // Remove custom arguments
         unset($passedArguments['scopes']);
         unset($passedArguments['CQRSQuery']);
         unset($passedArguments['CQRSQueryMapping']);
         unset($passedArguments['ApiResourceMapping']);
+        unset($passedArguments['experimentalOperation']);
 
         // Unless especially specified we only handle JSON format by default
         $passedArguments['formats'] = $formats ?? ['json'];
@@ -194,6 +201,19 @@ abstract class AbstractCQRSOperation extends HttpOperation
     {
         $self = clone $this;
         $self->extraProperties['ApiResourceMapping'] = $CQRSQuery;
+
+        return $self;
+    }
+
+    public function getExperimentalOperation(): bool
+    {
+        return $this->extraProperties['experimentalOperation'] ?? false;
+    }
+
+    public function withExperimentalOperation(bool $experimentalOperation): static
+    {
+        $self = clone $this;
+        $self->extraProperties['experimentalOperation'] = $experimentalOperation;
 
         return $self;
     }
