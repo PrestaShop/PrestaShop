@@ -872,7 +872,7 @@ class LinkCore
     public function getAdminBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
         if (null === $ssl) {
-            $ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+            $ssl = Configuration::get('PS_SSL_ENABLED');
         }
 
         if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) {
@@ -1353,7 +1353,7 @@ class LinkCore
     public function getBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
         if (null === $ssl) {
-            $ssl = (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
+            $ssl = Configuration::get('PS_SSL_ENABLED');
         }
 
         if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $idShop !== null) {

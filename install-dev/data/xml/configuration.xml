@@ -86,9 +86,6 @@
   <configuration id="PS_NB_DAYS_NEW_PRODUCT" name="PS_NB_DAYS_NEW_PRODUCT">
     <value>20</value>
   </configuration>
-  <configuration id="PS_SSL_ENABLED" name="PS_SSL_ENABLED">
-    <value>0</value>
-  </configuration>
   <configuration id="PS_WEIGHT_UNIT" name="PS_WEIGHT_UNIT">
     <value>kg</value>
   </configuration>

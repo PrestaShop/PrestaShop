@@ -29,13 +29,14 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener\Admin;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * Middleware that is triggered during `kernel.request` event on Symfony routing process, to redirect to HTTPS in some cases.
  *
- * If PS_SSL_ENABLED & (PS_SSL_ENABLED_EVERYWHERE | REFERER is HTTPS)
+ * If PS_SSL_ENABLED & REFERER is HTTPS
  * Then redirect to the equivalent URL to HTTPS.
  */
 class SSLMiddlewareListener
@@ -61,11 +62,16 @@ class SSLMiddlewareListener
 
         //If It's Sf route and SSL enabled and forced, redirect to https
         $enabled = (1 === (int) $this->configuration->get('PS_SSL_ENABLED'));
-        $forced = (1 === (int) $this->configuration->get('PS_SSL_ENABLED_EVERYWHERE'));
         $serverParams = $event->getRequest()->server;
         $refererSsl = ($serverParams->has('HTTP_REFERER') && str_starts_with($serverParams->get('HTTP_REFERER'), 'https'));
 
-        if ($enabled && ($forced || $refererSsl)) {
+        if ($enabled && $refererSsl) {
+            $forwardedProto = ($serverParams->has('HTTP_X_FORWARDED_PROTO') && str_starts_with($serverParams->get('HTTP_X_FORWARDED_PROTO'), 'https'));
+
+            if ($forwardedProto) {
+                throw new RuntimeException("Infinite redirection detected, please fill in the 'PS_TRUSTED_PROXIES' environment variable or disable the PS_SSL_ENABLED configuration");
+            }
+
             $this->redirectToSsl($event);
         }
     }

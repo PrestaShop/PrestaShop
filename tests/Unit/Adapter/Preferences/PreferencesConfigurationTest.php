@@ -71,7 +71,6 @@ class PreferencesConfigurationTest extends TestCase
             ->willReturnMap(
                 [
                     ['PS_SSL_ENABLED', false, true],
-                    ['PS_SSL_ENABLED_EVERYWHERE', false, true],
                     ['PS_TOKEN_ENABLE', false, true],
                     ['PS_ALLOW_HTML_IFRAME', false, true],
                     ['PS_USE_HTMLPURIFIER', false, true],
@@ -86,7 +85,6 @@ class PreferencesConfigurationTest extends TestCase
         $this->assertSame(
             [
                 'enable_ssl' => true,
-                'enable_ssl_everywhere' => true,
                 'enable_token' => true,
                 'allow_html_iframes' => true,
                 'use_htmlpurifier' => true,
@@ -137,7 +135,6 @@ class PreferencesConfigurationTest extends TestCase
             $this->object->updateConfiguration(
                 [
                     'enable_ssl' => false,
-                    'enable_ssl_everywhere' => false,
                     'enable_token' => true,
                     'allow_html_iframes' => true,
                     'use_htmlpurifier' => true,
@@ -166,7 +163,6 @@ class PreferencesConfigurationTest extends TestCase
             ->willReturnMap(
                 [
                     ['PS_SSL_ENABLED', true],
-                    ['PS_SSL_ENABLED_EVERYWHERE', true],
                     ['PS_TOKEN_ENABLE', true],
                     ['PS_ALLOW_HTML_IFRAME', true],
                     ['PS_USE_HTMLPURIFIER', true],
@@ -191,7 +187,6 @@ class PreferencesConfigurationTest extends TestCase
             $this->object->updateConfiguration(
                 [
                     'enable_ssl' => false,
-                    'enable_ssl_everywhere' => false,
                     'enable_token' => true,
                     'allow_html_iframes' => true,
                     'use_htmlpurifier' => true,
