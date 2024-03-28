@@ -33,7 +33,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AttributeGroup.
  *
- * @ORM\Table()
+ * @ORM\Table(indexes={@ORM\Index(name="is_color_group", columns={"is_color_group"})})
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeGroupRepository")
  */
 class AttributeGroup
