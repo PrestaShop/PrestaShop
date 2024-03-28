@@ -159,7 +159,7 @@ describe('FO - Checkout : Display of totals', async () => {
       expect(discountValue).to.equal(-cartRuleWithCodeData.discountAmount!.value);
     });
 
-    it.skip('should validate shopping cart and go to checkout page', async function () {
+    it('should validate shopping cart and go to checkout page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
       await cartPage.clickOnProceedToCheckout(page);
@@ -168,16 +168,7 @@ describe('FO - Checkout : Display of totals', async () => {
       expect(isCheckoutPage).to.equal(true);
     });
 
-    it.skip('should sign in by default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
-
-      await checkoutPage.clickOnSignIn(page);
-
-      const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
-      expect(isCustomerConnected, 'Customer is not connected!').to.equal(true);
-    });
-
-    it.skip('should go to delivery step', async function () {
+    it('should go to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
       // Address step - Go to delivery step
@@ -185,7 +176,7 @@ describe('FO - Checkout : Display of totals', async () => {
       expect(isStepAddressComplete, 'Step Address is not complete').to.equal(true);
     });
 
-    it.skip('should select the first carrier and check the shipping price', async function () {
+    it('should select the first carrier and check the shipping price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice1', baseContext);
 
       await checkoutPage.chooseShippingMethod(page, Carriers.myCarrier.id);
@@ -194,14 +185,14 @@ describe('FO - Checkout : Display of totals', async () => {
       expect(shippingCost).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
     });
 
-    it.skip('should check the cart rule name', async function () {
+    it('should check the cart rule name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartRuleName', baseContext);
 
       const cartRuleName = await checkoutPage.getCartRuleName(page, 1);
       expect(cartRuleName).to.equal(cartRuleWithCodeData.name);
     });
 
-    it.skip('should check the total', async function () {
+    it('should check the total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
 
       const totalAfterDiscount = await checkoutPage.getATIPrice(page);
@@ -209,7 +200,7 @@ describe('FO - Checkout : Display of totals', async () => {
         .to.equal((Products.demo_12.price - cartRuleWithCodeData.discountAmount!.value + Carriers.myCarrier.priceTTC).toFixed(2));
     });
 
-    it.skip('should remove the discount', async function () {
+    it('should remove the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeTheDiscount', baseContext);
 
       const isDeleteIconNotVisible = await checkoutPage.removePromoCode(page);
