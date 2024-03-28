@@ -34,9 +34,9 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Check the AuthorizationServer features flag
+ * Check the Admin API configuration
  */
-class AuthorizationServerFeatureListener
+class AdminAPIFeatureListener
 {
     public function __construct(
         private readonly FeatureFlagManager $featureFlagManager,
@@ -51,11 +51,11 @@ class AuthorizationServerFeatureListener
             return;
         }
 
-        $isAuthorizationServerActive = (bool) $this->configuration->get('PS_ENABLE_ADMIN_API');
-        $isAuthorizationServerMultistoreActive = $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE);
+        $isAdminAPIEnabled = (bool) $this->configuration->get('PS_ENABLE_ADMIN_API');
+        $isAdminAPIMultistoreEnabled = $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_MULTISTORE);
         $isMultistoreActive = $this->multiStoreFeature->isActive();
 
-        if (!$isAuthorizationServerActive || (!$isAuthorizationServerMultistoreActive && $isMultistoreActive)) {
+        if (!$isAdminAPIEnabled || (!$isAdminAPIMultistoreEnabled && $isMultistoreActive)) {
             throw new NotFoundHttpException();
         }
     }

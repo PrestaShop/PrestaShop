@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer;
+namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AdminAPI;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;

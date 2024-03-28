@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,6 +22,35 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/form.html.twig' %}
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\AdminAPI;
+
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+
+class FormDataProvider implements FormDataProviderInterface
+{
+    public function __construct(
+        private readonly DataConfigurationInterface $dataConfiguration
+    ) {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
+    {
+        return $this->dataConfiguration->getConfiguration();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->dataConfiguration->updateConfiguration($data);
+    }
+}

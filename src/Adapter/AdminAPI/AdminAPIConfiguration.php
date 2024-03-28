@@ -26,14 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\AuthorizationServer;
+namespace PrestaShop\PrestaShop\Adapter\AdminAPI;
 
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AuthorizationServerConfiguration implements DataConfigurationInterface
+class AdminAPIConfiguration implements DataConfigurationInterface
 {
     public function __construct(
         private readonly Configuration $configuration,

@@ -5,7 +5,7 @@ services:
     autowire: true
     autoconfigure: true
 
-  PrestaShopBundle\EventListener\API\AuthorizationServerFeatureListener:
+  PrestaShopBundle\EventListener\API\AdminAPIFeatureListener:
     autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 8 }

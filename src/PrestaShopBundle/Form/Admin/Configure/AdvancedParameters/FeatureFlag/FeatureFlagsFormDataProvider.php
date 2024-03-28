@@ -75,7 +75,7 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
             ];
         }
 
-        $featureFlagsData = $this->checkAuthorizationServerMultistore($featureFlagsData);
+        $featureFlagsData = $this->checkAdminAPIMultistore($featureFlagsData);
 
         return ['feature_flags' => $featureFlagsData];
     }
@@ -133,16 +133,16 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
         return $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findOneBy(['name' => $featureFlagName]);
     }
 
-    // conditions the display of the AuthorizationServerMultistore feature fag only if AuthorizationServer is activated, regardless of its stability
-    private function checkAuthorizationServerMultistore(array $featureFlagsData): array
+    // conditions the display of the AdminAPIMultistore feature fag only if Admin API is activated, regardless of its stability
+    private function checkAdminAPIMultistore(array $featureFlagsData): array
     {
         $adminApiEnabled = (bool) $this->configuration->get('PS_ENABLE_ADMIN_API');
-        $authorizationServerMultistoreKey = FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE;
+        $adminAPIMultistoreKey = FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_MULTISTORE;
         $isMultistoreActive = $this->multiStoreFeature->isActive();
 
-        if (array_key_exists($authorizationServerMultistoreKey, $featureFlagsData)) {
+        if (array_key_exists($adminAPIMultistoreKey, $featureFlagsData)) {
             if (!$isMultistoreActive || !$adminApiEnabled) {
-                unset($featureFlagsData[$authorizationServerMultistoreKey]);
+                unset($featureFlagsData[$adminAPIMultistoreKey]);
             }
         }
 

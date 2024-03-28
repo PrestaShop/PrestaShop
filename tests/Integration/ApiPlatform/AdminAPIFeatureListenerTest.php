@@ -37,7 +37,7 @@ use Tests\Resources\Resetter\ConfigurationResetter;
 use Tests\Resources\Resetter\FeatureFlagResetter;
 use Tests\Resources\Resetter\FeatureResetter;
 
-class AuthorizationServerFeatureListenerTest extends ApiTestCase
+class AdminAPIFeatureListenerTest extends ApiTestCase
 {
     private FeatureFlagManager $featureFlagManager;
 
@@ -69,7 +69,7 @@ class AuthorizationServerFeatureListenerTest extends ApiTestCase
         $this->featureFlagManager = self::getContainer()->get('PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager');
     }
 
-    public function testGetBearerTokenWhenAuthorizationServerIsEnabled(): string
+    public function testGetBearerTokenWhenAdminAPIIsEnabled(): string
     {
         self::createApiClient();
         $bearerToken = $this->getBearerToken();
@@ -85,13 +85,13 @@ class AuthorizationServerFeatureListenerTest extends ApiTestCase
     }
 
     /**
-     * @depends testGetBearerTokenWhenAuthorizationServerIsEnabled
+     * @depends testGetBearerTokenWhenAdminAPIIsEnabled
      *
      * @param string $bearerToken
      *
      * @return string
      */
-    public function testAccessTokenNotFoundAfterDisablingAuthorizationServer(string $bearerToken): string
+    public function testAccessTokenNotFoundAfterDisablingAdminAPI(string $bearerToken): string
     {
         // Disbale the Admin API feature, we can't even get a token now
         $this->updateConfiguration('PS_ENABLE_ADMIN_API', false);
@@ -115,13 +115,13 @@ class AuthorizationServerFeatureListenerTest extends ApiTestCase
     }
 
     /**
-     * @depends testAccessTokenNotFoundAfterDisablingAuthorizationServer
+     * @depends testAccessTokenNotFoundAfterDisablingAdminAPI
      *
      * @param string $bearerToken
      *
      * @return string
      */
-    public function testAuthorizationServerFeatureDisabled(string $bearerToken): string
+    public function testAdminAPIFeatureDisabled(string $bearerToken): string
     {
         // Endpoint is also no longer accessible
         static::createClient()->request('GET', '/test/unscoped/product/1', [
@@ -135,13 +135,13 @@ class AuthorizationServerFeatureListenerTest extends ApiTestCase
     }
 
     /**
-     * @depends testAuthorizationServerFeatureDisabled
+     * @depends testAdminAPIFeatureDisabled
      *
      * @param string $bearerToken
      *
      * @return string
      */
-    public function testAuthorizationServerFeatureMultistoreEnabled(string $bearerToken): string
+    public function testAdminAPIFeatureMultistoreEnabled(string $bearerToken): string
     {
         // Multistore enabled but it is not enough
         self::updateConfiguration(MultistoreConfig::FEATURE_STATUS, 1);
@@ -161,17 +161,17 @@ class AuthorizationServerFeatureListenerTest extends ApiTestCase
     }
 
     /**
-     * @depends testAuthorizationServerFeatureMultistoreEnabled
+     * @depends testAdminAPIFeatureMultistoreEnabled
      *
      * @param string $bearerToken
      *
      * @return string
      */
-    public function testAuthorizationServerFeatureMultistoreSuccess(string $bearerToken): string
+    public function testAdminAPIFeatureMultistoreSuccess(string $bearerToken): string
     {
-        // Enabled feature flag dedicated for authorization in multistore along with authorization server
+        // Enabled feature flag dedicated for authorization in multistore along with Admin API configuration
         $this->updateConfiguration('PS_ENABLE_ADMIN_API', true);
-        $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE);
+        $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_MULTISTORE);
 
         // Endpoint now accessible again
         static::createClient()->request('GET', '/test/unscoped/product/1', [
@@ -185,17 +185,17 @@ class AuthorizationServerFeatureListenerTest extends ApiTestCase
     }
 
     /**
-     * @depends testAuthorizationServerFeatureMultistoreSuccess
+     * @depends testAdminAPIFeatureMultistoreSuccess
      *
      * @param string $bearerToken
      *
      * @return string
      */
-    public function testAuthorizationServerWhenMultistoreEnabledButNotDedicatedFeatureFlag(string $bearerToken): string
+    public function testAdminAPIWhenMultistoreEnabledButNotDedicatedFeatureFlag(string $bearerToken): string
     {
-        // Authorization server enabled, but not with multistore specific feature flag
+        // Admin API enabled, but not with multistore specific feature flag
         $this->updateConfiguration('PS_ENABLE_ADMIN_API', true);
-        $this->featureFlagManager->disable(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE);
+        $this->featureFlagManager->disable(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_MULTISTORE);
 
         static::createClient()->request('GET', '/test/unscoped/product/1', [
             'headers' => [

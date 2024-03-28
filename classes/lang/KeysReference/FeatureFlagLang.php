@@ -28,9 +28,9 @@
 trans('Attribute groups', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated attribute page.', 'Admin.Advparameters.Help');
 
-// Authorization server - Multistore feature flag
-trans('Authorization server - Multistore', 'Admin.Advparameters.Feature');
-trans('Enable or disable the Authorization server when multistore is enabled.', 'Admin.Advparameters.Help');
+// Admin API - Multistore feature flag
+trans('Admin API - Multistore', 'Admin.Advparameters.Feature');
+trans('Enable or disable the Admin API when multistore is enabled.', 'Admin.Advparameters.Help');
 
 // Admin Api - Enable experimental endpoints
 trans('Enable experimental endpoints', 'Admin.Advparameters.Feature');
