@@ -56,28 +56,28 @@ class PackStockTypeChoiceProviderTest extends ChoiceProviderTestCase
         yield [
             0,
             [
-                'Decrement pack only.' => 0,
-                'Decrement products in pack only.' => 1,
-                'Decrement both.' => 2,
-                'Default (Decrement pack only.)' => 3,
+                'Use pack quantity' => 0,
+                'Use quantity of products in the pack' => 1,
+                'Use both, whatever is lower' => 2,
+                'Default (Use pack quantity)' => 3,
             ],
         ];
         yield [
             1,
             [
-                'Decrement pack only.' => 0,
-                'Decrement products in pack only.' => 1,
-                'Decrement both.' => 2,
-                'Default (Decrement products in pack only.)' => 3,
+                'Use pack quantity' => 0,
+                'Use quantity of products in the pack' => 1,
+                'Use both, whatever is lower' => 2,
+                'Default (Use quantity of products in the pack)' => 3,
             ],
         ];
         yield [
             2,
             [
-                'Decrement pack only.' => 0,
-                'Decrement products in pack only.' => 1,
-                'Decrement both.' => 2,
-                'Default (Decrement both.)' => 3,
+                'Use pack quantity' => 0,
+                'Use quantity of products in the pack' => 1,
+                'Use both, whatever is lower' => 2,
+                'Default (Use both, whatever is lower)' => 3,
             ],
         ];
     }

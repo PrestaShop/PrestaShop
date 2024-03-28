@@ -79,9 +79,9 @@ final class PackStockTypeChoiceProvider implements FormChoiceProviderInterface
     private function getLabelValuePairs(): array
     {
         return [
-            $this->translator->trans('Decrement pack only.', [], 'Admin.Catalog.Feature') => PackStockType::STOCK_TYPE_PACK_ONLY,
-            $this->translator->trans('Decrement products in pack only.', [], 'Admin.Catalog.Feature') => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,
-            $this->translator->trans('Decrement both.', [], 'Admin.Catalog.Feature') => PackStockType::STOCK_TYPE_BOTH,
+            $this->translator->trans('Use pack quantity', [], 'Admin.Catalog.Feature') => PackStockType::STOCK_TYPE_PACK_ONLY,
+            $this->translator->trans('Use quantity of products in the pack', [], 'Admin.Catalog.Feature') => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,
+            $this->translator->trans('Use both, whatever is lower', [], 'Admin.Catalog.Feature') => PackStockType::STOCK_TYPE_BOTH,
         ];
     }
 }
