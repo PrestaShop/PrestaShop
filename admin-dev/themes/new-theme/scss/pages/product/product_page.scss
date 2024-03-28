@@ -2813,11 +2813,11 @@ $mobile-menu-height: 2.6rem !default;
         }
       }
 
-      #product_details_show_condition{
+      #product_details_show_condition {
         margin-top: 0;
       }
 
-      .customization-field-switch{
+      .customization-field-switch {
         .ps-switch {
           .slide-button {
             right: 0;
@@ -2893,7 +2893,7 @@ $mobile-menu-height: 2.6rem !default;
 }
 
 @include media-breakpoint-down(md) {
-  #product_shipping{
+  #product_shipping {
     #product_shipping_delivery_time_note_type {
       .form-check-radio .form-check-label {
         flex-wrap: wrap;
@@ -2971,7 +2971,7 @@ $mobile-menu-height: 2.6rem !default;
   }
 }
 
-#product_options{
+#product_options {
   #product_options_product_suppliers > .row > .col-sm {
     max-width: calc(100% - 30px);
     overflow: auto;
@@ -2992,7 +2992,7 @@ $mobile-menu-height: 2.6rem !default;
   }
 }
 
-#categories-modal-content{
+#categories-modal-content {
   .form-control-label {
     margin: 1rem 0;
   }
