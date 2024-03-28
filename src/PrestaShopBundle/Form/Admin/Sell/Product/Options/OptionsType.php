@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
+use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -42,6 +43,14 @@ class OptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('date_new', DatePickerType::class, [
+                'required' => false,
+                'label' => $this->trans('Product as New from', 'Admin.Catalog.Feature'),
+                'label_subtitle' => $this->trans('The date allows you to specify when the product is considered as new. It is used by modules to showcase new products from your catalog or to arrange products by the most recent ones. By default, the date is set to the product creation date for the new date.', 'Admin.Catalog.Feature'),
+                'modify_all_shops' => true,
+                'attr' => ['placeholder' => 'YYYY-MM-DD'],
+                'label_tag_name' => 'h3',
+            ])
             ->add('visibility', VisibilityType::class)
             ->add('suppliers', SuppliersType::class)
             ->add('product_suppliers', ProductSupplierCollectionType::class)

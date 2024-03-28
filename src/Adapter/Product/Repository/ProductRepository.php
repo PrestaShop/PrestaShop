@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\DBAL\Exception as ExceptionAlias;
@@ -71,58 +72,14 @@ use Product;
 
 class ProductRepository extends AbstractMultiShopObjectModelRepository
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
-     * @var ProductValidator
-     */
-    private $productValidator;
-
-    /**
-     * @var TaxRulesGroupRepository
-     */
-    private $taxRulesGroupRepository;
-
-    /**
-     * @var ManufacturerRepository
-     */
-    private $manufacturerRepository;
-
-    /**
-     * @var CategoryRepository
-     */
-    private $categoryRepository;
-
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     * @param ProductValidator $productValidator
-     * @param TaxRulesGroupRepository $taxRulesGroupRepository
-     * @param ManufacturerRepository $manufacturerRepository
-     * @param CategoryRepository $categoryRepository
-     */
     public function __construct(
-        Connection $connection,
-        string $dbPrefix,
-        ProductValidator $productValidator,
-        TaxRulesGroupRepository $taxRulesGroupRepository,
-        ManufacturerRepository $manufacturerRepository,
-        CategoryRepository $categoryRepository
+        private Connection $connection,
+        private string $dbPrefix,
+        private ProductValidator $productValidator,
+        private TaxRulesGroupRepository $taxRulesGroupRepository,
+        private ManufacturerRepository $manufacturerRepository,
+        private CategoryRepository $categoryRepository
     ) {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
-        $this->productValidator = $productValidator;
-        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
-        $this->manufacturerRepository = $manufacturerRepository;
-        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -271,6 +228,8 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
         $product->name = $localizedNames;
         $product->link_rewrite = $localizedLinkRewrites;
         $product->id_tax_rules_group = $this->taxRulesGroupRepository->getIdTaxRulesGroupMostUsed();
+        $currentDate = new DateTime('NOW');
+        $product->date_new = $currentDate->format('Y-m-d');
 
         $this->productValidator->validateCreation($product);
         $this->addObjectModelToShops($product, [$shopId], CannotAddProductException::class);

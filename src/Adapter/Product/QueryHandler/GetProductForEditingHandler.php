@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
+use DateTime;
 use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -80,122 +81,22 @@ use Tag;
 #[AsQueryHandler]
 class GetProductForEditingHandler implements GetProductForEditingHandlerInterface
 {
-    /**
-     * @var NumberExtractor
-     */
-    private $numberExtractor;
-
-    /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
-     * @var CategoryRepository
-     */
-    private $categoryRepository;
-
-    /**
-     * @var StockAvailableRepository
-     */
-    private $stockAvailableRepository;
-
-    /**
-     * @var VirtualProductFileRepository
-     */
-    private $virtualProductFileRepository;
-
-    /**
-     * @var ProductImageRepository
-     */
-    private $productImageRepository;
-
-    /**
-     * @var TaxComputer
-     */
-    private $taxComputer;
-
-    /**
-     * @var int
-     */
-    private $countryId;
-
-    /**
-     * @var RedirectTargetProvider
-     */
-    private $targetProvider;
-
-    /**
-     * @var ProductImagePathFactory
-     */
-    private $productImageUrlFactory;
-
-    /**
-     * @var AttachmentRepository
-     */
-    private $attachmentRepository;
-
-    /**
-     * @var SpecificPriceRepository
-     */
-    private $specificPriceRepository;
-
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * @var CategoryDisplayNameBuilder
-     */
-    private $categoryDisplayNameBuilder;
-
-    /**
-     * @param NumberExtractor $numberExtractor
-     * @param ProductRepository $productRepository
-     * @param CategoryRepository $categoryRepository
-     * @param StockAvailableRepository $stockAvailableRepository
-     * @param VirtualProductFileRepository $virtualProductFileRepository
-     * @param ProductImageRepository $productImageRepository
-     * @param AttachmentRepository $attachmentRepository
-     * @param TaxComputer $taxComputer
-     * @param int $countryId
-     * @param RedirectTargetProvider $targetProvider
-     * @param ProductImagePathFactory $productImageUrlFactory
-     * @param SpecificPriceRepository $specificPriceRepository
-     * @param Configuration $configuration
-     * @param CategoryDisplayNameBuilder $categoryDisplayNameBuilder
-     */
     public function __construct(
-        NumberExtractor $numberExtractor,
-        ProductRepository $productRepository,
-        CategoryRepository $categoryRepository,
-        StockAvailableRepository $stockAvailableRepository,
-        VirtualProductFileRepository $virtualProductFileRepository,
-        ProductImageRepository $productImageRepository,
-        AttachmentRepository $attachmentRepository,
-        TaxComputer $taxComputer,
-        int $countryId,
-        RedirectTargetProvider $targetProvider,
-        ProductImagePathFactory $productImageUrlFactory,
-        SpecificPriceRepository $specificPriceRepository,
-        Configuration $configuration,
-        CategoryDisplayNameBuilder $categoryDisplayNameBuilder
+        private NumberExtractor $numberExtractor,
+        private ProductRepository $productRepository,
+        private CategoryRepository $categoryRepository,
+        private StockAvailableRepository $stockAvailableRepository,
+        private VirtualProductFileRepository $virtualProductFileRepository,
+        private ProductImageRepository $productImageRepository,
+        private AttachmentRepository $attachmentRepository,
+        private TaxComputer $taxComputer,
+        private int $countryId,
+        private RedirectTargetProvider $targetProvider,
+        private ProductImagePathFactory $productImageUrlFactory,
+        private SpecificPriceRepository $specificPriceRepository,
+        private Configuration $configuration,
+        private CategoryDisplayNameBuilder $categoryDisplayNameBuilder
     ) {
-        $this->numberExtractor = $numberExtractor;
-        $this->productRepository = $productRepository;
-        $this->categoryRepository = $categoryRepository;
-        $this->stockAvailableRepository = $stockAvailableRepository;
-        $this->virtualProductFileRepository = $virtualProductFileRepository;
-        $this->taxComputer = $taxComputer;
-        $this->countryId = $countryId;
-        $this->attachmentRepository = $attachmentRepository;
-        $this->targetProvider = $targetProvider;
-        $this->productImageRepository = $productImageRepository;
-        $this->productImageUrlFactory = $productImageUrlFactory;
-        $this->specificPriceRepository = $specificPriceRepository;
-        $this->configuration = $configuration;
-        $this->categoryDisplayNameBuilder = $categoryDisplayNameBuilder;
     }
 
     /**
@@ -223,7 +124,8 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             $this->getAttachments($query->getProductId()),
             $this->getProductStockInformation($product),
             $this->getVirtualProductFile($product),
-            $this->getCover($query->getProductId(), $product->getShopId())
+            $this->getCover($query->getProductId(), $product->getShopId()),
+            $this->getDateNew($product)
         );
     }
 
@@ -558,5 +460,10 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         }
 
         return $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
+    }
+
+    private function getDateNew(Product $product): DateTime
+    {
+        return new DateTime($product->date_new);
     }
 }
