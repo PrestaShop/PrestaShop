@@ -32,6 +32,10 @@ trans('Enable or disable the migrated attribute page.', 'Admin.Advparameters.Hel
 trans('Authorization server - Multistore', 'Admin.Advparameters.Feature');
 trans('Enable or disable the Authorization server when multistore is enabled.', 'Admin.Advparameters.Help');
 
+// Admin Api - Enable experimental endpoints
+trans('Enable experimental endpoints', 'Admin.Advparameters.Feature');
+trans('Experimental API endpoints are disabled by default in prod environment, this configuration allows to forcefully enable them.', 'Admin.Advparameters.Help');
+
 // Cart rules feature flag
 trans('Cart rules', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated cart rules page.', 'Admin.Advparameters.Help');

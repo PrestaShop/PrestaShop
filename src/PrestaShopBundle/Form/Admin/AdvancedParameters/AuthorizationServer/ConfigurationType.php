@@ -87,11 +87,6 @@ class ConfigurationType extends TranslatorAwareType
                     'Enabled' => true,
                 ],
             ])
-            ->add('enable_experimental_endpoints', SwitchType::class, [
-                'label' => $this->trans('Enable experimental endpoints', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Experimental API endpoints are disabled by default in prod environment, this configuration allows to forcefully enable them (not recommended).', 'Admin.Advparameters.Feature'),
-                'required' => true,
-            ])
         ;
     }
 

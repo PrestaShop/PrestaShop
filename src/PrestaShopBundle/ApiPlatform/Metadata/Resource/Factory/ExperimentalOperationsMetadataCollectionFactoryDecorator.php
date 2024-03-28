@@ -32,7 +32,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use Throwable;
 
 /**
@@ -42,7 +43,7 @@ use Throwable;
  * api routing, so it's not usable at all.
  *
  * Scope extraction is also impacted by this filtering, meaning if a scope is only associated to experimental operations
- * it won't be available in prod mode at all.
+ * it won't be available in prod mode at all, unless you enable the related feature flag.
  *
  * In dev mode all operations are kept though.
  */
@@ -51,7 +52,7 @@ class ExperimentalOperationsMetadataCollectionFactoryDecorator implements Resour
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $innerFactory,
         private readonly bool $isDebug,
-        private readonly ConfigurationInterface $configuration,
+        private readonly FeatureFlagManager $featureFlagManager,
     ) {
     }
 
@@ -82,15 +83,15 @@ class ExperimentalOperationsMetadataCollectionFactoryDecorator implements Resour
 
     /**
      * This decorator is implied during cache clearing which would fail when the shop is not installed
-     * because the DB config is not set up yet. So we protected the configuration fetching in a try/catch
-     * and return false (default recommended value) in case of an error.
+     * because the DB config is not set up yet. So we protected the feature flag fetching in a try/catch
+     * and return false (default value) in case of an error.
      *
      * @return bool
      */
     private function areExperimentalEndpointsEnabled(): bool
     {
         try {
-            return (bool) $this->configuration->get('PS_ENABLE_EXPERIMENTAL_API_ENDPOINTS');
+            return $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ENABLE_EXPERIMENTAL_ENDPOINTS);
         } catch (Throwable) {
             return false;
         }

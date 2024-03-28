@@ -46,7 +46,6 @@ class AuthorizationServerConfiguration implements DataConfigurationInterface
     {
         return [
             'enable_admin_api' => $this->configuration->getBoolean('PS_ENABLE_ADMIN_API'),
-            'enable_experimental_endpoints' => $this->configuration->getBoolean('PS_ENABLE_EXPERIMENTAL_API_ENDPOINTS'),
         ];
     }
 
@@ -58,7 +57,6 @@ class AuthorizationServerConfiguration implements DataConfigurationInterface
         }
 
         $this->configuration->set('PS_ENABLE_ADMIN_API', $configuration['enable_admin_api']);
-        $this->configuration->set('PS_ENABLE_EXPERIMENTAL_API_ENDPOINTS', $configuration['enable_experimental_endpoints']);
 
         // Clear cache so that Swagger and roles extraction are refreshed
         $this->cacheClearer->clear();
@@ -78,13 +76,6 @@ class AuthorizationServerConfiguration implements DataConfigurationInterface
             $errors[] = $this->translator->trans(
                 'The %s field is invalid.',
                 [$this->translator->trans('Admin API', [], 'Admin.Advparameters.Feature')],
-                'Admin.Notifications.Error'
-            );
-        }
-        if (!is_bool($configuration['enable_experimental_endpoints'])) {
-            $errors[] = $this->translator->trans(
-                'The %s field is invalid.',
-                [$this->translator->trans('Enable experimental endpoints', [], 'Admin.Advparameters.Feature')],
                 'Admin.Notifications.Error'
             );
         }
