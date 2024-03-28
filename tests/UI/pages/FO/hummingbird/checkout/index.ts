@@ -63,6 +63,7 @@ class Checkout extends CheckoutPage {
     this.shippingValueSpan = '#cart-subtotal-shipping span.cart-summary__value';
     this.itemsNumber = `${this.checkoutSummary} div.cart-summary__products.js-cart-summary-products p:nth-child(1)`;
     this.showDetailsLink = `${this.checkoutSummary} a.cart-summary__show.js-show-details`;
+    this.cartTotalATI = 'div.cart-summary__totals span.cart-summary__value';
     this.productDetailsBody = (productRow: number) => `${this.productRowLink(productRow)} div.cart-summary__product__body`;
     this.productDetailsImage = (productRow: number) => `${this.productRowLink(productRow)} div.cart-summary__product__image`
       + ' a img';
@@ -70,6 +71,10 @@ class Checkout extends CheckoutPage {
       + 'span.price';
     this.productDetailsAttributes = (productRow: number) => `${this.productRowLink(productRow)} div.cart-summary__product__body `
       + 'div.product-line-info:nth-child(2)';
+    // Promo code selectors
+    this.checkoutPromoBlock = '.js-cart-voucher';
+    this.cartSummaryLine = (line: number) => `${this.checkoutPromoBlock} li:nth-child(${line}).cart-voucher__item`;
+    this.cartRuleName = (line: number) => `${this.cartSummaryLine(line)} span.cart-voucher__name`;
   }
 
   /**
