@@ -26,7 +26,7 @@ CREATE TABLE `PREFIX_address` (
   `address2` varchar(128) DEFAULT NULL,
   `postcode` varchar(12) DEFAULT NULL,
   `city` varchar(64) NOT NULL,
-  `other` text,
+  `other` MEDIUMTEXT,
   `phone` varchar(32) DEFAULT NULL,
   `phone_mobile` varchar(32) DEFAULT NULL,
   `vat_number` varchar(32) DEFAULT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE `PREFIX_attachment_lang` (
   `id_attachment` int(10) unsigned NOT NULL auto_increment,
   `id_lang` int(10) unsigned NOT NULL,
   `name` varchar(32) DEFAULT NULL,
-  `description` TEXT,
+  `description` MEDIUMTEXT,
   PRIMARY KEY (`id_attachment`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
@@ -133,7 +133,7 @@ CREATE TABLE `PREFIX_cart` (
   `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_carrier` int(10) unsigned NOT NULL,
-  `delivery_option` TEXT NOT NULL,
+  `delivery_option` MEDIUMTEXT NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
   `id_address_delivery` int(10) unsigned NOT NULL,
   `id_address_invoice` int(10) unsigned NOT NULL,
@@ -143,7 +143,7 @@ CREATE TABLE `PREFIX_cart` (
   `secure_key` varchar(32) NOT NULL DEFAULT '-1',
   `recyclable` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `gift` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `gift_message` text,
+  `gift_message` MEDIUMTEXT,
   `mobile_theme` tinyint(1) NOT NULL DEFAULT '0',
   `allow_seperated_package` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
@@ -168,7 +168,7 @@ CREATE TABLE `PREFIX_cart_rule` (
   `id_customer` int unsigned NOT NULL DEFAULT '0',
   `date_from` datetime NOT NULL,
   `date_to` datetime NOT NULL,
-  `description` text,
+  `description` MEDIUMTEXT,
   `quantity` int(10) unsigned NOT NULL DEFAULT '0',
   `quantity_per_user` int(10) unsigned NOT NULL DEFAULT '0',
   `priority` int(10) unsigned NOT NULL DEFAULT 1,
@@ -355,8 +355,8 @@ CREATE TABLE `PREFIX_category_lang` (
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_lang` int(10) unsigned NOT NULL,
   `name` varchar(128) NOT NULL,
-  `description` text,
-  `additional_description` text,
+  `description` MEDIUMTEXT,
+  `additional_description` MEDIUMTEXT,
   `link_rewrite` varchar(128) NOT NULL,
   `meta_title` varchar(255) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
@@ -420,7 +420,7 @@ CREATE TABLE `PREFIX_cms_category_lang` (
   `id_lang` int(10) unsigned NOT NULL,
   `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
   `name` varchar(128) NOT NULL,
-  `description` text,
+  `description` MEDIUMTEXT,
   `link_rewrite` varchar(128) NOT NULL,
   `meta_title` varchar(255) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
@@ -446,7 +446,7 @@ CREATE TABLE `PREFIX_configuration` (
   `id_shop_group` INT(11) UNSIGNED DEFAULT NULL,
   `id_shop` INT(11) UNSIGNED DEFAULT NULL,
   `name` varchar(254) NOT NULL,
-  `value` text,
+  `value` MEDIUMTEXT,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_configuration`),
@@ -459,7 +459,7 @@ CREATE TABLE `PREFIX_configuration` (
 CREATE TABLE `PREFIX_configuration_lang` (
   `id_configuration` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
-  `value` text,
+  `value` MEDIUMTEXT,
   `date_upd` datetime DEFAULT NULL,
   PRIMARY KEY (`id_configuration`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
@@ -470,7 +470,7 @@ CREATE TABLE `PREFIX_configuration_kpi` (
   `id_shop_group` INT(11) UNSIGNED DEFAULT NULL,
   `id_shop` INT(11) UNSIGNED DEFAULT NULL,
   `name` varchar(64) NOT NULL,
-  `value` text,
+  `value` MEDIUMTEXT,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_configuration_kpi`),
@@ -483,7 +483,7 @@ CREATE TABLE `PREFIX_configuration_kpi` (
 CREATE TABLE `PREFIX_configuration_kpi_lang` (
   `id_configuration_kpi` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
-  `value` text,
+  `value` MEDIUMTEXT,
   `date_upd` datetime DEFAULT NULL,
   PRIMARY KEY (
     `id_configuration_kpi`, `id_lang`
@@ -546,7 +546,7 @@ CREATE TABLE `PREFIX_contact_lang` (
   `id_contact` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
   `name` varchar(255) NOT NULL,
-  `description` text,
+  `description` MEDIUMTEXT,
   PRIMARY KEY (`id_contact`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
@@ -629,7 +629,7 @@ CREATE TABLE `PREFIX_customer` (
   `show_public_prices` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `max_payment_days` int(10) unsigned NOT NULL DEFAULT '60',
   `secure_key` varchar(32) NOT NULL DEFAULT '-1',
-  `note` text,
+  `note` MEDIUMTEXT,
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `is_guest` tinyint(1) NOT NULL DEFAULT '0',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
@@ -973,7 +973,7 @@ CREATE TABLE `PREFIX_hook` (
   `id_hook` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(191) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `description` text,
+  `description` MEDIUMTEXT,
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `position` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_hook`),
@@ -1067,8 +1067,8 @@ CREATE TABLE `PREFIX_manufacturer` (
 CREATE TABLE `PREFIX_manufacturer_lang` (
   `id_manufacturer` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
-  `description` text,
-  `short_description` text,
+  `description` MEDIUMTEXT,
+  `short_description` MEDIUMTEXT,
   `meta_title` varchar(255) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
   `meta_description` varchar(512) DEFAULT NULL,
@@ -1082,7 +1082,7 @@ CREATE TABLE `PREFIX_message` (
   `id_customer` int(10) unsigned NOT NULL,
   `id_employee` int(10) unsigned DEFAULT NULL,
   `id_order` int(10) unsigned NOT NULL,
-  `message` text NOT NULL,
+  `message` MEDIUMTEXT NOT NULL,
   `private` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `date_add` datetime NOT NULL,
   PRIMARY KEY (`id_message`),
@@ -1228,7 +1228,7 @@ CREATE TABLE `PREFIX_orders` (
   `module` varchar(255) DEFAULT NULL,
   `recyclable` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `gift` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `gift_message` text,
+  `gift_message` MEDIUMTEXT,
   `mobile_theme` tinyint(1) NOT NULL DEFAULT '0',
   `total_discounts` decimal(20, 6) NOT NULL DEFAULT '0.00',
   `total_discounts_tax_incl` decimal(20, 6) NOT NULL DEFAULT '0.00',
@@ -1255,7 +1255,7 @@ CREATE TABLE `PREFIX_orders` (
   `valid` int(1) unsigned NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
-  `note` text,
+  `note` MEDIUMTEXT,
   PRIMARY KEY (`id_order`),
   KEY `reference` (`reference`),
   KEY `id_customer` (`id_customer`),
@@ -1300,8 +1300,8 @@ CREATE TABLE `PREFIX_order_invoice` (
   `shipping_tax_computation_method` int(10) unsigned NOT NULL,
   `total_wrapping_tax_excl` decimal(20, 6) NOT NULL DEFAULT '0.00',
   `total_wrapping_tax_incl` decimal(20, 6) NOT NULL DEFAULT '0.00',
-  `shop_address` text DEFAULT NULL,
-  `note` text,
+  `shop_address` MEDIUMTEXT DEFAULT NULL,
+  `note` MEDIUMTEXT,
   `date_add` datetime NOT NULL,
   PRIMARY KEY (`id_order_invoice`),
   KEY `id_order` (`id_order`)
@@ -1326,7 +1326,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `product_id` int(10) unsigned NOT NULL,
   `product_attribute_id` int(10) unsigned DEFAULT NULL,
   `id_customization` int(10) unsigned DEFAULT 0,
-  `product_name` text NOT NULL,
+  `product_name` MEDIUMTEXT NOT NULL,
   `product_quantity` int(10) unsigned NOT NULL DEFAULT '0',
   `product_quantity_in_stock` int(10) NOT NULL DEFAULT '0',
   `product_quantity_refunded` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1418,7 +1418,7 @@ CREATE TABLE `PREFIX_order_message_lang` (
   `id_order_message` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
   `name` varchar(128) NOT NULL,
-  `message` text NOT NULL,
+  `message` MEDIUMTEXT NOT NULL,
   PRIMARY KEY (`id_order_message`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
@@ -1428,7 +1428,7 @@ CREATE TABLE `PREFIX_order_return` (
   `id_customer` int(10) unsigned NOT NULL,
   `id_order` int(10) unsigned NOT NULL,
   `state` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `question` text NOT NULL,
+  `question` MEDIUMTEXT NOT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_order_return`),
@@ -1829,8 +1829,8 @@ CREATE TABLE `PREFIX_product_lang` (
   `id_product` int(10) unsigned NOT NULL,
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_lang` int(10) unsigned NOT NULL,
-  `description` text,
-  `description_short` text,
+  `description` MEDIUMTEXT,
+  `description_short` MEDIUMTEXT,
   `link_rewrite` varchar(128) NOT NULL,
   `meta_description` varchar(512) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
@@ -1925,7 +1925,7 @@ CREATE TABLE `PREFIX_range_weight` (
 CREATE TABLE IF NOT EXISTS `PREFIX_request_sql` (
   `id_request_sql` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
-  `sql` text NOT NULL,
+  `sql` MEDIUMTEXT NOT NULL,
   PRIMARY KEY (`id_request_sql`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
@@ -2028,7 +2028,7 @@ CREATE TABLE `PREFIX_supplier` (
 CREATE TABLE `PREFIX_supplier_lang` (
   `id_supplier` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
-  `description` text,
+  `description` MEDIUMTEXT,
   `meta_title` varchar(255) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
   `meta_description` varchar(512) DEFAULT NULL,
@@ -2129,8 +2129,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
   `name` varchar(255) NOT NULL,
   `address1` varchar(255) NOT NULL,
   `address2` varchar(255) DEFAULT NULL,
-  `hours` text,
-  `note` text,
+  `hours` MEDIUMTEXT,
+  `note` MEDIUMTEXT,
   PRIMARY KEY (`id_store`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
@@ -2138,7 +2138,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
 CREATE TABLE `PREFIX_webservice_account` (
   `id_webservice_account` int(11) NOT NULL AUTO_INCREMENT,
   `key` varchar(32) NOT NULL,
-  `description` text NULL,
+  `description` MEDIUMTEXT NULL,
   `class_name` VARCHAR(50) NOT NULL DEFAULT 'WebserviceRequest',
   `is_module` TINYINT(2) NOT NULL DEFAULT '0',
   `module_name` VARCHAR(50) NULL DEFAULT NULL,
@@ -2228,7 +2228,7 @@ CREATE TABLE `PREFIX_log` (
   `id_log` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `severity` tinyint(1) NOT NULL,
   `error_code` int(11) DEFAULT NULL,
-  `message` text NOT NULL,
+  `message` MEDIUMTEXT NOT NULL,
   `object_type` varchar(32) DEFAULT NULL,
   `object_id` int(10) unsigned DEFAULT NULL,
   `id_shop` int(10) unsigned DEFAULT NULL,
@@ -2244,7 +2244,7 @@ CREATE TABLE `PREFIX_log` (
 CREATE TABLE `PREFIX_import_match` (
   `id_import_match` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
-  `match` text NOT NULL,
+  `match` MEDIUMTEXT NOT NULL,
   `skip` int(2) NOT NULL,
   PRIMARY KEY (`id_import_match`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
