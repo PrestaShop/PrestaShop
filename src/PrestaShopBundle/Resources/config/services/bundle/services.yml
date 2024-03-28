@@ -6,7 +6,7 @@ parameters:
   modules_dir: "%kernel.project_dir%/modules"
   themes_dir: "%kernel.project_dir%/themes"
   translation_catalogues_export_dir: "%kernel.cache_dir%/export"
-  translations_catalogue_extract_excluded_dirs: [ 'vendor', 'lib', 'tests' ]
+  translations_catalogue_extract_excluded_dirs: [ 'vendor', 'lib', 'tests', 'node_modules', '_dev', 'js' ]
 
 services:
   _defaults:
@@ -42,6 +42,9 @@ services:
     class: PrestaShopBundle\Service\TranslationService
     properties:
       container: "@service_container"
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $logger: '@logger'
 
   # Interfaced services to decorate
   prestashop.core.data_provider.stock_interface:

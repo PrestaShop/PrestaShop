@@ -26,12 +26,14 @@
 
 namespace PrestaShopBundle\Service;
 
+use Doctrine\ORM\EntityManager;
 use Exception;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
 
@@ -41,6 +43,12 @@ class TranslationService
      * @var Container
      */
     public $container;
+
+    public function __construct(
+        private readonly EntityManager $entityManager,
+        private readonly LoggerInterface $logger,
+    ) {
+    }
 
     /**
      * @param string $lang
@@ -63,10 +71,8 @@ class TranslationService
      */
     public function findLanguageByLocale($locale)
     {
-        $doctrine = $this->container->get('doctrine');
-
         /** @var Lang|null $lang */
-        $lang = $doctrine->getManager()->getRepository(Lang::class)->findOneByLocale($locale);
+        $lang = $this->entityManager->getRepository(Lang::class)->findOneBy(['locale' => $locale]);
 
         if (!$lang instanceof Lang) {
             throw InvalidLanguageException::localeNotFound($locale);
@@ -226,10 +232,7 @@ class TranslationService
      */
     public function saveTranslationMessage($lang, $domain, $key, $translationValue, $theme = null)
     {
-        $doctrine = $this->container->get('doctrine');
-        $entityManager = $doctrine->getManager();
-        $logger = $this->container->get('logger');
-        $log_context = ['object_type' => 'Translation'];
+        $logContext = ['object_type' => 'Translation', 'domain' => $domain, 'key' => $key, 'translation_value' => $translationValue, 'theme' => $theme];
 
         if (empty($theme)) {
             $theme = null;
@@ -238,20 +241,20 @@ class TranslationService
         $translation = null;
 
         try {
-            $queryBuilder = $entityManager->getRepository(Translation::class)
+            $queryBuilder = $this->entityManager->getRepository(Translation::class)
                 ->createQueryBuilder('t')
                 ->where('t.lang = :lang')->setParameter('lang', $lang)
                 ->andWhere('t.domain = :domain')->setParameter('domain', $domain)
                 ->andWhere('t.key LIKE :key')->setParameter('key', $key)
             ;
-            if ($theme !== null) {
+            if (null !== $theme) {
                 $queryBuilder->andWhere('t.theme = :theme')->setParameter('theme', $theme);
             } else {
                 $queryBuilder->andWhere('t.theme IS NULL');
             }
             $translation = $queryBuilder->getQuery()->getSingleResult();
         } catch (Exception $exception) {
-            $logger->error($exception->getMessage(), $log_context);
+            $this->logger->error($exception->getMessage(), $logContext);
         }
 
         if (null === $translation) {
@@ -259,22 +262,19 @@ class TranslationService
             $translation->setDomain($domain);
             $translation->setLang($lang);
             $translation->setKey(htmlspecialchars_decode($key, ENT_QUOTES));
-            $translation->setTranslation($translationValue);
-            if (!empty($theme)) {
-                $translation->setTheme($theme);
-            }
-        } else {
-            if (!empty($theme)) {
-                $translation->setTheme($theme);
-            }
-            $translation->setTranslation($translationValue);
         }
+
+        if (null !== $theme) {
+            $translation->setTheme($theme);
+        }
+
+        $translation->setTranslation($translationValue);
 
         $validator = Validation::createValidator();
         $violations = $validator->validate($translation, new PassVsprintf());
         if (0 !== count($violations)) {
             foreach ($violations as $violation) {
-                $logger->error($violation->getMessage(), $log_context);
+                $this->logger->error($violation->getMessage(), $logContext);
             }
 
             return false;
@@ -283,12 +283,12 @@ class TranslationService
         $updatedTranslationSuccessfully = false;
 
         try {
-            $entityManager->persist($translation);
-            $entityManager->flush();
+            $this->entityManager->persist($translation);
+            $this->entityManager->flush();
 
             $updatedTranslationSuccessfully = true;
         } catch (Exception $exception) {
-            $logger->error($exception->getMessage(), $log_context);
+            $this->logger->error($exception->getMessage(), $logContext);
         }
 
         return $updatedTranslationSuccessfully;
@@ -306,9 +306,6 @@ class TranslationService
      */
     public function resetTranslationMessage($lang, $domain, $key, $theme = null)
     {
-        $doctrine = $this->container->get('doctrine');
-        $entityManager = $doctrine->getManager();
-
         $searchTranslation = [
             'lang' => $lang,
             'domain' => $domain,
@@ -318,7 +315,7 @@ class TranslationService
             $searchTranslation['theme'] = $theme;
         }
 
-        $translation = $entityManager->getRepository(Translation::class)->findOneBy($searchTranslation);
+        $translation = $this->entityManager->getRepository(Translation::class)->findOneBy($searchTranslation);
 
         $resetTranslationSuccessfully = false;
         if (null === $translation) {
@@ -326,12 +323,12 @@ class TranslationService
         }
 
         try {
-            $entityManager->remove($translation);
-            $entityManager->flush();
+            $this->entityManager->remove($translation);
+            $this->entityManager->flush();
 
             $resetTranslationSuccessfully = true;
         } catch (Exception $exception) {
-            $this->container->get('logger')->error($exception->getMessage());
+            $this->logger->error($exception->getMessage());
         }
 
         return $resetTranslationSuccessfully;
