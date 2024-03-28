@@ -23,6 +23,7 @@ const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_attribu
 let browserContext: BrowserContext;
 let page: Page;
 let numberOfValues: number = 0;
+let idAttribute: number = 0;
 
 /*
 Go to Attributes & Features page
@@ -71,10 +72,13 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
   it('should filter list of attributes by name \'Color\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDeleteAttributes', baseContext);
 
-    await attributesPage.filterTable(page, 'b!name', 'Color');
+    await attributesPage.filterTable(page, 'name', 'Color');
 
-    const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
+    const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
     expect(textColumn).to.contains('Color');
+
+    idAttribute = parseInt(await attributesPage.getTextColumn(page, 1, 'id_attribute_group'), 10);
+    expect(idAttribute).to.be.gt(0);
   });
 
   it('should view attribute \'Color\'', async function () {
@@ -83,7 +87,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     await attributesPage.viewAttribute(page, 1);
 
     const pageTitle = await viewAttributePage.getPageTitle(page);
-    expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} Color`);
+    expect(pageTitle).to.equal(viewAttributePage.pageTitle('Color'));
 
     numberOfValues = await viewAttributePage.resetAndGetNumberOfLines(page);
     expect(numberOfValues).to.be.above(0);
@@ -102,22 +106,25 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     });
 
     creationTests.forEach((test: number, index: number) => {
-      const createValueData = new AttributeValueData({attributeName: 'Color', value: `todelete${index}`});
       it(`should create value n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createNewValue${index}`, baseContext);
+
+        const createValueData = new AttributeValueData({
+          attributeID: idAttribute,
+          attributeName: 'Color',
+          value: `todelete${index}`,
+        });
 
         const textResult = await addValuePage.addEditValue(page, createValueData, index !== 6);
         expect(textResult).to.contains(attributesPage.successfulCreationMessage);
       });
     });
 
-    it('should view attribute \'Color\' and check number of values after creation', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewAttributeColor2', baseContext);
-
-      await attributesPage.viewAttribute(page, 1);
+    it('should check number of values after creation', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberAfterCreation', baseContext);
 
       const pageTitle = await viewAttributePage.getPageTitle(page);
-      expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} Color`);
+      expect(pageTitle).to.equal(viewAttributePage.pageTitle('Color'));
 
       const numberOfValuesAfterCreation = await viewAttributePage.resetAndGetNumberOfLines(page);
       expect(numberOfValuesAfterCreation).to.equal(numberOfValues + 7);
@@ -130,28 +137,28 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
       const paginationNumber = await viewAttributePage.selectPaginationLimit(page, 20);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await viewAttributePage.paginationNext(page);
-      expect(paginationNumber).to.equal('2');
+      expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
       const paginationNumber = await viewAttributePage.paginationPrevious(page);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await viewAttributePage.selectPaginationLimit(page, 50);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 
@@ -160,42 +167,42 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     const sortTests = [
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_attribute', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_attribute', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'b!name', sortDirection: 'up',
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'b!name', sortDirection: 'down',
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByColorAsc', sortBy: 'a!color', sortDirection: 'up',
+          testIdentifier: 'sortByColorAsc', sortBy: 'color', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByColorDesc', sortBy: 'a!color', sortDirection: 'down',
+          testIdentifier: 'sortByColorDesc', sortBy: 'color', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByPositionAsc', sortBy: 'a!position', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByPositionAsc', sortBy: 'position', sortDirection: 'asc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByPositionDesc', sortBy: 'a!position', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByPositionDesc', sortBy: 'position', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_attribute', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_attribute', sortDirection: 'asc', isFloat: true,
         },
       },
     ];
@@ -216,7 +223,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
 
           const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.args.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
@@ -224,7 +231,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
@@ -239,7 +246,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     it('should filter by value name \'toDelete\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await viewAttributePage.filterTable(page, 'b!name', 'toDelete');
+      await viewAttributePage.filterTable(page, 'name', 'toDelete');
 
       const numberOfValuesAfterFilter = await viewAttributePage.getNumberOfElementInGrid(page);
       expect(numberOfValuesAfterFilter).to.be.at.most(numberOfValues);
@@ -249,7 +256,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteAttributes', baseContext);
 
       const deleteTextResult = await viewAttributePage.bulkDeleteValues(page);
-      expect(deleteTextResult).to.be.contains(viewAttributePage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(viewAttributePage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {

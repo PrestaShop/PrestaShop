@@ -278,7 +278,13 @@ class Categories extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<{name: string, description: string, id: string, position: number, status: boolean}>}
    */
-  async getCategoryFromTable(page: Page, row: number) {
+  async getCategoryFromTable(page: Page, row: number): Promise<{
+    name: string,
+    description: string,
+    id: string,
+    position: number,
+    status: boolean,
+  }> {
     return {
       id: await this.getTextColumnFromTableCategories(page, row, 'id_category'),
       name: await this.getTextColumnFromTableCategories(page, row, 'name'),

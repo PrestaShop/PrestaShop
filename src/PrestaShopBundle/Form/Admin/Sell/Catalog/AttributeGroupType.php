@@ -66,6 +66,7 @@ class AttributeGroupType extends TranslatorAwareType
                 'label' => $this->trans('Name', 'Admin.Global'),
                 'options' => [
                     'constraints' => [
+                        new NotBlank(),
                         new TypedRegex([
                             'type' => TypedRegex::TYPE_CATALOG_NAME,
                         ]),
@@ -80,12 +81,13 @@ class AttributeGroupType extends TranslatorAwareType
                 'label' => $this->trans('Public name', 'Admin.Catalog.Feature'),
                 'options' => [
                     'constraints' => [
+                        new NotBlank(),
                         new TypedRegex([
                             'type' => TypedRegex::TYPE_CATALOG_NAME,
                         ]),
                     ],
                 ],
-                'help' => $this->trans('Your internal name for this attribute.', 'Admin.Catalog.Help')
+                'help' => $this->trans('The public name for this attribute, displayed to the customers.', 'Admin.Catalog.Help')
                     . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
                     . ' ' . TypedRegexValidator::CATALOG_CHARS,
             ])

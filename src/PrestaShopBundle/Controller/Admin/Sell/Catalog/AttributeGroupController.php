@@ -308,6 +308,16 @@ class AttributeGroupController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
                 ),
+                AttributeGroupConstraintException::EMPTY_PUBLIC_NAME => $this->trans(
+                    'The field %field_name% is required at least in your default language.',
+                    'Admin.Notifications.Error',
+                    ['%field_name%' => $this->trans('Public name', 'Admin.Global')]
+                ),
+                AttributeGroupConstraintException::INVALID_PUBLIC_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Public name', 'Admin.Global'))]
+                ),
             ],
 
             CannotAddAttributeGroupException::class => $this->trans(

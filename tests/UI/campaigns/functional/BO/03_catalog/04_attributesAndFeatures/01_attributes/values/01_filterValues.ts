@@ -59,9 +59,9 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
   it('should filter attributes table by name \'Color\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterAttributes', baseContext);
 
-    await attributesPage.filterTable(page, 'b!name', Attributes.color.name);
+    await attributesPage.filterTable(page, 'name', Attributes.color.name);
 
-    const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
+    const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
     expect(textColumn).to.contains(Attributes.color.name);
   });
 
@@ -71,7 +71,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
     await attributesPage.viewAttribute(page, 1);
 
     const pageTitle = await viewAttributePage.getPageTitle(page);
-    expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${Attributes.color.name}`);
+    expect(pageTitle).to.equal(viewAttributePage.pageTitle(Attributes.color.name));
   });
 
   it('should reset all filters and get number of values in BO', async function () {
@@ -95,7 +95,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
         args:
           {
             testIdentifier: 'filterName',
-            filterBy: 'b!name',
+            filterBy: 'name',
             filterValue: Attributes.color.values[3].value,
           },
       },
@@ -103,16 +103,8 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
         args:
           {
             testIdentifier: 'filterColor',
-            filterBy: 'a!color',
+            filterBy: 'color',
             filterValue: Attributes.color.values[7].color,
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'filterPosition',
-            filterBy: 'a!position',
-            filterValue: (Attributes.color.values[10].position - 1),
           },
       },
     ];
@@ -124,19 +116,14 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
         await viewAttributePage.filterTable(
           page,
           test.args.filterBy,
-          typeof test.args.filterValue === 'number' ? test.args.filterValue.toString() : test.args.filterValue,
+          test.args.filterValue,
         );
 
         const numberOfValuesAfterFilter = await viewAttributePage.getNumberOfElementInGrid(page);
         expect(numberOfValuesAfterFilter).to.be.at.most(numberOfValues);
 
         const textColumn = await viewAttributePage.getTextColumn(page, 1, test.args.filterBy);
-
-        if (typeof test.args.filterValue === 'number') {
-          expect(textColumn).to.contains(test.args.filterValue + 1);
-        } else {
-          expect(textColumn).to.contains(test.args.filterValue);
-        }
+        expect(textColumn).to.contains(test.args.filterValue);
       });
 
       it('should reset all filters', async function () {

@@ -70,12 +70,7 @@ describe('BO - Catalog - Attributes & Features : Filter attributes table', async
       },
       {
         args: {
-          testIdentifier: 'filterName', filterBy: 'b!name', filterValue: Attributes.color.name,
-        },
-      },
-      {
-        args: {
-          testIdentifier: 'filterPosition', filterBy: 'a!position', filterValue: (Attributes.paperType.position - 1),
+          testIdentifier: 'filterName', filterBy: 'name', filterValue: Attributes.color.name,
         },
       },
     ];
@@ -87,19 +82,14 @@ describe('BO - Catalog - Attributes & Features : Filter attributes table', async
         await attributesPage.filterTable(
           page,
           test.args.filterBy,
-          typeof test.args.filterValue === 'number' ? test.args.filterValue.toString() : test.args.filterValue,
+          test.args.filterValue,
         );
 
         const numberOfAttributesAfterFilter = await attributesPage.getNumberOfElementInGrid(page);
         expect(numberOfAttributesAfterFilter).to.be.at.most(numberOfAttributes);
 
         const textColumn = await attributesPage.getTextColumn(page, 1, test.args.filterBy);
-
-        if (typeof test.args.filterValue === 'number') {
-          expect(textColumn).to.contains(test.args.filterValue + 1);
-        } else {
-          expect(textColumn).to.contains(test.args.filterValue);
-        }
+        expect(textColumn).to.contains(test.args.filterValue);
       });
 
       it('should reset all filters', async function () {
