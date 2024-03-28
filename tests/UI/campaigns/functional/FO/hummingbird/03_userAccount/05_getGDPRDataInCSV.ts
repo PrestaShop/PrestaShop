@@ -7,24 +7,27 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
-import {checkoutPage} from '@pages/FO/classic/checkout';
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {contactUsPage} from '@pages/FO/classic/contactUs';
+// Import BO pages
 import customersPage from '@pages/BO/customers';
 import viewCustomerPage from '@pages/BO/customers/view';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import dashboardPage from '@pages/BO/dashboard';
-import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
-import {createAccountPage} from '@pages/FO/classic/myAccount/add';
-import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 import ordersPage from '@pages/BO/orders';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
-import {productPage} from '@pages/FO/classic/product';
+
+// Import FO pages
+import cartPage from '@pages/FO/hummingbird/cart';
+import checkoutPage from '@pages/FO/hummingbird/checkout';
+import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
+import contactUsPage from '@pages/FO/hummingbird/contactUs';
+import homePage from '@pages/FO/hummingbird/home';
+import loginPage from '@pages/FO/hummingbird/login';
+import myAccountPage from '@pages/FO/hummingbird/myAccount';
+import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
+import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalData';
+import productPage from '@pages/FO/hummingbird/product';
 
 // Import data
 import Products from '@data/demo/products';
@@ -40,10 +43,12 @@ import {
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_userAccount_getGDPRDataInCSV';
+const baseContext: string = 'functional_FO_hummingbird_userAccount_getGDPRDataInCSV';
 
 /*
-Scenario
+Pre-condition:
+- Install the theme hummingbird
+Scenario:
 - Check GDPR CSV file after create customer and first login
 - Check GDPR CSV file after create a cart
 - Check GDPR CSV file after create an order and an address
@@ -55,7 +60,7 @@ Post condition:
 describe('FO - Account : Get GDPR data in CSV', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string|null;
+  let filePath: string | null;
   let registrationDate: string;
   let lastVisitDate: string;
   let secondLastVisitDate: string;
@@ -93,6 +98,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   });
 
   const createCustomerName: string = `${customerData.firstName[0]}. ${customerData.lastName}`;
+
+  // Pre-condition : Install Hummingbird
+  installHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -147,7 +155,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         expect(pageTitle).to.equal(myAccountPage.pageTitle);
       });
 
-      it('should go to \'GDPR - Personal data\' page', async function () {
+      // @todo https://github.com/PrestaShop/hummingbird/pull/600
+      it.skip('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage1', baseContext);
 
         await myAccountPage.goToMyGDPRPersonalDataPage(page);
@@ -156,7 +165,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
-      it('should click on \'Get my data to CSV\'', async function () {
+      it.skip('should click on \'Get my data to CSV\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToCSV1', baseContext);
 
         filePath = await gdprPersonalDataPage.exportDataToCSV(page);
@@ -166,7 +175,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       });
     });
 
-    describe('Get personal information from BO', async () => {
+    describe.skip('Get personal information from BO', async () => {
       it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
       });
@@ -230,7 +239,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       });
     });
 
-    describe('Check GDPR data in CSV', async () => {
+    describe.skip('Check GDPR data in CSV', async () => {
       it('should check general info', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkGeneralInfo', baseContext);
 
@@ -356,7 +365,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
     });
   });
 
-  describe('Check GDPR CSV file after create a cart', async () => {
+  describe.skip('Check GDPR CSV file after create a cart', async () => {
     describe('Add a product to the cart and download CSV file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount2', baseContext);
@@ -479,7 +488,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
     });
   });
 
-  describe('Check GDPR CSV file after create an order and an address', async () => {
+  describe.skip('Check GDPR CSV file after create an order and an address', async () => {
     describe('Create an order and download CSV file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount3', baseContext);
@@ -655,7 +664,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
     });
   });
 
-  describe('Check GDPR CSV file after send a message', async () => {
+  describe.skip('Check GDPR CSV file after send a message', async () => {
     describe('Send message and download CSV file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount4', baseContext);
@@ -809,7 +818,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
     });
   });
 
-  describe('Check GDPR CSV file after logout and login in FO', async () => {
+  describe.skip('Check GDPR CSV file after logout and login in FO', async () => {
     describe('Logout then login and download CSV file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount5', baseContext);
@@ -1006,5 +1015,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   });
 
   // Post-condition: Create new account on FO
-  deleteCustomerTest(customerData, `${baseContext}_postTest`);
+  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
+
+  // Post-condition : Uninstall Hummingbird
+  uninstallHummingbird(`${baseContext}_postTest_2`);
 });

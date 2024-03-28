@@ -25,7 +25,7 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
-import gdprPersonalDataPage from '@pages/FO/classic/myAccount/gdprPersonalData';
+import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 import {productPage} from '@pages/FO/classic/product';
 
 // Import data
