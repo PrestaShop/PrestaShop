@@ -256,7 +256,7 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
             $command->setUpc($data['upc']);
         }
         if (isset($data['ean13'])) {
-            $command->setEan13($data['ean13']);
+            $command->setGtin($data['ean13']);
         }
         if (isset($data['mpn'])) {
             $command->setMpn($data['mpn']);

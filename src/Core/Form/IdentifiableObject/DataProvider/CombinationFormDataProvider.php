@@ -199,7 +199,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         return [
             'reference' => $details->getReference(),
             'isbn' => $details->getIsbn(),
-            'ean_13' => $details->getEan13(),
+            'ean_13' => $details->getGtin(),
             'upc' => $details->getUpc(),
             'mpn' => $details->getMpn(),
         ];

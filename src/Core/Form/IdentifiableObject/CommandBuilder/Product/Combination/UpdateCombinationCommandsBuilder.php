@@ -98,7 +98,7 @@ class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInte
             ->addField('[references][reference]', 'setReference', DataField::TYPE_STRING)
             ->addField('[references][mpn]', 'setMpn', DataField::TYPE_STRING)
             ->addField('[references][upc]', 'setUpc', DataField::TYPE_STRING)
-            ->addField('[references][ean_13]', 'setEan13', DataField::TYPE_STRING)
+            ->addField('[references][ean_13]', 'setGtin', DataField::TYPE_STRING)
             ->addField('[references][isbn]', 'setIsbn', DataField::TYPE_STRING)
         ;
 

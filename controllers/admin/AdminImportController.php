@@ -2458,7 +2458,7 @@ class AdminImportControllerCore extends AdminController
                     $info['weight'] = str_replace(',', '.', $info['weight']);
                     $info['available_date'] = Validate::isDate($info['available_date']) ? $info['available_date'] : null;
 
-                    if (!Validate::isEan13($info['ean13'])) {
+                    if (!Validate::isGtin($info['ean13'])) {
                         $this->warnings[] = $this->trans(
                             'EAN-13 "%ean13%" has incorrect value for product with ID %id%.',
                             [
