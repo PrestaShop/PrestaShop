@@ -6,7 +6,6 @@
 /* stylelint-enable */
 
 .products-catalog {
-
   .catalog-tools {
     flex: 0 0 2rem;
     max-width: 2rem;
@@ -64,6 +63,10 @@
     font-size: 12rem;
     color: $gray-light;
   }
+}
+
+table tr.column-filters td[data-column-id^="id_"] input {
+  min-width: 5rem;
 }
 
 // Create product modal
