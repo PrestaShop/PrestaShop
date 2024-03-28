@@ -44,7 +44,3 @@ services:
     deprecated:
       package: PrestaShop\PrestaShop
       version: 9.0
-
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\EventListener\FeatureFlagTypeListener:
-    tags:
-      - { name: core.legacy.hook.subscriber }

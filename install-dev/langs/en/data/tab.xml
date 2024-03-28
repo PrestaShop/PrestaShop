@@ -131,7 +131,7 @@
     <tab id="Traffic" name="Traffic &amp; SEO" />
     <tab id="Translations" name="Translations" />
     <tab id="Webservice" name="Webservice" />
-    <tab id="AuthorizationServer" name="Authorization Server" />
+    <tab id="AdminApi" name="Admin API" />
     <tab id="Zones" name="Zones" />
     <tab id="Marketing_tools" name="Module Selections" />
     <tab id="FeatureFlag" name="New &amp; Experimental Features" />

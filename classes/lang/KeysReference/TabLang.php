@@ -128,7 +128,7 @@ trans('Titles', 'Admin.Navigation.Menu');
 trans('Traffic & SEO', 'Admin.Navigation.Menu');
 trans('Translations', 'Admin.Navigation.Menu');
 trans('Webservice', 'Admin.Navigation.Menu');
-trans('Authorization Server', 'Admin.Navigation.Menu');
+trans('Admin API', 'Admin.Navigation.Menu');
 trans('Zones', 'Admin.Navigation.Menu');
 trans('Modules Catalog', 'Admin.Navigation.Menu');
 trans('Module Manager', 'Admin.Navigation.Menu');
