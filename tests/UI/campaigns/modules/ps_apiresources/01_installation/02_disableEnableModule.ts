@@ -86,12 +86,12 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
       });
 
       it('should go to \'Advanced Parameters > API Client\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToAuthorizationServerPage${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToAdminAPIPage${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
           dashboardPage.advancedParametersLink,
-          dashboardPage.authorizationServerLink,
+          dashboardPage.adminAPILink,
         );
 
         const pageTitle = await apiClientPage.getPageTitle(page);

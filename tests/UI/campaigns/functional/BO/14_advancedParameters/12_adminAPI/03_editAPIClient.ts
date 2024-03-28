@@ -17,7 +17,7 @@ import APIClientData from '@data/faker/APIClient';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_advancedParameters_authorizationServer_editAPIClient';
+const baseContext: string = 'functional_BO_advancedParameters_adminAPI_editAPIClient';
 
 describe('BO - Advanced Parameter - Authorization Server : Edit API Client', async () => {
   let browserContext: BrowserContext;
@@ -58,12 +58,12 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Client', asy
     });
 
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -122,7 +122,7 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Client', asy
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
       const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);
@@ -167,7 +167,7 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Client', asy
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
       const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);
@@ -227,7 +227,7 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Client', asy
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
       const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);

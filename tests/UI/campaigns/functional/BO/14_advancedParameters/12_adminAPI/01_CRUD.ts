@@ -16,9 +16,9 @@ import APIClientData from '@data/faker/APIClient';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_advancedParameters_authorizationServer_addAPIClient';
+const baseContext: string = 'functional_BO_advancedParameters_adminAPI_CRUD';
 
-describe('BO - Advanced Parameter - API Client : Add API Client', async () => {
+describe('BO - Advanced Parameter - API Client : CRUD', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -26,10 +26,11 @@ describe('BO - Advanced Parameter - API Client : Add API Client', async () => {
     clientName: 'API Client XYZ',
     clientId: 'api-client-xyz',
     description: 'Description ABC',
-    scopes: [
-      'hook_write',
-      'product_read',
-    ],
+  });
+  const editAPIClient: APIClientData = new APIClientData({
+    clientName: 'API Client UVW',
+    clientId: 'api-client-uvw',
+    description: 'Description DEF',
   });
 
   // before and after functions
@@ -48,12 +49,12 @@ describe('BO - Advanced Parameter - API Client : Add API Client', async () => {
     });
 
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -80,41 +81,38 @@ describe('BO - Advanced Parameter - API Client : Add API Client', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'createAPIClient', baseContext);
 
       const textResult = await addNewApiClientPage.addAPIClient(page, createAPIClient);
-      expect(textResult).to.contains(addNewApiClientPage.successfulCreationMessage);
+      expect(textResult).to.contain(addNewApiClientPage.successfulCreationMessage);
 
-      const textMessage = await addNewApiClientPage.getAlertInfoBlockParagraphContent(page);
-      expect(textMessage).to.contains(addNewApiClientPage.apiClientGeneratedMessage);
+      // Go back to list to get number of elements because creation form redirects to edition form
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.adminAPILink,
+      );
+      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
+      expect(numElements).to.equal(1);
     });
 
-    it('should copy client secret', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'copyClientSecret', baseContext);
+    it('should go to edit API Client page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAPIClientPage', baseContext);
 
-      await addNewApiClientPage.copyClientSecret(page);
+      await apiClientPage.goToEditAPIClientPage(page, 1);
 
-      const clipboardContent = await addNewApiClientPage.getClipboardText(page);
-      expect(clipboardContent.length).to.be.gt(0);
-
-      const clientSecret = await addNewApiClientPage.getClientSecret(page);
-      expect(clientSecret.length).to.be.gt(0);
-
-      expect(clipboardContent).to.be.equal(clientSecret);
+      const pageTitle = await addNewApiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleEdit(createAPIClient.clientName));
     });
 
-    it('should reload page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'reloadPage', baseContext);
+    it('should edit API Client', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editAPIClient', baseContext);
 
-      const hasAlertBlock = await addNewApiClientPage.hasAlertBlock(page);
-      expect(hasAlertBlock).to.equal(false);
-    });
-
-    it('should return to the list', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'returnList', baseContext);
+      const textResult = await addNewApiClientPage.addAPIClient(page, editAPIClient);
+      expect(textResult).to.equal(addNewApiClientPage.successfulUpdateMessage);
 
       // Go back to list to get number of elements because edition form redirects to itself
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
       const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);

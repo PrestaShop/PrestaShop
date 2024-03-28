@@ -9,7 +9,7 @@ import {Page} from 'playwright';
 class FeatureFlag extends BOBasePage {
   public readonly pageTitle: string;
 
-  public readonly featureFlagAuthorizationServer: string;
+  public readonly featureFlagAdminAPI: string;
 
   private readonly featureFlagSwitchButton: (status: string, feature: string, toggle: number) => string;
 
@@ -32,7 +32,7 @@ class FeatureFlag extends BOBasePage {
     this.successfulUpdateMessage = 'Update successful';
 
     // Feature Flag
-    this.featureFlagAuthorizationServer = 'authorization_server';
+    this.featureFlagAdminAPI = 'admin_api';
     // Selectors
     this.featureFlagSwitchButton = (status: string, feature: string, toggle: number) => `#feature_flag_${
       status}_feature_flags_${feature}_enabled_${toggle}`;
@@ -53,7 +53,7 @@ class FeatureFlag extends BOBasePage {
     let isStable: boolean;
 
     switch (featureFlag) {
-      case this.featureFlagAuthorizationServer:
+      case this.featureFlagAdminAPI:
         isStable = false;
         break;
       default:

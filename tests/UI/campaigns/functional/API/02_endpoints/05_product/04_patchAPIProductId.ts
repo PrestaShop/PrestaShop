@@ -71,12 +71,12 @@ describe('API : PATCH /product/{productId}', async () => {
       });
 
       it('should go to \'Advanced Parameters > API Client\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
           dashboardPage.advancedParametersLink,
-          dashboardPage.authorizationServerLink,
+          dashboardPage.adminAPILink,
         );
 
         const pageTitle = await apiClientPage.getPageTitle(page);
