@@ -1,5 +1,4 @@
 // Import utils
-import date from '@utils/date';
 import files from '@utils/files';
 import helper from '@utils/helpers';
 import basicHelper from '@utils/basicHelper';
@@ -17,6 +16,7 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
+
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
@@ -30,34 +30,34 @@ import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalDa
 import productPage from '@pages/FO/hummingbird/product';
 
 // Import data
-import MessageData from '@data/faker/message';
 import Products from '@data/demo/products';
+import MessageData from '@data/faker/message';
+
 import {
   // Import data
   dataPaymentMethods,
-  FakerCustomer,
   FakerAddress,
+  FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_hummingbird_userAccount_getGDPRDataInPDF';
+const baseContext: string = 'functional_FO_hummingbird_userAccount_getGDPRDataInCSV';
 
 /*
 Pre-condition:
 - Install the theme hummingbird
-Scenario
-- Check GDPR PDF file after create customer and first login
-- Check GDPR PDF file after create a cart
-- Check GDPR PDF file after create an order and an address
-- Check GDPR PDF file after send a message
-- Check GDPR PDF file after logout and login in FO
+Scenario:
+- Check GDPR CSV file after create customer and first login
+- Check GDPR CSV file after create a cart
+- Check GDPR CSV file after create an order and an address
+- Check GDPR CSV file after send a message
+- Check GDPR CSV file after logout and login in FO
 Post condition:
 - Delete created customer
-- Uninstall the theme hummingbird
  */
-describe('FO - Account : Get GDPR data in PDF', async () => {
+describe('FO - Account : Get GDPR data in CSV', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let filePath: string | null;
@@ -79,10 +79,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
     lastName: 'Beier',
     email: 'presta@prestashop.com',
   });
-  const today: string = date.getDateFormat('mm/dd/yyyy');
-  const dateNow: Date = new Date();
+  const date: Date = new Date();
   const addressData: FakerAddress = new FakerAddress({
-    alias: 'My Address',
     firstName: 'Marc',
     lastName: 'Beier',
     country: 'France',
@@ -118,8 +116,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
     await files.deleteFile(`${contactUsData.fileName}.txt`);
   });
 
-  describe('Check GDPR PDF file after create customer and first login', async () => {
-    describe('Create account on FO and download GDPR - Personal data PDF', async () => {
+  describe('Check GDPR CSV file after create customer and first login', async () => {
+    describe('Create account on FO and download GDPR - Personal data CSV', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount1', baseContext);
 
@@ -167,17 +165,17 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
-      it.skip('should click on \'Get my data to PDF file\'', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToPDF1', baseContext);
+      it.skip('should click on \'Get my data to CSV\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToCSV1', baseContext);
 
-        filePath = await gdprPersonalDataPage.exportDataToPDF(page);
+        filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
         const found = await files.doesFileExist(filePath);
-        expect(found, 'PDF file was not downloaded').to.eq(true);
+        expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
 
-    describe('Get personal information from BO', async () => {
+    describe.skip('Get personal information from BO', async () => {
       it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
       });
@@ -209,9 +207,10 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'getRegistrationDate', baseContext);
 
         const registration = await customersPage.getTextColumnFromTableCustomers(page, 1, 'date_add');
+
         registrationDate = `${registration.substring(6, 10)}-${registration.substring(0, 2)}-`
-          + `${registration.substring(3, 5)} ${registration.substring(11, 19)}`;
-        expect(registrationDate).to.contains(dateNow.getFullYear());
+          + `${registration.substring(3, 5)}${registration.substring(11, 19)}`;
+        expect(registrationDate).to.contains(date.getFullYear());
       });
 
       it('should get last visit date', async function () {
@@ -219,8 +218,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
         lastVisitDate = `${lastVisit.substring(6, 10)}-${lastVisit.substring(0, 2)}-`
-          + `${lastVisit.substring(3, 5)} ${lastVisit.substring(11, 19)}`;
-        expect(lastVisitDate).to.contains(dateNow.getFullYear());
+          + `${lastVisit.substring(3, 5)}${lastVisit.substring(11, 19)}`;
+        expect(lastVisitDate).to.contains(date.getFullYear());
       });
 
       it('should click on view customer', async function () {
@@ -240,106 +239,134 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       });
     });
 
-    describe('Check GDPR data in PDF', async () => {
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
-      it('should check the logo in PDF File', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkProductImage', baseContext);
-
-        this.skip();
-
-        const imageNumber = await files.getImageNumberInPDF(filePath);
-        expect(imageNumber).to.be.equal(1);
-      });
-
-      it.skip('should check the date and the customer name', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkDateAndCustomerName', baseContext);
-
-        const isVisible = await files.isTextInPDF(
-          filePath,
-          `${today} ${customerData.firstName} ${customerData.lastName} `,
-          true,
-        );
-        expect(isVisible, 'The date and the customer name are not correct!').to.eq(true);
-      });
-
-      it.skip('should check general info', async function () {
+    describe.skip('Check GDPR data in CSV', async () => {
+      it('should check general info', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkGeneralInfo', baseContext);
 
         const age = await basicHelper.age(customerData.birthDate);
 
-        const isVisible = await files.isTextInPDF(filePath, 'General info Gender '
-          + `${customerData.socialTitle} Name ${customerData.firstName} ${customerData.lastName} `
-          + `Birth date ${customerData.birthDate.toISOString().slice(0, 10)} Age ${age} Email `
-          + `${customerData.email} Language English (English) Creation account date `
-          + `${registrationDate} Last visit ${lastVisitDate} Siret Ape Company Website`, true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          '"GENERALINFO"GenderName"Birthdate"AgeEmailLanguage"Creationaccountdata""Lastvisit"'
+          + `SiretApeCompanyWebsite${customerData.socialTitle}"${customerData.firstName}${customerData.lastName}"`
+          + `${customerData.birthDate.toISOString().slice(0, 10)}${age}${customerData.email}"English(English)""`
+          + `${registrationDate}""${lastVisitDate}`,
+          true,
+          true,
+          'utf16le',
+        );
         expect(isVisible, 'General info is not correct!').to.eq(true);
       });
 
-      it.skip('should check that Addresses table is empty', async function () {
+      it('should check that Addresses table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatAddressesTableIsEmpty', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'No addresses ', true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          'ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"Noaddresses"',
+          true,
+          true,
+          'utf16le',
+        );
         expect(isVisible, 'Addresses table is not empty!').to.eq(true);
       });
 
-      it.skip('should check that Orders table is empty', async function () {
+      it('should check that Orders table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatOrdersTableIsEmpty', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Orders Reference Payment Order state '
-          + 'Total paid Date No orders', true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          'RDERSReferencePayment"Orderstate""Totalpaid"Date"Noorders"',
+          true,
+          true,
+          'utf16le',
+        );
         expect(isVisible, 'Orders table is not empty!').to.eq(true);
       });
 
-      it.skip('should check that Carts table is empty', async function () {
+      it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatCartsTableIsEmpty1', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Carts Id Total products Date No carts', true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
+          true,
+          true,
+          'utf16le',
+        );
         expect(isVisible, 'Carts table is not empty!').to.eq(true);
       });
 
-      it.skip('should check that Messages table is empty', async function () {
+      it('should check that Messages table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatMessagesTableIsEmpty', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Messages IP Message Date No messages', true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          'MESSAGESIPMessageDate"Nomessages""',
+          true,
+          true,
+          'utf16le',
+        );
         expect(isVisible, 'Messages table is not empty!').to.eq(true);
       });
 
-      it.skip('should check Last connections table', async function () {
+      it('should check Last connections table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLastConnectionsTable1', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Last connections Origin request Page viewed '
-          + `Time on the page IP address Date 1 / 2 ${today} ${customerData.firstName} `
-          + `${customerData.lastName} 0 ${ipAddress} ${lastVisitDate}`, true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          `LASTCONNECTIONS""Originrequest""Pageviewed""Timeonthepage""IPaddress"DateCountryDate0${ipAddress}`
+          + `"${lastVisitDate}"`,
+          true,
+          true,
+          'utf16le',
+        );
         expect(isVisible, 'The data in Last connections table is not correct!').to.eq(true);
       });
 
-      it.skip('should check that Newsletter subscription table is empty', async function () {
+      it('should check that Newsletter subscription table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNewsletterSubscriptionTable', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Module : Newsletter subscription 0 Newsletter '
-          + 'subscription: no email to export this customer has not registered.', true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          '"MODULE:NEWSLETTERSUBSCRIPTION""Newslettersubscription:noemailtoexport,thiscustomerhasnotregistered.""',
+          true,
+          true,
+          'utf16le',
+        );
         expect(isVisible, 'Newsletter subscription table is not empty!').to.eq(true);
       });
 
-      it.skip('should check that Module product comments is empty', async function () {
+      it('should check that Module product comments is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkModuleProductComments', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Module : Product Comments ', true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          '""MODULE:PRODUCTCOMMENTS""MODULE:MAILALERTS"',
+          true,
+          true,
+          'utf16le',
+        );
         expect(isVisible, 'Products comments is not empty!').to.eq(true);
       });
 
-      it.skip('should check that mail alerts table is empty', async function () {
+      it('should check that mail alerts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkModuleMailAlerts', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Module : Mail alerts 0 Mail alert: Unable to export '
-          + 'customer using email.', true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          'MODULE:MAILALERTS""Mailalert:Unabletoexportcustomerusingemail."',
+          true,
+          true,
+          'utf16le',
+        );
         expect(isVisible, 'Mail alert table is not empty!').to.eq(true);
       });
     });
   });
 
-  describe.skip('Check GDPR PDF file after create a cart', async () => {
-    describe('Add a product to the cart and download PDF file', async () => {
+  describe.skip('Check GDPR CSV file after create a cart', async () => {
+    describe('Add a product to the cart and download CSV file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount2', baseContext);
 
@@ -379,13 +406,13 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
-      it('should click on \'Get my data to PDF file\'', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToPDF2', baseContext);
+      it('should click on \'Get my data to CSV file\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToCSV2', baseContext);
 
-        filePath = await gdprPersonalDataPage.exportDataToPDF(page);
+        filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
         const found = await files.doesFileExist(filePath);
-        expect(found, 'PDF file was not downloaded').to.eq(true);
+        expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
 
@@ -435,29 +462,34 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'getShoppingCartIDAndDate', baseContext);
 
         shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date_add');
+        shoppingCartDate = `${shoppingCartDate.substring(6, 10)}-${shoppingCartDate.substring(0, 2)}-`
+          + `${shoppingCartDate.substring(3, 5)}${shoppingCartDate.substring(11, 19)}`;
 
         shoppingCartID = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
         expect(parseInt(shoppingCartID, 10)).to.be.greaterThan(5);
       });
     });
 
-    describe('Check GDPR data in PDF', async () => {
+    describe('Check GDPR data in CSV', async () => {
       it('should check Carts table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatCartsTableIsEmpty2', baseContext);
 
-        shoppingCartDate = `${shoppingCartDate.substring(6, 10)}-${shoppingCartDate.substring(0, 2)}-`
-          + `${shoppingCartDate.substring(3, 5)} ${shoppingCartDate.substring(11, 19)}`;
-
-        const isVisible = await files.isTextInPDF(filePath, `Carts Id Total products Date #${shoppingCartID}`
-          + ` 1 ${shoppingCartDate} Product(s) in the cart : Reference Name Quantity `
-          + `${Products.demo_1.reference} ${Products.demo_1.name} 2`, true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          `CARTSId"Totalproducts"Date#${shoppingCartID}1`
+          + `"${shoppingCartDate}""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity`
+          + `#${shoppingCartID}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}"2`,
+          true,
+          true,
+          'utf16le',
+        );
         expect(isVisible, 'Data in Carts table is not correct!').to.eq(true);
       });
     });
   });
 
-  describe.skip('Check GDPR PDF file after create an order and an address', async () => {
-    describe('Create an order and download PDF file', async () => {
+  describe.skip('Check GDPR CSV file after create an order and an address', async () => {
+    describe('Create an order and download CSV file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount3', baseContext);
 
@@ -523,13 +555,13 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
-      it('should click on \'Get my data to PDF file\'', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToPDF3', baseContext);
+      it('should click on \'Get my data to CSV file\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToCSV3', baseContext);
 
-        filePath = await gdprPersonalDataPage.exportDataToPDF(page);
+        filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
         const found = await files.doesFileExist(filePath);
-        expect(found, 'PDF file was not downloaded').to.eq(true);
+        expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
 
@@ -576,6 +608,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         totalPaid = await ordersPage.getOrderATIPrice(page);
         orderDate = await ordersPage.getTextColumn(page, 'date_add');
+        orderDate = `${orderDate.substring(6, 10)}-${orderDate.substring(0, 2)}-${orderDate.substring(3, 5)}`
+          + `${orderDate.substring(11, 19)}`;
       });
 
       it('should reset all filters', async function () {
@@ -586,40 +620,52 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       });
     });
 
-    describe('Check GDPR data in PDF', async () => {
+    describe('Check GDPR data in CSV', async () => {
       it('should check Addresses table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable1', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Addresses Alias Company Name Address '
-          + `Phone(s) Country Date ${addressData.alias} ${addressData.company} ${addressData.firstName} `
-          + `${addressData.lastName} ${addressData.address.replace(',', '')} ${addressData.postalCode} ${addressData.city} `
-          + `${addressData.phone} ${addressData.country}`, true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
+          + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
+          + `"${addressData.phone}"${addressData.country}"`,
+          true,
+          true,
+          'utf16le');
         expect(isVisible, 'Data in Addresses table is not correct!').to.eq(true);
       });
 
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable1', baseContext);
 
-        const orderCreateDate = `${orderDate.substring(6, 10)}-${orderDate.substring(0, 2)}-`
-          + `${orderDate.substring(3, 5)} ${orderDate.substring(11, 19)}`;
-        const isVisible = await files.isTextInPDF(filePath, 'Orders Reference Payment Order state Total paid '
-          + `Date ${orderReference} Bank transfer Awaiting bank wire payment ${totalPaid} EUR `
-          + `${orderCreateDate} Product(s) in the order : Reference Name Quantity ${Products.demo_1.reference}`
-          + ` ${Products.demo_1.name} (Size: S - Color: White) 2`, true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
+          + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
+          + `NameQuantity${orderReference}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}`
+          + '(Size:S-Color:White)"2',
+          true,
+          true,
+          'utf16le');
         expect(isVisible, 'Data in Orders table is not correct!').to.eq(true);
       });
 
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartsTable1', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Carts Id Total products Date No carts', true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
+          true,
+          true,
+          'utf16le');
         expect(isVisible, 'Carts table is not empty!').to.eq(true);
       });
     });
   });
 
-  describe.skip('Check GDPR PDF file after send a message', async () => {
-    describe('Send message and download PDF file', async () => {
+  describe.skip('Check GDPR CSV file after send a message', async () => {
+    describe('Send message and download CSV file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount4', baseContext);
 
@@ -666,13 +712,13 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
-      it('should click on \'Get my data to PDF file\'', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToPDF4', baseContext);
+      it('should click on \'Get my data to CSV file\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToCSV4', baseContext);
 
-        filePath = await gdprPersonalDataPage.exportDataToPDF(page);
+        filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
         const found = await files.doesFileExist(filePath);
-        expect(found, 'PDF file was not downloaded').to.eq(true);
+        expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
 
@@ -710,55 +756,70 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
         messageDate = await customerServicePage.getTextColumn(page, 1, 'date');
+        messageDate = `${messageDate.substring(6, 10)}-${messageDate.substring(0, 2)}-`
+          + `${messageDate.substring(3, 5)}${messageDate.substring(11, 19)}`;
         expect(messageDate).to.not.eq(null);
       });
     });
 
-    describe('Check GDPR data in PDF', async () => {
+    describe('Check GDPR data in CSV', async () => {
       it('should check Addresses table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable2', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Addresses Alias Company Name Address '
-          + `Phone(s) Country Date My Address ${addressData.company} ${addressData.firstName} `
-          + `${addressData.lastName} ${addressData.address.replace(',', '')} ${addressData.postalCode} ${addressData.city} `
-          + `${addressData.phone} ${addressData.country}`, true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
+          + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
+          + `"${addressData.phone}"${addressData.country}"`,
+          true,
+          true,
+          'utf16le');
         expect(isVisible, 'Data in Addresses table is not correct!').to.eq(true);
       });
 
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable2', baseContext);
 
-        const orderCreateDate = `${orderDate.substring(6, 10)}-${orderDate.substring(0, 2)}-`
-          + `${orderDate.substring(3, 5)} ${orderDate.substring(11, 19)}`;
-        const isVisible = await files.isTextInPDF(filePath, 'Orders Reference Payment Order state Total paid'
-          + ` Date ${orderReference} Bank transfer Awaiting bank wire payment ${totalPaid} EUR `
-          + `${orderCreateDate} Product(s) in the order : Reference Name Quantity ${Products.demo_1.reference}`
-          + ` ${Products.demo_1.name} (Size: S - Color: White) 2`, true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
+          + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
+          + `NameQuantity${orderReference}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}`
+          + '(Size:S-Color:White)"2',
+          true,
+          true,
+          'utf16le');
         expect(isVisible, 'Data in Orders table is not correct!').to.eq(true);
       });
 
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartsTable2', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Carts Id Total products Date No carts', true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
+          true,
+          true,
+          'utf16le');
         expect(isVisible, 'Carts table is not empty!').to.eq(true);
       });
 
       it('should check Messages table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkMessagesTable1', baseContext);
 
-        const dateString = `${messageDate.substring(6, 10)}-${messageDate.substring(0, 2)}-`
-          + `${messageDate.substring(3, 5)} ${messageDate.substring(11, 19)}`;
-        const isVisible = await files.isTextInPDF(filePath, `Messages IP Message Date 1 / 2 ${today} `
-          + `${contactUsData.firstName} ${contactUsData.lastName} ${ipAddress} ${contactUsData.message} ${
-            dateString}`, true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          `MESSAGESIPMessageDate${ipAddress}"${contactUsData.message.replace(/\s/g, '')}""${messageDate}`,
+          true,
+          true,
+          'utf16le');
         expect(isVisible, 'Data in Messages table is not correct!').to.eq(true);
       });
     });
   });
 
-  describe.skip('Check GDPR PDF file after logout and login in FO', async () => {
-    describe('Logout then login and download PDF file', async () => {
+  describe.skip('Check GDPR CSV file after logout and login in FO', async () => {
+    describe('Logout then login and download CSV file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount5', baseContext);
 
@@ -805,13 +866,13 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
-      it('should click on \'Get my data to PDF file\'', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToPDF5', baseContext);
+      it('should click on \'Get my data to CSV file\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToCSV5', baseContext);
 
-        filePath = await gdprPersonalDataPage.exportDataToPDF(page);
+        filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
         const found = await files.doesFileExist(filePath);
-        expect(found, 'PDF file was not downloaded').to.eq(true);
+        expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
 
@@ -833,6 +894,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
           dashboardPage.customersParentLink,
           dashboardPage.customersLink,
         );
+
         await customersPage.closeSfToolBar(page);
 
         const pageTitle = await customersPage.getPageTitle(page);
@@ -853,8 +915,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
         secondLastVisitDate = `${lastVisit.substring(6, 10)}-${lastVisit.substring(0, 2)}-`
-          + `${lastVisit.substring(3, 5)} ${lastVisit.substring(11, 19)}`;
-        expect(lastVisitDate).to.contains(dateNow.getFullYear());
+          + `${lastVisit.substring(3, 5)}${lastVisit.substring(11, 19)}`;
+        expect(lastVisitDate).to.contains(date.getFullYear());
       });
 
       it('should click on view customer', async function () {
@@ -867,71 +929,92 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       });
 
       it('should get last connections origin', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkLastConnectionsOrigin', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'getLastConnectionsOrigin', baseContext);
 
         connectionOrigin = await viewCustomerPage.getTextColumnFromTableLastConnections(page, 'origin', 1);
         if (connectionOrigin === 'Direct link') {
           connectionOrigin = '';
         } else if (connectionOrigin === 'localhost') {
-          connectionOrigin = `${global.INSTALL.ENABLE_SSL ? 'https://localhost:8002' : 'http://localhost:8001'},/en/,`;
+          if (global.INSTALL.ENABLE_SSL) {
+            connectionOrigin = 'https://localhost:8002/en/';
+          } else {
+            connectionOrigin = 'http://localhost:8001/en/';
+          }
         }
         expect(connectionOrigin).to.not.eq(null);
       });
     });
 
-    describe('Check GDPR data in PDF', async () => {
+    describe('Check GDPR data in CSV', async () => {
       it('should check Addresses table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable3', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Addresses Alias Company Name Address '
-          + `Phone(s) Country Date My Address ${addressData.company} ${addressData.firstName} `
-          + `${addressData.lastName} ${addressData.address.replace(',', '')} ${addressData.postalCode} ${addressData.city}`
-          + ` ${addressData.phone} ${addressData.country}`, true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
+          + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
+          + `"${addressData.phone}"${addressData.country}"`,
+          true,
+          true,
+          'utf16le');
         expect(isVisible, 'Data in Addresses table is not correct!').to.eq(true);
       });
 
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable3', baseContext);
 
-        const orderCreateDate = `${orderDate.substring(6, 10)}-${orderDate.substring(0, 2)}-`
-          + `${orderDate.substring(3, 5)} ${orderDate.substring(11, 19)}`;
-        const isVisible = await files.isTextInPDF(filePath, 'Orders Reference Payment Order state Total paid'
-          + ` Date ${orderReference} Bank transfer Awaiting bank wire payment ${totalPaid} EUR `
-          + `${orderCreateDate} Product(s) in the order : Reference Name Quantity ${Products.demo_1.reference}`
-          + ` ${Products.demo_1.name} (Size: S - Color: White) 2`, true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
+          + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
+          + `NameQuantity${orderReference}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}`
+          + '(Size:S-Color:White)"2',
+          true,
+          true,
+          'utf16le');
         expect(isVisible, 'Data in Orders table is not correct!').to.eq(true);
       });
 
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartsTable3', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Carts Id Total products Date No carts', true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
+          true,
+          true,
+          'utf16le');
         expect(isVisible, 'Carts table is not empty!').to.eq(true);
       });
 
       it('should check Messages table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkMessagesTable2', baseContext);
 
-        const dateString = `${messageDate.substring(6, 10)}-${messageDate.substring(0, 2)}-`
-          + `${messageDate.substring(3, 5)} ${messageDate.substring(11, 19)}`;
-        const isVisible = await files.isTextInPDF(filePath, `Messages IP Message Date 1 / 2 ${today} `
-          + `${contactUsData.firstName} ${contactUsData.lastName} ${ipAddress} ${contactUsData.message} ${
-            dateString}`, true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          `MESSAGESIPMessageDate${ipAddress}"${contactUsData.message.replace(/\s/g, '')}""${messageDate}`,
+          true,
+          true,
+          'utf16le');
         expect(isVisible, 'Data in Messages table is not correct!').to.eq(true);
       });
 
       it('should check Last connections table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLastConnectionsTable2', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Last connections Origin request Page viewed '
-          + `Time on the page IP address Date ${connectionOrigin.split(',').join('')} 0 ${ipAddress} ${secondLastVisitDate} 0 `
-          + `${ipAddress} ${lastVisitDate}`, true);
+        const isVisible = await files.isTextInFile(
+          filePath,
+          'LASTCONNECTIONS""Originrequest""Pageviewed""Timeonthepage""IPaddress"DateCountryDate'
+          + `${connectionOrigin}0${ipAddress}"${secondLastVisitDate}"0${ipAddress}"${lastVisitDate}"`,
+          true,
+          true,
+          'utf16le');
         expect(isVisible, 'The data in Last connections table is not correct!').to.eq(true);
       });
     });
   });
 
-  // Post-condition: Delete customer
+  // Post-condition: Create new account on FO
   deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
 
   // Post-condition : Uninstall Hummingbird
