@@ -204,7 +204,7 @@ export default class BOBasePage extends CommonPage {
 
   public readonly logsLink: string;
 
-  public readonly authorizationServerLink: string;
+  public readonly adminAPILink: string;
 
   public readonly featureFlagLink: string;
 
@@ -476,7 +476,7 @@ export default class BOBasePage extends CommonPage {
     // Logs
     this.logsLink = '#subtab-AdminLogs';
     // Authorization Server
-    this.authorizationServerLink = '#subtab-AdminAdminAPI';
+    this.adminAPILink = '#subtab-AdminAdminAPI';
     // New & Experimental Features
     this.featureFlagLink = '#subtab-AdminFeatureFlag';
     // Security

@@ -19,7 +19,7 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
   let title: string;
 
   switch (featureFlag) {
-    case featureFlagPage.featureFlagAuthorizationServer:
+    case featureFlagPage.featureFlagAdminAPI:
       title = 'Authorization server';
       break;
     default:

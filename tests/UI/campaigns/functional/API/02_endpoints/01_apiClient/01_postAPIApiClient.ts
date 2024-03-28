@@ -59,12 +59,12 @@ describe('API : POST /api-client', async () => {
     });
 
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -172,12 +172,12 @@ describe('API : POST /api-client', async () => {
 
   describe('BackOffice : Check the API Access is created', async () => {
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'returnToAuthorizationServerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToAdminAPIPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -256,7 +256,7 @@ describe('API : POST /api-client', async () => {
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
