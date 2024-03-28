@@ -64,7 +64,7 @@ describe('FO - Checkout : Display of totals', async () => {
   });
 
   // Pre-condition: Create cart rule with code
-  createCartRuleTest(cartRuleWithCodeData, baseContext);
+  createCartRuleTest(cartRuleWithCodeData, `${baseContext}_preTest`);
 
   describe('Display total', async () => {
     before(async function () {
@@ -203,5 +203,5 @@ describe('FO - Checkout : Display of totals', async () => {
   });
 
   // Post-condition: Delete created cart rule
-  deleteCartRuleTest(cartRuleWithCodeData.name, baseContext);
+  deleteCartRuleTest(cartRuleWithCodeData.name, `${baseContext}_postTest`);
 });
