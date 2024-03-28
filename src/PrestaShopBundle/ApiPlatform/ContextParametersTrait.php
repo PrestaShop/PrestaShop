@@ -50,6 +50,7 @@ trait ContextParametersTrait
                     'isStrict' => $shopConstraint->isStrict(),
                 ],
                 'shopId' => $this->shopContext->getId(),
+                'shopIds' => $this->shopContext->getAssociatedShopIds(),
                 'langId' => $this->languageContext->getId(),
                 'apiClientId' => $this->apiClientContext->getApiClient()?->getId(),
             ],
