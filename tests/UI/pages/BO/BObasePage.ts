@@ -476,7 +476,7 @@ export default class BOBasePage extends CommonPage {
     // Logs
     this.logsLink = '#subtab-AdminLogs';
     // Authorization Server
-    this.authorizationServerLink = '#subtab-AdminAuthorizationServer';
+    this.authorizationServerLink = '#subtab-AdminAdminAPI';
     // New & Experimental Features
     this.featureFlagLink = '#subtab-AdminFeatureFlag';
     // Security

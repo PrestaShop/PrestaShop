@@ -273,7 +273,7 @@ class ApiClientController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/index.html.twig', [
             'apiClientGrid' => $this->presentGrid($apiClientGrid),
-            'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
+            'help_link' => $this->generateSidebarLink('AdminAdminAPI'),
             'layoutTitle' => $this->trans('Admin API', 'Admin.Navigation.Menu'),
             'layoutHeaderToolbarBtn' => $this->getApiClientsToolbarButtons(),
             'isAuthorizationServerMultistoreDisabled' => $isAuthorizationServerMultistoreDisabled,
