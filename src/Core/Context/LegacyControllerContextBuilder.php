@@ -88,6 +88,10 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
 
     public function buildLegacyContext(): void
     {
+        if ($this->contextStateManager->getContext()->controller) {
+            return;
+        }
+
         $this->assertArguments();
 
         if (null === $this->_legacyControllerContext) {

@@ -45,6 +45,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class LegacyRouterChecker
 {
     public const LEGACY_CONTROLLER_CLASS_ATTRIBUTE = '_legacy_controller_class';
+    public const LEGACY_CONTROLLER_INSTANCE_ATTRIBUTE = '_legacy_controller_instance_class';
+    public const LEGACY_CONTROLLER_ANONYMOUS_ATTRIBUTE = '_legacy_controller_anonymous_class';
     public const LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE = '_legacy_controller_is_module';
 
     public function __construct(
@@ -116,6 +118,12 @@ class LegacyRouterChecker
 
             $controllerClass = $controllers[strtolower($queryController)];
         }
+        // Loading controller
+        $adminController = new $controllerClass();
+        $adminController->init();
+
+        $request->attributes->set(self::LEGACY_CONTROLLER_INSTANCE_ATTRIBUTE, $adminController);
+        $request->attributes->set(self::LEGACY_CONTROLLER_ANONYMOUS_ATTRIBUTE, $adminController->isAnonymousAllowed());
         $request->attributes->set(self::LEGACY_CONTROLLER_CLASS_ATTRIBUTE, $controllerClass);
         $request->attributes->set(self::LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE, $isModule);
 

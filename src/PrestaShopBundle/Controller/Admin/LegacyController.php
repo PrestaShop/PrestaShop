@@ -86,7 +86,7 @@ class LegacyController extends PrestaShopAdminController
             'is_module' => $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE),
         ];
 
-        $adminController = $this->initController($dispatcherHookParameters);
+        $adminController = $this->initController($request, $dispatcherHookParameters);
         // Redirect if necessary after post process
         if (!empty($adminController->getRedirectAfter())) {
             // After each request the cookie must be written to save its modified state during AdminController workflow
@@ -226,17 +226,16 @@ class LegacyController extends PrestaShopAdminController
      *
      * Note: some legacy controllers may already use die at this point (to echo content and finish the process) when postProcess is called.
      *
+     * @param Request $request
      * @param array $dispatcherHookParameters
      *
      * @return AdminController
      */
-    protected function initController(array $dispatcherHookParameters): AdminController
+    protected function initController(Request $request, array $dispatcherHookParameters): AdminController
     {
-        $controllerClass = $dispatcherHookParameters['controller_class'];
-
-        // Loading controller
+        // Retrieving the controller instantiated in LegacyRouterChecker
         /** @var AdminController $adminController */
-        $adminController = new $controllerClass();
+        $adminController = $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_INSTANCE_ATTRIBUTE);
 
         // Fill default smarty variables as they can be used in partial templates rendered in init methods
         $this->assignSmartyVariables->fillDefault();
@@ -246,7 +245,6 @@ class LegacyController extends PrestaShopAdminController
 
         // This part comes from AdminController::run method, it has been stripped from permission checks since the permission is already
         // handled by this Symfony controller
-        $adminController->init();
         $adminController->setMedia(false);
         $adminController->postProcess();
 
