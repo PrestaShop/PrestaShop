@@ -32,7 +32,6 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConfigurationType extends TranslatorAwareType
@@ -40,7 +39,7 @@ class ConfigurationType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        private readonly RouterInterface $router,
+        private readonly bool $isDebug,
     ) {
         parent::__construct($translator, $locales);
     }
@@ -66,26 +65,31 @@ class ConfigurationType extends TranslatorAwareType
             'Check that the six methods GET, POST, PUT, PATCH, DELETE and HEAD are supported by this server.',
             'Admin.Advparameters.Help'
         );
-        $enableAdminAPIHelp .= '<br/>';
+        $enableAdminAPIHelp .= '<br/> 4. ';
         $enableAdminAPIHelp .= $this->trans(
-            'The multistore is still on beta, to test it out go the [1]%feature_flag_page%[/1] page',
-            'Admin.Advparameters.Help',
-            [
-                '%feature_flag_page%' => $this->trans('New & Experimental features', 'Admin.Navigation.Menu'),
-                '[1]' => '<a href="' . $this->router->generate('admin_feature_flags_index') . '" target="_blank">',
-                '[/1]' => '</a>',
-            ],
+            'Check that your Admin API endpoint uses HTTPS protocol.',
+            'Admin.Advparameters.Help'
         );
 
         $builder
             ->add('enable_admin_api', SwitchType::class, [
                 'label' => $this->trans('Admin API', 'Admin.Advparameters.Feature'),
                 'help' => $enableAdminAPIHelp,
-                'required' => true,
+                'required' => false,
                 'choices' => [
                     'Disabled' => false,
                     'Enabled' => true,
                 ],
+            ])
+            ->add('force_debug_secured', SwitchType::class, [
+                'label' => $this->trans('Force security in debug mode', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Admin API forces the use of HTTPS with TLSv1.2 or higher, you can disable this check for debug mode only.', 'Admin.Advparameters.Help'),
+                'required' => false,
+                'choices' => [
+                    'Disabled' => false,
+                    'Enabled' => true,
+                ],
+                'disabled' => !$this->isDebug,
             ])
         ;
     }

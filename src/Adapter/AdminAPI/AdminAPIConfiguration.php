@@ -46,6 +46,7 @@ class AdminAPIConfiguration implements DataConfigurationInterface
     {
         return [
             'enable_admin_api' => $this->configuration->getBoolean('PS_ENABLE_ADMIN_API'),
+            'force_debug_secured' => $this->configuration->getBoolean('PS_ADMIN_API_FORCE_DEBUG_SECURED'),
         ];
     }
 
@@ -57,6 +58,7 @@ class AdminAPIConfiguration implements DataConfigurationInterface
         }
 
         $this->configuration->set('PS_ENABLE_ADMIN_API', $configuration['enable_admin_api']);
+        $this->configuration->set('PS_ADMIN_API_FORCE_DEBUG_SECURED', $configuration['force_debug_secured']);
 
         // Clear cache so that Swagger and roles extraction are refreshed
         $this->cacheClearer->clear();

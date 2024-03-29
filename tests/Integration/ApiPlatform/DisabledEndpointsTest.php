@@ -84,6 +84,13 @@ class DisabledEndpointsTest extends ApiTestCase
         // Boot kernel with appropriate configuration, exceptionally we force the environment, so we have
         // distinct cache and adapted data/behaviour for each use case
         $kernelOptions = ['debug' => $isDebug];
+
+        // The purpose in this test is not to check the HTTPS protection so we mimic it (especially for prod environment)
+        $defaultClientOptions = [
+            'headers' => [
+                'X_FORWARDED_PROTO' => 'HTTPS',
+            ],
+        ];
         static::bootKernel($kernelOptions);
 
         // Update the configuration
@@ -94,9 +101,9 @@ class DisabledEndpointsTest extends ApiTestCase
         }
 
         // Scope experimental_scope only exists when the endpoint is enabled
-        $bearerToken = $this->getBearerToken($expectedEndpointStatus ? ['experimental_scope'] : [], $kernelOptions);
+        $bearerToken = $this->getBearerToken($expectedEndpointStatus ? ['experimental_scope'] : [], $kernelOptions, $defaultClientOptions);
 
-        static::createClient($kernelOptions)->request('GET', '/test/experimental/product/1', [
+        static::createClient($kernelOptions, $defaultClientOptions)->request('GET', '/test/experimental/product/1', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $bearerToken,
             ],

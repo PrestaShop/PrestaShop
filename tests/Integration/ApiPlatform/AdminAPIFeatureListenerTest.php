@@ -69,9 +69,44 @@ class AdminAPIFeatureListenerTest extends ApiTestCase
         $this->featureFlagManager = self::getContainer()->get('PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager');
     }
 
-    public function testGetBearerTokenWhenAdminAPIIsEnabled(): string
+    public function testAPIIsProtectedByDefault(): void
     {
         self::createApiClient();
+        $this->accessTokenOptions = [
+            'extra' => [
+                'parameters' => [
+                    'client_id' => static::CLIENT_ID,
+                    'client_secret' => static::$clientSecret,
+                    'grant_type' => 'client_credentials',
+                    'scope' => [],
+                ],
+            ],
+            'headers' => [
+                'content-type' => 'application/x-www-form-urlencoded',
+            ],
+        ];
+        static::createClient()->request('POST', '/access_token', $this->accessTokenOptions);
+        self::assertResponseStatusCodeSame(401);
+
+        // Try with fake HTTPS request
+        static::createClient([], ['headers' => ['X_FORWARDED_PROTO' => 'HTTPS']])->request('POST', '/access_token', $this->accessTokenOptions);
+        self::assertResponseStatusCodeSame(200);
+
+        // We now authorize access without HTTPs for the rest of the tests (test environment has debug enabled)
+        self::updateConfiguration('PS_ADMIN_API_FORCE_DEBUG_SECURED', 0);
+
+        // Now we can use the API and login correctly
+        static::createClient()->request('POST', '/access_token', $this->accessTokenOptions);
+        self::assertResponseStatusCodeSame(200);
+    }
+
+    /**
+     * @depends testAPIIsProtectedByDefault
+     *
+     * @return string
+     */
+    public function testGetBearerTokenWhenAdminAPIIsEnabled(): string
+    {
         $bearerToken = $this->getBearerToken();
 
         static::createClient()->request('GET', '/test/unscoped/product/1', [
@@ -93,7 +128,7 @@ class AdminAPIFeatureListenerTest extends ApiTestCase
      */
     public function testAccessTokenNotFoundAfterDisablingAdminAPI(string $bearerToken): string
     {
-        // Disbale the Admin API feature, we can't even get a token now
+        // Disable the Admin API feature, we can't even get a token now
         $this->updateConfiguration('PS_ENABLE_ADMIN_API', false);
         $this->accessTokenOptions = [
             'extra' => [
