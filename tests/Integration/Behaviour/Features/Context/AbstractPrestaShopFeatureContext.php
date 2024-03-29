@@ -39,8 +39,6 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
 {
     use SharedStorageTrait;
 
-    public const MODULES_DIRECTORY = __DIR__ . '/../../../../Resources/modules';
-
     protected function checkFixtureExists(array $fixtures, $fixtureName, $fixtureIndex)
     {
         $searchLength = 10;

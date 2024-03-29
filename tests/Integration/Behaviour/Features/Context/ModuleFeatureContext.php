@@ -28,7 +28,6 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Module;
 use PHPUnit\Framework\Assert;
-use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -37,9 +36,6 @@ class ModuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function theModuleIsInstalled(string $module): void
     {
-        $fs = new Filesystem();
-        $fs->mirror(self::MODULES_DIRECTORY . '/' . $module, _PS_MODULE_DIR_ . '/' . $module);
-
         // Enable the module if needed
         if (!Module::isEnabled($module)) {
             Module::getInstanceByName($module)->enable();
