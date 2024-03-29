@@ -56,6 +56,8 @@ class ApiClientFormDataProvider implements FormDataProviderInterface
 
     public function getDefaultData()
     {
-        return [];
+        return [
+            'lifetime' => 3600,
+        ];
     }
 }

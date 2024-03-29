@@ -99,7 +99,6 @@ class ApiClientType extends TranslatorAwareType
             ->add('lifetime', IntegerType::class, [
                 'label' => $this->trans('Lifetime', 'Admin.Global'),
                 'required' => false,
-                'empty_data' => '3600',
                 'constraints' => [
                     new NotBlank(),
                     new Positive(),
