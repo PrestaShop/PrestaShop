@@ -31,65 +31,63 @@ describe('FO - Product page - Quick view : Share links', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Check share links', async () => {
-    it('should go to FO home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
+  it('should go to FO home page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      await homePage.goToFo(page);
+    await homePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
-      expect(isHomePage).to.eq(true);
-    });
+    const isHomePage = await homePage.isHomePage(page);
+    expect(isHomePage).to.eq(true);
+  });
 
-    it('should quick view the third product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'quickView', baseContext);
+  it('should quick view the third product', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'quickView', baseContext);
 
-      await homePage.quickViewProduct(page, 3);
+    await homePage.quickViewProduct(page, 3);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
-      expect(isModalVisible).to.eq(true);
-    });
+    const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+    expect(isModalVisible).to.eq(true);
+  });
 
-    const tests = [
-      {
-        args:
-          {
-            name: 'Facebook',
-          },
-        result:
-          {
-            url: 'https://www.facebook.com/',
-          },
-      },
-      {
-        args:
-          {
-            name: 'Twitter',
-          },
-        result:
-          {
-            url: 'https://twitter.com/',
-          },
-      },
-      {
-        args:
-          {
-            name: 'Pinterest',
-          },
-        result:
-          {
-            url: 'https://www.pinterest.com/',
-          },
-      },
-    ];
+  const tests = [
+    {
+      args:
+        {
+          name: 'Facebook',
+        },
+      result:
+        {
+          url: 'https://www.facebook.com/',
+        },
+    },
+    {
+      args:
+        {
+          name: 'Twitter',
+        },
+      result:
+        {
+          url: 'https://twitter.com/',
+        },
+    },
+    {
+      args:
+        {
+          name: 'Pinterest',
+        },
+      result:
+        {
+          url: 'https://www.pinterest.com/',
+        },
+    },
+  ];
 
-    tests.forEach((test, index: number) => {
-      it(`should check the share link '${test.args.name}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkLink${index}`, baseContext);
+  tests.forEach((test, index: number) => {
+    it(`should check the share link '${test.args.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkLink${index}`, baseContext);
 
-        const url = await quickViewModal.getSocialSharingLink(page, test.args.name);
-        expect(url).to.contain(test.result.url);
-      });
+      const url = await quickViewModal.getSocialSharingLink(page, test.args.name);
+      expect(url).to.contain(test.result.url);
     });
   });
 });
