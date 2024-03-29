@@ -369,6 +369,15 @@ class QuickViewModal extends FOBasePage {
   }
 
   /**
+   * get the URL of the cover image
+   * @param page {Page} Browser tab
+   * @returns {Promise<string|null>}
+   */
+  async getQuickViewCoverImage(page: Page): Promise<string | null> {
+    return this.getAttributeContent(page, this.quickViewCoverImage, 'src');
+  }
+
+  /**
    * Select thumb image
    * @param page {Page} Browser tab
    * @param position {number} Position of the image
