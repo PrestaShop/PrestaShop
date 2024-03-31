@@ -32,6 +32,7 @@ use Configuration;
 use Db;
 use Language;
 use Tests\Resources\DatabaseDump;
+use Tests\Resources\ResourceResetter;
 
 class LanguageResetter
 {
@@ -51,5 +52,8 @@ class LanguageResetter
 
         // Reset default language
         Configuration::updateValue('PS_LANG_DEFAULT', 1);
+
+        // Reset modules folder that are removed with the deleted languages
+        (new ResourceResetter())->resetTestModules();
     }
 }

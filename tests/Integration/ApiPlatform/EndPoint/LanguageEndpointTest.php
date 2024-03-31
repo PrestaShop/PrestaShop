@@ -48,8 +48,6 @@ class LanguageEndpointTest extends ApiTestCase
     {
         parent::tearDownAfterClass();
         LanguageResetter::resetLanguages();
-        // Reset modules folder that are removed with the FR language
-        (new ResourceResetter())->resetTestModules();
     }
 
     /**
