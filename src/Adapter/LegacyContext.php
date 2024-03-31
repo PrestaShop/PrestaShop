@@ -223,7 +223,9 @@ class LegacyContext
         $jsRouterMetadata = [],
         $metaTitle = '',
         $useRegularH1Structure = true,
-        $baseLayout = 'layout.tpl'
+        $baseLayout = 'layout.tpl',
+        $displayHeader = true,
+        $displayFooter = true
     ) {
         $originCtrl = new AdminLegacyLayoutControllerCore(
             $controllerName,
@@ -236,7 +238,9 @@ class LegacyContext
             $helpLink,
             $jsRouterMetadata,
             $metaTitle,
-            $useRegularH1Structure
+            $useRegularH1Structure,
+            $displayHeader,
+            $displayFooter
         );
         $originCtrl->layout = $baseLayout;
         $originCtrl->run();
