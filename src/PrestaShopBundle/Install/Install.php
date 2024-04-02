@@ -803,7 +803,6 @@ class Install extends AbstractInstall
 
         // Set SSL configuration
         Configuration::updateGlobalValue('PS_SSL_ENABLED', (int) $data['enable_ssl']);
-        Configuration::updateGlobalValue('PS_SSL_ENABLED_EVERYWHERE', (int) $data['enable_ssl']);
 
         // Set mails configuration
         Configuration::updateGlobalValue('PS_MAIL_METHOD', ($data['use_smtp']) ? 2 : 1);

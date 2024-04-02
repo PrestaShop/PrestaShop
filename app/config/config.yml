@@ -16,6 +16,7 @@ parameters:
   admin_page: "%prestashop_views%/Admin"
   env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
   env(PS_LOG_MAX_FILES): '30'
+  env(PS_TRUSTED_PROXIES): ''
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
@@ -38,6 +39,9 @@ services:
     public: true
 
 framework:
+  # proxies configuration, see https://symfony.com/doc/current/deployment/proxies.html
+  trusted_proxies: '%env(PS_TRUSTED_PROXIES)%'
+
   assets:
     version: !php/const PrestaShop\PrestaShop\Core\Version::VERSION
     packages:
