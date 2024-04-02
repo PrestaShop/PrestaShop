@@ -26,19 +26,19 @@ class OrderConfirmationPage extends FOBasePage {
 
   private readonly orderConfirmationTable: string;
 
-  private readonly paymentInformationBody: string;
+  protected paymentInformationBody: string;
 
-  private readonly orderDetails: string;
+  protected orderDetails: string;
 
   private readonly numberOfOrderedProducts: string;
 
-  private readonly productRow: (row: number) => string;
+  protected productRow: (row: number) => string;
 
-  private readonly productRowImage: (row: number) => string;
+  protected productRowImage: (row: number) => string;
 
-  private readonly productRowDetails: (row: number) => string;
+  protected productRowDetails: (row: number) => string;
 
-  private readonly productRowPrices: (row: number) => string;
+  protected productRowPrices: (row: number) => string;
 
   private readonly giftWrappingRow: string;
 
@@ -66,13 +66,13 @@ class OrderConfirmationPage extends FOBasePage {
     this.giftWrappingRow = `${this.orderConfirmationTable} tr:nth-child(3)`;
     this.orderDetailsTable = 'div#order-details';
     this.paymentMethodRow = `${this.orderDetailsTable} li:nth-child(2)`;
-    this.paymentInformationBody = '#content-wrapper div:nth-child(2) div.card-body';
-    this.orderDetails = 'div.order-confirmation__details ul.order-details';
+    this.paymentInformationBody = '#content-hook_payment_return';
+    this.orderDetails = 'div#order-details ul';
     this.numberOfOrderedProducts = 'div.order-confirmation__items div.item';
-    this.productRow = (row: number) => `div.order-confirmation__items div.item:nth-child(${row})`;
-    this.productRowImage = (row: number) => `${this.productRow(row)} div.item__image img`;
-    this.productRowDetails = (row: number) => `${this.productRow(row)} div.item__details`;
-    this.productRowPrices = (row: number) => `${this.productRow(row)} div.item__prices`;
+    this.productRow = (row: number) => `div.order-confirmation-table div.order-line:nth-child(${row})`;
+    this.productRowImage = (row: number) => `${this.productRow(row)} span.image img`;
+    this.productRowDetails = (row: number) => `${this.productRow(row)} div.details span`;
+    this.productRowPrices = (row: number) => `${this.productRow(row)} div.qty div`;
   }
 
   /*
@@ -171,7 +171,7 @@ class OrderConfirmationPage extends FOBasePage {
    */
   async getProductDetailsInRow(page: Page, row: number): Promise<ProductOrderConfirmation> {
     return {
-      image: await this.getAttributeContent(page, this.productRowImage(row), 'srcset'),
+      image: await this.getAttributeContent(page, this.productRowImage(row), 'src'),
       details: await this.getTextContent(page, this.productRowDetails(row)),
       prices: await this.getTextContent(page, this.productRowPrices(row)),
     };
