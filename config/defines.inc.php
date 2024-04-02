@@ -73,9 +73,6 @@ if (!defined('_PS_MODE_DEMO_')) {
 if (!defined('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_')) {
     define('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_', false);
 }
-if (!defined('_PS_API_FORCE_TLS_VERSION_')) {
-    define('_PS_API_FORCE_TLS_VERSION_', true);
-}
 
 $currentDir = dirname(__FILE__);
 

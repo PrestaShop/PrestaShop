@@ -52,7 +52,8 @@ class SSLMiddlewareListener
     ];
 
     public function __construct(
-        private readonly ConfigurationInterface $configuration
+        private readonly ConfigurationInterface $configuration,
+        private readonly bool $isDebug,
     ) {
     }
 
@@ -80,8 +81,8 @@ class SSLMiddlewareListener
             }
         }
 
-        // If constant that forces the check is disabled ignore the protection
-        if ($this->configuration->get('_PS_API_FORCE_TLS_VERSION_') === false) {
+        // You can disable the forced secured protocol via a configuration but ONLY in dev mode, prod mode is strictly protected
+        if ($this->isDebug && (bool) $this->configuration->get('PS_ADMIN_API_FORCE_DEBUG_SECURED') === false) {
             return;
         }
 

@@ -16,6 +16,7 @@ framework:
     storage_factory_id: session.storage.factory.mock_file
   profiler:
     collect: false
+  trusted_proxies: 'REMOTE_ADDR'
 
 web_profiler:
   toolbar: '%use_debug_toolbar%'

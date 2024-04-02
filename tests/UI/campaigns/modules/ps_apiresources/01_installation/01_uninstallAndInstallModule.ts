@@ -94,12 +94,12 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
 
   describe('BackOffice - Check that the module is not present', async () => {
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -173,12 +173,12 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
 
   describe('BackOffice - Check that the module is present', async () => {
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPageAfterInstall', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPageAfterInstall', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);

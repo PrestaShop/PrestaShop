@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer;
+namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
@@ -55,9 +55,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Manages the "Configure > Advanced Parameters > Authorization Server" page.
+ * Manages the "Configure > Advanced Parameters > Admin API" page.
  */
-class ApiClientController extends FrameworkBundleAdminController
+class AdminAPIController extends FrameworkBundleAdminController
 {
     public function __construct(
         private readonly FeatureFlagManager $featureFlagManager,
@@ -85,7 +85,7 @@ class ApiClientController extends FrameworkBundleAdminController
             if (empty($configurationErrors)) {
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_api_clients_index');
+                return $this->redirectToRoute('admin_api_index');
             }
 
             $this->flashErrors($configurationErrors);
@@ -94,11 +94,11 @@ class ApiClientController extends FrameworkBundleAdminController
         return $this->renderIndex($apiClientFilters, $request, $configurationForm);
     }
 
-    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_index')]
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_api_index')]
     public function createAction(Request $request): Response
     {
-        if ($this->isAuthorizationServerMultistoreDisabled()) {
-            return $this->redirectToRoute('admin_api_clients_index');
+        if ($this->isAdminAPIMultistoreDisabled()) {
+            return $this->redirectToRoute('admin_api_index');
         }
 
         $apiClientForm = $this->getFormBuilder()->getForm();
@@ -121,7 +121,7 @@ class ApiClientController extends FrameworkBundleAdminController
         }
 
         return $this->render(
-            '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/create.html.twig',
+            '@PrestaShop/Admin/Configure/AdvancedParameters/AdminAPI/ApiClient/create.html.twig',
             [
                 'layoutTitle' => $this->trans('New API Client', 'Admin.Navigation.Menu'),
                 'apiClientForm' => $apiClientForm->createView(),
@@ -144,11 +144,11 @@ class ApiClientController extends FrameworkBundleAdminController
         $this->addFlash('client_secret', $secret);
     }
 
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_index')]
     public function editAction(Request $request, int $apiClientId): Response
     {
-        if ($this->isAuthorizationServerMultistoreDisabled()) {
-            return $this->redirectToRoute('admin_api_clients_index');
+        if ($this->isAdminAPIMultistoreDisabled()) {
+            return $this->redirectToRoute('admin_api_index');
         }
 
         $apiClientForm = $this->getFormBuilder()->getFormFor($apiClientId);
@@ -168,7 +168,7 @@ class ApiClientController extends FrameworkBundleAdminController
 
         $formData = $apiClientForm->getData();
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/edit.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AdminAPI/ApiClient/edit.html.twig', [
             'layoutTitle' => $this->trans('Editing API Client "%name%"', 'Admin.Navigation.Menu', ['%name%' => $formData['client_name']]),
             'apiClientForm' => $apiClientForm->createView(),
         ]);
@@ -195,7 +195,7 @@ class ApiClientController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_index')]
     public function toggleStatusAction(int $apiClientId): JsonResponse
     {
         /** @var EditableApiClient $editableApiClient */
@@ -223,7 +223,7 @@ class ApiClientController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_api_clients_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_api_index')]
     public function deleteAction(int $apiClientId): Response
     {
         try {
@@ -236,7 +236,7 @@ class ApiClientController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_api_clients_index');
+        return $this->redirectToRoute('admin_api_index');
     }
 
     /**
@@ -261,7 +261,7 @@ class ApiClientController extends FrameworkBundleAdminController
     {
         $apiClientGridFactory = $this->get('prestashop.core.grid.factory.api_client');
         $apiClientGrid = $apiClientGridFactory->getGrid($apiClientFilters);
-        $isAuthorizationServerMultistoreDisabled = $this->isAuthorizationServerMultistoreDisabled();
+        $isAdminAPIMultistoreDisabled = $this->isAdminAPIMultistoreDisabled();
 
         $oauthApiBaseUrl = $this->getOAuthApiBaseUrl($request);
         $htmlDocUrl = $oauthApiBaseUrl . '/docs.html';
@@ -271,12 +271,12 @@ class ApiClientController extends FrameworkBundleAdminController
             $configurationForm = $this->getConfigurationFormHandler()->getForm();
         }
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/index.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AdminAPI/index.html.twig', [
             'apiClientGrid' => $this->presentGrid($apiClientGrid),
-            'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
-            'layoutTitle' => $this->trans('API Clients', 'Admin.Navigation.Menu'),
+            'help_link' => $this->generateSidebarLink('AdminAdminAPI'),
+            'layoutTitle' => $this->trans('Admin API', 'Admin.Navigation.Menu'),
             'layoutHeaderToolbarBtn' => $this->getApiClientsToolbarButtons(),
-            'isAuthorizationServerMultistoreDisabled' => $isAuthorizationServerMultistoreDisabled,
+            'isAdminAPIMultistoreDisabled' => $isAdminAPIMultistoreDisabled,
             'htmlDocUrl' => $htmlDocUrl,
             'jsonDocUrl' => $jsonDocUrl,
             'configurationForm' => $configurationForm,
@@ -295,7 +295,7 @@ class ApiClientController extends FrameworkBundleAdminController
 
     private function getConfigurationFormHandler(): ConfigurationFormHandlerInterface
     {
-        return $this->get('prestashop.adapter.autorization_server.form_handler');
+        return $this->get('prestashop.adapter.admin_api.form_handler');
     }
 
     /**
@@ -389,9 +389,9 @@ class ApiClientController extends FrameworkBundleAdminController
         ];
     }
 
-    private function isAuthorizationServerMultistoreDisabled(): bool
+    private function isAdminAPIMultistoreDisabled(): bool
     {
-        return !$this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_AUTHORIZATION_SERVER_MULTISTORE)
+        return !$this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_MULTISTORE)
             && $this->multiStoreFeature->isActive();
     }
 }

@@ -31,6 +31,7 @@ namespace Tests\Integration\ApiPlatform\EndPoint;
 use AdminAPIKernel;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase as ApiPlatformTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use Configuration;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\AddApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
@@ -50,6 +51,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+        self::updateConfiguration('PS_ADMIN_API_FORCE_DEBUG_SECURED', 0);
         ApiClientResetter::resetApiClient();
     }
 
@@ -57,6 +59,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
     {
         parent::tearDownAfterClass();
         ApiClientResetter::resetApiClient();
+        self::updateConfiguration('PS_ADMIN_API_FORCE_DEBUG_SECURED', 1);
         self::$clientSecret = null;
     }
 
@@ -83,7 +86,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         return parent::createClient($kernelOptions, $defaultOptions);
     }
 
-    protected function getBearerToken(array $scopes = [], array $kernelOptions = []): string
+    protected function getBearerToken(array $scopes = [], array $kernelOptions = [], array $clientOptions = []): string
     {
         if (null === self::$clientSecret) {
             self::createApiClient($scopes);
@@ -101,7 +104,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
                 'content-type' => 'application/x-www-form-urlencoded',
             ],
         ];
-        $response = static::createClient($kernelOptions)->request('POST', '/access_token', $options);
+        $response = static::createClient($kernelOptions, $clientOptions)->request('POST', '/access_token', $options);
 
         return json_decode($response->getContent())->access_token;
     }
@@ -201,5 +204,6 @@ abstract class ApiTestCase extends ApiPlatformTestCase
     protected static function updateConfiguration(string $configurationKey, $value, ?ShopConstraint $shopConstraint = null): void
     {
         self::getContainer()->get(ShopConfigurationInterface::class)->set($configurationKey, $value, $shopConstraint ?: ShopConstraint::allShops());
+        Configuration::resetStaticCache();
     }
 }

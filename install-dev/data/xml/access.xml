@@ -449,9 +449,9 @@
     <access id="access_1_501" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSECURITY_READ"/>
     <access id="access_1_502" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSECURITY_UPDATE"/>
     <access id="access_1_503" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTSECURITY_DELETE"/>
-    <access id="access_1_504" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINAUTHORIZATIONSERVER_CREATE"/>
-    <access id="access_1_505" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINAUTHORIZATIONSERVER_READ"/>
-    <access id="access_1_506" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINAUTHORIZATIONSERVER_UPDATE"/>
-    <access id="access_1_507" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINAUTHORIZATIONSERVER_DELETE"/>
+    <access id="access_1_504" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINADMINAPI_CREATE"/>
+    <access id="access_1_505" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINADMINAPI_READ"/>
+    <access id="access_1_506" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINADMINAPI_UPDATE"/>
+    <access id="access_1_507" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINADMINAPI_DELETE"/>
   </entities>
 </entity_access>

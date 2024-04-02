@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\AuthorizationServer;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\AdminAPI;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;

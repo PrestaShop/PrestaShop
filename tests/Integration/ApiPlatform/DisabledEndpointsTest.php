@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Integration\ApiPlatform;
 
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor;
 use Tests\Integration\ApiPlatform\EndPoint\ApiTestCase;
 
@@ -39,6 +41,8 @@ use Tests\Integration\ApiPlatform\EndPoint\ApiTestCase;
  */
 class DisabledEndpointsTest extends ApiTestCase
 {
+    private FeatureFlagManager $featureFlagManager;
+
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
@@ -49,6 +53,7 @@ class DisabledEndpointsTest extends ApiTestCase
     {
         parent::setUp();
         self::clearCache();
+        $this->featureFlagManager = self::getContainer()->get(FeatureFlagManager::class);
     }
 
     /**
@@ -79,15 +84,26 @@ class DisabledEndpointsTest extends ApiTestCase
         // Boot kernel with appropriate configuration, exceptionally we force the environment, so we have
         // distinct cache and adapted data/behaviour for each use case
         $kernelOptions = ['debug' => $isDebug];
+
+        // The purpose in this test is not to check the HTTPS protection so we mimic it (especially for prod environment)
+        $defaultClientOptions = [
+            'headers' => [
+                'X_FORWARDED_PROTO' => 'HTTPS',
+            ],
+        ];
         static::bootKernel($kernelOptions);
 
         // Update the configuration
-        $this->updateConfiguration('PS_ENABLE_EXPERIMENTAL_API_ENDPOINTS', (int) $forceExperimentalEndpoints);
+        if ($forceExperimentalEndpoints) {
+            $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS);
+        } else {
+            $this->featureFlagManager->disable(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS);
+        }
 
         // Scope experimental_scope only exists when the endpoint is enabled
-        $bearerToken = $this->getBearerToken($expectedEndpointStatus ? ['experimental_scope'] : [], $kernelOptions);
+        $bearerToken = $this->getBearerToken($expectedEndpointStatus ? ['experimental_scope'] : [], $kernelOptions, $defaultClientOptions);
 
-        static::createClient($kernelOptions)->request('GET', '/test/experimental/product/1', [
+        static::createClient($kernelOptions, $defaultClientOptions)->request('GET', '/test/experimental/product/1', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $bearerToken,
             ],

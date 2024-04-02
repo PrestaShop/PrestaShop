@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer;
+namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AdminAPI;
 
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ApiClientSettings;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -99,7 +99,6 @@ class ApiClientType extends TranslatorAwareType
             ->add('lifetime', IntegerType::class, [
                 'label' => $this->trans('Lifetime', 'Admin.Global'),
                 'required' => false,
-                'empty_data' => '3600',
                 'constraints' => [
                     new NotBlank(),
                     new Positive(),
@@ -119,7 +118,7 @@ class ApiClientType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'form_theme' => '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/ApiClient/form_theme.html.twig',
+            'form_theme' => '@PrestaShop/Admin/Configure/AdvancedParameters/AdminAPI/ApiClient/form_theme.html.twig',
         ]);
     }
 }

@@ -41,7 +41,7 @@ class ApiClientFormDataProviderTest extends TestCase
         $queryBusMock = $this->createMock(CommandBusInterface::class);
         $provider = new ApiClientFormDataProvider($queryBusMock);
 
-        $this->assertEquals([], $provider->getDefaultData());
+        $this->assertEquals(['lifetime' => 3600], $provider->getDefaultData());
     }
 
     /**
