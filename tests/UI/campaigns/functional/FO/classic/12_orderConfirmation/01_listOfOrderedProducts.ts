@@ -3,7 +3,6 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
@@ -11,13 +10,13 @@ import ordersPage from '@pages/BO/orders';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
-import cartPage from '@pages/FO/hummingbird/cart';
-import checkoutPage from '@pages/FO/hummingbird/checkout';
-import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
-import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
+import {homePage} from '@pages/FO/classic/home';
+import {cartPage} from '@pages/FO/classic/cart';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
+import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
 import Products from '@data/demo/products';
@@ -33,25 +32,18 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 // context
-const baseContext: string = 'functional_FO_hummingbird_orderConfirmation_listOfOrderedProducts';
+const baseContext: string = 'functional_FO_classic_orderConfirmation_listOfOrderedProducts';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario:
 - Add 3 products to cart
 - Proceed to checkout and confirm the order
 - Check the payment confirmation details
-Post-condition:
-- Uninstall the theme hummingbird
 */
 describe('FO - Order confirmation : List of ordered products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let orderReference: string;
-
-  // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -93,7 +85,8 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await blockCartModal.closeBlockCartModal(page);
     });
 
-    it(`should add the product ${Products.demo_5.name} to cart by quick view`, async function () {
+    it(`should add the product ${
+      Products.demo_5.name} to cart by quick view`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addDemo5ByQuickView', baseContext);
 
       await homePage.searchProduct(page, Products.demo_5.name);
@@ -218,9 +211,12 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       const totalToPay: string = (Products.demo_3.finalPrice + (2 * Products.demo_5.finalPrice)
         + (2 * Products.demo_12.finalPrice) + Carriers.myCarrier.priceTTC).toFixed(2);
 
+      const paymentMethod = await orderConfirmationPage.getPaymentMethod(page);
+      expect(paymentMethod).to.contains(dataPaymentMethods.wirePayment.displayName);
+
       const paymentInformation = await orderConfirmationPage.getPaymentInformation(page);
-      expect(paymentInformation).to.contains('You have chosen payment by '
-        + `${dataPaymentMethods.wirePayment.displayName.toLowerCase()}`)
+      expect(paymentInformation).to.contains('Please send us a '
+        + `${dataPaymentMethods.wirePayment.name.toLowerCase()}`)
         .and.to.contains(`Amount €${totalToPay}`)
         .and.to.contains(`Please specify your order reference ${orderReference}`);
     });
@@ -229,16 +225,10 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderDetails', baseContext);
 
       const orderDetails = await orderConfirmationPage.getOrderDetails(page);
+      console.log(orderDetails);
       expect(orderDetails).to.equal(`Order reference: ${orderReference} Payment method: `
         + `${dataPaymentMethods.wirePayment.displayName} Shipping method: `
-        + `${Carriers.myCarrier.name} - ${Carriers.myCarrier.delay}`);
-    });
-
-    it('should check the products number', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNumber', baseContext);
-
-      const productsNumber = await orderConfirmationPage.getNumberOfProducts(page);
-      expect(productsNumber).to.equal(3);
+        + `${Carriers.myCarrier.name} ${Carriers.myCarrier.delay}`);
     });
 
     it('should check the details of the first product in list', async function () {
@@ -247,8 +237,8 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       const result = await orderConfirmationPage.getProductDetailsInRow(page, 1);
       await Promise.all([
         expect(result.image).to.contains(Products.demo_3.coverImage),
-        expect(result.details).to.equal(`${Products.demo_3.name} (Size: S) Reference ${Products.demo_3.reference}`),
-        expect(result.prices).to.equal(`€${Products.demo_3.finalPrice} (x1) €${Products.demo_3.finalPrice}`),
+        expect(result.details).to.equal(`${Products.demo_3.name} (Size: S)`),
+        expect(result.prices).to.equal(`€${Products.demo_3.finalPrice} 1 €${Products.demo_3.finalPrice}`),
       ]);
     });
 
@@ -258,9 +248,9 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       const result = await orderConfirmationPage.getProductDetailsInRow(page, 2);
       await Promise.all([
         expect(result.image).to.contains(Products.demo_5.coverImage),
-        expect(result.details).to.equal(`${Products.demo_5.name} (Dimension: 40x60cm) Reference ${Products.demo_5.reference}`),
+        expect(result.details).to.equal(`${Products.demo_5.name} (Dimension: 40x60cm)`),
         expect(result.prices).to.equal(`€${Products.demo_5.finalPrice.toFixed(2)}`
-          + ` (x2) €${(Products.demo_5.finalPrice * 2).toFixed(2)}`),
+          + ` 2 €${(Products.demo_5.finalPrice * 2).toFixed(2)}`),
       ]);
     });
 
@@ -270,12 +260,9 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       const result = await orderConfirmationPage.getProductDetailsInRow(page, 3);
       await Promise.all([
         expect(result.image).to.contains(Products.demo_12.coverImage),
-        expect(result.details).to.equal(`${Products.demo_12.name} Reference ${Products.demo_12.reference}`),
-        expect(result.prices).to.equal(`€${Products.demo_12.finalPrice} (x2) €${(Products.demo_12.finalPrice * 2).toFixed(2)}`),
+        expect(result.details).to.equal(`${Products.demo_12.name}`),
+        expect(result.prices).to.equal(`€${Products.demo_12.finalPrice} 2 €${(Products.demo_12.finalPrice * 2).toFixed(2)}`),
       ]);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest`);
 });

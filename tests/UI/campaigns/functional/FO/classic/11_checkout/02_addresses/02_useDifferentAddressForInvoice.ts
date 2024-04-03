@@ -196,5 +196,26 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
       )
         .to.not.equal(finalInvoiceAddress.replace('Invoice', ''));
     });
+
+    it('should return to the page Orders', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.ordersLink,
+      );
+      await ordersPage.closeSfToolBar(page);
+
+      const pageTitle = await ordersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
+
+    it('should reset all filters ', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+
+      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      expect(numberOfOrders).to.be.above(0);
+    });
   });
 });
