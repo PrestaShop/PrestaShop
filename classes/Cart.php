@@ -813,8 +813,9 @@ class CartCore extends ObjectModel
                 $product['reduction_without_tax'] = $props['reduction_without_tax'];
                 $product['price_without_reduction'] = $props['price_without_reduction'];
                 $product['specific_prices'] = $props['specific_prices'];
+                $product['unit_price'] = $props['unit_price_tax_excluded'];
                 $product['unit_price_ratio'] = $props['unit_price_ratio'];
-                $product['unit_price'] = $product['unit_price_tax_excluded'] = $props['unit_price_tax_excluded'];
+                $product['unit_price_tax_excluded'] = $props['unit_price_tax_excluded'];
                 $product['unit_price_tax_included'] = $props['unit_price_tax_included'];
                 unset($props);
 
