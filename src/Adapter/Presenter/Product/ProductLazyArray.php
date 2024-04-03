@@ -810,8 +810,8 @@ class ProductLazyArray extends AbstractLazyArray
          *
          * If not, we will pass empty strings.
          */
-        if (!empty($this->product['unity']) && isset($this->product['unit_price_tax_excluded']) && isset($this->product['unit_price_tax_included'])) {
-            /* 
+        if (!empty($this->product['unity']) && isset($this->product['unit_price_tax_excluded'], $this->product['unit_price_tax_included'])) {
+            /*
              * We use the tax included or tax excluded price, depending on presentation settings.
              * We have the prices calculated from the Product::computeUnitPriceRatio, that is called before it gets passed here.
              *
