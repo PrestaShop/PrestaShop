@@ -75,6 +75,7 @@ type GlobalKeycloakConfig = {
   keycloakAdminUser: string
   keycloakAdminPass: string
   keycloakClientId: string
+  keycloakClientSecret: string
 }
 
 declare global {

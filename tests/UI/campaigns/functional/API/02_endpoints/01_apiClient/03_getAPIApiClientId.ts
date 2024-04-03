@@ -170,6 +170,7 @@ describe('API : GET /api-client/{apiClientId}', async () => {
         'clientId',
         'clientName',
         'description',
+        'externalIssuer',
         'enabled',
         'lifetime',
         'scopes',
@@ -206,6 +207,13 @@ describe('API : GET /api-client/{apiClientId}', async () => {
       expect(jsonResponse).to.have.property('description');
       expect(jsonResponse.description).to.be.a('string');
       expect(jsonResponse.description).to.be.equal(clientData.description);
+    });
+
+    it('should check the JSON Response : `externalIssuer`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseExternalIssuer', baseContext);
+
+      expect(jsonResponse).to.have.property('externalIssuer');
+      expect(jsonResponse.externalIssuer).to.equal(null);
     });
 
     it('should check the JSON Response : `enabled`', async function () {

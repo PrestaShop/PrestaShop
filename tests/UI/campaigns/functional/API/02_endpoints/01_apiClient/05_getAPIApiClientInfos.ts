@@ -170,6 +170,7 @@ describe('API : GET /api-client/infos', async () => {
         'clientId',
         'clientName',
         'description',
+        'externalIssuer',
         'enabled',
         'lifetime',
         'scopes',
