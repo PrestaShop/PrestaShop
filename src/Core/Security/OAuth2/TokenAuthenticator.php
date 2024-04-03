@@ -32,6 +32,7 @@ use Doctrine\ORM\NoResultException;
 use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use PrestaShopBundle\Security\OAuth2\Entity\JwtTokenUser;
+use PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -107,7 +108,14 @@ class TokenAuthenticator extends AbstractAuthenticator
         if (null === $jwtTokenUser) {
             throw new CustomUserMessageAuthenticationException(json_encode('Invalid credentials'));
         }
-        $this->autoSaveApiClient($jwtTokenUser);
+
+        // Specific check for external authorization server (PrestashopAuthorisationServer is the only internal implementation)
+        if (!$authorizationServer instanceof PrestashopAuthorisationServer) {
+            if (empty($jwtTokenUser->getExternalIssuer())) {
+                throw new CustomUserMessageAuthenticationException(json_encode('No external issuer specified'));
+            }
+            $this->autoSaveApiClient($jwtTokenUser);
+        }
 
         // Returns passport purely based on JWT token here, we set a specific loader that returns the
         // user object directly since it was already resolved by our authorization server
@@ -124,15 +132,15 @@ class TokenAuthenticator extends AbstractAuthenticator
     private function autoSaveApiClient(JwtTokenUser $jwtTokenUser): void
     {
         try {
-            $this->apiClientRepository->getByClientId($jwtTokenUser->getUserIdentifier());
+            $this->apiClientRepository->getByClientId($jwtTokenUser->getUserIdentifier(), $jwtTokenUser->getExternalIssuer());
         } catch (NoResultException) {
             $apiClient = new ApiClient();
             $apiClient
                 ->setClientId($jwtTokenUser->getUserIdentifier())
                 ->setClientName($jwtTokenUser->getUserIdentifier())
-                ->setEnabled(true)
-                ->setDescription('')
+                ->setExternalIssuer($jwtTokenUser->getExternalIssuer())
                 ->setLifetime(3600)
+                ->setEnabled(true)
             ;
             $this->apiClientRepository->save($apiClient);
         }

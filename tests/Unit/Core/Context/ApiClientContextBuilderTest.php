@@ -43,20 +43,25 @@ class ApiClientContextBuilderTest extends TestCase
     private const SHOP_ID = 42;
     private const API_CLIENT_ID = 51;
 
-    public function testBuild(): void
+    /**
+     * @dataProvider getExternalIssuers
+     */
+    public function testBuild(?string $externalIssuer): void
     {
-        $apiClient = $this->getApiClientEntity();
+        $apiClient = $this->getApiClientEntity($externalIssuer);
         $builder = new ApiClientContextBuilder(
-            $this->mockRepository($apiClient),
+            $this->mockRepository($apiClient, $externalIssuer),
             $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::SHOP_ID])
         );
 
         $builder->setClientId('client_id');
+        $builder->setExternalIssuer($externalIssuer);
         $apiClientContext = $builder->build();
         $this->assertNotNull($apiClientContext->getApiClient());
         $this->assertEquals(self::API_CLIENT_ID, $apiClientContext->getApiClient()->getId());
         $this->assertEquals('client_id', $apiClientContext->getApiClient()->getClientId());
         $this->assertEquals(['scope1', 'scope3'], $apiClientContext->getApiClient()->getScopes());
+        $this->assertEquals($externalIssuer, $apiClientContext->getApiClient()->getExternalIssuer());
         $this->assertEquals(self::SHOP_ID, $apiClientContext->getApiClient()->getShopId());
     }
 
@@ -73,6 +78,7 @@ class ApiClientContextBuilderTest extends TestCase
         $this->assertNotNull($apiClientContext->getApiClient());
         $this->assertEquals($apiClient->getClientId(), $apiClientContext->getApiClient()->getClientId());
         $this->assertEquals($apiClient->getScopes(), $apiClientContext->getApiClient()->getScopes());
+        $this->assertEquals(null, $apiClientContext->getApiClient()->getExternalIssuer());
         $this->assertEquals(self::SHOP_ID, $apiClientContext->getApiClient()->getShopId());
     }
 
@@ -87,18 +93,30 @@ class ApiClientContextBuilderTest extends TestCase
         $this->assertNull($apiClientContext->getApiClient());
     }
 
-    private function mockRepository(ApiClient $apiClient): ApiClientRepository|MockObject
+    public function getExternalIssuers(): iterable
+    {
+        yield 'no external issuer' => [
+            null,
+        ];
+
+        yield 'external issuer specified' => [
+            'http://external_authorization_server',
+        ];
+    }
+
+    private function mockRepository(ApiClient $apiClient, ?string $externalIssuer = null): ApiClientRepository|MockObject
     {
         $repository = $this->createMock(ApiClientRepository::class);
         $repository
             ->method('getByClientId')
+            ->with($apiClient->getClientId(), $externalIssuer)
             ->willReturn($apiClient)
         ;
 
         return $repository;
     }
 
-    private function getApiClientEntity(): ApiClient
+    private function getApiClientEntity(?string $externalIssuer = null): ApiClient
     {
         $apiClient = new ApiClient();
         $apiClient
@@ -107,6 +125,10 @@ class ApiClientContextBuilderTest extends TestCase
             ->setClientName('client_name')
             ->setScopes(['scope1', 'scope3'])
         ;
+
+        if (!empty($externalIssuer)) {
+            $apiClient->setExternalIssuer($externalIssuer);
+        }
 
         return $apiClient;
     }

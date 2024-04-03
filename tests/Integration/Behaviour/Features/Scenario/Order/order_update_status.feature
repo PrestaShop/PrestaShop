@@ -48,7 +48,7 @@ Feature: Order from Back Office (BO)
   Scenario: I update the order status while logged as an api client
     Given I create an api client "AC-1" with following properties:
       | clientName  | Thomas               |
-      | apiClientId | api_client           |
+      | clientId    | api_client           |
       | enabled     | true                 |
       | description | a simple description |
       | lifetime    | 3600                 |

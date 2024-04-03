@@ -34,7 +34,8 @@ class ApiClient
         private int $id,
         private string $clientId,
         private array $scopes,
-        private int $shopId
+        private ?string $externalIssuer,
+        private int $shopId,
     ) {
     }
 
@@ -56,6 +57,11 @@ class ApiClient
     public function getScopes(): array
     {
         return $this->scopes;
+    }
+
+    public function getExternalIssuer(): ?string
+    {
+        return $this->externalIssuer;
     }
 
     public function getShopId(): int

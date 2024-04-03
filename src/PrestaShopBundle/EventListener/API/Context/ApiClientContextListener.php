@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener\API\Context;
 
 use PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder;
+use PrestaShopBundle\Security\OAuth2\Entity\JwtTokenUser;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Security;
 
@@ -52,6 +53,9 @@ class ApiClientContextListener
         $token = $this->security->getToken();
         if ($token) {
             $this->accessContextBuilder->setClientId($token->getUserIdentifier());
+            if ($token->getUser() instanceof JwtTokenUser) {
+                $this->accessContextBuilder->setExternalIssuer($token->getUser()->getExternalIssuer());
+            }
         }
     }
 }

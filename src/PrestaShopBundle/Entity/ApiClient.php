@@ -37,12 +37,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ApiClientRepository")
- * @ORM\Table()
- *
- * @experimental
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="api_client_client_id_idx", fields={"clientId", "externalIssuer"}), @ORM\UniqueConstraint(name="api_client_client_name_idx", fields={"clientName", "externalIssuer"})})
  */
-#[UniqueEntity('clientId')]
-#[UniqueEntity('clientName')]
+#[UniqueEntity(fields: ['clientId', 'externalIssuer'], ignoreNull: false)]
+#[UniqueEntity(fields: ['clientName', 'externalIssuer'], ignoreNull: false)]
 class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -92,7 +90,13 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(name="description", type="string", options={"default": ""})
      */
     #[Assert\Length(max: 21844)]
-    private string $description;
+    private string $description = '';
+
+    /**
+     * @ORM\Column(name="external_issuer", type="string", nullable=true)
+     */
+    #[Assert\Length(max: 255)]
+    private ?string $externalIssuer = null;
 
     /**
      * Lifetime is in milliseconds. Default value is 3600 ms.
@@ -195,6 +199,18 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLifetime(int $lifetime): self
     {
         $this->lifetime = $lifetime;
+
+        return $this;
+    }
+
+    public function getExternalIssuer(): ?string
+    {
+        return $this->externalIssuer;
+    }
+
+    public function setExternalIssuer(string $externalIssuer): self
+    {
+        $this->externalIssuer = $externalIssuer;
 
         return $this;
     }

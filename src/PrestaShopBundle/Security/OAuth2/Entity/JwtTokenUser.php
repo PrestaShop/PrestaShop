@@ -39,6 +39,7 @@ class JwtTokenUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct(
         protected readonly string $userId,
         protected readonly array $scopes,
+        protected readonly ?string $externalIssuer = null,
     ) {
         $this->convertScopesToRoles();
     }
@@ -71,6 +72,11 @@ class JwtTokenUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->userId;
+    }
+
+    public function getExternalIssuer(): ?string
+    {
+        return $this->externalIssuer;
     }
 
     protected function convertScopesToRoles(): void

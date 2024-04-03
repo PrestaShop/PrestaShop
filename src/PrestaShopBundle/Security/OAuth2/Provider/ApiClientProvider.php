@@ -47,6 +47,7 @@ class ApiClientProvider implements UserProviderInterface
     public function loadUserByIdentifier(string $identifier): ApiClient
     {
         try {
+            // We only load internal API clients so no external issuer to specify
             $apiClient = $this->apiClientRepository->getByClientId($identifier);
         } catch (NoResultException) {
             throw new UserNotFoundException('Api Client not found');

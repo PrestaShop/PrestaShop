@@ -54,14 +54,15 @@ class ApiClientRepository extends EntityRepository
 
     /**
      * @param string $clientId
+     * @param string|null $externalIssuer
      *
      * @return ApiClient
      *
      * @throws NoResultException
      */
-    public function getByClientId(string $clientId): ApiClient
+    public function getByClientId(string $clientId, ?string $externalIssuer = null): ApiClient
     {
-        $apiClient = $this->findOneBy(['clientId' => $clientId]);
+        $apiClient = $this->findOneBy(['clientId' => $clientId, 'externalIssuer' => $externalIssuer]);
 
         if (null === $apiClient) {
             throw new NoResultException();
