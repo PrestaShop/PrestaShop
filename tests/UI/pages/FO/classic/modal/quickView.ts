@@ -133,7 +133,10 @@ class QuickViewModal extends FOBasePage {
         ]);
         break;
       case 'size':
-        await this.selectByVisibleText(page, this.quickViewProductSize, attributes.value);
+        await Promise.all([
+          page.waitForResponse((response) => response.url().includes('product&token=')),
+          await this.selectByVisibleText(page, this.quickViewProductSize, attributes.value),
+        ]);
         break;
       default:
         throw new Error(`${attributes.name} has not being in defined in "changeAttributes"`);
@@ -293,6 +296,11 @@ class QuickViewModal extends FOBasePage {
     return attributes;
   }
 
+  /**
+   * Get selected attribute
+   * @param page {Page} Browser tab
+   * @returns {Promise<ProductAttribute[]>}
+   */
   async getSelectedAttributes(page: Page): Promise<ProductAttribute[]> {
     return [
       {
