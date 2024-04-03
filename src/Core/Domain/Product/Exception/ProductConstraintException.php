@@ -97,6 +97,11 @@ class ProductConstraintException extends ProductException
     public const INVALID_EAN_13 = 130;
 
     /**
+     * When product GTIN code value is invalid
+     */
+    public const INVALID_GTIN = 135;
+
+    /**
      * When product ISBN code value is invalid
      */
     public const INVALID_ISBN = 140;

@@ -329,7 +329,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'references' => [
                 'mpn' => $details->getMpn(),
                 'upc' => $details->getUpc(),
-                'ean_13' => $details->getEan13(),
+                'ean_13' => $details->getGtin(),
                 'isbn' => $details->getIsbn(),
                 'reference' => $details->getReference(),
             ],

@@ -51,7 +51,11 @@ class TypedRegex extends Constraint
     public const TYPE_FILE_NAME = 'file_name';
     public const TYPE_DNI_LITE = 'dni_lite';
     public const TYPE_UPC = 'upc';
+    /**
+     * @deprecated since 9.0 will be removed in 10.0
+     */
     public const TYPE_EAN_13 = 'ean_13';
+    public const TYPE_GTIN = 'gtin';
     public const TYPE_ISBN = 'isbn';
     public const TYPE_REFERENCE = 'reference';
     public const TYPE_URL = 'url';

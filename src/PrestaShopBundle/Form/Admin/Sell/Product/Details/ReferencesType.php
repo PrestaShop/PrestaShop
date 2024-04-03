@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Details;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Gtin;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
@@ -79,11 +79,11 @@ class ReferencesType extends TranslatorAwareType
             ])
             ->add('ean_13', TextType::class, [
                 'required' => false,
-                'label' => $this->trans('EAN-13 or JAN barcode', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('GTIN (EAN, JA, ITF or UCC code)', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.', 'Admin.Catalog.Help'),
                 'constraints' => [
-                    new TypedRegex(TypedRegex::TYPE_EAN_13),
-                    new Length(['max' => Ean13::MAX_LENGTH]),
+                    new TypedRegex(TypedRegex::TYPE_GTIN),
+                    new Length(['max' => Gtin::MAX_LENGTH]),
                 ],
                 'empty_data' => '',
             ])
