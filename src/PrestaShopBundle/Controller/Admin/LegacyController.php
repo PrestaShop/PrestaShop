@@ -194,30 +194,8 @@ class LegacyController extends PrestaShopAdminController
         } elseif (method_exists($adminController, 'displayAjax')) {
             $adminController->displayAjax();
         }
-        $outputContent = ob_get_clean();
 
-        // The output of the controller is either directly echoed or it can be properly appended in AdminController::content
-        // it depends on the implementation of the controllers.
-        if (!empty($outputContent) && !empty($adminController->content)) {
-            // Sometimes they are both done and are equal, in which case we only return one content to avoid duplicates.
-            if ($outputContent === $adminController->content) {
-                $responseContent = $outputContent;
-            } else {
-                // In case both contents are present and are different we concatenate them, first the echoed output and then the controller
-                // one since it is displayed last by smarty in the original workflow
-                // This concatenation approach is theoretical and naive and was not tested because of the lack of use cases, so it may need
-                // to be improved in the future
-                $responseContent = $outputContent . $adminController->content;
-            }
-        } elseif (!empty($outputContent)) {
-            $responseContent = $outputContent;
-        } elseif (!empty($adminController->content)) {
-            $responseContent = $adminController->content;
-        } else {
-            $responseContent = '';
-        }
-
-        return new Response($responseContent);
+        return new Response(ob_get_clean());
     }
 
     /**
