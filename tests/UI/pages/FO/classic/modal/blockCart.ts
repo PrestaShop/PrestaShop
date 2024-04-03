@@ -140,6 +140,7 @@ class BlockCartModal extends FOBasePage {
    */
   async continueShopping(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.continueShoppingButton);
+
     return this.elementNotVisible(page, this.blockCartModalDiv, 2000);
   }
 
