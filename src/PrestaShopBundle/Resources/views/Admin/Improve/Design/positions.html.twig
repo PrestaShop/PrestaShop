@@ -100,7 +100,9 @@
                   data-update-url="{{ path('api_improve_design_positions_update') }}"
                   data-togglestatus-url="{{ path('admin_modules_positions_toggle_status') }}">
               {% for hook in hooks %}
-                <section class="hook-panel{% if not hook['position'] %} hook-position{% else %} hook-visible{% endif %}" {% if not hook['position'] %} style="display:none;" {% endif %}>
+                <section
+                  class="hook-panel{% if not hook['position'] %} hook-position{% else %} hook-visible{% endif %}" {% if not hook['position'] %} style="display:none;" {% endif %}
+                  data-hook-name="{{ hook['name'] }}">
                   <a name="{{ hook['name'] }}"></a>
                   <header class="hook-panel-header">
                     <span class="hook-status">
@@ -143,8 +145,10 @@
 
                             <div class="module-column-select">
                               <i class="material-icons drag_indicator">drag_indicator</i>
-                              <input type="checkbox" id="selecterbox{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"
+                              <input type="checkbox"
+                                     id="selecterbox{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"
                                      data-hook-id="{{ hook['id_hook'] }}"
+                                     data-hook-module="{{ moduleInstance.name }}"
                                      class="modules-position-checkbox hook{{ hook['id_hook'] }}"
                                      name="unhooks[]"
                                      value="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"
