@@ -14,6 +14,8 @@ class PsNewProducts extends ModuleConfiguration {
 
   private readonly productsToDisplayInput: string;
 
+  private readonly numDaysConsideredAsNewInput: string;
+
   private readonly saveSettingsForm: string;
 
   /**
@@ -28,6 +30,7 @@ class PsNewProducts extends ModuleConfiguration {
 
     // Selectors
     this.productsToDisplayInput = '#NEW_PRODUCTS_NBR';
+    this.numDaysConsideredAsNewInput = '#PS_NB_DAYS_NEW_PRODUCT';
     this.saveSettingsForm = '#module_form_submit_btn';
   }
 
@@ -46,12 +49,34 @@ class PsNewProducts extends ModuleConfiguration {
   }
 
   /**
+   * Set Number of days for which the product is considered 'new'
+   * @param page {Page} Browser tab
+   * @param value {number|string}
+   * @returns {Promise<string>}
+   */
+  async setNumDaysConsideredAsNew(page: Page, value: number|string): Promise<string> {
+    await page.locator(this.numDaysConsideredAsNewInput).fill(value.toString());
+    await this.clickAndWaitForLoadState(page, this.saveSettingsForm);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
    * Get Products to display
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async getNumProductsToDisplay(page: Page): Promise<string> {
     return this.getAttributeContent(page, this.productsToDisplayInput, 'value');
+  }
+
+  /**
+   * Get Number of days for which the product is considered 'new'
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getNumDaysConsideredAsNew(page: Page): Promise<string> {
+    return this.getAttributeContent(page, this.numDaysConsideredAsNewInput, 'value');
   }
 }
 
