@@ -38,7 +38,7 @@ class JwtTokenUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct(
         protected readonly string $userId,
-        protected readonly array $scopes
+        protected readonly array $scopes,
     ) {
         $this->convertScopesToRoles();
     }

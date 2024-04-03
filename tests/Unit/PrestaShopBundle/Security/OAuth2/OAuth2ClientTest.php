@@ -57,7 +57,7 @@ class OAuth2ClientTest extends TestCase
             $this->leagueResourceServer->method('validateAuthenticatedRequest')->willReturnCallback(function (ServerRequestInterface $request) {
                 return $request->withAttribute('oauth_client_id', $request->getParsedBody()['client_id'] ?? null);
             });
-            $user = $this->client->getUser($request);
+            $user = $this->client->getJwtTokenUser($request);
 
             $this->assertTrue($user instanceof UserInterface);
         } else {
@@ -66,7 +66,7 @@ class OAuth2ClientTest extends TestCase
                 ->method('validateAuthenticatedRequest')
                 ->willThrowException(new OAuthServerException('Client authentication failed', 4, 'invalid_client', 401))
             ;
-            $user = $this->client->getUser($request);
+            $user = $this->client->getJwtTokenUser($request);
             $this->assertNull($user);
         }
     }

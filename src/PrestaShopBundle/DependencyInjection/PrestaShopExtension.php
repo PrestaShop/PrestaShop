@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\DependencyInjection;
 
+use PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -45,6 +46,11 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
         $env = $container->getParameter('kernel.environment');
         $loader->load('services_' . $env . '.yml');
+
+        // Automatically tag services that implements this interface
+        $container->registerForAutoconfiguration(AuthorisationServerInterface::class)
+            ->addTag('core.oauth2.authorization_server')
+        ;
     }
 
     /**

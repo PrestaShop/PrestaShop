@@ -28,7 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
 
-use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
+use Doctrine\ORM\NoResultException;
+use PrestaShopBundle\Entity\ApiClient;
+use PrestaShopBundle\Entity\Repository\ApiClientRepository;
+use PrestaShopBundle\Security\OAuth2\Entity\JwtTokenUser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -47,16 +50,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class TokenAuthenticator extends AbstractAuthenticator
 {
+    /**
+     * @param iterable|AuthorisationServerInterface[] $authorizationServers
+     */
     public function __construct(
-        private readonly AuthorisationServerInterface $authorizationServer,
-        private readonly HttpMessageFactoryInterface $httpMessageFactory,
+        private readonly iterable $authorizationServers,
         private readonly TranslatorInterface $translator,
+        private ApiClientRepository $apiClientRepository,
     ) {
-    }
-
-    public function start(Request $request, AuthenticationException $authException = null): Response
-    {
-        return $this->returnWWWAuthenticateResponse();
     }
 
     public function supports(Request $request): bool
@@ -84,23 +85,67 @@ class TokenAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $authorization = $request->headers->get('Authorization') ?? null;
-        if (null === $authorization) {
-            throw new CustomUserMessageAuthenticationException('No Authorization header provided');
-        }
-        if (!str_starts_with($authorization, 'Bearer ')) {
-            throw new CustomUserMessageAuthenticationException('Bearer token missing');
+        $authorizationServer = $this->getAuthorizationServer($request);
+
+        // No authorization server found, return a hint in the exception to hel debug a little
+        if (null === $authorizationServer) {
+            // These tso hints are probably not adapted for all the possible authorization servers, but probably most
+            // of them, and at the very least they are true for the internal PrestashopAuthorizationServer
+            $authorization = $request->headers->get('Authorization') ?? null;
+            if (null === $authorization) {
+                throw new CustomUserMessageAuthenticationException(json_encode('No Authorization header provided'));
+            }
+            if (!str_starts_with($authorization, 'Bearer ')) {
+                throw new CustomUserMessageAuthenticationException(json_encode('Bearer token missing'));
+            }
+
+            // Default hint, simply could not find a matching authorization server
+            throw new CustomUserMessageAuthenticationException(json_encode('No authorization server matching your credentials'));
         }
 
-        $credentials = $this->httpMessageFactory->createRequest($request);
-        $user = $this->authorizationServer->getUser($credentials);
-
-        if (null === $user) {
-            throw new CustomUserMessageAuthenticationException('Invalid credentials');
+        $jwtTokenUser = $authorizationServer->getJwtTokenUser($request);
+        if (null === $jwtTokenUser) {
+            throw new CustomUserMessageAuthenticationException(json_encode('Invalid credentials'));
         }
+        $this->autoSaveApiClient($jwtTokenUser);
 
         // Returns passport purely based on JWT token here, we set a specific loader that returns the
         // user object directly since it was already resolved by our authorization server
-        return new SelfValidatingPassport(new UserBadge($user->getUserIdentifier(), fn () => $user));
+        return new SelfValidatingPassport(new UserBadge($jwtTokenUser->getUserIdentifier(), fn () => $jwtTokenUser));
+    }
+
+    /**
+     * All clients are saved in DB, this allows keeping track of connections and it is used by the
+     * ApiClientContext to initialize correctly, thus we can use this Context service even for clients
+     * from external authorization servers.
+     *
+     * @param JwtTokenUser $jwtTokenUser
+     */
+    private function autoSaveApiClient(JwtTokenUser $jwtTokenUser): void
+    {
+        try {
+            $this->apiClientRepository->getByClientId($jwtTokenUser->getUserIdentifier());
+        } catch (NoResultException) {
+            $apiClient = new ApiClient();
+            $apiClient
+                ->setClientId($jwtTokenUser->getUserIdentifier())
+                ->setClientName($jwtTokenUser->getUserIdentifier())
+                ->setEnabled(true)
+                ->setDescription('')
+                ->setLifetime(3600)
+            ;
+            $this->apiClientRepository->save($apiClient);
+        }
+    }
+
+    private function getAuthorizationServer(Request $request): ?AuthorisationServerInterface
+    {
+        foreach ($this->authorizationServers as $authorizationServer) {
+            if ($authorizationServer->isTokenValid($request)) {
+                return $authorizationServer;
+            }
+        }
+
+        return null;
     }
 }
