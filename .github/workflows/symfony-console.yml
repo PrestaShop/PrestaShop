@@ -104,8 +104,8 @@ jobs:
       - name: Check bin/console and cache:clear can run after shop install
         run: |
           docker ps
-          docker exec prestashop_prestashop-git_1 php ./bin/console --app-id=${{ matrix.app-id }}
-          docker exec prestashop_prestashop-git_1 php -d memory_limit=-1 ./bin/console cache:clear --env=dev --app-id=${{ matrix.app-id }}
-          docker exec prestashop_prestashop-git_1 php -d memory_limit=-1 ./bin/console cache:clear --env=prod --app-id=${{ matrix.app-id }}
-          docker exec prestashop_prestashop-git_1 php ./bin/console cache:clear --env=dev --no-warmup --app-id=${{ matrix.app-id }}
-          docker exec prestashop_prestashop-git_1 php ./bin/console cache:clear --env=prod --no-warmup --app-id=${{ matrix.app-id }}
+          docker exec prestashop-prestashop-git-1 php ./bin/console --app-id=${{ matrix.app-id }}
+          docker exec prestashop-prestashop-git-1 php -d memory_limit=-1 ./bin/console cache:clear --env=dev --app-id=${{ matrix.app-id }}
+          docker exec prestashop-prestashop-git-1 php -d memory_limit=-1 ./bin/console cache:clear --env=prod --app-id=${{ matrix.app-id }}
+          docker exec prestashop-prestashop-git-1 php ./bin/console cache:clear --env=dev --no-warmup --app-id=${{ matrix.app-id }}
+          docker exec prestashop-prestashop-git-1 php ./bin/console cache:clear --env=prod --no-warmup --app-id=${{ matrix.app-id }}
