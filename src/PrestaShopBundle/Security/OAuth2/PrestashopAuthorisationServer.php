@@ -49,6 +49,16 @@ class PrestashopAuthorisationServer implements AuthorisationServerInterface
 
     public function isTokenValid(Request $request): bool
     {
+        // Manually check that the authorization header is as expected (league resource server is a bit more lax about the
+        // Bearer keyword absence)
+        $authorization = $request->headers->get('Authorization') ?? null;
+        if (null === $authorization) {
+            return false;
+        }
+        if (!str_starts_with($authorization, 'Bearer ')) {
+            return false;
+        }
+
         try {
             $serverRequest = $this->httpMessageFactory->createRequest($request);
             $this->resourceServer->validateAuthenticatedRequest($serverRequest);

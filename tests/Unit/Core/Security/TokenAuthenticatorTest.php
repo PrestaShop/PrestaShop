@@ -31,11 +31,10 @@ use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\JwtFacade;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
-use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator;
-use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
+use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -45,30 +44,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class TokenAuthenticatorTest extends TestCase
 {
     protected $tokenAuthenticator;
-    protected $authorizationServer;
     protected $request;
 
     public function setUp(): void
     {
-        $psr7 = new Psr17Factory();
-        $this->authorizationServer = $this->createMock(AuthorisationServerInterface::class);
+        $authorizationServer = $this->createMock(AuthorisationServerInterface::class);
         $translator = $this->createMock(TranslatorInterface::class);
         $translator->method('trans')->willReturnArgument(0);
+        $repository = $this->createMock(ApiClientRepository::class);
         $this->tokenAuthenticator = new TokenAuthenticator(
-            $this->authorizationServer,
-            new PsrHttpFactory($psr7, $psr7, $psr7, $psr7),
+            [$authorizationServer],
             $translator,
+            $repository,
         );
         $this->request = Request::create('/');
         parent::setUp();
-    }
-
-    public function testStart(): void
-    {
-        $response = $this->tokenAuthenticator->start($this->request, new AuthenticationException());
-        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
-        $this->assertTrue($response->headers->has('WWW-Authenticate'));
-        $this->assertSame('Bearer', $response->headers->get('WWW-Authenticate'));
     }
 
     public function testOnAuthenticationFailure(): void

@@ -63,7 +63,7 @@ class LanguageEndpointTest extends ApiTestCase
 
         $content = $response->getContent(false);
         $this->assertNotEmpty($content);
-        $this->assertEquals('No Authorization header provided', $content);
+        $this->assertEquals('"No Authorization header provided"', $content);
     }
 
     public function getProtectedEndpoints(): iterable

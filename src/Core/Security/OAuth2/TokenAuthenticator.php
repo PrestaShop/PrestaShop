@@ -56,7 +56,7 @@ class TokenAuthenticator extends AbstractAuthenticator
     public function __construct(
         private readonly iterable $authorizationServers,
         private readonly TranslatorInterface $translator,
-        private ApiClientRepository $apiClientRepository,
+        private readonly ApiClientRepository $apiClientRepository,
     ) {
     }
 
