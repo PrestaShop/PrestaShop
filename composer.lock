@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b161cf4a13fd7f6b9271bb6d0e26b8f",
+    "content-hash": "30e0b178cb291349e58d42b4bf438e30",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5579,16 +5579,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-Issue-35687-command-on-single-shops-that-expects-shopids",
+            "version": "dev-external-server-refacto",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tleon/ps_apiresources.git",
-                "reference": "f7586dda75eb7c1d07544b8f0acc3c9c3f5094a9"
+                "url": "https://github.com/jolelievre/ps_apiresources.git",
+                "reference": "f379b4c7932779de213ec6ee701be21e2d151dcb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tleon/ps_apiresources/zipball/f7586dda75eb7c1d07544b8f0acc3c9c3f5094a9",
-                "reference": "f7586dda75eb7c1d07544b8f0acc3c9c3f5094a9",
+                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/f379b4c7932779de213ec6ee701be21e2d151dcb",
+                "reference": "f379b4c7932779de213ec6ee701be21e2d151dcb",
                 "shasum": ""
             },
             "require": {
@@ -5640,9 +5640,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/tleon/ps_apiresources/tree/Issue-35687-command-on-single-shops-that-expects-shopids"
+                "source": "https://github.com/jolelievre/ps_apiresources/tree/external-server-refacto"
             },
-            "time": "2024-04-02T15:29:56+00:00"
+            "time": "2024-04-09T15:56:08+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -17989,5 +17989,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
