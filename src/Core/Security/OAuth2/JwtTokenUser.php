@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Security\OAuth2\Entity;
+namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
 
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;

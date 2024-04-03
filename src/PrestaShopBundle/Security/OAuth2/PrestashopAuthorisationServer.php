@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Security\OAuth2;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\ResourceServer as LeagueResourceServer;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface;
-use PrestaShopBundle\Security\OAuth2\Entity\JwtTokenUser;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\JwtTokenUser;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 

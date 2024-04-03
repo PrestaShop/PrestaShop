@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener\API\Context;
 
 use PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder;
-use PrestaShopBundle\Security\OAuth2\Entity\JwtTokenUser;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\JwtTokenUser;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Security;
 

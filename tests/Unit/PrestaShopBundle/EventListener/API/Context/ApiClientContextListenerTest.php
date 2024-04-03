@@ -30,11 +30,11 @@ namespace Tests\Unit\PrestaShopBundle\EventListener\API\Context;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\JwtTokenUser;
 use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use PrestaShopBundle\EventListener\API\Context\ApiClientContextListener;
-use PrestaShopBundle\Security\OAuth2\Entity\JwtTokenUser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;

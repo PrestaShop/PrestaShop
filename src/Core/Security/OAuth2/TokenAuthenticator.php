@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
 use Doctrine\ORM\NoResultException;
 use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
-use PrestaShopBundle\Security\OAuth2\Entity\JwtTokenUser;
 use PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

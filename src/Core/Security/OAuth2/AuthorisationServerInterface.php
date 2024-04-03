@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
 
-use PrestaShopBundle\Security\OAuth2\Entity\JwtTokenUser;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
