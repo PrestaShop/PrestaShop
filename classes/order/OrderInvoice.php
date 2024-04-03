@@ -138,7 +138,15 @@ class OrderInvoiceCore extends ObjectModel
         ' . ($this->id && $this->number ? ' AND od.`id_order_invoice` = ' . (int) $this->id : '') . ' ORDER BY od.`product_name`');
     }
 
-    public static function getInvoiceByNumber($id_invoice, $id_order = false)
+    /**
+     * Returns OrderInvoice for a specific invoice number and order ID. It's highly recommended to also provide an order ID, because you may end up with a different invoice than you wanted.
+     *
+     * @param string|int $id_invoice
+     * @param int $id_order
+     * 
+     * @return OrderInvoice|false
+     */
+    public static function getInvoiceByNumber($id_invoice, $id_order = null)
     {
         if (is_numeric($id_invoice)) {
             $id_invoice = (int) $id_invoice;
