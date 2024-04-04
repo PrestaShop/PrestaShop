@@ -30,9 +30,17 @@ class OrderConfirmationPage extends FOBasePage {
 
   protected orderDetails: string;
 
-  private readonly numberOfOrderedProducts: string;
+  protected productRow: string;
 
-  protected productRow: (row: number) => string;
+  protected customizationButton: string;
+
+  protected customizationModal: string;
+
+  protected customizationModalBody: string;
+
+  protected customizationModalCloseButton: string;
+
+  protected productRowNth: (row: number) => string;
 
   protected productRowImage: (row: number) => string;
 
@@ -68,11 +76,15 @@ class OrderConfirmationPage extends FOBasePage {
     this.paymentMethodRow = `${this.orderDetailsTable} li:nth-child(2)`;
     this.paymentInformationBody = '#content-hook_payment_return';
     this.orderDetails = 'div#order-details ul';
-    this.numberOfOrderedProducts = 'div.order-confirmation__items div.item';
-    this.productRow = (row: number) => `div.order-confirmation-table div.order-line:nth-child(${row})`;
-    this.productRowImage = (row: number) => `${this.productRow(row)} span.image img`;
-    this.productRowDetails = (row: number) => `${this.productRow(row)} div.details span`;
-    this.productRowPrices = (row: number) => `${this.productRow(row)} div.qty div`;
+    this.productRow = `${this.orderConfirmationTable} div.order-line`;
+    this.customizationButton = `${this.productRow} div.customizations a`;
+    this.customizationModal = 'div[id*="product-customizations-modal"]';
+    this.customizationModalBody = `${this.customizationModal} div.modal-body`;
+    this.customizationModalCloseButton = `${this.customizationModal} div.modal-header button`;
+    this.productRowNth = (row: number) => `${this.productRow}:nth-child(${row})`;
+    this.productRowImage = (row: number) => `${this.productRowNth(row)} span.image img`;
+    this.productRowDetails = (row: number) => `${this.productRowNth(row)} div.details`;
+    this.productRowPrices = (row: number) => `${this.productRowNth(row)} div.qty div`;
   }
 
   /*
@@ -160,7 +172,7 @@ class OrderConfirmationPage extends FOBasePage {
    * @returns {Promise<string>}
    */
   async getNumberOfProducts(page: Page): Promise<number> {
-    return page.locator(this.numberOfOrderedProducts).count();
+    return page.locator(this.productRow).count();
   }
 
   /**
@@ -175,6 +187,37 @@ class OrderConfirmationPage extends FOBasePage {
       details: await this.getTextContent(page, this.productRowDetails(row)),
       prices: await this.getTextContent(page, this.productRowPrices(row)),
     };
+  }
+
+  /**
+   * Click on customized button
+   * @param page{Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnCustomizedButton(page: Page): Promise<boolean> {
+    await page.locator(this.customizationButton).first().click();
+
+    return this.elementVisible(page, this.customizationModal, 2000);
+  }
+
+  /**
+   * Get modal product customization content
+   * @param page{Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async getModalProductCustomizationContent(page: Page): Promise<string> {
+    return this.getTextContent(page, this.customizationModalBody);
+  }
+
+  /**
+   * Close modal product customization
+   * @param page{Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeModalProductCustomization(page: Page): Promise<boolean> {
+    await page.locator(this.customizationModalCloseButton).click();
+
+    return this.elementNotVisible(page, this.customizationModal, 2000);
   }
 }
 
