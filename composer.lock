@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "30e0b178cb291349e58d42b4bf438e30",
+    "content-hash": "1728f58b8070fdf93219e8469336cd3f",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5579,16 +5579,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-external-server-refacto",
+            "version": "dev-Issue-35686-make-api-based-on-grid",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "f379b4c7932779de213ec6ee701be21e2d151dcb"
+                "url": "https://github.com/tleon/ps_apiresources.git",
+                "reference": "a2720b6365b33cf953e73a09822d55126e4b66f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/f379b4c7932779de213ec6ee701be21e2d151dcb",
-                "reference": "f379b4c7932779de213ec6ee701be21e2d151dcb",
+                "url": "https://api.github.com/repos/tleon/ps_apiresources/zipball/a2720b6365b33cf953e73a09822d55126e4b66f1",
+                "reference": "a2720b6365b33cf953e73a09822d55126e4b66f1",
                 "shasum": ""
             },
             "require": {
@@ -5640,9 +5640,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/jolelievre/ps_apiresources/tree/external-server-refacto"
+                "source": "https://github.com/tleon/ps_apiresources/tree/Issue-35686-make-api-based-on-grid"
             },
-            "time": "2024-04-09T15:56:08+00:00"
+            "time": "2024-04-11T14:37:35+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -17989,5 +17989,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

@@ -33,29 +33,29 @@ use ApiPlatform\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
-use PrestaShopBundle\ApiPlatform\Metadata\DQBPaginatedList;
+use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
 use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
 
-class DQBPaginatedListTest extends TestCase
+class PaginatedListTest extends TestCase
 {
     public function testDefaultConstructor(): void
     {
         // Without any parameters
-        $operation = new DQBPaginatedList();
+        $operation = new PaginatedList();
         $this->assertEquals(QueryListProvider::class, $operation->getProvider());
-        $this->assertEquals(DQBPaginatedList::METHOD_GET, $operation->getMethod());
+        $this->assertEquals(PaginatedList::METHOD_GET, $operation->getMethod());
         $this->assertEquals([], $operation->getExtraProperties());
         $this->assertEquals(['json'], $operation->getFormats());
 
         // With positioned parameters
-        $operation = new DQBPaginatedList('/uri');
+        $operation = new PaginatedList('/uri');
         $this->assertEquals(QueryListProvider::class, $operation->getProvider());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
         $this->assertEquals(['json'], $operation->getFormats());
 
         // With named parameters
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             formats: ['json', 'html'],
             extraProperties: ['scopes' => ['test']]
         );
@@ -68,7 +68,7 @@ class DQBPaginatedListTest extends TestCase
     {
         // Filters mapping parameters in constructor
         $filtersClass = ProductFilters::class;
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             filtersClass: $filtersClass,
         );
 
@@ -76,14 +76,14 @@ class DQBPaginatedListTest extends TestCase
         $this->assertEquals($filtersClass, $operation->getFiltersClass());
 
         // Extra properties parameters in constructor
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             extraProperties: ['filtersClass' => $filtersClass],
         );
         $this->assertEquals(['filtersClass' => $filtersClass], $operation->getExtraProperties());
         $this->assertEquals($filtersClass, $operation->getFiltersClass());
 
         // Extra properties AND CQRS query mapping parameters in constructor, both values are equals no problem
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             extraProperties: ['filtersClass' => $filtersClass],
             filtersClass: $filtersClass,
         );
@@ -103,7 +103,7 @@ class DQBPaginatedListTest extends TestCase
         // When both values are specified, but they are different trigger an exception
         $caughtException = null;
         try {
-            new DQBPaginatedList(
+            new PaginatedList(
                 extraProperties: ['filtersClass' => $filtersClass],
                 filtersClass: $newMapping,
             );
@@ -120,7 +120,7 @@ class DQBPaginatedListTest extends TestCase
     {
         // Filters mapping parameters in constructor
         $filtersMapping = ['[langId]' => '[id_lang]'];
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             filtersMapping: $filtersMapping,
         );
 
@@ -128,14 +128,14 @@ class DQBPaginatedListTest extends TestCase
         $this->assertEquals($filtersMapping, $operation->getFiltersMapping());
 
         // Extra properties parameters in constructor
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             extraProperties: ['filtersMapping' => $filtersMapping],
         );
         $this->assertEquals(['filtersMapping' => $filtersMapping], $operation->getExtraProperties());
         $this->assertEquals($filtersMapping, $operation->getFiltersMapping());
 
         // Extra properties AND CQRS query mapping parameters in constructor, both values are equals no problem
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             extraProperties: ['filtersMapping' => $filtersMapping],
             filtersMapping: $filtersMapping,
         );
@@ -155,7 +155,7 @@ class DQBPaginatedListTest extends TestCase
         // When both values are specified, but they are different trigger an exception
         $caughtException = null;
         try {
-            new DQBPaginatedList(
+            new PaginatedList(
                 extraProperties: ['filtersMapping' => $filtersMapping],
                 filtersMapping: $newMapping,
             );
@@ -171,21 +171,21 @@ class DQBPaginatedListTest extends TestCase
     public function testScopes(): void
     {
         // Scopes parameters in constructor
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             scopes: ['test', 'test2']
         );
         $this->assertEquals(['scopes' => ['test', 'test2']], $operation->getExtraProperties());
         $this->assertEquals(['test', 'test2'], $operation->getScopes());
 
         // Extra properties parameters in constructor
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             extraProperties: ['scopes' => ['test']]
         );
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
         $this->assertEquals(['test'], $operation->getScopes());
 
         // Extra properties AND scopes parameters in constructor, both values get merged but remain unique
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             extraProperties: ['scopes' => ['test', 'test1']],
             scopes: ['test', 'test2'],
         );
@@ -206,7 +206,7 @@ class DQBPaginatedListTest extends TestCase
     {
         // Api resource mapping parameters in constructor
         $resourceMapping = ['[id]' => '[queryId]'];
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             ApiResourceMapping: $resourceMapping,
         );
 
@@ -214,14 +214,14 @@ class DQBPaginatedListTest extends TestCase
         $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
 
         // Extra properties parameters in constructor
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             extraProperties: ['ApiResourceMapping' => $resourceMapping],
         );
         $this->assertEquals(['ApiResourceMapping' => $resourceMapping], $operation->getExtraProperties());
         $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
 
         // Extra properties AND Api resource mapping parameters in constructor, both values are equals no problem
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             extraProperties: ['ApiResourceMapping' => $resourceMapping],
             ApiResourceMapping: $resourceMapping,
         );
@@ -241,7 +241,7 @@ class DQBPaginatedListTest extends TestCase
         // When both values are specified, but they are different trigger an exception
         $caughtException = null;
         try {
-            new DQBPaginatedList(
+            new PaginatedList(
                 extraProperties: ['ApiResourceMapping' => $resourceMapping],
                 ApiResourceMapping: $newMapping,
             );
@@ -254,57 +254,57 @@ class DQBPaginatedListTest extends TestCase
         $this->assertEquals('Specifying an extra property ApiResourceMapping and a ApiResourceMapping argument that are different is invalid', $caughtException->getMessage());
     }
 
-    public function testQueryBuilder(): void
+    public function testGridDataFactory(): void
     {
-        // QueryBuilder parameters in constructor
-        $operation = new DQBPaginatedList(
-            queryBuilder: 'prestashop.core.api.query_builder.hook'
+        // GridDataFactory parameters in constructor
+        $operation = new PaginatedList(
+            gridDataFactory: 'prestashop.core.api.query_builder.hook'
         );
-        $this->assertEquals(['queryBuilder' => 'prestashop.core.api.query_builder.hook'], $operation->getExtraProperties());
-        $this->assertEquals('prestashop.core.api.query_builder.hook', $operation->getQueryBuilder());
+        $this->assertEquals(['gridDataFactory' => 'prestashop.core.api.query_builder.hook'], $operation->getExtraProperties());
+        $this->assertEquals('prestashop.core.api.query_builder.hook', $operation->getGridDataFactory());
 
         // Extra properties parameters in constructor
-        $operation = new DQBPaginatedList(
-            extraProperties: ['queryBuilder' => 'prestashop.core.api.query_builder.hook']
+        $operation = new PaginatedList(
+            extraProperties: ['gridDataFactory' => 'prestashop.core.api.query_builder.hook']
         );
-        $this->assertEquals(['queryBuilder' => 'prestashop.core.api.query_builder.hook'], $operation->getExtraProperties());
-        $this->assertEquals('prestashop.core.api.query_builder.hook', $operation->getQueryBuilder());
+        $this->assertEquals(['gridDataFactory' => 'prestashop.core.api.query_builder.hook'], $operation->getExtraProperties());
+        $this->assertEquals('prestashop.core.api.query_builder.hook', $operation->getGridDataFactory());
 
         // Use with method, returned object is a clone All values are replaced
-        $operation2 = $operation->withQueryBuilder('prestashop.core.api.query_builder.hook2');
+        $operation2 = $operation->withGridDataFactory('prestashop.core.api.query_builder.hook2');
         $this->assertNotEquals($operation2, $operation);
-        $this->assertEquals(['queryBuilder' => 'prestashop.core.api.query_builder.hook2'], $operation2->getExtraProperties());
-        $this->assertEquals('prestashop.core.api.query_builder.hook2', $operation2->getQueryBuilder());
+        $this->assertEquals(['gridDataFactory' => 'prestashop.core.api.query_builder.hook2'], $operation2->getExtraProperties());
+        $this->assertEquals('prestashop.core.api.query_builder.hook2', $operation2->getGridDataFactory());
         // Initial operation not modified of course
-        $this->assertEquals(['queryBuilder' => 'prestashop.core.api.query_builder.hook'], $operation->getExtraProperties());
-        $this->assertEquals('prestashop.core.api.query_builder.hook', $operation->getQueryBuilder());
+        $this->assertEquals(['gridDataFactory' => 'prestashop.core.api.query_builder.hook'], $operation->getExtraProperties());
+        $this->assertEquals('prestashop.core.api.query_builder.hook', $operation->getGridDataFactory());
     }
 
     public function testMultipleArguments(): void
     {
         $resourceMapping = ['[id]' => '[queryId]'];
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             extraProperties: [
                 'scopes' => ['master_scope'],
             ],
             scopes: ['scope1', 'scope2'],
             ApiResourceMapping: $resourceMapping,
-            queryBuilder: 'prestashop.core.api.query_builder.hook',
+            gridDataFactory: 'prestashop.core.api.query_builder.hook',
         );
 
         $this->assertEquals(QueryListProvider::class, $operation->getProvider());
         $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
         $this->assertEquals(['master_scope', 'scope1', 'scope2'], $operation->getScopes());
-        $this->assertEquals('prestashop.core.api.query_builder.hook', $operation->getQueryBuilder());
+        $this->assertEquals('prestashop.core.api.query_builder.hook', $operation->getGridDataFactory());
         $this->assertEquals([
             'scopes' => ['master_scope', 'scope1', 'scope2'],
             'ApiResourceMapping' => $resourceMapping,
-            'queryBuilder' => 'prestashop.core.api.query_builder.hook',
+            'gridDataFactory' => 'prestashop.core.api.query_builder.hook',
         ], $operation->getExtraProperties());
 
         // Using with clones the object, only one extra parameter is modified
         $operation2 = $operation->withScopes(['scope3']);
-        $operation3 = $operation2->withQueryBuilder('prestashop.core.api.query_builder.hook2');
+        $operation3 = $operation2->withGridDataFactory('prestashop.core.api.query_builder.hook2');
         $this->assertNotEquals($operation2, $operation);
         $this->assertNotEquals($operation2, $operation3);
         $this->assertNotEquals($operation3, $operation);
@@ -312,23 +312,23 @@ class DQBPaginatedListTest extends TestCase
         // Check first clone operation2
         $this->assertEquals(QueryListProvider::class, $operation2->getProvider());
         $this->assertEquals($resourceMapping, $operation2->getApiResourceMapping());
-        $this->assertEquals('prestashop.core.api.query_builder.hook', $operation2->getQueryBuilder());
+        $this->assertEquals('prestashop.core.api.query_builder.hook', $operation2->getGridDataFactory());
         $this->assertEquals(['scope3'], $operation2->getScopes());
         $this->assertEquals([
             'scopes' => ['scope3'],
             'ApiResourceMapping' => $resourceMapping,
-            'queryBuilder' => 'prestashop.core.api.query_builder.hook',
+            'gridDataFactory' => 'prestashop.core.api.query_builder.hook',
         ], $operation2->getExtraProperties());
 
         // Check second clone operation3
         $this->assertEquals(QueryListProvider::class, $operation3->getProvider());
         $this->assertEquals($resourceMapping, $operation3->getApiResourceMapping());
-        $this->assertEquals('prestashop.core.api.query_builder.hook2', $operation3->getQueryBuilder());
+        $this->assertEquals('prestashop.core.api.query_builder.hook2', $operation3->getGridDataFactory());
         $this->assertEquals(['scope3'], $operation3->getScopes());
         $this->assertEquals([
             'scopes' => ['scope3'],
             'ApiResourceMapping' => $resourceMapping,
-            'queryBuilder' => 'prestashop.core.api.query_builder.hook2',
+            'gridDataFactory' => 'prestashop.core.api.query_builder.hook2',
         ], $operation3->getExtraProperties());
 
         // The original object has not been modified
@@ -338,33 +338,33 @@ class DQBPaginatedListTest extends TestCase
         $this->assertEquals([
             'scopes' => ['master_scope', 'scope1', 'scope2'],
             'ApiResourceMapping' => $resourceMapping,
-            'queryBuilder' => 'prestashop.core.api.query_builder.hook',
+            'gridDataFactory' => 'prestashop.core.api.query_builder.hook',
         ], $operation->getExtraProperties());
     }
 
     public function testExperimentalOperation(): void
     {
         // Default value is false (no extra property added)
-        $operation = new DQBPaginatedList();
+        $operation = new PaginatedList();
         $this->assertEquals([], $operation->getExtraProperties());
         $this->assertEquals(false, $operation->getExperimentalOperation());
 
         // Scopes parameters in constructor
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             experimentalOperation: true,
         );
         $this->assertEquals(['experimentalOperation' => true], $operation->getExtraProperties());
         $this->assertEquals(true, $operation->getExperimentalOperation());
 
         // Extra properties parameters in constructor
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             extraProperties: ['experimentalOperation' => false]
         );
         $this->assertEquals(['experimentalOperation' => false], $operation->getExtraProperties());
         $this->assertEquals(false, $operation->getExperimentalOperation());
 
         // Extra properties AND scopes parameters in constructor, both values get merged but remain unique
-        $operation = new DQBPaginatedList(
+        $operation = new PaginatedList(
             extraProperties: ['experimentalOperation' => true],
             experimentalOperation: true,
         );
@@ -383,7 +383,7 @@ class DQBPaginatedListTest extends TestCase
         // When both values are specified, but they are different trigger an exception
         $caughtException = null;
         try {
-            new DQBPaginatedList(
+            new PaginatedList(
                 extraProperties: ['experimentalOperation' => true],
                 experimentalOperation: false,
             );
