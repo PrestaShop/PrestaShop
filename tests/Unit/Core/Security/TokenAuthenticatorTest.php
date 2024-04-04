@@ -35,6 +35,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -44,26 +45,23 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class TokenAuthenticatorTest extends TestCase
 {
     protected $tokenAuthenticator;
-    protected $request;
 
     public function setUp(): void
     {
-        $authorizationServer = $this->createMock(AuthorisationServerInterface::class);
         $translator = $this->createMock(TranslatorInterface::class);
         $translator->method('trans')->willReturnArgument(0);
-        $repository = $this->createMock(ApiClientRepository::class);
         $this->tokenAuthenticator = new TokenAuthenticator(
-            [$authorizationServer],
+            [$this->createMock(AuthorisationServerInterface::class)],
             $translator,
-            $repository,
+            $this->createMock(ApiClientRepository::class),
+            $this->createMock(LoggerInterface::class),
         );
-        $this->request = Request::create('/');
         parent::setUp();
     }
 
     public function testOnAuthenticationFailure(): void
     {
-        $response = $this->tokenAuthenticator->onAuthenticationFailure($this->request, new AuthenticationException());
+        $response = $this->tokenAuthenticator->onAuthenticationFailure(Request::create('/'), new AuthenticationException());
         $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
         $this->assertTrue($response->headers->has('WWW-Authenticate'));
         $this->assertSame('Bearer', $response->headers->get('WWW-Authenticate'));
@@ -71,7 +69,7 @@ class TokenAuthenticatorTest extends TestCase
 
     public function testSupports(): void
     {
-        $this->assertTrue($this->tokenAuthenticator->supports($this->request));
+        $this->assertTrue($this->tokenAuthenticator->supports(Request::create('/')));
     }
 
     private function buildTestToken(): string
@@ -95,18 +93,19 @@ class TokenAuthenticatorTest extends TestCase
 
     public function testAuthenticate(): void
     {
+        $request = Request::create('/');
         $this->expectException(CustomUserMessageAuthenticationException::class);
         $this->expectExceptionMessage('No Authorization header provided');
-        $this->tokenAuthenticator->authenticate($this->request);
+        $this->tokenAuthenticator->authenticate($request);
 
         $this->expectException(CustomUserMessageAuthenticationException::class);
         $this->expectExceptionMessage('Bearer token missing');
-        $this->request->headers->add(['Authorization' => 'toto']);
-        $this->tokenAuthenticator->authenticate($this->request);
+        $request->headers->add(['Authorization' => 'toto']);
+        $this->tokenAuthenticator->authenticate($request);
 
-        $this->request->headers->add(['Authorization' => 'Bearer ' . $this->buildTestToken()]);
+        $request->headers->add(['Authorization' => 'Bearer ' . $this->buildTestToken()]);
         $this->expectException(CustomUserMessageAuthenticationException::class);
         $this->expectExceptionMessage('Invalid credentials');
-        $this->tokenAuthenticator->authenticate($this->request);
+        $this->tokenAuthenticator->authenticate($request);
     }
 }

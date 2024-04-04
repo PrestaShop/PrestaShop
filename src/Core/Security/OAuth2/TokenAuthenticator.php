@@ -32,6 +32,7 @@ use Doctrine\ORM\NoResultException;
 use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -57,6 +58,7 @@ class TokenAuthenticator extends AbstractAuthenticator
         private readonly iterable $authorizationServers,
         private readonly TranslatorInterface $translator,
         private readonly ApiClientRepository $apiClientRepository,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -87,30 +89,35 @@ class TokenAuthenticator extends AbstractAuthenticator
     {
         $authorizationServer = $this->getAuthorizationServer($request);
 
-        // No authorization server found, return a hint in the exception to hel debug a little
+        // No authorization server found, return a hint in the exception to help debug a little
         if (null === $authorizationServer) {
-            // These tso hints are probably not adapted for all the possible authorization servers, but probably most
+            // These two hints are probably not adapted for all the possible authorization servers, but probably most
             // of them, and at the very least they are true for the internal PrestashopAuthorizationServer
             $authorization = $request->headers->get('Authorization') ?? null;
             if (null === $authorization) {
+                $this->logger->error('TokenAuthenticator: No Authorization header provided');
                 throw new CustomUserMessageAuthenticationException(json_encode('No Authorization header provided'));
             }
             if (!str_starts_with($authorization, 'Bearer ')) {
+                $this->logger->error('TokenAuthenticator: Bearer token missing');
                 throw new CustomUserMessageAuthenticationException(json_encode('Bearer token missing'));
             }
 
             // Default hint, simply could not find a matching authorization server
+            $this->logger->error('TokenAuthenticator: No authorization server matching your credentials');
             throw new CustomUserMessageAuthenticationException(json_encode('No authorization server matching your credentials'));
         }
 
         $jwtTokenUser = $authorizationServer->getJwtTokenUser($request);
         if (null === $jwtTokenUser) {
+            $this->logger->error('TokenAuthenticator: Invalid credentials');
             throw new CustomUserMessageAuthenticationException(json_encode('Invalid credentials'));
         }
 
         // Specific check for external authorization server (PrestashopAuthorisationServer is the only internal implementation)
         if (!$authorizationServer instanceof PrestashopAuthorisationServer) {
             if (empty($jwtTokenUser->getExternalIssuer())) {
+                $this->logger->error('TokenAuthenticator: No external issuer specified');
                 throw new CustomUserMessageAuthenticationException(json_encode('No external issuer specified'));
             }
             $this->autoSaveApiClient($jwtTokenUser);
@@ -148,7 +155,9 @@ class TokenAuthenticator extends AbstractAuthenticator
     private function getAuthorizationServer(Request $request): ?AuthorisationServerInterface
     {
         foreach ($this->authorizationServers as $authorizationServer) {
-            if ($authorizationServer->isTokenValid($request)) {
+            $isTokenValid = $authorizationServer->isTokenValid($request);
+            $this->logger->debug('TokenAuthenticator check token via ' . get_class($authorizationServer) . ' => ' . ($isTokenValid ? 'valid token' : 'invalid token'));
+            if ($isTokenValid) {
                 return $authorizationServer;
             }
         }
