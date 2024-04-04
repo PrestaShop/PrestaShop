@@ -386,7 +386,7 @@ export default class CommonPage {
    * @param force {boolean} Forcing the value of the select
    * @returns {Promise<void>}
    */
-  async selectByValue(page: Frame | Page, selector: string, valueToSelect: number | string, force: boolean = false): Promise<void> {
+  async selectByValue(page: Frame | Page, selector: string, valueToSelect: number|string, force: boolean = false): Promise<void> {
     await page.locator(selector).selectOption({value: valueToSelect.toString()}, {force});
   }
 
