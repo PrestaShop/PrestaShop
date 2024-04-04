@@ -1198,7 +1198,11 @@ class Install extends AbstractInstall
         $theme_manager = $builder->build();
 
         if (!($theme_manager->install($themeName) && $theme_manager->enable($themeName))) {
-            $this->getLogger()->log('Could not install theme');
+            $this->getLogger()->logError('Could not install theme');
+            $errors = $theme_manager->getErrors($themeName);
+            foreach ($errors as $error) {
+                $this->getLogger()->logError($error);
+            }
 
             return false;
         }

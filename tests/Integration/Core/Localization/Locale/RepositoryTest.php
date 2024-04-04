@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Resources\Resetter\LocalizationPackResetter;
-use Tests\Resources\ResourceResetter;
 
 class RepositoryTest extends KernelTestCase
 {
@@ -67,7 +66,6 @@ class RepositoryTest extends KernelTestCase
     {
         parent::tearDownAfterClass();
         LocalizationPackResetter::resetLocalizationPacks();
-        (new ResourceResetter())->resetTestModules();
     }
 
     protected function setUp(): void
