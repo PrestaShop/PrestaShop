@@ -76,21 +76,21 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
 
         $addAddressCommand = new AddCustomerAddressCommand(
             $customerId,
-            $data['alias'],
-            $data['first_name'],
-            $data['last_name'],
-            $data['address1'],
-            $data['city'],
-            (int) $data['id_country'],
-            $data['postcode'],
-            $data['dni'],
-            $data['company'],
-            $data['vat_number'],
-            $data['address2'],
-            (int) $data['id_state'],
-            $data['phone'],
+            $data['alias'] ?? '',
+            $data['first_name'] ?? '',
+            $data['last_name'] ?? '',
+            $data['address1'] ?? '',
+            $data['city'] ?? '',
+            (int) $data['id_country'] ?? 0,
+            $data['postcode'] ?? '',
+            $data['dni'] ?? '',
+            $data['company'] ?? '',
+            $data['vat_number'] ?? '',
+            $data['address2'] ?? '',
+            (int) $data['id_state'] ?? 0,
+            $data['phone'] ?? null,
             $data['phone_mobile'] ?? null,
-            $data['other']
+            $data['other'] ?? ''
         );
 
         /** @var AddressId $addressId */
