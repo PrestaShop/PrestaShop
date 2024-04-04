@@ -74,6 +74,11 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
             throw new InvalidArgumentException('Max must be int. Input was: ' . \gettype($constraint->max));
         }
 
+        // If the provided value is not a string, nothing to validate here
+        if (!is_string($value)) {
+            return;
+        }
+
         $replaceArray = [
             "\n",
             "\r",
