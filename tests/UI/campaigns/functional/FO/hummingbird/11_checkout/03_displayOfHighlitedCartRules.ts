@@ -115,7 +115,7 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
     });
 
     it('should check the displayed promo code', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPromoCodeBlock2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPromoCodeBlock', baseContext);
 
       const promoCode = await cartPage.getHighlightPromoCode(page);
       expect(promoCode).to.equal(`${cartRuleWithCodeData.code} - ${cartRuleWithCodeData.name}`);
