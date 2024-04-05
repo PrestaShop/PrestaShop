@@ -448,11 +448,13 @@ class CartPage extends FOBasePage {
    * Remove voucher
    * @param page {Page} Browser tab
    * @param line {number} Cart summary line
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
-  async removeVoucher(page: Page, line: number = 1): Promise<void> {
+  async removeVoucher(page: Page, line: number = 1): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.promoCodeRemoveIcon(line));
     await this.waitForHiddenSelector(page, this.promoCodeRemoveIcon(line));
+
+    return this.elementNotVisible(page, this.promoCodeRemoveIcon(line), 1000);
   }
 }
 
