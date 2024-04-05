@@ -225,7 +225,6 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderDetails', baseContext);
 
       const orderDetails = await orderConfirmationPage.getOrderDetails(page);
-      console.log(orderDetails);
       expect(orderDetails).to.equal(`Order reference: ${orderReference} Payment method: `
         + `${dataPaymentMethods.wirePayment.displayName} Shipping method: `
         + `${Carriers.myCarrier.name} ${Carriers.myCarrier.delay}`);
