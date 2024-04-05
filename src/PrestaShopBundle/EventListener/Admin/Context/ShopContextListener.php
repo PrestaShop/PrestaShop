@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
+use PrestaShopBundle\Routing\LegacyRouterChecker;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -44,6 +45,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Routing\Exception\NoConfigurationException;
 use Symfony\Component\Routing\RouterInterface;
+use PrestaShopBundle\Routing\LegacyRouterChecker;
 
 /**
  * Listener dedicated to set up Shop context for the Back-Office/Admin application.
@@ -112,6 +114,12 @@ class ShopContextListener
         $shopConstraint = $this->verifyRouteAttribute($request);
 
         if ($shopConstraint) {
+            return $shopConstraint;
+        }
+
+        $isAllShopContext = $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_IS_ALL_SHOP_CONTEXT);
+
+        if ($isAllShopContext) {
             return $shopConstraint;
         }
 

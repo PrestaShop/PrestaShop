@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Routing;
 
 use Dispatcher;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -48,6 +49,7 @@ class LegacyRouterChecker
     public const LEGACY_CONTROLLER_INSTANCE_ATTRIBUTE = '_legacy_controller_instance_class';
     public const LEGACY_CONTROLLER_ANONYMOUS_ATTRIBUTE = '_legacy_controller_anonymous_class';
     public const LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE = '_legacy_controller_is_module';
+    public const LEGACY_CONTROLLER_IS_ALL_SHOP_CONTEXT = '_legacy_controller_is_all_shop_context';
 
     public function __construct(
         protected readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
@@ -124,6 +126,7 @@ class LegacyRouterChecker
 
         $request->attributes->set(self::LEGACY_CONTROLLER_INSTANCE_ATTRIBUTE, $adminController);
         $request->attributes->set(self::LEGACY_CONTROLLER_ANONYMOUS_ATTRIBUTE, $adminController->isAnonymousAllowed());
+        $request->attributes->set(self::LEGACY_CONTROLLER_IS_ALL_SHOP_CONTEXT, $adminController->multishop_context === ShopConstraint::ALL_SHOPS);
         $request->attributes->set(self::LEGACY_CONTROLLER_CLASS_ATTRIBUTE, $controllerClass);
         $request->attributes->set(self::LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE, $isModule);
 
