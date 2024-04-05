@@ -33,10 +33,17 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
+use PrestaShopBundle\Controller\Attribute\AllShopContext;
+use ReflectionClass;
+use ReflectionException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\Routing\Exception\NoConfigurationException;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Listener dedicated to set up Shop context for the Back-Office/Admin application.
@@ -49,15 +56,19 @@ class ShopContextListener
         private readonly ShopConfigurationInterface $configuration,
         private readonly LegacyContext $legacyContext,
         private readonly MultistoreFeature $multistoreFeature,
+        private readonly RouterInterface $router,
     ) {
     }
 
+    /**
+     * @throws ReflectionException
+     * @throws ShopException
+     */
     public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
         }
-
         $psSslEnabled = (bool) $this->configuration->get('PS_SSL_ENABLED', null, ShopConstraint::allShops());
 
         $this->shopContextBuilder->setSecureMode($psSslEnabled && $event->getRequest()->isSecure());
@@ -72,7 +83,7 @@ class ShopContextListener
         if (!$this->multistoreFeature->isUsed()) {
             $shopConstraint = ShopConstraint::shop($this->getConfiguredDefaultShopId());
         } else {
-            $shopConstraint = $this->getMultiShopConstraint();
+            $shopConstraint = $this->getMultiShopConstraint($event->getRequest());
         }
         $this->shopContextBuilder->setShopConstraint($shopConstraint);
 
@@ -92,8 +103,18 @@ class ShopContextListener
         return (int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops());
     }
 
-    private function getMultiShopConstraint(): ShopConstraint
+    /**
+     * @throws ShopException
+     * @throws ReflectionException
+     */
+    private function getMultiShopConstraint(Request $request): ShopConstraint
     {
+        $shopConstraint = $this->verifyRouteAttribute($request);
+
+        if ($shopConstraint) {
+            return $shopConstraint;
+        }
+
         $shopConstraint = ShopConstraint::allShops();
         $cookieShopConstraint = $this->getShopConstraintFromCookie();
         if ($cookieShopConstraint) {
@@ -182,5 +203,30 @@ class ShopContextListener
             $requestEvent->getRequest()->getUri(),
             ['setShopContext', 'conf']
         ));
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    private function verifyRouteAttribute(Request $request): ?ShopConstraint
+    {
+        try {
+            $routeInfo = $this->router->match($request->getPathInfo());
+            $controller = $routeInfo['_controller'];
+            [$className, $methodName] = explode('::', $controller);
+
+            $reflectionClass = new ReflectionClass($className);
+            $classAttributes = $reflectionClass->getAttributes(AllShopContext::class);
+            $methodAttributes = $reflectionClass->getMethod($methodName)->getAttributes(AllShopContext::class);
+
+            $attributes = array_merge($classAttributes, $methodAttributes);
+            if (!empty($attributes)) {
+                return ShopConstraint::allShops();
+            } else {
+                return null;
+            }
+        } catch (NoConfigurationException) {
+            return null;
+        }
     }
 }

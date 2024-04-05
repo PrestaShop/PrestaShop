@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Session\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Session\EmployeeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,6 +57,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Class SecurityController is responsible for displaying the
  * "Configure > Advanced parameters > Security" page.
  */
+#[AllShopContext]
 class SecurityController extends FrameworkBundleAdminController
 {
     /**

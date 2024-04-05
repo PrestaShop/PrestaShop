@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinition
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnStatesFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderStatesFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,6 +55,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Controller responsible of "Configure > Shop Parameters > Order states Settings" page.
  */
+#[AllShopContext]
 class OrderStateController extends FrameworkBundleAdminController
 {
     /**

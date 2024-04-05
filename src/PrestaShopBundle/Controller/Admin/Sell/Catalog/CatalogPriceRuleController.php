@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefin
 use PrestaShop\PrestaShop\Core\Search\Filters\CatalogPriceRuleFilters;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
@@ -55,6 +56,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Responsible for Sell > Catalog > Discounts > Catalog Price Rules page
  */
+#[AllShopContext]
 class CatalogPriceRuleController extends FrameworkBundleAdminController
 {
     private const UNSPECIFIED_VALUE_FORMAT = '--';

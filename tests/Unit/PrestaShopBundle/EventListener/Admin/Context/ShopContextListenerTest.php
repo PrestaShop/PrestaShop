@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\EventListener\Admin\Context\ShopContextListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\NoConfigurationException;
+use Symfony\Component\Routing\RouterInterface;
 use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class ShopContextListenerTest extends ContextEventListenerTestCase
@@ -58,7 +60,8 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             $this->mockEmployeeContext(),
             $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
             $this->mockLegacyContext(['shopContext' => '']),
-            $this->mockMultistoreFeature(false)
+            $this->mockMultistoreFeature(false),
+            $this->mockRouter()
         );
         $listener->onKernelRequest($event);
 
@@ -90,7 +93,8 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             $this->mockEmployeeContext($employeeData),
             $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
             $this->mockLegacyContext(['shopContext' => $cookieValue]),
-            $this->mockMultistoreFeature(true)
+            $this->mockMultistoreFeature(true),
+            $this->mockRouter()
         );
         $listener->onKernelRequest($event);
 
@@ -164,7 +168,8 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             $this->mockEmployeeContext(),
             $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
             $mockContext,
-            $this->mockMultistoreFeature(true)
+            $this->mockMultistoreFeature(true),
+            $this->mockRouter()
         );
 
         // Check that initially the cookie has a null value
@@ -257,6 +262,17 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             false,
             '',
         ];
+    }
+
+    private function mockRouter(): RouterInterface|MockObject
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->method('match')
+            ->willThrowException(new NoConfigurationException())
+        ;
+
+        return $router;
     }
 
     private function mockMultistoreFeature(bool $multiShopEnabled): MultistoreFeature|MockObject

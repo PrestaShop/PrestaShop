@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermis
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +43,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Allows permissions configuration for employee profiles in "Configure > Advanced Parameters > Team > Permissions"
  */
+#[AllShopContext]
 class PermissionController extends FrameworkBundleAdminController
 {
     /**
