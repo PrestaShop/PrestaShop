@@ -198,13 +198,15 @@ export default class CommonPage {
    * @param selector {string} String to locate the element for the click
    * @param newPageSelector {string} String to locate the element on the opened page (default to FO logo)
    * @param state {'load'|'domcontentloaded'|'networkidle'} The event to wait after click
+   * @param waitForVisible {boolean} true if we need to wait for visible selector
    * @return {Promise<Page>} Opened tab after the click
    */
   async openLinkWithTargetBlank(
     page: Page,
     selector: string,
     newPageSelector: string = 'body .logo',
-    state: 'load' | 'domcontentloaded' | 'networkidle' = 'networkidle'): Promise<Page> {
+    state: 'load' | 'domcontentloaded' | 'networkidle' = 'networkidle',
+    waitForVisible: boolean = true): Promise<Page> {
     const [newPage] = await Promise.all([
       page.waitForEvent('popup'),
       page.locator(selector).click(),
@@ -212,7 +214,9 @@ export default class CommonPage {
 
     await newPage.waitForLoadState(state);
 
-    await this.waitForVisibleSelector(newPage, newPageSelector);
+    if (waitForVisible) {
+      await this.waitForVisibleSelector(newPage, newPageSelector);
+    }
     return newPage;
   }
 
@@ -568,7 +572,7 @@ export default class CommonPage {
    * @returns {Promise<number>}
    */
   async getPriceFromText(
-    page: Frame|Page,
+    page: Frame | Page,
     selector: string,
     timeout: number = 0,
     waitForSelector: boolean = true,

@@ -678,6 +678,35 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Click social sharing link
+   * @param page {Page} Browser tab
+   * @param socialSharing {string} Social network's name to get link from
+   * @returns {Promise<Page>}
+   */
+  async clickOnSocialSharingLink(page: Page, socialSharing: string): Promise<Page> {
+    let selector;
+
+    switch (socialSharing) {
+      case 'Facebook':
+        selector = this.facebookSocialSharing;
+        break;
+
+      case 'Twitter':
+        selector = this.twitterSocialSharing;
+        break;
+
+      case 'Pinterest':
+        selector = this.pinterestSocialSharing;
+        break;
+
+      default:
+        throw new Error(`${socialSharing} was not found`);
+    }
+
+    return this.openLinkWithTargetBlank(page, selector, 'body', 'networkidle', false);
+  }
+
+  /**
    * Set quantity
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity to set
