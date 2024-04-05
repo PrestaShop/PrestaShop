@@ -563,7 +563,7 @@ class CategoryPage extends FOBasePage {
    * @return {Promise<void>}
    */
   async filterByPrice(page: Page, minPrice: number, maxPrice: number, filterFrom: number, filterTo: number): Promise<void> {
-    const sliderTrack = await page.locator(this.searchFiltersSlider);
+    const sliderTrack = page.locator(this.searchFiltersSlider);
     const sliderOffsetWidth = await sliderTrack.evaluate((el) => el.getBoundingClientRect().width);
     const pxOneEuro = sliderOffsetWidth / (maxPrice - minPrice);
 

@@ -1,4 +1,4 @@
-import type {CategoryCreator} from '@data/types/category';
+import type {CategoryCreator, CategoryRedirection} from '@data/types/category';
 
 import {
   // Import data
@@ -19,7 +19,7 @@ export default class CategoryData {
 
   public readonly name: string;
 
-  public readonly displayed: boolean;
+  public displayed: boolean;
 
   public readonly description: string;
 
@@ -36,6 +36,10 @@ export default class CategoryData {
   public readonly children: CategoryData[];
 
   public readonly products: string[];
+
+  public redirectionWhenNotDisplayed: CategoryRedirection;
+
+  public redirectedCategory: CategoryData | null;
 
   /**
    * Constructor for class CategoryData
@@ -78,5 +82,29 @@ export default class CategoryData {
 
     /** @type {string[]} Products of the category */
     this.products = categoryToCreate.products || [];
+
+    /** @type {CategoryRedirection} Redirection when not displayed */
+    this.redirectionWhenNotDisplayed = categoryToCreate.redirectionWhenNotDisplayed || '301';
+
+    /** @type {CategoryData|null} Which category should the page redirect? */
+    this.redirectedCategory = categoryToCreate.redirectedCategory || null;
+  }
+
+  /**
+   * @param {CategoryRedirection} redirection
+   */
+  setRedirectionWhenNotDisplayed(redirection: CategoryRedirection): this {
+    this.redirectionWhenNotDisplayed = redirection;
+
+    return this;
+  }
+
+  /**
+   * @param {bool} displayed
+   */
+  setDisplayed(displayed: boolean): this {
+    this.displayed = displayed;
+
+    return this;
   }
 }

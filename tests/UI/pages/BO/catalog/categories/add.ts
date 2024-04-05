@@ -23,6 +23,12 @@ class AddCategory extends BOBasePage {
 
   private readonly metaDescriptionTextarea: string;
 
+  private readonly linkRewriteInput: string;
+
+  private readonly redirectionWhenNotDisplayedSelect: string;
+
+  private readonly redirectedCategory: string;
+
   private readonly selectAllGroupAccessCheckbox: string;
 
   private readonly saveCategoryButton: string;
@@ -53,6 +59,9 @@ class AddCategory extends BOBasePage {
     this.categoryThumbnailImage = '#category_thumbnail_image';
     this.metaTitleInput = '#category_meta_title_1';
     this.metaDescriptionTextarea = '#category_meta_description_1';
+    this.linkRewriteInput = '#category_link_rewrite_1';
+    this.redirectionWhenNotDisplayedSelect = '#category_redirect_option_type';
+    this.redirectedCategory = '#category_redirect_option_target_search_input';
     this.selectAllGroupAccessCheckbox = '.js-choice-table-select-all';
     this.saveCategoryButton = '#save-button';
 
@@ -79,7 +88,7 @@ class AddCategory extends BOBasePage {
       const parentElement = await this.getParentElement(page, this.selectAllGroupAccessCheckbox);
 
       if (parentElement instanceof HTMLElement) {
-        await parentElement.click();
+        parentElement.click();
       }
     }
   }
@@ -102,6 +111,12 @@ class AddCategory extends BOBasePage {
     }
     await this.setValue(page, this.metaTitleInput, categoryData.metaTitle);
     await this.setValue(page, this.metaDescriptionTextarea, categoryData.metaDescription);
+    await page.locator(this.redirectionWhenNotDisplayedSelect).selectOption({
+      value: categoryData.redirectionWhenNotDisplayed,
+    });
+    if (categoryData.redirectedCategory && ['301', '302'].includes(categoryData.redirectionWhenNotDisplayed)) {
+      await this.searchOptionTarget(page, categoryData.redirectedCategory.name);
+    }
     await this.selectAllGroups(page);
 
     // Save Category
@@ -126,6 +141,33 @@ class AddCategory extends BOBasePage {
     // Save Category
     await this.clickAndWaitForURL(page, this.saveCategoryButton);
     return this.getPageTitle(page);
+  }
+
+  /**
+   * Search option target
+   * @param page {Page} Browser tab
+   * @param target {string} Target to search
+   * @returns {Promise<void>}
+   */
+  private async searchOptionTarget(page: Page, target: string): Promise<void> {
+    await page.locator(this.redirectedCategory).fill(target);
+    await page.waitForTimeout(1000);
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+  }
+
+  /**
+   * Return input value
+   * @param page {Page}
+   * @param inputName {string}
+   */
+  async getValue(page: Page, inputName: string): Promise<string> {
+    switch (inputName) {
+      case 'friendlyUrl':
+        return page.inputValue(this.linkRewriteInput);
+      default:
+        throw new Error(`Input ${inputName} was not found`);
+    }
   }
 }
 
