@@ -26,6 +26,12 @@ class OrderConfirmationPage extends FOBasePage {
 
   private readonly orderConfirmationTable: string;
 
+  protected subTotalRow: string;
+
+  protected shippingRow: string;
+
+  protected totalRow: string;
+
   protected paymentInformationBody: string;
 
   protected orderDetails: string;
@@ -54,6 +60,8 @@ class OrderConfirmationPage extends FOBasePage {
 
   protected paymentMethodRow: string;
 
+  protected shippingMethodRow: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on order confirmation page
@@ -71,9 +79,13 @@ class OrderConfirmationPage extends FOBasePage {
     this.orderReferenceValue = '#order-reference-value';
     this.customerSupportLink = '#content-hook_payment_return a';
     this.orderConfirmationTable = 'div.order-confirmation-table';
+    this.subTotalRow = `${this.orderConfirmationTable} table tr:nth-child(1) td:nth-child(2)`;
+    this.shippingRow = `${this.orderConfirmationTable} table tr:nth-child(2) td:nth-child(2)`;
+    this.totalRow = `${this.orderConfirmationTable} table tr:nth-child(3) td:nth-child(2)`;
     this.giftWrappingRow = `${this.orderConfirmationTable} tr:nth-child(3)`;
     this.orderDetailsTable = 'div#order-details';
     this.paymentMethodRow = `${this.orderDetailsTable} li:nth-child(2)`;
+    this.shippingMethodRow = `${this.orderDetailsTable} li:nth-child(3)`;
     this.paymentInformationBody = '#content-hook_payment_return';
     this.orderDetails = 'div#order-details ul';
     this.productRow = `${this.orderConfirmationTable} div.order-line`;
@@ -135,6 +147,17 @@ class OrderConfirmationPage extends FOBasePage {
    */
   async getPaymentMethod(page: Page): Promise<string> {
     const text = await this.getTextContent(page, this.paymentMethodRow);
+
+    return (text.split(':'))[1].trim();
+  }
+
+  /**
+   * Return the shipping method
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getShippingMethod(page: Page): Promise<string> {
+    const text = await this.getTextContent(page, this.shippingMethodRow);
 
     return (text.split(':'))[1].trim();
   }
@@ -218,6 +241,33 @@ class OrderConfirmationPage extends FOBasePage {
     await page.locator(this.customizationModalCloseButton).click();
 
     return this.elementNotVisible(page, this.customizationModal, 2000);
+  }
+
+  /**
+   * Return the order sub total
+   * @param page{Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getOrderSubTotal(page: Page): Promise<string> {
+    return this.getTextContent(page, this.subTotalRow);
+  }
+
+  /**
+   * Return the order shipping total
+   * @param page{Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getOrderShippingTotal(page: Page): Promise<string> {
+    return this.getTextContent(page, this.shippingRow);
+  }
+
+  /**
+   * Return the order total
+   * @param page{Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getOrderTotal(page: Page): Promise<string> {
+    return this.getTextContent(page, this.totalRow);
   }
 }
 

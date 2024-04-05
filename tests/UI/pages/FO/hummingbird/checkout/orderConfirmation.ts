@@ -20,7 +20,11 @@ class OrderConfirmation extends OrderConfirmationPage {
     this.orderDetailsTable = 'div.order-confirmation__details ul.order-details';
     this.orderReferenceValue = `${this.orderDetailsTable} li:nth-child(1)`;
     this.customerSupportLink = 'div.card .card-footer a.alert-link';
+    this.subTotalRow = 'div.order-confirmation__subtotals div:nth-child(1) div.text-end';
+    this.shippingRow = 'div.order-confirmation__subtotals div:nth-child(2) div.text-end';
+    this.totalRow = 'div.order-confirmation__totals div:nth-child(1) div.text-end';
     this.paymentMethodRow = `${this.orderDetailsTable} li:nth-child(2)`;
+    this.shippingMethodRow = `${this.orderDetailsTable} li:nth-child(3)`;
     this.paymentInformationBody = '#content-wrapper div:nth-child(2) div.card-body';
     this.orderDetails = 'div.order-confirmation__details ul.order-details';
     this.productRow = 'div.order-confirmation__items div.item';
