@@ -41,7 +41,11 @@ class Product extends FOBasePage {
 
   private readonly productDescription: string;
 
-  protected customizedTextarea: string;
+  protected customizationBlock: string;
+
+  protected customizedTextarea: (row: number) => string;
+
+  protected customizationsMessage: (row: number) => string;
 
   private readonly saveCustomizationButton: string;
 
@@ -191,8 +195,10 @@ class Product extends FOBasePage {
     this.productQuantity = '#quantity_wanted';
     this.shortDescription = '#product-description-short';
     this.productDescription = '#description';
-    this.customizedTextarea = '.product-customization-item .product-message';
+    this.customizationBlock = 'div.product-container div.product-information section.product-customization';
+    this.customizedTextarea = (row: number) => `.product-customization-item:nth-child(${row}) .product-message`;
     this.saveCustomizationButton = 'button[name=\'submitCustomizedData\']';
+    this.customizationsMessage = (row: number) => `div.product-information li:nth-child(${row}) h6`;
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.blockCartModal = '#blockcart-modal';
     this.proceedToCheckoutButton = `${this.blockCartModal} div.cart-content-btn a`;
@@ -609,6 +615,29 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Set product customizations
+   * @param page {Page} Browser tab
+   * @param customizedTexts {string[]} Texts to set in customizations input
+   * @returns {Promise<void>}
+   */
+  async setProductCustomizations(page: Page, customizedTexts: string[]): Promise<void> {
+    for (let i = 1; i <= customizedTexts.length; i++) {
+      await this.setValue(page, this.customizedTextarea(i), customizedTexts[i - 1]);
+    }
+    await this.waitForSelectorAndClick(page, this.saveCustomizationButton);
+  }
+
+  /**
+   * Get customizations messages
+   * @param page {Page} Browser tab
+   * @param customizationRow {number} Number of customizations to display
+   * @returns {Promise<string>}
+   */
+  async getCustomizationsMessages(page: Page, customizationRow: number): Promise<string> {
+    return this.getTextContent(page, this.customizationsMessage(customizationRow));
+  }
+
+  /**
    * Click on Add to cart button then on Proceed to checkout button in the modal
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity of the product that customer wants
@@ -629,8 +658,8 @@ class Product extends FOBasePage {
       await this.setValue(page, this.productQuantity, quantity);
     }
 
-    if (await this.elementVisible(page, this.customizedTextarea, 2000)) {
-      await this.setValue(page, this.customizedTextarea, customizedText);
+    if (await this.elementVisible(page, this.customizedTextarea(1), 2000)) {
+      await this.setValue(page, this.customizedTextarea(1), customizedText);
       await this.waitForSelectorAndClick(page, this.saveCustomizationButton);
     }
 
@@ -765,7 +794,7 @@ class Product extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isCustomizationBlockVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, 'div.product-container div.product-information section.product-customization', 1000);
+    return this.elementVisible(page, this.customizationBlock, 1000);
   }
 
   /**

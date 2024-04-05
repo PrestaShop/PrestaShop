@@ -369,6 +369,7 @@ class DetailsTab extends BOBasePage {
    * @returns {Promise<void>}
    */
   async addNewCustomizations(page: Page, productData: ProductData): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.detailsTabLink);
     for (let i: number = 0; i < productData.customizations.length; i++) {
       await this.waitForSelectorAndClick(page, this.addNewCustomizationButton);
 
