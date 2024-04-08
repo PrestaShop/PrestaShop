@@ -14,6 +14,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWD:-prestashop}
       MYSQL_DATABASE: ${DB_NAME:-prestashop}
     restart: unless-stopped
+    networks:
+      - prestashop-network
 
   prestashop-git:
     hostname: ${PS_HOSTNAME:-localhost}
@@ -51,8 +53,16 @@ services:
       - mysql
     volumes:
       - ./:/var/www/html:delegated
+    networks:
+      - prestashop-network
 
   maildev:
     image: 'maildev/maildev'
     ports:
       - "1080:1080"
+    networks:
+      - prestashop-network
+
+networks:
+  prestashop-network:
+    name: prestashop-network
