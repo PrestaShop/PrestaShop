@@ -51,6 +51,7 @@ class ApiClientFormDataProvider implements FormDataProviderInterface
             'enabled' => $apiAccess->isEnabled(),
             'scopes' => $apiAccess->getScopes(),
             'lifetime' => $apiAccess->getLifetime(),
+            'external_issuer' => $apiAccess->getExternalIssuer(),
         ];
     }
 

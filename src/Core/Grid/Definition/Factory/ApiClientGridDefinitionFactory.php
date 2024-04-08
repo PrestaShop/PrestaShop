@@ -93,6 +93,13 @@ final class ApiClientGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
+                (new DataColumn('external_issuer'))
+                    ->setName($this->trans('External issuer', [], 'Admin.Advparameters.Feature'))
+                    ->setOptions([
+                        'field' => 'external_issuer',
+                    ])
+            )
+            ->add(
                 (new ToggleColumn('enabled'))
                     ->setName($this->trans('Status', [], 'Admin.Global'))
                     ->setOptions([
@@ -130,7 +137,7 @@ final class ApiClientGridDefinitionFactory extends AbstractGridDefinitionFactory
                 $this->buildDeleteAction(
                     'admin_api_clients_delete',
                     'apiClientId',
-                    'id_api_client'
+                    'id_api_client',
                 )
             );
 
