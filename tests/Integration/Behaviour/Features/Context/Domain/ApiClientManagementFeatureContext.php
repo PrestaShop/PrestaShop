@@ -113,6 +113,12 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
             }
         }
 
+        if (isset($expectedData['externalIssuer'])) {
+            if ($result->getExternalIssuer() !== ($expectedData['externalIssuer'] ?: null)) {
+                $errors[] = 'externalIssuer';
+            }
+        }
+
         if (isset($expectedData['scopes'])) {
             $expectedScopes = PrimitiveUtils::castStringArrayIntoArray($expectedData['scopes']);
             if ($result->getScopes() !== $expectedScopes) {

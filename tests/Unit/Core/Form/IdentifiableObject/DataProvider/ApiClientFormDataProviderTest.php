@@ -70,7 +70,8 @@ class ApiClientFormDataProviderTest extends TestCase
                 true,
                 'short description',
                 ['api_client_read', 'hook_read'],
-                3600
+                3600,
+                null,
             ),
             [
                 'client_id' => 'client-id',

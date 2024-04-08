@@ -14,12 +14,13 @@ Feature: Api Client Management
       | description | a simple description |
       | lifetime    | 3600                 |
     Then api client "AC-1" should have the following properties:
-      | clientName  | Thomas               |
-      | clientId    | test-id              |
-      | enabled     | true                 |
-      | description | a simple description |
-      | scopes      |                      |
-      | lifetime    | 3600                 |
+      | clientName     | Thomas               |
+      | clientId       | test-id              |
+      | enabled        | true                 |
+      | description    | a simple description |
+      | externalIssuer |                      |
+      | scopes         |                      |
+      | lifetime       | 3600                 |
     When I edit api client "AC-1" with the following values:
       | clientName  | Toto                |
       | clientId    | test-id-toto        |
@@ -27,12 +28,13 @@ Feature: Api Client Management
       | description | another description |
       | lifetime    | 3000                |
     Then api client "AC-1" should have the following properties:
-      | clientName  | Toto                |
-      | clientId    | test-id-toto        |
-      | enabled     | false               |
-      | description | another description |
-      | scopes      |                     |
-      | lifetime    | 3000                |
+      | clientName     | Toto                |
+      | clientId       | test-id-toto        |
+      | enabled        | false               |
+      | description    | another description |
+      | externalIssuer |                     |
+      | scopes         |                     |
+      | lifetime       | 3000                |
     When I edit api client "AC-1" with the following values:
     # Just a quick edition to show partial update is possible
       | clientId | test-id-toto-2 |

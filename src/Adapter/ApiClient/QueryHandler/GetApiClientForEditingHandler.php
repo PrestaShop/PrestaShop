@@ -59,7 +59,8 @@ class GetApiClientForEditingHandler implements GetApiClientForEditingHandlerInte
             $apiClient->isEnabled(),
             $apiClient->getDescription(),
             $apiClient->getScopes(),
-            $apiClient->getLifetime()
+            $apiClient->getLifetime(),
+            $apiClient->getExternalIssuer(),
         );
     }
 }
