@@ -24,16 +24,6 @@ admin_attributes_search:
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
 
-admin_attributes_create:
-  path: /new
-  methods: [ GET, POST ]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeController::createAction'
-    _legacy_controller: AdminAttributesGroups
-    redirectQueryParamsToKeep:
-      - 'attributeGroupId'
-    _legacy_link: AdminAttributesGroups:addattribute_group
-
 admin_attributes_edit:
   path: /{attributeId}/edit
   methods: [ GET, POST ]

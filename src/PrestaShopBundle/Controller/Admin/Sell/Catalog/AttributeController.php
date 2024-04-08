@@ -129,10 +129,11 @@ class AttributeController extends FrameworkBundleAdminController
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.')]
-    public function createAction(Request $request, int $attributeGroupId): Response
+    public function createAction(Request $request): Response
     {
         $attributeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.attribute_form_builder');
         $attributeFormHandler = $this->get('prestashop.core.form.identifiable_object.attribute_form_handler');
+        $attributeGroupId = (int) $request->query->get('attributeGroupId');
 
         $attributeForm = $attributeFormBuilder->getForm([], ['attribute_group' => $attributeGroupId]);
         $attributeForm->handleRequest($request);

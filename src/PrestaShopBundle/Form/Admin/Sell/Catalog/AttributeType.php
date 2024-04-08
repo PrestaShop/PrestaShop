@@ -74,9 +74,15 @@ class AttributeType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $attributeGroupId = $options['attribute_group'];
-        $attributeGroup = $this->attributeGroupRepository->get(
-            new AttributeGroupId($attributeGroupId)
-        );
+
+        $hasAttributeGroupId = false;
+        if (0 < $attributeGroupId) {
+            $attributeGroup = $this->attributeGroupRepository->get(
+                new AttributeGroupId($attributeGroupId)
+            );
+            $hasAttributeGroupId = true;
+        }
+
         $builder
             ->add('attribute_group', ChoiceType::class, [
                 'label' => $this->trans('Attribute group', 'Admin.Catalog.Feature'),
@@ -85,7 +91,7 @@ class AttributeType extends TranslatorAwareType
                     new ShopId($this->shopContext->getId()),
                     new LanguageId($this->languageContext->getId())
                 ),
-                'data' => $attributeGroupId,
+                'data' => ($hasAttributeGroupId ? $attributeGroupId : ''),
             ])
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
@@ -101,14 +107,17 @@ class AttributeType extends TranslatorAwareType
                     . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
                     . ' ' . TypedRegexValidator::CATALOG_CHARS,
             ]);
-        if ($attributeGroup->group_type === AttributeGroupType::ATTRIBUTE_GROUP_TYPE_COLOR) {
-            $builder->add('color', ColorType::class, [
-                'label' => $this->trans('Color', 'Admin.Global'),
-                'required' => false,
-            ])->add('texture', FileType::class, [
-                'label' => $this->trans('Texture', 'Admin.Global'),
-                'required' => false,
-            ]);
+
+        if ($hasAttributeGroupId === true) {
+            if ($attributeGroup->group_type === AttributeGroupType::ATTRIBUTE_GROUP_TYPE_COLOR) {
+                $builder->add('color', ColorType::class, [
+                    'label' => $this->trans('Color', 'Admin.Global'),
+                    'required' => false,
+                ])->add('texture', FileType::class, [
+                    'label' => $this->trans('Texture', 'Admin.Global'),
+                    'required' => false,
+                ]);
+            }
         }
 
         if ($this->multistoreFeature->isUsed()) {
