@@ -126,7 +126,7 @@ function uninstallModule(module: FakerModule, baseContext: string = 'commonTests
     it(`should uninstall the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, module, 'uninstall');
+      const successMessage = await moduleManagerPage.setActionInModule(page, module, 'uninstall', false, true);
       expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(module.tag));
     });
   });

@@ -1,4 +1,5 @@
 import BOBasePage from '@pages/BO/BObasePage';
+import type {ModuleInfo} from '@data/types/module';
 
 import {
   // Import data
@@ -61,11 +62,13 @@ class ModuleManager extends BOBasePage {
 
   private readonly modulesListBlockTitle: string;
 
-  private readonly allModulesBlock: string;
+  private readonly moduleItem: string;
+
+  private readonly moduleItemNth: (nth: number) => string;
 
   private readonly moduleBlocks: string;
 
-  private readonly moduleBlock: (moduleTag: string) => string;
+  private readonly moduleItemName: (moduleTag: string) => string;
 
   private readonly moduleCheckboxButton: (moduleTag: string) => string;
 
@@ -157,10 +160,11 @@ class ModuleManager extends BOBasePage {
     // Modules list selectors
     this.modulesListBlock = '.module-short-list:not([style=\'display: none;\'])';
     this.modulesListBlockTitle = `${this.modulesListBlock} span.module-search-result-title`;
-    this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
+    this.moduleItem = `${this.modulesListBlock} .module-item-list`;
+    this.moduleItemNth = (nth: number) => `${this.moduleItem}:nth-child(${nth})`;
     this.moduleBlocks = 'div.module-short-list';
-    this.moduleBlock = (moduleTag: string) => `${this.allModulesBlock}[data-tech-name=${moduleTag}]`;
-    this.moduleCheckboxButton = (moduleTag: string) => `${this.moduleBlock(moduleTag)}`
+    this.moduleItemName = (moduleTag: string) => `${this.moduleItem}[data-tech-name=${moduleTag}]`;
+    this.moduleCheckboxButton = (moduleTag: string) => `${this.moduleItemName(moduleTag)}`
       + ' div.module-checkbox-bulk-list.md-checkbox label i';
     this.seeMoreButton = (blockName: string) => `#main-div div.module-short-list button.see-more[data-category=${blockName}]`;
     this.seeLessButton = (blockName: string) => `#main-div div.module-short-list button.see-less[data-category=${blockName}]`;
@@ -246,7 +250,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async isModuleVisible(page: Page, module: FakerModule): Promise<boolean> {
-    return this.elementVisible(page, this.moduleBlock(module.tag), 10000);
+    return this.elementVisible(page, this.moduleItemName(module.tag), 10000);
   }
 
   /**
@@ -256,7 +260,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<string>}
    */
   async getModuleName(page: Page, module: FakerModule): Promise<string> {
-    return this.getAttributeContent(page, `${this.moduleBlock(module.tag)} [data-original-title]`, 'data-original-title');
+    return this.getAttributeContent(page, `${this.moduleItemName(module.tag)} [data-original-title]`, 'data-original-title');
   }
 
   /**
@@ -403,7 +407,7 @@ class ModuleManager extends BOBasePage {
    */
   async getAllModulesTechNames(page: Page): Promise<(string | null)[]> {
     return page
-      .locator(this.allModulesBlock)
+      .locator(this.moduleItem)
       .evaluateAll(
         (all) => all.map((el) => el.getAttribute('data-tech-name')),
       );
@@ -549,6 +553,39 @@ class ModuleManager extends BOBasePage {
    */
   async getNumberOfModulesInBlock(page: Page, blockName: string): Promise<number> {
     return page.locator(this.moduleListBlock(blockName)).count();
+  }
+
+  /**
+   * Get number of modules
+   * @param page {Page} Browser tab
+   * @return {Promise<number>}
+   */
+  async getNumberOfModules(page: Page): Promise<number> {
+    const moduleItems = await page.locator(this.moduleItem).all();
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const moduleItem of moduleItems) {
+      console.log(await moduleItem.getAttribute('data-tech-name'));
+    }
+
+    return page.locator(this.moduleItem).count();
+  }
+
+  /**
+   * Return informations about nTh module
+   * @param page {Page} Browser tab
+   * @param nth {number} Module tag
+   * @return {Promise<ModuleInfo>}
+   */
+  async getModuleInformationNth(page: Page, nth: number): Promise<ModuleInfo> {
+    const technicalName = await this.getAttributeContent(page, this.moduleItemNth(nth), 'data-tech-name');
+
+    return {
+      moduleId: parseInt(await this.getAttributeContent(page, this.moduleItemNth(nth), 'data-id'), 10),
+      technicalName,
+      version: await this.getAttributeContent(page, this.moduleItemNth(nth), 'data-version'),
+      enabled: await this.elementNotVisible(page, this.actionModuleButton(technicalName, 'enabled'), 1000),
+    };
   }
 }
 
