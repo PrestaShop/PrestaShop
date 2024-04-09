@@ -112,7 +112,6 @@ class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
             ->addMultiShopField('[options][visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)
             ->addMultiShopField('[options][visibility][show_price]', 'setShowPrice', DataField::TYPE_BOOL)
             ->addMultiShopField('[details][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
-
         ;
 
         // based on show_condition value, the condition field can be disabled, in that case "condition" won't exist in request
