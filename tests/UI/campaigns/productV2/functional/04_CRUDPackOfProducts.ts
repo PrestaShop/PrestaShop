@@ -58,7 +58,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
   const editPackData: ProductPackOptions = {
     quantity: 100,
     minimalQuantity: 2,
-    packQuantitiesOption: 'Decrement pack only',
+    packQuantitiesOption: 'Use pack quantity',
   };
 
   // Data to edit the product price
