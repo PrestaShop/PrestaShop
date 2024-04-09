@@ -39,6 +39,7 @@ Feature: Add basic product from Back Office (BO)
       | condition           | new   |
       | show_condition      | false |
       | manufacturer        |       |
+      | date_new            | 2024-01-01 |
     And product "product1" type should be virtual
     And product "product1" localized "name" should be:
       | locale | value          |

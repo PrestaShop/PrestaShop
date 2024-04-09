@@ -34,6 +34,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | new   |
       | show_condition      | false |
       | manufacturer        |       |
+      | date_new            | 2024-01-01 |
     Then product "product1" should be disabled for shops "shop1,shop2,shop3,shop4"
     And product "product1" should not be indexed for shops "shop1,shop2,shop3,shop4"
 

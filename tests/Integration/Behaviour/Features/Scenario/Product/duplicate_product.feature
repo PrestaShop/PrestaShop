@@ -98,6 +98,7 @@ Feature: Duplicate product from Back Office (BO).
       | condition           | used         |
       | show_condition      | false        |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-01-01   |
     And product "productWithFieldsCopy" should have following details:
       | product detail | value             |
       | isbn           | 978-3-16-148410-0 |

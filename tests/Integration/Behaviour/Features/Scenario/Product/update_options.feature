@@ -23,6 +23,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | new   |
       | show_condition      | false |
       | manufacturer        |       |
+      | date_new            | 2024-01-01 |
     When I update product "product1" with following values:
       | visibility          | catalog      |
       | available_for_order | false        |
@@ -31,6 +32,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     Then product "product1" should have following options:
       | product option      | value        |
       | visibility          | catalog      |
@@ -40,6 +42,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     And product "product1" should not be indexed
 
   Scenario: I only update product availability for order, leaving other properties unchanged
@@ -52,6 +55,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     When I update product "product1" with following values:
       | available_for_order | true |
     # show_price is automatically set to true
@@ -64,6 +68,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     And product "product1" should not be indexed
 
   Scenario: I update manufacturer and check the relationship is updated correctly
@@ -76,6 +81,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     When I update product "product1" with following values:
       | manufacturer | graphicCorner |
     Then product "product1" should have following options:
@@ -87,6 +93,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used          |
       | show_condition      | true          |
       | manufacturer        | graphicCorner |
+      | date_new            | 2024-02-02   |
     When I update product "product1" with following values:
       | manufacturer |  |
     Then product "product1" should have following options:
@@ -98,6 +105,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used    |
       | show_condition      | true    |
       | manufacturer        |         |
+      | date_new            | 2024-02-02   |
     And product "product1" should not be indexed
 
   Scenario: I update product options providing invalid values
@@ -113,6 +121,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | new   |
       | show_condition      | false |
       | manufacturer        |       |
+      | date_new            | 2024-02-02   |
     When I assign non existing manufacturer to product "product2"
     Then I should get error that manufacturer does not exist
     When I update product "product2" with following values:
@@ -130,6 +139,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | new   |
       | show_condition      | false |
       | manufacturer        |       |
+      | date_new            | 2024-02-02   |
     And product "product1" should not be indexed
 
   Scenario: I update a product's options for a product that should be indexed
@@ -145,6 +155,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | new   |
       | show_condition      | false |
       | manufacturer        |       |
+      | date_new            | 2024-02-02   |
     When I update product "product1" with following values:
       | visibility          | search       |
       | available_for_order | false        |
@@ -153,6 +164,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     When I enable product "product1"
     Then product "product1" should be enabled
     And product "product1" should have following options:
@@ -164,6 +176,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     And product "product1" should be indexed
 
   Scenario: I update a product's options for an indexable product when indexation feature is disabled
@@ -179,6 +192,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | new   |
       | show_condition      | false |
       | manufacturer        |       |
+      | date_new            | 2024-02-02   |
     And search indexation feature is disabled
     When I update product "product1" with following values:
       | visibility          | search       |
@@ -188,6 +202,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     Then product "product1" should have following options:
       | product option      | value        |
       | visibility          | search       |
@@ -197,6 +212,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     And product "product1" should not be indexed
 
   Scenario: Product indexation depends on its visibility and status
@@ -209,6 +225,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     And product "product1" should be disabled
     And product "product1" should not be indexed
     When I update product "product1" with following values:
@@ -222,6 +239,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     And product "product1" should be disabled
     And product "product1" should not be indexed
     When I enable product "product1"
@@ -238,6 +256,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     And product "product1" should be enabled
     And product "product1" should not be indexed
     When I update product "product1" with following values:
@@ -251,6 +270,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     And product "product1" should be enabled
     And product "product1" should be indexed
     When I disable product "product1"
@@ -268,6 +288,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     When I update product "product1" with following values:
       | show_price | true |
     # We can show price when product is not available for order
@@ -280,6 +301,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     # Even if we try forcing the show price to false it will be true as long as product is available for order
     When I update product "product1" with following values:
       | available_for_order | true  |
@@ -293,6 +315,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     When I update product "product1" with following values:
       | show_price          | false  |
     Then product "product1" should have following options:
@@ -304,3 +327,4 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
