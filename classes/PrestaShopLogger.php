@@ -85,7 +85,7 @@ class PrestaShopLoggerCore extends ObjectModel
         'fields' => [
             'severity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
             'error_code' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
-            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true],
+            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 4194303],
             'object_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'allow_null' => true],
             'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'allow_null' => true],
