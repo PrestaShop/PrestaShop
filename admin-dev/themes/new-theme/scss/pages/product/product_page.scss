@@ -419,6 +419,7 @@ $product-page-padding-bottom: 80px !default;
       flex-direction: row;
       gap: 0.5rem;
       justify-content: space-between;
+      align-items: center;
       width: 100%;
       height: 100%;
       padding: 0 0.5rem;
@@ -478,12 +479,14 @@ $product-page-padding-bottom: 80px !default;
         #product_footer_actions_catalog {
           display: flex;
           align-items: center;
-
-          .material-icons {
-            margin-top: 0;
-          }
         }
       }
+    }
+  }
+
+  .go-to-catalog-button {
+    .material-icons {
+      margin-top: 0;
     }
   }
 
