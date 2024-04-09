@@ -124,8 +124,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             $this->getAttachments($query->getProductId()),
             $this->getProductStockInformation($product),
             $this->getVirtualProductFile($product),
-            $this->getCover($query->getProductId(), $product->getShopId()),
-            $this->getDateNew($product)
+            $this->getCover($query->getProductId(), $product->getShopId())
         );
     }
 
@@ -279,7 +278,8 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             (bool) $product->show_price,
             $product->condition,
             (bool) $product->show_condition,
-            (int) $product->id_manufacturer
+            (int) $product->id_manufacturer,
+            (string) $product->date_new
         );
     }
 

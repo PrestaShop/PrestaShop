@@ -28,71 +28,23 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
+
 /**
  * Holds product options information
  */
 class ProductOptions
 {
-    /**
-     * @var string
-     */
-    private $visibility;
-
-    /**
-     * @var bool
-     */
-    private $availableForOrder;
-
-    /**
-     * @var bool
-     */
-    private $onlineOnly;
-
-    /**
-     * @var bool
-     */
-    private $showPrice;
-
-    /**
-     * @var string
-     */
-    private $condition;
-
-    /**
-     * @var bool
-     */
-    private $showCondition;
-
-    /**
-     * @var int
-     */
-    private $manufacturerId;
-
-    /**
-     * @param string $visibility
-     * @param bool $availableForOrder
-     * @param bool $onlineOnly
-     * @param bool $showPrice
-     * @param string $condition
-     * @param bool $showCondition
-     * @param int $manufacturerId
-     */
     public function __construct(
-        string $visibility,
-        bool $availableForOrder,
-        bool $onlineOnly,
-        bool $showPrice,
-        string $condition,
-        bool $showCondition,
-        int $manufacturerId
+        private string $visibility,
+        private bool $availableForOrder,
+        private bool $onlineOnly,
+        private bool $showPrice,
+        private string $condition,
+        private bool $showCondition,
+        private int $manufacturerId,
+        private string $dateNew
     ) {
-        $this->visibility = $visibility;
-        $this->availableForOrder = $availableForOrder;
-        $this->onlineOnly = $onlineOnly;
-        $this->showPrice = $showPrice;
-        $this->condition = $condition;
-        $this->showCondition = $showCondition;
-        $this->manufacturerId = $manufacturerId;
     }
 
     /**
@@ -149,5 +101,10 @@ class ProductOptions
     public function getManufacturerId(): int
     {
         return $this->manufacturerId;
+    }
+
+    public function getDateNew(): DateTime
+    {
+        return new DateTime($this->dateNew);
     }
 }

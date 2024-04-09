@@ -52,8 +52,7 @@ class ProductForEditing
         private array $associatedAttachments,
         private ProductStockInformation $stockInformation,
         private ?VirtualProductFileForEditing $virtualProductFile,
-        private string $coverThumbnailUrl,
-        private DateTime $dateNew
+        private string $coverThumbnailUrl
     ) {
     }
 
@@ -175,10 +174,5 @@ class ProductForEditing
     public function getCoverThumbnailUrl(): string
     {
         return $this->coverThumbnailUrl;
-    }
-
-    public function getDateNew(): DateTime
-    {
-        return $this->dateNew;
     }
 }
