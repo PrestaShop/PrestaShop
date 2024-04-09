@@ -461,9 +461,4 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
 
         return $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
     }
-
-    private function getDateNew(Product $product): DateTime
-    {
-        return new DateTime($product->date_new);
-    }
 }
