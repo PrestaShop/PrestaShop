@@ -277,7 +277,7 @@ class UpdateProductCommand
     private $active;
 
     /**
-     * @var DateTimeInterface
+     * @var DateTimeInterface|null
      */
     private $dateNew;
 
