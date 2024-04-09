@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-use Datetime;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 
