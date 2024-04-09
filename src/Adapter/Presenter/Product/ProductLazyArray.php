@@ -802,12 +802,30 @@ class ProductLazyArray extends AbstractLazyArray
             $this->product['discount_to_display'] = $this->product['regular_price'];
         }
 
-        if (isset($product['unit_price']) && $product['unit_price']) {
-            $this->product['unit_price'] = $this->priceFormatter->format($product['unit_price']);
-            $this->product['unit_price_full'] = $this->priceFormatter->format($product['unit_price'])
-                . ' ' . $product['unity'];
+        /*
+         * Now, let's format unit price display.
+         *
+         * If we have a unit ("per 100 g") to display after the unit price AND we have the value, we can proceed with formatting.
+         * We are intentionally not using empty here, because unit price can be also zero.
+         *
+         * If not, we will pass empty strings.
+         */
+        if (!empty($this->product['unity']) && isset($this->product['unit_price_tax_excluded'], $this->product['unit_price_tax_included'])) {
+            /*
+             * We use the tax included or tax excluded price, depending on presentation settings.
+             * We have the prices calculated from the Product::computeUnitPriceRatio, that is called before it gets passed here.
+             *
+             * The prices are already adapted to account for specific prices and combinations.
+             */
+            $this->product['unit_price'] = $this->priceFormatter->format(
+                $settings->include_taxes ? $this->product['unit_price_tax_included'] : $this->product['unit_price_tax_excluded']
+            );
+
+            // And add the full version with the unit after the price
+            $this->product['unit_price_full'] = $this->product['unit_price'] . ' ' . $product['unity'];
         } else {
-            $this->product['unit_price'] = $this->product['unit_price_full'] = '';
+            $this->product['unit_price'] = '';
+            $this->product['unit_price_full'] = '';
         }
     }
 
