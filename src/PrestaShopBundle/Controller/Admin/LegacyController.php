@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Routing\LegacyRouterChecker;
+use PrestaShopBundle\Routing\LegacyControllerConstants;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use PrestaShopBundle\Twig\Layout\SmartyVariablesFiller;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,8 +82,8 @@ class LegacyController extends PrestaShopAdminController
         // These parameters have already been set as request attributes by LegacyRouterChecker
         $dispatcherHookParameters = [
             'controller_type' => Dispatcher::FC_ADMIN,
-            'controller_class' => $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_CLASS_ATTRIBUTE),
-            'is_module' => $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE),
+            'controller_class' => $request->attributes->get(LegacyControllerConstants::CLASS_ATTRIBUTE),
+            'is_module' => $request->attributes->get(LegacyControllerConstants::IS_MODULE_ATTRIBUTE),
         ];
 
         $adminController = $this->initController($request, $dispatcherHookParameters);
@@ -213,7 +213,7 @@ class LegacyController extends PrestaShopAdminController
     {
         // Retrieving the controller instantiated in LegacyRouterChecker
         /** @var AdminController $adminController */
-        $adminController = $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_INSTANCE_ATTRIBUTE);
+        $adminController = $request->attributes->get(LegacyControllerConstants::INSTANCE_ATTRIBUTE);
 
         // Fill default smarty variables as they can be used in partial templates rendered in init methods
         $this->assignSmartyVariables->fillDefault();

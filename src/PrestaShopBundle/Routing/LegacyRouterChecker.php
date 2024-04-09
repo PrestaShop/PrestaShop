@@ -45,12 +45,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 #[AsRoutingConditionService(priority: -1)]
 class LegacyRouterChecker
 {
-    public const LEGACY_CONTROLLER_CLASS_ATTRIBUTE = '_legacy_controller_class';
-    public const LEGACY_CONTROLLER_INSTANCE_ATTRIBUTE = '_legacy_controller_instance_class';
-    public const LEGACY_CONTROLLER_ANONYMOUS_ATTRIBUTE = '_legacy_controller_anonymous_class';
-    public const LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE = '_legacy_controller_is_module';
-    public const LEGACY_CONTROLLER_IS_ALL_SHOP_CONTEXT = '_legacy_controller_is_all_shop_context';
-
     public function __construct(
         protected readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
         protected readonly TabRepository $tabRepository,
@@ -120,15 +114,19 @@ class LegacyRouterChecker
 
             $controllerClass = $controllers[strtolower($queryController)];
         }
-        // Loading controller
+        // We load the controller early in the process (during router matching actually), because the controller
+        // configuration has many impacts on the contexts, the security listeners, ... And the relevant data can
+        // only be retrieved once the legacy class is instantiated to access its public configuration
+        // But for performance issues we only instantiate (and init) the controller here once and then store it (along
+        // with other related attributes) in the request attributes so they can be retrieved easily by the code depending on them
         $adminController = new $controllerClass();
         $adminController->init();
 
-        $request->attributes->set(self::LEGACY_CONTROLLER_INSTANCE_ATTRIBUTE, $adminController);
-        $request->attributes->set(self::LEGACY_CONTROLLER_ANONYMOUS_ATTRIBUTE, $adminController->isAnonymousAllowed());
-        $request->attributes->set(self::LEGACY_CONTROLLER_IS_ALL_SHOP_CONTEXT, $adminController->multishop_context === ShopConstraint::ALL_SHOPS);
-        $request->attributes->set(self::LEGACY_CONTROLLER_CLASS_ATTRIBUTE, $controllerClass);
-        $request->attributes->set(self::LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE, $isModule);
+        $request->attributes->set(LegacyControllerConstants::INSTANCE_ATTRIBUTE, $adminController);
+        $request->attributes->set(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE, $adminController->isAnonymousAllowed());
+        $request->attributes->set(LegacyControllerConstants::IS_ALL_SHOP_CONTEXT_ATTRIBUTE, $adminController->multishop_context === ShopConstraint::ALL_SHOPS);
+        $request->attributes->set(LegacyControllerConstants::CLASS_ATTRIBUTE, $controllerClass);
+        $request->attributes->set(LegacyControllerConstants::IS_MODULE_ATTRIBUTE, $isModule);
 
         return true;
     }

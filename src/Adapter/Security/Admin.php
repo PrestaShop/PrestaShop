@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Routing\LegacyRouterChecker;
+use PrestaShopBundle\Routing\LegacyControllerConstants;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -88,7 +88,7 @@ class Admin
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        $publicLegacyRoute = $event->getRequest()->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_ANONYMOUS_ATTRIBUTE);
+        $publicLegacyRoute = $event->getRequest()->attributes->get(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE);
         if ($this->security->getUser() !== null || $publicLegacyRoute) {
             return;
         }

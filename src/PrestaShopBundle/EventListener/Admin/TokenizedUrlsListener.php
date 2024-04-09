@@ -28,7 +28,7 @@ namespace PrestaShopBundle\EventListener\Admin;
 
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
-use PrestaShopBundle\Routing\LegacyRouterChecker;
+use PrestaShopBundle\Routing\LegacyControllerConstants;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
@@ -51,7 +51,7 @@ class TokenizedUrlsListener
     public function onKernelRequest(KernelEvent $event)
     {
         $request = $event->getRequest();
-        $publicLegacyRoute = $event->getRequest()->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_ANONYMOUS_ATTRIBUTE);
+        $publicLegacyRoute = $event->getRequest()->attributes->get(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE);
 
         if (TokenInUrls::isDisabled() || $publicLegacyRoute) {
             return;

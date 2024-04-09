@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
-use PrestaShopBundle\Routing\LegacyRouterChecker;
+use PrestaShopBundle\Routing\LegacyControllerConstants;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -45,7 +45,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Routing\Exception\NoConfigurationException;
 use Symfony\Component\Routing\RouterInterface;
-use PrestaShopBundle\Routing\LegacyRouterChecker;
 
 /**
  * Listener dedicated to set up Shop context for the Back-Office/Admin application.
@@ -117,13 +116,14 @@ class ShopContextListener
             return $shopConstraint;
         }
 
-        $isAllShopContext = $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_IS_ALL_SHOP_CONTEXT);
+        $shopConstraint = ShopConstraint::allShops();
+        // Check if the displayed legacy controller forces All shops mode (check already performed by LegacyRouterChecker)
+        $isAllShopContext = $request->attributes->get(LegacyControllerConstants::IS_ALL_SHOP_CONTEXT_ATTRIBUTE);
 
         if ($isAllShopContext) {
             return $shopConstraint;
         }
 
-        $shopConstraint = ShopConstraint::allShops();
         $cookieShopConstraint = $this->getShopConstraintFromCookie();
         if ($cookieShopConstraint) {
             if ($cookieShopConstraint->getShopGroupId()) {
