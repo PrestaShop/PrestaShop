@@ -1193,7 +1193,7 @@ CREATE TABLE `PREFIX_operating_system` (
 /* List of orders */
 CREATE TABLE `PREFIX_orders` (
   `id_order` int(10) unsigned NOT NULL auto_increment,
-  `reference` VARCHAR(9),
+  `reference` VARCHAR(255),
   `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_carrier` int(10) unsigned NOT NULL,

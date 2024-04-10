@@ -233,7 +233,7 @@ class OrderCore extends ObjectModel
             'invoice_date' => ['type' => self::TYPE_DATE],
             'delivery_date' => ['type' => self::TYPE_DATE],
             'valid' => ['type' => self::TYPE_BOOL],
-            'reference' => ['type' => self::TYPE_STRING],
+            'reference' => ['type' => self::TYPE_STRING, 'size' => 255],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'note' => ['type' => self::TYPE_HTML, 'size' => 4194303],
