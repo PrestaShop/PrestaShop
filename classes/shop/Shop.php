@@ -81,9 +81,9 @@ class ShopCore extends ObjectModel
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
-            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 50],
             'id_category' => ['type' => self::TYPE_INT, 'required' => true],
-            'theme_name' => ['type' => self::TYPE_STRING, 'validate' => 'isThemeName'],
+            'theme_name' => ['type' => self::TYPE_STRING, 'validate' => 'isThemeName', 'size' => 255],
             'id_shop_group' => ['type' => self::TYPE_INT, 'required' => true],
         ],
     ];

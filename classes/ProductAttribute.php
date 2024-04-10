@@ -50,7 +50,7 @@ class ProductAttributeCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             'id_attribute_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32],
             'position' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
 
             /* Lang fields */

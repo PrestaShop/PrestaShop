@@ -133,7 +133,7 @@ class CarrierCore extends ObjectModel
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isCarrierName', 'required' => true, 'size' => 64],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
             'is_free' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'url' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'],
+            'url' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl', 'size' => 255],
             'shipping_handling' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'shipping_external' => ['type' => self::TYPE_BOOL],
             'range_behavior' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],

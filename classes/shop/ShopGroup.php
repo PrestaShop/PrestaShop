@@ -45,7 +45,7 @@ class ShopGroupCore extends ObjectModel
         'primary' => 'id_shop_group',
         'fields' => [
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
-            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 50],
             'share_customer' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'share_order' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'share_stock' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
