@@ -118,6 +118,7 @@ smartyRegisterFunction($smarty, 'modifier', 'rand', 'rand');
 smartyRegisterFunction($smarty, 'modifier', 'sizeof', 'sizeof');
 smartyRegisterFunction($smarty, 'modifier', 'str_replace', 'str_replace');
 smartyRegisterFunction($smarty, 'modifier', 'stripslashes', 'stripslashes');
+smartyRegisterFunction($smarty, 'modifier', 'strpos', 'strpos');
 smartyRegisterFunction($smarty, 'modifier', 'strstr', 'strstr');
 smartyRegisterFunction($smarty, 'modifier', 'strtolower', 'strtolower');
 smartyRegisterFunction($smarty, 'modifier', 'strval', 'strval');
