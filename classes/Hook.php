@@ -974,18 +974,35 @@ class HookCore extends ObjectModel
             if (Hook::isHookCallableOn($moduleInstance, $registeredHookName)) {
                 $hook_args['altern'] = ++$altern;
 
+                // If this is a chain hook and it's not the first module to call,
+                // we will pass the response from the previous one as parameters.
                 if (0 !== $key && true === $chain) {
                     $hook_args = $output;
                 }
 
                 $display = Hook::callHookOn($moduleInstance, $registeredHookName, $hook_args);
 
+                // Case 1 - each module response to different array key. We don't care about the response.
                 if ($array_return) {
                     $output[$moduleInstance->name] = $display;
+                // Case 2 - chaining. Here, each module MUST return an array that will the next module receive as parameters.
                 } elseif (true === $chain) {
                     $output = $display;
+                // Case 3 - classic display hook. Here we need to verify if the response is not an array.
                 } else {
-                    $output .= $display;
+                    // If it's an array, we will disregard the response
+                    if (is_array($display)) {
+                        // And notify the developer in debug mode.
+                        if (_PS_MODE_DEV_) {
+                            trigger_error(sprintf(
+                                'Module %s returned an array on hook %s. This is not allowed, the response must be joinable to a string.',
+                                $moduleInstance->name,
+                                $hook_name
+                            ), E_USER_NOTICE);
+                        }
+                    } else {
+                        $output .= $display;
+                    }
                 }
 
                 if ($isRegistryEnabled) {
@@ -993,18 +1010,35 @@ class HookCore extends ObjectModel
                 }
             } elseif (Hook::isDisplayHookName($registeredHookName)) {
                 if ($moduleInstance instanceof WidgetInterface) {
+                    // If this is a chain hook and it's not the first module to call,
+                    // we will pass the response from the previous one as parameters.
                     if (0 !== $key && true === $chain) {
                         $hook_args = $output;
                     }
 
                     $display = Hook::coreRenderWidget($moduleInstance, $registeredHookName, $hook_args);
 
+                    // Case 1 - each module response to different array key. We don't care about the response.
                     if ($array_return) {
                         $output[$moduleInstance->name] = $display;
+                    // Case 2 - chaining. Here, each module MUST return an array that will the next module receive as parameters.
                     } elseif (true === $chain) {
                         $output = $display;
+                    // Case 3 - classic display hook. Here we need to verify if the response is not an array.
                     } else {
-                        $output .= $display;
+                        // If it's an array, we will disregard the response
+                        if (is_array($display)) {
+                            // And notify the developer in debug mode.
+                            if (_PS_MODE_DEV_) {
+                                trigger_error(sprintf(
+                                    'Module %s returned an array on hook %s. This is not allowed, the response must be joinable to a string.',
+                                    $moduleInstance->name,
+                                    $hook_name
+                                ), E_USER_NOTICE);
+                            }
+                        } else {
+                            $output .= $display;
+                        }
                     }
                 }
 
