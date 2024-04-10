@@ -46,7 +46,7 @@ class ProfileCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             /* Lang fields */
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128],
         ],
     ];
 

@@ -70,7 +70,7 @@ class CustomerMessageCore extends ObjectModel
         'fields' => [
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_customer_thread' => ['type' => self::TYPE_INT],
-            'ip_address' => ['type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 15],
+            'ip_address' => ['type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 16],
             'message' => ['type' => self::TYPE_HTML, 'required' => true, 'size' => 4194303, 'validate' => 'isCleanHtml'],
             'file_name' => ['type' => self::TYPE_STRING],
             'user_agent' => ['type' => self::TYPE_STRING],
