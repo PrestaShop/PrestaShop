@@ -47,7 +47,7 @@ CREATE TABLE `PREFIX_address` (
 /* Used for search, if a search string is present inside the table, search the alias as well */
 CREATE TABLE `PREFIX_alias` (
   `id_alias` int(10) unsigned NOT NULL auto_increment,
-  `alias` varchar(191) NOT NULL,
+  `alias` varchar(255) NOT NULL,
   `search` varchar(255) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_alias`),
@@ -1108,7 +1108,7 @@ CREATE TABLE `PREFIX_meta_lang` (
   `title` varchar(128) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `keywords` varchar(255) DEFAULT NULL,
-  `url_rewrite` varchar(254) NOT NULL,
+  `url_rewrite` varchar(255) NOT NULL,
   PRIMARY KEY (`id_meta`, `id_shop`, `id_lang`),
   KEY `id_shop` (`id_shop`),
   KEY `id_lang` (`id_lang`)
@@ -2190,7 +2190,7 @@ CREATE TABLE `PREFIX_tax_rule` (
 
 CREATE TABLE `PREFIX_tax_rules_group` (
   `id_tax_rules_group` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(50) NOT NULL,
+  `name` VARCHAR(64) NOT NULL,
   `active` INT NOT NULL,
   `deleted` TINYINT(1) UNSIGNED NOT NULL,
   `date_add` DATETIME NOT NULL,
@@ -2717,9 +2717,9 @@ CREATE TABLE `PREFIX_smarty_cache` (
 
 CREATE TABLE IF NOT EXISTS `PREFIX_mail` (
   `id_mail` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `recipient` varchar(126) NOT NULL,
+  `recipient` varchar(255) NOT NULL,
   `template` varchar(62) NOT NULL,
-  `subject` varchar(254) NOT NULL,
+  `subject` varchar(255) NOT NULL,
   `id_lang` int(11) unsigned NOT NULL,
   `date_add` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_mail`),
@@ -2935,11 +2935,12 @@ CREATE TABLE `PREFIX_shop` (
   KEY             `IDX_CBDFBB9EF5C9E40` (`id_shop_group`),
   PRIMARY KEY (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 CREATE TABLE `PREFIX_shop_url` (
   `id_shop_url`  int(11) unsigned NOT NULL AUTO_INCREMENT,
   `id_shop`      int(11) unsigned NOT NULL,
-  `domain`       varchar(150) NOT NULL,
-  `domain_ssl`   varchar(150) NOT NULL,
+  `domain`       varchar(255) NOT NULL,
+  `domain_ssl`   varchar(255) NOT NULL,
   `physical_uri` varchar(64)  NOT NULL,
   `virtual_uri`  varchar(64)  NOT NULL,
   `main`         TINYINT(1) NOT NULL,
@@ -2950,6 +2951,7 @@ CREATE TABLE `PREFIX_shop_url` (
   UNIQUE KEY `full_shop_url_ssl` (`domain_ssl`, `physical_uri`, `virtual_uri`),
   KEY `IDX_279F19DA274A50A0` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 CREATE TABLE `PREFIX_shop_group` (
   `id_shop_group`  INT AUTO_INCREMENT NOT NULL,
   `name`           VARCHAR(64) NOT NULL,

@@ -84,7 +84,7 @@ class Tab
     private bool $enabled = true;
 
     /**
-     * @ORM\Column(name="icon", type="string", length=32, nullable=true)
+     * @ORM\Column(name="icon", type="string", length=64, nullable=true)
      */
     private ?string $icon;
 
