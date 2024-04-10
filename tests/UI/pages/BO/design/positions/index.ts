@@ -18,6 +18,8 @@ class Positions extends BOBasePage {
 
   private readonly searchResultHookNameSpan: string;
 
+  private readonly filterModuleSelect: string;
+
   private readonly filterModuleButton: string;
 
   private readonly filterModuleInputValue: string;
@@ -68,6 +70,7 @@ class Positions extends BOBasePage {
     this.searchInput = '#hook-search';
     this.modulePositionForm = '#module-positions-form';
     this.searchResultHookNameSpan = `${this.modulePositionForm} section[style] header span span`;
+    this.filterModuleSelect = '#show-modules';
     this.filterModuleButton = '#position-filters span.select2';
     this.filterModuleInputValue = 'body span.select2-search.select2-search--dropdown input';
     this.filterModuleFirstResult = '#select2-show-modules-results li:nth-child(1)';
@@ -117,6 +120,14 @@ class Positions extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.filterModuleButton);
     await this.setValue(page, this.filterModuleInputValue, moduleName);
     await this.waitForSelectorAndClick(page, this.filterModuleFirstResult);
+  }
+
+  /**
+   * Return the filtered module name
+   * @param page
+   */
+  async getModuleFilter(page: Page): Promise<string> {
+    return this.getTextContent(page, `${this.filterModuleSelect} option[selected='selected']`, false);
   }
 
   /**
