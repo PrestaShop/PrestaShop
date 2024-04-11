@@ -140,9 +140,9 @@ class CartCore extends ObjectModel
             'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'recyclable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'gift' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'],
+            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 4194303],
             'mobile_theme' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'delivery_option' => ['type' => self::TYPE_STRING],
+            'delivery_option' => ['type' => self::TYPE_STRING, 'size' => 4194303],
             'secure_key' => ['type' => self::TYPE_STRING, 'size' => 32],
             'allow_seperated_package' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
@@ -816,8 +816,9 @@ class CartCore extends ObjectModel
                 $product['reduction_without_tax'] = $props['reduction_without_tax'];
                 $product['price_without_reduction'] = $props['price_without_reduction'];
                 $product['specific_prices'] = $props['specific_prices'];
+                $product['unit_price'] = $props['unit_price_tax_excluded'];
                 $product['unit_price_ratio'] = $props['unit_price_ratio'];
-                $product['unit_price'] = $product['unit_price_tax_excluded'] = $props['unit_price_tax_excluded'];
+                $product['unit_price_tax_excluded'] = $props['unit_price_tax_excluded'];
                 $product['unit_price_tax_included'] = $props['unit_price_tax_included'];
                 unset($props);
 

@@ -90,6 +90,7 @@ smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty')
 // Native PHP functions
 smartyRegisterFunction($smarty, 'modifier', 'addcslashes', 'addcslashes');
 smartyRegisterFunction($smarty, 'modifier', 'addslashes', 'addslashes');
+smartyRegisterFunction($smarty, 'modifier', 'array_slice', 'array_slice');
 smartyRegisterFunction($smarty, 'modifier', 'date', 'date');
 smartyRegisterFunction($smarty, 'modifier', 'end', 'smarty_endWithoutReference');
 smartyRegisterFunction($smarty, 'modifier', 'explode', 'explode');
