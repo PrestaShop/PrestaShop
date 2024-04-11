@@ -78,6 +78,11 @@ class LanguageEndpointTest extends ApiTestCase
     public function testGetLanguages(): void
     {
         $paginatedLanguages = $this->listLanguages();
+        $items = $paginatedLanguages['items'];
+        // We delete the end of the flag path because it is a timestamp and could cause random fails in tests.
+        foreach ($items as $key => $item) {
+            $items[$key]['flag'] = substr($items[$key]['flag'], 0, strpos($items[$key]['flag'], '?'));
+        }
         $this->assertEquals(2, $paginatedLanguages['totalItems']);
         $this->assertEquals([
             [
@@ -90,6 +95,7 @@ class LanguageEndpointTest extends ApiTestCase
                 'dateTimeFormat' => 'm/d/Y H:i:s',
                 'isRtl' => false,
                 'active' => true,
+                'flag' => '/img/tmp/lang_mini_1_1.jpg',
             ],
             [
                 'langId' => static::$frenchLangId,
@@ -101,8 +107,9 @@ class LanguageEndpointTest extends ApiTestCase
                 'dateTimeFormat' => 'd/m/Y H:i:s',
                 'isRtl' => false,
                 'active' => true,
+                'flag' => '/img/tmp/lang_mini_' . static::$frenchLangId . '_1.jpg',
             ],
-        ], $paginatedLanguages['items']);
+        ], $items);
     }
 
     public function testFilterLanguages(): void

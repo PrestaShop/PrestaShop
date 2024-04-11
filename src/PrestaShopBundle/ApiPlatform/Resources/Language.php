@@ -30,11 +30,11 @@ namespace PrestaShopBundle\ApiPlatform\Resources;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use PrestaShopBundle\ApiPlatform\Metadata\DQBPaginatedList;
+use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
 
 #[ApiResource(
     operations: [
-        new DQBPaginatedList(
+        new PaginatedList(
             uriTemplate: '/languages',
             ApiResourceMapping: [
                 '[id_lang]' => '[langId]',
@@ -44,7 +44,7 @@ use PrestaShopBundle\ApiPlatform\Metadata\DQBPaginatedList;
                 '[date_format_full]' => '[dateTimeFormat]',
                 '[is_rtl]' => '[isRtl]',
             ],
-            queryBuilder: 'prestashop.core.grid.query.builder.language',
+            gridDataFactory: 'prestashop.core.grid.factory.language_decorator',
             filtersMapping: [
                 '[langId]' => '[id_lang]',
                 '[isoCode]' => '[iso_code]',
@@ -76,4 +76,6 @@ class Language
     public bool $isRtl;
 
     public bool $active;
+
+    public string $flag;
 }

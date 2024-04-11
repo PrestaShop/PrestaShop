@@ -34,12 +34,13 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
 
 /**
- * Class DoctrineQueryBuilderPaginatedList is a custom operation that provides extra parameters
+ * Class PaginatedList is a custom operation that provides extra parameters
  * to help configure an operation based on a GetCollection,
  * it is custom tailed for read operations and forces using the GET method.
+ * It gathers its data from the associated GridData using the GridDataFactoryInterface.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
-class DQBPaginatedList extends AbstractCQRSOperation implements CollectionOperationInterface
+class PaginatedList extends AbstractCQRSOperation implements CollectionOperationInterface
 {
     public function __construct(
         ?string $uriTemplate = null,
@@ -113,7 +114,7 @@ class DQBPaginatedList extends AbstractCQRSOperation implements CollectionOperat
         array $extraProperties = [],
         array $scopes = [],
         ?array $ApiResourceMapping = null,
-        ?string $queryBuilder = null,
+        ?string $gridDataFactory = null,
         ?string $filtersClass = null,
         ?array $filtersMapping = null,
         ?bool $experimentalOperation = null,
@@ -123,9 +124,9 @@ class DQBPaginatedList extends AbstractCQRSOperation implements CollectionOperat
         $passedArguments['provider'] = $provider ?? QueryListProvider::class;
         $passedArguments['filtersClass'] = $filtersClass ?? Filters::class;
 
-        if (!empty($queryBuilder)) {
-            $this->checkArgumentAndExtraParameterValidity('queryBuilder', $queryBuilder, $passedArguments['extraProperties']);
-            $passedArguments['extraProperties']['queryBuilder'] = $queryBuilder;
+        if (!empty($gridDataFactory)) {
+            $this->checkArgumentAndExtraParameterValidity('gridDataFactory', $gridDataFactory, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['gridDataFactory'] = $gridDataFactory;
         }
 
         if (!empty($filtersClass)) {
@@ -138,22 +139,22 @@ class DQBPaginatedList extends AbstractCQRSOperation implements CollectionOperat
             $passedArguments['extraProperties']['filtersMapping'] = $filtersMapping;
         }
 
-        unset($passedArguments['queryBuilder']);
+        unset($passedArguments['gridDataFactory']);
         unset($passedArguments['filtersClass']);
         unset($passedArguments['filtersMapping']);
 
         parent::__construct(...$passedArguments);
     }
 
-    public function getQueryBuilder(): ?string
+    public function getGridDataFactory(): ?string
     {
-        return $this->extraProperties['queryBuilder'] ?? null;
+        return $this->extraProperties['gridDataFactory'] ?? null;
     }
 
-    public function withQueryBuilder(string $queryBuilder): static
+    public function withGridDataFactory(string $gridDataFactory): static
     {
         $self = clone $this;
-        $self->extraProperties['queryBuilder'] = $queryBuilder;
+        $self->extraProperties['gridDataFactory'] = $gridDataFactory;
 
         return $self;
     }

@@ -34,6 +34,6 @@ use ApiPlatform\Exception\InvalidResourceException;
 /**
  * Is thrown when the Query builder property is not defined on a resource on which it should be.
  */
-class QueryBuilderNotFoundException extends InvalidResourceException
+class GridDataFactoryNotFoundException extends InvalidResourceException
 {
 }

@@ -35,12 +35,12 @@ use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
-use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Builder\FiltersBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShopBundle\ApiPlatform\ContextParametersTrait;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
-use PrestaShopBundle\ApiPlatform\Exception\QueryBuilderNotFoundException;
+use PrestaShopBundle\ApiPlatform\Exception\GridDataFactoryNotFoundException;
 use PrestaShopBundle\ApiPlatform\Pagination\PaginationElements;
 use PrestaShopBundle\ApiPlatform\QueryResultSerializerTrait;
 use Psr\Container\ContainerInterface;
@@ -88,24 +88,25 @@ class QueryListProvider implements ProviderInterface
             );
         }
 
-        $queryBuilderDefinition = $operation->getExtraProperties()['queryBuilder'] ?? null;
+        $gridDataFactoryDefinition = $operation->getExtraProperties()['gridDataFactory'] ?? null;
 
-        if (null === $queryBuilderDefinition) {
-            throw new QueryBuilderNotFoundException(sprintf('Resource %s has no Query builder defined.', $operation->getClass()));
+        if (null === $gridDataFactoryDefinition) {
+            throw new GridDataFactoryNotFoundException(sprintf('Resource %s has no Grid data factory defined.', $operation->getClass()));
         }
 
-        /** @var DoctrineQueryBuilderInterface $queryBuilder * */
-        $queryBuilder = $this->container->get($queryBuilderDefinition);
+        /** @var GridDataFactoryInterface $gridDataFactory */
+        $gridDataFactory = $this->container->get($gridDataFactoryDefinition);
 
         $filter = $this->createFilters($context, $operation);
 
-        $count = (int) $queryBuilder->getCountQueryBuilder($filter)->executeQuery()->fetchOne();
+        $gridData = $gridDataFactory->getData($filter);
+        $gridDataItems = $gridData->getRecords()->all();
 
-        $queryResult = $queryBuilder->getSearchQueryBuilder($filter)->fetchAllAssociative();
+        $count = $gridData->getRecordsTotal();
 
         $normalizedQueryResult = [];
 
-        foreach ($queryResult as $key => $result) {
+        foreach ($gridDataItems as $key => $result) {
             $normalizedQueryResult[$key] = $this->domainSerializer->denormalize(
                 $result,
                 $operation->getClass(),
