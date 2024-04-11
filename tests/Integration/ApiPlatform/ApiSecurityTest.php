@@ -59,7 +59,7 @@ class ApiSecurityTest extends ApiTestCase
         $response = static::createClient()->request('GET', '/test/unscoped/product/1');
 
         self::assertResponseStatusCodeSame(401);
-        $this->assertEquals('No Authorization header provided', $response->getContent(false));
+        $this->assertEquals('"No Authorization header provided"', $response->getContent(false));
     }
 
     public function testAuthenticationWithoutBearerFailed()
@@ -73,7 +73,7 @@ class ApiSecurityTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(401);
-        $this->assertEquals('Bearer token missing', $response->getContent(false));
+        $this->assertEquals('"Bearer token missing"', $response->getContent(false));
     }
 
     public function testAuthenticationWithInvalidCredential()
@@ -86,7 +86,8 @@ class ApiSecurityTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(401);
-        $this->assertEquals('Invalid credentials', $response->getContent(false));
+        // The internal server doesn't recognize the token format, so the authenticator has no server to use
+        $this->assertEquals('"No authorization server matching your credentials"', $response->getContent(false));
     }
 
     public function testAuthenticationWithLowerCaseBearerFailed()
@@ -100,7 +101,7 @@ class ApiSecurityTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(401);
-        $this->assertEquals('Bearer token missing', $response->getContent(false));
+        $this->assertEquals('"Bearer token missing"', $response->getContent(false));
     }
 
     public function testAuthenticationWithScopeSuccess()

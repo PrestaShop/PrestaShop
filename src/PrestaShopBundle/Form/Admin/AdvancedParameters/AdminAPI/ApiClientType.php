@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\AdminAPI;
 
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ApiClientSettings;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -44,10 +45,14 @@ class ApiClientType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // If an external issuer is specified most of the form is not editable or relevant
+        $formData = $builder->getData();
+        $isExternalApiClient = !empty($formData['external_issuer'] ?? null);
+
         $builder
             ->add('client_name', TextType::class, [
                 'label' => $this->trans('Client Name', 'Admin.Advparameters.Feature'),
-                'required' => true,
+                'required' => !$isExternalApiClient,
                 'constraints' => [
                     new NotBlank(),
                     new Length([
@@ -61,10 +66,11 @@ class ApiClientType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+                'disabled' => $isExternalApiClient,
             ])
             ->add('client_id', TextType::class, [
                 'label' => $this->trans('Client ID', 'Admin.Advparameters.Feature'),
-                'required' => true,
+                'required' => !$isExternalApiClient,
                 'constraints' => [
                     new NotBlank(),
                     new Length([
@@ -78,6 +84,7 @@ class ApiClientType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+                'disabled' => $isExternalApiClient,
             ])
             ->add('description', TextareaType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
@@ -96,22 +103,34 @@ class ApiClientType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('lifetime', IntegerType::class, [
-                'label' => $this->trans('Lifetime', 'Admin.Global'),
-                'required' => false,
-                'constraints' => [
-                    new NotBlank(),
-                    new Positive(),
-                ],
-            ])
-            ->add('enabled', SwitchType::class, [
-                'label' => $this->trans('Enabled', 'Admin.Global'),
-                'required' => true,
-            ])
-            ->add('scopes', ResourceScopesType::class, [
-                'label' => $this->trans('Scopes', 'Admin.Advparameters.Feature'),
-            ])
         ;
+
+        if (!$isExternalApiClient) {
+            $builder
+                ->add('lifetime', IntegerType::class, [
+                    'label' => $this->trans('Lifetime', 'Admin.Global'),
+                    'required' => false,
+                    'constraints' => [
+                        new NotBlank(),
+                        new Positive(),
+                    ],
+                ])
+                ->add('enabled', SwitchType::class, [
+                    'label' => $this->trans('Enabled', 'Admin.Global'),
+                    'required' => true,
+                ])
+                ->add('scopes', ResourceScopesType::class, [
+                    'label' => $this->trans('Scopes', 'Admin.Advparameters.Feature'),
+                ])
+            ;
+        } else {
+            $builder
+                ->add('external_issuer', TextPreviewType::class, [
+                    'label' => $this->trans('External issuer', 'Admin.Advparameters.Feature'),
+                    'required' => false,
+                ])
+            ;
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

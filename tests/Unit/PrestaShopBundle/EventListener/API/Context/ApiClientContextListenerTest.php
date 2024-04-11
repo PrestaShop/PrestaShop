@@ -30,12 +30,12 @@ namespace Tests\Unit\PrestaShopBundle\EventListener\API\Context;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\JwtTokenUser;
 use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use PrestaShopBundle\EventListener\API\Context\ApiClientContextListener;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
@@ -45,18 +45,18 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
     /**
      * @dataProvider getExpectedClients
      */
-    public function testBuildBasedOnSecurityToken(int $apiId, string $clientId, array $scopes): void
+    public function testBuildBasedOnSecurityToken(int $apiId, string $clientId, array $scopes, ?string $externalIssuer = null): void
     {
         // Create request that mimic a call to external API
         $event = $this->createRequestEvent(new Request());
 
         $builder = new ApiClientContextBuilder(
-            $this->mockRepository($apiId, $clientId, $scopes),
+            $this->mockRepository($apiId, $clientId, $scopes, $externalIssuer),
             $this->mockConfiguration(['PS_SHOP_DEFAULT' => 42])
         );
         $listener = new ApiClientContextListener(
             $builder,
-            $this->mockSecurity($this->mockToken($clientId))
+            $this->mockSecurity($this->mockToken($clientId, $externalIssuer))
         );
 
         $listener->onKernelRequest($event);
@@ -66,6 +66,7 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
         $this->assertEquals($apiId, $apiClientContext->getApiClient()->getId());
         $this->assertEquals($clientId, $apiClientContext->getApiClient()->getClientId());
         $this->assertEquals($scopes, $apiClientContext->getApiClient()->getScopes());
+        $this->assertEquals($externalIssuer, $apiClientContext->getApiClient()->getExternalIssuer());
         $this->assertEquals(42, $apiClientContext->getApiClient()->getShopId());
     }
 
@@ -81,6 +82,13 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
             51,
             'any_other_client_id',
             [],
+        ];
+
+        yield 'client with empty scopes and external issuer' => [
+            51,
+            'any_other_client_id',
+            [],
+            'http://external_authorasition_server',
         ];
     }
 
@@ -127,12 +135,13 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
         return $builder;
     }
 
-    private function mockToken(string $userIdentifier): TokenInterface|MockObject
+    private function mockToken(string $userIdentifier, ?string $externalIssuer): TokenInterface|MockObject
     {
-        // Note: we mock PreAuthenticatedToken instead of the interface, because getUserIdentifier is really introduced only in SF6,
-        // so we can't mock it yet, once Symfony is upgraded we can mock the interface directly
-        $token = $this->createMock(PreAuthenticatedToken::class);
+        $token = $this->createMock(TokenInterface::class);
         $token->method('getUserIdentifier')->willReturn($userIdentifier);
+        $jwtToken = $this->createMock(JwtTokenUser::class);
+        $jwtToken->method('getExternalIssuer')->willReturn($externalIssuer);
+        $token->method('getUser')->willReturn($jwtToken);
 
         return $token;
     }
@@ -145,17 +154,20 @@ class ApiClientContextListenerTest extends ContextEventListenerTestCase
         return $security;
     }
 
-    private function mockRepository(int $apiId, string $expectedClientId, array $scopes): ApiClientRepository|MockObject
+    private function mockRepository(int $apiId, string $expectedClientId, array $scopes, ?string $externalIssuer): ApiClientRepository|MockObject
     {
         $apiClient = new ApiClient();
         $apiClient->setId($apiId);
         $apiClient->setScopes($scopes);
         $apiClient->setClientId($expectedClientId);
+        if (!empty($externalIssuer)) {
+            $apiClient->setExternalIssuer($externalIssuer);
+        }
 
         $builder = $this->createMock(ApiClientRepository::class);
         $builder
             ->method('getByClientId')
-            ->with($expectedClientId)
+            ->with($expectedClientId, $externalIssuer)
             ->willReturn($apiClient)
         ;
 

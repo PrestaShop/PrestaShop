@@ -27,6 +27,7 @@ cd tests/UI/
 npm ci
 npx playwright install --with-deps
 ```
+
 Subsequently, we can use the envFile to define the test environment variables,
 to do this we copy the .env.ci file renaming it .env, and we edit the values we want.
 Another option is to pass the variables directly via command line.
@@ -79,13 +80,14 @@ npm run test:functional:BO:orders
 
 ### Keycloak parameters
 
-| Parameter             | Description                                                                              |
-|-----------------------|------------------------------------------------------------------------------------------|
-| KEYCLOAK_URL_EXTERNAL | The external URL for Keycloak (default to **`http://127.0.0.1:8003`**) (outside Docker)  |
-| KEYCLOAK_URL_INTERNAL | The internal URL for Keycloak (default to **`http://keycloak:8080`**) (inside Docker)    |
-| KEYCLOAK_ADMIN_USER   | The admin user for connecting to Keycloak (default to **`admin`**)                       |
-| KEYCLOAK_ADMIN_PASS   | The admin password for connecting to Keycloak (default to **`admin`**)                   |
-| KEYCLOAK_CLIENT_ID    | The Client ID for using in PrestaShop & Keycloak (default to **`prestashop_client_id`**) |
+| Parameter               | Description                                                                                              |
+|-------------------------|----------------------------------------------------------------------------------------------------------|
+| KEYCLOAK_URL_EXTERNAL   | The external URL for Keycloak (default to **`http://localhost:8003`**) (outside Docker)                  |
+| KEYCLOAK_URL_INTERNAL   | The internal URL for Keycloak (default to **`http://keycloak:8080`**) (inside Docker)                    |
+| KEYCLOAK_ADMIN_USER     | The admin user for connecting to Keycloak (default to **`admin`**)                                       |
+| KEYCLOAK_ADMIN_PASS     | The admin password for connecting to Keycloak (default to **`admin`**)                                   |
+| KEYCLOAK_CLIENT_ID      | The Client ID for using in PrestaShop & Keycloak (default to **`prestashop-keycloak`**)                  |
+| KKEYCLOAK_CLIENT_SECRET | The Client Secret for using in PrestaShop & Keycloak (default to **`O2kKN0fprCK2HWP6PS6reVbZThWf5LFw`**) |
 
 ### Playwright parameters
 

@@ -97,9 +97,9 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
                 $errors[] = 'clientName';
             }
         }
-        if (isset($expectedData['apiClientId'])) {
-            if ($result->getClientId() !== $expectedData['apiClientId']) {
-                $errors[] = 'apiClientId';
+        if (isset($expectedData['clientId'])) {
+            if ($result->getClientId() !== $expectedData['clientId']) {
+                $errors[] = 'clientId';
             }
         }
         if (isset($expectedData['enabled'])) {
@@ -110,6 +110,12 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
         if (isset($expectedData['description'])) {
             if ($result->getDescription() !== $expectedData['description']) {
                 $errors[] = 'description';
+            }
+        }
+
+        if (isset($expectedData['externalIssuer'])) {
+            if ($result->getExternalIssuer() !== ($expectedData['externalIssuer'] ?: null)) {
+                $errors[] = 'externalIssuer';
             }
         }
 
@@ -140,8 +146,8 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['clientName'])) {
             $command->setClientName($data['clientName']);
         }
-        if (isset($data['apiClientId'])) {
-            $command->setClientId($data['apiClientId']);
+        if (isset($data['clientId'])) {
+            $command->setClientId($data['clientId']);
         }
         if (isset($data['enabled'])) {
             $command->setEnabled($data['enabled']);
@@ -172,7 +178,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
 
         $command = new AddApiClientCommand(
             $data['clientName'],
-            $data['apiClientId'],
+            $data['clientId'],
             $data['enabled'],
             $data['description'],
             $data['lifetime'],
@@ -203,8 +209,8 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['clientName'])) {
             $command->setClientName($data['clientName']);
         }
-        if (isset($data['apiClientId'])) {
-            $command->setClientId($data['apiClientId']);
+        if (isset($data['clientId'])) {
+            $command->setClientId($data['clientId']);
         }
         if (isset($data['enabled'])) {
             $command->setEnabled($data['enabled']);
@@ -328,8 +334,9 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
         $apiClientContext->setOverriddenApiClient(new ApiClient(
             id: $apiClient->getId(),
             clientId: $apiClient->getClientId(),
-            shopId: $this->getDefaultShopId(),
             scopes: $apiClient->getScopes(),
+            externalIssuer: null,
+            shopId: $this->getDefaultShopId(),
         ));
     }
 
@@ -359,7 +366,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
 
         $command = new AddApiClientCommand(
             $data['clientName'],
-            $data['apiClientId'],
+            $data['clientId'],
             $data['enabled'],
             $data['description'],
             $data['lifetime'],
@@ -409,7 +416,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
     private function getInvalidConstraintErrorCode(string $fieldName): int
     {
         $constraintErrorFieldMap = [
-            'apiClientId' => ApiClientConstraintException::INVALID_CLIENT_ID,
+            'clientId' => ApiClientConstraintException::INVALID_CLIENT_ID,
             'clientName' => ApiClientConstraintException::INVALID_CLIENT_NAME,
             'enabled' => ApiClientConstraintException::INVALID_ENABLED,
             'description' => ApiClientConstraintException::INVALID_DESCRIPTION,
@@ -427,7 +434,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
     private function getTooLargeConstraintErrorCode(string $fieldName): int
     {
         $constraintErrorFieldMap = [
-            'apiClientId' => ApiClientConstraintException::CLIENT_ID_TOO_LARGE,
+            'clientId' => ApiClientConstraintException::CLIENT_ID_TOO_LARGE,
             'clientName' => ApiClientConstraintException::CLIENT_NAME_TOO_LARGE,
             'description' => ApiClientConstraintException::DESCRIPTION_TOO_LARGE,
         ];
@@ -442,7 +449,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
     private function generateMaxLengthValue(array $data, string $fieldName): array
     {
         $length = match ($fieldName) {
-            'apiClientId', 'clientName' => 260,
+            'clientId', 'clientName' => 260,
             'description' => 21900,
             default => throw new \RuntimeException(sprintf('The field %s cannot have a max value generated', $fieldName)),
         };

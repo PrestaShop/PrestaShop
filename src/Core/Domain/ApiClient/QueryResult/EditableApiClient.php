@@ -38,7 +38,8 @@ class EditableApiClient
         private readonly bool $enabled,
         private readonly string $description,
         private readonly array $scopes,
-        private readonly int $lifetime
+        private readonly int $lifetime,
+        private readonly ?string $externalIssuer,
     ) {
     }
 
@@ -78,5 +79,10 @@ class EditableApiClient
     public function getLifetime(): int
     {
         return $this->lifetime;
+    }
+
+    public function getExternalIssuer(): ?string
+    {
+        return $this->externalIssuer;
     }
 }

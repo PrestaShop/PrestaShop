@@ -18,4 +18,4 @@ services:
     public: false
     autowire: true
     arguments:
-      - '@PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface'
+      $authorizationServers: !tagged_iterator core.oauth2.authorization_server

@@ -4,7 +4,6 @@ parameters:
 services:
   _defaults:
     public: true
-
   prestashop.security.admin.provider:
     class: PrestaShopBundle\Security\Admin\EmployeeProvider
     arguments:
@@ -29,12 +28,10 @@ services:
 
   PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer:
     public: false
+    autowire: true
+    autoconfigure: true
     arguments:
       - '@League\OAuth2\Server\ResourceServer'
-
-  PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface:
-    alias: PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer
-    public: false
 
   prestashop.security.password_hasher.factory:
     class: Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory

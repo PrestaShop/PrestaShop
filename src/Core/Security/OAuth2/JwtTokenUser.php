@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Security\OAuth2\Entity;
+namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
 
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -38,7 +38,8 @@ class JwtTokenUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct(
         protected readonly string $userId,
-        protected readonly array $scopes
+        protected readonly array $scopes,
+        protected readonly ?string $externalIssuer = null,
     ) {
         $this->convertScopesToRoles();
     }
@@ -71,6 +72,11 @@ class JwtTokenUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->userId;
+    }
+
+    public function getExternalIssuer(): ?string
+    {
+        return $this->externalIssuer;
     }
 
     protected function convertScopesToRoles(): void

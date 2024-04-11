@@ -3,7 +3,7 @@ import type ClientRepresentation from '@keycloak/keycloak-admin-client/lib/defs/
 
 const kcAdminClient: KeycloakAdminClient = new KeycloakAdminClient({
   baseUrl: global.keycloakConfig.keycloakExternalUrl,
-  realmName: 'master',
+  realmName: 'prestashop',
 });
 
 /**

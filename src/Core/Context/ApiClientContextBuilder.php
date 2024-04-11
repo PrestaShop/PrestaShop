@@ -36,6 +36,7 @@ use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 class ApiClientContextBuilder
 {
     private string $clientId;
+    private ?string $externalIssuer = null;
     private ?ApiClientEntity $apiClient = null;
 
     public function __construct(
@@ -55,7 +56,8 @@ class ApiClientContextBuilder
                 id: $apiClient->getId(),
                 clientId: $apiClient->getClientId(),
                 scopes: $apiClient->getScopes(),
-                shopId: (int) $defaultShopId
+                externalIssuer: $apiClient->getExternalIssuer(),
+                shopId: (int) $defaultShopId,
             );
         }
 
@@ -67,10 +69,17 @@ class ApiClientContextBuilder
         $this->clientId = $clientId;
     }
 
+    public function setExternalIssuer(?string $externalIssuer): self
+    {
+        $this->externalIssuer = $externalIssuer;
+
+        return $this;
+    }
+
     private function getApiClient(): ?ApiClientEntity
     {
         if (!$this->apiClient && !empty($this->clientId)) {
-            $this->apiClient = $this->apiClientRepository->getByClientId($this->clientId);
+            $this->apiClient = $this->apiClientRepository->getByClientId($this->clientId, $this->externalIssuer);
         }
 
         return $this->apiClient;

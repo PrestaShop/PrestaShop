@@ -12,6 +12,8 @@ class KeycloakConnectorDemo extends ModuleConfiguration {
 
   private readonly formKeycloakEndpoint: string;
 
+  private readonly formKeycloakAllowedIssuers: string;
+
   private readonly formKeycloakButtonSubmit: string;
 
   /**
@@ -24,7 +26,8 @@ class KeycloakConnectorDemo extends ModuleConfiguration {
     this.pageTitle = `Keycloak connector • ${global.INSTALL.SHOP_NAME}`;
 
     // Form selectors
-    this.formKeycloakEndpoint = '#form_KEYCLOAK_ENDPOINT';
+    this.formKeycloakEndpoint = '#form_KEYCLOAK_REALM_ENDPOINT';
+    this.formKeycloakAllowedIssuers = '#form_KEYCLOAK_ALLOWED_ISSUERS';
     this.formKeycloakButtonSubmit = 'form.form-horizontal .card-footer button';
   }
 
@@ -33,11 +36,13 @@ class KeycloakConnectorDemo extends ModuleConfiguration {
   /**
    * Set the Keycloak Realm Endpoint
    * @param page {Page} Browser tab
-   * @param endpoint {string}
+   * @param keycloakRealmUrl {string}
+   * @param allowedIssuers {string[]}
    * @returns {Promise<number>}
    */
-  async setKeycloakEndpoint(page: Page, endpoint: string): Promise<string> {
-    await page.locator(this.formKeycloakEndpoint).fill(endpoint);
+  async setKeycloakEndpoint(page: Page, keycloakRealmUrl: string, allowedIssuers: string[]): Promise<string> {
+    await page.locator(this.formKeycloakEndpoint).fill(keycloakRealmUrl);
+    await page.locator(this.formKeycloakAllowedIssuers).fill(allowedIssuers.join(' '));
 
     await this.clickAndWaitForLoadState(page, this.formKeycloakButtonSubmit);
 

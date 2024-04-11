@@ -70,7 +70,8 @@ class ApiClientFormDataProviderTest extends TestCase
                 true,
                 'short description',
                 ['api_client_read', 'hook_read'],
-                3600
+                3600,
+                null,
             ),
             [
                 'client_id' => 'client-id',
@@ -79,6 +80,29 @@ class ApiClientFormDataProviderTest extends TestCase
                 'enabled' => true,
                 'scopes' => ['api_client_read', 'hook_read'],
                 'lifetime' => 3600,
+                'external_issuer' => null,
+            ],
+        ];
+
+        yield 'simple case with external issuer' => [
+            new EditableApiClient(
+                42,
+                'client-id',
+                'client-name',
+                true,
+                'short description',
+                ['api_client_read', 'hook_read'],
+                3600,
+                'http://localhost/authorization_server',
+            ),
+            [
+                'client_id' => 'client-id',
+                'client_name' => 'client-name',
+                'description' => 'short description',
+                'enabled' => true,
+                'scopes' => ['api_client_read', 'hook_read'],
+                'lifetime' => 3600,
+                'external_issuer' => 'http://localhost/authorization_server',
             ],
         ];
     }
