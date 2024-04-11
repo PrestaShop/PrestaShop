@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintE
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -53,6 +54,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class LanguageController manages "Improve > International > Localization > Languages".
  */
+#[AllShopContext]
 class LanguageController extends FrameworkBundleAdminController
 {
     /**

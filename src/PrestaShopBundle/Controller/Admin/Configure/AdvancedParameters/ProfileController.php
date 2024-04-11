@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -51,6 +52,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Class ProfileController is responsible for displaying the
  * "Configure > Advanced parameters > Team > Roles" page.
  */
+#[AllShopContext]
 class ProfileController extends FrameworkBundleAdminController
 {
     /**
