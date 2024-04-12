@@ -54,7 +54,15 @@ class HomePage extends FOBasePage {
 
   private readonly customTextBlock: string;
 
+  private readonly newsletterBlock: string;
+
   protected newsletterFormField: string;
+
+  private readonly newsletterRGPDBlock: string;
+
+  private readonly newsletterRGPDBlockCheckbox: string;
+
+  private readonly newsletterRGPDBlockLabel: string;
 
   protected newsletterSubmitButton: string;
 
@@ -117,8 +125,12 @@ class HomePage extends FOBasePage {
     this.customTextBlock = '#custom-text';
 
     // Newsletter Subscription selectors
-    this.newsletterFormField = '.block_newsletter [name=email]';
-    this.newsletterSubmitButton = '.block_newsletter [name="submitNewsletter"][value="Subscribe"]';
+    this.newsletterBlock = '.block_newsletter';
+    this.newsletterFormField = `${this.newsletterBlock} [name=email]`;
+    this.newsletterRGPDBlock = `${this.newsletterBlock} div[class^="gdpr_consent gdpr_module_"]`;
+    this.newsletterRGPDBlockCheckbox = `${this.newsletterRGPDBlock} label.psgdpr_consent_message input[type="checkbox"]`;
+    this.newsletterRGPDBlockLabel = `${this.newsletterRGPDBlock} label.psgdpr_consent_message span:nth-of-type(2)`;
+    this.newsletterSubmitButton = `${this.newsletterBlock} [name="submitNewsletter"][value="Subscribe"]`;
     this.subscriptionAlertMessage = '.block_newsletter_alert';
   }
 
@@ -367,9 +379,30 @@ class HomePage extends FOBasePage {
    */
   async subscribeToNewsletter(page: Page, email: string): Promise<string> {
     await this.setValue(page, this.newsletterFormField, email);
+    if (await this.hasSubscribeNewsletterRGPD(page)) {
+      await this.setChecked(page, this.newsletterRGPDBlockCheckbox, true);
+    }
     await this.waitForSelectorAndClick(page, this.newsletterSubmitButton);
 
     return this.getTextContent(page, this.subscriptionAlertMessage);
+  }
+
+  /**
+   * Returns if the block RGPD for the newsletter is visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async hasSubscribeNewsletterRGPD(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.newsletterRGPDBlock, 3000);
+  }
+
+  /**
+   * Returns the label of the block RGPD for the newsletter
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getSubscribeNewsletterRGPDLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.newsletterRGPDBlockLabel);
   }
 }
 
