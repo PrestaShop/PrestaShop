@@ -20,6 +20,8 @@ api_platform:
     json: [ 'application/json', 'application/merge-patch+json' ]
     # Allow this format for other API endpoint than native endpoint (by default we will use json)
     jsonld: [ 'application/ld+json' ]
+    # Multipart format for file upload
+    multipart: [ 'multipart/form-data' ]
   patch_formats:
     json: [ 'application/merge-patch+json' ]
   error_formats:
