@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShopBundle\ApiPlatform;
+namespace PrestaShopBundle\ApiPlatform\Serializer;
 
 use ReflectionClass;
 use ReflectionException;
