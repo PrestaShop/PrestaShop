@@ -1,12 +1,11 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/account';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {createAccountTest} from '@commonTests/FO/classic/account';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
@@ -20,8 +19,12 @@ import productPage from '@pages/FO/hummingbird/product';
 
 // Import data
 import Products from '@data/demo/products';
-import CustomerData from '@data/faker/customer';
-import AddressData from '@data/faker/address';
+
+import {
+  // Import data
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -50,10 +53,10 @@ describe('FO - Account : CRUD address', async () => {
   let firstAddressPosition: number = 0;
   let secondAddressPosition: number = 0;
 
-  const newCustomerData: CustomerData = new CustomerData();
-  const createAddressData: AddressData = new AddressData({country: 'France'});
-  const editAddressData: AddressData = new AddressData({country: 'France'});
-  const secondAddressData: AddressData = new AddressData({country: 'France'});
+  const newCustomerData: FakerCustomer = new FakerCustomer();
+  const createAddressData: FakerAddress = new FakerAddress({country: 'France'});
+  const editAddressData: FakerAddress = new FakerAddress({country: 'France'});
+  const secondAddressData: FakerAddress = new FakerAddress({country: 'France'});
 
   // Pre-condition
   createAccountTest(newCustomerData, `${baseContext}_preTest_1`);
@@ -69,7 +72,6 @@ describe('FO - Account : CRUD address', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Go to \'Add first address\' page and create address', async () => {

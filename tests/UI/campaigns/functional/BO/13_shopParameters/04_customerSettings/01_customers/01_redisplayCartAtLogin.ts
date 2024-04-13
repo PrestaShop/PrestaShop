@@ -14,9 +14,13 @@ import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/o
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as loginFOPage} from '@pages/FO/classic/login';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
-// Import data
-import Customers from '@data/demo/customers';
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -101,19 +105,25 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
 
       // Login FO
       await homePage.goToLoginPage(page);
-      await loginFOPage.customerLogin(page, Customers.johnDoe);
+      await loginFOPage.customerLogin(page, dataCustomers.johnDoe);
 
       const connected = await homePage.isCustomerConnected(page);
       expect(connected, 'Customer is not connected in FO').to.eq(true);
     });
 
-    it('should add the first product to the cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `addProductToTheCart_${index}`, baseContext);
+    it('should quick view the first product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `quickViewFirstProduct_${index}`, baseContext);
 
       // Add first product to the cart
       await homePage.goToHomePage(page);
-      await homePage.addProductToCartByQuickView(page, 1, 1);
-      await homePage.proceedToCheckout(page);
+      await homePage.quickViewProduct(page, 1);
+    });
+
+    it('should add the first product to the cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `addProductToTheCart_${index}`, baseContext);
+
+      await quickViewModal.addToCartByQuickView(page);
+      await blockCartModal.proceedToCheckout(page);
 
       // Check number of product in cart
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
@@ -135,7 +145,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
 
       // Login FO
       await homePage.goToLoginPage(page);
-      await loginFOPage.customerLogin(page, Customers.johnDoe);
+      await loginFOPage.customerLogin(page, dataCustomers.johnDoe);
 
       const connected = await homePage.isCustomerConnected(page);
       expect(connected, 'Customer is not connected in FO').to.eq(true);

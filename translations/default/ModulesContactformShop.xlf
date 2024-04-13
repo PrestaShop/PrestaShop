@@ -25,12 +25,12 @@
       <trans-unit id="881ae7c0ea0a71b12b4548d4268464f7">
         <source>An error occurred while sending the message.</source>
         <target>An error occurred while sending the message.</target>
-        <note>Line: 660</note>
+        <note>Line: 661</note>
       </trans-unit>
       <trans-unit id="4ec1c39345fe8820d68463eea8803b0f">
         <source>Your message has been successfully sent to our team.</source>
         <target>Your message has been successfully sent to our team.</target>
-        <note>Line: 670</note>
+        <note>Line: 671</note>
       </trans-unit>
     </body>
   </file>

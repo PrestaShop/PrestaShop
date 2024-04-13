@@ -12,6 +12,8 @@ class CreditSlip extends CreditSlipPage {
    */
   constructor() {
     super('hummingbird');
+
+    this.homeLink = 'nav.breadcrumb__wrapper li.breadcrumb-item:nth-child(1) a';
   }
 }
 

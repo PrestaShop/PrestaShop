@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import FO pages
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -11,14 +11,18 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
-import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
-import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
-import PaymentMethods from '@data/demo/paymentMethods';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -43,14 +47,14 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
   let page: Page;
 
   const orderData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create order
@@ -88,7 +92,7 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -138,7 +142,7 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
     it('should Pay by bank wire and confirm order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmReorder', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       const pageTitle = await orderConfirmationPage.getPageTitle(page);
       expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);

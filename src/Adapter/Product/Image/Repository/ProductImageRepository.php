@@ -90,6 +90,22 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * @return Image[]
+     */
+    public function getAllImages(): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('i.id_image')
+            ->from($this->dbPrefix . 'image', 'i')
+            ->addOrderBy('i.id_image', 'ASC')
+       ;
+
+        return array_map(static function (string $id): Image {
+            return new Image((int) $id);
+        }, $qb->executeQuery()->fetchFirstColumn());
+    }
+
+    /**
      * @param ProductId $productId
      *
      * @return Image[]

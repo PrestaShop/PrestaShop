@@ -1,10 +1,13 @@
-import Countries from '@data/demo/countries';
-import CountryData from '@data/faker/country';
 import BrandAddressCreator from '@data/types/brandAddress';
+import {
+  // Import data
+  dataCountries,
+  type FakerCountry,
+} from '@prestashop-core/ui-testing';
 
 import {fakerFR as faker} from '@faker-js/faker';
 
-const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
+const countriesNames: string[] = Object.values(dataCountries).map((country: FakerCountry) => country.name);
 
 /**
  * Create new brand address to use in brand address form on BO

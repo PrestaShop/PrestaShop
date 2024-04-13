@@ -1,12 +1,16 @@
-import Countries from '@data/demo/countries';
-import Customers from '@data/demo/customers';
-import CountryData from '@data/faker/country';
 import ImportData from '@data/faker/import';
 import type {ImportAddress} from '@data/types/import';
 
+import {
+  // Import data
+  dataCountries,
+  dataCustomers,
+  type FakerCountry,
+} from '@prestashop-core/ui-testing';
+
 import {fakerFR as faker} from '@faker-js/faker';
 
-const countriesNames = Object.values(Countries).map((country: CountryData) => country.name);
+const countriesNames = Object.values(dataCountries).map((country: FakerCountry) => country.name);
 
 const records: ImportAddress[] = [];
 
@@ -16,8 +20,8 @@ function createRecord(): ImportAddress[] {
       id: i + 3,
       alias: faker.location.streetAddress().substring(0, 30),
       active: faker.number.int({min: 0, max: 1}),
-      email: Customers.johnDoe.email,
-      customerID: Customers.johnDoe.id,
+      email: dataCustomers.johnDoe.email,
+      customerID: dataCustomers.johnDoe.id,
       manufacturer: '',
       supplier: '',
       company: faker.company.name(),

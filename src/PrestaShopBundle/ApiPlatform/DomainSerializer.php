@@ -53,6 +53,13 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
      */
     protected $cachedReflectionClasses = [];
 
+    private const SCALAR_TYPES = [
+        'int' => true,
+        'bool' => true,
+        'float' => true,
+        'string' => true,
+    ];
+
     /**
      * @param Traversable $denormalizers
      */
@@ -127,7 +134,8 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
     private function getConvertedValue($value, ReflectionParameter|ReflectionProperty $parameter = null)
     {
         $paramType = $parameter->getType() instanceof ReflectionNamedType ? $parameter->getType()->getName() : null;
-        if ($paramType && $paramType !== gettype($value)) {
+        // For non scalar types we denormalize the values
+        if ($paramType && !isset(self::SCALAR_TYPES[$paramType]) && $paramType !== gettype($value)) {
             return $this->serializer->denormalize($value, $paramType);
         } else {
             return $value;

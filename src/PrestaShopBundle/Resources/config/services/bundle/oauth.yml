@@ -4,7 +4,7 @@ services:
 
   PrestaShopBundle\Security\OAuth2\Repository\ClientRepository:
     arguments:
-      - '@prestashop.security.api-access.provider'
+      - '@PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider'
       - '@security.user_password_hasher'
 
   PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository:
@@ -14,7 +14,7 @@ services:
   PrestaShopBundle\Security\OAuth2\Repository\ScopeRepository:
     arguments:
       - '@PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface'
-      - '@prestashop.security.api-access.provider'
+      - '@PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider'
 
   League\OAuth2\Server\Grant\ClientCredentialsGrant:
 
@@ -72,12 +72,3 @@ services:
   PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController:
     autowire: true
     autoconfigure: true
-
-  PrestaShopBundle\ApiPlatform\Normalizer\:
-    resource: "../../../../ApiPlatform/Normalizer/*"
-    tags: [ 'prestashop.api.normalizers' ]
-
-  PrestaShopBundle\ApiPlatform\DomainSerializer:
-    class: PrestaShopBundle\ApiPlatform\DomainSerializer
-    arguments:
-      - !tagged_iterator { tag: prestashop.api.normalizers, default_priority_method: getNormalizerPriority }

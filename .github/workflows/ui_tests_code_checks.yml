@@ -104,3 +104,31 @@ jobs:
 
       - name: Checking doubles in steps identifiers
         run: npm run check:step-identifiers
+
+  suites:
+    runs-on: ubuntu-latest
+    name: Checking Suites Count
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright/
+          key: ${{ runner.os }}-browsers
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies in UI tests directory
+        run: npm ci
+
+      - name: Install browsers
+        run: npx playwright install --with-deps
+
+      - name: Checking that all suites are executed
+        run: npm run check:suites

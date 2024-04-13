@@ -2,13 +2,12 @@
 import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import commonTests
 import {createCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import createAccountTest from '@commonTests/FO/hummingbird/account';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
@@ -18,7 +17,11 @@ import foVouchersPage from '@pages/FO/hummingbird/myAccount/vouchers';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';
-import CustomerData from '@data/faker/customer';
+
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -45,7 +48,7 @@ describe('FO - Account : View vouchers', async () => {
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
   const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
   const expirationDate: string = date.getDateFormat('mm/dd/yyyy', 'future');
-  const customerData: CustomerData = new CustomerData({});
+  const customerData: FakerCustomer = new FakerCustomer({});
   const firstCartRule: CartRuleData = new CartRuleData({
     code: 'promo20',
     customer: customerData,
@@ -81,7 +84,6 @@ describe('FO - Account : View vouchers', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('View vouchers on FO', async () => {

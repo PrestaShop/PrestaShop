@@ -270,6 +270,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
         $product->id_shop_default = $shopId->getValue();
         $product->name = $localizedNames;
         $product->link_rewrite = $localizedLinkRewrites;
+        $product->id_tax_rules_group = $this->taxRulesGroupRepository->getIdTaxRulesGroupMostUsed();
 
         $this->productValidator->validateCreation($product);
         $this->addObjectModelToShops($product, [$shopId], CannotAddProductException::class);

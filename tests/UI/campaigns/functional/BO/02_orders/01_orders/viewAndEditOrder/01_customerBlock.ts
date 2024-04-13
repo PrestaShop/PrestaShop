@@ -5,19 +5,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createAccountTest, createAddressTest} from '@commonTests/FO/account';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createAccountTest, createAddressTest} from '@commonTests/FO/classic/account';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
-
-// Import data
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
-import AddressData from '@data/faker/address';
-
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 // Import BO pages
 import customersPage from '@pages/BO/customers';
@@ -26,8 +18,18 @@ import viewCustomerPage from '@pages/BO/customers/view';
 
 // Import data
 import Products from '@data/demo/products';
-import CustomerData from '@data/faker/customer';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_customerBlock';
 
@@ -54,11 +56,11 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
   let customerID: number = 0;
   let addressID: string = '0';
 
-  const customerData: CustomerData = new CustomerData();
-  const firstAddressData: AddressData = new AddressData({firstName: 'first', country: 'France'});
-  const secondAddressData: AddressData = new AddressData({firstName: 'second', country: 'France'});
-  const editShippingAddressData: AddressData = new AddressData({country: 'France'});
-  const editInvoiceAddressData: AddressData = new AddressData({country: 'France'});
+  const customerData: FakerCustomer = new FakerCustomer();
+  const firstAddressData: FakerAddress = new FakerAddress({firstName: 'first', country: 'France'});
+  const secondAddressData: FakerAddress = new FakerAddress({firstName: 'second', country: 'France'});
+  const editShippingAddressData: FakerAddress = new FakerAddress({country: 'France'});
+  const editInvoiceAddressData: FakerAddress = new FakerAddress({country: 'France'});
   const privateNote: string = 'Test private note';
   // New order by customer data
   const orderData: OrderData = new OrderData({
@@ -69,10 +71,10 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   // Customer login data
-  const customerLoginData = new CustomerData({
+  const customerLoginData = new FakerCustomer({
     email: customerData.email,
     password: customerData.password,
   });
@@ -388,13 +390,13 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
       expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrderTable2', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should view the 1st order for the default customer', async function () {
@@ -475,13 +477,13 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
       expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrderTable4', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should view the 2nd order for the default customer', async function () {

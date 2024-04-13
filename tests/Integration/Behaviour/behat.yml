@@ -154,6 +154,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerManagerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ApiClientManagementFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\AddCartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\CartRuleAssertionFeatureContext
@@ -595,9 +596,16 @@ default:
             - Tests\Integration\Behaviour\Features\Context\Domain\AliasFeatureContext
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
             - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
-        api-access:
+        api-client:
           paths:
-            - "%paths.base%/Features/Scenario/ApiAccess"
+            - "%paths.base%/Features/Scenario/ApiClient"
           contexts:
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\ApiAccessManagementFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\ApiClientManagementFeatureContext
+        image-settings:
+          paths:
+            - "%paths.base%/Features/Scenario/ImageSettings"
+          contexts:
+            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\ImageSettings\ImageTypeContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\ImageSettings\ImageSettingsContext

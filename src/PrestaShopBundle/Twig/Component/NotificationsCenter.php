@@ -32,7 +32,9 @@ use Configuration;
 use Context;
 use Link;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
 use Profile;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -50,7 +52,8 @@ class NotificationsCenter
 
     public function __construct(
         protected readonly TranslatorInterface $translator,
-        protected readonly LegacyContext $legacyContext
+        protected readonly LegacyContext $legacyContext,
+        protected readonly RouterInterface $router,
     ) {
         $this->link = $legacyContext->getContext()->link;
     }
@@ -136,7 +139,7 @@ class NotificationsCenter
                     [
                         '[1]' => '<strong>',
                         '[/1]' => '</strong>',
-                        '[2]' => '<a href="' . $this->link->getAdminLink('AdminCarts', true, [], ['action' => 'filterOnlyAbandonedCarts']) . '">',
+                        '[2]' => '<a href="' . $this->router->generate('admin_carts_index', ['cart[filters][status]' => CartStatus::ABANDONED_CART]) . '">',
                         '[/2]' => '</a>',
                         '[3]' => '<br>',
                     ],

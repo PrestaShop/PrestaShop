@@ -6,18 +6,22 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {bulkDeleteCustomersTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByGuestTest} from '@commonTests/FO/order';
+import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -37,8 +41,8 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
   let browserContext: BrowserContext;
   let page: Page;
 
-  const addressData: AddressData = new AddressData({country: 'France'});
-  const customerData: CustomerData = new CustomerData({password: '', lastName: 'guest'});
+  const addressData: FakerAddress = new FakerAddress({country: 'France'});
+  const customerData: FakerCustomer = new FakerCustomer({password: '', lastName: 'guest'});
   // New order by guest data
   const orderByGuestData: OrderData = new OrderData({
     customer: customerData,
@@ -49,7 +53,7 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
       },
     ],
     deliveryAddress: addressData,
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create 16 orders
@@ -93,28 +97,28 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 20);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await shoppingCartsPage.paginationNext(page);
-      expect(paginationNumber).to.equal('2');
+      expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
       const paginationNumber = await shoppingCartsPage.paginationPrevious(page);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 300 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo300', baseContext);
 
-      const paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 300);
-      expect(paginationNumber).to.equal('1');
+      const paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 100);
+      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 
@@ -123,61 +127,61 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
     it('should filter by customer lastName start by \'guest\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToSort', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'c!lastname', 'guest');
+      await shoppingCartsPage.filterTable(page, 'input', 'customer_name', 'guest');
 
-      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'c!lastname');
+      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'customer_name');
       expect(textColumn).to.contains(customerData.lastName);
     });
 
     const sortTests = [
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_cart', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_cart', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByOrderIDAsc', sortBy: 'status', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByOrderIDAsc', sortBy: 'status', sortDirection: 'asc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByOrderIDDesc', sortBy: 'status', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByOrderIDDesc', sortBy: 'status', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByCarrierAsc', sortBy: 'ca!name', sortDirection: 'up',
+          testIdentifier: 'sortByCarrierAsc', sortBy: 'carrier_name', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByCarrierDesc', sortBy: 'ca!name', sortDirection: 'down',
+          testIdentifier: 'sortByCarrierDesc', sortBy: 'carrier_name', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByDateAsc', sortBy: 'date', sortDirection: 'up',
+          testIdentifier: 'sortByDateAsc', sortBy: 'date_add', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByDateDesc', sortBy: 'date', sortDirection: 'down',
+          testIdentifier: 'sortByDateDesc', sortBy: 'date_add', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByOnlineAsc', sortBy: 'id_guest', sortDirection: 'up',
+          testIdentifier: 'sortByOnlineAsc', sortBy: 'customer_online', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByOnlineDesc', sortBy: 'id_guest', sortDirection: 'down',
+          testIdentifier: 'sortByOnlineDesc', sortBy: 'customer_online', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_cart', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_cart', sortDirection: 'asc', isFloat: true,
         },
       },
     ];
@@ -198,7 +202,7 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.args.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
@@ -206,7 +210,7 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
         } else {
           const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());

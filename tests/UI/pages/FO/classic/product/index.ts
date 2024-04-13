@@ -23,11 +23,11 @@ class Product extends FOBasePage {
 
   private readonly warningMessage: string;
 
-  private readonly productFlags: string;
+  protected productFlags: string;
 
   private readonly productFlag: (flag: string) => string;
 
-  private readonly productName: string;
+  protected productName: string;
 
   private readonly productCoverImg: string;
 
@@ -37,11 +37,15 @@ class Product extends FOBasePage {
 
   private readonly productQuantity: string;
 
-  private readonly shortDescription: string;
+  protected shortDescription: string;
 
   private readonly productDescription: string;
 
-  private readonly customizedTextarea: string;
+  protected customizationBlock: string;
+
+  protected customizedTextarea: (row: number) => string;
+
+  protected customizationsMessage: (row: number) => string;
 
   private readonly saveCustomizationButton: string;
 
@@ -81,7 +85,7 @@ class Product extends FOBasePage {
 
   private readonly pinterestSocialSharing: string;
 
-  private readonly productPricesBlock: string;
+  protected productPricesBlock: string;
 
   private readonly discountAmountSpan: string;
 
@@ -91,7 +95,7 @@ class Product extends FOBasePage {
 
   private readonly packProductsPrice: string;
 
-  private readonly productPrice: string;
+  protected productPrice: string;
 
   private readonly taxShippingDeliveryBlock: string;
 
@@ -165,6 +169,8 @@ class Product extends FOBasePage {
 
   private readonly productInPackQuantity: (productInList: number) => string;
 
+  private readonly productsBlock: (blockName: string) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on product page
@@ -189,8 +195,10 @@ class Product extends FOBasePage {
     this.productQuantity = '#quantity_wanted';
     this.shortDescription = '#product-description-short';
     this.productDescription = '#description';
-    this.customizedTextarea = '.product-customization-item .product-message';
+    this.customizationBlock = 'div.product-container div.product-information section.product-customization';
+    this.customizedTextarea = (row: number) => `.product-customization-item:nth-child(${row}) .product-message`;
     this.saveCustomizationButton = 'button[name=\'submitCustomizedData\']';
+    this.customizationsMessage = (row: number) => `div.product-information li:nth-child(${row}) h6`;
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.blockCartModal = '#blockcart-modal';
     this.proceedToCheckoutButton = `${this.blockCartModal} div.cart-content-btn a`;
@@ -262,6 +270,8 @@ class Product extends FOBasePage {
     this.productInPackPrice = (productInList: number) => `${this.productInPackList(productInList)} div.pack-product-price`;
     this.productInPackQuantity = (productInList: number) => `${this.productInPackList(productInList)}`
       + ' div.pack-product-quantity';
+
+    this.productsBlock = (blockName: string) => `#content-wrapper section[data-type="${blockName}"]`;
   }
 
   // Methods
@@ -605,11 +615,34 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Set product customizations
+   * @param page {Page} Browser tab
+   * @param customizedTexts {string[]} Texts to set in customizations input
+   * @returns {Promise<void>}
+   */
+  async setProductCustomizations(page: Page, customizedTexts: string[]): Promise<void> {
+    for (let i = 1; i <= customizedTexts.length; i++) {
+      await this.setValue(page, this.customizedTextarea(i), customizedTexts[i - 1]);
+    }
+    await this.waitForSelectorAndClick(page, this.saveCustomizationButton);
+  }
+
+  /**
+   * Get customizations messages
+   * @param page {Page} Browser tab
+   * @param customizationRow {number} Number of customizations to display
+   * @returns {Promise<string>}
+   */
+  async getCustomizationsMessages(page: Page, customizationRow: number): Promise<string> {
+    return this.getTextContent(page, this.customizationsMessage(customizationRow));
+  }
+
+  /**
    * Click on Add to cart button then on Proceed to checkout button in the modal
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity of the product that customer wants
    * @param combination {ProductAttribute[]}  Product's combination data to add to cart
-   * @param proceedToCheckout {boolean} True to click on proceed to checkout button on modal
+   * @param proceedToCheckout {boolean|null} True to click on proceed to checkout button on modal
    * @param customizedText {string} Value of customization
    * @returns {Promise<void>}
    */
@@ -617,27 +650,28 @@ class Product extends FOBasePage {
     page: Page,
     quantity: number = 1,
     combination: ProductAttribute[] = [],
-    proceedToCheckout: boolean = true,
+    proceedToCheckout: boolean | null = true,
     customizedText: string = 'text',
   ): Promise<void> {
     await this.selectAttributes(page, quantity, combination);
     if (quantity !== 1) {
-      await this.setValue(page, this.productQuantity, quantity.toString());
+      await this.setValue(page, this.productQuantity, quantity);
     }
 
-    if (await this.elementVisible(page, this.customizedTextarea, 2000)) {
-      await this.setValue(page, this.customizedTextarea, customizedText);
+    if (await this.elementVisible(page, this.customizedTextarea(1), 2000)) {
+      await this.setValue(page, this.customizedTextarea(1), customizedText);
       await this.waitForSelectorAndClick(page, this.saveCustomizationButton);
     }
 
     await this.waitForSelectorAndClick(page, this.addToCartButton);
     await this.waitForVisibleSelector(page, `${this.blockCartModal}[style*='display: block;']`);
 
-    if (proceedToCheckout) {
+    if (proceedToCheckout === true) {
       await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
       await this.clickAndWaitForURL(page, this.proceedToCheckoutButton);
       await this.waitForPageTitleToLoad(page);
-    } else {
+    }
+    if (proceedToCheckout === false) {
       await this.waitForSelectorAndClick(page, this.continueShoppingButton);
       await this.waitForHiddenSelector(page, this.continueShoppingButton);
     }
@@ -670,6 +704,35 @@ class Product extends FOBasePage {
     }
 
     return this.getAttributeContent(page, selector, 'href');
+  }
+
+  /**
+   * Click social sharing link
+   * @param page {Page} Browser tab
+   * @param socialSharing {string} Social network's name to get link from
+   * @returns {Promise<Page>}
+   */
+  async clickOnSocialSharingLink(page: Page, socialSharing: string): Promise<Page> {
+    let selector;
+
+    switch (socialSharing) {
+      case 'Facebook':
+        selector = this.facebookSocialSharing;
+        break;
+
+      case 'Twitter':
+        selector = this.twitterSocialSharing;
+        break;
+
+      case 'Pinterest':
+        selector = this.pinterestSocialSharing;
+        break;
+
+      default:
+        throw new Error(`${socialSharing} was not found`);
+    }
+
+    return this.openLinkWithTargetBlank(page, selector, 'body', 'networkidle', false);
   }
 
   /**
@@ -731,7 +794,7 @@ class Product extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isCustomizationBlockVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, 'div.product-container div.product-information section.product-customization', 1000);
+    return this.elementVisible(page, this.customizationBlock, 1000);
   }
 
   /**
@@ -867,6 +930,16 @@ class Product extends FOBasePage {
    */
   async getWarningMessage(page: Page): Promise<string> {
     return this.getTextContent(page, this.warningMessage);
+  }
+
+  /**
+   * Has products block
+   * @param blockName {'categoryproducts'} The block name in the page
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async hasProductsBlock(page: Page, blockName: 'categoryproducts'): Promise<boolean> {
+    return (await page.locator(this.productsBlock(blockName)).count()) > 0;
   }
 }
 

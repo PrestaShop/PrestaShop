@@ -77,7 +77,7 @@ jobs:
         run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
       - name: Run Lint Yaml on `app`
-        run: php bin/console lint:yaml app
+        run: php bin/console lint:yaml app --parse-tags
 
       - name: Run Lint Yaml on `src` tags are allowed
         run: php bin/console lint:yaml src --parse-tags

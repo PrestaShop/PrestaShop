@@ -27,8 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditRootCategoryHandlerInterface;
@@ -41,19 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
  * Class EditRootCategoryHandler.
  */
 #[AsCommandHandler]
-final class EditRootCategoryHandler extends AbstractObjectModelHandler implements EditRootCategoryHandlerInterface
+final class EditRootCategoryHandler extends AbstractEditCategoryHandler implements EditRootCategoryHandlerInterface
 {
-    /**
-     * @var CategoryImageUploader
-     */
-    private $categoryImageUploader;
-
-    public function __construct(
-        CategoryImageUploader $categoryImageUploader
-    ) {
-        $this->categoryImageUploader = $categoryImageUploader;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -130,6 +117,10 @@ final class EditRootCategoryHandler extends AbstractObjectModelHandler implement
 
         if (null !== $command->getAssociatedGroupIds()) {
             $category->groupBox = $command->getAssociatedGroupIds();
+        }
+
+        if (null !== $command->getRedirectOption()) {
+            $this->fillWithRedirectOption($category, $command->getRedirectOption());
         }
 
         if ($command->getAssociatedShopIds()) {

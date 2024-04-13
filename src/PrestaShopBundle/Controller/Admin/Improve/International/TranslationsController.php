@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -42,6 +43,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 /**
  * Admin controller for the International pages.
  */
+#[AllShopContext]
 class TranslationsController extends FrameworkBundleAdminController
 {
     public const CONTROLLER_NAME = 'ADMINTRANSLATIONS';
@@ -133,8 +135,8 @@ class TranslationsController extends FrameworkBundleAdminController
     {
         try {
             $routeFinder = $this->get('prestashop.adapter.translation_route_finder');
-            $route = $routeFinder->findRoute($request->query);
-            $routeParameters = $routeFinder->findRouteParameters($request->query);
+            $route = $routeFinder->findRoute($request);
+            $routeParameters = $routeFinder->findRouteParameters($request);
         } catch (InvalidModuleException $e) {
             $this->addFlash('error', $this->trans('An error has occurred, this module does not exist: %s', 'Admin.International.Notification', [$e->getMessage()]));
 

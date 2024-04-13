@@ -10,8 +10,9 @@ import addressesPage from '@pages/BO/customers/addresses';
 import addAddressPage from '@pages/BO/customers/addresses/add';
 import dashboardPage from '@pages/BO/dashboard';
 
-// Import data
-import AddressData from '@data/faker/address';
+import {
+  FakerAddress,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,8 +25,8 @@ describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
   let page: Page;
   let numberOfAddresses: number = 0;
 
-  const createAddressData: AddressData = new AddressData({email: 'pub@prestashop.com', country: 'France'});
-  const editAddressData: AddressData = new AddressData({country: 'France'});
+  const createAddressData: FakerAddress = new FakerAddress({email: 'pub@prestashop.com', country: 'France'});
+  const editAddressData: FakerAddress = new FakerAddress({country: 'France'});
 
   // before and after functions
   before(async function () {

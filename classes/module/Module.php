@@ -3495,6 +3495,8 @@ abstract class ModuleCore implements ModuleInterface
     public static function resetStaticCache()
     {
         static::$_INSTANCE = [];
+        static::$modules_cache = null;
+        static::$cachedModuleNames = null;
         Cache::clean('Module::isEnabled*');
     }
 }

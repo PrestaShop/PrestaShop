@@ -17,9 +17,13 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
 // Import data
-import Customers from '@data/demo/customers';
 import MessageData from '@data/faker/message';
 import Employees from '@data/demo/employees';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -77,7 +81,7 @@ describe('BO - Customer Service : Change status', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

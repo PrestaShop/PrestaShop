@@ -5,7 +5,7 @@
       <trans-unit id="3aaaafde6f9b2701f9e6eb9292e95521">
         <source>Google sitemap</source>
         <target>Google sitemap</target>
-        <note>Line: 58</note>
+        <note>Line: 68</note>
       </trans-unit>
       <trans-unit id="935a6bc13704a117d22333c3155b5dae">
         <source>Generate your Google sitemap file</source>
@@ -15,12 +15,12 @@
       <trans-unit id="b52bf50c73995780892b9945ddc98708">
         <source>An error occured while trying to check your file permissions. Please adjust your permissions to allow PrestaShop to write a file in your root directory.</source>
         <target>An error occured while trying to check your file permissions. Please adjust your permissions to allow PrestaShop to write a file in your root directory.</target>
-        <note>Line: 630</note>
+        <note>Line: 727</note>
       </trans-unit>
       <trans-unit id="400b56170a529d4644b068ade0a6e84f">
         <source>Generate your Google sitemap file and keep it up to date with this module.</source>
         <target>Generate your Google sitemap file and keep it up to date with this module.</target>
-        <note>Line: 59</note>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
@@ -144,67 +144,67 @@
       <trans-unit id="0cbc12a507b5e6c5e2cd4fe3f7a62d1f">
         <source>Indicate the pages that you do not want to include in your sitemap files:</source>
         <target>Indicate the pages that you do not want to include in your sitemap files:</target>
-        <note>Line: 99</note>
+        <note>Line: 97</note>
       </trans-unit>
       <trans-unit id="13a3549902fb75af1df329df5f3b265a">
         <source>Uncheck all</source>
         <target>Uncheck all</target>
-        <note>Line: 140</note>
+        <note>Line: 138</note>
       </trans-unit>
       <trans-unit id="8123c8ac806194dca71afdba4dad85a3">
         <source>Generate sitemap</source>
         <target>Generate sitemap</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="53fdf9abbbe9a13fccaf2a6dd5b6220f">
         <source>Generating a sitemap can take several minutes</source>
         <target>Generating a sitemap can take several minutes</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
         <source>Information</source>
         <target>Information</target>
-        <note>Line: 124</note>
+        <note>Line: 122</note>
       </trans-unit>
       <trans-unit id="221dffef949377570bdc389d3f983c66">
         <source>You have two ways to generate sitemaps.</source>
         <target>You have two ways to generate sitemaps.</target>
-        <note>Line: 126</note>
+        <note>Line: 124</note>
       </trans-unit>
       <trans-unit id="6caa369fd774beef106abbc5cc1e3368">
         <source>Manually:</source>
         <target>Manually:</target>
-        <note>Line: 127</note>
+        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="a331b19ce5be82a91e1e60a091e81212">
         <source>Using the form above (as often as needed)</source>
         <target>Using the form above (as often as needed)</target>
-        <note>Line: 127</note>
+        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="3d263eb0233f14872193733387840c80">
         <source>-or-</source>
         <target>-or-</target>
-        <note>Line: 128</note>
+        <note>Line: 126</note>
       </trans-unit>
       <trans-unit id="957d27165d1dc5947fb00e57967ffcce">
         <source>Automatically:</source>
         <target>Automatically:</target>
-        <note>Line: 129</note>
+        <note>Line: 127</note>
       </trans-unit>
       <trans-unit id="03f772c9541dddad66266c0cf698bba6">
         <source>Ask your hosting provider to setup a "Cron job" to load the following URL at the time you would like:</source>
         <target>Ask your hosting provider to setup a "Cron job" to load the following URL at the time you would like:</target>
-        <note>Line: 129</note>
+        <note>Line: 127</note>
       </trans-unit>
       <trans-unit id="ad71f6d43a4db5fe6bf961882adfa113">
         <source>It will automatically generate your XML sitemaps.</source>
         <target>It will automatically generate your XML sitemaps.</target>
-        <note>Line: 131</note>
+        <note>Line: 129</note>
       </trans-unit>
       <trans-unit id="b7d7436a18bf546dd6438d92218868c1">
         <source>Check all</source>
         <target>Check all</target>
-        <note>Line: 139</note>
+        <note>Line: 137</note>
       </trans-unit>
     </body>
   </file>

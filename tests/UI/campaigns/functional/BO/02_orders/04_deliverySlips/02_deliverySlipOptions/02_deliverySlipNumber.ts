@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -13,12 +13,16 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import DeliverySlipOptionsData from '@data/faker/deliverySlipOptions';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -40,14 +44,14 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
   let fileName: string;
 
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 5,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   const deliverySlipData: DeliverySlipOptionsData = new DeliverySlipOptionsData();
 
@@ -116,11 +120,11 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
       expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      expect(result).to.equal(OrderStatuses.shipped.name);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should check that the delivery slip file name contain the \'Delivery slip number\'', async function () {

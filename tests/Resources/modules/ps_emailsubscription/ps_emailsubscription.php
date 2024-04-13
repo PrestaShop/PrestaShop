@@ -79,4 +79,12 @@ class Ps_Emailsubscription extends Module
 
         return true;
     }
+
+    public function hookDisplayFooterBefore()
+    {
+    }
+
+    public function hookActionCustomerAccountAdd()
+    {
+    }
 }

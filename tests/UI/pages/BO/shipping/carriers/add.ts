@@ -1,8 +1,10 @@
 // Import BO pages
 import BOBasePage from '@pages/BO/BObasePage';
 
-// Import data
-import CarrierData from '@data/faker/carrier';
+import {
+  // Import data
+  FakerCarrier,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -115,10 +117,10 @@ class AddCarrier extends BOBasePage {
   /**
    * Fill carrier form in create or edit page and save
    * @param page {Page} Browser tab
-   * @param carrierData {CarrierData} Carrier information
+   * @param carrierData {FakerCarrier} Carrier information
    * @return {Promise<string>}
    */
-  async createEditCarrier(page: Page, carrierData: CarrierData): Promise<string> {
+  async createEditCarrier(page: Page, carrierData: FakerCarrier): Promise<string> {
     // Set general settings
     await this.setValue(page, this.nameInput, carrierData.name);
     await this.setValue(page, this.transitTimeInput, carrierData.transitName);

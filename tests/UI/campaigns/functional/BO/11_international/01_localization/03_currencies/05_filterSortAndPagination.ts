@@ -12,9 +12,10 @@ import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 
-// Import data
-import Currencies from '@data/demo/currencies';
-import type CurrencyData from '@data/faker/currency';
+import {
+  dataCurrencies,
+  type FakerCurrency,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -77,12 +78,13 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
     expect(numberOfCurrencies).to.be.above(0);
   });
 
-  const currencies: CurrencyData[] = [Currencies.mad, Currencies.all, Currencies.chileanPeso, Currencies.dzd, Currencies.tnd,
-    Currencies.try, Currencies.usd, Currencies.aed, Currencies.lyd, Currencies.lsl,
+  const currencies: FakerCurrency[] = [
+    dataCurrencies.mad, dataCurrencies.all, dataCurrencies.chileanPeso, dataCurrencies.dzd, dataCurrencies.tnd,
+    dataCurrencies.try, dataCurrencies.usd, dataCurrencies.aed, dataCurrencies.lyd, dataCurrencies.lsl,
   ];
 
   // 1 - Create 10 currencies
-  currencies.forEach((currency: CurrencyData, index: number) => {
+  currencies.forEach((currency: FakerCurrency, index: number) => {
     describe(`Create official currency '${currency.name}'`, async () => {
       it('should go to create new currency page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCurrencyPage${index}`, baseContext);
@@ -125,7 +127,7 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: Currencies.all.name,
+            filterValue: dataCurrencies.all.name,
           },
       },
       {
@@ -134,7 +136,7 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
             testIdentifier: 'filterBySymbol',
             filterType: 'input',
             filterBy: 'symbol',
-            filterValue: Currencies.all.symbol,
+            filterValue: dataCurrencies.all.symbol,
           },
 
       },
@@ -144,7 +146,7 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
             testIdentifier: 'filterByIsoCode',
             filterType: 'input',
             filterBy: 'iso_code',
-            filterValue: Currencies.all.isoCode,
+            filterValue: dataCurrencies.all.isoCode,
           },
       },
       {
@@ -153,7 +155,7 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
             testIdentifier: 'filterByEnabled',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: Currencies.all.enabled ? '1' : '0',
+            filterValue: dataCurrencies.all.enabled ? '1' : '0',
           },
       },
     ].forEach((test, index: number) => {
@@ -285,7 +287,7 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
 
   // 4 : Delete currencies created
   describe('Delete currencies', async () => {
-    currencies.forEach((currency: CurrencyData, index: number) => {
+    currencies.forEach((currency: FakerCurrency, index: number) => {
       it(`should filter list by currency name '${currency.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 

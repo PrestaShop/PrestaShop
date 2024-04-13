@@ -25,7 +25,7 @@ services:
       $defaultShopLanguageId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
       $saveFormLocaleChoice: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
       $defaultFormLanguageId: "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
-      $isDebug: '@=service("prestashop.adapter.environment").isDebug()'
+      $isDebug: '%kernel.debug%'
       $multiStoreFeature: '@prestashop.adapter.feature.multistore'
       $contextShopId: '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       $contextLangId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
@@ -486,6 +486,12 @@ services:
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
       $homeCategoryId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
 
+  PrestaShopBundle\Form\Admin\Sell\Category\SEO\RedirectOptionType:
+    arguments:
+      $targetTransformer: '@PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer'
+      $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Category\EventListener\RedirectOptionListener'
+      $homeCategoryId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
+
   PrestaShopBundle\Form\Admin\Sell\Product\Options\VisibilityType:
     arguments:
       $productVisibilityChoiceProvider: '@prestashop.core.form.choice_provider.product_visibility_choice_provider'
@@ -632,6 +638,9 @@ services:
       package: PrestaShop\PrestaShop
       version: 9.0
 
+  PrestaShopBundle\Form\Admin\Sell\Category\EventListener\RedirectOptionListener:
+    autowire: true
+
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
     autowire: true
     autoconfigure: true
@@ -651,3 +660,8 @@ services:
       - { method: setTranslator, arguments: [ '@translator' ] }
     tags:
       - { name: form.type }
+
+  PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageTypeType: ~
+  PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\DeleteImageTypeType: ~
+  PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageSettingsType: ~
+  PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\RegenerateThumbnailsType: ~

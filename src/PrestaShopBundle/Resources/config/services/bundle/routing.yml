@@ -2,7 +2,7 @@ services:
   prestashop.bundle.routing.module_route_loader:
     class: 'PrestaShopBundle\Routing\YamlModuleLoader'
     arguments:
-      - '@=service("prestashop.adapter.module.repository.module_repository").getActiveModulesPaths()'
+      - '@=service("prestashop.adapter.module.repository.module_repository").getInstalledModulesPaths()'
     tags: [ routing.loader ]
 
   prestashop.bundle.routing.converter.legacy_url_converter:

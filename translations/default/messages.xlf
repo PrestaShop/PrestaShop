@@ -116,6 +116,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
+        <source>%</source>
+        <target>%</target>
+        <note>Line: 107</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a1e7379abfdbc3b8e03506e5489c6110">
@@ -209,6 +218,11 @@
         <source>Manage hooks</source>
         <target>Manage hooks</target>
         <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
+        <source>Reset</source>
+        <target>Reset</target>
+        <note>Line: 79</note>
       </trans-unit>
     </body>
   </file>
@@ -395,6 +409,56 @@
         <target>No modules available in this section.</target>
         <note>Line: 200</note>
       </trans-unit>
+      <trans-unit id="df3f079de6961496f0460dcfdbf9bca3">
+        <source>by</source>
+        <target>by</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
+        <source>Read more</source>
+        <target>Read more</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="ba6b1bc4d8bfe5e6e835afa72f102a02">
+        <source>You bought this module on PrestaShop Addons. Thank You.</source>
+        <target>You bought this module on PrestaShop Addons. Thank You.</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="fe5a7fc9d9c907efdf6a384a71cd53fc">
+        <source>Bought</source>
+        <target>Bought</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="0461779839539a8ee8fb2dca43cf5bec">
+        <source>This module is available on PrestaShop Addons</source>
+        <target>This module is available on PrestaShop Addons</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="2cc1943d4c0b46bfcf503a75c44f988b">
+        <source>Popular</source>
+        <target>Popular</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="0008feba81a131902ece95d59f1b8f21">
+        <source>Official</source>
+        <target>Official</target>
+        <note>Line: 61</note>
+      </trans-unit>
+      <trans-unit id="28f60d4760851bab00345a3cb86871f7">
+        <source>Need update</source>
+        <target>Need update</target>
+        <note>Line: 64</note>
+      </trans-unit>
+      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
+        <source>Free</source>
+        <target>Free</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="349838fb1d851d3e2014b9fe39203275">
+        <source>Install</source>
+        <target>Install</target>
+        <note>Line: 104</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/modal_translation.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -408,15 +472,15 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/page.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6afd80bf62a1b8bdfe729af8a0159fee">
-        <source>Modules list</source>
-        <target>Modules list</target>
-        <note>Line: 81</note>
-      </trans-unit>
       <trans-unit id="96e36efe70e72835ae51946e2650f9e7">
         <source>Add a new module</source>
         <target>Add a new module</target>
         <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="6afd80bf62a1b8bdfe729af8a0159fee">
+        <source>Modules list</source>
+        <target>Modules list</target>
+        <note>Line: 81</note>
       </trans-unit>
       <trans-unit id="6dc2462f2851bdac265c852f023b6d3f">
         <source>The module must either be a Zip file (.zip) or a tarball file (.tar, .tar.gz, .tgz).</source>
@@ -520,11 +584,6 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/readmore-header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="df3f079de6961496f0460dcfdbf9bca3">
-        <source>by</source>
-        <target>by</target>
-        <note>Line: 30</note>
-      </trans-unit>
       <trans-unit id="9e3669d19b675bd57058fd4664205d2a">
         <source>v</source>
         <target>v</target>
@@ -534,51 +593,6 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/tab_module_line.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
-        <source>Read more</source>
-        <target>Read more</target>
-        <note>Line: 52</note>
-      </trans-unit>
-      <trans-unit id="ba6b1bc4d8bfe5e6e835afa72f102a02">
-        <source>You bought this module on PrestaShop Addons. Thank You.</source>
-        <target>You bought this module on PrestaShop Addons. Thank You.</target>
-        <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="fe5a7fc9d9c907efdf6a384a71cd53fc">
-        <source>Bought</source>
-        <target>Bought</target>
-        <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="0461779839539a8ee8fb2dca43cf5bec">
-        <source>This module is available on PrestaShop Addons</source>
-        <target>This module is available on PrestaShop Addons</target>
-        <note>Line: 38</note>
-      </trans-unit>
-      <trans-unit id="2cc1943d4c0b46bfcf503a75c44f988b">
-        <source>Popular</source>
-        <target>Popular</target>
-        <note>Line: 38</note>
-      </trans-unit>
-      <trans-unit id="0008feba81a131902ece95d59f1b8f21">
-        <source>Official</source>
-        <target>Official</target>
-        <note>Line: 40</note>
-      </trans-unit>
-      <trans-unit id="28f60d4760851bab00345a3cb86871f7">
-        <source>Need update</source>
-        <target>Need update</target>
-        <note>Line: 43</note>
-      </trans-unit>
-      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
-        <source>Free</source>
-        <target>Free</target>
-        <note>Line: 64</note>
-      </trans-unit>
-      <trans-unit id="349838fb1d851d3e2014b9fe39203275">
-        <source>Install</source>
-        <target>Install</target>
-        <note>Line: 104</note>
-      </trans-unit>
       <trans-unit id="f248df0d4d7e4ae98485c5df8af58945">
         <source>This module is available for free thanks to our partner.</source>
         <target>This module is available for free thanks to our partner.</target>
@@ -996,11 +1010,6 @@
         <target>Dec</target>
         <note>Line: 115</note>
       </trans-unit>
-      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
-        <source>From</source>
-        <target>From</target>
-        <note>Line: 87</note>
-      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/helpers/form/assoshop.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1009,11 +1018,6 @@
         <source>Group:</source>
         <target>Group:</target>
         <note>Line: 99</note>
-      </trans-unit>
-      <trans-unit id="741aae2e1e9e98305742675d1cfc3fb0">
-        <source>All stores</source>
-        <target>All stores</target>
-        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -1077,11 +1081,6 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/list/list_content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
-        <source>%</source>
-        <target>%</target>
-        <note>Line: 120</note>
-      </trans-unit>
       <trans-unit id="087fb8756d4add87f2d162304ccd486b">
         <source>No records found</source>
         <target>No records found</target>
@@ -1115,10 +1114,10 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
-        <source>Reset</source>
-        <target>Reset</target>
-        <note>Line: 417</note>
+      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
+        <source>From</source>
+        <target>From</target>
+        <note>Line: 358</note>
       </trans-unit>
       <trans-unit id="6ccfec41b65de46efeb7ca242341e8ea">
         <source>Please fill at least one field to perform a search in this list.</source>
@@ -1212,10 +1211,20 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="741aae2e1e9e98305742675d1cfc3fb0">
+        <source>All stores</source>
+        <target>All stores</target>
+        <note>Line: 32</note>
+      </trans-unit>
       <trans-unit id="804ccd6219996d12eda865d1c0707423">
         <source>All shops</source>
         <target>All shops</target>
         <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
+        <source>%s group</source>
+        <target>%s group</target>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
@@ -1381,15 +1390,6 @@
         <source>by ip address</source>
         <target>by ip address</target>
         <note>Line: 46</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/new-theme/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
-        <source>%s group</source>
-        <target>%s group</target>
-        <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>

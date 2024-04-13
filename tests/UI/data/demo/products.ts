@@ -57,6 +57,7 @@ export default {
     name: 'The adventure begins Framed poster',
     reference: 'demo_5',
     category: 'Art',
+    coverImage: 'the-adventure-begins-framed-poster.jpg',
     price: 34.8,
     priceTaxExcluded: 29.00,
     quantity: 1500,
@@ -98,6 +99,11 @@ export default {
     category: 'Stationery',
     price: 15.48,
     quantity: 1200,
+    status: true,
+  }),
+  demo_15: new ProductData({
+    id: 9,
+    name: 'Mountain fox cushion',
     status: true,
   }),
   demo_9: new ProductData({

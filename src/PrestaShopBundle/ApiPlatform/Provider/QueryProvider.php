@@ -31,6 +31,7 @@ namespace PrestaShopBundle\ApiPlatform\Provider;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShopBundle\ApiPlatform\ContextParametersTrait;
@@ -49,7 +50,8 @@ class QueryProvider implements ProviderInterface
         protected readonly CommandBusInterface $queryBus,
         protected readonly DomainSerializer $domainSerializer,
         protected readonly ShopContext $shopContext,
-        protected readonly LanguageContext $languageContext
+        protected readonly LanguageContext $languageContext,
+        protected readonly ApiClientContext $apiClientContext,
     ) {
     }
 

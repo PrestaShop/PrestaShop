@@ -31,10 +31,17 @@ namespace PrestaShop\PrestaShop\Core\Context;
 class ApiClient
 {
     public function __construct(
+        private int $id,
         private string $clientId,
         private array $scopes,
-        private int $shopId
+        private ?string $externalIssuer,
+        private int $shopId,
     ) {
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getClientId(): string
@@ -42,9 +49,19 @@ class ApiClient
         return $this->clientId;
     }
 
+    public function hasScope(string $scope): bool
+    {
+        return in_array($scope, $this->scopes);
+    }
+
     public function getScopes(): array
     {
         return $this->scopes;
+    }
+
+    public function getExternalIssuer(): ?string
+    {
+        return $this->externalIssuer;
     }
 
     public function getShopId(): int

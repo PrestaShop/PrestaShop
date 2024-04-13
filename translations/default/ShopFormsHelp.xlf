@@ -5,17 +5,17 @@
       <trans-unit id="350bfcb1e3cfb28ddff48ce525d4f139">
         <source>DD</source>
         <target>DD</target>
-        <note>Line: 940</note>
+        <note>Line: 948</note>
       </trans-unit>
       <trans-unit id="ad05f78187c942f9dd521605fa81f1ba">
         <source>MM</source>
         <target>MM</target>
-        <note>Line: 941</note>
+        <note>Line: 949</note>
       </trans-unit>
       <trans-unit id="8df34bb962577b90d574a51ed2ca757f">
         <source>YYYY</source>
         <target>YYYY</target>
-        <note>Line: 942</note>
+        <note>Line: 950</note>
       </trans-unit>
     </body>
   </file>
@@ -45,10 +45,14 @@
         <target>Customer password is too weak</target>
         <note>Line: 103</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderConfirmationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="4e46ead161638465b5f8cc4351e559a3">
         <source>Enter a password to transform your guest account into a customer account.</source>
         <target>Enter a password to transform your guest account into a customer account.</target>
-        <note>Line: 91</note>
+        <note>Line: 131</note>
       </trans-unit>
     </body>
   </file>

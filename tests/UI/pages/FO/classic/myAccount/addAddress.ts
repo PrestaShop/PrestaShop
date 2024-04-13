@@ -1,8 +1,12 @@
 // Import pages
 import FOBasePage from '@pages/FO/FObasePage';
 
+import {
+  // Import data
+  FakerAddress,
+} from '@prestashop-core/ui-testing';
+
 import type {Page} from 'playwright';
-import AddressData from '@data/faker/address';
 
 /**
  * Add address page, contains functions that can be used on the page
@@ -91,7 +95,7 @@ class AddAddressPage extends FOBasePage {
    * @param addressData {AddressData} Address's information to fill on form
    * @returns {Promise<string>}
    */
-  async setAddress(page: Page, addressData: AddressData): Promise<string> {
+  async setAddress(page: Page, addressData: FakerAddress): Promise<string> {
     // Set alias if added (optional)
     if (addressData.alias) {
       await this.setValue(page, this.aliasInput, addressData.alias);

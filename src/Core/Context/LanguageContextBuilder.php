@@ -28,19 +28,24 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Language\Repository\LanguageRepository as ObjectModelLanguageRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
 
-class LanguageContextBuilder
+class LanguageContextBuilder implements LegacyContextBuilderInterface
 {
     private ?int $languageId = null;
     private ?int $defaultLanguageId = null;
 
     public function __construct(
         private readonly LanguageRepositoryInterface $languageRepository,
-        private readonly RepositoryInterface $localeRepository
+        private readonly RepositoryInterface $localeRepository,
+        private readonly ContextStateManager $contextStateManager,
+        private readonly ObjectModelLanguageRepository $objectModelLanguageRepository
     ) {
     }
 
@@ -109,5 +114,12 @@ class LanguageContextBuilder
             dateTimeFormat: $language->getDateTimeFormat(),
             localizationLocale: $localizationLocale,
         );
+    }
+
+    public function buildLegacyContext(): void
+    {
+        $this->assertArguments();
+        $language = $this->objectModelLanguageRepository->get(new LanguageId($this->languageId));
+        $this->contextStateManager->setLanguage($language);
     }
 }

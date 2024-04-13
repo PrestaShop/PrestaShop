@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
@@ -50,19 +51,20 @@ class ModuleManagerBuilder
      *
      * @var ModuleRepository
      */
-    public static $modulesRepository = null;
+    protected static $modulesRepository = null;
     /**
      * Singleton of ModuleManager.
      *
      * @var ModuleManager
      */
-    public static $moduleManager = null;
-    public static $adminModuleDataProvider = null;
-    public static $legacyLogger = null;
-    public static $moduleDataProvider = null;
-    public static $translator = null;
-    public static $instance = null;
-    public static $cacheProvider = null;
+    protected static $moduleManager = null;
+    protected static $adminModuleDataProvider = null;
+    protected static $legacyLogger = null;
+    protected static $moduleDataProvider = null;
+    protected static $translator = null;
+    protected static $instance = null;
+    protected static $cacheProvider = null;
+    protected static $apiClientContext;
 
     /**
      * @var bool
@@ -168,10 +170,12 @@ class ModuleManagerBuilder
 
         if (null === self::$adminModuleDataProvider) {
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
+            self::$apiClientContext = new ApiClientContext(null);
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
                 self::$moduleDataProvider,
                 self::$translator,
-                Context::getContext()->employee
+                Context::getContext()->employee,
+                self::$apiClientContext,
             );
             self::$adminModuleDataProvider->setRouter($this->getSymfonyRouter());
         }

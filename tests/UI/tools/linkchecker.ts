@@ -74,7 +74,7 @@ describe('Crawl every page for defects and issues', async () => {
     });
 
     // Intercepts responses
-    await page.on('response', (response) => {
+    page.on('response', (response) => {
       checkResponseStatus(
         response.request().url(),
         response.status().toString(),
@@ -82,7 +82,7 @@ describe('Crawl every page for defects and issues', async () => {
     });
 
     // Intercepts JS errors
-    await page.on('pageerror', (exception) => {
+    page.on('pageerror', (exception) => {
       javascriptTextError = exception.toString();
       javascriptError = true;
 
@@ -93,7 +93,7 @@ describe('Crawl every page for defects and issues', async () => {
     });
 
     // Intercept console errors
-    await page.on('console', (msg) => {
+    page.on('console', (msg) => {
       // Handle only errors.
       if (msg.type() === 'error') {
         consoleTextError = msg.text();

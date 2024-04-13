@@ -29,7 +29,10 @@ declare(strict_types=1);
 namespace Tests\Integration\ApiPlatform;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\ValueObject\CreatedApiAccess;
+use PrestaShop\Module\APIResources\ApiPlatform\Resources\CustomerGroup;
+use PrestaShop\Module\APIResources\ApiPlatform\Resources\Hook;
+use PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
@@ -42,8 +45,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\ApiPlatform\DomainSerializer;
-use PrestaShopBundle\ApiPlatform\Resources\CustomerGroup;
-use PrestaShopBundle\ApiPlatform\Resources\Product;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class DomainSerializerTest extends KernelTestCase
@@ -60,7 +61,7 @@ class DomainSerializerTest extends KernelTestCase
     public function testDenormalizeWithEmptyValues(): void
     {
         $serializer = self::getContainer()->get(DomainSerializer::class);
-        $value = $serializer->denormalize(null, 'PrestaShopBundle\ApiPlatform\Resources\Product', null, []);
+        $value = $serializer->denormalize(null, Product::class, null, []);
         self::assertEquals(new Product(), $value);
     }
 
@@ -215,6 +216,35 @@ class DomainSerializerTest extends KernelTestCase
             ],
             new GetProductForEditing(42, ShopConstraint::shop(2), 51),
         ];
+
+        $hook = new Hook();
+        $hook->id = 1;
+        $hook->active = true;
+        $hook->name = 'testHook';
+        $hook->title = 'testHookTitle';
+        $hook->description = '';
+        yield [
+            [
+                'id_hook' => 1,
+                'active' => 1,
+                'name' => 'testHook',
+                'title' => 'testHookTitle',
+                'description' => '',
+            ],
+            $hook,
+            ['[id_hook]' => '[id]'],
+        ];
+        yield [
+            [
+                'id_hook' => 1,
+                'active' => '1',
+                'name' => 'testHook',
+                'title' => 'testHookTitle',
+                'description' => '',
+            ],
+            $hook,
+            ['[id_hook]' => '[id]'],
+        ];
     }
 
     /**
@@ -235,11 +265,11 @@ class DomainSerializerTest extends KernelTestCase
 
     public function getNormalizationData(): iterable
     {
-        $createdApiAccess = new CreatedApiAccess(42, 'my_secret');
+        $createdApiClient = new CreatedApiClient(42, 'my_secret');
         yield 'normalize command result that contains a ValueObject' => [
-            $createdApiAccess,
+            $createdApiClient,
             [
-                'apiAccessId' => 42,
+                'apiClientId' => 42,
                 'secret' => 'my_secret',
             ],
         ];

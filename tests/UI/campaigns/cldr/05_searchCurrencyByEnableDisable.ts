@@ -12,8 +12,9 @@ import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 
-// Import data
-import Currencies from '@data/demo/currencies';
+import {
+  dataCurrencies,
+} from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';
 import chaiString from 'chai-string';
@@ -84,7 +85,7 @@ describe('CLDR : Search a currency by enable/disable', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'createOfficialCurrencyUSD', baseContext);
 
     // Create and check successful message
-    const textResult = await addCurrencyPage.addOfficialCurrency(page, Currencies.usd);
+    const textResult = await addCurrencyPage.addOfficialCurrency(page, dataCurrencies.usd);
     expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
 
     // Check number of currencies after creation
@@ -92,11 +93,11 @@ describe('CLDR : Search a currency by enable/disable', async () => {
     expect(numberOfCurrenciesAfterCreation).to.be.equal(numberOfCurrencies + 1);
   });
 
-  it(`should filter by iso code of currency '${Currencies.usd.isoCode}'`, async function () {
+  it(`should filter by iso code of currency '${dataCurrencies.usd.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToUSDCurrency', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.usd.isoCode);
+    await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.usd.isoCode);
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
@@ -104,11 +105,11 @@ describe('CLDR : Search a currency by enable/disable', async () => {
 
     // Check currency created
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    expect(textColumn).to.contains(Currencies.usd.isoCode);
+    expect(textColumn).to.contains(dataCurrencies.usd.isoCode);
   });
 
-  it(`should disable currency '${Currencies.usd.isoCode}'`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', `disableCurrency${Currencies.usd.isoCode}`, baseContext);
+  it(`should disable currency '${dataCurrencies.usd.isoCode}'`, async function () {
+    await testContext.addContextItem(this, 'testIdentifier', `disableCurrency${dataCurrencies.usd.isoCode}`, baseContext);
 
     await currenciesPage.setStatus(page, 1, false);
 
@@ -126,7 +127,7 @@ describe('CLDR : Search a currency by enable/disable', async () => {
     expect(numberEnabledCurrencies).to.be.eq(1);
 
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    expect(textColumn).to.contains(Currencies.euro.isoCode);
+    expect(textColumn).to.contains(dataCurrencies.euro.isoCode);
   });
 
   it('should search Disabled currencies', async function () {
@@ -139,11 +140,11 @@ describe('CLDR : Search a currency by enable/disable', async () => {
     expect(numberEnabledCurrencies).to.be.eq(1);
 
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    expect(textColumn).to.contains(Currencies.usd.isoCode);
+    expect(textColumn).to.contains(dataCurrencies.usd.isoCode);
   });
 
-  it(`should enable currency '${Currencies.usd.isoCode}'`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', `enableCurrency${Currencies.usd.isoCode}`, baseContext);
+  it(`should enable currency '${dataCurrencies.usd.isoCode}'`, async function () {
+    await testContext.addContextItem(this, 'testIdentifier', `enableCurrency${dataCurrencies.usd.isoCode}`, baseContext);
 
     await currenciesPage.setStatus(page, 1, true);
 
@@ -164,7 +165,7 @@ describe('CLDR : Search a currency by enable/disable', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'createOfficialCurrencyGBP', baseContext);
 
     // Create and check successful message
-    const textResult = await addCurrencyPage.addOfficialCurrency(page, Currencies.gbp);
+    const textResult = await addCurrencyPage.addOfficialCurrency(page, dataCurrencies.gbp);
     expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
 
     // Check number of currencies after creation
@@ -180,8 +181,8 @@ describe('CLDR : Search a currency by enable/disable', async () => {
   });
 
   // Post-condition - Delete currency USD
-  deleteCurrencyTest(Currencies.usd, `${baseContext}_postTest_1`);
+  deleteCurrencyTest(dataCurrencies.usd, `${baseContext}_postTest_1`);
 
   // Post-condition - Delete currency GBP
-  deleteCurrencyTest(Currencies.gbp, `${baseContext}_postTest_2`);
+  deleteCurrencyTest(dataCurrencies.gbp, `${baseContext}_postTest_2`);
 });

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="34ddce12eacd79ced0e326360863888f">
+        <source>No module has been installed.</source>
+        <target>No module has been installed.</target>
+        <note>Line: 545</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/images/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="729a51874fe901b092899e9e8b31c97a">
         <source>Are you sure?</source>
         <target>Are you sure?</target>
         <note>Line: 50</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/stats/menu.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="34ddce12eacd79ced0e326360863888f">
-        <source>No module has been installed.</source>
-        <target>No module has been installed.</target>
-        <note>Line: 35</note>
       </trans-unit>
     </body>
   </file>
@@ -37,12 +37,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminImagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
         <source>Delete selected items?</source>
         <target>Delete selected items?</target>
-        <note>Line: 49</note>
+        <note>Line: 60</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
+        <source>Delete selected item?</source>
+        <target>Delete selected item?</target>
+        <note>Line: 566</note>
       </trans-unit>
     </body>
   </file>
@@ -51,25 +60,16 @@
       <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
         <source>Are you sure you want to uninstall this module?</source>
         <target>Are you sure you want to uninstall this module?</target>
-        <note>Line: 64</note>
+        <note>Line: 74</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_linklist/src/Core/Grid/Definition/Factory/LinkBlockDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
-        <source>Delete selected item?</source>
-        <target>Delete selected item?</target>
-        <note>Line: 126</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/Preferences/PreferencesConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/MerchandiseReturn/Configuration/MerchandiseReturnOptionsConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="85265e940fbb820dd2475946e7bc48d9">
         <source>Invalid configuration</source>
         <target>Invalid configuration</target>
-        <note>Line: 77</note>
+        <note>Line: 64</note>
       </trans-unit>
     </body>
   </file>

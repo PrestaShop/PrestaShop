@@ -17,8 +17,12 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
-import CarrierData from '@data/faker/carrier';
+
+import {
+  // Import data
+  dataCustomers,
+  FakerCarrier,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -64,12 +68,12 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
     expect(pageTitle).to.contains(preferencesPage.pageTitle);
   });
 
-  const carriers: CarrierData[] = [
+  const carriers: FakerCarrier[] = [
     Carriers.myCarrier,
     Carriers.default,
   ];
 
-  carriers.forEach((carrier: CarrierData, index: number) => {
+  carriers.forEach((carrier: FakerCarrier, index: number) => {
     describe(`Set default carrier to '${carrier.name}' and check result in FO`, async () => {
       it(`should set default carrier to ${carrier.name} in BO`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);
@@ -104,7 +108,7 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
         if (index === 0) {
           // Personal information step - Login
           await foCheckoutPage.clickOnSignIn(page);
-          await foCheckoutPage.customerLogin(page, Customers.johnDoe);
+          await foCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
         }
 
         // Address step - Go to delivery step

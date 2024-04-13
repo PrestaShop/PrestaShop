@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    public: false
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\AddImageTypeHandler: ~
+  PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\EditImageTypeHandler: ~
+  PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\DeleteImageTypeHandler: ~
+  PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\BulkDeleteImageTypeHandler: ~
+  PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\DeleteImagesFromTypeHandler: ~
+  PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\EditImageSettingsHandler: ~
+  PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\RegenerateThumbnailsHandler: ~
+
+  PrestaShop\PrestaShop\Core\Domain\ImageSettings\QueryHandler\GetImageTypeForEditingHandler: ~
+  PrestaShop\PrestaShop\Core\Domain\ImageSettings\QueryHandler\GetImageSettingsForEditingHandler: ~

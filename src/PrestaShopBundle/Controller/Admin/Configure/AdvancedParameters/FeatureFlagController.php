@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,6 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Manages the "Configure > Advanced Parameters > Experimental Features" page.
  */
+#[AllShopContext]
 class FeatureFlagController extends FrameworkBundleAdminController
 {
     /**

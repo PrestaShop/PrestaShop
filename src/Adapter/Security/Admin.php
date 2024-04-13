@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -89,10 +88,7 @@ class Admin
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (
-            $this->security->getUser() !== null
-            || $event->getRequest()->get('_controller') === AccessTokenController::class
-        ) {
+        if ($this->security->getUser() !== null) {
             return;
         }
 

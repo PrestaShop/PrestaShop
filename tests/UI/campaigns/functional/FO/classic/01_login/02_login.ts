@@ -6,9 +6,11 @@ import testContext from '@utils/testContext';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 
-// Import data
-import Customers from '@data/demo/customers';
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  dataCustomers,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -19,9 +21,9 @@ describe('FO - Login : Login in FO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const firstCredentialsData: CustomerData = new CustomerData();
-  const secondCredentialsData: CustomerData = new CustomerData({password: Customers.johnDoe.password});
-  const thirdCredentialsData: CustomerData = new CustomerData({email: Customers.johnDoe.email});
+  const firstCredentialsData: FakerCustomer = new FakerCustomer();
+  const secondCredentialsData: FakerCustomer = new FakerCustomer({password: dataCustomers.johnDoe.password});
+  const thirdCredentialsData: FakerCustomer = new FakerCustomer({email: dataCustomers.johnDoe.email});
 
   // before and after functions
   before(async function () {
@@ -95,7 +97,7 @@ describe('FO - Login : Login in FO', async () => {
   it('should enter a valid credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
-    await loginPage.customerLogin(page, Customers.johnDoe);
+    await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);

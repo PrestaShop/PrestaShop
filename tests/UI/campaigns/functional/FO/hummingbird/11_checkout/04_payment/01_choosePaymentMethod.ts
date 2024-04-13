@@ -5,18 +5,22 @@ import mailHelper from '@utils/mailHelper';
 
 // Import common tests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import homePage from '@pages/FO/hummingbird/home';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
+import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
+import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
-// Import data
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
-import PaymentMethodData from '@data/faker/paymentMethod';
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+  type FakerPaymentMethod,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -60,10 +64,10 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
 
   describe('Choose a payment method', async () => {
     [
-      PaymentMethods.wirePayment,
-      PaymentMethods.checkPayment,
-      PaymentMethods.cashOnDelivery,
-    ].forEach((test: PaymentMethodData, index: number) => {
+      dataPaymentMethods.wirePayment,
+      dataPaymentMethods.checkPayment,
+      dataPaymentMethods.cashOnDelivery,
+    ].forEach((test: FakerPaymentMethod, index: number) => {
       it('should go to FO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToFo${index}`, baseContext);
 
@@ -74,11 +78,20 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
+      it('should quick view the first product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `quickViewFirstProduct${index}`, baseContext);
+
+        await homePage.quickViewProduct(page, 1);
+
+        const isQuickViewModal = await quickViewModal.isQuickViewProductModalVisible(page);
+        expect(isQuickViewModal).to.equal(true);
+      });
+
       it('should add the first product to cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
-        await homePage.addProductToCartByQuickView(page, 1, 1);
-        await homePage.proceedToCheckout(page);
+        await quickViewModal.addToCartByQuickView(page);
+        await blockCartModal.proceedToCheckout(page);
 
         const pageTitle = await cartPage.getPageTitle(page);
         expect(pageTitle).to.eq(cartPage.pageTitle);
@@ -99,7 +112,7 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
 
           await checkoutPage.clickOnSignIn(page);
 
-          const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
+          const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
           expect(isCustomerConnected, 'Customer is connected').to.eq(true);
         });
       }

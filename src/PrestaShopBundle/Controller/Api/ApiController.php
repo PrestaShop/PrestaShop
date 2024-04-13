@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -91,11 +92,11 @@ abstract class ApiController
      */
     protected function clearCache()
     {
-        $cacheRefresh = $this->container->get('prestashop.cache.refresh');
+        /** @var SymfonyCacheClearer $cacheClearer */
+        $cacheClearer = $this->container->get(SymfonyCacheClearer::class);
 
         try {
-            $cacheRefresh->addCacheClear();
-            $cacheRefresh->execute();
+            $cacheClearer->clear();
         } catch (Exception $exception) {
             $this->container->get('logger')->error($exception->getMessage());
         }

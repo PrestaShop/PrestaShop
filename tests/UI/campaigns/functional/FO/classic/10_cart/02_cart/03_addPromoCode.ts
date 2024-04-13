@@ -5,6 +5,8 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import commonTests
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
@@ -59,8 +61,9 @@ describe('FO - cart : Add promo code', async () => {
     it('should add the first product to cart and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
-      await homePage.addProductToCartByQuickView(page, 1, 1);
-      await homePage.proceedToCheckout(page);
+      await homePage.quickViewProduct(page, 1);
+      await quickViewModal.addToCartByQuickView(page);
+      await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.eq(cartPage.pageTitle);

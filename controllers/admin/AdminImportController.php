@@ -2458,7 +2458,7 @@ class AdminImportControllerCore extends AdminController
                     $info['weight'] = str_replace(',', '.', $info['weight']);
                     $info['available_date'] = Validate::isDate($info['available_date']) ? $info['available_date'] : null;
 
-                    if (!Validate::isEan13($info['ean13'])) {
+                    if (!Validate::isGtin($info['ean13'])) {
                         $this->warnings[] = $this->trans(
                             'EAN-13 "%ean13%" has incorrect value for product with ID %id%.',
                             [
@@ -3553,12 +3553,16 @@ class AdminImportControllerCore extends AdminController
 
         /** @var Store $store */
         if (isset($store->image) && !empty($store->image)) {
-            if (!(AdminImportController::copyImg($store->id, null, $store->image, 'stores', !$regenerate))) {
-                $this->warnings[] = $store->image . ' ' . $this->trans('cannot be copied.', [], 'Admin.Advparameters.Notification');
+            // check to see if the image exists
+            $headers = @get_headers($store->image);
+            if ($headers && strpos($headers[0], '200')) {
+                if (!(AdminImportController::copyImg($store->id, null, $store->image, 'stores', !$regenerate))) {
+                    $this->warnings[] = $store->image . ' ' . $this->trans('cannot be copied.', [], 'Admin.Advparameters.Notification');
+                }
             }
         }
 
-        if (is_array($store->hours)) {
+        if (is_array($store->hours) && isset($info['hours'])) {
             $newHours = [];
             foreach ($store->hours as $hour) {
                 $newHours[] = [$hour];
@@ -4040,7 +4044,8 @@ class AdminImportControllerCore extends AdminController
                     $doneCount += $this->aliasImport($offset, $limit, $validateOnly);
 
                     break;
-                case $this->entities[$import_type = $this->trans('Store contacts', [], 'Admin.Advparameters.Feature')]:
+                case $this->entities[$this->trans('Store contacts', [], 'Admin.Advparameters.Feature')]:
+                    $import_type = 'StoreContacts';
                     $doneCount += $this->storeContactImport($offset, $limit, $validateOnly);
                     $clearCache = true;
 

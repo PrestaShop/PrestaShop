@@ -6,6 +6,11 @@
     <field name="description"/>
   </fields>
   <entities>
+    <hook id="actionMailAlterMessageBeforeSend">
+      <name>actionMailAlterMessageBeforeSend</name>
+      <title>Modify Swift Message before sending</title>
+      <description>This hook is called before the Swift Message is sent in Mail.php</description>
+    </hook>
     <hook id="actionValidateOrder">
       <name>actionValidateOrder</name>
       <title>New orders</title>
@@ -4563,6 +4568,11 @@
       <name>actionAjaxDieBefore</name>
       <title>Triggers when returning AJAX response</title>
       <description>Allows to modify AJAX response of controllers using ajaxRender method.</description>
+    </hook>
+    <hook id="actionValidateCartRule">
+      <name>actionValidateCartRule</name>
+      <title>Alter cart rule validation process</title>
+      <description>Allow modules to implement their own rules to validate a cart rule.</description>
     </hook>
   </entities>
 </entity_hook>

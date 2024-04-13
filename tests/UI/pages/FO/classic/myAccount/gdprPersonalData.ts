@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class GDPRPersonalData extends FOBasePage {
+class GDPRPersonalDataPage extends FOBasePage {
   public readonly pageTitle: string;
 
   private readonly headerTitle: string;
@@ -22,8 +22,8 @@ class GDPRPersonalData extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on gdpr personal data page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'GDPR - Personal data';
 
@@ -75,4 +75,5 @@ class GDPRPersonalData extends FOBasePage {
   }
 }
 
-export default new GDPRPersonalData();
+const gdprPersonalDataPage = new GDPRPersonalDataPage();
+export {gdprPersonalDataPage, GDPRPersonalDataPage};

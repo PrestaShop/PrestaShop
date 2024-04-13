@@ -42,6 +42,8 @@ export default class ProductData {
 
   public description: string;
 
+  public descriptionFR: string;
+
   public reference: string;
 
   public mpn: string | null;
@@ -141,11 +143,11 @@ export default class ProductData {
     /** @type {number} ID of the product */
     this.id = productToCreate.id || 0;
 
-    /** @type {string} Name of the product */
+    /** @type {string} Name of the product (in English) */
     this.name = productToCreate.name || faker.commerce.productName();
 
-    /** @type {string} Name of the product */
-    this.nameFR = productToCreate.nameFR || this.name;
+    /** @type {string} Name of the product (in French) */
+    this.nameFR = productToCreate.nameFR || `${this.name} (FRENCH)`;
 
     /** @type {string|null} Default image path for the product */
     this.defaultImage = productToCreate.defaultImage || null;
@@ -174,8 +176,11 @@ export default class ProductData {
     /** @type {string} Summary of the product */
     this.summary = productToCreate.summary === undefined ? faker.lorem.sentence() : productToCreate.summary;
 
-    /** @type {string} Description of the product */
+    /** @type {string} Description of the product (in English) */
     this.description = productToCreate.description === undefined ? faker.lorem.sentence() : productToCreate.description;
+
+    /** @type {string} Description of the product (in French) */
+    this.descriptionFR = productToCreate.descriptionFR || `${this.description} (FRENCH)`;
 
     /** @type {string} Reference of the product */
     this.reference = productToCreate.reference || faker.string.alphanumeric(7);

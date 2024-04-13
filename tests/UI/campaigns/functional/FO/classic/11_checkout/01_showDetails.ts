@@ -8,6 +8,8 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 import {checkoutPage} from '@pages/FO/classic/checkout';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import Products from '@data/demo/products';
@@ -50,12 +52,13 @@ describe('FO - Checkout : Show details', async () => {
     expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
-  it('should add the first product to cart', async function () {
+  it('should add the first product to cart then close block cart modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
-    await homePage.addProductToCartByQuickView(page, 1, 1);
+    await homePage.quickViewProduct(page, 1);
+    await quickViewModal.addToCartByQuickView(page);
 
-    const isModalClosed = await homePage.closeBlockCartModal(page);
+    const isModalClosed = await blockCartModal.closeBlockCartModal(page);
     expect(isModalClosed).to.eq(true);
   });
 
@@ -63,8 +66,9 @@ describe('FO - Checkout : Show details', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
     await loginPage.goToHomePage(page);
-    await homePage.addProductToCartByQuickView(page, 3, 2);
-    await homePage.proceedToCheckout(page);
+    await homePage.quickViewProduct(page, 3);
+    await quickViewModal.setQuantityAndAddToCart(page, 2);
+    await blockCartModal.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);
     expect(pageTitle).to.equal(cartPage.pageTitle);

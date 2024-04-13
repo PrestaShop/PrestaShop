@@ -335,7 +335,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
         await cartPage.clickOnPromoCode(page);
 
         const cartRuleName = await cartPage.getCartRuleName(page, 1);
-        expect(cartRuleName).to.equal(`${secondCartRuleWithCode.code} - ${secondCartRuleWithCode.name}`);
+        expect(cartRuleName).to.equal(secondCartRuleWithCode.name);
       });
 
       it('should verify the total after the discount', async function () {

@@ -1,6 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type CountryData from '@data/faker/country';
+import {
+  // Import data
+  type FakerCountry,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -78,10 +81,10 @@ class AddCountry extends BOBasePage {
   /**
    * Fill form for add/edit country
    * @param page {Page} Browser tab
-   * @param countryData {CountryData} Data to set on new country form
+   * @param countryData {FakerCountry} Data to set on new country form
    * @returns {Promise<string>}
    */
-  async createEditCountry(page: Page, countryData: CountryData): Promise<string> {
+  async createEditCountry(page: Page, countryData: FakerCountry): Promise<string> {
     await this.setValue(page, this.nameInputEn, countryData.name);
     await this.setValue(page, this.isoCodeInput, countryData.isoCode);
     await this.setValue(page, this.callPrefixInput, countryData.callPrefix.toString());

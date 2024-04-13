@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -14,11 +14,15 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import OrderShippingData from '@data/faker/orderShipping';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -47,14 +51,14 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
   const shippingDetailsCost: string = '€8.40';
   // New order by customer data
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition - Create order by default customer
@@ -97,13 +101,13 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
       expect(numberOfOrders).to.be.above(0);
     });
 
-    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {

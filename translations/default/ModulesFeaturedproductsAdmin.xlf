@@ -5,57 +5,57 @@
       <trans-unit id="ca7d973c26c57b69e0857e7a0332d545">
         <source>Featured products</source>
         <target>Featured products</target>
-        <note>Line: 55</note>
+        <note>Line: 58</note>
       </trans-unit>
       <trans-unit id="9dd45d7a2af90e742d1f736c2a752d73">
         <source>Pick a category and highlight its items, enhance customer experience with a lively homepage.</source>
         <target>Pick a category and highlight its items, enhance customer experience with a lively homepage.</target>
-        <note>Line: 56</note>
+        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="fddb8a1881e39ad11bfe0d0aca5becc3">
         <source>The number of products is invalid. Please enter a positive number.</source>
         <target>The number of products is invalid. Please enter a positive number.</target>
-        <note>Line: 125</note>
+        <note>Line: 128</note>
       </trans-unit>
       <trans-unit id="c284a59996a4e984b30319999a7feb1d">
         <source>The category ID is invalid. Please choose an existing category ID.</source>
         <target>The category ID is invalid. Please choose an existing category ID.</target>
-        <note>Line: 130</note>
+        <note>Line: 133</note>
       </trans-unit>
       <trans-unit id="fd2608d329d90e9a49731393427d0a5a">
         <source>Invalid value for the "randomize" flag.</source>
         <target>Invalid value for the "randomize" flag.</target>
-        <note>Line: 135</note>
+        <note>Line: 138</note>
       </trans-unit>
       <trans-unit id="abc877135a96e04fc076becb9ce6fdfa">
         <source>To add products to your homepage, simply add them to the corresponding product category (default: "Home").</source>
         <target>To add products to your homepage, simply add them to the corresponding product category (default: "Home").</target>
-        <note>Line: 162</note>
+        <note>Line: 165</note>
       </trans-unit>
       <trans-unit id="d44168e17d91bac89aab3f38d8a4da8e">
         <source>Number of products to be displayed</source>
         <target>Number of products to be displayed</target>
-        <note>Line: 166</note>
+        <note>Line: 169</note>
       </trans-unit>
       <trans-unit id="1b73f6b70a0fcd38bbc6a6e4b67e3010">
         <source>Set the number of products that you would like to display on homepage (default: 8).</source>
         <target>Set the number of products that you would like to display on homepage (default: 8).</target>
-        <note>Line: 169</note>
+        <note>Line: 172</note>
       </trans-unit>
       <trans-unit id="b773a38d8c456f7b24506c0e3cd67889">
         <source>Category from which to pick products to be displayed</source>
         <target>Category from which to pick products to be displayed</target>
-        <note>Line: 177</note>
+        <note>Line: 180</note>
       </trans-unit>
       <trans-unit id="49417670345173e7b95018b7bf976fc7">
         <source>Randomly display featured products</source>
         <target>Randomly display featured products</target>
-        <note>Line: 182</note>
+        <note>Line: 185</note>
       </trans-unit>
       <trans-unit id="3c12c1068fb0e02fe65a6c4fc40bc29a">
         <source>Enable if you wish the products to be displayed randomly (default: no).</source>
         <target>Enable if you wish the products to be displayed randomly (default: no).</target>
-        <note>Line: 185</note>
+        <note>Line: 188</note>
       </trans-unit>
     </body>
   </file>

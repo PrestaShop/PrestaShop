@@ -165,12 +165,12 @@ class ModuleManagerTest extends TestCase
         $this->module->method('hasValidInstance')->willReturnOnConsecutiveCalls(false, true, true);
 
         $this->assertEquals(
-            'The module is invalid and cannot be loaded.',
+            'The module %module% is invalid and cannot be loaded.',
             $this->moduleManager->getError(self::INSTALLED_MODULE_NAME)
         );
 
         $this->assertEquals(
-            'Unfortunately, the module did not return additional details.',
+            'Unfortunately, the module %module% did not return additional details.',
             $this->moduleManager->getError(self::INSTALLED_MODULE_NAME)
         );
 

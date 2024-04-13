@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import deleteCacheTest from '@commonTests/BO/advancedParameters/cache';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/account';
+import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import pages
 // Import BO pages
@@ -32,9 +32,11 @@ import {siteMapPage} from '@pages/FO/classic/siteMap';
 import {storesPage} from '@pages/FO/classic/stores';
 import {termsAndConditionsOfUsePage} from '@pages/FO/classic/termsAndConditionsOfUse';
 
-// Import data
-import Customers from '@data/demo/customers';
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  dataCustomers,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -63,7 +65,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
 
   const today: Date = new Date();
   const currentYear: string = today.getFullYear().toString();
-  const createCustomerData: CustomerData = new CustomerData();
+  const createCustomerData: FakerCustomer = new FakerCustomer();
 
   // Pre-condition: Create new account on FO
   createAccountTest(createCustomerData, `${baseContext}_preTest1`);
@@ -158,7 +160,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

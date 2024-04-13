@@ -44,13 +44,6 @@ try {
     }
 
     $iso = $context->language->iso_code;
-    if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php')) {
-        @trigger_error(
-            'Translating ObjectModel fields using fields.php is deprecated since version 8.0.0.',
-            E_USER_DEPRECATED
-        );
-        include _PS_TRANSLATIONS_DIR_.$iso.'/fields.php';
-    }
 
     /* Server Params */
     $protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';

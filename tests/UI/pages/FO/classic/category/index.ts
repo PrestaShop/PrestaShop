@@ -2,34 +2,37 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 import type {Page} from 'playwright';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 /**
  * Category page, contains functions that can be used on the page
  * @class
  * @extends FOBasePage
  */
-class Category extends FOBasePage {
+class CategoryPage extends FOBasePage {
   public readonly messageAddedToWishlist: string;
 
   private readonly bodySelector: string;
 
   private readonly mainSection: string;
 
-  private readonly headerNamePage: string;
+  protected headerNamePage: string;
+
+  private readonly totalProducts: string;
 
   private readonly productsSection: string;
 
   private readonly productListTop: string;
 
-  private readonly productListDiv: string;
+  protected productListDiv: string;
 
-  private readonly pagesList: string;
+  protected pagesList: string;
 
-  private readonly productItemListDiv: string;
+  protected productItemListDiv: string;
 
-  private readonly paginationText: string;
+  protected paginationText: string;
 
-  private readonly paginationNext: string;
+  protected paginationNext: string;
 
   private readonly paginationPrevious: string;
 
@@ -39,11 +42,11 @@ class Category extends FOBasePage {
 
   private readonly valueToSortBy: (sortBy: string) => string;
 
-  private readonly sideBlockCategories: string;
+  protected sideBlockCategories: string;
 
-  private readonly sideBlockCategoriesItem: string;
+  protected sideBlockCategoriesItem: string;
 
-  private readonly sideBlockCategory: (text: string) => string;
+  protected sideBlockCategory: (text: string) => string;
 
   private readonly subCategoriesList: string;
 
@@ -51,45 +54,41 @@ class Category extends FOBasePage {
 
   private readonly productList: string;
 
-  private readonly productArticle: (number: number) => string;
+  protected productArticle: (number: number) => string;
 
   private readonly productTitle: (number: number) => string;
 
-  private readonly productPrice: (number: number) => string;
+  protected productPrice: (number: number) => string;
 
   private readonly productAttribute: (number: number, attribute: string) => string;
 
-  private readonly productImg: (number: number) => string;
+  protected productImg: (number: number) => string;
 
   private readonly productDescriptionDiv: (number: number) => string;
 
-  private readonly productQuickViewLink: (number: number) => string;
+  protected productQuickViewLink: (number: number) => string;
 
   private readonly productAddToWishlist: (number: number) => string;
 
-  private readonly quickViewModalDiv: string;
-
-  private readonly quickViewModalProductImageCover: string;
-
   private readonly categoryDescription: string;
 
-  private readonly searchFilters: string;
+  protected searchFilters: string;
 
   private readonly searchFilter: (facetType: string) => string;
 
-  private readonly searchFiltersCheckbox: (facetType: string) => string;
+  protected searchFiltersCheckbox: (facetType: string) => string;
 
   private readonly searchFiltersRadio: (facetType: string) => string;
 
   private readonly searchFiltersDropdown: (facetType: string) => string;
 
-  private readonly closeOneFilter: (row: number) => string;
+  protected closeOneFilter: (row: number) => string;
 
-  private readonly searchFiltersSlider: string;
+  protected searchFiltersSlider: string;
 
   private readonly searchFilterPriceValues: string;
 
-  private readonly clearAllFiltersLink: string;
+  protected clearAllFiltersLink: string;
 
   private readonly activeSearchFilters: string;
 
@@ -103,8 +102,8 @@ class Category extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on category page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     // Message
     this.messageAddedToWishlist = 'Product added';
@@ -113,6 +112,7 @@ class Category extends FOBasePage {
     this.bodySelector = '#category';
     this.mainSection = '#main';
     this.headerNamePage = '#js-product-list-header';
+    this.totalProducts = '#js-product-list-top .total-products > p';
     this.productsSection = '#products';
     this.productListTop = '#js-product-list-top';
     this.productListDiv = '#js-product-list';
@@ -145,12 +145,9 @@ class Category extends FOBasePage {
     // Pagination selectors
     this.pagesList = '.page-list';
     this.paginationText = `${this.productListDiv} .pagination div:nth-child(1)`;
-    this.paginationNext = '#js-product-list nav.pagination a[rel=\'next\']';
-    this.paginationPrevious = '#js-product-list nav.pagination a[rel=\'prev\']';
+    this.paginationNext = '#js-product-list nav a[rel=\'next\']';
+    this.paginationPrevious = '#js-product-list nav a[rel=\'prev\']';
 
-    // Quick View modal
-    this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
-    this.quickViewModalProductImageCover = `${this.quickViewModalDiv} div.product-cover picture`;
     this.categoryDescription = '#category-description';
 
     // Filter
@@ -180,6 +177,15 @@ class Category extends FOBasePage {
    */
   async isCategoryPage(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.bodySelector, 2000);
+  }
+
+  /**
+   * Get products number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getProductsNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.totalProducts);
   }
 
   /**
@@ -319,7 +325,6 @@ class Category extends FOBasePage {
     await this.clickAndWaitForURL(page, this.productAttribute(id, 'thumbnail'));
   }
 
-  // Quick view methods
   /**
    * Click on Quick view Product
    * @param page {Page} Browser tab
@@ -350,27 +355,9 @@ class Category extends FOBasePage {
     }
     /* eslint-enable no-await-in-loop */
     await Promise.all([
-      this.waitForVisibleSelector(page, this.quickViewModalDiv),
+      this.waitForVisibleSelector(page, quickViewModal.quickViewModalDiv),
       page.locator(this.productQuickViewLink(id)).evaluate((el: HTMLElement) => el.click()),
     ]);
-  }
-
-  /**
-   * Is quick view product modal visible
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async isQuickViewProductModalVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.quickViewModalDiv, 2000);
-  }
-
-  /**
-   * Returns the URL of the main image in the quickview
-   * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
-   */
-  async getQuickViewImageMain(page: Page): Promise<string | null> {
-    return this.getAttributeContent(page, `${this.quickViewModalProductImageCover} source`, 'srcset');
   }
 
   /**
@@ -647,4 +634,5 @@ class Category extends FOBasePage {
   }
 }
 
-export default new Category();
+const categoryPage = new CategoryPage();
+export {categoryPage, CategoryPage};

@@ -1,11 +1,10 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 // Import BO pages
@@ -46,7 +45,6 @@ describe('FO - Header and Footer : Change language', async () => {
 
     after(async () => {
       await helper.closeBrowserContext(browserContext);
-      await files.deleteFile('../../admin-dev/hummingbird.zip');
     });
 
     // 1 - Disable language

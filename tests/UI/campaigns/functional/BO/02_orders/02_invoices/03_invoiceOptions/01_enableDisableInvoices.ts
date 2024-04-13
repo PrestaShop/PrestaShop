@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -13,11 +13,15 @@ import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -35,14 +39,14 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
   let page: Page;
 
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create order in FO
@@ -63,7 +67,7 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
       args: {
         action: 'Disable',
         status: false,
-        orderStatus: OrderStatuses.shipped.name,
+        orderStatus: dataOrderStatuses.shipped.name,
         isInvoiceCreated: 'no invoice document created',
       },
     },
@@ -71,7 +75,7 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
       args: {
         action: 'Enable',
         status: true,
-        orderStatus: OrderStatuses.paymentAccepted.name,
+        orderStatus: dataOrderStatuses.paymentAccepted.name,
         isInvoiceCreated: 'an invoice document created',
       },
     },

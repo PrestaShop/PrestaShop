@@ -1,0 +1,29 @@
+# Security rules for OAuth Application
+security:
+  enable_authenticator_manager: true
+  password_hashers:
+    # auto hasher with default options for the User class (and children)
+    PrestaShopBundle\Entity\ApiClient: 'auto'
+
+    # auto hasher with custom options for all PasswordAuthenticatedUserInterface instances
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+      algorithm: 'auto'
+      cost: 15
+
+    Symfony\Component\Security\Core\User\User: plaintext
+
+  firewalls:
+    # disables authentication for assets and the profiler, adapt it according to your needs
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    api_token:
+      pattern: ^/access_token
+      security: false
+
+    api:
+      pattern: '^(?!/docs)'
+      stateless: true
+      custom_authenticators:
+        - PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator

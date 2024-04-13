@@ -9,10 +9,12 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
-// Import data
-import PaymentMethods from '@data/demo/paymentMethods';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -31,9 +33,9 @@ Scenario:
 describe('FO - Checkout - Personal information : Order as a guest', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const guestData: CustomerData = new CustomerData({password: ''});
-  const secondGuestData: CustomerData = new CustomerData({password: ''});
-  const addressData: AddressData = new AddressData({country: 'France'});
+  const guestData: FakerCustomer = new FakerCustomer({password: ''});
+  const secondGuestData: FakerCustomer = new FakerCustomer({password: ''});
+  const addressData: FakerAddress = new FakerAddress({country: 'France'});
 
   // before and after functions
   before(async function () {
@@ -106,7 +108,7 @@ describe('FO - Checkout - Personal information : Order as a guest', async () => 
     expect(isStepDeliveryComplete, 'Step Address is not complete').to.equal(true);
 
     // Payment step - Choose payment step
-    await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+    await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
     const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
     // Check the confirmation message

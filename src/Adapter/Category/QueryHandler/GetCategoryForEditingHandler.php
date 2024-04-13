@@ -31,6 +31,7 @@ use Db;
 use ImageManager;
 use ImageType;
 use PDO;
+use PrestaShop\PrestaShop\Adapter\SEO\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
@@ -47,17 +48,10 @@ use Shop;
 #[AsQueryHandler]
 final class GetCategoryForEditingHandler implements GetCategoryForEditingHandlerInterface
 {
-    /**
-     * @var ImageTagSourceParserInterface
-     */
-    private $imageTagSourceParser;
-
-    /**
-     * @param ImageTagSourceParserInterface $imageTagSourceParser
-     */
-    public function __construct(ImageTagSourceParserInterface $imageTagSourceParser)
-    {
-        $this->imageTagSourceParser = $imageTagSourceParser;
+    public function __construct(
+        private readonly ImageTagSourceParserInterface $imageTagSourceParser,
+        private readonly RedirectTargetProvider $targetProvider,
+    ) {
     }
 
     /**
@@ -92,6 +86,11 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             'AND LENGTH(@pv := CONCAT(@pv, \',\', id_category))'
         );
 
+        $categoryRedirectTarget = $this->targetProvider->getRedirectTarget(
+            $category->redirect_type,
+            $category->id_type_redirected,
+        );
+
         $editableCategory = new EditableCategory(
             $query->getCategoryId(),
             $category->name,
@@ -102,6 +101,8 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             $category->meta_description,
             $category->meta_keywords,
             $category->link_rewrite,
+            $category->redirect_type,
+            $categoryRedirectTarget,
             $category->getGroups(),
             $category->getAssociatedShops(),
             (bool) $category->is_root_category,

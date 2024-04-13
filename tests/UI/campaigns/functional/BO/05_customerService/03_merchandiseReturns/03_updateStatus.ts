@@ -9,7 +9,7 @@ import mailHelper from '@utils/mailHelper';
 import loginCommon from '@commonTests/BO/loginBO';
 import {disableMerchandiseReturns, enableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import pages
 // Import BO pages
@@ -22,18 +22,22 @@ import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseRet
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
-import foMerchandiseReturnsPage from '@pages/FO/classic/myAccount/merchandiseReturns';
-import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
 import Addresses from '@data/demo/address';
 import OrderData from '@data/faker/order';
-import CustomerData from '@data/demo/customers';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -68,14 +72,14 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
   let mailListener: MailDev;
   const todayDate: string = date.getDateFormat('mm/dd/yyyy');
   const orderData: OrderData = new OrderData({
-    customer: CustomerData.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // before and after functions
@@ -137,11 +141,11 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
     });
 
-    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await viewOrderBasePage.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      expect(result).to.equal(OrderStatuses.shipped.name);
+      const result = await viewOrderBasePage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should check if the button \'Return products\' is visible', async function () {
@@ -167,7 +171,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, CustomerData.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

@@ -3615,11 +3615,16 @@ exit;
         if ($use_html_purifier) {
             if ($purifier === null) {
                 $config = HTMLPurifier_Config::createDefault();
+                $cacheDir = _PS_CACHE_DIR_ . 'purifier';
+                // Make sure the cache directory exists, as the purifier won't create it automatically
+                if (!file_exists($cacheDir) && !mkdir($cacheDir, PsFileSystem::DEFAULT_MODE_FOLDER, true) && !is_dir($cacheDir)) {
+                    throw new \RuntimeException(sprintf('HTML purifier directory "%s" can not be created', $cacheDir));
+                }
 
                 $config->set('Attr.EnableID', true);
                 $config->set('Attr.AllowedRel', ['nofollow']);
                 $config->set('HTML.Trusted', true);
-                $config->set('Cache.SerializerPath', _PS_CACHE_DIR_ . 'purifier');
+                $config->set('Cache.SerializerPath', $cacheDir);
                 $config->set('Attr.AllowedFrameTargets', ['_blank', '_self', '_parent', '_top']);
                 if (is_array($uri_unescape)) {
                     $config->set('URI.UnescapeCharacters', implode('', $uri_unescape));

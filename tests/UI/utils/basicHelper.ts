@@ -66,4 +66,14 @@ export default {
   capitalize(value: string): string {
     return value.charAt(0).toUpperCase() + value.slice(1);
   },
+
+  /**
+   * Search occurrence of a value in text
+   * @param text {string}
+   * @param searchedValue {string}
+   * @returns {string}
+   */
+  async searchOccurrence(text: string, searchedValue: string): Promise<number> {
+    return text.split(searchedValue).length - 1;
+  },
 };

@@ -101,7 +101,9 @@ class ContainerBuilder
             );
         }
         if (!isset(self::$containers[$containerName])) {
-            $builder = new ContainerBuilder(new Environment($isDebug));
+            // Container builder is only used for FO now, so we hard code the Environment to use the front appId so that
+            // it uses the cache dir from FrontKernel (in var/cache/{dev|prod}/front)
+            $builder = new ContainerBuilder(new Environment($isDebug, $isDebug ? 'dev' : 'prod', 'front'));
             self::$containers[$containerName] = $builder->buildContainer($containerName);
         }
 

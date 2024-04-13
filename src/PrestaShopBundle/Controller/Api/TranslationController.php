@@ -75,7 +75,7 @@ class TranslationController extends ApiController
             $domain = $request->attributes->get('domain');
             $theme = $request->attributes->get('theme');
             $module = $request->query->get('module');
-            $search = $request->query->get('search');
+            $search = $request->query->all('search');
 
             try {
                 $this->translationService->findLanguageByLocale($locale);
@@ -137,7 +137,7 @@ class TranslationController extends ApiController
             $type = $request->attributes->get('type');
             $selected = $request->attributes->get('selected');
 
-            $search = $request->query->get('search');
+            $search = $request->query->all('search');
 
             if (!in_array($type, ProviderDefinitionInterface::ALLOWED_TYPES)) {
                 throw new Exception(sprintf("The 'type' parameter '%s' is not valid", $type));

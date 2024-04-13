@@ -38,13 +38,16 @@
         {% if status.employeeLastName is not empty %}
           {{ status.employeeFirstName ~ ' ' ~ status.employeeLastName }}
         {% endif %}
+        {% if status.apiClientId is not empty %}
+          {{ 'Api Client: %api_client_id%'|trans({'%api_client_id%': status.apiClientId}, 'Admin.Global') }}
+        {% endif %}
       </td>
       <td class="text-right" data-role="date-column">
         {{ status.createdAt|date_format_full }}
       </td>
       <td class="text-right">
         {% if status.withEmail %}
-          <form method="post" 
+          <form method="post"
                 action="{{ path('admin_orders_resend_email', {'orderId': orderForViewing.id, 'orderHistoryId': status.orderHistoryId, 'orderStatusId': status.orderStatusId}) }}">
             <button class="btn btn-link pt-0 pb-0">
               {{ 'Resend email'|trans({}, 'Admin.Orderscustomers.Feature') }}

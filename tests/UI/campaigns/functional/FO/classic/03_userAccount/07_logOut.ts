@@ -7,8 +7,10 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 
-// Import data
-import Customers from '@data/demo/customers';
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -42,7 +44,7 @@ describe('FO - User Account : LogOut', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
     await homePage.goToLoginPage(page);
-    await loginPage.customerLogin(page, Customers.johnDoe);
+    await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);

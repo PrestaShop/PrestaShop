@@ -18,15 +18,15 @@ class OrderHistoryPage extends FOBasePage {
 
   private readonly ordersTableRows: string;
 
-  private readonly ordersTableRow: (row: number) => string;
+  protected readonly ordersTableRow: (row: number) => string;
 
   private readonly orderTableColumn: (row: number, column: number) => string;
 
   private readonly orderTableColumnReference: (row: number) => string;
 
-  private readonly reorderLink: (row: number) => string;
+  protected reorderLink: (row: number) => string;
 
-  private readonly detailsLink: (row: number) => string;
+  protected detailsLink: (row: number) => string;
 
   private readonly orderTableColumnInvoice: (row: number) => string;
 

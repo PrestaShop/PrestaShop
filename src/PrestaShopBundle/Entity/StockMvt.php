@@ -79,7 +79,7 @@ class StockMvt
      *
      * @ORM\Column(name="id_employee", type="integer", nullable=false)
      */
-    private $idEmployee;
+    private $idEmployee = 0;
 
     /**
      * @var string

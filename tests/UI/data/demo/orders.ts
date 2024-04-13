@@ -1,7 +1,11 @@
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import OrderData from '@data/faker/order';
-import Customers from '@data/demo/customers';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 export default {
   firstOrder: new OrderData({
@@ -9,49 +13,49 @@ export default {
     reference: 'XKBKNABJK',
     newClient: true,
     delivery: 'United States',
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     totalPaid: 61.80,
-    paymentMethod: PaymentMethods.checkPayment,
-    status: OrderStatuses.canceled,
+    paymentMethod: dataPaymentMethods.checkPayment,
+    status: dataOrderStatuses.canceled,
   }),
   secondOrder: new OrderData({
     id: 2,
     reference: 'OHSATSERP',
     newClient: false,
     delivery: 'United States',
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     totalPaid: 69.90,
-    paymentMethod: PaymentMethods.checkPayment,
-    status: OrderStatuses.awaitingCheckPayment,
+    paymentMethod: dataPaymentMethods.checkPayment,
+    status: dataOrderStatuses.awaitingCheckPayment,
   }),
   thirdOrder: new OrderData({
     id: 3,
     reference: 'UOYEVOLI',
     newClient: false,
     delivery: 'United States',
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     totalPaid: 14.90,
-    paymentMethod: PaymentMethods.checkPayment,
-    status: OrderStatuses.paymentError,
+    paymentMethod: dataPaymentMethods.checkPayment,
+    status: dataOrderStatuses.paymentError,
   }),
   fourthOrder: new OrderData({
     id: 4,
     reference: 'FFATNOMMJ',
     newClient: false,
     delivery: 'United States',
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     totalPaid: 14.90,
-    paymentMethod: PaymentMethods.checkPayment,
-    status: OrderStatuses.awaitingCheckPayment,
+    paymentMethod: dataPaymentMethods.checkPayment,
+    status: dataOrderStatuses.awaitingCheckPayment,
   }),
   fifthOrder: new OrderData({
     id: 5,
     reference: 'KHWLILZLL',
     newClient: false,
     delivery: 'United States',
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     totalPaid: 20.90,
-    paymentMethod: PaymentMethods.wirePayment,
-    status: OrderStatuses.awaitingCheckPayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
+    status: dataOrderStatuses.awaitingCheckPayment,
   }),
 };

@@ -181,7 +181,7 @@ class AttributeController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Sell/Catalog/Attribute/edit.html.twig',
             [
                 'layoutTitle' => $this->trans(
-                    'Editing attribute %name%',
+                    'Editing attribute value %name%',
                     'Admin.Navigation.Menu',
                     ['%name%' => $attributeName]
                 ),

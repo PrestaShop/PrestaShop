@@ -10,8 +10,9 @@ import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import addZonePage from '@pages/BO/international/locations/add';
 
-// Import data
-import ZoneData from '@data/faker/zone';
+import {
+  FakerZone,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -23,9 +24,9 @@ describe('BO - International - Zones : Bulk enable, disable and delete', async (
   let page: Page;
   let numberOfZones: number = 0;
 
-  const zonesToCreate: ZoneData[] = [
-    new ZoneData({name: 'todelete1'}),
-    new ZoneData({name: 'todelete2'}),
+  const zonesToCreate: FakerZone[] = [
+    new FakerZone({name: 'todelete1'}),
+    new FakerZone({name: 'todelete2'}),
   ];
 
   // before and after functions
@@ -64,7 +65,7 @@ describe('BO - International - Zones : Bulk enable, disable and delete', async (
   });
 
   describe('Create 2 zones in BO', async () => {
-    zonesToCreate.forEach((zoneToCreate: ZoneData, index: number) => {
+    zonesToCreate.forEach((zoneToCreate: FakerZone, index: number) => {
       it('should go to add new title page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewZonePage${index + 1}`, baseContext);
 

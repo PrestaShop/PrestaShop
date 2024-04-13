@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShopBundle\Api\Api;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +39,7 @@ if (!defined('PS_ADMIN_DIR')) {
 }
 
 require _PS_ADMIN_DIR_ . '/../config/config.inc.php';
+define('_PS_APP_ID_', AdminKernel::APP_ID);
 
 //small test to clear cache after upgrade
 if (Configuration::get('PS_UPGRADE_CLEAR_CACHE')) {
@@ -76,10 +76,8 @@ $kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
 $request = Request::createFromGlobals();
 Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO);
 
-$catch = str_contains($request->getRequestUri(), Api::API_BASE_PATH);
-
 try {
-    $response = $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, $catch);
+    $response = $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, false);
     $response->send();
     $kernel->terminate($request, $response);
     /*

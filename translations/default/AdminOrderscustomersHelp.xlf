@@ -62,7 +62,7 @@
       <trans-unit id="3c1c7064989da051f0b4b904bcb408cf">
         <source>This customer will receive your newsletter via email.</source>
         <target>This customer will receive your newsletter via email.</target>
-        <note>Line: 1443</note>
+        <note>Line: 1446</note>
       </trans-unit>
     </body>
   </file>
@@ -110,7 +110,7 @@
       <trans-unit id="75bf7b6b951d3183f7c8f96bdb4fa74c">
         <source>Valid characters:</source>
         <target>Valid characters:</target>
-        <note>Line: 337</note>
+        <note>Line: 331</note>
       </trans-unit>
     </body>
   </file>

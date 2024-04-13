@@ -1,10 +1,9 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import commonTests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
@@ -12,9 +11,13 @@ import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import homePage from '@pages/FO/hummingbird/home';
 import loginPage from '@pages/FO/hummingbird/login';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
+import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
+import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
-// Import data
-import Customers from '@data/demo/customers';
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -47,7 +50,6 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
     after(async () => {
       await helper.closeBrowserContext(browserContext);
-      await files.deleteFile('../../admin-dev/hummingbird.zip');
     });
 
     it('should go to FO home page', async function () {
@@ -83,7 +85,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       // Sign in
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
@@ -103,10 +105,11 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
       await loginPage.goToHomePage(page);
       // Add product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 1, 3);
+      await homePage.quickViewProduct(page, 1);
+      await quickViewModal.setQuantityAndAddToCart(page, 3);
 
       // Close block cart modal
-      const isQuickViewModalClosed = await homePage.closeBlockCartModal(page);
+      const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page);
       expect(isQuickViewModalClosed).to.eq(true);
     });
 

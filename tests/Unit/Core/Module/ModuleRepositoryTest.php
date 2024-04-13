@@ -85,7 +85,7 @@ class ModuleRepositoryTest extends TestCase
 
     public function testGetList(): void
     {
-        $this->assertCount(10, $this->moduleRepository->getList());
+        $this->assertCount(11, $this->moduleRepository->getList());
     }
 
     public function testGetInstalledModules(): void

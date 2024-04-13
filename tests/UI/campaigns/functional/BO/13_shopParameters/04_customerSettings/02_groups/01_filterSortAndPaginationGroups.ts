@@ -12,9 +12,11 @@ import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
-// Import data
-import Groups from '@data/demo/groups';
-import GroupData from '@data/faker/group';
+import {
+  // Import data
+  dataGroups,
+  FakerGroup,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -80,7 +82,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_group',
-            filterValue: Groups.visitor.id,
+            filterValue: dataGroups.visitor.id,
           },
       },
       {
@@ -89,7 +91,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
             testIdentifier: 'filterName',
             filterType: 'input',
             filterBy: 'b!name',
-            filterValue: Groups.visitor.name,
+            filterValue: dataGroups.visitor.name,
           },
       },
       {
@@ -98,7 +100,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
             testIdentifier: 'filterDiscount',
             filterType: 'input',
             filterBy: 'reduction',
-            filterValue: Groups.visitor.discount,
+            filterValue: dataGroups.visitor.discount,
           },
       },
       {
@@ -116,7 +118,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
             testIdentifier: 'filterShopPrices',
             filterType: 'select',
             filterBy: 'show_prices',
-            filterValue: Groups.visitor.shownPrices ? '1' : '0',
+            filterValue: dataGroups.visitor.shownPrices ? '1' : '0',
           },
         expected: 'Yes',
       },
@@ -266,7 +268,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
   describe('Create 18 groups', async () => {
     const creationTests: number[] = new Array(18).fill(0, 0, 18);
     creationTests.forEach((value: number, index: number) => {
-      const groupToCreate: GroupData = new GroupData({name: `toSortAndPaginate${index}`});
+      const groupToCreate: FakerGroup = new FakerGroup({name: `toSortAndPaginate${index}`});
 
       it('should go to add new group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewGroupPage${index}`, baseContext);

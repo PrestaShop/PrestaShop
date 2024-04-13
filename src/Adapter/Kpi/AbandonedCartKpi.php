@@ -31,8 +31,6 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -47,8 +45,7 @@ final class AbandonedCartKpi implements KpiInterface
         private readonly TranslatorInterface $translator,
         private readonly ConfigurationInterface $configuration,
         private readonly LanguageContext $languageContext,
-        private readonly UrlGeneratorInterface $router,
-        private readonly FeatureFlagStateCheckerInterface $flagStateChecker,
+        private readonly UrlGeneratorInterface $router
     ) {
     }
 
@@ -69,15 +66,9 @@ final class AbandonedCartKpi implements KpiInterface
             '%date2%' => date($dateFormat, strtotime('-1 day')),
         ], 'Admin.Orderscustomers.Feature');
 
-        if ($this->flagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_CARTS)) {
-            $helper->href = $this->router->generate('admin_carts_index', [
-                'cart[filters][status]' => CartStatus::ABANDONED_CART,
-            ]);
-        } else {
-            $helper->href = $this->contextAdapter->getAdminLink('AdminCarts', true, [
-                'action' => 'filterOnlyAbandonedCarts',
-            ]);
-        }
+        $helper->href = $this->router->generate('admin_carts_index', [
+            'cart[filters][status]' => CartStatus::ABANDONED_CART,
+        ]);
 
         if ($this->configuration->get('ABANDONED_CARTS') !== false) {
             $helper->value = $this->configuration->get('ABANDONED_CARTS');

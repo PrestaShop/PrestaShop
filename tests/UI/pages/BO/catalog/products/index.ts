@@ -772,7 +772,7 @@ class Products extends BOBasePage {
   async getProductPriceFromList(page: Page, row: number, withTaxes: boolean): Promise<number> {
     const selector = withTaxes ? this.productsListTableColumnPriceATI : this.productsListTableColumnPriceTExc;
     const text = await this.getTextContent(page, selector(row));
-    const resultExecArray: RegExpExecArray | null = /\d+/g.exec(text);
+    const resultExecArray: RegExpExecArray | null = /[\d.]+/g.exec(text);
 
     if (resultExecArray === null) {
       return 0;

@@ -1,9 +1,13 @@
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
-import type CarrierData from '@data/faker/carrier';
-import type CustomerData from '@data/faker/customer';
 import type {ShoppingCartCreator} from '@data/types/shoppingCart';
+
+import {
+  // Import data
+  dataCustomers,
+  FakerCarrier,
+  type FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Create new tax rule to use on tax rule form on BO
@@ -14,9 +18,9 @@ export default class ShoppingCartData {
 
   public readonly orderID: number;
 
-  public readonly customer: CustomerData;
+  public readonly customer: FakerCustomer;
 
-  public readonly carrier: CarrierData;
+  public readonly carrier: FakerCarrier;
 
   public readonly online: boolean;
 
@@ -31,10 +35,10 @@ export default class ShoppingCartData {
     /** @type {number} Order ID */
     this.orderID = valueToCreate.orderID || 0;
 
-    /** @type {CustomerData} Customer */
-    this.customer = valueToCreate.customer || Customers.johnDoe;
+    /** @type {FakerCustomer} Customer */
+    this.customer = valueToCreate.customer || dataCustomers.johnDoe;
 
-    /** @type {CarrierData} Carrier */
+    /** @type {FakerCarrier} Carrier */
     this.carrier = valueToCreate.carrier || Carriers.myCarrier;
 
     /** @type {boolean} */

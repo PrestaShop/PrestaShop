@@ -1,0 +1,60 @@
+# These are services related to ApiPlatform integration, like decorators or services that depend on the ApiPlatform framework
+services:
+  _defaults:
+    public: false
+
+  # Configuration to automatically inject normalizers into DomainSerializer
+  PrestaShopBundle\ApiPlatform\Normalizer\:
+    resource: "../../../../ApiPlatform/Normalizer/*"
+    tags: [ 'prestashop.api.normalizers' ]
+
+  # This is a custom serializer used by our custom providers/processors for ApiPlatform
+  PrestaShopBundle\ApiPlatform\DomainSerializer:
+    class: PrestaShopBundle\ApiPlatform\DomainSerializer
+    arguments:
+      - !tagged_iterator { tag: prestashop.api.normalizers, default_priority_method: getNormalizerPriority }
+
+  # Customer provider for CQRS queries
+  PrestaShopBundle\ApiPlatform\Provider\QueryProvider:
+    tags: [ 'api_platform.state_provider' ]
+    autowire: true
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  # Custom processor for CQRS commands
+  PrestaShopBundle\ApiPlatform\Processor\CommandProcessor:
+    tags: [ 'api_platform.state_processor' ]
+    autowire: true
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  # Custom provider for paginated listing
+  PrestaShopBundle\ApiPlatform\Provider\QueryListProvider:
+    tags: [ 'api_platform.state_provider' ]
+    autowire: true
+    arguments:
+      $filtersBuilder: '@prestashop.core.api.search.builder'
+      $requestStack: '@request_stack'
+
+  # This decorator allows modifying the available ApiPlatform resources based on their configuration (using a custom extra property)
+  PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\ExperimentalOperationsMetadataCollectionFactoryDecorator:
+    decorates: api_platform.metadata.resource.metadata_collection_factory
+    autowire: true
+    arguments:
+      $innerFactory: '@.inner'
+      $isDebug: '%kernel.debug%'
+
+  # This service depends on ResourceMetadataCollectionFactoryInterface (auto wired) and can extract the scopes defined on operations
+  PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor:
+    autowire: true
+    arguments:
+      $moduleDir: '%prestashop.module_dir%'
+      $installedModules: '%prestashop.installed_modules%'
+      $enabledModules: '%prestashop.active_modules%'
+      $projectDir: '%kernel.project_dir%'
+
+  PrestaShopBundle\ApiPlatform\Scopes\CachedApiResourceScopesExtractor:
+    autowire: true
+    decorates: PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor
+
+  PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface: '@PrestaShopBundle\ApiPlatform\Scopes\CachedApiResourceScopesExtractor'

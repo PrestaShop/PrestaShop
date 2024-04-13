@@ -19,10 +19,14 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -164,7 +168,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
 
           await checkoutPage.clickOnSignIn(page);
 
-          const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
+          const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
           expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
@@ -185,7 +189,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
         it('should choose the payment type and confirm the order', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'choosePaymentMethod', baseContext);
 
-          await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+          await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
           // Check the confirmation message

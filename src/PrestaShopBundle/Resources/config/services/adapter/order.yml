@@ -24,8 +24,8 @@ services:
       - '@prestashop.adapter.order.product_quantity.updater'
       - '@prestashop.adapter.order.order_detail.updater'
 
-  prestashop.adapter.order.command_handler.update_order_status_handler:
-    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateOrderStatusHandler
+  PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateOrderStatusHandler:
+    autowire: true
     autoconfigure: true
 
   prestashop.adapter.order.command_handler.update_product_in_order_handler:

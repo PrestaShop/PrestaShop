@@ -22,7 +22,7 @@ class CreditSlipPage extends FOBasePage {
 
   private readonly backToYourAccountLink: string;
 
-  private readonly homeLink: string;
+  protected homeLink: string;
 
   private readonly alertInfoBlock: string;
 

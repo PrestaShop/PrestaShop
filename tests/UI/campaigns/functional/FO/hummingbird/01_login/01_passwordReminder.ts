@@ -2,14 +2,12 @@
 import helper from '@utils/helpers';
 import mailHelper from '@utils/mailHelper';
 import testContext from '@utils/testContext';
-import type {BrowserContext, Page} from 'playwright';
-import files from '@utils/files';
 
 // Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import createAccountTest from '@commonTests/FO/hummingbird/account';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
@@ -18,11 +16,16 @@ import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import passwordReminderPage from '@pages/FO/hummingbird/passwordReminder';
 
 // Import data
-import CustomerData from '@data/faker/customer';
 import type MailDevEmail from '@data/types/maildevEmail';
+
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type MailDev from 'maildev';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_login_passwordReminder';
 
@@ -46,9 +49,9 @@ describe('FO - Login : Password reminder', async () => {
   let mailListener: MailDev;
 
   const resetPasswordMailSubject: string = 'Password query confirmation';
-  const customerData: CustomerData = new CustomerData();
+  const customerData: FakerCustomer = new FakerCustomer();
   const newPassword: string = 'new test password';
-  const customerNewPassword: CustomerData = new CustomerData();
+  const customerNewPassword: FakerCustomer = new FakerCustomer();
   customerNewPassword.email = customerData.email;
   customerNewPassword.password = newPassword;
 
@@ -77,7 +80,6 @@ describe('FO - Login : Password reminder', async () => {
   after(async () => {
     await helper.closeBrowserContext(browserContext);
     mailHelper.stopListener(mailListener);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
   });
 
   describe('Go to FO and check the password reminder', async () => {

@@ -311,6 +311,14 @@ abstract class StockManagementRepository
         return strtr($filters['having'], [
             '{combination_name}' => 'combination_name',
             '{product_reference}' => 'product_reference',
+            '{product_ean13}' => 'product_ean13',
+            '{product_isbn}' => 'product_isbn',
+            '{product_upc}' => 'product_upc',
+            '{product_mpn}' => 'product_mpn',
+            '{combination_ean13}' => 'combination_ean13',
+            '{combination_isbn}' => 'combination_isbn',
+            '{combination_upc}' => 'combination_upc',
+            '{combination_mpn}' => 'combination_mpn',
             '{supplier_name}' => 'supplier_name',
             '{product_name}' => 'product_name',
         ]);

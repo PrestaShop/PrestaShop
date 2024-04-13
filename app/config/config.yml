@@ -16,10 +16,10 @@ parameters:
   admin_page: "%prestashop_views%/Admin"
   env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
   env(PS_LOG_MAX_FILES): '30'
+  env(PS_TRUSTED_PROXIES): ''
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
-  api_base_path: !php/const PrestaShopBundle\Api\Api::API_BASE_PATH
   prestashop.controllers_all_shop_context:
     - AdminAccess
     - AdminFeatureFlag
@@ -39,6 +39,9 @@ services:
     public: true
 
 framework:
+  # proxies configuration, see https://symfony.com/doc/current/deployment/proxies.html
+  trusted_proxies: '%env(PS_TRUSTED_PROXIES)%'
+
   assets:
     version: !php/const PrestaShop\PrestaShop\Core\Version::VERSION
     packages:
@@ -50,9 +53,6 @@ framework:
   translator:
     fallbacks: [ "default" ]
     paths: "%modules_translation_paths%"
-  router:
-    resource: "%kernel.project_dir%/app/config/routing.yml"
-    strict_requirements: ~
   form: ~
   csrf_protection: ~
   validation: { enable_attributes: true }
@@ -99,7 +99,7 @@ twig:
     '%kernel.project_dir%/modules': Modules
     '%mail_themes_dir%': MailThemes
     '%prestashop_views%': PrestaShopCore
-    '%kernel.project_dir%/admin-dev/themes/new-theme': AdminNewTheme
+    '%prestashop.admin_dir%/themes/new-theme': AdminNewTheme
   globals:
     ps: '@PrestaShopBundle\Twig\Layout\PrestaShopLayoutGlobalVariables'
     webpack_server: false
@@ -108,24 +108,13 @@ twig:
     disabling_switch_prefix: !php/const PrestaShopBundle\Form\Extension\DisablingSwitchExtension::FIELD_PREFIX
 
 api_platform:
-  title: Backoffice API
-  version: 0.1.0
-  enable_docs: true
+  # API docs is disabled in the Admin environment, it is accessible via the oauth dedicated endpoint
+  enable_docs: false
   enable_entrypoint: false
-  enable_swagger: true
-  enable_swagger_ui: true
-  formats:
-    json: [ 'application/json' ]
-    # Allow this format for other API endpoint than native endpoint (by default we will use json)
-    jsonld: [ 'application/ld+json' ]
-  docs_formats:
-    # This is used to allow using the Swagger UI in HTML presentation
-    html: [ 'text/html' ]
+  enable_swagger: false
+  enable_swagger_ui: false
+  # We define mapping here because even though the API routes are oncly accessible via the admin-api endpoint we still need
+  # to parse the Api Platform resources to extract the scopes
   mapping:
     paths:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
-  swagger:
-    api_keys:
-      JWT:
-        name: Authorization
-        type: header

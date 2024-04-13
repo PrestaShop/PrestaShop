@@ -373,15 +373,15 @@
         <target>Front office</target>
         <note>Line: 69</note>
       </trans-unit>
-      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
-        <source>Email</source>
-        <target>Email</target>
-        <note>Line: 70</note>
-      </trans-unit>
       <trans-unit id="6311ae17c1ee52b36e68aaf4ad066387">
         <source>Other</source>
         <target>Other</target>
         <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
+        <source>Email</source>
+        <target>Email</target>
+        <note>Line: 70</note>
       </trans-unit>
     </body>
   </file>
@@ -756,12 +756,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/MailTheme/Blocks/generate_mails_form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/MailTheme/Blocks/translate_mails_body_form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c96f531c0eda2dece593a2f8df3a58a8">
         <source>Select your language</source>
         <target>Select your language</target>
-        <note>Line: 51</note>
+        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>
@@ -857,8 +857,7 @@
       <trans-unit id="076b68505282c6c0654708db343d6673">
         <source>Add new currency</source>
         <target>Add new currency</target>
-        <note>Line: 31
-Comment: Stable feature flags form</note>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -1011,20 +1010,21 @@ Comment: nb_translations can be 0 or 1</note>
         <target>Search translations</target>
         <note>Line: 58</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="c949bd6d096b356fc06f55ec5205e3b6">
         <source>%d missing</source>
         <target>%d missing</target>
-        <note>Line: 360</note>
+        <note><![CDATA[Line: 45
+Comment: Missing is plural, always > 1]]></note>
       </trans-unit>
       <trans-unit id="3a8b99657fcabfc65f45cd1be2b34de9">
         <source>%nb_translations% expressions</source>
         <target>%nb_translations% expressions</target>
-        <note>Line: 429</note>
+        <note>Line: 47</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="740b879fdd48f184f798b8018134f630">
         <source>Show messages</source>
         <target>Show messages</target>

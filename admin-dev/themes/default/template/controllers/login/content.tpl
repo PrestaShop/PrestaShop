@@ -27,7 +27,6 @@
 		<h1 class="text-center">
 			<img id="logo" src="{$img_dir}prestashop@2x.png" width="123px" height="24px" alt="PrestaShop" />
 		</h1>
-		<div class="text-center">{$ps_version}</div>
 		<div id="error" class="hide alert alert-danger">
 		{if isset($errors)}
 			<h4>

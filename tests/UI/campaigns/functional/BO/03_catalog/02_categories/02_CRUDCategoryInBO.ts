@@ -12,40 +12,52 @@ import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import categoryPage from '@pages/FO/classic/category';
+import {categoryPage} from '@pages/FO/classic/category';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
 // Import data
+import Categories from '@data/demo/categories';
 import CategoryData from '@data/faker/category';
+import type {CategoryRedirection} from '@data/types/category';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_catalog_categories_CRUDCategoryInBO';
 
 // Create, Read, Update and Delete Category
 describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
+  let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCategories: number = 0;
   let categoryID: number = 0;
   let subcategoryID: number = 0;
+  let categoryFriendlyURL: string = '';
 
-  const createCategoryData: CategoryData = new CategoryData();
-  const createSubCategoryData: CategoryData = new CategoryData({name: 'subCategoryToCreate'});
-  const editCategoryData: CategoryData = new CategoryData({displayed: false, name: `update${createCategoryData.name}`});
+  const createCategoryData: CategoryData = new CategoryData({
+    displayed: true,
+    redirectionWhenNotDisplayed: '301',
+    redirectedCategory: Categories.art,
+  });
+  const createSubCategoryData: CategoryData = new CategoryData({
+    name: 'subCategoryToCreate',
+    displayed: true,
+    redirectionWhenNotDisplayed: '302',
+    redirectedCategory: Categories.clothes,
+  });
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
+    apiContext = await helper.createAPIContext(global.API.URL);
     page = await helper.newTab(browserContext);
 
     // Create categories images
     await Promise.all([
       files.generateImage(`${createCategoryData.name}.jpg`),
       files.generateImage(`${createSubCategoryData.name}.jpg`),
-      files.generateImage(`${editCategoryData.name}.jpg`),
     ]);
   });
 
@@ -56,7 +68,6 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
     await Promise.all([
       files.deleteFile(`${createCategoryData.name}.jpg`),
       files.deleteFile(`${createSubCategoryData.name}.jpg`),
-      files.deleteFile(`${editCategoryData.name}.jpg`),
     ]);
   });
 
@@ -320,100 +331,237 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
     });
   });
 
-  // 3 : Update category and check that category isn't displayed in FO (displayed = false)
-  describe('Update Category', async () => {
-    it('should go to \'Catalog > Categories\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPageToUpdate', baseContext);
+  // 3 : Disable category (and subcategory) and check the redirection
+  [
+    {
+      type: 'category',
+      category: createCategoryData,
+    },
+    {
+      type: 'subcategory',
+      category: createSubCategoryData,
+    },
+  ].forEach((arg: {type: string, category: CategoryData}, index: number) => {
+    describe(`Disable ${arg.type} and check the redirection (${arg.category.redirectionWhenNotDisplayed})`, async () => {
+      it('should go to \'Catalog > Categories\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToCategoriesPageToDisable${index}`, baseContext);
 
-      await categoriesPage.goToSubMenu(
-        page,
-        categoriesPage.catalogParentLink,
-        categoriesPage.categoriesLink,
-      );
+        await categoriesPage.goToSubMenu(
+          page,
+          categoriesPage.catalogParentLink,
+          categoriesPage.categoriesLink,
+        );
 
-      const pageTitle = await categoriesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(categoriesPage.pageTitle);
-    });
+        const pageTitle = await categoriesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      });
 
-    it(`should filter list by Name '${createCategoryData.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
+      it(`should filter list by Name '${arg.category.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `filterToDisable${index}`, baseContext);
 
-      await categoriesPage.resetFilter(page);
-      await categoriesPage.filterCategories(
-        page,
-        'input',
-        'name',
-        createCategoryData.name,
-      );
+        await categoriesPage.resetFilter(page);
+        await categoriesPage.filterCategories(
+          page,
+          'input',
+          'name',
+          arg.category.name,
+        );
 
-      const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
-      expect(textColumn).to.contains(createCategoryData.name);
-    });
+        const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
+        expect(textColumn).to.contains(arg.category.name);
+      });
 
-    it('should go to edit category page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditCategoryPage', baseContext);
+      it(`should go to edit ${arg.type} page`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToEditCategoryPage${index}`, baseContext);
 
-      await categoriesPage.goToEditCategoryPage(page, 1);
+        await categoriesPage.goToEditCategoryPage(page, 1);
 
-      const pageTitle = await addCategoryPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCategoryPage.pageTitleEdit + createCategoryData.name);
-    });
+        const pageTitle = await addCategoryPage.getPageTitle(page);
+        expect(pageTitle).to.contains(addCategoryPage.pageTitleEdit + arg.category.name);
 
-    it('should update the category', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateCategory', baseContext);
+        categoryFriendlyURL = await addCategoryPage.getValue(page, 'friendlyUrl');
+      });
 
-      const textResult = await addCategoryPage.createEditCategory(page, editCategoryData);
-      expect(textResult).to.equal(categoriesPage.successfulUpdateMessage);
+      it(`should disable the ${arg.type}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `disableCategory${index}`, baseContext);
 
-      const numberOfCategoriesAfterUpdate = await categoriesPage.resetAndGetNumberOfLines(page);
-      expect(numberOfCategoriesAfterUpdate).to.be.equal(numberOfCategories + 1);
-    });
+        arg.category.setDisplayed(false);
 
-    it('should search for the new category and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchForUpdatedCategory', baseContext);
+        const textResult = await addCategoryPage.createEditCategory(page, arg.category);
+        expect(textResult).to.equal(categoriesPage.successfulUpdateMessage);
 
-      await categoriesPage.resetFilter(page);
-      await categoriesPage.filterCategories(
-        page,
-        'input',
-        'name',
-        editCategoryData.name,
-      );
+        const numberOfCategoriesAfterUpdate = await categoriesPage.resetAndGetNumberOfLines(page);
+        expect(numberOfCategoriesAfterUpdate).to.be.equal(arg.type === 'category' ? numberOfCategories + 1 : 1);
+      });
 
-      const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
-      expect(textColumn).to.contains(editCategoryData.name);
-    });
+      it(`should go to FO and check that the ${arg.type} does not exist`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkRedirectedCategoryFO${index}`, baseContext);
 
-    it('should go to FO and check that the category does not exist', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCategoryFO', baseContext);
+        const idCategory: number = arg.type === 'category' ? categoryID : subcategoryID;
 
-      // View shop
-      page = await categoriesPage.viewMyShop(page);
-      // Change FO language
-      await foHomePage.changeLanguage(page, 'en');
-      // Go to sitemap page
-      await foHomePage.goToFooterLink(page, 'Sitemap');
+        // View shop
+        page = await categoriesPage.viewMyShop(page);
+        // Change FO language
+        await foHomePage.changeLanguage(page, 'en');
+        // Go to sitemap page
+        await foHomePage.goToFooterLink(page, 'Sitemap');
 
-      const pageTitle = await siteMapPage.getPageTitle(page);
-      expect(pageTitle).to.equal(siteMapPage.pageTitle);
+        const pageTitle = await siteMapPage.getPageTitle(page);
+        expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
-      // Check category name
-      const categoryName = await siteMapPage.isVisibleCategory(page, categoryID);
-      expect(categoryName).to.eq(false);
-    });
+        // Check category name
+        const categoryName = await siteMapPage.isVisibleCategory(page, idCategory);
+        expect(categoryName).to.eq(false);
+      });
 
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo3', baseContext);
+      it('should check the HTTP code of the response', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `responseRedirectedCategoryFO${index}`, baseContext);
 
-      // Close tab and init other page objects with new current tab
-      page = await siteMapPage.closePage(browserContext, page, 0);
+        const idCategory: number = arg.type === 'category' ? categoryID : subcategoryID;
 
-      const pageTitle = await categoriesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(categoriesPage.pageTitle);
+        // Check if it is an error page
+        const response = await categoryPage.goTo(page, `${global.FO.URL}en/${idCategory}-${categoryFriendlyURL}`);
+        expect(response).to.be.not.equal(null);
+        const requestRedirectFrom = response!.request().redirectedFrom();
+        expect(requestRedirectFrom).to.be.not.equal(null);
+        const responseBeforeRedirection = await requestRedirectFrom!.response();
+        expect(responseBeforeRedirection).to.be.not.equal(null);
+        expect(responseBeforeRedirection!.status()).to.be.equal(parseInt(arg.category.redirectionWhenNotDisplayed, 10));
+
+        // Check if it is redirected to the category
+        const categoryName = await categoryPage.getHeaderPageName(page);
+        expect(categoryName).to.contains(arg.category.redirectedCategory!.name.toUpperCase());
+      });
+
+      it('should go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goBackToBoDisabled${index}`, baseContext);
+
+        const titlePage: string = arg.type === 'category'
+          ? categoriesPage.pageTitle
+          : categoriesPage.pageCategoryTitle(createCategoryData.name);
+
+        // Close tab and init other page objects with new current tab
+        page = await siteMapPage.closePage(browserContext, page, 0);
+
+        const pageTitle = await categoriesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(titlePage);
+      });
     });
   });
 
-  // 4 : Delete Category from BO
+  // 4: Update the category (and subcategory) redirection to 40x and check the error page
+  [
+    {
+      type: 'category',
+      category: createCategoryData,
+      newRedirect: '404' as CategoryRedirection,
+    },
+    {
+      type: 'subcategory',
+      category: createSubCategoryData,
+      newRedirect: '410' as CategoryRedirection,
+    },
+  ].forEach((arg: {type: string, category: CategoryData, newRedirect: CategoryRedirection}, index: number) => {
+    describe(`Change the redirection for ${arg.type} and check the error page (${arg.newRedirect})`, async () => {
+      it('should go to \'Catalog > Categories\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToCategoriesPageToSetRedirection${index}`, baseContext);
+
+        await categoriesPage.goToSubMenu(
+          page,
+          categoriesPage.catalogParentLink,
+          categoriesPage.categoriesLink,
+        );
+
+        const pageTitle = await categoriesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      });
+
+      it(`should filter list by Name '${arg.category.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `filterToUpdate${index}`, baseContext);
+
+        await categoriesPage.resetFilter(page);
+        await categoriesPage.filterCategories(
+          page,
+          'input',
+          'name',
+          arg.category.name,
+        );
+
+        const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
+        expect(textColumn).to.contains(arg.category.name);
+      });
+
+      it(`should go to edit ${arg.type} page`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToEditCategoryPage1${index}`, baseContext);
+
+        await categoriesPage.goToEditCategoryPage(page, 1);
+
+        const pageTitle = await addCategoryPage.getPageTitle(page);
+        expect(pageTitle).to.contains(addCategoryPage.pageTitleEdit + arg.category.name);
+
+        categoryFriendlyURL = await addCategoryPage.getValue(page, 'friendlyUrl');
+      });
+
+      it(`should set a new redirection type for ${arg.type}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `setNewRedirection${index}`, baseContext);
+
+        arg.category.setRedirectionWhenNotDisplayed(arg.newRedirect);
+
+        const textResult = await addCategoryPage.createEditCategory(page, arg.category);
+        expect(textResult).to.equal(categoriesPage.successfulUpdateMessage);
+
+        const numberOfCategoriesAfterUpdate = await categoriesPage.resetAndGetNumberOfLines(page);
+        expect(numberOfCategoriesAfterUpdate).to.be.equal(arg.type === 'category' ? numberOfCategories + 1 : 1);
+      });
+
+      it(`should go to FO and check that the ${arg.type} does not exist`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkErroredCategoryFO${index}`, baseContext);
+
+        const idCategory: number = arg.type === 'category' ? categoryID : subcategoryID;
+
+        // View shop
+        page = await categoriesPage.viewMyShop(page);
+        // Change FO language
+        await foHomePage.changeLanguage(page, 'en');
+        // Go to sitemap page
+        await foHomePage.goToFooterLink(page, 'Sitemap');
+
+        const pageTitle = await siteMapPage.getPageTitle(page);
+        expect(pageTitle).to.equal(siteMapPage.pageTitle);
+
+        // Check category name
+        const categoryName = await siteMapPage.isVisibleCategory(page, idCategory);
+        expect(categoryName).to.eq(false);
+      });
+
+      it('should check the HTTP code of the response', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `responseErroredCategoryFO${index}`, baseContext);
+
+        const idCategory: number = arg.type === 'category' ? categoryID : subcategoryID;
+
+        // Check if it is a error page
+        const response = await apiContext.get(`${global.FO.URL}en/${idCategory}-${categoryFriendlyURL}`);
+        expect(response).to.be.not.equal(null);
+        expect(response!.status()).to.be.equal(parseInt(arg.category.redirectionWhenNotDisplayed, 10));
+      });
+
+      it('should go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goBackToBoRedirect${index}`, baseContext);
+
+        const titlePage: string = arg.type === 'category'
+          ? categoriesPage.pageTitle
+          : categoriesPage.pageCategoryTitle(createCategoryData.name);
+
+        // Close tab and init other page objects with new current tab
+        page = await siteMapPage.closePage(browserContext, page, 0);
+
+        const pageTitle = await categoriesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(titlePage);
+      });
+    });
+  });
+
+  // 5 : Delete Category from BO
   describe('Delete Category', async () => {
     it('should go to \'Catalog > Categories\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPageToDelete', baseContext);
@@ -428,7 +576,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
 
-    it(`should filter list by Name '${editCategoryData.name}'`, async function () {
+    it(`should filter list by Name '${createCategoryData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       await categoriesPage.resetFilter(page);
@@ -436,12 +584,12 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         page,
         'input',
         'name',
-        editCategoryData.name,
+        createCategoryData.name,
       );
       categoryID = parseInt(await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category'), 10);
 
       const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
-      expect(textColumn).to.contains(editCategoryData.name);
+      expect(textColumn).to.contains(createCategoryData.name);
     });
 
     it('should delete category', async function () {

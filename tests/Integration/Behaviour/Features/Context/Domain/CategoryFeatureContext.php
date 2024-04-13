@@ -49,6 +49,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
 use RuntimeException;
 use Shop;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -179,6 +181,18 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $this->assertProperty($data, 'group access', $editableCategory->getGroupAssociationIds(), self::PROPERTY_TYPE_REFERENCE_ARRAY);
         $this->assertProperty($data, 'associated shops', $editableCategory->getShopAssociationIds(), self::PROPERTY_TYPE_REFERENCE_ARRAY);
         $this->assertProperty($data, 'meta keywords', $editableCategory->getMetaKeywords());
+        $this->assertProperty($data, 'redirect type', $editableCategory->getRedirectType());
+
+        $expectedRedirectTarget = isset($data['redirect target']) ?
+            $this->getSharedStorage()->get($data['redirect target']) :
+            RedirectTarget::NO_TARGET
+        ;
+
+        Assert::assertEquals(
+            $expectedRedirectTarget,
+            $editableCategory->getRedirectTarget() ? $editableCategory->getRedirectTarget()->getId() : RedirectTarget::NO_TARGET,
+            'Unexpected redirect target'
+        );
     }
 
     /**
@@ -356,6 +370,15 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['meta keywords'])) {
             $command->setLocalizedMetaKeywords($data['meta keywords']);
         }
+        if (isset($data['redirect type'])) {
+            $target = isset($data['redirect target']) ? $this->getSharedStorage()->get($data['redirect target']) : 0;
+
+            $redirectionOption = new RedirectOption(
+                $data['redirect type'],
+                $target,
+            );
+            $command->setRedirectOption($redirectionOption);
+        }
 
         /** @var CategoryId $categoryId */
         $categoryId = $this->getCommandBus()->handle($command);
@@ -417,6 +440,15 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         }
         if ($command instanceof EditCategoryCommand && isset($data['parent category'])) {
             $command->setParentCategoryId($this->getSharedStorage()->get($data['parent category']));
+        }
+        if (isset($data['redirect type'])) {
+            $target = isset($data['redirect target']) ? $this->getSharedStorage()->get($data['redirect target']) : 0;
+
+            $redirectionOption = new RedirectOption(
+                $data['redirect type'],
+                $target,
+            );
+            $command->setRedirectOption($redirectionOption);
         }
     }
 

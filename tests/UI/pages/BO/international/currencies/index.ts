@@ -1,6 +1,8 @@
 import LocalizationBasePage from '@pages/BO/international/localization/localizationBasePage';
 
-import CurrencyData from '@data/faker/currency';
+import {
+  FakerCurrency,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -257,10 +259,10 @@ class Currencies extends LocalizationBasePage {
    * Get currency row from table
    * @param page {Page} Browser tab
    * @param row {number} Row on table
-   * @returns {Promise<CurrencyData>}
+   * @returns {Promise<FakerCurrency>}
    */
-  async getCurrencyFromTable(page: Page, row: number): Promise<CurrencyData> {
-    return new CurrencyData({
+  async getCurrencyFromTable(page: Page, row: number): Promise<FakerCurrency> {
+    return new FakerCurrency({
       name: await this.getTextColumnFromTableCurrency(page, row, 'name'),
       symbol: await this.getTextColumnFromTableCurrency(page, row, 'symbol'),
       isoCode: await this.getTextColumnFromTableCurrency(page, row, 'iso_code'),

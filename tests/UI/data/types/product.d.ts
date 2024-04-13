@@ -22,6 +22,7 @@ type ProductCreator = {
   applyChangesToAllStores?: boolean
   summary?: string
   description?: string
+  descriptionFR?: string
   reference?: string
   mpn?: string | null
   upc?: string | null
@@ -218,6 +219,12 @@ type ProductStockMovement = {
   employee: string
 };
 
+type ProductOrderConfirmation = {
+  image: string
+  details: string
+  prices: string
+};
+
 export {
   ProductAttribute,
   ProductAttributes,
@@ -245,4 +252,5 @@ export {
   ProductFeatures,
   ProductFiles,
   ProductCustomizations,
+  ProductOrderConfirmation,
 };

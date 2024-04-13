@@ -4,18 +4,22 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 
 // Import data
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
-import OrderStatuses from '@data/demo/orderStatuses';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -34,14 +38,14 @@ describe('BO - Orders : Bulk update orders status', async () => {
   let page: Page;
 
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create 2 orders in FO
@@ -84,7 +88,7 @@ describe('BO - Orders : Bulk update orders status', async () => {
 
       const textResult = await ordersPage.bulkUpdateOrdersStatus(
         page,
-        OrderStatuses.paymentAccepted.name,
+        dataOrderStatuses.paymentAccepted.name,
         false,
         [1, 2],
       );
@@ -96,7 +100,7 @@ describe('BO - Orders : Bulk update orders status', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderStatus${index + 1}`, baseContext);
 
         const orderStatus = await ordersPage.getTextColumn(page, 'osname', index + 1);
-        expect(orderStatus, 'Order status is not correct').to.equal(OrderStatuses.paymentAccepted.name);
+        expect(orderStatus, 'Order status is not correct').to.equal(dataOrderStatuses.paymentAccepted.name);
       });
     });
   });

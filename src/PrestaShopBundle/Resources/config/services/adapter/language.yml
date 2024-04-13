@@ -65,3 +65,6 @@ services:
     public: false
     arguments:
       $context: '@prestashop.adapter.legacy.context'
+
+  PrestaShop\PrestaShop\Adapter\Language\Repository\LanguageRepository:
+    autowire: true

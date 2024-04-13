@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
 import {homePage as homePageFO} from '@pages/FO/classic/home';
-import categoryPageFO from '@pages/FO/classic/category';
+import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

@@ -30,6 +30,7 @@ namespace Tests\Unit\PrestaShopBundle\ApiPlatform\Scopes;
 
 use ApiPlatform\Metadata\Resource\Factory\AttributesResourceMetadataCollectionFactory;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopes;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor;
 
@@ -53,7 +54,7 @@ class ApiResourceScopesExtractorTest extends TestCase
 
         $expectedResourceScopes = [
             ApiResourceScopes::createCoreScopes(['hook_read', 'hook_write']),
-            ApiResourceScopes::createModuleScopes(['api_access_read'], 'fake_module'),
+            ApiResourceScopes::createModuleScopes(['api_client_read'], 'fake_module'),
             ApiResourceScopes::createModuleScopes(['customer_group_read'], 'disabled_fake_module'),
         ];
         $this->assertEquals($expectedResourceScopes, $resourceScopes);
@@ -66,15 +67,19 @@ class ApiResourceScopesExtractorTest extends TestCase
 
         $expectedResourceScopes = [
             ApiResourceScopes::createCoreScopes(['hook_read', 'hook_write']),
-            ApiResourceScopes::createModuleScopes(['api_access_read'], 'fake_module'),
+            ApiResourceScopes::createModuleScopes(['api_client_read'], 'fake_module'),
         ];
         $this->assertEquals($expectedResourceScopes, $resourceScopes);
     }
 
     private function buildExtractor(): ApiResourceScopesExtractor
     {
+        $environment = $this->createMock(EnvironmentInterface::class);
+        $environment->method('getName')->willReturn('test');
+
         return new ApiResourceScopesExtractor(
             new AttributesResourceMetadataCollectionFactory(),
+            $environment,
             $this->moduleDir,
             ['fake_module', 'disabled_fake_module'],
             ['fake_module'],

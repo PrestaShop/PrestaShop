@@ -10,6 +10,8 @@ import type {Page} from 'playwright';
 class Categories extends BOBasePage {
   public readonly pageTitle: string;
 
+  public readonly pageCategoryTitle: (categoryName: string) => string;
+
   public readonly pageRootTitle: string;
 
   public readonly successfulUpdateStatusMessage: string;
@@ -92,6 +94,7 @@ class Categories extends BOBasePage {
     super();
 
     this.pageTitle = `Categories • ${global.INSTALL.SHOP_NAME}`;
+    this.pageCategoryTitle = (categoryName: string) => `Category ${categoryName} • ${global.INSTALL.SHOP_NAME}`;
     this.pageRootTitle = `Category Root • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
@@ -519,7 +522,7 @@ class Categories extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page: Page): Promise<string> {
+  async getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 

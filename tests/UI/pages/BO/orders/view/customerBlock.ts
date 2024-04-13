@@ -1,8 +1,10 @@
 import addAddressPage from '@pages/BO/customers/addresses/add';
 import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
-// Import data
-import AddressData from '@data/faker/address';
+import {
+  // Import data
+  FakerAddress,
+} from '@prestashop-core/ui-testing';
 
 import type {Frame, Page} from 'playwright';
 /**
@@ -172,7 +174,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param addressData {AddressData} Shipping address data to edit
    * @returns {Promise<string>}
    */
-  async editExistingShippingAddress(page: Page, addressData: AddressData): Promise<string> {
+  async editExistingShippingAddress(page: Page, addressData: FakerAddress): Promise<string> {
     await this.waitForSelectorAndClick(page, this.shippingAddressToolTipLink);
     await this.waitForSelectorAndClick(page, this.editShippingAddressButton);
 
@@ -209,7 +211,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param addressData {AddressData} Invoice address data to edit
    * @returns {Promise<string>}
    */
-  async editExistingInvoiceAddress(page: Page, addressData: AddressData): Promise<string> {
+  async editExistingInvoiceAddress(page: Page, addressData: FakerAddress): Promise<string> {
     await this.waitForSelectorAndClick(page, this.invoiceAddressToolTipLink);
     await this.waitForSelectorAndClick(page, this.editInvoiceAddressButton);
 

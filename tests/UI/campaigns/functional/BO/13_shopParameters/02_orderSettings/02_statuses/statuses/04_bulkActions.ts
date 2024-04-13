@@ -12,8 +12,9 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 import addOrderStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/add';
 
-// Import data
-import OrderStatusData from '@data/faker/orderStatus';
+import {
+  FakerOrderStatus,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -91,7 +92,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Bulk actions in ord
     describe(`Create order status n°${index + 1} in BO`, async () => {
       before(() => files.generateImage(`todelete${index}.jpg`));
 
-      const orderStatusData: OrderStatusData = new OrderStatusData({name: `todelete${index}`});
+      const orderStatusData: FakerOrderStatus = new FakerOrderStatus({name: `todelete${index}`});
 
       it('should go to add new order status group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddOrderStatusPage${index}`, baseContext);

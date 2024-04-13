@@ -5,7 +5,7 @@ import mailHelper from '@utils/mailHelper';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import pages
@@ -17,11 +17,15 @@ import {moduleManager} from '@pages/BO/modules/moduleManager';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import Modules from '@data/demo/modules';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -51,14 +55,14 @@ describe('Mail alerts module - Enable/Disable return', async () => {
 
   // New order by customer data
   const orderData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 3,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create first order

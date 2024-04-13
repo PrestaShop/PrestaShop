@@ -311,15 +311,15 @@ class ModuleManager implements ModuleManagerInterface
             $error = array_pop($errors);
             if (empty($error)) {
                 $error = $this->translator->trans(
-                    'Unfortunately, the module did not return additional details.',
-                    [],
+                    'Unfortunately, the module %module% did not return additional details.',
+                    ['%module%' => $name],
                     'Admin.Modules.Notification'
                 );
             }
         } else {
             $error = $this->translator->trans(
-                'The module is invalid and cannot be loaded.',
-                [],
+                'The module %module% is invalid and cannot be loaded.',
+                ['%module%' => $name],
                 'Admin.Modules.Notification'
             );
         }

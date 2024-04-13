@@ -184,6 +184,11 @@
         <target>Your review cannot be sent</target>
         <note>Line: 144</note>
       </trans-unit>
+      <trans-unit id="7966126831926ad29c528b239d69f855">
+        <source>Write your review</source>
+        <target>Write your review</target>
+        <note>Line: 34</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/productcomments/views/templates/hook/product-additional-info.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -192,11 +197,6 @@
         <source>Read user reviews</source>
         <target>Read user reviews</target>
         <note>Line: 40</note>
-      </trans-unit>
-      <trans-unit id="7966126831926ad29c528b239d69f855">
-        <source>Write your review</source>
-        <target>Write your review</target>
-        <note>Line: 45</note>
       </trans-unit>
     </body>
   </file>
@@ -234,32 +234,32 @@
       <trans-unit id="71e8650db4e9d91dedc7ddf8b0dd2c21">
         <source>Your review appreciation cannot be sent</source>
         <target>Your review appreciation cannot be sent</target>
-        <note>Line: 61</note>
+        <note>Line: 75</note>
       </trans-unit>
       <trans-unit id="49e1ec421718259de522cdd347e5bba6">
         <source>Report comment</source>
         <target>Report comment</target>
-        <note>Line: 68</note>
+        <note>Line: 82</note>
       </trans-unit>
       <trans-unit id="ab51a81c76d95ddc762194d58ec5db63">
         <source>Are you sure that you want to report this comment?</source>
         <target>Are you sure that you want to report this comment?</target>
-        <note>Line: 69</note>
+        <note>Line: 83</note>
       </trans-unit>
       <trans-unit id="1e1669fa3b08541f2e785fb96309df65">
         <source>Report sent</source>
         <target>Report sent</target>
-        <note>Line: 76</note>
+        <note>Line: 90</note>
       </trans-unit>
       <trans-unit id="2b15bb3a34368bc47f59833e7e6ef09b">
         <source>Your report has been submitted and will be considered by a moderator.</source>
         <target>Your report has been submitted and will be considered by a moderator.</target>
-        <note>Line: 77</note>
+        <note>Line: 91</note>
       </trans-unit>
       <trans-unit id="40273f71e8d680ae64c2ac1d6026d8b3">
         <source>Your report cannot be sent</source>
         <target>Your report cannot be sent</target>
-        <note>Line: 83</note>
+        <note>Line: 97</note>
       </trans-unit>
     </body>
   </file>

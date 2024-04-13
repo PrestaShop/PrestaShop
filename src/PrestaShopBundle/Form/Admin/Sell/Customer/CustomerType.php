@@ -297,6 +297,7 @@ class CustomerType extends TranslatorAwareType
                 ),
                 'empty_data' => [],
                 'choices' => $this->groupByIdChoiceProvider->getChoices(),
+                'display_total_items' => true,
             ])
             ->add('default_group_id', GroupType::class, [
                 'label' => $this->trans('Default customer group', 'Admin.Orderscustomers.Feature'),

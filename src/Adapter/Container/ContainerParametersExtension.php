@@ -68,11 +68,12 @@ class ContainerParametersExtension implements ContainerBuilderExtensionInterface
         include _PS_ROOT_DIR_ . '/app/config/set_parameters.php';
         $container->addResource(new FileResource(_PS_ROOT_DIR_ . '/app/config/parameters.php'));
 
-        //Most of these parameters are just necessary fro doctrine services definitions
+        //Most of these parameters are just necessary from doctrine services definitions
         $container->setParameter('kernel.bundles', []);
         $container->setParameter('kernel.name', 'app');
         $container->setParameter('kernel.debug', $this->environment->isDebug());
         $container->setParameter('kernel.environment', $this->environment->getName());
+        $container->setParameter('kernel.app_id', $this->environment->getAppId());
 
         //Note: this is not the same folder in test env because PS_CACHE_DIR only manages dev and prod env
         //but it should! So for now let's do it the right way here and let's fix the rest later when EnvironmentInterface

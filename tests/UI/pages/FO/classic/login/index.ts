@@ -1,8 +1,10 @@
 // Import pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-// Import data
-import type CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  type FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -63,11 +65,11 @@ class LoginPage extends FOBasePage {
   /**
    * Login in FO
    * @param page {Page} Browser tab
-   * @param customer {CustomerData} Customer's information (email and password)
+   * @param customer {FakerCustomer} Customer's information (email and password)
    * @param waitForNavigation {boolean} true to wait for navigation after the click on button
    * @return {Promise<void>}
    */
-  async customerLogin(page: Page, customer: CustomerData, waitForNavigation: boolean = true): Promise<void> {
+  async customerLogin(page: Page, customer: FakerCustomer, waitForNavigation: boolean = true): Promise<void> {
     await this.setValue(page, this.emailInput, customer.email);
     await this.setValue(page, this.passwordInput, customer.password);
     if (waitForNavigation) {

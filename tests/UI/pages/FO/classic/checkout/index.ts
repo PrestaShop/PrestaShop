@@ -1,10 +1,12 @@
 // Import pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-// Import data
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
-import CarrierData from '@data/faker/carrier';
+import {
+  // Import data
+  FakerAddress,
+  FakerCarrier,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 import {ProductDetailsBasic} from '@data/types/product';
@@ -43,33 +45,31 @@ class CheckoutPage extends FOBasePage {
 
   protected shippingValueSpan: string;
 
-  private readonly blockPromoDiv: string;
+  protected cartSummaryLine: (line: number) => string;
 
-  private readonly cartSummaryLine: (line: number) => string;
-
-  private readonly cartRuleName: (line: number) => string;
+  protected cartRuleName: (line: number) => string;
 
   private readonly discountValue: (line: number) => string;
 
   private readonly noPaymentNeededElement: string;
 
-  private readonly itemsNumber: string;
+  protected itemsNumber: string;
 
-  private readonly showDetailsLink: string;
+  protected showDetailsLink: string;
 
   private readonly productList: string;
 
-  private readonly productRowLink: (productRow: number) => string;
+  protected productRowLink: (productRow: number) => string;
 
-  private readonly productDetailsImage: (productRow: number) => string;
+  protected productDetailsImage: (productRow: number) => string;
 
-  private readonly productDetailsName: (productRow: number) => string;
+  protected productDetailsName: (productRow: number) => string;
 
-  private readonly productDetailsQuantity: (productRow: number) => string;
+  protected productDetailsQuantity: (productRow: number) => string;
 
-  private readonly productDetailsPrice: (productRow: number) => string;
+  protected productDetailsPrice: (productRow: number) => string;
 
-  private readonly productDetailsAttributes: (productRow: number) => string;
+  protected productDetailsAttributes: (productRow: number) => string;
 
   public readonly noPaymentNeededText: string;
 
@@ -81,7 +81,7 @@ class CheckoutPage extends FOBasePage {
 
   public personalInformationStepForm: string;
 
-  private readonly forgetPasswordLink: string;
+  protected forgetPasswordLink: string;
 
   private readonly activeLink: string;
 
@@ -113,15 +113,15 @@ class CheckoutPage extends FOBasePage {
 
   protected signInHyperLink: string;
 
-  private readonly checkoutSummary: string;
+  protected checkoutSummary: string;
 
-  private readonly checkoutPromoBlock: string;
+  protected checkoutPromoBlock: string;
 
   private readonly checkoutHavePromoCodeButton: string;
 
   private readonly checkoutRemoveDiscountLink: string;
 
-  private readonly checkoutLoginForm: string;
+  protected checkoutLoginForm: string;
 
   private readonly emailInput: string;
 
@@ -133,11 +133,11 @@ class CheckoutPage extends FOBasePage {
 
   private readonly personalInformationLogoutLink: string;
 
-  private readonly personalInformationCustomerIdentity: string;
+  protected personalInformationCustomerIdentity: string;
 
-  private readonly personalInformationEditLink: string;
+  protected personalInformationEditLink: string;
 
-  private readonly loginErrorMessage: string;
+  protected loginErrorMessage: string;
 
   protected addressStepSection: string;
 
@@ -169,9 +169,9 @@ class CheckoutPage extends FOBasePage {
 
   protected addressStepEditButton: string;
 
-  private readonly addAddressButton: string;
+  protected addAddressButton: string;
 
-  private readonly addInvoiceAddressButton: string;
+  protected addInvoiceAddressButton: string;
 
   private readonly differentInvoiceAddressLink: string;
 
@@ -181,7 +181,7 @@ class CheckoutPage extends FOBasePage {
 
   protected deliveryStepSection: string;
 
-  private readonly deliveryStepEditButton: string;
+  protected deliveryStepEditButton: string;
 
   private readonly deliveryStepCarriersList: string;
 
@@ -215,17 +215,17 @@ class CheckoutPage extends FOBasePage {
 
   protected deliveryAddressPosition: (position: number) => string;
 
-  private readonly invoiceAddressPosition: (position: number) => string;
+  protected invoiceAddressPosition: (position: number) => string;
 
   protected deliveryAddressEditButton: (addressID: number) => string;
 
-  private readonly deliveryAddressDeleteButton: (addressID: number) => string;
+  protected deliveryAddressDeleteButton: (addressID: number) => string;
 
   private readonly deliveryAddressRadioButton: (addressID: number) => string;
 
   private readonly invoiceAddressRadioButton: (addressID: number) => string;
 
-  private readonly cartTotalATI: string;
+  protected cartTotalATI: string;
 
   private readonly cartRuleAlertMessage: string;
 
@@ -354,15 +354,14 @@ class CheckoutPage extends FOBasePage {
     this.checkoutSummary = '#js-checkout-summary';
     this.checkoutPromoBlock = `${this.checkoutSummary} div.block-promo`;
     this.checkoutHavePromoCodeButton = `${this.checkoutPromoBlock} p.promo-code-button a`;
-    this.checkoutRemoveDiscountLink = `${this.checkoutPromoBlock} a[data-link-action='remove-voucher'] i`;
+    this.checkoutRemoveDiscountLink = 'a[data-link-action="remove-voucher"] i';
     this.cartTotalATI = '.cart-summary-totals span.value';
     this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
     this.promoCodeArea = '#promo-code';
     this.checkoutHavePromoInputArea = `${this.promoCodeArea} input.promo-input`;
     this.checkoutPromoCodeAddButton = `${this.promoCodeArea} button.btn-primary`;
     this.shippingValueSpan = '#cart-subtotal-shipping span.value';
-    this.blockPromoDiv = '.block-promo';
-    this.cartSummaryLine = (line: number) => `${this.blockPromoDiv} li:nth-child(${line}).cart-summary-line`;
+    this.cartSummaryLine = (line: number) => `${this.checkoutPromoBlock} li:nth-child(${line}).cart-summary-line`;
     this.cartRuleName = (line: number) => `${this.cartSummaryLine(line)} span.label`;
     this.discountValue = (line: number) => `${this.cartSummaryLine(line)} div span`;
 
@@ -372,7 +371,7 @@ class CheckoutPage extends FOBasePage {
     this.productList = '#cart-summary-product-list';
     this.productRowLink = (productRow: number) => `${this.productList} ul li:nth-child(${productRow})`;
     this.productDetailsImage = (productRow: number) => `${this.productRowLink(productRow)} div.media-left a img`;
-    this.productDetailsName = (productRow: number) => `${this.productRowLink(productRow)} div.media-body span.product-name`;
+    this.productDetailsName = (productRow: number) => `${this.productRowLink(productRow)} div span.product-name`;
     this.productDetailsQuantity = (productRow: number) => `${this.productRowLink(productRow)} `
       + 'div.media-body span.product-quantity';
     this.productDetailsPrice = (productRow: number) => `${this.productRowLink(productRow)} div.media-body `
@@ -578,10 +577,10 @@ class CheckoutPage extends FOBasePage {
   /**
    * Fill personal information form and click on continue
    * @param page {Page} Browser tab
-   * @param customerData {CustomerData} Guest Customer's information to fill on form
+   * @param customerData {FakerCustomer} Guest Customer's information to fill on form
    * @return {Promise<boolean>}
    */
-  async setGuestPersonalInformation(page: Page, customerData: CustomerData): Promise<boolean> {
+  async setGuestPersonalInformation(page: Page, customerData: FakerCustomer): Promise<boolean> {
     await this.setChecked(page, this.checkoutGuestGenderInput(customerData.socialTitle === 'Mr.' ? 1 : 2));
 
     await this.setValue(page, this.checkoutGuestFirstnameInput, customerData.firstName);
@@ -722,7 +721,7 @@ class CheckoutPage extends FOBasePage {
    * @param address {AddressData} Address's information to fill form with
    * @returns {Promise<void>}
    */
-  async fillAddressForm(page: Page, address: AddressData): Promise<void> {
+  async fillAddressForm(page: Page, address: FakerAddress): Promise<void> {
     if (await this.elementVisible(page, this.addressStepAliasInput)) {
       await this.setValue(page, this.addressStepAliasInput, address.alias);
     }
@@ -746,7 +745,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @param invoiceAddress {AddressData} Address's information to fill form with
    */
-  async setInvoiceAddress(page: Page, invoiceAddress: AddressData): Promise<boolean> {
+  async setInvoiceAddress(page: Page, invoiceAddress: FakerAddress): Promise<boolean> {
     await this.fillAddressForm(page, invoiceAddress);
 
     if (await this.elementVisible(page, this.addressStepContinueButton, 2000)) {
@@ -765,7 +764,7 @@ class CheckoutPage extends FOBasePage {
    * @param invoiceAddress {AddressData|null} Address's information to add (for invoice)
    * @returns {Promise<boolean>}
    */
-  async setAddress(page: Page, deliveryAddress: AddressData, invoiceAddress: AddressData | null = null): Promise<boolean> {
+  async setAddress(page: Page, deliveryAddress: FakerAddress, invoiceAddress: FakerAddress | null = null): Promise<boolean> {
     // Set delivery address
     await this.fillAddressForm(page, deliveryAddress);
 
@@ -958,7 +957,7 @@ class CheckoutPage extends FOBasePage {
     return (await page
       .locator(this.deliveryOptionAllPricesSpan)
       .allTextContents())
-      .filter((el: string|null): el is string => el !== null);
+      .filter((el: string | null): el is string => el !== null);
   }
 
   /**
@@ -986,10 +985,10 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @param carrierID {number} The carrier row in list
    */
-  async getCarrierData(page: Page, carrierID: number = 1): Promise<CarrierData> {
+  async getCarrierData(page: Page, carrierID: number = 1): Promise<FakerCarrier> {
     const priceText: string = await this.getTextContent(page, this.deliveryStepCarrierPrice(carrierID));
 
-    return new CarrierData({
+    return new FakerCarrier({
       name: await this.getTextContent(page, this.deliveryStepCarrierName(carrierID)),
       delay: await this.getTextContent(page, this.deliveryStepCarrierDelay(carrierID)),
       price: parseFloat(priceText),

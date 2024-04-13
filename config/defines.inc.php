@@ -73,9 +73,6 @@ if (!defined('_PS_MODE_DEMO_')) {
 if (!defined('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_')) {
     define('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_', false);
 }
-if (!defined('_PS_API_FORCE_TLS_VERSION_')) {
-    define('_PS_API_FORCE_TLS_VERSION_', true);
-}
 
 $currentDir = dirname(__FILE__);
 
@@ -92,7 +89,9 @@ if (!defined('_PS_CORE_DIR_')) {
     define('_PS_CORE_DIR_', realpath($currentDir.'/..'));
 }
 
-define('_PS_ALL_THEMES_DIR_', _PS_ROOT_DIR_.'/themes/');
+if (!defined('_PS_ALL_THEMES_DIR_')) {
+    define('_PS_ALL_THEMES_DIR_', _PS_ROOT_DIR_.'/themes/');
+}
 /* BO THEMES */
 if (defined('_PS_ADMIN_DIR_')) {
     define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
@@ -116,6 +115,10 @@ if ((defined('_PS_IN_TEST_') && _PS_IN_TEST_)
     define('_PS_ENV_', _PS_MODE_DEV_ ? 'dev': 'prod');
 }
 
+// This legacy const is used in many legacy components (smarty, parameters caching, ...) We don't change this one
+// to follow the multiple kernel's that each have their own cache folder, so the root folder of each environment
+// (dev, prod, test) will contain some cache folder common to all the kernels, it simplifies the cache clearing
+// for legacy codes since they only need to clear one cache and not three
 if (!defined('_PS_CACHE_DIR_')) {
     define('_PS_CACHE_DIR_', _PS_ROOT_DIR_.'/var/cache/' . _PS_ENV_ . DIRECTORY_SEPARATOR);
 }

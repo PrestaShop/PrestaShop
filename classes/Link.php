@@ -702,7 +702,7 @@ class LinkCore
 
         // If the module has its own route ... just use it !
         if (Dispatcher::getInstance()->hasRoute('module-' . $module . '-' . $controller, $idLang, $idShop)) {
-            return $this->getPageLink('module-' . $module . '-' . $controller, $ssl, $idLang, $params);
+            return $this->getPageLink('module-' . $module . '-' . $controller, $ssl, $idLang, $params, false, $idShop);
         } else {
             return $url . Dispatcher::getInstance()->createUrl('module', $idLang, $params, $this->allow, '', $idShop);
         }
@@ -872,7 +872,7 @@ class LinkCore
     public function getAdminBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
         if (null === $ssl) {
-            $ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+            $ssl = Configuration::get('PS_SSL_ENABLED');
         }
 
         if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) {
@@ -1353,7 +1353,7 @@ class LinkCore
     public function getBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
         if (null === $ssl) {
-            $ssl = (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
+            $ssl = Configuration::get('PS_SSL_ENABLED');
         }
 
         if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $idShop !== null) {

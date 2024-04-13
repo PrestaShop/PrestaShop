@@ -1350,13 +1350,29 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         return $requiredQuantity;
     }
 
-    public function getBreadcrumbLinks()
+    /**
+     * Generates breadcrumb according to product category tree.
+     * If the product is accessed from another category than product default category, it will generate the breadcrumb according to current category.
+     *
+     * @return array
+     *
+     * @throws PrestaShopException
+     */
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
-        $categoryDefault = new Category($this->product->id_category_default, $this->context->language->id);
+        // $productBreadcrumbCategory can have two possible values
+        // - current : Category the product was accessed from
+        // - default : Product default category
+        if (('current' === Configuration::get('PS_PRODUCT_BREADCRUMB_CATEGORY')) &&
+            !empty($this->category)) {
+            $productBreadcrumbCategory = $this->category;
+        } else {
+            $productBreadcrumbCategory = new Category($this->product->id_category_default, $this->context->language->id);
+        }
 
-        foreach ($categoryDefault->getAllParents() as $category) {
+        foreach ($productBreadcrumbCategory->getAllParents() as $category) {
             /** @var Category $category */
             if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
                 $breadcrumb['links'][] = [
@@ -1366,10 +1382,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
         }
 
-        if ($categoryDefault->id_parent != 0 && !$categoryDefault->is_root_category && $categoryDefault->active) {
+        if ($productBreadcrumbCategory->id_parent != 0 && !$productBreadcrumbCategory->is_root_category && $productBreadcrumbCategory->active) {
             $breadcrumb['links'][] = [
-                'title' => $categoryDefault->name,
-                'url' => $this->context->link->getCategoryLink($categoryDefault),
+                'title' => $productBreadcrumbCategory->name,
+                'url' => $this->context->link->getCategoryLink($productBreadcrumbCategory),
             ];
         }
 

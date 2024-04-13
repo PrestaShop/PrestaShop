@@ -52,7 +52,7 @@ PrestaShop can also be deployed with Docker and its tool [Docker compose][docker
 To run the software, use:
 
 ```
-docker-compose up
+docker compose up
 ```
 
 Then reach your shop on this URL: http://localhost:8001
@@ -78,13 +78,13 @@ rm config/settings.inc.php
 # clear all docker caches and rebuild everything
 docker compose down -v
 docker compose build --no-cache
-docker-compose up --build --force-recreate
+docker compose up --build --force-recreate
 ```
 **Note:** To add a PHPMyAdmin service to your Docker Compose setup, you can copy the existing `docker-compose.override.yml.dist` to `docker-compose.override.yml` and then start your Docker Compose setup (override file will be included as it is a convention)
 
 ```
 cp docker-compose.override.yml.dist docker-compose.override.yml
-docker-compose up
+docker compose up
 ```
 
 Documentation

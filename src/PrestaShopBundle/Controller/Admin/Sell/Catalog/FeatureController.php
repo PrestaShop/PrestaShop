@@ -315,20 +315,16 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    private function getSettingsTipMessage(): string
+    private function getSettingsTipMessage()
     {
+        if ($this->isFeatureEnabled()) {
+            return null;
+        }
+
         $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_performance'));
         $urlEnding = '</a>';
-
-        if ($this->isFeatureEnabled()) {
-            return $this->trans(
-                'The features are enabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.',
-                'Admin.Catalog.Notification',
-                [$urlOpening, $urlEnding]
-            );
-        }
 
         return $this->trans(
             'The features are disabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.',

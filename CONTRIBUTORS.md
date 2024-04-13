@@ -15,10 +15,12 @@ GitHub contributors:
 - Adrien
 - Adrien Astier
 - Adrien Foulon
+- AdrienPlx
 - adviva
 - Agence CINS
 - Agnes
 - Agostino Fiscale
+- Aimé Dubuisson
 - Aitbella Mohamed
 - Alban
 - Alban DEFLANDRE
@@ -45,6 +47,7 @@ GitHub contributors:
 - AlexEven
 - Alexey Svistunov
 - alexey-svistunov
+- Alexis Guyomar
 - Alexis Haumaitre
 - alexsimple
 - Alfakom-MK
@@ -83,6 +86,7 @@ GitHub contributors:
 - Arman Hosseini
 - Armando Salvador Pérez
 - Arnaud Drieux
+- Arnaud Dohogne
 - Arnaud Lemercier
 - Arnaud Schaeffer
 - Arnaud104
@@ -93,6 +97,7 @@ GitHub contributors:
 - Atef Ben Ali
 - Aude
 - Aurélien Pelletier
+- Aurélien Rita
 - Aurone
 - Awit Kuta Rahil
 - axi
@@ -135,6 +140,7 @@ GitHub contributors:
 - Captain FLAM
 - Captain-FLAM
 - Carlos Addis
+- Carotte
 - Casper Olsen
 - cava89
 - ccauw
@@ -194,12 +200,14 @@ GitHub contributors:
 - Daniel Ziegenberg
 - Daniele Giachino
 - Daniele Rosario
+- Danilo Carta
 - Danoosh
 - Danoosh Mir
 - Dany Maillard
 - daresh
 - Darius Aleksiunas
 - dariusakafest
+- Dariusz Tryba
 - David D.
 - David Diverres
 - David Eschmeyer
@@ -216,6 +224,7 @@ GitHub contributors:
 - Denis Yurevich
 - Dennis
 - Denver Prophit Jr.
+- Denys
 - Desbouche Christophe
 - DevNet
 - devyk
@@ -238,6 +247,7 @@ GitHub contributors:
 - DogSports
 - Dominic Taylor
 - Dominik Ulrich
+- dparis
 - Dragan Skrbic
 - DRC
 - Dream me up
@@ -249,6 +259,7 @@ GitHub contributors:
 - e-gaulue
 - ecommerce-manager
 - edamart
+- Edel Muñoz Macias
 - Edouard
 - Edouard Gaulue
 - Edouard Seynaeve
@@ -279,6 +290,7 @@ GitHub contributors:
 - Fatma Bouchekoua
 - Fatima Mazhit
 - fchellypresta
+- Felipe Espinosa
 - Felipe Uribe
 - fetis
 - fgschaefer
@@ -308,6 +320,7 @@ GitHub contributors:
 - Fransuisse
 - Frédéric Benoist
 - Gabriel Arama
+- Gabriel Roman
 - Gabriel Schwardy
 - Gabriel Tenita
 - Gabriele Manganello
@@ -357,6 +370,7 @@ GitHub contributors:
 - Henri Davigne
 - Hervé Hennes
 - hhennes
+- Hherreros
 - Hibatallah Aouadni
 - hiousi
 - Hitasukha
@@ -454,6 +468,7 @@ GitHub contributors:
 - juraj1000
 - justeen35
 - Justinas Urbanavicius
+- Kaikina
 - Kamil Szymański
 - Karel Balej
 - Karel Faille
@@ -476,6 +491,7 @@ GitHub contributors:
 - ksaandev
 - Kyary
 - Léa Delin
+- Léa Gris
 - Ladel
 - Lathanao
 - Laurent Rousseau
@@ -564,6 +580,7 @@ GitHub contributors:
 - Matthieu Mota
 - Matthieu Rolland
 - MatthieuB
+- Mattia
 - mauglee
 - MaX3315
 - Maxence
@@ -670,6 +687,7 @@ GitHub contributors:
 - Patrick Mettraux
 - Patrick Peters
 - Patrick Weinstein
+- Paul Campbell
 - Paul Coudeville
 - Paulo Baptista
 - Pavel Novitsky
@@ -799,6 +817,7 @@ GitHub contributors:
 - Sarah Dib
 - Sarah Lorenzini
 - Šarūnas Jonušas
+- Sas-adilis
 - Sauli Maijala
 - sbordun
 - Seb
@@ -870,8 +889,10 @@ GitHub contributors:
 - TechhDan
 - Ted Sanders
 - Teemu Mäntynen
+- Tess
 - The Gitter Badger
 - themella
+- theoalloin
 - theodiablo
 - therampagerado
 - Thibaud Chauviere
@@ -882,6 +903,7 @@ GitHub contributors:
 - Thomas
 - Thomas Baccelli
 - Thomas Blanc
+- Thomas DL
 - Thomas Ferney
 - Thomas L'huillier
 - Thomas Leguillant
@@ -916,6 +938,7 @@ GitHub contributors:
 - Turtle
 - Txmod Xoops
 - Tyson Andre
+- Ugur CELIK
 - unlocomqx
 - vahid abdi
 - Valentin M

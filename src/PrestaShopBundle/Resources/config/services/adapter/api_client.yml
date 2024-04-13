@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\ApiClient\CommandHandler\AddApiClientHandler:
+
+  PrestaShop\PrestaShop\Adapter\ApiClient\CommandHandler\EditApiClientHandler:
+
+  PrestaShop\PrestaShop\Adapter\ApiClient\CommandHandler\DeleteApiClientHandler:
+
+  PrestaShop\PrestaShop\Adapter\ApiClient\CommandHandler\GenerateApiClientSecretHandler:
+
+  PrestaShop\PrestaShop\Adapter\ApiClient\QueryHandler\GetApiClientForEditingHandler:

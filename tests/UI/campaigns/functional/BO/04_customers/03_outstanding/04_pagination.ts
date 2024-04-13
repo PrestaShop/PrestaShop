@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import pages
 import outstandingPage from '@pages/BO/customers/outstanding';
@@ -13,11 +13,15 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 
 // Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -46,14 +50,14 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
   // Const used to get the least number of outstanding to display pagination
   const numberOfOrdersToCreate: number = 11;
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-Condition : Enable B2B
@@ -99,7 +103,7 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
         it('should update order status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus_${index}`, baseContext);
 
-          const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
+          const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
           expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
         });
 
@@ -107,7 +111,7 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
           await testContext.addContextItem(this, 'testIdentifier', `checkStatusBO_${index}`, baseContext);
 
           const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-          expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
+          expect(orderStatus, 'Order status was not updated').to.equal(dataOrderStatuses.paymentAccepted.name);
         });
       });
     });

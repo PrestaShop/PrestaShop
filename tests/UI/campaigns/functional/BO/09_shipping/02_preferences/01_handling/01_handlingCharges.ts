@@ -22,10 +22,12 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Customers from '@data/demo/customers';
-import Groups from '@data/demo/groups';
-import CarrierData from '@data/faker/carrier';
+import {
+  // Import data
+  dataCustomers,
+  dataGroups,
+  FakerCarrier,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -47,7 +49,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
   let page: Page;
   let newCarrierID: number = 0;
 
-  const createCarrierData: CarrierData = new CarrierData({
+  const createCarrierData: FakerCarrier = new FakerCarrier({
     freeShipping: false,
     allZones: true,
     handlingCosts: true,
@@ -103,13 +105,13 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       expect(pageTitle).to.contains(groupsPage.pageTitle);
     });
 
-    it(`should filter by '${Groups.customer.name}'`, async function () {
+    it(`should filter by '${dataGroups.customer.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByGroupName1', baseContext);
 
-      await groupsPage.filterTable(page, 'input', 'b!name', Groups.customer.name);
+      await groupsPage.filterTable(page, 'input', 'b!name', dataGroups.customer.name);
 
       const textColumn = await groupsPage.getTextColumn(page, 1, 'b!name');
-      expect(textColumn).to.contains(Groups.customer.name);
+      expect(textColumn).to.contains(dataGroups.customer.name);
     });
 
     it('should go to edit group page', async function () {
@@ -200,7 +202,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO1', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -297,7 +299,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO2', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -419,13 +421,13 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       expect(pageTitle).to.contains(groupsPage.pageTitle);
     });
 
-    it(`should filter by '${Groups.customer.name}'`, async function () {
+    it(`should filter by '${dataGroups.customer.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByGroupName2', baseContext);
 
-      await groupsPage.filterTable(page, 'input', 'b!name', Groups.customer.name);
+      await groupsPage.filterTable(page, 'input', 'b!name', dataGroups.customer.name);
 
       const textColumn = await groupsPage.getTextColumn(page, 1, 'b!name');
-      expect(textColumn).to.contains(Groups.customer.name);
+      expect(textColumn).to.contains(dataGroups.customer.name);
     });
 
     it('should go to edit group page', async function () {

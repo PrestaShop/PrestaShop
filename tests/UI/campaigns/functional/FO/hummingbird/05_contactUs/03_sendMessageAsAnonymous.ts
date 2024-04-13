@@ -7,7 +7,7 @@ import mailHelper from '@utils/mailHelper';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 // Import BO pages
@@ -22,10 +22,14 @@ import homePage from '@pages/FO/hummingbird/home';
 import loginPage from '@pages/FO/hummingbird/login';
 
 // Import data
-import Customers from '@data/demo/customers';
 import MessageData from '@data/faker/message';
 import MailDevEmail from '@data/types/maildevEmail';
 import Modules from '@data/demo/modules';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -56,29 +60,29 @@ describe('FO - Contact us : Send message from contact us page with customer not 
   let mailListener: MailDev;
 
   const contactUsEmptyEmail: MessageData = new MessageData({
-    firstName: Customers.johnDoe.firstName,
-    lastName: Customers.johnDoe.lastName,
+    firstName: dataCustomers.johnDoe.firstName,
+    lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: '',
   });
   const contactUsInvalidEmail: MessageData = new MessageData({
-    firstName: Customers.johnDoe.firstName,
-    lastName: Customers.johnDoe.lastName,
+    firstName: dataCustomers.johnDoe.firstName,
+    lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: 'demo@prestashop',
   });
   const contactUsEmptyContent: MessageData = new MessageData({
-    firstName: Customers.johnDoe.firstName,
-    lastName: Customers.johnDoe.lastName,
+    firstName: dataCustomers.johnDoe.firstName,
+    lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: Customers.johnDoe.email,
+    emailAddress: dataCustomers.johnDoe.email,
     message: '',
   });
   const contactUsData: MessageData = new MessageData({
-    firstName: Customers.johnDoe.firstName,
-    lastName: Customers.johnDoe.lastName,
+    firstName: dataCustomers.johnDoe.firstName,
+    lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: Customers.johnDoe.email,
+    emailAddress: dataCustomers.johnDoe.email,
   });
 
   // Pre-Condition : Setup config SMTP
@@ -108,7 +112,6 @@ describe('FO - Contact us : Send message from contact us page with customer not 
     await helper.closeBrowserContext(browserContext);
 
     await files.deleteFile(`${contactUsData.fileName}.txt`);
-    await files.deleteFile('../../admin-dev/hummingbird.zip');
     // Stop listening to maildev server
     mailHelper.stopListener(mailListener);
   });

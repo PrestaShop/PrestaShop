@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -14,12 +14,16 @@ import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
+// Import data=
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -43,14 +47,14 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
 
   const creditSlipDocumentName: string = 'Credit slip';
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   const numberOfOrderToCreate: number = 11;
 
@@ -92,7 +96,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
-      it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+      it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -100,7 +104,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           `${baseContext}_preTest_${i}`,
         );
 
-        const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.shipped);
+        const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.shipped);
         expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
       });
 

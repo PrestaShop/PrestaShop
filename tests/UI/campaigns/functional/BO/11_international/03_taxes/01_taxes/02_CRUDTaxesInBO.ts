@@ -10,8 +10,9 @@ import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
 import addTaxPage from '@pages/BO/international/taxes/add';
 
-// Import data
-import TaxData from '@data/faker/tax';
+import {
+  FakerTax,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,8 +25,8 @@ describe('BO - International - Taxes : Create, Update and Delete Tax', async () 
   let page: Page;
   let numberOfTaxes: number = 0;
 
-  const createTaxData: TaxData = new TaxData();
-  const editTaxData: TaxData = new TaxData({enabled: false});
+  const createTaxData: FakerTax = new FakerTax();
+  const editTaxData: FakerTax = new FakerTax({enabled: false});
 
   // before and after functions
   before(async function () {

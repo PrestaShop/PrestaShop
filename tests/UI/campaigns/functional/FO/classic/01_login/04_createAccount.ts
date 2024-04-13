@@ -13,8 +13,12 @@ import {loginPage} from '@pages/FO/classic/login';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 // Import data
-import CustomerData from '@data/faker/customer';
 import type MailDevEmail from '@data/types/maildevEmail';
+
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type MailDev from 'maildev';
@@ -28,7 +32,7 @@ describe('FO - Login : Create account', async () => {
   let newMail: MailDevEmail;
   let mailListener: MailDev;
 
-  const customerData: CustomerData = new CustomerData();
+  const customerData: FakerCustomer = new FakerCustomer();
 
   // before and after functions
   before(async function () {

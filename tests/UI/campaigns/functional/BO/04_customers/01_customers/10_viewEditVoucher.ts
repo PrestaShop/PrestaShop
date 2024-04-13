@@ -13,8 +13,12 @@ import viewCustomerPage from '@pages/BO/customers/view';
 import editRulesPage from '@pages/BO/catalog/discounts/add';
 
 // Import data
-import Customers from '@data/demo/customers';
 import CartRuleData from '@data/faker/cartRule';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -28,7 +32,7 @@ describe('BO - Customers - Customers : View/edit voucher', async () => {
   // Data to create cart rule
   const newCartRuleData: CartRuleData = new CartRuleData({
     name: 'reduction',
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     discountType: 'Amount',
     discountAmount: {
       value: 20,
@@ -80,14 +84,14 @@ describe('BO - Customers - Customers : View/edit voucher', async () => {
       expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
-    it(`should filter list by email '${Customers.johnDoe.email}'`, async function () {
+    it(`should filter list by email '${dataCustomers.johnDoe.email}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedCustomer', baseContext);
 
       await customersPage.resetFilter(page);
-      await customersPage.filterCustomers(page, 'input', 'email', Customers.johnDoe.email);
+      await customersPage.filterCustomers(page, 'input', 'email', dataCustomers.johnDoe.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      expect(textEmail).to.contains(Customers.johnDoe.email);
+      expect(textEmail).to.contains(dataCustomers.johnDoe.email);
     });
 
     it('should click on view customer', async function () {

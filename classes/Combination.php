@@ -483,27 +483,32 @@ class CombinationCore extends ObjectModel
         return parent::isCurrentlyUsed('product_attribute');
     }
 
+    public static function getIdByEan13($ean13)
+    {
+        return self::getIdByGtin($ean13);
+    }
+
     /**
-     * For a given ean13 reference, returns the corresponding id.
+     * For a given gtin reference, returns the corresponding id.
      *
-     * @param string $ean13
+     * @param string $gtin
      *
      * @return int|string Product attribute identifier
      */
-    public static function getIdByEan13($ean13)
+    public static function getIdByGtin($gtin)
     {
-        if (empty($ean13)) {
+        if (empty($gtin)) {
             return 0;
         }
 
-        if (!Validate::isEan13($ean13)) {
+        if (!Validate::isGtin($gtin)) {
             return 0;
         }
 
         $query = new DbQuery();
         $query->select('pa.id_product_attribute');
         $query->from('product_attribute', 'pa');
-        $query->where('pa.ean13 = \'' . pSQL($ean13) . '\'');
+        $query->where('pa.ean13 = \'' . pSQL($gtin) . '\'');
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }

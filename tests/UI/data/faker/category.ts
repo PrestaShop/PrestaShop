@@ -1,6 +1,10 @@
-import Groups from '@data/demo/groups';
-import type GroupData from '@data/faker/group';
-import type {CategoryCreator} from '@data/types/category';
+import type {CategoryCreator, CategoryRedirection} from '@data/types/category';
+
+import {
+  // Import data
+  dataGroups,
+  type FakerGroup,
+} from '@prestashop-core/ui-testing';
 
 import {faker} from '@faker-js/faker';
 
@@ -15,7 +19,7 @@ export default class CategoryData {
 
   public readonly name: string;
 
-  public readonly displayed: boolean;
+  public displayed: boolean;
 
   public readonly description: string;
 
@@ -23,7 +27,7 @@ export default class CategoryData {
 
   public readonly metaDescription: string;
 
-  public readonly groupAccess: GroupData;
+  public readonly groupAccess: FakerGroup;
 
   public readonly coverImage: string | null;
 
@@ -32,6 +36,10 @@ export default class CategoryData {
   public readonly children: CategoryData[];
 
   public readonly products: string[];
+
+  public redirectionWhenNotDisplayed: CategoryRedirection;
+
+  public redirectedCategory: CategoryData | null;
 
   /**
    * Constructor for class CategoryData
@@ -59,9 +67,9 @@ export default class CategoryData {
     /** @type {string} Meta description of the category */
     this.metaDescription = faker.lorem.sentence();
 
-    /** @type {GroupData} Customer group that could access to the category */
+    /** @type {FakerGroup} Customer group that could access to the category */
     this.groupAccess = categoryToCreate.groupAccess
-      || faker.helpers.arrayElement([Groups.customer, Groups.guest, Groups.visitor]);
+      || faker.helpers.arrayElement([dataGroups.customer, dataGroups.guest, dataGroups.visitor]);
 
     /** @type {string|null} Category cover image of the category */
     this.coverImage = categoryToCreate.coverImage || null;
@@ -74,5 +82,29 @@ export default class CategoryData {
 
     /** @type {string[]} Products of the category */
     this.products = categoryToCreate.products || [];
+
+    /** @type {CategoryRedirection} Redirection when not displayed */
+    this.redirectionWhenNotDisplayed = categoryToCreate.redirectionWhenNotDisplayed || '301';
+
+    /** @type {CategoryData|null} Which category should the page redirect? */
+    this.redirectedCategory = categoryToCreate.redirectedCategory || null;
+  }
+
+  /**
+   * @param {CategoryRedirection} redirection
+   */
+  setRedirectionWhenNotDisplayed(redirection: CategoryRedirection): this {
+    this.redirectionWhenNotDisplayed = redirection;
+
+    return this;
+  }
+
+  /**
+   * @param {bool} displayed
+   */
+  setDisplayed(displayed: boolean): this {
+    this.displayed = displayed;
+
+    return this;
   }
 }
