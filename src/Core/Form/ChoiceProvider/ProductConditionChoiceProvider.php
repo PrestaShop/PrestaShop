@@ -55,8 +55,11 @@ final class ProductConditionChoiceProvider implements FormChoiceProviderInterfac
     {
         return [
             $this->translator->trans('New', [], 'Admin.Catalog.Feature') => ProductCondition::NEW,
+            $this->translator->trans('New, open box', [], 'Admin.Catalog.Feature') => ProductCondition::OPEN_BOX,
+            $this->translator->trans('New, minor defects', [], 'Admin.Catalog.Feature') => ProductCondition::NEW_WITH_DEFECTS,
             $this->translator->trans('Used', [], 'Admin.Catalog.Feature') => ProductCondition::USED,
             $this->translator->trans('Refurbished', [], 'Admin.Catalog.Feature') => ProductCondition::REFURBISHED,
+            $this->translator->trans('Damaged', [], 'Admin.Catalog.Feature') => ProductCondition::DAMAGED,
         ];
     }
 }

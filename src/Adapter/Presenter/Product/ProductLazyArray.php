@@ -279,6 +279,24 @@ class ProductLazyArray extends AbstractLazyArray
                     'label' => $this->translator->trans('Refurbished', [], 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/RefurbishedCondition',
                 ];
+            case 'damaged':
+                return [
+                    'type' => 'damaged',
+                    'label' => $this->translator->trans('Damaged', [], 'Shop.Theme.Catalog'),
+                    'schema_url' => 'https://schema.org/DamagedCondition',
+                ];
+            case 'open_box':
+                return [
+                    'type' => 'open_box',
+                    'label' => $this->translator->trans('New, open box', [], 'Shop.Theme.Catalog'),
+                    'schema_url' => 'https://schema.org/NewCondition',
+                ];
+            case 'new_with_defects':
+                return [
+                    'type' => 'new_with_defects',
+                    'label' => $this->translator->trans('New, minor defects', [], 'Shop.Theme.Catalog'),
+                    'schema_url' => 'https://schema.org/NewCondition',
+                ];
             default:
                 return false;
         }

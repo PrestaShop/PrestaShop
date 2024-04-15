@@ -38,6 +38,9 @@ class ProductCondition
     public const NEW = 'new';
     public const USED = 'used';
     public const REFURBISHED = 'refurbished';
+    public const OPEN_BOX = 'open_box';
+    public const DAMAGED = 'damaged';
+    public const NEW_WITH_DEFECTS = 'new_with_defects';
 
     /**
      * A list of available values
@@ -46,6 +49,9 @@ class ProductCondition
         self::NEW,
         self::USED,
         self::REFURBISHED,
+        self::OPEN_BOX,
+        self::DAMAGED,
+        self::NEW_WITH_DEFECTS,
     ];
 
     /**

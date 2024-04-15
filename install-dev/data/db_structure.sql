@@ -1650,7 +1650,7 @@ CREATE TABLE `PREFIX_product` (
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
   `show_condition` tinyint(1) NOT NULL DEFAULT '0',
-  `condition` ENUM('new', 'used', 'refurbished') NOT NULL DEFAULT 'new',
+  `condition` ENUM('new', 'used', 'refurbished', 'open_box', 'damaged', 'new_with_defects') NOT NULL DEFAULT 'new',
   `show_price` tinyint(1) NOT NULL DEFAULT '1',
   `indexed` tinyint(1) NOT NULL DEFAULT '0',
   `visibility` ENUM(
@@ -1710,7 +1710,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
   `show_condition` tinyint(1) NOT NULL DEFAULT '1',
-  `condition` enum('new', 'used', 'refurbished') NOT NULL DEFAULT 'new',
+  `condition` enum('new', 'used', 'refurbished', 'open_box', 'damaged', 'new_with_defects') NOT NULL DEFAULT 'new',
   `show_price` tinyint(1) NOT NULL DEFAULT '1',
   `indexed` tinyint(1) NOT NULL DEFAULT '0',
   `visibility` enum(
