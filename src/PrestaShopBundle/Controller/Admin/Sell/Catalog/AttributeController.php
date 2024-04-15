@@ -140,6 +140,7 @@ class AttributeController extends FrameworkBundleAdminController
 
         try {
             $handlerResult = $attributeFormHandler->handle($attributeForm);
+            $attributeFormData = $attributeForm->getData();
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
@@ -149,7 +150,7 @@ class AttributeController extends FrameworkBundleAdminController
                     return $this->redirectToRoute('admin_attributes_create', ['attributeGroupId' => $attributeGroupId]);
                 }
 
-                return $this->redirectToRoute('admin_attributes_index', ['attributeGroupId' => $attributeGroupId]);
+                return $this->redirectToRoute('admin_attributes_index', ['attributeGroupId' => $attributeFormData['attribute_group']]);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
