@@ -66,6 +66,6 @@ export default {
   keycloak: new FakerModule({
     tag: 'keycloak_connector_demo',
     name: 'Keycloak OAuth2 connector demo',
-    releaseZip: 'https://github.com/PrestaShop/keycloak_connector_demo/releases/download/v1.0.4/keycloak_connector_demo.zip',
+    releaseZip: 'https://github.com/PrestaShop/keycloak_connector_demo/releases/download/v1.1.0/keycloak_connector_demo.zip',
   }),
 };

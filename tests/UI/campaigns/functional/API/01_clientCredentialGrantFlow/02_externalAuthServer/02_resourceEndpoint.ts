@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 import loginCommon from '@commonTests/BO/loginBO';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
-// import {installModule, uninstallModule} from '@commonTests/BO/modules/moduleManager';
+import {installModule, uninstallModule} from '@commonTests/BO/modules/moduleManager';
 
 import dashboardPage from '@pages/BO/dashboard';
 import keycloakConnectorDemo from '@pages/BO/modules/keycloakConnectorDemo';
@@ -66,8 +66,7 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
     }
   });
 
-  // todo: reenable the install by module zip when the new version is released
-  // installModule(Modules.keycloak, `${baseContext}_preTest_1`);
+  installModule(Modules.keycloak, `${baseContext}_preTest_1`);
 
   describe('Resource Endpoint', async () => {
     it('should login in BO', async function () {
@@ -233,5 +232,5 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
   });
 
   deleteAPIClientTest(`${baseContext}_postTest_0`);
-  //uninstallModule(Modules.keycloak, `${baseContext}_postTest_1`);
+  uninstallModule(Modules.keycloak, `${baseContext}_postTest_1`);
 });
