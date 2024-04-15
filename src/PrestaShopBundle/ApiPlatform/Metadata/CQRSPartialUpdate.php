@@ -31,7 +31,7 @@ namespace PrestaShopBundle\ApiPlatform\Metadata;
 /**
  * Class CQRSPartialUpdate is a custom operation that provides extra parameters to help configure an operation
  * based on a CQRS command, it is custom tailed for update operations and forces using the PATCH method, to use PUT
- * method you should use CQRSUpdate instead.
+ * or POST method you should use CQRSUpdate instead.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class CQRSPartialUpdate extends CQRSCommand

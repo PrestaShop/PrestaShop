@@ -47,10 +47,10 @@ class CQRSUpdateTest extends TestCase
         $this->assertEquals(['json'], $operation->getFormats());
 
         // With positioned parameters
-        $operation = new CQRSUpdate('/uri');
+        $operation = new CQRSUpdate(CQRSUpdate::METHOD_POST, '/uri');
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
         $this->assertNull($operation->getProvider());
-        $this->assertEquals(CQRSUpdate::METHOD_PUT, $operation->getMethod());
+        $this->assertEquals(CQRSUpdate::METHOD_POST, $operation->getMethod());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
         $this->assertEquals(['json'], $operation->getFormats());
