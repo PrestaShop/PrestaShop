@@ -31,7 +31,7 @@ namespace Tests\Integration\ApiPlatform\Serializer;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\CustomerGroup;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\Hook;
-use PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
+use PrestaShop\Module\APIResources\ApiPlatform\Resources\Product\Product;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
