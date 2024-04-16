@@ -161,6 +161,7 @@ describe('API : GET /languages', async () => {
           'dateTimeFormat',
           'isRtl',
           'active',
+          'flag',
         );
       }
     });
@@ -227,6 +228,9 @@ describe('API : GET /languages', async () => {
 
         const langActive = await languagesPage.getStatus(page, 1);
         expect(langActive).to.equal(jsonResponse.items[idxItem].active);
+
+        const langFlag = await languagesPage.getImgSrc(page, 1);
+        expect(langFlag.split('?')[0]).to.equal(jsonResponse.items[idxItem].flag.split('?')[0]);
 
         // Go the edit page
         await languagesPage.goToEditLanguage(page, 1);
