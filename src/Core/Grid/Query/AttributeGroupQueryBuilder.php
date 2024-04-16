@@ -112,31 +112,32 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getQueryBuilder(array $filters)
     {
         $qb = $this->connection->createQueryBuilder()
-            ->from($this->dbPrefix . 'attribute', 'a')
+            ->from($this->dbPrefix . 'attribute_group', 'ag')
             ->setParameter('contextLangId', $this->contextLangId)
             ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
-
-        $qb->leftJoin(
-            'a',
-            $this->dbPrefix . 'attribute_group',
-            'ag',
-            'a.id_attribute_group = ag.id_attribute_group'
-        );
 
         $qb->leftJoin(
             'ag',
             $this->dbPrefix . 'attribute_group_lang',
             'agl',
-            'agl.id_attribute_group = ag.id_attribute_group AND agl.id_lang = :contextLangId'
+            'agl.id_attribute_group = ag.id_attribute_group'
+        );
+
+        $qb->leftJoin(
+            'ag',
+            $this->dbPrefix . 'attribute',
+            'a',
+            'a.id_attribute_group = agl.id_attribute_group'
         );
 
         $qb->leftJoin(
             'a',
             $this->dbPrefix . 'attribute_shop',
             'ash',
-            'ash.id_attribute = a.id_attribute'
+            'ash.id_attribute = a.id_attribute AND ash.id_shop IN (:contextShopIds)'
         );
-        $qb->andWhere('ash.id_shop IN (:contextShopIds)');
+
+        $qb->where('agl.id_lang = :contextLangId');
         $qb->groupBy('ag.id_attribute_group');
 
         $this->applyFilters($filters, $qb);
