@@ -193,6 +193,11 @@ jobs:
           INSTALL_AUTO: ${{ env.INSTALL_AUTO }}
           CP_API_CONFIG: ${{ (env.GH_BRANCH == '8.1.x') && 'true' || 'false' }}
 
+      # Keycloak is only needed for API campaign
+      - name: Setup Keycloak
+        uses: /.github/actions/setup-keycloak
+        if: env.GH_BRANCH == 'develop' && env.TEST_CAMPAIGN == 'functional:API'
+
       - name: Run Tests
         continue-on-error: true
         uses: ./.github/actions/ui-test
