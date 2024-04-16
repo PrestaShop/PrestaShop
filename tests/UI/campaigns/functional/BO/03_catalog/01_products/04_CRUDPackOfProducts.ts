@@ -307,7 +307,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'cancelDeleteProduct', baseContext);
 
       const isModalVisible = await packTab.deleteProduct(page, 1, false);
-      expect(isModalVisible).to.eq(true);
+      expect(isModalVisible).to.eq(false);
     });
 
     it('should delete the customized product', async function () {

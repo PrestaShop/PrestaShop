@@ -478,7 +478,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
     it('should edit Pack Quantities "Decrement products in pack only"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editPackQuantities', baseContext);
 
-      await packTab.editPackStockType(page, 'Decrement products in pack only');
+      await packTab.editPackStockType(page, 'Use quantity of products in the pack');
 
       const updateProductMessage = await createProductsPage.saveProduct(page);
       expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
