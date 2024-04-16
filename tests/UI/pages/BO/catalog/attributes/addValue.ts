@@ -36,7 +36,7 @@ class AddValue extends BOBasePage {
     super();
 
     this.createPageTitle = `New attribute value • ${global.INSTALL.SHOP_NAME}`;
-    this.editPageTitle = (name: string) => `Editing attribute ${name} • ${global.INSTALL.SHOP_NAME}`;
+    this.editPageTitle = (name: string) => `Editing attribute value ${name} • ${global.INSTALL.SHOP_NAME}`;
 
     // Form selectors
     this.attributeGroupSelect = '#attribute_attribute_group';

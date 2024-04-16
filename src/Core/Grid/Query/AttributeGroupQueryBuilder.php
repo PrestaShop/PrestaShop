@@ -66,7 +66,7 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function __construct(
         Connection $connection,
-                   $dbPrefix,
+        $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         $contextLangId,
         MultistoreContextCheckerInterface $multistoreContextChecker,
