@@ -30,6 +30,8 @@ namespace PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
@@ -39,13 +41,19 @@ class CountryContextListener
 {
     public function __construct(
         private readonly CountryContextBuilder $countryContextBuilder,
-        private readonly ConfigurationInterface $configuration
+        private readonly ConfigurationInterface $configuration,
+        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
+        private readonly bool $isSymfonyLayout,
     ) {
     }
 
     public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
+            return;
+        }
+
+        if ($this->isSymfonyLayout !== $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)) {
             return;
         }
 

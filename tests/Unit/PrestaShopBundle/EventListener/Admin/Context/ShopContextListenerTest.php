@@ -61,7 +61,9 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
             $this->mockLegacyContext(['shopContext' => '']),
             $this->mockMultistoreFeature(false),
-            $this->mockRouter()
+            $this->mockRouter(),
+            $this->mockFeatureFlagStateChecker(),
+            true,
         );
         $listener->onKernelRequest($event);
 
@@ -94,7 +96,9 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
             $this->mockLegacyContext(['shopContext' => $cookieValue]),
             $this->mockMultistoreFeature(true),
-            $this->mockRouter()
+            $this->mockRouter(),
+            $this->mockFeatureFlagStateChecker(),
+            true,
         );
         $listener->onKernelRequest($event);
 
@@ -169,7 +173,9 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
             $mockContext,
             $this->mockMultistoreFeature(true),
-            $this->mockRouter()
+            $this->mockRouter(),
+            $this->mockFeatureFlagStateChecker(),
+            true,
         );
 
         // Check that initially the cookie has a null value

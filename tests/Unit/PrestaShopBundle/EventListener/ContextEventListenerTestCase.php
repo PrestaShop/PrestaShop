@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use ReflectionProperty;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -80,6 +81,17 @@ abstract class ContextEventListenerTestCase extends KernelTestCase
         ;
 
         return $legacyContext;
+    }
+
+    protected function mockFeatureFlagStateChecker(): FeatureFlagStateCheckerInterface|MockObject
+    {
+        $featureFlagStateChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
+        $featureFlagStateChecker
+            ->method('isEnabled')
+            ->willReturn(true)
+        ;
+
+        return $featureFlagStateChecker;
     }
 
     protected function createRequestEvent(Request $request): RequestEvent
