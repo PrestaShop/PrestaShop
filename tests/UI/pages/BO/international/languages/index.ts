@@ -271,6 +271,20 @@ class Languages extends LocalizationBasePage {
   }
 
   /**
+   * Get image source
+   * @param page {Page} Browser tab
+   * @param row {number} Row to get status
+   * @return {Promise<string>}
+   */
+  async getImgSrc(page: Page, row: number): Promise<string> {
+    return this.getAttributeContent(
+      page,
+      `${this.tableColumn(row, 'flag')} img`,
+      'src',
+    );
+  }
+
+  /**
    * Get language status
    * @param page {Page} Browser tab
    * @param row {number} Row to get status

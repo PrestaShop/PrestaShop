@@ -561,13 +561,6 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<number>}
    */
   async getNumberOfModules(page: Page): Promise<number> {
-    const moduleItems = await page.locator(this.moduleItem).all();
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const moduleItem of moduleItems) {
-      console.log(await moduleItem.getAttribute('data-tech-name'));
-    }
-
     return page.locator(this.moduleItem).count();
   }
 
