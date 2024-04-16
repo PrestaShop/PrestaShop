@@ -1085,7 +1085,15 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
                 return $result;
             } else {
-                throw new WebserviceException('Please set an "image" parameter with image data for value', [76, 400]);
+                $id_product = (int) $this->wsObject->urlSegment[2];
+                $id_image = (int) $this->wsObject->urlSegment[3];
+                
+                $image = new Image($id_image);
+                $image->id_product = $id_product;
+                $image->cover = $id_image == Image::getCover($id_product)['id_image'] ? true : false;
+                $image->update();
+
+                return true;
             }
         } elseif ($this->wsObject->method == 'POST') {
             if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name']) {
