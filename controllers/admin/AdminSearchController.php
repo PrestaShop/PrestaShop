@@ -565,7 +565,14 @@ class AdminSearchControllerCore extends AdminController
         // Considering the indexing task can be really long, we ask the PHP process to not stop before 2 hours.
         ini_set('max_execution_time', '7200');
         Search::indexation(Tools::getValue('full'));
-        if (Tools::getValue('redirect')) {
+
+        /*
+         * If redirect parameter was specified in the URL and we have the URL the user came from,
+         * we will redirect him back. This is used in backoffice so the user lands back to the config form.
+         *
+         * In CRON or CLI (referer is missing), it will die here. Even if redirect is in the URL.
+         */
+        if (Tools::getValue('redirect') && !empty($_SERVER['HTTP_REFERER'])) {
             Tools::redirectAdmin($_SERVER['HTTP_REFERER'] . '&conf=4');
         }
     }
