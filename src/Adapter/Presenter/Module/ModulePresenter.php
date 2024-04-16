@@ -63,6 +63,7 @@ class ModulePresenter implements PresenterInterface
         }
 
         $attributes = $module->attributes->all();
+        $attributes['id'] = $module->database->get('id', $attributes['id']);
         $attributes['price'] = $this->getModulePrice($attributes['price']);
         // Round to the nearest 0.5
         $attributes['starsRate'] = str_replace('.', '', (string) (round(floatval($attributes['avgRate']) * 2) / 2));
