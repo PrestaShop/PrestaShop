@@ -531,10 +531,13 @@ export default class CommonPage {
    * @param page {Page} Browser tab
    * @param source {string} String to locate the element to drag
    * @param target {string} String to locate the element where to drop
+   * @param force {boolean} If true, don't check if the locator is visible
    * @return {Promise<void>}
    */
-  async dragAndDrop(page: Page, source: string, target: string): Promise<void> {
-    await page.locator(source).dragTo(page.locator(target));
+  async dragAndDrop(page: Page, source: string, target: string, force: boolean = false): Promise<void> {
+    await page
+      .locator(source)
+      .dragTo(page.locator(target), {force, timeout: 3000});
   }
 
   /**

@@ -7,7 +7,6 @@ admin_attributes_index:
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
     _legacy_link: AdminAttributesGroups:viewattribute_group
-    _legacy_feature_flag: attribute_group
     _legacy_parameters:
       id_attribute_group: attributeGroupId
     requirements:
@@ -22,7 +21,6 @@ admin_attributes_search:
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.attribute
     redirectRoute: admin_attributes_index
     _legacy_link: AdminAttributesGroups:submitFilterattribute_values
-    _legacy_feature_flag: attribute_group
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
 
@@ -35,7 +33,6 @@ admin_attributes_create:
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
     _legacy_link: AdminAttributesGroups:addattribute_group
-    _legacy_feature_flag: attribute_group
 
 admin_attributes_edit:
   path: /{attributeId}/edit
@@ -46,7 +43,6 @@ admin_attributes_edit:
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
     _legacy_link: AdminAttributesGroups:updateattribute
-    _legacy_feature_flag: attribute_group
     _legacy_parameters:
       id_attribute_group: attributeGroupId
   requirements:
@@ -61,7 +57,6 @@ admin_attributes_delete:
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
     _legacy_link: AdminAttributesGroups:deleteattribute
-    _legacy_feature_flag: attribute_group
     _legacy_parameters:
       id_attribute_group: attributeGroupId
       id_attribute: attributeId
@@ -75,7 +70,6 @@ admin_attributes_bulk_delete:
       - 'attributeGroupId'
     _legacy_controller: AdminAttributesGroups
     _legacy_link: AdminAttributesGroups:bulkdeleteattribute
-    _legacy_feature_flag: attribute_group
     _legacy_parameters:
       id_attribute_group: attributeGroupId
       id_attribute: attributeId
@@ -87,7 +81,6 @@ admin_attributes_update_position:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeController::updatePositionAction'
     _legacy_controller: AdminAttributesGroups
     _legacy_link: AdminAttributesGroups:updateAttributesPositions
-    _legacy_feature_flag: attribute_group
 
 admin_attribute_export:
   path: /export
@@ -98,7 +91,6 @@ admin_attribute_export:
       - 'attributeGroupId'
     _legacy_controller: AdminAttributesGroups
     _legacy_link: AdminAttributesGroups:exportattribute_group
-    _legacy_feature_flag: attribute_group
     _legacy_parameters:
       id_attribute_group: attributeGroupId
   requirements:
