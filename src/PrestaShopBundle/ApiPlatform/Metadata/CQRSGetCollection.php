@@ -32,11 +32,12 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 /**
- * Class CQRSQuery is a custom operation that provides extra parameters to help configure an operation
- * based on a CQRS query, it is custom tailed for read operations and forces using the GET method.
+ * Class CQRSGetCollection is a custom operation that provides extra parameters to help configure an operation
+ * based on a CQRS query, it is custom tailed for read operations and forces using the GET method it also expects
+ * the returned result to be a collection.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
-class CQRSQueryCollection extends AbstractCQRSOperation implements CollectionOperationInterface
+class CQRSGetCollection extends AbstractCQRSOperation implements CollectionOperationInterface
 {
     public function __construct(
         ?string $uriTemplate = null,

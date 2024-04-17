@@ -44,11 +44,11 @@ use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Exception\CQRSQueryNotFoundException;
 use PrestaShopBundle\ApiPlatform\Normalizer\CQRSApiNormalizer;
 use PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberNormalizer;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
+use PrestaShopBundle\ApiPlatform\Serializer\DomainSerializer;
 use RuntimeException;
 
 class QueryProviderTest extends TestCase

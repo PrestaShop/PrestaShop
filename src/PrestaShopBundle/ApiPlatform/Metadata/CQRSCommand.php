@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
-use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 /**
  * Class CQRSCommand handles parameters to ease the configuration of an operation relying on CommandProcessor
@@ -132,11 +131,6 @@ class CQRSCommand extends AbstractCQRSOperation
             $passedArguments['extraProperties']['CQRSCommandMapping'] = $CQRSCommandMapping;
         }
 
-        // If a CQRSQuery is specified without a provider we use the QueryProvider by default
-        if (!empty($CQRSQuery) || !empty($passedArguments['extraProperties']['CQRSQuery'])) {
-            $passedArguments['provider'] = $provider ?? QueryProvider::class;
-        }
-
         // Remove custom arguments
         unset($passedArguments['CQRSCommand']);
         unset($passedArguments['CQRSCommandMapping']);
@@ -161,9 +155,6 @@ class CQRSCommand extends AbstractCQRSOperation
     {
         $self = clone $this;
         $self->extraProperties['CQRSQuery'] = $CQRSQuery;
-        if (empty($self->provider)) {
-            $self->provider = QueryProvider::class;
-        }
 
         return $self;
     }

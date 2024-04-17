@@ -30,29 +30,29 @@ namespace Tests\Unit\PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSQueryCollection;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSGetCollection;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
-class CQRSQueryCollectionTest extends TestCase
+class CQRSGetCollectionTest extends TestCase
 {
     public function testDefaultConstructor(): void
     {
         // Without any parameters
-        $operation = new CQRSQueryCollection();
+        $operation = new CQRSGetCollection();
         $this->assertEquals(QueryProvider::class, $operation->getProvider());
-        $this->assertEquals(CQRSQueryCollection::METHOD_GET, $operation->getMethod());
+        $this->assertEquals(CQRSGetCollection::METHOD_GET, $operation->getMethod());
         $this->assertEquals([], $operation->getExtraProperties());
         $this->assertEquals(['json'], $operation->getFormats());
 
         // With positioned parameters
-        $operation = new CQRSQueryCollection('/uri');
+        $operation = new CQRSGetCollection('/uri');
         $this->assertEquals(QueryProvider::class, $operation->getProvider());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
         $this->assertEquals(['json'], $operation->getFormats());
 
         // With named parameters
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             formats: ['json', 'html'],
             extraProperties: ['scopes' => ['test']]
         );
@@ -64,21 +64,21 @@ class CQRSQueryCollectionTest extends TestCase
     public function testScopes(): void
     {
         // Scopes parameters in constructor
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             scopes: ['test', 'test2']
         );
         $this->assertEquals(['scopes' => ['test', 'test2']], $operation->getExtraProperties());
         $this->assertEquals(['test', 'test2'], $operation->getScopes());
 
         // Extra properties parameters in constructor
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             extraProperties: ['scopes' => ['test']]
         );
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
         $this->assertEquals(['test'], $operation->getScopes());
 
         // Extra properties AND scopes parameters in constructor, both values get merged but remain unique
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             extraProperties: ['scopes' => ['test', 'test1']],
             scopes: ['test', 'test2'],
         );
@@ -98,21 +98,21 @@ class CQRSQueryCollectionTest extends TestCase
     public function testCQRSQuery(): void
     {
         // CQRS query parameters in constructor
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             CQRSQuery: 'My\\Namespace\\MyQuery',
         );
         $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
         // Extra properties parameters in constructor
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             extraProperties: ['CQRSQuery' => 'My\\Namespace\\MyQuery'],
         );
         $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
         // Extra properties AND CQRS query parameters in constructor, both values are equals no problem
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             extraProperties: ['CQRSQuery' => 'My\\Namespace\\MyQuery'],
             CQRSQuery: 'My\\Namespace\\MyQuery',
         );
@@ -131,7 +131,7 @@ class CQRSQueryCollectionTest extends TestCase
         // When both values are specified, but they are different trigger an exception
         $caughtException = null;
         try {
-            new CQRSQueryCollection(
+            new CQRSGetCollection(
                 extraProperties: ['CQRSQuery' => 'My\\Namespace\\MyQuery'],
                 CQRSQuery: 'My\\Namespace\\MyOtherQuery',
             );
@@ -148,7 +148,7 @@ class CQRSQueryCollectionTest extends TestCase
     {
         // CQRS query mapping parameters in constructor
         $queryMapping = ['[id]' => '[queryId]'];
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             CQRSQueryMapping: $queryMapping,
         );
 
@@ -156,14 +156,14 @@ class CQRSQueryCollectionTest extends TestCase
         $this->assertEquals($queryMapping, $operation->getCQRSQueryMapping());
 
         // Extra properties parameters in constructor
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             extraProperties: ['CQRSQueryMapping' => $queryMapping],
         );
         $this->assertEquals(['CQRSQueryMapping' => $queryMapping], $operation->getExtraProperties());
         $this->assertEquals($queryMapping, $operation->getCQRSQueryMapping());
 
         // Extra properties AND CQRS query mapping parameters in constructor, both values are equals no problem
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             extraProperties: ['CQRSQueryMapping' => $queryMapping],
             CQRSQueryMapping: $queryMapping,
         );
@@ -183,7 +183,7 @@ class CQRSQueryCollectionTest extends TestCase
         // When both values are specified, but they are different trigger an exception
         $caughtException = null;
         try {
-            new CQRSQueryCollection(
+            new CQRSGetCollection(
                 extraProperties: ['CQRSQueryMapping' => $queryMapping],
                 CQRSQueryMapping: $newMapping,
             );
@@ -200,7 +200,7 @@ class CQRSQueryCollectionTest extends TestCase
     {
         // Api resource mapping parameters in constructor
         $resourceMapping = ['[id]' => '[queryId]'];
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             ApiResourceMapping: $resourceMapping,
         );
 
@@ -208,14 +208,14 @@ class CQRSQueryCollectionTest extends TestCase
         $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
 
         // Extra properties parameters in constructor
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             extraProperties: ['ApiResourceMapping' => $resourceMapping],
         );
         $this->assertEquals(['ApiResourceMapping' => $resourceMapping], $operation->getExtraProperties());
         $this->assertEquals($resourceMapping, $operation->getApiResourceMapping());
 
         // Extra properties AND Api resource mapping parameters in constructor, both values are equals no problem
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             extraProperties: ['ApiResourceMapping' => $resourceMapping],
             ApiResourceMapping: $resourceMapping,
         );
@@ -235,7 +235,7 @@ class CQRSQueryCollectionTest extends TestCase
         // When both values are specified, but they are different trigger an exception
         $caughtException = null;
         try {
-            new CQRSQueryCollection(
+            new CQRSGetCollection(
                 extraProperties: ['ApiResourceMapping' => $resourceMapping],
                 ApiResourceMapping: $newMapping,
             );
@@ -252,7 +252,7 @@ class CQRSQueryCollectionTest extends TestCase
     {
         $resourceMapping = ['[id]' => '[queryId]'];
         $queryMapping = ['[id]' => '[queryId]'];
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             extraProperties: [
                 'CQRSQuery' => 'My\\Namespace\\MyQuery',
                 'scopes' => ['master_scope'],
@@ -324,26 +324,26 @@ class CQRSQueryCollectionTest extends TestCase
     public function testExperimentalOperation(): void
     {
         // Default value is false (no extra property added)
-        $operation = new CQRSQueryCollection();
+        $operation = new CQRSGetCollection();
         $this->assertEquals([], $operation->getExtraProperties());
         $this->assertEquals(false, $operation->getExperimentalOperation());
 
         // Scopes parameters in constructor
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             experimentalOperation: true,
         );
         $this->assertEquals(['experimentalOperation' => true], $operation->getExtraProperties());
         $this->assertEquals(true, $operation->getExperimentalOperation());
 
         // Extra properties parameters in constructor
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             extraProperties: ['experimentalOperation' => false]
         );
         $this->assertEquals(['experimentalOperation' => false], $operation->getExtraProperties());
         $this->assertEquals(false, $operation->getExperimentalOperation());
 
         // Extra properties AND scopes parameters in constructor, both values get merged but remain unique
-        $operation = new CQRSQueryCollection(
+        $operation = new CQRSGetCollection(
             extraProperties: ['experimentalOperation' => true],
             experimentalOperation: true,
         );
@@ -362,7 +362,7 @@ class CQRSQueryCollectionTest extends TestCase
         // When both values are specified, but they are different trigger an exception
         $caughtException = null;
         try {
-            new CQRSQueryCollection(
+            new CQRSGetCollection(
                 extraProperties: ['experimentalOperation' => true],
                 experimentalOperation: false,
             );

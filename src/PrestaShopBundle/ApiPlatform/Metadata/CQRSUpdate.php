@@ -37,6 +37,7 @@ namespace PrestaShopBundle\ApiPlatform\Metadata;
 class CQRSUpdate extends CQRSCommand
 {
     public function __construct(
+        string $method = self::METHOD_PUT,
         ?string $uriTemplate = null,
         ?array $types = null,
         $formats = null,
@@ -118,7 +119,6 @@ class CQRSUpdate extends CQRSCommand
         ?bool $experimentalOperation = null,
     ) {
         $passedArguments = \get_defined_vars();
-        $passedArguments['method'] = self::METHOD_PUT;
         // Disable read listener because it is forced when using PUT method, but we don't need it since we rely on CQRS commands/queries
         $passedArguments['read'] = $read ?? false;
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1728f58b8070fdf93219e8469336cd3f",
+    "content-hash": "efd203e189d4e5a10f9fda3907bf67af",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5579,16 +5579,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-Issue-35686-make-api-based-on-grid",
+            "version": "dev-upload-product-image",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tleon/ps_apiresources.git",
-                "reference": "a2720b6365b33cf953e73a09822d55126e4b66f1"
+                "url": "https://github.com/jolelievre/ps_apiresources.git",
+                "reference": "1d7390558cab5597addfb49bf09e0afe660c7307"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tleon/ps_apiresources/zipball/a2720b6365b33cf953e73a09822d55126e4b66f1",
-                "reference": "a2720b6365b33cf953e73a09822d55126e4b66f1",
+                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/1d7390558cab5597addfb49bf09e0afe660c7307",
+                "reference": "1d7390558cab5597addfb49bf09e0afe660c7307",
                 "shasum": ""
             },
             "require": {
@@ -5640,9 +5640,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/tleon/ps_apiresources/tree/Issue-35686-make-api-based-on-grid"
+                "source": "https://github.com/jolelievre/ps_apiresources/tree/upload-product-image"
             },
-            "time": "2024-04-11T14:37:35+00:00"
+            "time": "2024-04-16T17:27:57+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -17989,5 +17989,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

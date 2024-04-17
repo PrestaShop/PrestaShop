@@ -50,3 +50,18 @@ services:
       $isDebug: '%kernel.debug%'
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  # Serializer modifications, the following services are automatically injected in the serializer Symfony service,
+  # to limit their impact on the Admin they are only defined for the API context.
+
+  # This normalizer disables the denormalization process of File fields
+  PrestaShopBundle\ApiPlatform\Normalizer\UploadedFileNormalizer:
+    autowire: true
+    autoconfigure: true
+    # Tag to be injected in the DomainSerializer
+    tags: [ 'prestashop.api.normalizers' ]
+
+  # This is the encoder to handle multipart requests for API
+  PrestaShopBundle\ApiPlatform\Encoder\MultipartDecoder:
+    autowire: true
+    autoconfigure: true

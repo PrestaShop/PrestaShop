@@ -26,12 +26,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\ApiPlatform;
+namespace Tests\Integration\ApiPlatform\Serializer;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\CustomerGroup;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\Hook;
-use PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
+use PrestaShop\Module\APIResources\ApiPlatform\Resources\Product\Product;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShopBundle\ApiPlatform\DomainSerializer;
+use PrestaShopBundle\ApiPlatform\Serializer\DomainSerializer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class DomainSerializerTest extends KernelTestCase
