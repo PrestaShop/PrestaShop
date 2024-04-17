@@ -81,6 +81,14 @@ class HostingInformation
     {
         return function_exists('php_uname') ? php_uname('s') . ' ' . php_uname('v') . ' ' . php_uname('m') : '';
     }
+    
+    /**
+     * @return string
+     */
+    public function getHostname()
+    {
+        return gethostname();
+    }
 
     /**
      * @return bool
