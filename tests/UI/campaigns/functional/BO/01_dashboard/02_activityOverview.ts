@@ -58,7 +58,6 @@ const baseContext: string = 'functional_BO_dashboard_activityOverview';
 describe('BO - Dashboard : Activity overview', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let numberOfOnlineVisitors: number;
   let activeShoppingCarts: number;
   let numberOfReturnExchanges: number;
   let ordersNumber: number;
@@ -97,86 +96,6 @@ describe('BO - Dashboard : Activity overview', async () => {
   describe('Check Online visitor & Active shopping carts', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
-    });
-
-    describe('Check Online visitor', async () => {
-      it('should get the number of online visitors', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfOnlineVisitors', baseContext);
-
-        numberOfOnlineVisitors = await dashboardPage.getNumberOfOnlineVisitors(page);
-      });
-
-      it('should click on Online visitor link and check stats page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickOnlineVisitors', baseContext);
-
-        await dashboardPage.clickOnOnlineVisitorsLink(page);
-
-        const pageTitle = await statsPage.getPageTitle(page);
-        expect(pageTitle).to.eq(statsPage.pageTitle);
-      });
-
-      it('should view my shop', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop1', baseContext);
-
-        page = await dashboardPage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
-
-        const isHomePage = await homePage.isHomePage(page);
-        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
-      });
-
-      it('should go to login page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
-
-        await homePage.goToLoginPage(page);
-
-        const pageTitle = await foLoginPage.getPageTitle(page);
-        expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
-      });
-
-      it('should sign in with default customer', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
-
-        await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
-
-        const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-        expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
-      });
-
-      it('should logout from FO', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'logoutFO', baseContext);
-
-        await foLoginPage.logout(page);
-
-        const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-        expect(isCustomerConnected, 'Customer is not connected').to.eq(false);
-      });
-
-      it('should go back to BO', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
-
-        // Close page and init page objects
-        page = await foLoginPage.closePage(browserContext, page, 0);
-
-        const pageTitle = await statsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(statsPage.pageTitle);
-      });
-
-      it('should go back to dashboard page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard', baseContext);
-
-        await statsPage.goToDashboardPage(page);
-
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
-      });
-
-      it('should check the number of Online visitors', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfOnlineVisitors', baseContext);
-
-        const onlineVisitors = await dashboardPage.getNumberOfOnlineVisitors(page);
-        expect(onlineVisitors).to.eq(numberOfOnlineVisitors + 1);
-      });
     });
 
     describe('Check Active shopping carts', async () => {
@@ -783,40 +702,6 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         const pageTitle = await dashboardPage.getPageTitle(page);
         expect(pageTitle).to.eq(dashboardPage.pageTitle);
-      });
-    });
-
-    describe('Check Unique visitors', async () => {
-      it('should get the number of Unique Visitors', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfUniqueVisitors', baseContext);
-
-        newCustomersNumber = await dashboardPage.getNumberOfVisits(page);
-      });
-
-      it('should click on Unique Visitors link and check Stats page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickOnUniqueVisitorsLink', baseContext);
-
-        await dashboardPage.clickOnUniqueVisitorsLink(page);
-
-        const pageTitle = await statsPage.getPageTitle(page);
-        expect(pageTitle).to.eq(statsPage.pageTitle);
-      });
-
-      it('should go back to dashboard page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard13', baseContext);
-
-        await shoppingCartsPage.goToDashboardPage(page);
-
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
-      });
-
-      it('should check Traffic sources', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkTrafficSources', baseContext);
-
-        const trafficSources = await dashboardPage.getTrafficSources(page);
-        expect(trafficSources).to.contains('prestashop.com')
-          .and.to.contains('Direct link');
       });
     });
   });

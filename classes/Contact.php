@@ -73,6 +73,7 @@ class ContactCore extends ObjectModel
                 'type' => self::TYPE_STRING,
                 'lang' => true,
                 'validate' => 'isString',
+                'size' => 4194303,
             ],
         ],
     ];

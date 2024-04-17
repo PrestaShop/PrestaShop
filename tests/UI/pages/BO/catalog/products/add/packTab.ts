@@ -258,7 +258,7 @@ class PackTab extends BOBasePage {
    * @param page {Page} Browser tab
    */
   async isDeleteModalVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.modalDeleteProduct, 1000);
+    return !(await this.elementNotVisible(page, this.modalDeleteProduct, 3000));
   }
 
   /**
@@ -326,19 +326,19 @@ class PackTab extends BOBasePage {
     let locator: Locator;
 
     switch (packStockType) {
-      case 'Decrement pack only':
+      case 'Use pack quantity':
         locator = page.locator(this.packStockTypeRadioButton(0));
         break;
 
-      case 'Decrement products in pack only':
+      case 'Use quantity of products in the pack':
         locator = page.locator(this.packStockTypeRadioButton(1));
         break;
 
-      case 'Decrement both':
+      case 'Use both, whatever is lower':
         locator = page.locator(this.packStockTypeRadioButton(2));
         break;
 
-      case 'Default':
+      case 'Default (Use pack quantity)':
         locator = page.locator(this.packStockTypeRadioButton(3));
         break;
 

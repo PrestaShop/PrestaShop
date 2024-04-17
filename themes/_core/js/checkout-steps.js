@@ -33,7 +33,7 @@ export default class Steps {
     this.$steps = $(prestashop.selectors.checkout.step);
     this.$steps.off('click');
 
-    this.$clickableSteps = $(currentStepSelector).prevAll().andSelf();
+    this.$clickableSteps = $(currentStepSelector).prevAll().addBack();
     this.$clickableSteps.addClass('-clickable');
   }
 

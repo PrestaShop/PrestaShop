@@ -395,7 +395,7 @@ class CartRuleCore extends ObjectModel
         // Basic part of the query, we are selecting all cart rules
         $sql = '
             SELECT SQL_NO_CACHE * FROM `' . _DB_PREFIX_ . 'cart_rule` cr
-            LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl 
+            LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl
             ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
 
         // We will definitely include vouchers for this specific customer
