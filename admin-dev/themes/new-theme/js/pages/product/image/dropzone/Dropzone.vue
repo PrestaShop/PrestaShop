@@ -290,7 +290,7 @@
           this.initDropZone();
 
           images.forEach((image: Dropzone.DropzoneMockFile) => {
-            this.dropzone?.displayExistingFile(image, image.image_url);
+            this.dropzone?.displayExistingFile(image, image.image_url, undefined, 'anonymous');
           });
         } catch (error) {
           window.$.growl.error({message: error});
