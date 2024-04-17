@@ -28,37 +28,35 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Admin\Context;
 
-use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
-use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * Listener dedicated to set up Language context for the Back-Office/Admin application.
+ * Listener dedicated to set up default Shop context for the Back-Office/Admin application.
+ * We need to initialize the ShopContext earlier because it's used by components in the Symfony
+ * layout that will be displayed in the Not Found legacy page
  */
-class LanguageContextListener
+class DefaultShopContextListener
 {
     public function __construct(
-        private readonly LanguageContextBuilder $languageContextBuilder,
-        private readonly EmployeeContext $employeeContext,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
-        private readonly bool $isSymfonyLayout,
+        private readonly ShopContextBuilder $shopContextBuilder,
+        private readonly ShopConfigurationInterface $configuration,
     ) {
     }
 
+    /**
+     * @throws ShopException
+     */
     public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
         }
-
-        if ($this->isSymfonyLayout !== $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)) {
-            return;
-        }
-        if ($this->employeeContext->getEmployee()) {
-            // Use the employee language if available
-            $this->languageContextBuilder->setLanguageId($this->employeeContext->getEmployee()->getLanguageId());
-        }
+        $shopConstraint = ShopConstraint::shop((int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops()));
+        $this->shopContextBuilder->setShopId($shopConstraint->getShopId()->getValue());
+        $this->shopContextBuilder->setShopConstraint($shopConstraint);
     }
 }

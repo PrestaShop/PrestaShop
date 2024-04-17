@@ -92,6 +92,10 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%legacy_employee_listener_priority%' }
 
+  PrestaShopBundle\EventListener\Admin\Context\DefaultLanguageContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%legacy_language_listener_priority%' }
+
   # Language depends on Employee so its priority is lower, however it has higher priority than Currency and Country because they depend on Language
   PrestaShopBundle\EventListener\Admin\Context\LanguageContextListener:
     arguments:
@@ -105,6 +109,10 @@ services:
       $isSymfonyLayout: false
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%legacy_language_listener_priority%' }
+
+  PrestaShopBundle\EventListener\Admin\Context\DefaultShopContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%legacy_default_listener_priority%' }
 
   PrestaShopBundle\EventListener\Admin\Context\ShopContextListener:
     arguments:

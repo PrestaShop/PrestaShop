@@ -109,10 +109,10 @@ class LegacyRouterChecker
             // It's clearer to actually return a not found exception, for now the dispatcher is still used as fallback in index.php
             // but when it's cleared and only Symfony handles the whole routing then we can display a proper not found Symfony page
             if (!isset($controllers[strtolower($queryController)])) {
-                throw new NotFoundHttpException(sprintf('Unknown controller %s', $queryController));
+                $controllerClass = 'AdminNotFoundController';
+            } else {
+                $controllerClass = $controllers[strtolower($queryController)];
             }
-
-            $controllerClass = $controllers[strtolower($queryController)];
         }
         // We load the controller early in the process (during router matching actually), because the controller
         // configuration has many impacts on the contexts, the security listeners, ... And the relevant data can

@@ -28,22 +28,20 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Admin\Context;
 
-use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * Listener dedicated to set up Language context for the Back-Office/Admin application.
+ * Listener dedicated to set up default Language context for the Back-Office/Admin application.
+ * We need to initialize the LanguageContext earlier because it's used by components in the Symfony
+ * layout that will be displayed in the Not Found legacy page
  */
-class LanguageContextListener
+class DefaultLanguageContextListener
 {
     public function __construct(
         private readonly LanguageContextBuilder $languageContextBuilder,
-        private readonly EmployeeContext $employeeContext,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
-        private readonly bool $isSymfonyLayout,
+        private readonly ConfigurationInterface $configuration,
     ) {
     }
 
@@ -53,12 +51,8 @@ class LanguageContextListener
             return;
         }
 
-        if ($this->isSymfonyLayout !== $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)) {
-            return;
-        }
-        if ($this->employeeContext->getEmployee()) {
-            // Use the employee language if available
-            $this->languageContextBuilder->setLanguageId($this->employeeContext->getEmployee()->getLanguageId());
-        }
+        $defaultLanguageId = (int) $this->configuration->get('PS_LANG_DEFAULT');
+        $this->languageContextBuilder->setDefaultLanguageId($defaultLanguageId);
+        $this->languageContextBuilder->setLanguageId($defaultLanguageId);
     }
 }
