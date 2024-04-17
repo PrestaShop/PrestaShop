@@ -143,7 +143,7 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @param string|int $id_invoice
      * @param int $id_order
-     * 
+     *
      * @return OrderInvoice|false
      */
     public static function getInvoiceByNumber($id_invoice, $id_order = null)
