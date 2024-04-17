@@ -108,6 +108,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                 $this->processInstallFixtures();
             } elseif (Tools::getValue('postInstall') && (!$validateFixturesInstallation || $fixturesInstalled)) {
                 $this->processPostInstall();
+            } elseif (Tools::getValue('finalize') && !empty($this->session->process_validated['postInstall'])) {
+                $this->processFinalize();
             }
         } catch (\Exception $e) {
             if (_PS_MODE_DEV_) {
@@ -264,6 +266,26 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->ajaxJsonAnswer(true);
     }
 
+    public function processFinalize(): void
+    {
+        $this->initializeContext();
+
+        $result = $this->model_install->finalize();
+        if (!$result || $this->model_install->getErrors()) {
+            $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+        }
+
+        if (is_string($result)) {
+            $this->session->adminFolderName = $result;
+        } elseif (file_exists(_PS_ROOT_DIR_ . '/admin-dev')) {
+            $this->session->adminFolderName = '../admin-dev';
+        } elseif (file_exists(_PS_ROOT_DIR_ . '/admin')) {
+            $this->session->adminFolderName = '../admin';
+        }
+
+        $this->ajaxJsonAnswer(true);
+    }
+
     /**
      * PROCESS : installFixtures
      * Install fixtures (E.g. demo products)
@@ -330,6 +352,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         }
 
         $this->process_steps[] = ['key' => 'postInstall', 'lang' => $this->translator->trans('Post installation scripts', [], 'Install')];
+        $this->process_steps[] = ['key' => 'finalize', 'lang' => $this->translator->trans('Finalization', [], 'Install')];
 
         $this->displayContent('process');
     }
