@@ -195,8 +195,8 @@ jobs:
 
       # Keycloak is only needed for API campaign
       - name: Setup Keycloak
-        uses: /.github/actions/setup-keycloak
-        if: env.GH_BRANCH == 'develop' && env.TEST_CAMPAIGN == 'functional:API'
+        uses: ./.github/actions/setup-keycloak
+        if: ${{ env.GH_BRANCH == 'develop' && env.TEST_CAMPAIGN == 'functional:API' }}
 
       - name: Run Tests
         continue-on-error: true
