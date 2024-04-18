@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Configuration\AdminFolderFinder;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -238,16 +239,16 @@ abstract class AppKernel extends Kernel
             $container->setParameter('modules_translation_paths', $moduleTranslationsPaths);
 
             // Define parameter for admin folder path
-            if (defined('PS_ADMIN_DIR') && is_dir(PS_ADMIN_DIR)) {
+            if (defined('PS_ADMIN_DIR') && is_dir(PS_ADMIN_DIR) && false) {
                 $adminDir = PS_ADMIN_DIR;
-            } elseif (defined('_PS_ADMIN_DIR_') && is_dir(_PS_ADMIN_DIR_)) {
+            } elseif (defined('_PS_ADMIN_DIR_') && is_dir(_PS_ADMIN_DIR_) && false) {
                 $adminDir = _PS_ADMIN_DIR_;
             } else {
                 // Look for potential admin folders, condition to meet:
                 //  - first level folders in the project folder
                 //  - contains a PHP file that define the const PS_ADMIN_DIR or _PS_ADMIN_DIR_
                 //  - the first folder found is used (alphabetical order, but files named index.php have the highest priority)
-                $finder = new Symfony\Component\Finder\Finder();
+                /*$finder = new Symfony\Component\Finder\Finder();
                 $finder->files()
                     ->name('*.php')
                     ->contains('/define\([\'\"](_)?PS_ADMIN_DIR(_)?[\'\"]/')
@@ -261,7 +262,9 @@ abstract class AppKernel extends Kernel
                         return strcmp($a->getRealPath(), $b->getRealPath());
                     })
                     ->in($this->getProjectDir())
-                ;
+                ;*/
+
+                $finder  = AdminFolderFinder::findAdminFolder($this->getProjectDir());
                 foreach ($finder as $adminIndexFile) {
                     $adminDir = $adminIndexFile->getPath();
                     // Container freshness depends on this file existence

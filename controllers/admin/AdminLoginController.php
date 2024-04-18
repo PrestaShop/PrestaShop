@@ -23,6 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Core\Configuration\AdminFolderFinder;
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use PrestaShopBundle\Security\Admin\SessionRenewer;
 use Symfony\Component\HttpFoundation\IpUtils;
@@ -114,9 +116,9 @@ class AdminLoginControllerCore extends AdminController
             // The install is well finished
             !file_exists(_PS_ROOT_DIR_ . '/var/.install.prestashop')
             && basename(_PS_ADMIN_DIR_) == 'admin'
-            && file_exists(_PS_ADMIN_DIR_ . '/../admin/')
+            //&& file_exists(_PS_ADMIN_DIR_ . '/../admin/')
         ) {
-            $rand = sprintf(
+            /*$rand = sprintf(
                 'admin%03d%s/',
                 mt_rand(0, 999),
                 Tools::strtolower(Tools::passwdGen(16))
@@ -127,10 +129,18 @@ class AdminLoginControllerCore extends AdminController
                 $this->context->smarty->assign([
                     'wrong_folder_name' => true,
                 ]);
+            }*/
+            $finder  = AdminFolderFinder::findAdminFolder(_PS_ROOT_DIR_);
+            foreach ($finder as $adminIndexFile) {
+                $rand = $adminIndexFile->getPath();
+                // Container freshness depends on this file existence
+                break;
             }
         } else {
             $rand = basename(_PS_ADMIN_DIR_) . '/';
         }
+
+
 
         $this->context->smarty->assign([
             'randomNb' => $rand,
