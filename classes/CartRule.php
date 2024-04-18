@@ -489,7 +489,7 @@ class CartRuleCore extends ObjectModel
                     SELECT `id_country`
                     FROM `' . _DB_PREFIX_ . 'address`
                     WHERE `id_customer` = ' . (int) $id_customer . '
-                    AND `deleted` = 0'
+                    AND `deleted` = 0 GROUP BY `id_country`'
                 );
 
                 if (is_array($countries) && count($countries)) {
