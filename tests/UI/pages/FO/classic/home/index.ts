@@ -42,6 +42,8 @@ class HomePage extends FOBasePage {
 
   protected productQuickViewLink: (row: number) => string;
 
+  private readonly productColors: (row: number) => string;
+
   private readonly productColorLink: (row: number, color: string) => string;
 
   protected allProductsBlockLink: (blockId: number | string) => string;
@@ -107,6 +109,7 @@ class HomePage extends FOBasePage {
     this.productImg = (row: number) => `${this.productArticle(row)} img`;
     this.productDescriptionDiv = (row: number) => `${this.productArticle(row)} div.product-description`;
     this.productQuickViewLink = (row: number) => `${this.productArticle(row)} a.quick-view`;
+    this.productColors = (row: number) => `${this.productArticle(row)} .variant-links`;
     this.productColorLink = (row: number, color: string) => `${this.productArticle(row)} .variant-links`
       + ` a[aria-label='${color}']`;
     this.productPrice = (row: number) => `${this.productArticle(row)} span[aria-label="Price"]`;
@@ -287,6 +290,30 @@ class HomePage extends FOBasePage {
    */
   async isCustomTextBlockVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.customTextBlock, 1000);
+  }
+
+  /**
+   * Is quickView link visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row of product to quick view
+   * @return {Promise<boolean>}
+   */
+  async isQuickViewLinkVisible(page: Page, row: number): Promise<boolean> {
+    await page.locator(this.productImg(row)).hover();
+
+    return this.elementVisible(page, this.productQuickViewLink(row), 1000);
+  }
+
+  /**
+   * Is colored boxes visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row of product to quick view
+   * @return {Promise<boolean>}
+   */
+  async isColoredBoxesVisible(page: Page, row: number): Promise<boolean> {
+    await page.locator(this.productImg(row)).hover();
+
+    return this.elementVisible(page, this.productColors(row), 1000);
   }
 
   /**
