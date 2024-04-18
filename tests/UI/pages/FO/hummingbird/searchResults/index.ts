@@ -15,6 +15,7 @@ class SearchResults extends SearchResultsPage {
   constructor() {
     super('hummingbird');
 
+    this.sortDropDownMenu = '.dropdown-menu.dropdown-menu-start.show';
     this.productPrice = '#js-product-list div.card span.product-miniature__price';
     this.productArticle = (number: number) => `#js-product-list .products article:nth-child(${number})`;
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
