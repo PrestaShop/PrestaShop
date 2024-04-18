@@ -11,9 +11,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import dashboardPage from '@pages/BO/dashboard';
-import localizationPage from '@pages/BO/international/localization';
-import languagesPage from '@pages/BO/international/languages';
-import addLanguagePage from '@pages/BO/international/languages/add';
 
 // Import data
 import APIClientData from '@data/faker/APIClient';
@@ -21,9 +18,9 @@ import APIClientData from '@data/faker/APIClient';
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_language_getAPILanguages';
+const baseContext: string = 'functional_API_endpoints_apiClients_getApiClients';
 
-describe('API : GET /languages', async () => {
+describe('API : GET /api-clients', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -31,9 +28,12 @@ describe('API : GET /languages', async () => {
   let accessToken: string;
   let jsonResponse: any;
 
+  const clientScope: string = 'api_client_read';
   const clientData: APIClientData = new APIClientData({
     enabled: true,
-    scopes: [],
+    scopes: [
+      clientScope,
+    ],
   });
 
   before(async function () {
@@ -108,6 +108,7 @@ describe('API : GET /languages', async () => {
           client_id: clientData.clientId,
           client_secret: clientSecret,
           grant_type: 'client_credentials',
+          scope: clientScope,
         },
       });
       expect(apiResponse.status()).to.eq(200);
@@ -123,10 +124,10 @@ describe('API : GET /languages', async () => {
   });
 
   describe('API : Fetch Data', async () => {
-    it('should request the endpoint /languages', async function () {
+    it('should request the endpoint /api-clients', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get('languages', {
+      const apiResponse = await apiContext.get('api-clients', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -142,8 +143,10 @@ describe('API : GET /languages', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseKeys', baseContext);
       expect(jsonResponse).to.have.all.keys(
         'totalItems',
+        'orderBy',
         'sortOrder',
         'limit',
+        'offset',
         'filters',
         'items',
       );
@@ -152,113 +155,68 @@ describe('API : GET /languages', async () => {
 
       for (let i:number = 0; i < jsonResponse.totalItems; i++) {
         expect(jsonResponse.items[i]).to.have.all.keys(
-          'langId',
-          'name',
-          'isoCode',
-          'languageCode',
-          'locale',
-          'dateFormat',
-          'dateTimeFormat',
-          'isRtl',
-          'active',
-          'flag',
+          'apiClientId',
+          'clientId',
+          'clientName',
+          'description',
+          'externalIssuer',
+          'enabled',
+          'lifetime',
         );
       }
     });
   });
 
   describe('BackOffice : Expected data', async () => {
-    it('should go to \'International > Localization\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.internationalParentLink,
-        dashboardPage.localizationLink,
-      );
-      await localizationPage.closeSfToolBar(page);
-
-      const pageTitle = await localizationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(localizationPage.pageTitle);
-    });
-
-    it('should go to \'Languages\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
-
-      await localizationPage.goToSubTabLanguages(page);
-
-      const pageTitle = await languagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(languagesPage.pageTitle);
-
-      const numLanguages = await languagesPage.resetAndGetNumberOfLines(page);
-      expect(numLanguages).to.eq(jsonResponse.totalItems);
-    });
-
     it('should filter list by id', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkJSONItems', baseContext);
 
       for (let idxItem: number = 0; idxItem < jsonResponse.totalItems; idxItem++) {
-        // eslint-disable-next-line no-loop-func
-        await languagesPage.resetFilter(page);
-        await languagesPage.filterTable(page, 'input', 'id_lang', jsonResponse.items[idxItem].langId);
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.advancedParametersLink,
+          dashboardPage.adminAPILink,
+        );
 
-        const numLanguages = await languagesPage.getNumberOfElementInGrid(page);
-        expect(numLanguages).to.be.equal(1);
+        const pageTitle = await apiClientPage.getPageTitle(page);
+        expect(pageTitle).to.eq(apiClientPage.pageTitle);
 
-        const langId = parseInt((await languagesPage.getTextColumnFromTable(page, 1, 'id_lang')).toString(), 10);
-        expect(langId).to.equal(jsonResponse.items[idxItem].langId);
+        const numAPIClients = await apiClientPage.getNumberOfElementInGrid(page);
+        expect(numAPIClients).to.be.equal(1);
 
-        const langName = await languagesPage.getTextColumnFromTable(page, 1, 'name');
-        expect(langName).to.equal(jsonResponse.items[idxItem].name);
+        const apiClientId = parseInt((await apiClientPage.getTextColumn(page, 'id_api_client', 1)).toString(), 10);
+        expect(apiClientId).to.equal(jsonResponse.items[idxItem].apiClientId);
 
-        const langIsoCode = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
-        expect(langIsoCode).to.equal(jsonResponse.items[idxItem].isoCode);
+        const clientId = await apiClientPage.getTextColumn(page, 'client_id', 1);
+        expect(clientId).to.equal(jsonResponse.items[idxItem].clientId);
 
-        const langLanguageCode = await languagesPage.getTextColumnFromTable(page, 1, 'language_code');
-        expect(langLanguageCode).to.equal(jsonResponse.items[idxItem].languageCode);
+        const clientName = await apiClientPage.getTextColumn(page, 'client_name', 1);
+        expect(clientName).to.equal(jsonResponse.items[idxItem].clientName);
 
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/35860
-        // Check `jsonResponse.items[idxItem].locale`
+        const externalIssuer = await apiClientPage.getTextColumn(page, 'external_issuer', 1);
+        expect(externalIssuer).to.equal(
+          jsonResponse.items[idxItem].externalIssuer === null
+            ? ''
+            : jsonResponse.items[idxItem].externalIssuer,
+        );
 
-        const langDateFormat = await languagesPage.getTextColumnFromTable(page, 1, 'date_format_lite');
-        expect(langDateFormat).to.equal(jsonResponse.items[idxItem].dateFormat);
+        const enabled = await apiClientPage.getStatus(page, 1);
+        expect(enabled).to.equal(jsonResponse.items[idxItem].enabled);
 
-        const langDateTimeFormat = await languagesPage.getTextColumnFromTable(page, 1, 'date_format_full');
-        expect(langDateTimeFormat).to.equal(jsonResponse.items[idxItem].dateTimeFormat);
+        await apiClientPage.goToEditAPIClientPage(page, 1);
 
-        const langActive = await languagesPage.getStatus(page, 1);
-        expect(langActive).to.equal(jsonResponse.items[idxItem].active);
+        const pageTitleEdit = await addNewApiClientPage.getPageTitle(page);
+        expect(pageTitleEdit).to.eq(addNewApiClientPage.pageTitleEdit(jsonResponse.items[idxItem].clientName));
 
-        const langFlag = await languagesPage.getImgSrc(page, 1);
-        expect(langFlag.split('?')[0]).to.equal(jsonResponse.items[idxItem].flag.split('?')[0]);
+        const description = await addNewApiClientPage.getValue(page, 'description');
+        expect(description).to.equal(jsonResponse.items[idxItem].description);
 
-        // Go the edit page
-        await languagesPage.goToEditLanguage(page, 1);
-
-        const pageTitleEdit = await addLanguagePage.getPageTitle(page);
-        expect(pageTitleEdit).to.contains(addLanguagePage.pageEditTitle);
-
-        const langIsRTL = await addLanguagePage.isRTL(page);
-        expect(langIsRTL).to.equal(jsonResponse.items[idxItem].isRtl);
-
-        // Return languages tab
-        await localizationPage.goToSubTabLanguages(page);
-
-        const pageTitle = await languagesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(languagesPage.pageTitle);
+        const lifetime = parseInt(await addNewApiClientPage.getValue(page, 'tokenLifetime'), 10);
+        expect(lifetime).to.equal(jsonResponse.items[idxItem].lifetime);
       }
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
-
-      await languagesPage.resetFilter(page);
-
-      const numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
-      expect(numberOfLanguages).to.be.above(0);
     });
   });
 
-  // Post-condition: Delete the API Client
+  // Pre-condition: Create an API Client
   deleteAPIClientTest(`${baseContext}_postTest`);
 });

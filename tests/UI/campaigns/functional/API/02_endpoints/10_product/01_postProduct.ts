@@ -24,7 +24,7 @@ import ProductData from '@data/faker/product';
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_product_postAPIProduct';
+const baseContext: string = 'functional_API_endpoints_product_postProduct';
 
 describe('API : POST /product', async () => {
   let apiContext: APIRequestContext;

@@ -25,7 +25,7 @@ import {
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_customerGroup_deleteAPICustomerGroupsId';
+const baseContext: string = 'functional_API_endpoints_customerGroup_deleteCustomerGroupsId';
 
 describe('API : DELETE /customers/group/{customerGroupId}', async () => {
   let apiContext: APIRequestContext;

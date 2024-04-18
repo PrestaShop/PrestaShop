@@ -18,15 +18,16 @@ import APIClientData from '@data/faker/APIClient';
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_apiClients_getAPIApiClients';
+const baseContext: string = 'functional_API_endpoints_apiClient_getApiClientId';
 
-describe('API : GET /api-clients', async () => {
+describe('API : GET /api-client/{apiClientId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
-  let clientSecret: string;
   let accessToken: string;
   let jsonResponse: any;
+  let clientSecret: string;
+  let idApiClient: number;
 
   const clientScope: string = 'api_client_read';
   const clientData: APIClientData = new APIClientData({
@@ -123,11 +124,33 @@ describe('API : GET /api-clients', async () => {
     });
   });
 
-  describe('API : Fetch Data', async () => {
-    it('should request the endpoint /api-clients', async function () {
+  describe('BackOffice : Expected data', async () => {
+    it('should go to \'Advanced Parameters > API Client\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToAdminAPIPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.adminAPILink,
+      );
+
+      const pageTitle = await apiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(apiClientPage.pageTitle);
+    });
+
+    it('should get informations', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getInformations', baseContext);
+
+      idApiClient = parseInt(await apiClientPage.getTextColumn(page, 'id_api_client', 1), 10);
+      expect(idApiClient).to.be.gt(0);
+    });
+  });
+
+  describe('API : Check Data', async () => {
+    it('should request the endpoint /api-client/{apiClientId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get('api-clients', {
+      const apiResponse = await apiContext.get(`api-client/${idApiClient}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -141,82 +164,83 @@ describe('API : GET /api-clients', async () => {
 
     it('should check the JSON Response keys', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseKeys', baseContext);
+
       expect(jsonResponse).to.have.all.keys(
-        'totalItems',
-        'orderBy',
-        'sortOrder',
-        'limit',
-        'offset',
-        'filters',
-        'items',
+        'apiClientId',
+        'clientId',
+        'clientName',
+        'description',
+        'externalIssuer',
+        'enabled',
+        'lifetime',
+        'scopes',
       );
+    });
 
-      expect(jsonResponse.totalItems).to.be.gt(0);
+    it('should check the JSON Response : `apiClientId`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseApiClientId', baseContext);
 
-      for (let i:number = 0; i < jsonResponse.totalItems; i++) {
-        expect(jsonResponse.items[i]).to.have.all.keys(
-          'apiClientId',
-          'clientId',
-          'clientName',
-          'description',
-          'externalIssuer',
-          'enabled',
-          'lifetime',
-        );
-      }
+      expect(jsonResponse).to.have.property('apiClientId');
+      expect(jsonResponse.apiClientId).to.be.a('number');
+      expect(jsonResponse.apiClientId).to.be.equal(idApiClient);
+    });
+
+    it('should check the JSON Response : `clientId`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseClientId', baseContext);
+
+      expect(jsonResponse).to.have.property('clientId');
+      expect(jsonResponse.clientId).to.be.a('string');
+      expect(jsonResponse.clientId).to.be.equal(clientData.clientId);
+    });
+
+    it('should check the JSON Response : `clientName`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseClientName', baseContext);
+
+      expect(jsonResponse).to.have.property('clientName');
+      expect(jsonResponse.clientName).to.be.a('string');
+      expect(jsonResponse.clientName).to.be.equal(clientData.clientName);
+    });
+
+    it('should check the JSON Response : `description`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDescription', baseContext);
+
+      expect(jsonResponse).to.have.property('description');
+      expect(jsonResponse.description).to.be.a('string');
+      expect(jsonResponse.description).to.be.equal(clientData.description);
+    });
+
+    it('should check the JSON Response : `externalIssuer`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseExternalIssuer', baseContext);
+
+      expect(jsonResponse).to.have.property('externalIssuer');
+      expect(jsonResponse.externalIssuer).to.equal(null);
+    });
+
+    it('should check the JSON Response : `enabled`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseEnabled', baseContext);
+
+      expect(jsonResponse).to.have.property('enabled');
+      expect(jsonResponse.enabled).to.be.a('boolean');
+      expect(jsonResponse.enabled).to.be.equal(clientData.enabled);
+    });
+
+    it('should check the JSON Response : `lifetime`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLifetime', baseContext);
+
+      expect(jsonResponse).to.have.property('lifetime');
+      expect(jsonResponse.lifetime).to.be.a('number');
+      expect(jsonResponse.lifetime).to.be.equal(clientData.tokenLifetime);
+    });
+
+    it('should check the JSON Response : `scopes`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseScopes', baseContext);
+
+      expect(jsonResponse).to.have.property('scopes');
+      expect(jsonResponse.scopes).to.be.a('array');
+      expect(jsonResponse.scopes).to.deep.equal(clientData.scopes);
     });
   });
 
-  describe('BackOffice : Expected data', async () => {
-    it('should filter list by id', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkJSONItems', baseContext);
-
-      for (let idxItem: number = 0; idxItem < jsonResponse.totalItems; idxItem++) {
-        await dashboardPage.goToSubMenu(
-          page,
-          dashboardPage.advancedParametersLink,
-          dashboardPage.adminAPILink,
-        );
-
-        const pageTitle = await apiClientPage.getPageTitle(page);
-        expect(pageTitle).to.eq(apiClientPage.pageTitle);
-
-        const numAPIClients = await apiClientPage.getNumberOfElementInGrid(page);
-        expect(numAPIClients).to.be.equal(1);
-
-        const apiClientId = parseInt((await apiClientPage.getTextColumn(page, 'id_api_client', 1)).toString(), 10);
-        expect(apiClientId).to.equal(jsonResponse.items[idxItem].apiClientId);
-
-        const clientId = await apiClientPage.getTextColumn(page, 'client_id', 1);
-        expect(clientId).to.equal(jsonResponse.items[idxItem].clientId);
-
-        const clientName = await apiClientPage.getTextColumn(page, 'client_name', 1);
-        expect(clientName).to.equal(jsonResponse.items[idxItem].clientName);
-
-        const externalIssuer = await apiClientPage.getTextColumn(page, 'external_issuer', 1);
-        expect(externalIssuer).to.equal(
-          jsonResponse.items[idxItem].externalIssuer === null
-            ? ''
-            : jsonResponse.items[idxItem].externalIssuer,
-        );
-
-        const enabled = await apiClientPage.getStatus(page, 1);
-        expect(enabled).to.equal(jsonResponse.items[idxItem].enabled);
-
-        await apiClientPage.goToEditAPIClientPage(page, 1);
-
-        const pageTitleEdit = await addNewApiClientPage.getPageTitle(page);
-        expect(pageTitleEdit).to.eq(addNewApiClientPage.pageTitleEdit(jsonResponse.items[idxItem].clientName));
-
-        const description = await addNewApiClientPage.getValue(page, 'description');
-        expect(description).to.equal(jsonResponse.items[idxItem].description);
-
-        const lifetime = parseInt(await addNewApiClientPage.getValue(page, 'tokenLifetime'), 10);
-        expect(lifetime).to.equal(jsonResponse.items[idxItem].lifetime);
-      }
-    });
-  });
-
-  // Pre-condition: Create an API Client
+  // Post-condition: Create an API Client
   deleteAPIClientTest(`${baseContext}_postTest`);
 });

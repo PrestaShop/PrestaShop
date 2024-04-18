@@ -8,34 +8,33 @@ import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import apiClientPage from 'pages/BO/advancedParameters/APIClient';
+import apiClientPage from '@pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import dashboardPage from '@pages/BO/dashboard';
-import {moduleManager} from '@pages/BO/modules/moduleManager';
+import positionsPage from '@pages/BO/design/positions';
 
 // Import data
 import APIClientData from '@data/faker/APIClient';
-import {ModuleInfo} from '@data/types/module';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {
-  boModuleManagerPage,
-  dataModules,
-} from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_API_endpoints_module_getAPIModuleId';
+const baseContext: string = 'functional_API_endpoints_hooks_getHooksId';
 
-describe('API : GET /module/{moduleId}', async () => {
+describe('API : GET /hooks/{id}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
   let clientSecret: string;
   let accessToken: string;
   let jsonResponse: any;
-  let moduleInfo: ModuleInfo;
+  let idHook: number;
+  let statusHook: boolean;
+  let nameHook: string;
+  //let titleHook: string;
+  let descriptionHook: string;
 
-  const clientScope: string = 'module_read';
+  const clientScope: string = 'hook_read';
   const clientData: APIClientData = new APIClientData({
     enabled: true,
     scopes: [
@@ -131,31 +130,46 @@ describe('API : GET /module/{moduleId}', async () => {
   });
 
   describe('BackOffice : Expected data', async () => {
-    it('should go to \'Modules > Module Manager\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToModulesPage', baseContext);
+    it('should go to \'Design > Positions\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToPositionsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.modulesParentLink, dashboardPage.modulesParentLink);
-      await boModuleManagerPage.closeSfToolBar(page);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.designParentLink,
+        dashboardPage.positionsLink,
+      );
+      await positionsPage.closeSfToolBar(page);
 
-      const pageTitle = await boModuleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
+      const pageTitle = await positionsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(positionsPage.pageTitle);
     });
 
-    it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
+    it('should get the hook informations', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getHookInformations', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, dataModules.psApiResources);
-      expect(isModuleVisible).to.be.equal(true);
+      idHook = await positionsPage.getHookId(page, 0);
+      expect(idHook).to.be.gt(0);
 
-      moduleInfo = await moduleManager.getModuleInformationNth(page, 1);
+      statusHook = await positionsPage.getHookStatus(page, 0);
+      expect(statusHook).to.be.equal(true);
+
+      nameHook = await positionsPage.getHookName(page, 0);
+      expect(nameHook.length).to.be.gt(0);
+
+      // @todo : https://github.com/PrestaShop/PrestaShop/issues/34552
+      //titleHook = await positionsPage.getHookStatus(page, 0);
+      //expect(titleHook.length).to.be.gt(0);
+
+      descriptionHook = await positionsPage.getHookDescription(page, 0);
+      expect(descriptionHook.length).to.be.gt(0);
     });
   });
 
   describe('API : Check Data', async () => {
-    it('should request the endpoint /module/{moduleId}', async function () {
+    it('should request the endpoint /hooks/{id}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get(`module/${moduleInfo.moduleId}`, {
+      const apiResponse = await apiContext.get(`hooks/${idHook}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -165,49 +179,61 @@ describe('API : GET /module/{moduleId}', async () => {
       expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
       jsonResponse = await apiResponse.json();
-      console.log(jsonResponse);
     });
 
     it('should check the JSON Response keys', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseKeys', baseContext);
+
       expect(jsonResponse).to.have.all.keys(
-        'moduleId',
-        'technicalName',
-        'version',
-        'enabled',
+        'id',
+        'active',
+        'name',
+        'title',
+        'description',
       );
     });
 
-    it('should check the JSON Response : `moduleId`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseModuleId', baseContext);
+    it('should check the JSON Response : `id`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseId', baseContext);
 
-      expect(jsonResponse).to.have.property('moduleId');
-      expect(jsonResponse.moduleId).to.be.a('number');
-      expect(jsonResponse.moduleId).to.be.equal(moduleInfo.moduleId);
+      expect(jsonResponse).to.have.property('id');
+      expect(jsonResponse.id).to.be.a('number');
+      expect(jsonResponse.id).to.be.equal(idHook);
     });
 
-    it('should check the JSON Response : `technicalName`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseTechnicalName', baseContext);
+    it('should check the JSON Response : `active`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseActive', baseContext);
 
-      expect(jsonResponse).to.have.property('technicalName');
-      expect(jsonResponse.technicalName).to.be.a('string');
-      expect(jsonResponse.technicalName).to.be.equal(moduleInfo.technicalName);
+      expect(jsonResponse).to.have.property('active');
+      expect(jsonResponse.active).to.be.a('boolean');
+      expect(jsonResponse.active).to.be.equal(statusHook);
     });
 
-    it('should check the JSON Response : `version`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseVersion', baseContext);
+    it('should check the JSON Response : `name`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseName', baseContext);
 
-      expect(jsonResponse).to.have.property('version');
-      expect(jsonResponse.version).to.be.a('string');
-      expect(jsonResponse.version).to.be.equal(moduleInfo.version);
+      expect(jsonResponse).to.have.property('name');
+      expect(jsonResponse.name).to.be.a('string');
+      expect(jsonResponse.name).to.be.equal(nameHook);
     });
 
-    it('should check the JSON Response : `enabled`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseEnabled', baseContext);
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/34552
+    it('should check the JSON Response : `title`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseTitle', baseContext);
 
-      expect(jsonResponse).to.have.property('enabled');
-      expect(jsonResponse.enabled).to.be.a('boolean');
-      expect(jsonResponse.enabled).to.be.equal(moduleInfo.enabled);
+      this.skip();
+
+      //expect(jsonResponse).to.have.property('title');
+      //expect(jsonResponse.title).to.be.a('string');
+      //expect(jsonResponse.title).to.be.equal(titleHook);
+    });
+
+    it('should check the JSON Response : `description`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDescription', baseContext);
+
+      expect(jsonResponse).to.have.property('description');
+      expect(jsonResponse.description).to.be.a('string');
+      expect(jsonResponse.description).to.be.equal(descriptionHook);
     });
   });
 
