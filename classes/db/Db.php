@@ -573,7 +573,7 @@ abstract class DbCore
         if (is_array($sql)) {
             $result = true;
             foreach ($sql as $query) {
-                if (!$this->execute($query, $use_cache)) {
+                if (!$this->query($query)) {
                     $result = false;
                 }
             }
