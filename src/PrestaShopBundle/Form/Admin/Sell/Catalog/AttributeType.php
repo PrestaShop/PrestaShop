@@ -108,16 +108,14 @@ class AttributeType extends TranslatorAwareType
                     . ' ' . TypedRegexValidator::CATALOG_CHARS,
             ]);
 
-        if ($hasAttributeGroupId === true) {
-            if ($attributeGroup->group_type === AttributeGroupType::ATTRIBUTE_GROUP_TYPE_COLOR) {
-                $builder->add('color', ColorType::class, [
-                    'label' => $this->trans('Color', 'Admin.Global'),
-                    'required' => false,
-                ])->add('texture', FileType::class, [
-                    'label' => $this->trans('Texture', 'Admin.Global'),
-                    'required' => false,
-                ]);
-            }
+        if ($hasAttributeGroupId === true && $attributeGroup->group_type === AttributeGroupType::ATTRIBUTE_GROUP_TYPE_COLOR) {
+            $builder->add('color', ColorType::class, [
+                'label' => $this->trans('Color', 'Admin.Global'),
+                'required' => false,
+            ])->add('texture', FileType::class, [
+                'label' => $this->trans('Texture', 'Admin.Global'),
+                'required' => false,
+            ]);
         }
 
         if ($this->multistoreFeature->isUsed()) {
