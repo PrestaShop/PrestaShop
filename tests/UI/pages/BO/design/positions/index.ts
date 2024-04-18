@@ -10,7 +10,11 @@ import type {Page} from 'playwright';
 class Positions extends BOBasePage {
   public readonly pageTitle: string;
 
+  public readonly messageModuleAddedFromHook: string;
+
   public readonly messageModuleRemovedFromHook: string;
+
+  private readonly headerButtonHookModule: string;
 
   private readonly searchInput: string;
 
@@ -64,9 +68,11 @@ class Positions extends BOBasePage {
     super();
 
     this.pageTitle = `Module positions • ${global.INSTALL.SHOP_NAME}`;
+    this.messageModuleAddedFromHook = 'The module transplanted successfully to the hook.';
     this.messageModuleRemovedFromHook = 'The module was successfully removed from the hook.';
 
     // Selectors
+    this.headerButtonHookModule = '#page-header-desc-configuration-save';
     this.searchInput = '#hook-search';
     this.modulePositionForm = '#module-positions-form';
     this.searchResultHookNameSpan = `${this.modulePositionForm} section[style] header span span`;
@@ -97,6 +103,14 @@ class Positions extends BOBasePage {
   }
 
   /* Methods */
+  /**
+   * Click on Header button "Hook a module"
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickHeaderHookModule(page: Page): Promise<void> {
+    await page.locator(this.headerButtonHookModule).click();
+  }
 
   /**
    * Search for a hook

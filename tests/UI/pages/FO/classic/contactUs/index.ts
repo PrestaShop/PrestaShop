@@ -34,6 +34,8 @@ class ContactUsPage extends FOBasePage {
 
   private readonly messageTextarea: string;
 
+  private readonly gdprLabel: string;
+
   private readonly sendButton: string;
 
   private readonly alertSuccessDiv: string;
@@ -62,6 +64,7 @@ class ContactUsPage extends FOBasePage {
     this.attachmentLabel = '#file-upload'; // input[name="fileUpload"]
     this.orderReferenceSelect = 'select[name=id_order]';
     this.messageTextarea = '#content textarea[name=\'message\']';
+    this.gdprLabel = '#content .gdpr_consent label.psgdpr_consent_message span:nth-of-type(2)';
     this.sendButton = '#content input[name=\'submitMessage\']';
     this.alertSuccessDiv = '#content div.alert-success';
     this.alertDangerTextBlock = '#content div.alert-danger';
@@ -134,8 +137,26 @@ class ContactUsPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAttachmentInputVisible(page: Page): Promise<boolean> {
+  async isAttachmentInputVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.attachmentLabel, 1000);
+  }
+
+  /**
+   * Return if the GDPR field is present
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async hasGDPRLabel(page: Page): Promise<boolean> {
+    return await page.locator(this.gdprLabel).count() !== 0;
+  }
+
+  /**
+   * Return the label for the GDPR field
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getGDPRLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.gdprLabel);
   }
 }
 

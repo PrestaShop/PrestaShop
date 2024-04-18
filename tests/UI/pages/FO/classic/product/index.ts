@@ -107,6 +107,8 @@ class Product extends FOBasePage {
 
   private readonly productMailAlertsEmailInput: string;
 
+  private readonly productMailAlertsGDPRLabel: string;
+
   private readonly productMailAlertsNotifyButton: string;
 
   private readonly productMailAlertsNotification: string;
@@ -145,6 +147,8 @@ class Product extends FOBasePage {
 
   private readonly productReviewModal: string;
 
+  private readonly productReviewModalGDPRLabel: string;
+
   private readonly reviewForm: string;
 
   private readonly reviewTitle: string;
@@ -154,6 +158,8 @@ class Product extends FOBasePage {
   private readonly reviewRating: (rating: number) => string;
 
   private readonly reviewSubmitButton: string;
+
+  private readonly reviewCancelButton: string;
 
   private readonly reviewSentConfirmationModal: string;
 
@@ -233,6 +239,8 @@ class Product extends FOBasePage {
     this.productInformationBlock = 'div.product-information';
     this.productMailAlertsBlock = `${this.productInformationBlock} div.js-mailalert`;
     this.productMailAlertsEmailInput = `${this.productMailAlertsBlock} input[type="email"]`;
+    this.productMailAlertsGDPRLabel = `${this.productMailAlertsBlock} div.gdpr_consent label.psgdpr_consent_message `
+      + 'span:nth-of-type(2)';
     this.productMailAlertsNotifyButton = `${this.productMailAlertsBlock} button`;
     this.productMailAlertsNotification = `${this.productMailAlertsBlock} article`;
 
@@ -255,11 +263,13 @@ class Product extends FOBasePage {
     this.emptyReviewAddReviewButton = '#empty-product-comment button';
     this.notEmptyReviewAddReviewButton = '#product-comments-list-footer button';
     this.productReviewModal = '#post-product-comment-modal';
+    this.productReviewModalGDPRLabel = `${this.productReviewModal} div.gdpr_consent label span:nth-of-type(2)`;
     this.reviewForm = '#post-product-comment-form';
     this.reviewTitle = `${this.reviewForm} input[name=comment_title]`;
     this.reviewTextContent = `${this.reviewForm} textarea[name=comment_content]`;
     this.reviewRating = (rating: number) => `.star-full div:nth-child(${rating})`;
     this.reviewSubmitButton = `${this.reviewForm} button[type=submit]`;
+    this.reviewCancelButton = `${this.reviewForm} button[data-dismiss="modal"]`;
     this.reviewSentConfirmationModal = '#product-comment-posted-modal';
     this.closeReviewSentConfirmationModalButton = `${this.reviewSentConfirmationModal} button`;
 
@@ -320,6 +330,24 @@ class Product extends FOBasePage {
    */
   async hasBlockMailAlert(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.productMailAlertsBlock, 2000);
+  }
+
+  /**
+   * Return if the GDPR field is present
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async hasBlockMailAlertGDPRLabel(page: Page): Promise<boolean> {
+    return await page.locator(this.productMailAlertsGDPRLabel).count() !== 0;
+  }
+
+  /**
+   * Return the label for the GDPR field
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getBlockMailAlertGDPRLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.productMailAlertsGDPRLabel);
   }
 
   /**
@@ -864,17 +892,26 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Click on the button "Add a review"
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickAddReviewButton(page: Page): Promise<void> {
+    if (await this.getNumberOfComments(page) !== 0) {
+      await page.locator(this.notEmptyReviewAddReviewButton).click();
+    } else {
+      await page.locator(this.emptyReviewAddReviewButton).click();
+    }
+  }
+
+  /**
    * Add a product review
    * @param page {Page} Browser tab
    * @param productReviewData {ProductReviewData} The content of the product review (title, content, rating)
    * @returns {Promise<boolean>}
    */
   async addProductReview(page: Page, productReviewData: ProductReviewData): Promise<boolean> {
-    if (await this.getNumberOfComments(page) !== 0) {
-      await page.locator(this.notEmptyReviewAddReviewButton).click();
-    } else {
-      await page.locator(this.emptyReviewAddReviewButton).click();
-    }
+    await this.clickAddReviewButton(page);
     await this.waitForVisibleSelector(page, this.productReviewModal);
     await this.setValue(page, this.reviewTitle, productReviewData.reviewTitle);
     await this.setValue(page, this.reviewTextContent, productReviewData.reviewContent);
@@ -882,6 +919,34 @@ class Product extends FOBasePage {
     await page.locator(this.reviewSubmitButton).click();
     await page.locator(this.closeReviewSentConfirmationModalButton).click();
     return this.elementNotVisible(page, this.reviewSentConfirmationModal, 3000);
+  }
+
+  /**
+   * Close the product review modal
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeProductReviewModal(page: Page): Promise<boolean> {
+    await page.locator(this.reviewCancelButton).click();
+    return !(await this.elementNotVisible(page, this.productReviewModal, 3000));
+  }
+
+  /**
+   * Return if the GDPR field is present
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async hasProductReviewGDPRLabel(page: Page): Promise<boolean> {
+    return await page.locator(this.productReviewModalGDPRLabel).count() !== 0;
+  }
+
+  /**
+   * Return the label for the GDPR field
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getProductReviewGDPRLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.productReviewModalGDPRLabel);
   }
 
   /**

@@ -1,7 +1,7 @@
 // Import pages
 import CommonPage from '@pages/commonPage';
 
-import {Frame, Page} from 'playwright';
+import {Frame, FrameLocator, Page} from 'playwright';
 import type {PageFunction} from 'playwright-core/types/structs';
 
 /**
@@ -959,21 +959,32 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @param iFrameSelector {string} Selector of the iFrame to set value on
    * @param value {string} Value to set on the iFrame
+   * @param hasParagraph {boolean} Has the iFrame a paragraph
    * @return {Promise<void>}
    */
-  async setValueOnTinymceInput(page: Page, iFrameSelector: string, value: string): Promise<void> {
-    const args = {selector: iFrameSelector, vl: value};
+  async setValueOnTinymceInput(page: Page, iFrameSelector: string, value: string, hasParagraph: boolean = true): Promise<void> {
+    const args = {selector: iFrameSelector, vl: value, hasP: hasParagraph};
     // eslint-disable-next-line no-eval
-    const fn: { fnSetValueOnTinymceInput: PageFunction<{ selector: string, vl: string }, void> } = eval(`({
+    const fn: { fnSetValueOnTinymceInput: PageFunction<{ selector: string, vl: string, hasP: boolean }, void> } = eval(`({
       async fnSetValueOnTinymceInput(args) {
         /* eslint-env browser */
         const iFrameElement = await document.querySelector(args.selector);
         const iFrameHtml = iFrameElement.contentDocument.documentElement;
-        const textElement = await iFrameHtml.querySelector('body p');
+        const textElement = await iFrameHtml.querySelector(args.hasP ? 'body p' : 'body');
         textElement.textContent = args.vl;
       }
     })`);
     await page.evaluate(fn.fnSetValueOnTinymceInput, args);
+  }
+
+  /**
+   * Set value on tinyMce textarea
+   * @param frameLocator {FrameLocator} TinyMCE iFrame
+   * @param value {string} Value to set on the iFrame
+   * @return {Promise<void>}
+   */
+  async setTinyMCEInputValue(frameLocator: FrameLocator, value: string): Promise<void> {
+    await frameLocator.locator('body').fill(value);
   }
 
   /**

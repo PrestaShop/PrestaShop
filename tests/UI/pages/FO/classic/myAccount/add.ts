@@ -36,6 +36,8 @@ class CreateAccountPage extends FOBasePage {
 
   private readonly customerPrivacyCheckbox: string;
 
+  private readonly psgdprLabel: string;
+
   private readonly psgdprCheckbox: string;
 
   private readonly partnerOfferCheckbox: string;
@@ -64,6 +66,7 @@ class CreateAccountPage extends FOBasePage {
     this.newPasswordInput = `${this.createAccountForm} input[name='password']`;
     this.birthdateInput = `${this.createAccountForm} input[name='birthday']`;
     this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;
+    this.psgdprLabel = `${this.createAccountForm} label[for="field-psgdpr"] + div > span.custom-checkbox > label`;
     this.psgdprCheckbox = `${this.createAccountForm} input[name='psgdpr']`;
     this.partnerOfferCheckbox = `${this.createAccountForm} input[name='optin']`;
     this.companyInput = `${this.createAccountForm} input[name='company']`;
@@ -79,7 +82,7 @@ class CreateAccountPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getHeaderTitle(page: Page): Promise<string> {
+  async getHeaderTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.pageHeaderTitle);
   }
 
@@ -143,6 +146,24 @@ class CreateAccountPage extends FOBasePage {
    */
   async isCompanyInputVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.companyInput, 1000);
+  }
+
+  /**
+   * Return the label for the GDPR field
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getGDPRLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.psgdprLabel);
+  }
+
+  /**
+   * Return if the GDPR field is present
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async hasGDPRLabel(page: Page): Promise<boolean> {
+    return await page.locator(this.psgdprLabel).count() !== 0;
   }
 }
 
