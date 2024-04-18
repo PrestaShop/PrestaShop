@@ -13,6 +13,8 @@ class ProductPage extends Product {
   constructor() {
     super('hummingbird');
 
+    this.warningMessage = '#js-toast-container div.bg-danger  div.toast-body';
+    this.productRowQuantityUpDownButton = (direction: string) => `div.product-actions__quantity button.js-${direction}-button`;
     this.proceedToCheckoutButton = '#blockcart-modal div.cart-footer-actions a';
     this.productName = '#content-wrapper h1.product__name';
     this.shortDescription = 'div.product__description-short';
