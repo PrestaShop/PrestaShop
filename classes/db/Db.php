@@ -557,20 +557,36 @@ abstract class DbCore
     /**
      * Executes a query.
      *
-     * @param string|DbQuery $sql
+     * @param array|string|DbQuery $sql
      * @param bool $use_cache
      *
      * @return bool
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
-    public function execute($sql, $use_cache = true)
+    public function execute(array|string|DbQuery $sql, bool $use_cache = true): bool
     {
         if ($sql instanceof DbQuery) {
             $sql = $sql->build();
         }
 
-        $this->result = $this->query($sql);
+        if (is_array($sql)) {
+            $result = true;
+            foreach ($sql as $query) {
+                if (!$this->execute($query, $use_cache)) {
+                    $result = false;
+                }
+            }
+            $this->result = $result;
+        } else {
+            $this->result = $this->query($sql);
+        }
+
         if ($use_cache && $this->is_cache_enabled) {
-            Cache::getInstance()->deleteQuery($sql);
+            $cache = Cache::getInstance();
+            if ($cache) {
+                $cache->deleteQuery($sql);
+            }
         }
 
         return (bool) $this->result;
