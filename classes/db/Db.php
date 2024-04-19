@@ -561,6 +561,7 @@ abstract class DbCore
      * @param bool $use_cache
      *
      * @return bool
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
