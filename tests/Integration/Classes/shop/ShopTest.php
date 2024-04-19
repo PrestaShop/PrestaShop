@@ -32,7 +32,7 @@ use Configuration;
 use PHPUnit\Framework\TestCase;
 use Shop;
 
-class ShopTest extends Testcase
+class ShopTest extends TestCase
 {
     public function testGetBaseURL(): void
     {

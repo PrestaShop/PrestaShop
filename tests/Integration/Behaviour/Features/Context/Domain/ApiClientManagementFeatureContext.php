@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\ApiClient\QueryResult\EditableApiClient;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\ApiClientId;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
+use RuntimeException;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -127,7 +128,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (count($errors) > 0) {
-            throw new \RuntimeException(sprintf('Fields %s are not identical', implode(', ', $errors)));
+            throw new RuntimeException(sprintf('Fields %s are not identical', implode(', ', $errors)));
         }
     }
 
@@ -244,7 +245,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
         } catch (ApiClientNotFoundException $e) {
             return;
         }
-        throw new \RuntimeException(sprintf('API Client %s still exists', $apiClientReference));
+        throw new RuntimeException(sprintf('API Client %s still exists', $apiClientReference));
     }
 
     /**
@@ -306,7 +307,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
         $plainSecret = $this->getSharedStorage()->get($secretReference);
         $passwordHasher = $this->getContainer()->get(PasswordHasherInterface::class);
         if ($expected !== $passwordHasher->verify($hashedSecret, $plainSecret)) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 'Secret %s was expected to be %s',
                 $secretReference,
                 $expected ? 'valid' : 'invalid'
@@ -316,6 +317,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @BeforeFeature @restore-api-client-before-feature
+     *
      * @AfterFeature @restore-api-client-after-feature     */
     public static function restoreApiClientTables(): void
     {
@@ -360,7 +362,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
         $apiClientContext->resetOverriddenApiClient();
     }
 
-    private function createApiClient(string $apiClientReference, TableNode $table, string $secretReference = null): void
+    private function createApiClient(string $apiClientReference, TableNode $table, ?string $secretReference = null): void
     {
         $data = $this->fixDataType($table->getRowsHash());
 
@@ -407,7 +409,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
-            throw new \RuntimeException(sprintf('"%s" is not mapped with constraint error code', $fieldName));
+            throw new RuntimeException(sprintf('"%s" is not mapped with constraint error code', $fieldName));
         }
 
         return $constraintErrorFieldMap[$fieldName];
@@ -425,7 +427,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
-            throw new \RuntimeException(sprintf('"%s" is not mapped with constraint error code', $fieldName));
+            throw new RuntimeException(sprintf('"%s" is not mapped with constraint error code', $fieldName));
         }
 
         return $constraintErrorFieldMap[$fieldName];
@@ -440,7 +442,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
-            throw new \RuntimeException(sprintf('"%s" is not mapped with constraint error code', $fieldName));
+            throw new RuntimeException(sprintf('"%s" is not mapped with constraint error code', $fieldName));
         }
 
         return $constraintErrorFieldMap[$fieldName];
@@ -451,7 +453,7 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
         $length = match ($fieldName) {
             'clientId', 'clientName' => 260,
             'description' => 21900,
-            default => throw new \RuntimeException(sprintf('The field %s cannot have a max value generated', $fieldName)),
+            default => throw new RuntimeException(sprintf('The field %s cannot have a max value generated', $fieldName)),
         };
 
         $data[$fieldName] = bin2hex(random_bytes($length));

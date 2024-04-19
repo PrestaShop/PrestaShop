@@ -137,7 +137,7 @@ class PackCore extends Product
         $price_display_method = !self::$_taxCalculationMethod;
         $items = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
         foreach ($items as $item) {
-            $pricePerItem = $item->getPrice($price_display_method, ($item->id_pack_product_attribute ? $item->id_pack_product_attribute : null));
+            $pricePerItem = $item->getPrice($price_display_method, $item->id_pack_product_attribute ? $item->id_pack_product_attribute : null);
 
             // Different calculation depending on rounding type
             switch (Configuration::get('PS_ROUND_TYPE')) {
@@ -235,7 +235,7 @@ class PackCore extends Product
      *
      * @throws PrestaShopException
      */
-    public static function isInStock($idProduct, $wantedQuantity = 1, Cart $cart = null)
+    public static function isInStock($idProduct, $wantedQuantity = 1, ?Cart $cart = null)
     {
         if (!Pack::isFeatureActive()) {
             return true;
@@ -274,7 +274,7 @@ class PackCore extends Product
         $idProduct,
         $idProductAttribute = null,
         $cacheIsPack = null,
-        CartCore $cart = null,
+        ?CartCore $cart = null,
         $idCustomization = null
     ) {
         $idProduct = (int) $idProduct;
@@ -485,9 +485,9 @@ class PackCore extends Product
             $result = Db::getInstance()->update('product', ['cache_is_pack' => 0], 'id_product = ' . (int) $id_product);
         }
 
-        return $result &&
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'pack` WHERE `id_product_pack` = ' . (int) $id_product) &&
-            Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', Pack::isCurrentlyUsed());
+        return $result
+            && Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'pack` WHERE `id_product_pack` = ' . (int) $id_product)
+            && Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', Pack::isCurrentlyUsed());
     }
 
     /**
@@ -506,8 +506,8 @@ class PackCore extends Product
     {
         $id_attribute_item = (int) $id_attribute_item ? (int) $id_attribute_item : Product::getDefaultAttribute((int) $id_item);
 
-        return Db::getInstance()->update('product', ['cache_is_pack' => 1, 'product_type' => ProductType::TYPE_PACK], 'id_product = ' . (int) $id_product) &&
-            Db::getInstance()->insert('pack', [
+        return Db::getInstance()->update('product', ['cache_is_pack' => 1, 'product_type' => ProductType::TYPE_PACK], 'id_product = ' . (int) $id_product)
+            && Db::getInstance()->insert('pack', [
                 'id_product_pack' => (int) $id_product,
                 'id_product_item' => (int) $id_item,
                 'id_product_attribute_item' => (int) $id_attribute_item,

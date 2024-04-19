@@ -90,7 +90,7 @@ class ProductPackUpdater
 
         $this->productPackRepository->removeAllProductsFromPack($packId);
 
-        //reset cache_default_attribute
+        // reset cache_default_attribute
         $pack->setDefaultAttribute(NoCombinationId::NO_COMBINATION_ID);
 
         try {

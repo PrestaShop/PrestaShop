@@ -78,10 +78,10 @@ class AdminSecurity
 
     public function __construct(
         array|string $data = [],
-        string $message = null,
-        string $domain = null,
-        string $url = null,
-        array $redirectQueryParamsToKeep = null,
+        ?string $message = null,
+        ?string $domain = null,
+        ?string $url = null,
+        ?array $redirectQueryParamsToKeep = null,
         ?int $statusCode = null,
         ?int $exceptionCode = null,
         ?string $redirectRoute = null,

@@ -60,7 +60,7 @@ class PrestaShopAdminController extends AbstractController
         $this->container->get(HookDispatcherInterface::class)->dispatchWithParameters($hookName, $parameters);
     }
 
-    protected function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
+    protected function trans(string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
     {
         return $this->container->get(TranslatorInterface::class)->trans($id, $parameters, $domain, $locale);
     }

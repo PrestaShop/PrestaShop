@@ -92,11 +92,11 @@ class LegacyRouterChecker
                     include_once _PS_OVERRIDE_DIR_ . "modules/{$moduleName}/controllers/admin/$controllerName.php";
                     $controllerClass = $controllerName . (
                         strpos($controllerName, 'Controller') ? 'Override' : 'ControllerOverride'
-                        );
+                    );
                 } else {
                     $controllerClass = $controllerName . (
                         strpos($controllerName, 'Controller') ? '' : 'Controller'
-                        );
+                    );
                 }
             }
         } else {

@@ -106,7 +106,7 @@ class FolderThemeCatalogTest extends TestCase
         $layoutCollection = $theme->getLayouts();
         $this->assertCount(8, $layoutCollection);
 
-        //Check core layouts
+        // Check core layouts
         $coreLayouts = $this->filterCoreLayouts($layoutCollection);
         $this->assertCount(4, $coreLayouts);
 
@@ -124,7 +124,7 @@ class FolderThemeCatalogTest extends TestCase
         $this->assertNotNull($layout->getModuleName());
         $this->assertEmpty($layout->getModuleName());
 
-        //Check module layouts
+        // Check module layouts
         $modulesLayouts = $this->filterModulesLayouts($layoutCollection);
         $this->assertCount(4, $modulesLayouts);
 
@@ -210,7 +210,7 @@ class FolderThemeCatalogTest extends TestCase
     public function testListThemesWithoutCoreFolder()
     {
         $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $this->createHookDispatcherMock(4));
-        //No bug occurs if the folder does not exist
+        // No bug occurs if the folder does not exist
         $this->fs->remove(implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'classic', MailTemplateInterface::CORE_CATEGORY]));
 
         /** @var ThemeCollectionInterface $themes */
@@ -333,7 +333,7 @@ class FolderThemeCatalogTest extends TestCase
 
         /** @var ThemeInterface $theme */
         foreach ($this->expectedThemes as $theme) {
-            //Insert core files
+            // Insert core files
             $themeFolder = $this->tempDir . DIRECTORY_SEPARATOR . $theme->getName();
             $coreFolder = implode(DIRECTORY_SEPARATOR, [$themeFolder, MailTemplateInterface::CORE_CATEGORY]);
             $this->fs->mkdir($coreFolder);
@@ -341,7 +341,7 @@ class FolderThemeCatalogTest extends TestCase
                 $this->fs->touch(implode(DIRECTORY_SEPARATOR, [$coreFolder, $layout]));
             }
 
-            //Insert modules files
+            // Insert modules files
             $modulesFolder = $themeFolder . DIRECTORY_SEPARATOR . MailTemplateInterface::MODULES_CATEGORY;
             foreach ($this->moduleLayouts as $moduleName => $moduleLayouts) {
                 $moduleFolder = $modulesFolder . DIRECTORY_SEPARATOR . $moduleName;
@@ -351,7 +351,7 @@ class FolderThemeCatalogTest extends TestCase
                 }
             }
 
-            //Insert components files used in layoutss
+            // Insert components files used in layoutss
             $componentsFolder = $themeFolder . DIRECTORY_SEPARATOR . 'components';
             $this->fs->mkdir($componentsFolder);
             $this->fs->touch($componentsFolder . DIRECTORY_SEPARATOR . 'title.twig');

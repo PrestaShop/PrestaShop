@@ -26,9 +26,11 @@
 
 namespace PrestaShopBundle\Command;
 
+use InvalidArgumentException;
 use PrestaShopBundle\Routing\Linter\AdminRouteProvider;
 use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use PrestaShopBundle\Routing\Linter\SecurityAttributeLinter;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -154,10 +156,10 @@ final class SecurityAttributeLinterCommand extends Command
         $actionToPerform = $input->getArgument('action');
 
         if (!in_array($actionToPerform, self::getAvailableActions())) {
-            throw new \InvalidArgumentException(sprintf(
-                    'Action must be one of: %s',
-                    implode(', ', self::getAvailableActions())
-                )
+            throw new InvalidArgumentException(sprintf(
+                'Action must be one of: %s',
+                implode(', ', self::getAvailableActions())
+            )
             );
         }
 
@@ -170,7 +172,7 @@ final class SecurityAttributeLinterCommand extends Command
                 break;
 
             default:
-                throw new \RuntimeException(sprintf('Unknown action %s', $actionToPerform));
+                throw new RuntimeException(sprintf('Unknown action %s', $actionToPerform));
         }
 
         return 0;

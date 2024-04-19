@@ -110,7 +110,7 @@ class ShopContextBuilderTest extends TestCase
         return $shop;
     }
 
-    private function mockShopRepository(Shop|MockObject $shop = null): ShopRepository|MockObject
+    private function mockShopRepository(Shop|MockObject|null $shop = null): ShopRepository|MockObject
     {
         $repository = $this->createMock(ShopRepository::class);
         $repository

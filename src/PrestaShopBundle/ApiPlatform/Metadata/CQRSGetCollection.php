@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Metadata\CollectionOperationInterface;
+use Attribute;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 /**
@@ -36,16 +37,16 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
  * based on a CQRS query, it is custom tailed for read operations and forces using the GET method it also expects
  * the returned result to be a collection.
  */
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class CQRSGetCollection extends AbstractCQRSOperation implements CollectionOperationInterface
 {
     public function __construct(
         ?string $uriTemplate = null,
         ?array $types = null,
-                $formats = null,
-                $inputFormats = null,
-                $outputFormats = null,
-                $uriVariables = null,
+        $formats = null,
+        $inputFormats = null,
+        $outputFormats = null,
+        $uriVariables = null,
         ?string $routePrefix = null,
         ?string $routeName = null,
         ?array $defaults = null,
@@ -54,7 +55,7 @@ class CQRSGetCollection extends AbstractCQRSOperation implements CollectionOpera
         ?bool $stateless = null,
         ?string $sunset = null,
         ?string $acceptPatch = null,
-                $status = null,
+        $status = null,
         ?string $host = null,
         ?array $schemes = null,
         ?string $condition = null,
@@ -94,10 +95,10 @@ class CQRSGetCollection extends AbstractCQRSOperation implements CollectionOpera
         ?string $deprecationReason = null,
         ?array $filters = null,
         ?array $validationContext = null,
-                $input = null,
-                $output = null,
-                $mercure = null,
-                $messenger = null,
+        $input = null,
+        $output = null,
+        $mercure = null,
+        $messenger = null,
         ?bool $elasticsearch = null,
         ?int $urlGenerationStrategy = null,
         ?bool $read = null,
@@ -109,8 +110,8 @@ class CQRSGetCollection extends AbstractCQRSOperation implements CollectionOpera
         ?bool $forceEager = null,
         ?int $priority = null,
         ?string $name = null,
-                $provider = null,
-                $processor = null,
+        $provider = null,
+        $processor = null,
         array $extraProperties = [],
         ?string $CQRSQuery = null,
         array $scopes = [],

@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\ApiPlatform\Serializer;
 
+use DateTimeImmutable;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\CustomerGroup;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\Hook;
@@ -100,7 +101,7 @@ class DomainSerializerTest extends KernelTestCase
         $editCartRuleCommand->setAllowPartialUse(true);
         $editCartRuleCommand->setPriority(1);
         $editCartRuleCommand->setActive(true);
-        $editCartRuleCommand->setValidityDateRange(new \DateTimeImmutable('2023-08-23'), new \DateTimeImmutable('2023-08-25'));
+        $editCartRuleCommand->setValidityDateRange(new DateTimeImmutable('2023-08-23'), new DateTimeImmutable('2023-08-25'));
         $editCartRuleCommand->setTotalQuantity(100);
         $editCartRuleCommand->setQuantityPerUser(1);
         $editCartRuleCommand->setCartRuleAction(new CartRuleAction(true));
@@ -123,7 +124,7 @@ class DomainSerializerTest extends KernelTestCase
                 'totalQuantity' => 100,
                 'quantityPerUser' => 1,
                 'cartRuleAction' => ['freeShipping' => true],
-                //TODO: handle cartRuleAction with complex discount handle by business rules
+                // TODO: handle cartRuleAction with complex discount handle by business rules
                 // 'cartRuleAction' => ['freeShipping' => true, 'giftProduct' => ['productId': 1], 'discount' => ['amountDiscount' => ['amount' => 10]]]...
             ],
             $editCartRuleCommand,

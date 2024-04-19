@@ -137,8 +137,8 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
 
         $productSupplierId = (int) $result['id_product_supplier'];
 
-        if ($association->getProductSupplierId() !== null &&
-            $productSupplierId !== $association->getProductSupplierId()->getValue()) {
+        if ($association->getProductSupplierId() !== null
+            && $productSupplierId !== $association->getProductSupplierId()->getValue()) {
             throw new InvalidProductSupplierAssociationException(sprintf(
                 'Invalid ProductSupplier ID in association: %s Provided is %d but the persisted one is %d.',
                 (string) $association,

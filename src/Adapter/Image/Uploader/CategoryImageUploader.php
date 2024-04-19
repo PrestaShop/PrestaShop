@@ -60,8 +60,8 @@ class CategoryImageUploader
      */
     public function uploadImages(
         CategoryId $categoryId,
-        UploadedFile $coverImage = null,
-        UploadedFile $thumbnailImage = null
+        ?UploadedFile $coverImage = null,
+        ?UploadedFile $thumbnailImage = null
     ): void {
         if (null !== $coverImage) {
             $this->categoryCoverUploader->upload($categoryId->getValue(), $coverImage);

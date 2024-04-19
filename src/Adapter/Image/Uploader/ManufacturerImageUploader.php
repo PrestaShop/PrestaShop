@@ -81,8 +81,8 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
 
         try {
             /* Generate images with different size */
-            if (count($_FILES) &&
-                file_exists(_PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')
+            if (count($_FILES)
+                && file_exists(_PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')
             ) {
                 $imageTypes = ImageType::getImagesTypes('manufacturers');
                 $configuredImageFormats = ServiceLocator::get(ImageFormatConfiguration::class)->getGenerationFormats();

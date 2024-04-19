@@ -235,9 +235,9 @@ final class ProductImportHandler extends AbstractImportHandler
         $this->fixFloatValues($product);
 
         $productExistsById = $this->entityExists($product, 'product');
-        $productExistsByReference = $importConfig->matchReferences() &&
-            $product->reference &&
-            $product->existsRefInDatabase($product->reference)
+        $productExistsByReference = $importConfig->matchReferences()
+            && $product->reference
+            && $product->existsRefInDatabase($product->reference)
         ;
 
         if ($productExistsByReference || $productExistsById) {
@@ -1073,7 +1073,7 @@ final class ProductImportHandler extends AbstractImportHandler
      */
     private function saveProductImages(Product $product, ImportConfigInterface $importConfig)
     {
-        //delete existing images if "delete_existing_images" is set to 1
+        // delete existing images if "delete_existing_images" is set to 1
         if (isset($product->delete_existing_images)) {
             if ((bool) $product->delete_existing_images) {
                 $product->deleteImages();
@@ -1252,9 +1252,9 @@ final class ProductImportHandler extends AbstractImportHandler
         }
 
         $hasAccessories =
-            isset($product->accessories) &&
-            is_array($product->accessories) &&
-            count($product->accessories)
+            isset($product->accessories)
+            && is_array($product->accessories)
+            && count($product->accessories)
         ;
 
         if ($hasAccessories) {

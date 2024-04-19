@@ -66,7 +66,7 @@ class QueryProvider implements ProviderInterface
      * @throws CQRSQueryNotFoundException
      * @throws ReflectionException
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|null|object
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|object|null
     {
         $CQRSQueryClass = $this->getCQRSQueryClass($operation);
         if (null === $CQRSQueryClass) {

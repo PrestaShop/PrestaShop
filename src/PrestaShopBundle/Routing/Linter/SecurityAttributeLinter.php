@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Routing\Linter;
 
 use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use ReflectionException;
 use ReflectionMethod;
 use Symfony\Component\Routing\Route;
 
@@ -41,7 +42,7 @@ final class SecurityAttributeLinter implements RouteLinterInterface
      *
      * @return AdminSecurity[]
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws LinterException
      */
     public function getRouteSecurityAttributes(Route $route)

@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Configuration;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -54,7 +55,7 @@ trait MockConfigurationTrait
                         return $configurationValues[$configurationName];
                     }
 
-                    throw new \InvalidArgumentException('Unhandled configuration ' . $configurationName);
+                    throw new InvalidArgumentException('Unhandled configuration ' . $configurationName);
                 }))
             ;
         }

@@ -120,6 +120,7 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @depends testIsFloat
+     *
      * @dataProvider isOptFloatDataProvider
      */
     public function testIsOptFloat($expected, $input)

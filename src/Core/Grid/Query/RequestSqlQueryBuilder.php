@@ -58,7 +58,7 @@ final class RequestSqlQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null): QueryBuilder
+    public function getSearchQueryBuilder(?SearchCriteriaInterface $searchCriteria = null): QueryBuilder
     {
         $searchQueryBuilder = $this->buildQueryBySearchCriteria($searchCriteria);
 
@@ -72,7 +72,7 @@ final class RequestSqlQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getCountQueryBuilder(?SearchCriteriaInterface $searchCriteria = null)
     {
         $countQueryBuilder = $this->buildQueryBySearchCriteria($searchCriteria);
         $countQueryBuilder->select('COUNT(rs.id_request_sql)');

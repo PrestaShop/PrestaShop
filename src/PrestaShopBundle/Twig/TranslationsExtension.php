@@ -424,9 +424,9 @@ class TranslationsExtension extends AbstractExtension
             $totalTranslations = count(array_values($subtree['__messages'])[0]);
             $totalTranslationsAttribute = ' data-total-translations="' . $this->translator->trans(
                 '%nb_translations% expressions',
-                    ['%nb_translations%' => $totalTranslations],
-                    'Admin.International.Feature'
-                ) . '"';
+                ['%nb_translations%' => $totalTranslations],
+                'Admin.International.Feature'
+            ) . '"';
         }
 
         $missingTranslationsAttribute = '';

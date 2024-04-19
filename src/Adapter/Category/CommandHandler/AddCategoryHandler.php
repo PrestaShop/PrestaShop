@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 
 /**
  * Adds new category using legacy object model.
@@ -69,8 +71,8 @@ final class AddCategoryHandler extends AbstractEditCategoryHandler implements Ad
      * @return Category
      *
      * @throws CannotAddCategoryException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function createCategoryFromCommand(AddCategoryCommand $command)
     {

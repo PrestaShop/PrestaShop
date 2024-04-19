@@ -32,6 +32,7 @@ use PrestaShopBundle\Security\Attribute\AdminSecurity as AdminSecurityAttribute;
  * Annotation based on the AdminSecurity attribute
  *
  * @deprecated
+ *
  * @Annotation
  */
 class AdminSecurity extends AdminSecurityAttribute

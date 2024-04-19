@@ -31,7 +31,7 @@ use Cart;
 use Db;
 use DbQuery;
 use Order;
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CountryStateByIdChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ManufacturerNameByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AbstractEditAddressCommand;
@@ -546,7 +546,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         try {
             /* @var EditableManufacturerAddress $editableManufacturerAddress */
             $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
-            throw new \RuntimeException(sprintf('Manufacturer address "%s" should not be found', $addressReference));
+            throw new RuntimeException(sprintf('Manufacturer address "%s" should not be found', $addressReference));
         } catch (AddressNotFoundException $exception) {
         }
     }

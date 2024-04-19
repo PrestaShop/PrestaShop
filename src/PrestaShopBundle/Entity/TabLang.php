@@ -32,20 +32,25 @@ use Doctrine\ORM\Mapping as ORM;
  * TabLang.
  *
  * @ORM\Table()
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TabLangRepository")
  */
 class TabLang
 {
     /**
      * @ORM\Id
+     *
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Tab", inversedBy="tabLangs")
+     *
      * @ORM\JoinColumn(name="id_tab", referencedColumnName="id_tab", nullable=false)
      */
     private $id;
 
     /**
      * @ORM\Id
+     *
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Lang")
+     *
      * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false, onDelete="CASCADE")
      */
     private $lang;
@@ -94,7 +99,7 @@ class TabLang
     /**
      * Set lang.
      *
-     * @param \PrestaShopBundle\Entity\Lang $lang
+     * @param Lang $lang
      *
      * @return TabLang
      */
@@ -108,7 +113,7 @@ class TabLang
     /**
      * Get lang.
      *
-     * @return \PrestaShopBundle\Entity\Lang
+     * @return Lang
      */
     public function getLang()
     {

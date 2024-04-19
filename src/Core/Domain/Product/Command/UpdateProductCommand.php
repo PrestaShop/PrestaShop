@@ -711,9 +711,9 @@ class UpdateProductCommand
     /**
      * @param int $manufacturerId
      *
-     * @throws ManufacturerConstraintException
-     *
      * @return self
+     *
+     * @throws ManufacturerConstraintException
      */
     public function setManufacturerId(int $manufacturerId): self
     {

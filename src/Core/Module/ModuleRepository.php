@@ -306,7 +306,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         try {
             $externalModules = $this->getModulesFromHook();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $modules->addError($e);
 
             return $modules;
@@ -337,7 +337,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         try {
             $modulesFromHook = $this->getModulesFromHook();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $module;
         }
 

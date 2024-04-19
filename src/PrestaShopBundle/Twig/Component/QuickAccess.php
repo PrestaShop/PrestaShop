@@ -39,7 +39,7 @@ class QuickAccess
     /**
      * List of Quick Accesses to display
      */
-    protected array|null $quickAccesses = null;
+    protected ?array $quickAccesses = null;
 
     /**
      * Active Quick access based on current request uri

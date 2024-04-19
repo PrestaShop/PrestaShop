@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\DeleteAttributeCommand;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\Attribu
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query\GetAttributeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult\EditableAttribute;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 
 class AttributeFeatureContext extends AbstractDomainFeatureContext
@@ -59,7 +61,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
             );
 
             $this->getSharedStorage()->set($reference, $attributeId->getValue());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->setLastException($e);
         }
     }
@@ -72,7 +74,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         $errorCode = match ($fieldName) {
             'color' => AttributeConstraintException::INVALID_COLOR,
             'name' => AttributeConstraintException::INVALID_NAME,
-            default => throw new \RuntimeException('Unknown field ' . $fieldName),
+            default => throw new RuntimeException('Unknown field ' . $fieldName),
         };
 
         $this->assertLastErrorIs(

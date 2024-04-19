@@ -523,7 +523,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array{type: string, target: null|array}
+     * @return array{type: string, target: array|null}
      */
     private function extractRedirectOptionData(ProductForEditing $productForEditing): array
     {

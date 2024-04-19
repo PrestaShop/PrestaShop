@@ -544,7 +544,7 @@ class OrderCore extends ObjectModel
             FROM `' . _DB_PREFIX_ . 'orders` o
             LEFT JOIN `' . _DB_PREFIX_ . 'order_history` oh ON o.`id_order` = oh.`id_order`
             LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON os.`id_order_state` = oh.`id_order_state`
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) ($id_lang) . ')
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $id_lang . ')
             LEFT JOIN `' . _DB_PREFIX_ . 'employee` e ON e.`id_employee` = oh.`id_employee`
             LEFT JOIN `' . _DB_PREFIX_ . 'mutation` m ON m.`mutation_table` = "order_history" AND m.`mutation_row_id` = oh.`id_order_history` AND m.`mutator_type` = "' . MutatorType::API_CLIENT->value . '"
             LEFT JOIN `' . _DB_PREFIX_ . 'api_client` a ON m.`mutator_identifier` = a.`id_api_client`
@@ -954,7 +954,7 @@ class OrderCore extends ObjectModel
      *
      * @return array Customer orders
      */
-    public static function getCustomerOrders($id_customer, $show_hidden_status = false, Context $context = null)
+    public static function getCustomerOrders($id_customer, $show_hidden_status = false, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1013,7 +1013,7 @@ class OrderCore extends ObjectModel
         return $orders;
     }
 
-    public static function getOrdersWithInformations($limit = null, Context $context = null)
+    public static function getOrdersWithInformations($limit = null, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1806,7 +1806,7 @@ class OrderCore extends ObjectModel
         $currency = null,
         $date = null,
         $order_invoice = null,
-        int $id_employee = null
+        ?int $id_employee = null
     ) {
         $order_payment = new OrderPayment();
         $order_payment->order_reference = $this->reference;
@@ -2661,7 +2661,7 @@ class OrderCore extends ObjectModel
         // assign id_carrier
         $new_cart->id_carrier = (int) $this->id_carrier;
 
-        //remove all products : cart (maybe change in the meantime)
+        // remove all products : cart (maybe change in the meantime)
         foreach ($new_cart->getProducts() as $product) {
             $new_cart->deleteProduct((int) $product['id_product'], (int) $product['id_product_attribute']);
         }

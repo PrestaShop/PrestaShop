@@ -64,6 +64,6 @@ class VirtualProductFileValidatorTest extends TestCase
     public function getInvalidPaths(): Generator
     {
         yield [__DIR__];
-        yield [__DIR__ . '/' . 'notexistingfile.csv'];
+        yield [__DIR__ . '/notexistingfile.csv'];
     }
 }

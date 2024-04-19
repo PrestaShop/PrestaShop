@@ -147,7 +147,7 @@ class DbPDOCore extends Db
     {
         try {
             return $this->link->query($sql);
-        } catch (\PDOException $exception) {
+        } catch (PDOException $exception) {
             throw new PrestaShopException($exception->getMessage(), (int) $exception->getCode(), $exception);
         }
     }

@@ -35,6 +35,7 @@ use CartRule;
 use Configuration;
 use Context;
 use Currency;
+use DateTime;
 use Db;
 use Exception;
 use Group;
@@ -213,7 +214,7 @@ class CartTest extends TestCase
      * null $shippingCost is interpreted as free shipping
      * Carriers are cached by $name.
      */
-    private static function getIdCarrier(string $name, int $shippingCost = null, int $id_tax_rules_group = null): int
+    private static function getIdCarrier(string $name, ?int $shippingCost = null, ?int $id_tax_rules_group = null): int
     {
         static $carriers = [];
 
@@ -274,8 +275,8 @@ class CartTest extends TestCase
 
         $cartRule->name = $amount . ' ' . $type . ' Cart Rule';
 
-        $date_from = new \DateTime();
-        $date_to = new \DateTime();
+        $date_from = new DateTime();
+        $date_to = new DateTime();
 
         $date_from->modify('-2 days');
         $date_to->modify('+2 days');

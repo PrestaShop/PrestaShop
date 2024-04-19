@@ -232,7 +232,7 @@ class StockMvtWSCore extends ObjectModelCore
         parent::__construct($id, $id_lang, $id_shop);
 
         if ((int) $this->id != 0) {
-            $res = $this->getWebserviceObjectList('', (' AND ' . $this->def['primary'] . ' = ' . (int) $this->id), '', '', true);
+            $res = $this->getWebserviceObjectList('', ' AND ' . $this->def['primary'] . ' = ' . (int) $this->id, '', '', true);
             if (isset($res[0])) {
                 foreach ($this->tables_assoc as $key => $param) {
                     $this->{$key} = $res[0][$key];

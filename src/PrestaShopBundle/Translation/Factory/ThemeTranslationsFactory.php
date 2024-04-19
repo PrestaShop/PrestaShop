@@ -91,9 +91,9 @@ class ThemeTranslationsFactory extends TranslationsFactory
      * @param string $locale the catalogue locale
      * @param string|null $search
      *
-     * @throws ProviderNotFoundException
-     *
      * @return array
+     *
+     * @throws ProviderNotFoundException
      */
     protected function getFrontTranslationsForThemeAndLocale($themeName, $locale, $search = null)
     {

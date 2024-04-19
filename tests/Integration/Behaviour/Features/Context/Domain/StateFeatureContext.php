@@ -257,6 +257,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Given /^state "(.*)" is (enabled|disabled)?$/
+     *
      * @Then /^state "(.*)" should be (enabled|disabled)?$/
      *
      * @param string $stateReference

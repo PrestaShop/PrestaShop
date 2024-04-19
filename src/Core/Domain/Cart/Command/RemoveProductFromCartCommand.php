@@ -66,8 +66,8 @@ class RemoveProductFromCartCommand
     public function __construct(
         int $cartId,
         int $productId,
-        int $combinationId = null,
-        int $customizationId = null
+        ?int $combinationId = null,
+        ?int $customizationId = null
     ) {
         $this->cartId = new CartId($cartId);
         $this->productId = new ProductId($productId);

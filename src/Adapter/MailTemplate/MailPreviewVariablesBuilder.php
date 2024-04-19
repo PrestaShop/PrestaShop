@@ -37,7 +37,9 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
+use PrestaShopException;
 use Product;
+use SmartyException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 
@@ -111,14 +113,14 @@ final class MailPreviewVariablesBuilder
      *
      * @return array
      *
-     * @throws \SmartyException
+     * @throws SmartyException
      */
     public function buildTemplateVariables(LayoutInterface $mailLayout)
     {
         $imageDir = $this->configuration->get('_PS_IMG_DIR_');
         $baseUrl = $this->context->link->getBaseLink();
 
-        //Logo url
+        // Logo url
         $logoMail = $this->configuration->get('PS_LOGO_MAIL');
         $logo = $this->configuration->get('PS_LOGO');
         if (!empty($logoMail) && file_exists($imageDir . $logoMail)) {
@@ -163,9 +165,9 @@ final class MailPreviewVariablesBuilder
     /**
      * @return array
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
-     * @throws \SmartyException
+     * @throws SmartyException
      */
     private function buildOrderVariables(LayoutInterface $mailLayout)
     {
@@ -250,7 +252,7 @@ final class MailPreviewVariablesBuilder
      *
      * @return string
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     private function getNewOrderItems(Order $order)
@@ -301,7 +303,7 @@ final class MailPreviewVariablesBuilder
 					<td style="padding:0.6em 0.4em; text-align:right;">' . $this->locale->formatPrice($unitPrice, $this->context->currency->iso_code) . '</td>
 					<td style="padding:0.6em 0.4em; text-align:center;">' . (int) $product['product_quantity'] . '</td>
 					<td style="padding:0.6em 0.4em; text-align:right;">'
-                . $this->locale->formatPrice(($unitPrice * $product['product_quantity']), $this->context->currency->iso_code)
+                . $this->locale->formatPrice($unitPrice * $product['product_quantity'], $this->context->currency->iso_code)
                 . '</td>
 				</tr>';
         }
@@ -321,7 +323,7 @@ final class MailPreviewVariablesBuilder
      *
      * @return string
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     private function getReturnSlipItems(Order $order)
     {
@@ -358,8 +360,8 @@ final class MailPreviewVariablesBuilder
 
         $productTemplateList = [];
         foreach ($productList as $product) {
-            $price = Product::getPriceStatic((int) $product['id_product'], false, ($product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
-            $priceWithTax = Product::getPriceStatic((int) $product['id_product'], true, ($product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
+            $price = Product::getPriceStatic((int) $product['id_product'], false, $product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null, 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
+            $priceWithTax = Product::getPriceStatic((int) $product['id_product'], true, $product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null, 2, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
 
             $productPrice = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $priceWithTax;
 

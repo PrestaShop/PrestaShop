@@ -283,7 +283,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
                 $regenThumbnailsForm->get('image')->getData(),
                 $regenThumbnailsForm->get('image-type')->getData(),
                 $regenThumbnailsForm->get('erase-previous-images')->getData()
-             ));
+            ));
             $this->addFlash('success', $this->trans('The thumbnails were successfully regenerated.', 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $e->getMessage());

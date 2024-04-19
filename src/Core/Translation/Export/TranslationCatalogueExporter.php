@@ -170,7 +170,7 @@ class TranslationCatalogueExporter
 
             if (
                 null === $selection['selected']
-                && (in_array($selection['type'], [ProviderDefinitionInterface::TYPE_MODULES, ProviderDefinitionInterface::TYPE_THEMES], true))
+                && in_array($selection['type'], [ProviderDefinitionInterface::TYPE_MODULES, ProviderDefinitionInterface::TYPE_THEMES], true)
             ) {
                 throw new Exception(sprintf('Selected value cannot be null for type %s.', $selection['type']));
             }

@@ -102,13 +102,13 @@ class GeneralConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration)
     {
         $isValid = isset(
-                $configuration['check_ip_address'],
-                $configuration['front_cookie_lifetime'],
-                $configuration['back_cookie_lifetime']
-            ) && in_array(
-                $configuration['cookie_samesite'],
-                CookieOptions::SAMESITE_AVAILABLE_VALUES
-            );
+            $configuration['check_ip_address'],
+            $configuration['front_cookie_lifetime'],
+            $configuration['back_cookie_lifetime']
+        ) && in_array(
+            $configuration['cookie_samesite'],
+            CookieOptions::SAMESITE_AVAILABLE_VALUES
+        );
 
         return (bool) $isValid;
     }

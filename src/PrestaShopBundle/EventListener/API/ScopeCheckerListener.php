@@ -49,7 +49,7 @@ class ScopeCheckerListener
     use OperationRequestInitiatorTrait;
 
     public function __construct(
-        ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory = null,
+        ?ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory = null,
         private readonly Security $security,
     ) {
         $this->resourceMetadataCollectionFactory = $resourceMetadataCollectionFactory;

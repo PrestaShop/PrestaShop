@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
+use Context;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\EntityTranslatorFactory;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\CoreDomainProviderDefinition;
@@ -41,6 +42,8 @@ use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\TranslatorInterface;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -279,9 +282,9 @@ class TranslationController extends ApiController
 
         $decodedContent = $this->guardAgainstInvalidJsonBody($content);
 
-        if (empty($decodedContent) ||
-            !array_key_exists('translations', $decodedContent) ||
-            !is_array($decodedContent['translations'])
+        if (empty($decodedContent)
+            || !array_key_exists('translations', $decodedContent)
+            || !is_array($decodedContent['translations'])
         ) {
             $message = 'The request body should contain a JSON-encoded array of translations';
 
@@ -301,10 +304,10 @@ class TranslationController extends ApiController
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
-            if (!array_key_exists('locale', $item) ||
-                !array_key_exists('domain', $item) ||
-                !array_key_exists('default', $item) ||
-                !array_key_exists('edited', $item)
+            if (!array_key_exists('locale', $item)
+                || !array_key_exists('domain', $item)
+                || !array_key_exists('default', $item)
+                || !array_key_exists('edited', $item)
             ) {
                 throw new BadRequestHttpException(sprintf($message, $index));
             }
@@ -321,9 +324,9 @@ class TranslationController extends ApiController
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
-            if (!array_key_exists('locale', $item) ||
-                !array_key_exists('domain', $item) ||
-                !array_key_exists('default', $item)
+            if (!array_key_exists('locale', $item)
+                || !array_key_exists('domain', $item)
+                || !array_key_exists('default', $item)
             ) {
                 throw new BadRequestHttpException(sprintf($message, $index));
             }
@@ -336,8 +339,8 @@ class TranslationController extends ApiController
      * @param string[] $modifiedDomains List of modified domains
      * @param Lang $lang
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function translateMultilingualContent(array $modifiedDomains, Lang $lang)
     {
@@ -348,7 +351,7 @@ class TranslationController extends ApiController
             // update menu items (tabs)
             (new EntityTranslatorFactory($this->translator))
                 ->buildFromTableName('tab', $lang->getLocale())
-                ->translate($lang->getId(), \Context::getContext()->shop->id);
+                ->translate($lang->getId(), Context::getContext()->shop->id);
         }
     }
 

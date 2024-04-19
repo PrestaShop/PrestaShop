@@ -253,8 +253,8 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
             if ($product['customizedDatas']) {
                 foreach ($product['customizedDatas'] as $customizationPerAddress) {
                     foreach ($customizationPerAddress as $customization) {
-                        if (((int) $customization['id_customization'] !== (int) $product['id_customization']) &&
-                            count($customizationPerAddress) === 1
+                        if (((int) $customization['id_customization'] !== (int) $product['id_customization'])
+                            && count($customizationPerAddress) === 1
                         ) {
                             continue;
                         }

@@ -29,11 +29,13 @@ namespace PrestaShopBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 
 /**
  * AttributeGroup.
  *
  * @ORM\Table()
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeGroupRepository")
  */
 class AttributeGroup
@@ -42,7 +44,9 @@ class AttributeGroup
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_attribute_group", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -77,6 +81,7 @@ class AttributeGroup
 
     /**
      * @ORM\ManyToMany(targetEntity="PrestaShopBundle\Entity\Shop", cascade={"persist"})
+     *
      * @ORM\JoinTable(
      *      joinColumns={@ORM\JoinColumn(name="id_attribute_group", referencedColumnName="id_attribute_group")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", onDelete="CASCADE")}
@@ -148,7 +153,7 @@ class AttributeGroup
     public function setGroupType($groupType)
     {
         if (!in_array($groupType, $this->groupTypeAvailable)) {
-            throw new \InvalidArgumentException('Invalid group type');
+            throw new InvalidArgumentException('Invalid group type');
         }
 
         $this->groupType = $groupType;
@@ -201,7 +206,7 @@ class AttributeGroup
     /**
      * Add shop.
      *
-     * @param \PrestaShopBundle\Entity\Shop $shop
+     * @param Shop $shop
      *
      * @return AttributeGroup
      */
@@ -215,7 +220,7 @@ class AttributeGroup
     /**
      * Remove shop.
      *
-     * @param \PrestaShopBundle\Entity\Shop $shop
+     * @param Shop $shop
      */
     public function removeShop(Shop $shop)
     {
@@ -225,7 +230,7 @@ class AttributeGroup
     /**
      * Get shops.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getShops()
     {

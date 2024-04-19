@@ -164,7 +164,7 @@ class CurrencyType extends TranslatorAwareType
             ->add('iso_code', TextType::class, [
                 'attr' => $isoCodeAttrs,
                 'label' => $this->trans(
-                  'ISO code',
+                    'ISO code',
                     'Admin.International.Feature'
                 ),
                 'help' => $this->trans(

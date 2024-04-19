@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Translation\Extractor;
 
 use Exception;
+use LogicException;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\SmartyExtractor;
@@ -135,7 +136,7 @@ class ThemeExtractor
             }
         }
 
-        throw new \LogicException(sprintf('The format %s is not supported.', $this->format));
+        throw new LogicException(sprintf('The format %s is not supported.', $this->format));
     }
 
     /**

@@ -59,7 +59,7 @@ class RadioWithChoiceChildrenType extends AbstractType
                 ],
                 'choices' => $childChoice['choices'],
                 'choice_attr' => $childChoiceAttr,
-                'expanded' => $childChoice['multiple'], //same value as multiple. We can only have Select or Checkboxes
+                'expanded' => $childChoice['multiple'], // same value as multiple. We can only have Select or Checkboxes
                 'multiple' => $childChoice['multiple'],
             ]);
         }

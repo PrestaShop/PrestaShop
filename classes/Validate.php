@@ -99,7 +99,7 @@ class ValidateCore
         } elseif (substr($url, -4) != '.tar' && substr($url, -4) != '.zip' && substr($url, -4) != '.tgz' && substr($url, -7) != '.tar.gz') {
             $errors[] = Context::getContext()->getTranslator()->trans('Unknown archive type.', [], 'Admin.Modules.Notification');
         } else {
-            if ((strpos($url, 'http')) === false) {
+            if (strpos($url, 'http') === false) {
                 $url = 'http://' . $url;
             }
             if (!is_array(@get_headers($url))) {
@@ -677,10 +677,10 @@ class ValidateCore
         if (!empty(DateTime::getLastErrors()['warning_count']) || false === $d) {
             return false;
         }
-        $twoHundredYearsAgo = new Datetime();
+        $twoHundredYearsAgo = new DateTime();
         $twoHundredYearsAgo->sub(new DateInterval('P200Y'));
 
-        return $d->setTime(0, 0, 0) <= new Datetime() && $d->setTime(0, 0, 0) >= $twoHundredYearsAgo;
+        return $d->setTime(0, 0, 0) <= new DateTime() && $d->setTime(0, 0, 0) >= $twoHundredYearsAgo;
     }
 
     /**
@@ -1291,7 +1291,7 @@ class ValidateCore
         }
         $sum = 0;
         for ($i = 0; $i != 14; ++$i) {
-            $tmp = ((($i + 1) % 2) + 1) * (int) ($siret[$i]);
+            $tmp = ((($i + 1) % 2) + 1) * (int) $siret[$i];
             if ($tmp >= 10) {
                 $tmp -= 9;
             }

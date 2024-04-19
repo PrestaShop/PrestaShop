@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
+use ReflectionException;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
@@ -115,8 +116,8 @@ class ProductLazyArray extends AbstractLazyArray
         PriceFormatter $priceFormatter,
         ProductColorsRetriever $productColorsRetriever,
         TranslatorInterface $translator,
-        HookManager $hookManager = null,
-        Configuration $configuration = null
+        ?HookManager $hookManager = null,
+        ?Configuration $configuration = null
     ) {
         $this->settings = $settings;
         $this->product = $product;
@@ -345,7 +346,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return array
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getAttachments()
     {
@@ -980,7 +981,7 @@ class ProductLazyArray extends AbstractLazyArray
             return false;
         }
 
-        if (($product['customizable'] == ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION || !empty($product['customization_required']))) {
+        if ($product['customizable'] == ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION || !empty($product['customization_required'])) {
             $shouldEnable = false;
 
             if (isset($product['customizations'])) {
@@ -1134,7 +1135,7 @@ class ProductLazyArray extends AbstractLazyArray
                 }
             }
 
-            // Case 2 - Product not in stock, available for order
+        // Case 2 - Product not in stock, available for order
         } elseif ($product['allow_oosp']) {
             $this->product['availability_date'] = $product['available_date'];
             $this->product['availability'] = 'available';
@@ -1149,7 +1150,7 @@ class ProductLazyArray extends AbstractLazyArray
                 $this->product['availability_message'] = $config[$language->id] ?? null;
             }
 
-            // Case 3 - OOSP disabled and customer wants to add more items to cart than are in stock
+        // Case 3 - OOSP disabled and customer wants to add more items to cart than are in stock
         } elseif ($product['quantity'] > 0) {
             $this->product['availability_date'] = $product['available_date'];
             $this->product['availability'] = 'unavailable';

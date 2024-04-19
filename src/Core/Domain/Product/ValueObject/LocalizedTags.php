@@ -94,7 +94,7 @@ class LocalizedTags
         $this->tags = [];
 
         foreach ($tags as $tag) {
-            //skip empty value
+            // skip empty value
             if (empty($tag)) {
                 continue;
             }

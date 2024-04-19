@@ -46,7 +46,7 @@ class MissingZoneRequiredFieldsException extends ZoneException
      * @param int $code
      * @param Throwable|null $previous
      */
-    public function __construct(array $missingRequiredFields, $message = '', $code = 0, Throwable $previous = null)
+    public function __construct(array $missingRequiredFields, $message = '', $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->missingRequiredFields = $missingRequiredFields;

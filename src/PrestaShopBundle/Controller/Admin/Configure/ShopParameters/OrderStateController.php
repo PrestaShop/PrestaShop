@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\BulkDeleteOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\DeleteOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateException;
@@ -524,7 +525,7 @@ class OrderStateController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages(\Exception $e)
+    private function getErrorMessages(Exception $e)
     {
         return [
             OrderStateNotFoundException::class => $this->trans(

@@ -184,7 +184,7 @@ class ModuleManagerBuilder
     /**
      * Returns an instance of \Symfony\Component\Routing\Router from Symfony scope into Legacy.
      *
-     * @return \Symfony\Component\Routing\Router
+     * @return Router
      */
     private function getSymfonyRouter()
     {

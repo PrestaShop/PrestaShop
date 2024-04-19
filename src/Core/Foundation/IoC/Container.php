@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\IoC;
 
 use ReflectionClass;
+use ReflectionException;
 use ReflectionNamedType;
 
 class Container
@@ -91,7 +92,7 @@ class Container
 
         try {
             $refl = new ReflectionClass($className);
-        } catch (\ReflectionException $re) {
+        } catch (ReflectionException $re) {
             throw new Exception(sprintf('This doesn\'t seem to be a class name: `%s`.', $className));
         }
 

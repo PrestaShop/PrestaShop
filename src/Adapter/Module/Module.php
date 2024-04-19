@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Exception;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
@@ -55,21 +56,21 @@ class Module implements ModuleInterface
     /**
      * Module attributes (name, displayName etc.).
      *
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
+     * @var ParameterBag
      */
     public $attributes;
 
     /**
      * Module attributes from disk.
      *
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
+     * @var ParameterBag
      */
     public $disk;
 
     /**
      * Module attributes from database.
      *
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
+     * @var ParameterBag
      */
     public $database;
 
@@ -206,7 +207,7 @@ class Module implements ModuleInterface
             // We try to instantiate the legacy class if not done yet
             try {
                 $this->instanciateLegacyModule();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->disk->set('is_valid', false);
 
                 return false;

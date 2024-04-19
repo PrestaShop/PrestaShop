@@ -182,7 +182,7 @@ class ImageManagerCore
      * @param int $sourceWidth Needed by AdminImportController to speed up the import process
      * @param int $sourceHeight Needed by AdminImportController to speed up the import process
      *
-     *@return bool Operation result
+     * @return bool Operation result
      */
     public static function resize(
         $sourceFile,
@@ -703,7 +703,7 @@ class ImageManagerCore
             default:
                 $quality = ($psJpegQuality === false ? 90 : $psJpegQuality);
                 // @phpstan-ignore-next-line
-                imageinterlace($resource, true); /// make it PROGRESSIVE
+                imageinterlace($resource, true); // / make it PROGRESSIVE
                 // @phpstan-ignore-next-line
                 $success = imagejpeg($resource, $filename, (int) $quality);
 

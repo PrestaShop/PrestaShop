@@ -33,6 +33,7 @@ use Currency;
 use DummyAdminController;
 use Employee;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
+use RuntimeException;
 use Shop;
 
 /**
@@ -97,7 +98,7 @@ class LegacyContextLoader
         }
 
         if (!class_exists($controllerClassName)) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Cannot load controller context for classname %s',
                     $controllerClassName

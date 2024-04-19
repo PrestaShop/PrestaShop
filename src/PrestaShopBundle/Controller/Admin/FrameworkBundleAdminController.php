@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Context;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
+use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Help\Documentation;
@@ -290,14 +292,14 @@ class FrameworkBundleAdminController extends AbstractController
             'title' => $title,
         ]);
 
-        //this line is allow to revert a new behaviour introduce in sf 5.4 which break the result we used to have
+        // this line is allow to revert a new behaviour introduce in sf 5.4 which break the result we used to have
         return strtr($url, ['%2F' => '%252F']);
     }
 
     /**
      * Get the old but still useful context.
      *
-     * @return \Context
+     * @return Context
      */
     protected function getContext()
     {
@@ -368,7 +370,7 @@ class FrameworkBundleAdminController extends AbstractController
      *
      * @return int
      *
-     * @throws \LogicException
+     * @throws LogicException
      */
     protected function authorizationLevel($controller)
     {
@@ -410,7 +412,7 @@ class FrameworkBundleAdminController extends AbstractController
      *
      * @param array $errorMessages
      *
-     * @throws \LogicException
+     * @throws LogicException
      */
     protected function flashErrors(array $errorMessages)
     {
@@ -442,19 +444,19 @@ class FrameworkBundleAdminController extends AbstractController
      *
      * @return bool
      *
-     * @throws \LogicException
+     * @throws LogicException
      */
     protected function actionIsAllowed($action, $object = '', $suffix = '')
     {
         return (
-                $action === 'delete' . $suffix && $this->isGranted(Permission::DELETE, $object)
-            ) || (
-                ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
-                $this->isGranted(Permission::UPDATE, $object)
-            ) || (
-                ($action === 'duplicate' . $suffix) &&
-                ($this->isGranted(Permission::UPDATE, $object) || $this->isGranted(Permission::CREATE, $object))
-            );
+            $action === 'delete' . $suffix && $this->isGranted(Permission::DELETE, $object)
+        ) || (
+            ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix)
+            && $this->isGranted(Permission::UPDATE, $object)
+        ) || (
+            ($action === 'duplicate' . $suffix)
+            && ($this->isGranted(Permission::UPDATE, $object) || $this->isGranted(Permission::CREATE, $object))
+        );
     }
 
     /**

@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Exception;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Tests\Integration\Utility\ContextMocker;
 
@@ -63,7 +64,7 @@ class ContextFeatureContext extends AbstractPrestaShopFeatureContext
     public function resetContext()
     {
         if (empty($this->contextMocker)) {
-            throw new \Exception('Context was not mocked');
+            throw new Exception('Context was not mocked');
         }
         $this->contextMocker->resetContext();
     }

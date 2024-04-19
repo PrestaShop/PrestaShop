@@ -184,7 +184,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'maintenance_allow_admins' => (bool) Configuration::get('PS_MAINTENANCE_ALLOW_ADMINS'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'headerTabContent' => $this->headerTabContent,
-            'content' => '{$content}', //replace content by original smarty tag var
+            'content' => '{$content}', // replace content by original smarty tag var
             'enableSidebar' => $this->enableSidebar,
             'lite_display' => $this->lite_display,
             'url_post' => self::$currentIndex . '&token=' . $this->token,

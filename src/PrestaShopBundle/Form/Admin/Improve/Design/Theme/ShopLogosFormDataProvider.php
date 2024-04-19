@@ -119,8 +119,8 @@ final class ShopLogosFormDataProvider implements FormDataProviderInterface
         $shopRestrictionFields = $shopRestriction->getShopRestrictionFields();
 
         foreach ($shopRestrictionFields as $shopRestrictionField) {
-            $doesValueExistsAndNotRestrictedToShop = isset($data[$shopRestrictionField->getFieldName()]) &&
-                !$shopRestrictionField->isRestrictedToContextShop();
+            $doesValueExistsAndNotRestrictedToShop = isset($data[$shopRestrictionField->getFieldName()])
+                && !$shopRestrictionField->isRestrictedToContextShop();
 
             if ($doesValueExistsAndNotRestrictedToShop) {
                 unset($data[$shopRestrictionField->getFieldName()]);

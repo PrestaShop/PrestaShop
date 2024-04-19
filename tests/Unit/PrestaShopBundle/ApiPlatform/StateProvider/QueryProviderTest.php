@@ -30,6 +30,7 @@ namespace Tests\Unit\PrestaShopBundle\ApiPlatform\StateProvider;
 
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\FoundProduct as FoundProductDto;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\Hook;
@@ -74,7 +75,7 @@ class QueryProviderTest extends TestCase
      */
     public function setUp(): void
     {
-        $denormalizers = new \ArrayIterator([new DecimalNumberNormalizer(), new CQRSApiNormalizer()]);
+        $denormalizers = new ArrayIterator([new DecimalNumberNormalizer(), new CQRSApiNormalizer()]);
         $this->serializer = new DomainSerializer($denormalizers);
         $this->queryBus = $this->createMock(CommandBusInterface::class);
         $this->queryBus

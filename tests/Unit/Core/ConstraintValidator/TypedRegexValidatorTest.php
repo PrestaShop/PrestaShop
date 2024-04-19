@@ -450,7 +450,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
             'onmousedown', 'onmousemove', 'onmmouseup', 'onmouseover', 'onmouseout', 'onload', 'onunload', 'onfocus',
             'onblur', 'onchange', 'onsubmit', 'ondblclick', 'onclick', 'onkeydown', 'onkeyup', 'onkeypress', 'onmouseenter',
             'onmouseleave', 'onerror', 'onselect', 'onreset', 'onabort', 'ondragdrop', 'onresize', 'onactivate', 'onafterprint',
-            'onmoveend', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy' . 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus',
+            'onmoveend', 'onafterupdate', 'onbeforeactivate', 'onbeforecopyonbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus',
             'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onmove', 'onbounce', 'oncellchange',
             'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete',
             'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'onmousewheel', 'ondragleave', 'ondragover', 'ondragstart',
@@ -876,10 +876,10 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         $configurationMock = $this->createMock(ConfigurationInterface::class);
         $configurationMock->method('get')
             ->willReturnMap(
-            [
-                ['PS_ALLOW_ACCENTED_CHARS_URL', $this->configurationData['PS_ALLOW_ACCENTED_CHARS_URL']],
-            ]
-        );
+                [
+                    ['PS_ALLOW_ACCENTED_CHARS_URL', $this->configurationData['PS_ALLOW_ACCENTED_CHARS_URL']],
+                ]
+            );
 
         return new TypedRegexValidator($configurationMock);
     }

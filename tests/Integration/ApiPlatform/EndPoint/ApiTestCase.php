@@ -161,7 +161,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         return $commandBus->handle($command)->getValue();
     }
 
-    protected static function addShopGroup(string $groupName, string $color = null): int
+    protected static function addShopGroup(string $groupName, ?string $color = null): int
     {
         $shopGroup = new ShopGroup();
         $shopGroup->name = $groupName;
@@ -178,7 +178,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         return (int) $shopGroup->id;
     }
 
-    protected static function addShop(string $shopName, int $shopGroupId, string $color = null): int
+    protected static function addShop(string $shopName, int $shopGroupId, ?string $color = null): int
     {
         $shop = new Shop();
         $shop->active = true;

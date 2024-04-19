@@ -56,7 +56,7 @@ class OrderSlipControllerCore extends FrontController
     public function getTemplateVarCreditSlips()
     {
         $credit_slips = [];
-        $orders_slip = OrderSlip::getOrdersSlip(((int) $this->context->cookie->id_customer));
+        $orders_slip = OrderSlip::getOrdersSlip((int) $this->context->cookie->id_customer);
 
         foreach ($orders_slip as $order_slip) {
             $order = new Order($order_slip['id_order']);

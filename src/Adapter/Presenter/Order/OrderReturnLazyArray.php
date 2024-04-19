@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShopException;
+use ReflectionException;
 use Tools;
 
 class OrderReturnLazyArray extends AbstractLazyArray
@@ -53,7 +54,7 @@ class OrderReturnLazyArray extends AbstractLazyArray
      * @param Link $link
      * @param array $orderReturn
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct($prefix, Link $link, array $orderReturn)
     {

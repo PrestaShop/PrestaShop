@@ -539,21 +539,21 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $order['id_currency'] == Currency::getDefaultCurrencyId()
                     ? Configuration::get('CONF_' . strtoupper($order['module']) . '_FIXED')
                     : Configuration::get('CONF_' . strtoupper($order['module']) . '_FIXED_FOREIGN')
-                );
+            );
 
             // Add variable fees for this order
             $var_fees = $order['total_paid_tax_incl'] * (
                 $order['id_currency'] == Currency::getDefaultCurrencyId()
                     ? Configuration::get('CONF_' . strtoupper($order['module']) . '_VAR')
                     : Configuration::get('CONF_' . strtoupper($order['module']) . '_VAR_FOREIGN')
-                ) / 100;
+            ) / 100;
 
             // Add shipping fees for this order
             $shipping_fees = $order['total_shipping_tax_excl'] * (
                 $order['id_country'] == Configuration::get('PS_COUNTRY_DEFAULT')
                     ? Configuration::get('CONF_' . strtoupper($order['carrier_reference']) . '_SHIP')
                     : Configuration::get('CONF_' . strtoupper($order['carrier_reference']) . '_SHIP_OVERSEAS')
-                ) / 100;
+            ) / 100;
 
             // Tally up these fees
             if ($granularity == 'day') {
@@ -584,12 +584,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     true,
                     date('Y-m-d', strtotime('-31 day')),
                     date('Y-m-d', strtotime('-1 day')),
-                    false /*'day'*/
+                    false /* 'day' */
                 );
                 $orders = AdminStatsController::getOrders(
                     date('Y-m-d', strtotime('-31 day')),
                     date('Y-m-d', strtotime('-1 day')),
-                    false /*'day'*/
+                    false /* 'day' */
                 );
 
                 $visits_sum = $visitors;
@@ -682,9 +682,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
             case 'disabled_products':
                 $value = round(
-                        100 * AdminStatsController::getDisabledProducts() / AdminStatsController::getTotalProducts(),
-                        2
-                    ) . '%';
+                    100 * AdminStatsController::getDisabledProducts() / AdminStatsController::getTotalProducts(),
+                    2
+                ) . '%';
                 $tooltip = $this->trans(
                     '%value% of your products are disabled and not visible to your customers',
                     ['%value%' => $value],
@@ -1028,14 +1028,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
         $render = Tools::getValue('render');
         $type = Tools::getValue('type');
         $option = Tools::getValue('option');
-        $width = (int) (Tools::getValue('width', 600));
-        $height = (int) (Tools::getValue('height', 920));
-        $start = (int) (Tools::getValue('start', 0));
-        $limit = (int) (Tools::getValue('limit', 40));
+        $width = (int) Tools::getValue('width', 600);
+        $height = (int) Tools::getValue('height', 920);
+        $start = (int) Tools::getValue('start', 0);
+        $limit = (int) Tools::getValue('limit', 40);
         $sort = Tools::getValue('sort', 0); // Should be a String. Default value is an Integer because we don't know what can be the name of the column to sort.
         $dir = Tools::getValue('dir', 0); // Should be a String : Either ASC or DESC
-        $id_employee = (int) (Tools::getValue('id_employee'));
-        $id_lang = (int) (Tools::getValue('id_lang'));
+        $id_employee = (int) Tools::getValue('id_employee');
+        $id_lang = (int) Tools::getValue('id_lang');
 
         /** @var ModuleGrid|false $grid */
         $grid = Module::getInstanceByName($module);

@@ -157,7 +157,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         CustomerDataProvider $customerDataProvider,
         GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler,
         Configuration $configuration,
-        AddressFormatterInterface $addressFormatter = null
+        ?AddressFormatterInterface $addressFormatter = null
     ) {
         $this->translator = $translator;
         $this->contextLanguageId = $contextLanguageId;
@@ -502,9 +502,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             );
         }
 
-        $canGenerateInvoice = $this->configuration->get('PS_INVOICE') &&
-            count($order->getInvoicesCollection()) &&
-            $order->invoice_number;
+        $canGenerateInvoice = $this->configuration->get('PS_INVOICE')
+            && count($order->getInvoicesCollection())
+            && $order->invoice_number;
 
         $canGenerateDeliverySlip = (bool) $order->delivery_number;
 

@@ -42,6 +42,7 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
 {
     /**
      * @BeforeScenario @restore-cart-rules-before-scenario
+     *
      * @AfterScenario @restore-cart-rules-after-scenario
      *
      * @return void

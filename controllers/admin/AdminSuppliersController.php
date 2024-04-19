@@ -138,20 +138,19 @@ class AdminSuppliersControllerCore extends AdminController
                     'col' => 4,
                     'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                 ],
-                (
-                    in_array('company', $required_fields) ?
-                    [
-                        'type' => 'text',
-                        'label' => $this->trans('Company', [], 'Admin.Global'),
-                        'name' => 'company',
-                        'display' => in_array('company', $required_fields),
-                        'required' => in_array('company', $required_fields),
-                        'maxlength' => 16,
-                        'col' => 4,
-                        'hint' => $this->trans('Company name for this supplier', [], 'Admin.Catalog.Help'),
-                    ]
-                    : null
-                ),
+
+                in_array('company', $required_fields) ?
+                [
+                    'type' => 'text',
+                    'label' => $this->trans('Company', [], 'Admin.Global'),
+                    'name' => 'company',
+                    'display' => in_array('company', $required_fields),
+                    'required' => in_array('company', $required_fields),
+                    'maxlength' => 16,
+                    'col' => 4,
+                    'hint' => $this->trans('Company name for this supplier', [], 'Admin.Catalog.Help'),
+                ]
+                : null,
                 [
                     'type' => 'textarea',
                     'label' => $this->trans('Description', [], 'Admin.Global'),
@@ -161,7 +160,7 @@ class AdminSuppliersControllerCore extends AdminController
                         $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                         $this->trans('Will appear in the list of suppliers.', [], 'Admin.Catalog.Help'),
                     ],
-                    'autoload_rte' => 'rte', //Enable TinyMCE editor for short description
+                    'autoload_rte' => 'rte', // Enable TinyMCE editor for short description
                 ],
                 [
                     'type' => 'text',
@@ -468,7 +467,7 @@ class AdminSuppliersControllerCore extends AdminController
     public function postProcess()
     {
         // checks access
-        if (Tools::isSubmit('submitAdd' . $this->table) && !($this->access('add'))) {
+        if (Tools::isSubmit('submitAdd' . $this->table) && !$this->access('add')) {
             $this->errors[] = $this->trans('You do not have permission to add suppliers.', [], 'Admin.Catalog.Notification');
 
             return parent::postProcess();
@@ -536,7 +535,7 @@ class AdminSuppliersControllerCore extends AdminController
             if (!($obj = $this->loadObject(true))) {
                 return;
             } else {
-                //delete all product_supplier linked to this supplier
+                // delete all product_supplier linked to this supplier
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_supplier` WHERE `id_supplier`=' . (int) $obj->id);
 
                 $id_address = Address::getAddressIdBySupplierId($obj->id);

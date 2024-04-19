@@ -113,7 +113,7 @@ abstract class ApiController
      */
     protected function addAdditionalInfo(
         Request $request,
-        QueryParamsCollection $queryParams = null,
+        ?QueryParamsCollection $queryParams = null,
         $headers = []
     ) {
         $router = $this->container->get('router');
@@ -146,9 +146,9 @@ abstract class ApiController
             $info['previous_url'] = $router->generate($request->attributes->get('_route'), $previousParams);
         }
 
-        if (array_key_exists('Total-Pages', $headers) &&
-            array_key_exists('page_index', $allParams) &&
-            $headers['Total-Pages'] > $allParams['page_index']) {
+        if (array_key_exists('Total-Pages', $headers)
+            && array_key_exists('page_index', $allParams)
+            && $headers['Total-Pages'] > $allParams['page_index']) {
             $nextParams = $allParams;
             if (array_key_exists('page_index', $nextParams)) {
                 ++$nextParams['page_index'];
@@ -180,7 +180,7 @@ abstract class ApiController
     protected function jsonResponse(
         $data,
         Request $request,
-        QueryParamsCollection $queryParams = null,
+        ?QueryParamsCollection $queryParams = null,
         $status = 200,
         $headers = []
     ) {

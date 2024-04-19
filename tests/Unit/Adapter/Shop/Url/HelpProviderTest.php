@@ -63,7 +63,7 @@ class HelpProviderTest extends TestCase
 
                     return true;
                 }
-            ));
+                ));
 
         $provider = new HelpProvider(
             $legacyContextMock,

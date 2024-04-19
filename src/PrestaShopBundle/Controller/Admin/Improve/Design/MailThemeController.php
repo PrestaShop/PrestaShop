@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use Exception;
 use Mail;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
@@ -112,7 +113,7 @@ class MailThemeController extends FrameworkBundleAdminController
             try {
                 $coreMailsFolder = '';
                 $modulesMailFolder = '';
-                //Overwrite theme folder if selected
+                // Overwrite theme folder if selected
                 if (!empty($data['theme'])) {
                     if (is_dir($data['theme'] . '/mails')) {
                         $coreMailsFolder = $data['theme'] . '/mails';
@@ -183,7 +184,7 @@ class MailThemeController extends FrameworkBundleAdminController
      *
      * @return Response
      *
-     * @throws \Exception
+     * @throws Exception
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function saveConfigurationAction(Request $request)
@@ -466,7 +467,7 @@ class MailThemeController extends FrameworkBundleAdminController
 
         /** @var MailTemplateRendererInterface $renderer */
         $renderer = $this->get('prestashop.core.mail_template.mail_template_renderer');
-        //Special case for preview, we fill the mail variables
+        // Special case for preview, we fill the mail variables
         $renderer->addTransformation(new MailVariablesTransformation(MailTemplateInterface::HTML_TYPE, $mailLayoutVariables));
         $renderer->addTransformation(new MailVariablesTransformation(MailTemplateInterface::TXT_TYPE, $mailLayoutVariables));
 

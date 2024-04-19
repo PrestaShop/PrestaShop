@@ -256,7 +256,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteAttributeGroupCommand(
-                    $this->getAttributeGroupIdsFromRequest($request))
+                $this->getAttributeGroupIdsFromRequest($request))
             );
             $this->addFlash(
                 'success',

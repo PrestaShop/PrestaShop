@@ -323,9 +323,9 @@ class ContextCore
          *
          * We don't want to flush his cart, if he made it when logged out.
          */
-        if (Configuration::get('PS_CART_FOLLOWING') &&
-            (empty($this->cookie->id_cart) || Cart::getNbProducts((int) $this->cookie->id_cart) == 0) &&
-            $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)
+        if (Configuration::get('PS_CART_FOLLOWING')
+            && (empty($this->cookie->id_cart) || Cart::getNbProducts((int) $this->cookie->id_cart) == 0)
+            && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)
         ) {
             $this->cart = new Cart($idCart);
             $this->cart->secure_key = $customer->secure_key;
@@ -358,9 +358,9 @@ class ContextCore
 
                 // Set proper customer ID and assign addresses to the cart
                 $this->cart->id_customer = (int) $customer->id;
-                $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
-                $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
-                $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
+                $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) $customer->id));
+                $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) $customer->id);
+                $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) $customer->id);
             }
         }
 

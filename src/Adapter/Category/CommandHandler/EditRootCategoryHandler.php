@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryExcep
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 
 /**
  * Class EditRootCategoryHandler.
@@ -78,8 +80,8 @@ final class EditRootCategoryHandler extends AbstractEditCategoryHandler implemen
      *
      * @throws CannotEditCategoryException
      * @throws CategoryException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function updateRootCategoryFromCommandData(Category $category, EditRootCategoryCommand $command)
     {

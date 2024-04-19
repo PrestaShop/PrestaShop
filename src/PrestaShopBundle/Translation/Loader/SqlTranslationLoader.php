@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Translation\Loader;
 
 use Db;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShopException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -68,7 +69,7 @@ class SqlTranslationLoader implements LoaderInterface
                 FROM `' . _DB_PREFIX_ . 'lang`
                 WHERE `locale` = "' . $locale . '"'
                 );
-            } catch (\PrestaShopException) {
+            } catch (PrestaShopException) {
                 // When no DB is created there is nothing to fetch, so we return an empty catalog to avoid breaking process for
                 // invalid reasons (like CLI commands before the shop is installed)
                 return new MessageCatalogue($locale);

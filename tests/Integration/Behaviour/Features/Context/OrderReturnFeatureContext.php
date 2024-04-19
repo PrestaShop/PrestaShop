@@ -42,8 +42,8 @@ class OrderReturnFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @param string $orderReturnStateReference
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function createOrderReturnState(string $orderReturnStateReference): void
     {

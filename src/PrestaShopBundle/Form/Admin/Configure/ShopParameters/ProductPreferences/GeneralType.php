@@ -71,9 +71,9 @@ class GeneralType extends TranslatorAwareType
             ->add('catalog_mode', SwitchType::class, [
                 'label' => $this->trans('Catalog mode', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
-                        'Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.',
-                        'Admin.Shopparameters.Help'
-                    ),
+                    'Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.',
+                    'Admin.Shopparameters.Help'
+                ),
                 'required' => false,
             ])
             ->add('catalog_mode_with_prices', SwitchType::class, [
@@ -84,13 +84,13 @@ class GeneralType extends TranslatorAwareType
                 ) . '<br />' . $this->trans(
                     'To hide prices for a specific group, go to [1]Customer Settings > Groups[/1].',
                     'Admin.Shopparameters.Help',
-                        [
-                            '[1]' => sprintf(
-                                '<a target="_blank" href="%s">',
-                                $this->legacyContext->getAdminLink('AdminGroups')
-                            ),
-                            '[/1]' => '</a>',
-                        ]
+                    [
+                        '[1]' => sprintf(
+                            '<a target="_blank" href="%s">',
+                            $this->legacyContext->getAdminLink('AdminGroups')
+                        ),
+                        '[/1]' => '</a>',
+                    ]
                 ),
                 'row_attr' => [
                     'class' => 'catalog-mode-option',

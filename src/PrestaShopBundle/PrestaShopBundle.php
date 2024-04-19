@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle;
 
+use AppKernel;
 use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryRegisterPass;
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
@@ -60,7 +61,7 @@ class PrestaShopBundle extends Bundle
      */
     public const LOAD_MODULE_SERVICES_PASS_PRIORITY = 200;
 
-    public function __construct(private \AppKernel $kernel)
+    public function __construct(private AppKernel $kernel)
     {
     }
 

@@ -151,6 +151,6 @@ class InvoicesController extends FrameworkBundleAdminController
 
         // When using legacy generator,
         // we want to be sure that displaying PDF is the last thing this controller will do
-        die();
+        die;
     }
 }

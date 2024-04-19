@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Version;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\ConfigDataCollector as SymfonyDataCollector;
+use Throwable;
 
 /**
  * Class ConfigDataCollector.
@@ -46,7 +47,7 @@ class ConfigDataCollector extends SymfonyDataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Throwable $exception = null): void
+    public function collect(Request $request, Response $response, ?Throwable $exception = null): void
     {
         parent::collect($request, $response, $exception);
         $this->data['app_name'] = $this->name;

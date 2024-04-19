@@ -37,6 +37,7 @@ use Customer;
 use Language;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
+use PrestaShopException;
 use Shop;
 
 /**
@@ -200,7 +201,7 @@ class ContextStateManager
      *
      * @return $this
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function setShop(Shop $shop): self
     {
@@ -219,7 +220,7 @@ class ContextStateManager
      *
      * @return $this
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function setShopContext(int $shopContext, ?int $shopContextId = null): self
     {

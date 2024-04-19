@@ -498,8 +498,8 @@ class SupplyOrderCore extends ObjectModel
         foreach ($data as $key => $value) {
             if (array_key_exists($key, get_object_vars($this))) {
                 // formats prices and floats
-                if ($this->def['fields'][$key]['validate'] == 'isFloat' ||
-                    $this->def['fields'][$key]['validate'] == 'isPrice') {
+                if ($this->def['fields'][$key]['validate'] == 'isFloat'
+                    || $this->def['fields'][$key]['validate'] == 'isPrice') {
                     $value = Tools::ps_round($value, 6);
                 }
                 $this->$key = $value;

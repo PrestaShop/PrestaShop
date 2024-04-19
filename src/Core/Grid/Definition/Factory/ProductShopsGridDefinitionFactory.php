@@ -61,27 +61,27 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
         $columns
             ->remove('associated_shops')
             ->addBefore('image', (new ShopNameColumn('shop_name'))
-            ->setName($this->trans('Store(s)', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'shop_name',
-                'color_field' => 'shop_color',
-            ])
-        );
+                ->setName($this->trans('Store(s)', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'shop_name',
+                    'color_field' => 'shop_color',
+                ])
+            );
 
         // Replace active toggle column, mainly to adapt the primary key
         $columns
             ->remove('active')
             ->addBefore('position', (new ToggleColumn('active'))
-            ->setName($this->trans('Status', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'active',
-                'primary_field' => 'id_product',
-                'route' => 'admin_products_toggle_status_for_shop',
-                'route_param_name' => 'productId',
-                'extra_route_params' => [
-                    'shopId' => 'id_shop',
-                ],
-            ])
+                ->setName($this->trans('Status', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'active',
+                    'primary_field' => 'id_product',
+                    'route' => 'admin_products_toggle_status_for_shop',
+                    'route_param_name' => 'productId',
+                    'extra_route_params' => [
+                        'shopId' => 'id_shop',
+                    ],
+                ])
             );
 
         return $columns;
@@ -97,31 +97,31 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
         $rowActions = new RowActionCollection();
         $rowActions
             ->add((new LinkRowAction('edit'))
-            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-            ->setIcon('edit')
-            ->setOptions([
-                'route' => 'admin_products_edit',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                // @todo: Clickable row will be handled later (if it doesn't impact the UX negatively)
-                // 'clickable_row' => true,
-                'extra_route_params' => [
-                    'switchToShop' => 'id_shop',
-                ],
-            ])
+                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                ->setIcon('edit')
+                ->setOptions([
+                    'route' => 'admin_products_edit',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    // @todo: Clickable row will be handled later (if it doesn't impact the UX negatively)
+                    // 'clickable_row' => true,
+                    'extra_route_params' => [
+                        'switchToShop' => 'id_shop',
+                    ],
+                ])
             )
             ->add((new LinkRowAction('preview'))
-            ->setName($this->trans('Preview', [], 'Admin.Actions'))
-            ->setIcon('remove_red_eye')
-            ->setOptions([
-                'route' => 'admin_products_preview',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'target' => '_blank',
-                'extra_route_params' => [
-                    'shopId' => 'id_shop',
-                ],
-            ])
+                ->setName($this->trans('Preview', [], 'Admin.Actions'))
+                ->setIcon('remove_red_eye')
+                ->setOptions([
+                    'route' => 'admin_products_preview',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'target' => '_blank',
+                    'extra_route_params' => [
+                        'shopId' => 'id_shop',
+                    ],
+                ])
             )
             ->add(
                 $this->buildDeleteAction(

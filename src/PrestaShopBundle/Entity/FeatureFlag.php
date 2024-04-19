@@ -35,7 +35,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\FeatureFlagRepository")
+ *
  * @ORM\Table()
+ *
  * @UniqueEntity("name")
  */
 class FeatureFlag
@@ -44,7 +46,9 @@ class FeatureFlag
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_feature_flag", type="integer", options={"unsigned":true})
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;

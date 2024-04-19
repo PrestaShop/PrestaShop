@@ -132,7 +132,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * @return array Subcategories lite tree
      */
-    public function recurseLiteCategTree($max_depth = 3, $currentDepth = 0, $id_lang = null, $excluded_ids_array = null, Link $link = null)
+    public function recurseLiteCategTree($max_depth = 3, $currentDepth = 0, $id_lang = null, $excluded_ids_array = null, ?Link $link = null)
     {
         if (!$link) {
             $link = Context::getContext()->link;
@@ -166,7 +166,7 @@ class CMSCategoryCore extends ObjectModel
         ];
     }
 
-    public static function getRecurseCategory($id_lang = null, $current = 1, $active = 1, $links = 0, Link $link = null)
+    public static function getRecurseCategory($id_lang = null, $current = 1, $active = 1, $links = 0, ?Link $link = null)
     {
         if (!$link) {
             $link = Context::getContext()->link;
@@ -520,7 +520,7 @@ class CMSCategoryCore extends ObjectModel
         return $result['link_rewrite'];
     }
 
-    public function getLink(Link $link = null)
+    public function getLink(?Link $link = null)
     {
         if (!$link) {
             $link = Context::getContext()->link;
@@ -621,6 +621,7 @@ class CMSCategoryCore extends ObjectModel
         if (!isset($moved_category) || !isset($position)) {
             return false;
         }
+
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         return Db::getInstance()->execute('

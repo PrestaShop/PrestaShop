@@ -229,9 +229,9 @@ class OrderControllerCore extends FrontController
             'cartUrl' => '',
         ];
 
-        if ($this->context->cart->isAllProductsInStock() !== true ||
-            $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true ||
-            $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
+        if ($this->context->cart->isAllProductsInStock() !== true
+            || $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true
+            || $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
             $responseData['errors'] = true;
             $responseData['cartUrl'] = $this->context->link->getPageLink('cart', null, null, ['action' => 'show']);
         }
@@ -267,9 +267,9 @@ class OrderControllerCore extends FrontController
         }
 
         // Check that products are still orderable, at any point in checkout
-        if ($this->context->cart->isAllProductsInStock() !== true ||
-            $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true ||
-            $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
+        if ($this->context->cart->isAllProductsInStock() !== true
+            || $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true
+            || $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
             $shouldRedirectToCart = true;
         }
 
@@ -406,7 +406,7 @@ class OrderControllerCore extends FrontController
                     !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer)
                     && (int) Configuration::get('PS_TAX')
                 )
-                ->setDisplayTaxesLabel((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')))
+                ->setDisplayTaxesLabel(Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'))
                 ->setGiftCost(
                     $this->context->cart->getGiftWrappingPrice(
                         $checkoutDeliveryStep->getIncludeTaxes()

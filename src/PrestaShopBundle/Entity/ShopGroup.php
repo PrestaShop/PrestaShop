@@ -34,6 +34,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ShopGroup.
  *
  * @ORM\Table()
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ShopGroupRepository")
  */
 class ShopGroup
@@ -42,7 +43,9 @@ class ShopGroup
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_shop_group", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -100,6 +103,7 @@ class ShopGroup
      * @var Collection
      *
      * One group shop has many shops. This is the inverse side.
+     *
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\Shop", mappedBy="shopGroup")
      */
     private $shops;

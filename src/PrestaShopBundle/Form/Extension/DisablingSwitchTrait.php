@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Extension;
 
+use Closure;
 use Symfony\Component\Form\Exception\InvalidConfigurationException;
 use Symfony\Component\Form\FormInterface;
 use TypeError;
@@ -57,7 +58,7 @@ trait DisablingSwitchTrait
             }
             if (null === $disabledValue) {
                 $emptyData = $form->getConfig()->getOption('empty_data');
-                $disabledValue = $emptyData instanceof \Closure ? $emptyData($form) : $emptyData;
+                $disabledValue = $emptyData instanceof Closure ? $emptyData($form) : $emptyData;
             }
 
             $shouldBeDisabled = $disabledValue === $data;

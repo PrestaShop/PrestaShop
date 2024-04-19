@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\FeatureFlag\Layer;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\TypeLayerInterface;
+use RuntimeException;
 
 class DotEnvLayer implements TypeLayerInterface
 {
@@ -70,8 +71,8 @@ class DotEnvLayer implements TypeLayerInterface
      */
     public function canBeUsed(string $featureFlagName): bool
     {
-        return isset($_ENV['SYMFONY_DOTENV_VARS']) &&
-            str_contains($_ENV['SYMFONY_DOTENV_VARS'], $this->getVarName($featureFlagName));
+        return isset($_ENV['SYMFONY_DOTENV_VARS'])
+            && str_contains($_ENV['SYMFONY_DOTENV_VARS'], $this->getVarName($featureFlagName));
     }
 
     /**
@@ -79,8 +80,8 @@ class DotEnvLayer implements TypeLayerInterface
      */
     public function isEnabled(string $featureFlagName): bool
     {
-        return isset($_ENV[$this->getVarName($featureFlagName)]) &&
-            filter_var($_ENV[$this->getVarName($featureFlagName)], \FILTER_VALIDATE_BOOLEAN);
+        return isset($_ENV[$this->getVarName($featureFlagName)])
+            && filter_var($_ENV[$this->getVarName($featureFlagName)], \FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -135,7 +136,7 @@ class DotEnvLayer implements TypeLayerInterface
             return;
         }
 
-        throw new \RuntimeException(sprintf('Cannot change status of the feature flag %s', $featureFlagName));
+        throw new RuntimeException(sprintf('Cannot change status of the feature flag %s', $featureFlagName));
     }
 
     /**

@@ -103,12 +103,12 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
             'name' => AttributeGroupConstraintException::INVALID_NAME,
             'public_name' => AttributeGroupConstraintException::INVALID_PUBLIC_NAME,
             'type' => AttributeGroupConstraintException::INVALID_TYPE,
-            default => throw new \RuntimeException('Unknown field ' . $fieldName),
+            default => throw new RuntimeException('Unknown field ' . $fieldName),
         };
         $exception = match ($fieldName) {
             'name', 'public_name' => AttributeGroupConstraintException::class,
             'type' => InvalidAttributeGroupTypeException::class,
-            default => throw new \RuntimeException('Unknown field ' . $fieldName),
+            default => throw new RuntimeException('Unknown field ' . $fieldName),
         };
 
         $this->assertLastErrorIs(

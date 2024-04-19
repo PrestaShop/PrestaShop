@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
+use Attribute;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 
 /**
@@ -35,7 +36,7 @@ use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
  * it doesn't force any arguments, so it is suitable for custom usage, but it is recommended to use CQRSCreate
  * or CQRSUpdate instead as they handle default values that help the configuration and avoid unexpected behaviour.
  */
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class CQRSCommand extends AbstractCQRSOperation
 {
     public function __construct(

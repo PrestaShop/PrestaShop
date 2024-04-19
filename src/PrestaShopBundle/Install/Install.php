@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Install;
 
+use Contact;
+use Exception;
 use FileLogger as LegacyFileLogger;
 use Language as LanguageLegacy;
 use PhpEncryption;
@@ -167,10 +169,10 @@ class Install extends AbstractInstall
         ) {
             $this->setError(
                 $this->translator->trans(
-                '%folder% folder is not writable (check permissions)',
-                ['%folder%' => dirname($this->settingsFile)],
-                'Install'
-            )
+                    '%folder% folder is not writable (check permissions)',
+                    ['%folder%' => dirname($this->settingsFile)],
+                    'Install'
+                )
             );
 
             return false;
@@ -284,7 +286,7 @@ class Install extends AbstractInstall
         try {
             Tools::clearSf2Cache('prod');
             Tools::clearSf2Cache('dev');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->setError($e->getMessage());
 
             return false;
@@ -759,7 +761,7 @@ class Install extends AbstractInstall
     {
         $this->getLogger()->log('Configuring shop');
 
-        //clear image cache in tmp folder
+        // clear image cache in tmp folder
         if (file_exists(_PS_TMP_IMG_DIR_)) {
             foreach (scandir(_PS_TMP_IMG_DIR_, SCANDIR_SORT_NONE) as $file) {
                 if ($file[0] != '.' && $file != 'index.php') {
@@ -907,7 +909,7 @@ class Install extends AbstractInstall
         Configuration::updateGlobalValue('PS_LOGS_EMAIL_RECEIVERS', $data['admin_email']);
 
         $contacts = new PrestaShopCollection('Contact');
-        /** @var \Contact $contact */
+        /** @var Contact $contact */
         foreach ($contacts as $contact) {
             $contact->email = $data['admin_email'];
             $contact->update();
@@ -1183,7 +1185,7 @@ class Install extends AbstractInstall
         return true;
     }
 
-    public function installTheme(string $themeName = null): bool
+    public function installTheme(?string $themeName = null): bool
     {
         $themeName = $themeName ?: _THEME_NAME_;
         $this->getLogger()->log('Installing theme ' . $themeName);

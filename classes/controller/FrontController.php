@@ -364,10 +364,10 @@ class FrontControllerCore extends Controller
              * If geolocation is enabled and we are not allowed to order from our country, we will delete the cart.
              */
             } elseif (
-                (int) (Configuration::get('PS_GEOLOCATION_ENABLED'))
+                (int) Configuration::get('PS_GEOLOCATION_ENABLED')
                 && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))
                 && $cart->nbProducts()
-                && (int) (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1
+                && (int) Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') != -1
                 && !FrontController::isInWhitelistForGeolocation()
                 && !in_array($_SERVER['SERVER_NAME'], ['localhost', '127.0.0.1', '::1'])
             ) {
@@ -557,7 +557,7 @@ class FrontControllerCore extends Controller
      *
      * @return array Variables to be inserted in the "prestashop" javascript object
      *
-     * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
+     * @throws PrestaShop\PrestaShop\Core\Filter\FilterException
      * @throws PrestaShopException
      */
     protected function buildFrontEndObject($object)
@@ -822,7 +822,7 @@ class FrontControllerCore extends Controller
             } else {
                 header('Location: ' . Tools::getShopDomain(true) . $_SERVER['REQUEST_URI']);
             }
-            exit();
+            exit;
         }
     }
 
@@ -873,7 +873,7 @@ class FrontControllerCore extends Controller
 
                     try {
                         $record = $reader->city(Tools::getRemoteAddr());
-                    } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
+                    } catch (GeoIp2\Exception\AddressNotFoundException $e) {
                         $record = null;
                     }
 
@@ -1895,7 +1895,7 @@ class FrontControllerCore extends Controller
     /**
      * @deprecated Since 9.0 and will be removed in the next major.
      */
-    protected function updateQueryString(array $extraParams = null)
+    protected function updateQueryString(?array $extraParams = null)
     {
         return Tools::updateCurrentQueryString($extraParams);
     }

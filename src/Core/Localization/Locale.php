@@ -117,7 +117,7 @@ class Locale implements LocaleInterface
      * @return string
      *                The formatted number
      *
-     * @throws Exception\LocalizationException
+     * @throws LocalizationException
      */
     public function formatNumber(int|float|string $number): string
     {
@@ -137,7 +137,7 @@ class Locale implements LocaleInterface
      *
      * @return string The formatted price
      *
-     * @throws Exception\LocalizationException
+     * @throws LocalizationException
      */
     public function formatPrice(int|float|string $number, string $currencyCode): string
     {

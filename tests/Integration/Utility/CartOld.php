@@ -220,7 +220,7 @@ class CartOld extends Cart
 
                 case Order::ROUND_ITEM:
                 default:
-                    $product_price = /*$with_taxes ? $tax_calculator->addTaxes($price) : */
+                    $product_price = /* $with_taxes ? $tax_calculator->addTaxes($price) : */
                         $price;
                     $products_total[$id_tax_rules_group] += Tools::ps_round($product_price, $compute_precision)
                         * (int) $product['cart_quantity'];
@@ -258,7 +258,7 @@ class CartOld extends Cart
             // Then, calculate the contextual value for each one
             $flag = false;
             foreach ($cart_rules as $item) {
-                /** @var \CartRule $cartRule */
+                /** @var CartRule $cartRule */
                 $cartRule = $item['obj'];
                 // If the cart rule offers free shipping, add the shipping cost
                 if (($with_shipping || $type == Cart::ONLY_DISCOUNTS) && $cartRule->free_shipping && !$flag) {
@@ -267,7 +267,7 @@ class CartOld extends Cart
                             $with_taxes,
                             $virtual_context,
                             CartRule::FILTER_ACTION_SHIPPING,
-                            ($param_product ? $package : null),
+                            $param_product ? $package : null,
                             $use_cache
                         ),
                         $compute_precision

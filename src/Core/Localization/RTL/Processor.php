@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\RTL;
 
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Entity\Language;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException;
 
@@ -159,8 +160,8 @@ class Processor
     }
 
     /**
-     * @throws Exception\GenerationException
-     * @throws \Exception
+     * @throws GenerationException
+     * @throws Exception
      */
     public function process()
     {

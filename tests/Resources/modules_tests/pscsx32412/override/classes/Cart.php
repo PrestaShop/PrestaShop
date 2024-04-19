@@ -51,7 +51,7 @@ class Cart extends CartCore
 
     public function delete()
     {
-        if ($this->OrderExists()) { //NOT delete a cart which is associated with an order
+        if ($this->OrderExists()) { // NOT delete a cart which is associated with an order
             return false;
         }
 
