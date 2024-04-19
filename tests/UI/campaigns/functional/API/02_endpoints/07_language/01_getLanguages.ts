@@ -10,8 +10,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import productsPage from '@pages/BO/catalog/products';
 import dashboardPage from '@pages/BO/dashboard';
+import localizationPage from '@pages/BO/international/localization';
+import languagesPage from '@pages/BO/international/languages';
+import addLanguagePage from '@pages/BO/international/languages/add';
 
 // Import data
 import APIClientData from '@data/faker/APIClient';
@@ -19,9 +21,9 @@ import APIClientData from '@data/faker/APIClient';
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_productList_getAPIProducts';
+const baseContext: string = 'functional_API_endpoints_language_getLanguages';
 
-describe('API : GET /products', async () => {
+describe('API : GET /languages', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -29,12 +31,9 @@ describe('API : GET /products', async () => {
   let accessToken: string;
   let jsonResponse: any;
 
-  const clientScope: string = 'product_read';
   const clientData: APIClientData = new APIClientData({
     enabled: true,
-    scopes: [
-      clientScope,
-    ],
+    scopes: [],
   });
 
   before(async function () {
@@ -109,7 +108,6 @@ describe('API : GET /products', async () => {
           client_id: clientData.clientId,
           client_secret: clientSecret,
           grant_type: 'client_credentials',
-          scope: clientScope,
         },
       });
       expect(apiResponse.status()).to.eq(200);
@@ -125,10 +123,10 @@ describe('API : GET /products', async () => {
   });
 
   describe('API : Fetch Data', async () => {
-    it('should request the endpoint /products', async function () {
+    it('should request the endpoint /languages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get('products', {
+      const apiResponse = await apiContext.get('languages', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -144,7 +142,6 @@ describe('API : GET /products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseKeys', baseContext);
       expect(jsonResponse).to.have.all.keys(
         'totalItems',
-        'orderBy',
         'sortOrder',
         'limit',
         'filters',
@@ -155,30 +152,46 @@ describe('API : GET /products', async () => {
 
       for (let i:number = 0; i < jsonResponse.totalItems; i++) {
         expect(jsonResponse.items[i]).to.have.all.keys(
-          'productId',
-          'active',
+          'langId',
           'name',
-          'quantity',
-          'price',
-          'category',
+          'isoCode',
+          'languageCode',
+          'locale',
+          'dateFormat',
+          'dateTimeFormat',
+          'isRtl',
+          'active',
+          'flag',
         );
       }
     });
   });
 
   describe('BackOffice : Expected data', async () => {
-    it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+    it('should go to \'International > Localization\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
-      await productsPage.closeSfToolBar(page);
-      await productsPage.resetFilter(page);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.internationalParentLink,
+        dashboardPage.localizationLink,
+      );
+      await localizationPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await localizationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(localizationPage.pageTitle);
+    });
 
-      const numProducts = await productsPage.getNumberOfProductsFromHeader(page);
-      expect(numProducts).to.eq(jsonResponse.totalItems);
+    it('should go to \'Languages\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
+
+      await localizationPage.goToSubTabLanguages(page);
+
+      const pageTitle = await languagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(languagesPage.pageTitle);
+
+      const numLanguages = await languagesPage.resetAndGetNumberOfLines(page);
+      expect(numLanguages).to.eq(jsonResponse.totalItems);
     });
 
     it('should filter list by id', async function () {
@@ -186,45 +199,66 @@ describe('API : GET /products', async () => {
 
       for (let idxItem: number = 0; idxItem < jsonResponse.totalItems; idxItem++) {
         // eslint-disable-next-line no-loop-func
-        await productsPage.resetFilter(page);
-        await productsPage.filterProducts(page, 'id_product', {
-          min: jsonResponse.items[idxItem].productId,
-          max: jsonResponse.items[idxItem].productId,
-        });
+        await languagesPage.resetFilter(page);
+        await languagesPage.filterTable(page, 'input', 'id_lang', jsonResponse.items[idxItem].langId);
 
-        const numProducts = await productsPage.getNumberOfProductsFromList(page);
-        expect(numProducts).to.be.equal(1);
+        const numLanguages = await languagesPage.getNumberOfElementInGrid(page);
+        expect(numLanguages).to.be.equal(1);
 
-        const productId = parseInt((await productsPage.getTextColumn(page, 'id_product', 1)).toString(), 10);
-        expect(productId).to.equal(jsonResponse.items[idxItem].productId);
+        const langId = parseInt((await languagesPage.getTextColumnFromTable(page, 1, 'id_lang')).toString(), 10);
+        expect(langId).to.equal(jsonResponse.items[idxItem].langId);
 
-        const productActive = await productsPage.getTextColumn(page, 'active', 1);
-        expect(productActive).to.equal(jsonResponse.items[idxItem].active);
+        const langName = await languagesPage.getTextColumnFromTable(page, 1, 'name');
+        expect(langName).to.equal(jsonResponse.items[idxItem].name);
 
-        const productName = await productsPage.getTextColumn(page, 'product_name', 1);
-        expect(productName).to.equal(jsonResponse.items[idxItem].name);
+        const langIsoCode = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
+        expect(langIsoCode).to.equal(jsonResponse.items[idxItem].isoCode);
 
-        const productQuantity = await productsPage.getTextColumn(page, 'quantity', 1);
-        expect(productQuantity).to.equal(jsonResponse.items[idxItem].quantity);
+        const langLanguageCode = await languagesPage.getTextColumnFromTable(page, 1, 'language_code');
+        expect(langLanguageCode).to.equal(jsonResponse.items[idxItem].languageCode);
 
-        const productPrice = await productsPage.getTextColumn(page, 'price', 1);
-        expect(productPrice).to.equal(parseFloat(jsonResponse.items[idxItem].price));
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/35860
+        // Check `jsonResponse.items[idxItem].locale`
 
-        const productCategory = await productsPage.getTextColumn(page, 'category', 1);
-        expect(productCategory).to.equal(jsonResponse.items[idxItem].category);
+        const langDateFormat = await languagesPage.getTextColumnFromTable(page, 1, 'date_format_lite');
+        expect(langDateFormat).to.equal(jsonResponse.items[idxItem].dateFormat);
+
+        const langDateTimeFormat = await languagesPage.getTextColumnFromTable(page, 1, 'date_format_full');
+        expect(langDateTimeFormat).to.equal(jsonResponse.items[idxItem].dateTimeFormat);
+
+        const langActive = await languagesPage.getStatus(page, 1);
+        expect(langActive).to.equal(jsonResponse.items[idxItem].active);
+
+        const langFlag = await languagesPage.getImgSrc(page, 1);
+        expect(langFlag.split('?')[0]).to.equal(jsonResponse.items[idxItem].flag.split('?')[0]);
+
+        // Go the edit page
+        await languagesPage.goToEditLanguage(page, 1);
+
+        const pageTitleEdit = await addLanguagePage.getPageTitle(page);
+        expect(pageTitleEdit).to.contains(addLanguagePage.pageEditTitle);
+
+        const langIsRTL = await addLanguagePage.isRTL(page);
+        expect(langIsRTL).to.equal(jsonResponse.items[idxItem].isRtl);
+
+        // Return languages tab
+        await localizationPage.goToSubTabLanguages(page);
+
+        const pageTitle = await languagesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(languagesPage.pageTitle);
       }
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      await productsPage.resetFilter(page);
+      await languagesPage.resetFilter(page);
 
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      expect(numberOfProducts).to.be.above(0);
+      const numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfLanguages).to.be.above(0);
     });
   });
 
-  // Pre-condition: Create an API Client
+  // Post-condition: Delete the API Client
   deleteAPIClientTest(`${baseContext}_postTest`);
 });

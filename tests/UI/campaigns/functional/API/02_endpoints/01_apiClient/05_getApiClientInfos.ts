@@ -18,7 +18,7 @@ import APIClientData from '@data/faker/APIClient';
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_apiClient_getAPIApiClientInfos';
+const baseContext: string = 'functional_API_endpoints_apiClient_getApiClientInfos';
 
 describe('API : GET /api-client/infos', async () => {
   let apiContext: APIRequestContext;

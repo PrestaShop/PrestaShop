@@ -5,42 +5,40 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
+import {createProductTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import apiClientPage from 'pages/BO/advancedParameters/APIClient';
+import apiClientPage from '@pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
+import productsPage from '@pages/BO/catalog/products';
 import dashboardPage from '@pages/BO/dashboard';
-import positionsPage from '@pages/BO/design/positions';
 
 // Import data
 import APIClientData from '@data/faker/APIClient';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_hook_getAPIHooksId';
+const baseContext: string = 'functional_API_endpoints_product_deleteProductId';
 
-describe('API : GET /hooks/{id}', async () => {
+describe('API : DELETE /product/{productId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
+  let idProduct: number;
   let clientSecret: string;
   let accessToken: string;
-  let jsonResponse: any;
-  let idHook: number;
-  let statusHook: boolean;
-  let nameHook: string;
-  //let titleHook: string;
-  let descriptionHook: string;
 
-  const clientScope: string = 'hook_read';
+  const clientScope: string = 'product_write';
   const clientData: APIClientData = new APIClientData({
     enabled: true,
     scopes: [
       clientScope,
     ],
   });
+  const productData: ProductData = new ProductData({type: 'standard', status: true});
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -52,6 +50,9 @@ describe('API : GET /hooks/{id}', async () => {
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
+
+  // Pre-Condition : Create a product
+  createProductTest(productData, `${baseContext}_preTest_0`);
 
   describe('BackOffice : Fetch the access token', async () => {
     it('should login in BO', async function () {
@@ -129,111 +130,56 @@ describe('API : GET /hooks/{id}', async () => {
     });
   });
 
-  describe('BackOffice : Expected data', async () => {
-    it('should go to \'Design > Positions\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPositionsPage', baseContext);
+  describe('BackOffice : Fetch the ID of the product', async () => {
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.designParentLink,
-        dashboardPage.positionsLink,
-      );
-      await positionsPage.closeSfToolBar(page);
+      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+      await productsPage.closeSfToolBar(page);
 
-      const pageTitle = await positionsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(positionsPage.pageTitle);
+      const pageTitle = await productsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it('should get the hook informations', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getHookInformations', baseContext);
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForCreation', baseContext);
 
-      idHook = await positionsPage.getHookId(page, 0);
-      expect(idHook).to.be.gt(0);
+      await productsPage.resetFilter(page);
+      await productsPage.filterProducts(page, 'product_name', productData.name);
 
-      statusHook = await positionsPage.getHookStatus(page, 0);
-      expect(statusHook).to.be.equal(true);
+      const numProducts = await productsPage.getNumberOfProductsFromList(page);
+      expect(numProducts).to.be.equal(1);
 
-      nameHook = await positionsPage.getHookName(page, 0);
-      expect(nameHook.length).to.be.gt(0);
+      const productName = await productsPage.getTextColumn(page, 'product_name', 1);
+      expect(productName).to.contains(productData.name);
 
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/34552
-      //titleHook = await positionsPage.getHookStatus(page, 0);
-      //expect(titleHook.length).to.be.gt(0);
-
-      descriptionHook = await positionsPage.getHookDescription(page, 0);
-      expect(descriptionHook.length).to.be.gt(0);
+      idProduct = parseInt((await productsPage.getTextColumn(page, 'id_product', 1)).toString(), 10);
+      expect(idProduct).to.be.gt(0);
     });
   });
 
-  describe('API : Check Data', async () => {
-    it('should request the endpoint /hooks/{id}', async function () {
+  describe('API : Delete the Product', async () => {
+    it('should request the endpoint /product/{productId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get(`hooks/${idHook}`, {
+      const apiResponse = await apiContext.delete(`product/${idProduct}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      expect(apiResponse.status()).to.eq(200);
-      expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
-      expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
-
-      jsonResponse = await apiResponse.json();
+      expect(apiResponse.status()).to.eq(204);
     });
+  });
 
-    it('should check the JSON Response keys', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseKeys', baseContext);
+  describe('BackOffice : Check the Product is deleted', async () => {
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterAfterDeletion', baseContext);
 
-      expect(jsonResponse).to.have.all.keys(
-        'id',
-        'active',
-        'name',
-        'title',
-        'description',
-      );
-    });
+      await productsPage.resetFilter(page);
+      await productsPage.filterProducts(page, 'product_name', productData.name);
 
-    it('should check the JSON Response : `id`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseId', baseContext);
-
-      expect(jsonResponse).to.have.property('id');
-      expect(jsonResponse.id).to.be.a('number');
-      expect(jsonResponse.id).to.be.equal(idHook);
-    });
-
-    it('should check the JSON Response : `active`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseActive', baseContext);
-
-      expect(jsonResponse).to.have.property('active');
-      expect(jsonResponse.active).to.be.a('boolean');
-      expect(jsonResponse.active).to.be.equal(statusHook);
-    });
-
-    it('should check the JSON Response : `name`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseName', baseContext);
-
-      expect(jsonResponse).to.have.property('name');
-      expect(jsonResponse.name).to.be.a('string');
-      expect(jsonResponse.name).to.be.equal(nameHook);
-    });
-
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/34552
-    it('should check the JSON Response : `title`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseTitle', baseContext);
-
-      this.skip();
-
-      //expect(jsonResponse).to.have.property('title');
-      //expect(jsonResponse.title).to.be.a('string');
-      //expect(jsonResponse.title).to.be.equal(titleHook);
-    });
-
-    it('should check the JSON Response : `description`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDescription', baseContext);
-
-      expect(jsonResponse).to.have.property('description');
-      expect(jsonResponse.description).to.be.a('string');
-      expect(jsonResponse.description).to.be.equal(descriptionHook);
+      const numProducts = await productsPage.getNumberOfProductsFromList(page);
+      expect(numProducts).to.be.equal(0);
     });
   });
 

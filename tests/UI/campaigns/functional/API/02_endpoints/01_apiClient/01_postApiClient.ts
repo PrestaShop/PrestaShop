@@ -18,7 +18,7 @@ import APIClientData from '@data/faker/APIClient';
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_apiClient_postAPIApiClient';
+const baseContext: string = 'functional_API_endpoints_apiClient_postApiClient';
 
 describe('API : POST /api-client', async () => {
   let apiContext: APIRequestContext;

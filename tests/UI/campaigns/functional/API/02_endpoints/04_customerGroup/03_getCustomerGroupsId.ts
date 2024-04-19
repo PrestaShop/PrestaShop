@@ -19,41 +19,31 @@ import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 import Languages from '@data/demo/languages';
 import APIClientData from '@data/faker/APIClient';
 
-import {
-  FakerGroup,
-} from '@prestashop-core/ui-testing';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_customerGroup_putAPICustomerGroupsId';
+const baseContext: string = 'functional_API_endpoints_customerGroup_getCustomerGroupsId';
 
-describe('API : PUT /customers/group/{customerGroupId}', async () => {
+describe('API : GET /customers/group/{customerGroupId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
-  let numberOfGroups: number;
-  let idCustomerGroup: number;
+  let accessToken: string;
   let jsonResponse: any;
   let clientSecret: string;
-  let accessToken: string;
+  let idCustomerGroup: number;
+  let reductionPercent: number;
+  let displayPriceTaxExcluded: boolean;
+  let showPrice: boolean;
+  let nameFr: string;
+  let nameEn: string;
 
-  const clientScope: string = 'customer_group_write';
+  const clientScope: string = 'customer_group_read';
   const clientData: APIClientData = new APIClientData({
     enabled: true,
     scopes: [
       clientScope,
     ],
-  });
-  const createGroupData: FakerGroup = new FakerGroup({
-    priceDisplayMethod: 'Tax included',
-  });
-  const updateGroupData: FakerGroup = new FakerGroup({
-    name: 'Customer Group EN',
-    frName: 'Customer Group FR',
-    discount: 42,
-    shownPrices: false,
-    priceDisplayMethod: 'Tax excluded',
   });
 
   before(async function () {
@@ -143,7 +133,7 @@ describe('API : PUT /customers/group/{customerGroupId}', async () => {
     });
   });
 
-  describe('BackOffice : Create a Customer Group', async () => {
+  describe('BackOffice : Expected data', async () => {
     it('should go to \'Shop Parameters > Customer Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
@@ -170,63 +160,49 @@ describe('API : PUT /customers/group/{customerGroupId}', async () => {
     it('should reset all filters and get number of groups in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      numberOfGroups = await groupsPage.resetAndGetNumberOfLines(page);
+      const numberOfGroups = await groupsPage.resetAndGetNumberOfLines(page);
       expect(numberOfGroups).to.be.above(0);
-    });
-
-    it('should go to add new group page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewGroup', baseContext);
-
-      await groupsPage.goToNewGroupPage(page);
-
-      const pageTitle = await addGroupPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addGroupPage.pageTitleCreate);
-    });
-
-    it('should create group and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createGroup', baseContext);
-
-      const textResult = await addGroupPage.createEditGroup(page, createGroupData);
-      expect(textResult).to.contains(groupsPage.successfulCreationMessage);
-
-      const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
-      expect(numberOfGroupsAfterCreation).to.be.equal(numberOfGroups + 1);
-    });
-
-    it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterAfterCreation', baseContext);
-
-      await groupsPage.resetFilter(page);
-      await groupsPage.filterTable(page, 'input', 'b!name', createGroupData.name);
-
-      const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
-      expect(numberOfGroupsAfterCreation).to.be.equal(1);
-
-      const textEmail = await groupsPage.getTextColumn(page, 1, 'b!name');
-      expect(textEmail).to.contains(createGroupData.name);
 
       idCustomerGroup = parseInt(await groupsPage.getTextColumn(page, 1, 'id_group'), 10);
       expect(idCustomerGroup).to.be.gt(0);
     });
+
+    it('should go to edit group page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditGroupPage', baseContext);
+
+      await groupsPage.gotoEditGroupPage(page, 1);
+
+      const pageTitle = await addGroupPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addGroupPage.pageTitleEdit);
+    });
+
+    it('should fetch informations', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'fetchInformations', baseContext);
+
+      reductionPercent = parseInt(await addGroupPage.getValue(page, 'reductionPercent'), 10);
+      expect(reductionPercent).to.be.gte(0);
+
+      displayPriceTaxExcluded = (await addGroupPage.getValue(page, 'displayPriceTaxExcluded')) === 'Tax excluded';
+      expect(displayPriceTaxExcluded).to.be.a('boolean');
+
+      showPrice = (await addGroupPage.getValue(page, 'showPrice')) === '1';
+      expect(showPrice).to.be.a('boolean');
+
+      nameFr = await addGroupPage.getValue(page, 'localizedNames', Languages.french.id);
+      expect(nameFr).to.be.a('string');
+
+      nameEn = await addGroupPage.getValue(page, 'localizedNames', Languages.english.id);
+      expect(nameFr).to.be.a('string');
+    });
   });
 
-  describe('API : Update the Customer Group', async () => {
+  describe('API : Check Data', async () => {
     it('should request the endpoint /customers/group/{customerGroupId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.put(`customers/group/${idCustomerGroup}`, {
+      const apiResponse = await apiContext.get(`customers/group/${idCustomerGroup}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-        },
-        data: {
-          customerGroupId: idCustomerGroup,
-          localizedNames: {
-            [Languages.french.id]: updateGroupData.frName,
-            [Languages.english.id]: updateGroupData.name,
-          },
-          reductionPercent: updateGroupData.discount,
-          displayPriceTaxExcluded: updateGroupData.priceDisplayMethod === 'Tax excluded',
-          showPrice: updateGroupData.shownPrices,
         },
       });
       expect(apiResponse.status()).to.eq(200);
@@ -249,115 +225,56 @@ describe('API : PUT /customers/group/{customerGroupId}', async () => {
       );
     });
 
-    it('should check the JSON Response', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseJSON', baseContext);
+    it('should check the JSON Response : `customerGroupId`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseCustomerGroupId', baseContext);
 
-      expect(jsonResponse.customerGroupId).to.equal(idCustomerGroup);
-      expect(jsonResponse.localizedNames).to.deep.equal({1: updateGroupData.name, 2: updateGroupData.frName});
-      expect(jsonResponse.reductionPercent).to.equal(updateGroupData.discount);
-      expect(jsonResponse.displayPriceTaxExcluded).to.equal(updateGroupData.priceDisplayMethod === 'Tax excluded');
-      expect(jsonResponse.showPrice).to.equal(updateGroupData.shownPrices);
-      expect(jsonResponse.shopIds).to.deep.equal([1]);
-    });
-  });
-
-  describe('BackOffice : Check the Customer Group is updated', async () => {
-    it('should filter list by id', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterAfterUpdate', baseContext);
-
-      await groupsPage.resetFilter(page);
-      await groupsPage.filterTable(page, 'input', 'id_group', idCustomerGroup);
-
-      const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
-      expect(numberOfGroupsAfterCreation).to.be.equal(1);
-
-      idCustomerGroup = parseInt(await groupsPage.getTextColumn(page, 1, 'id_group'), 10);
-      expect(idCustomerGroup).to.be.equal(idCustomerGroup);
+      expect(jsonResponse).to.have.property('customerGroupId');
+      expect(jsonResponse.customerGroupId).to.be.a('number');
+      expect(jsonResponse.customerGroupId).to.be.equal(idCustomerGroup);
     });
 
-    it('should edit the customer group', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'editCustomerGroup', baseContext);
+    it('should check the JSON Response : `localizedNames`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLocalizedNames', baseContext);
 
-      await groupsPage.gotoEditGroupPage(page, 1);
-
-      const pageTitle = await addGroupPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addGroupPage.pageTitleEdit);
-    });
-
-    it('should check the JSON Response : `localizedNames` (EN)', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLocalizedNamesEN', baseContext);
-
-      const value = await addGroupPage.getValue(page, 'localizedNames', Languages.english.id);
-      expect(jsonResponse.localizedNames[Languages.english.id]).to.be.equal(value);
-    });
-
-    it('should check the JSON Response : `localizedNames` (FR)', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLocalizedNamesFR', baseContext);
-
-      const value = await addGroupPage.getValue(page, 'localizedNames', Languages.french.id);
-      expect(jsonResponse.localizedNames[Languages.french.id]).to.be.equal(value);
+      expect(jsonResponse).to.have.property('localizedNames');
+      expect(jsonResponse.localizedNames).to.be.a('object');
+      expect(jsonResponse.localizedNames[Languages.english.id]).to.be.equal(nameEn);
+      expect(jsonResponse.localizedNames[Languages.french.id]).to.be.equal(nameFr);
     });
 
     it('should check the JSON Response : `reductionPercent`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseReductionPercent', baseContext);
 
-      const value = parseInt(await addGroupPage.getValue(page, 'reductionPercent'), 10);
-      expect(jsonResponse.reductionPercent).to.be.equal(value);
+      expect(jsonResponse).to.have.property('reductionPercent');
+      expect(jsonResponse.reductionPercent).to.be.a('number');
+      expect(jsonResponse.reductionPercent).to.be.equal(reductionPercent);
     });
 
     it('should check the JSON Response : `displayPriceTaxExcluded`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDisplayPriceTaxExcluded', baseContext);
 
-      const value = (await addGroupPage.getValue(page, 'displayPriceTaxExcluded')) === 'Tax excluded';
-      expect(jsonResponse.displayPriceTaxExcluded).to.be.equal(value);
+      expect(jsonResponse).to.have.property('displayPriceTaxExcluded');
+      expect(jsonResponse.displayPriceTaxExcluded).to.be.a('boolean');
+      expect(jsonResponse.displayPriceTaxExcluded).to.be.equal(displayPriceTaxExcluded);
     });
 
     it('should check the JSON Response : `showPrice`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseShowPrice', baseContext);
 
-      const value = (await addGroupPage.getValue(page, 'showPrice')) === '1';
-      expect(jsonResponse.showPrice).to.be.equal(value);
+      expect(jsonResponse).to.have.property('showPrice');
+      expect(jsonResponse.showPrice).to.be.a('boolean');
+      expect(jsonResponse.showPrice).to.be.equal(showPrice);
+    });
+
+    it('should check the JSON Response : `shopIds`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseShopIds', baseContext);
+
+      expect(jsonResponse).to.have.property('shopIds');
+      expect(jsonResponse.shopIds).to.be.a('array');
+      expect(jsonResponse.shopIds).to.deep.equal([1]);
     });
   });
 
-  describe('BackOffice : Delete the Customer Group', async () => {
-    it('should go to \'Groups\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToGroupsPageForDeletion', baseContext);
-
-      await customerSettingsPage.goToGroupsPage(page);
-
-      const pageTitle = await groupsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(groupsPage.pageTitle);
-    });
-
-    it('should filter list by id', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterForDeletion', baseContext);
-
-      await groupsPage.resetFilter(page);
-      await groupsPage.filterTable(page, 'input', 'id_group', idCustomerGroup);
-
-      const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
-      expect(numberOfGroupsAfterCreation).to.be.equal(1);
-
-      idCustomerGroup = parseInt(await groupsPage.getTextColumn(page, 1, 'id_group'), 10);
-      expect(idCustomerGroup).to.be.equal(idCustomerGroup);
-    });
-
-    it('should delete group', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteGroup', baseContext);
-
-      const textResult = await groupsPage.deleteGroup(page, 1);
-      expect(textResult).to.contains(groupsPage.successfulDeleteMessage);
-    });
-
-    it('should reset filter', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
-
-      const numberOfGroupsAfterDelete = await groupsPage.resetAndGetNumberOfLines(page);
-      expect(numberOfGroupsAfterDelete).to.be.equal(numberOfGroups);
-    });
-  });
-
-  // Pre-condition: Create an API Client
+  // Post-condition: Create an API Client
   deleteAPIClientTest(`${baseContext}_postTest`);
 });

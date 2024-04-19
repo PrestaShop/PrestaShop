@@ -18,7 +18,7 @@ import APIClientData from '@data/faker/APIClient';
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_apiClient_patchAPIApiClientId';
+const baseContext: string = 'functional_API_endpoints_apiClient_patchApiClientId';
 
 describe('API : PATCH /api-client/{apiClientId}', async () => {
   let apiContext: APIRequestContext;

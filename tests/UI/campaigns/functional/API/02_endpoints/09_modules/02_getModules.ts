@@ -5,40 +5,43 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
-import {createProductTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import apiClientPage from '@pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import productsPage from '@pages/BO/catalog/products';
 import dashboardPage from '@pages/BO/dashboard';
+import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 // Import data
 import APIClientData from '@data/faker/APIClient';
-import ProductData from '@data/faker/product';
+import type {ModuleInfo} from '@data/types/module';
 
+import {
+  boModuleManagerPage,
+  FakerModule,
+} from '@prestashop-core/ui-testing';
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_API_endpoints_product_deleteAPIProductId';
+const baseContext: string = 'functional_API_endpoints_modules_getModules';
 
-describe('API : DELETE /product/{productId}', async () => {
+describe('API : GET /modules', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
-  let idProduct: number;
   let clientSecret: string;
   let accessToken: string;
+  let jsonResponse: any;
+  const jsonResponseItems: ModuleInfo [] = [];
 
-  const clientScope: string = 'product_write';
+  const clientScope: string = 'module_read';
   const clientData: APIClientData = new APIClientData({
     enabled: true,
     scopes: [
       clientScope,
     ],
   });
-  const productData: ProductData = new ProductData({type: 'standard', status: true});
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -50,9 +53,6 @@ describe('API : DELETE /product/{productId}', async () => {
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
-
-  // Pre-Condition : Create a product
-  createProductTest(productData, `${baseContext}_preTest_0`);
 
   describe('BackOffice : Fetch the access token', async () => {
     it('should login in BO', async function () {
@@ -130,56 +130,98 @@ describe('API : DELETE /product/{productId}', async () => {
     });
   });
 
-  describe('BackOffice : Fetch the ID of the product', async () => {
-    it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+  describe('API : Fetch Data', async () => {
+    [
+      {
+        page: 0,
+      },
+      {
+        page: 1,
+      },
+    ].forEach((arg: {page: number}, index: number) => {
+      it(`should request the endpoint /modules (page ${arg.page})`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `requestEndpoint${index}`, baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
-      await productsPage.closeSfToolBar(page);
+        const apiResponse = await apiContext.get(`modules${arg.page > 0 ? `?offset=${arg.page * 50}` : ''}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        expect(apiResponse.status()).to.eq(200);
+        expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+        expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
-    });
-
-    it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterForCreation', baseContext);
-
-      await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', productData.name);
-
-      const numProducts = await productsPage.getNumberOfProductsFromList(page);
-      expect(numProducts).to.be.equal(1);
-
-      const productName = await productsPage.getTextColumn(page, 'product_name', 1);
-      expect(productName).to.contains(productData.name);
-
-      idProduct = parseInt((await productsPage.getTextColumn(page, 'id_product', 1)).toString(), 10);
-      expect(idProduct).to.be.gt(0);
-    });
-  });
-
-  describe('API : Delete the Product', async () => {
-    it('should request the endpoint /product/{productId}', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
-
-      const apiResponse = await apiContext.delete(`product/${idProduct}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        jsonResponse = await apiResponse.json();
       });
-      expect(apiResponse.status()).to.eq(204);
+
+      it(`should check the JSON Response keys (page ${arg.page})`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkResponseKeys${index}`, baseContext);
+
+        const keys = [
+          'totalItems',
+          'sortOrder',
+          'limit',
+          'filters',
+          'items',
+        ];
+
+        if (arg.page > 0) {
+          keys.push('offset');
+        }
+        expect(jsonResponse).to.have.all.keys(keys);
+
+        expect(jsonResponse.items.length).to.be.gt(0);
+        if (arg.page === 0) {
+          expect(jsonResponse.items.length).to.be.equal(jsonResponse.limit);
+        } else {
+          expect(jsonResponse.items.length).to.be.lt(jsonResponse.limit);
+        }
+
+        for (let i:number = 0; i < jsonResponse.items.length; i++) {
+          expect(jsonResponse.items[i]).to.have.all.keys(
+            'moduleId',
+            'technicalName',
+            'version',
+            'enabled',
+          );
+          jsonResponseItems.push(jsonResponse.items[i]);
+        }
+      });
     });
   });
 
-  describe('BackOffice : Check the Product is deleted', async () => {
-    it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterAfterDeletion', baseContext);
+  describe('BackOffice : Expected data', async () => {
+    it('should go to \'Modules > Module Manager\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToModulesPage', baseContext);
 
-      await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', productData.name);
+      await dashboardPage.goToSubMenu(page, dashboardPage.modulesParentLink, dashboardPage.modulesParentLink);
+      await boModuleManagerPage.closeSfToolBar(page);
+      await moduleManager.filterByStatus(page, 'installed');
 
-      const numProducts = await productsPage.getNumberOfProductsFromList(page);
-      expect(numProducts).to.be.equal(0);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
+
+      const numModules = await moduleManager.getNumberOfModules(page);
+      expect(numModules).to.eq(jsonResponseItems.length);
+    });
+
+    it('should filter list by technicaleName', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkJSONItems', baseContext);
+
+      for (let idxItem: number = 0; idxItem < jsonResponseItems.length; idxItem++) {
+        // eslint-disable-next-line no-loop-func
+        const isModuleVisible = await moduleManager.searchModule(
+          page,
+          {tag: jsonResponseItems[idxItem].technicalName} as FakerModule,
+        );
+        expect(isModuleVisible).to.be.equal(true);
+
+        const moduleInfos = await moduleManager.getModuleInformationNth(page, 1);
+        expect(moduleInfos.moduleId).to.equal(jsonResponseItems[idxItem].moduleId);
+        expect(moduleInfos.technicalName).to.equal(jsonResponseItems[idxItem].technicalName);
+        expect(moduleInfos.version).to.equal(jsonResponseItems[idxItem].version);
+        expect(moduleInfos.enabled).to.equal(jsonResponseItems[idxItem].enabled);
+      }
     });
   });
 
