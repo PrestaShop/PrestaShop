@@ -33,6 +33,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | new   |
       | show_condition      | false |
       | manufacturer        |       |
+      | date_new            | 2024-01-01   |
     When I update product "product1" with following values:
       | visibility          | catalog      |
       | available_for_order | false        |
@@ -41,6 +42,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     And I set following shops for product "product1":
       | source shop | shop1       |
       | shops       | shop1,shop2 |
@@ -53,6 +55,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+      | date_new            | 2024-02-02   |
     And product "product1" should be disabled for shops "shop1,shop2"
     And product "product1" should not be indexed for shops "shop1,shop2"
 
@@ -65,6 +68,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | refurbished |
       | show_condition      | false       |
       | manufacturer        |             |
+      | date_new            | 2024-03-03  |
     Then product "product1" should have following options for shops "shop2":
       | product option      | value       |
       | visibility          | search      |
@@ -74,6 +78,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | refurbished |
       | show_condition      | false       |
       | manufacturer        |             |
+      | date_new            | 2024-03-03  |
     And product "product1" should have following options for shops "shop1":
       | product option      | value   |
       | visibility          | catalog |
@@ -84,6 +89,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | show_condition      | true    |
 #     manufacturer does not depend on multi shop, so it should be updated no matter which shop is targeted
       | manufacturer        |         |
+      | date_new            | 2024-02-02   |
     And product "product1" should not be indexed for shops "shop1,shop2"
 
   Scenario: I update product options for all associated shops
@@ -95,6 +101,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | new           |
       | show_condition      | true          |
       | manufacturer        | graphicCorner |
+      | date_new            | 2024-01-01   |
     Then product "product1" should have following options for shops "shop1,shop2":
       | product option      | value         |
       | visibility          | none          |
@@ -104,6 +111,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | new           |
       | show_condition      | true          |
       | manufacturer        | graphicCorner |
+      | date_new            | 2024-01-01   |
     And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product search indexation related values in different shops

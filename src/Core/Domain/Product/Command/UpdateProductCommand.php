@@ -274,6 +274,11 @@ class UpdateProductCommand
     private $active;
 
     /**
+     * @var DateTimeInterface|null
+     */
+    private $dateNew;
+
+    /**
      * @param int $productId
      * @param ShopConstraint $shopConstraint
      */
@@ -1137,6 +1142,18 @@ class UpdateProductCommand
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function getDateNew(): ?DateTimeInterface
+    {
+        return $this->dateNew;
+    }
+
+    public function setDateNew(DateTimeInterface $dateNew): self
+    {
+        $this->dateNew = $dateNew;
 
         return $this;
     }

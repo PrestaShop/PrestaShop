@@ -756,6 +756,7 @@ class ProductFormDataProviderTest extends TestCase
             'ean13' => 'ean13_2',
             'mpn' => 'mpn_2',
             'reference' => 'reference_2',
+            'date_new' => '2024-01-01',
             'attachments' => [
                 new AttachmentInformation(
                     1,
@@ -772,6 +773,7 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['options']['visibility']['available_for_order'] = false;
         $expectedOutputData['options']['visibility']['online_only'] = true;
         $expectedOutputData['options']['visibility']['show_price'] = false;
+        $expectedOutputData['options']['date_new'] = '2024-01-01';
 
         $expectedOutputData['details']['references']['isbn'] = 'isbn_2';
         $expectedOutputData['details']['references']['upc'] = 'upc_2';
@@ -1427,7 +1429,8 @@ class ProductFormDataProviderTest extends TestCase
             $product['show_price'] ?? true,
             $product['condition'] ?? ProductCondition::NEW,
             $product['show_condition'] ?? false,
-            $product['manufacturer_id'] ?? 0
+            $product['manufacturer_id'] ?? 0,
+            $product['date_new'] ?? '2024-01-01'
         );
     }
 
@@ -1693,6 +1696,7 @@ class ProductFormDataProviderTest extends TestCase
                     'show_price' => true,
                     'online_only' => false,
                 ],
+                'date_new' => '2024-01-01',
                 'suppliers' => [
                     'default_supplier_id' => 0,
                     'supplier_ids' => [],

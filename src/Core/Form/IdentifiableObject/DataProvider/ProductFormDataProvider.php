@@ -589,6 +589,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'show_price' => $options->showPrice(),
                 'online_only' => $options->isOnlineOnly(),
             ],
+            'date_new' => $productForEditing->getOptions()->getDateNew()->format('Y-m-d'),
         ], $suppliersData);
     }
 

@@ -56,7 +56,8 @@ class OptionsAssertionFeatureContext extends AbstractProductFeatureContext
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['show_price']),
             $dataRows['condition'],
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['show_condition']),
-            $this->getManufacturerId($dataRows['manufacturer'])
+            $this->getManufacturerId($dataRows['manufacturer']),
+            $dataRows['date_new']
         );
     }
 
