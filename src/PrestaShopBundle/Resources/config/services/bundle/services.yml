@@ -36,7 +36,9 @@ services:
 
   prestashop.database.naming_strategy:
     class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
-    arguments: [ "%database_prefix%" ]
+    autowire: true
+    arguments:
+      $prefix: "%database_prefix%"
 
   prestashop.service.translation:
     class: PrestaShopBundle\Service\TranslationService
