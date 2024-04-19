@@ -51,8 +51,8 @@ class SymfonyIntegrationTestCase extends WebTestCase
 
         $this->client = self::createClient();
 
-        //createClient already creates the kernel
-        //$this->bootKernel();
+        // createClient already creates the kernel
+        // $this->bootKernel();
 
         // Global var for SymfonyContainer
         global $kernel;

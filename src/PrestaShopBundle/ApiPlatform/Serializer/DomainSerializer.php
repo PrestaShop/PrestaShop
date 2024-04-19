@@ -80,7 +80,7 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
      *
      * @throws ReflectionException
      */
-    public function denormalize($data, string $type, string $format = null, array $context = []): mixed
+    public function denormalize($data, string $type, ?string $format = null, array $context = []): mixed
     {
         // Before anything perform the mapping if specified
         if (!empty($context[self::NORMALIZATION_MAPPING])) {
@@ -103,7 +103,7 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
 
         $denormalizedObject = $this->serializer->denormalize($dataConstruct, $type, $format, $context);
 
-        //Try to call setters
+        // Try to call setters
         if (is_iterable($data)) {
             foreach ($data as $propertyName => $value) {
                 $parameters = [];
@@ -131,7 +131,7 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
         return $denormalizedObject;
     }
 
-    private function getConvertedValue($value, ReflectionParameter|ReflectionProperty $parameter = null)
+    private function getConvertedValue($value, ReflectionParameter|ReflectionProperty|null $parameter = null)
     {
         $paramType = $parameter->getType() instanceof ReflectionNamedType ? $parameter->getType()->getName() : null;
         // For non scalar types we denormalize the values
@@ -145,7 +145,7 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, string $format = null, array $context = [])
+    public function normalize($object, ?string $format = null, array $context = [])
     {
         $normalizedData = $this->serializer->normalize($object, $format, $context);
         if (!empty($context[self::NORMALIZATION_MAPPING])) {
@@ -158,7 +158,7 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsNormalization($data, string $format = null): bool
+    public function supportsNormalization($data, ?string $format = null): bool
     {
         return $this->serializer->supportsNormalization($data, $format);
     }
@@ -166,7 +166,7 @@ class DomainSerializer implements NormalizerInterface, DenormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsDenormalization($data, string $type, string $format = null): bool
+    public function supportsDenormalization($data, string $type, ?string $format = null): bool
     {
         return $this->serializer->supportsDenormalization($data, $type, $format);
     }

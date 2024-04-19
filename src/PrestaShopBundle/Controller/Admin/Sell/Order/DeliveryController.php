@@ -57,7 +57,7 @@ class DeliveryController extends FrameworkBundleAdminController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()
             && $this->isGranted('update', $request->attributes->get('_legacy_controller')
-        )) {
+            )) {
             $errors = $formHandler->save($form->getData());
             if (empty($errors)) {
                 $this->addFlash(

@@ -72,9 +72,9 @@ final class FolderThemeScanner
     /**
      * @param string $mailThemeFolder
      *
-     * @throws TypeException
-     *
      * @return LayoutCollectionInterface
+     *
+     * @throws TypeException
      */
     private function findThemeLayouts($mailThemeFolder)
     {
@@ -140,7 +140,7 @@ final class FolderThemeScanner
         $finder->files()->in($folder)->sortByName();
         /** @var SplFileInfo $fileInfo */
         foreach ($finder as $fileInfo) {
-            //Get filename without any extension (ex: account.html.twig -> account)
+            // Get filename without any extension (ex: account.html.twig -> account)
             $layoutName = preg_replace('/\..+/', '', $fileInfo->getBasename());
             if (!isset($layoutFiles[$layoutName])) {
                 $layoutFiles[$layoutName] = [

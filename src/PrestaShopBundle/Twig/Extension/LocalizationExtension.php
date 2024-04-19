@@ -72,7 +72,7 @@ class LocalizationExtension extends AbstractExtension
      *
      * @return string
      */
-    public function priceFormat(float $price, string $currencyCode = null, string $locale = null): string
+    public function priceFormat(float $price, ?string $currencyCode = null, ?string $locale = null): string
     {
         if (null !== $locale) {
             $cldrLocale = $this->localeRepository->getLocale($locale);

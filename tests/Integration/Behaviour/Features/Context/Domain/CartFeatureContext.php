@@ -69,6 +69,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotF
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Product;
 use RuntimeException;
 use SpecificPrice;
@@ -118,6 +120,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I create an empty cart :cartReference for customer :customerReference
+     *
      * @Given customer :customerReference has an empty cart :cartReference
      *
      * @param string $cartReference
@@ -384,6 +387,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I select :countryIsoCode address as delivery and invoice address for customer :customerReference in cart :cartReference
+     *
      * @Given cart :cartReference delivery and invoice address country for customer :customerReference is :countryIsoCode
      *
      * @param string $countryIsoCode
@@ -563,8 +567,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      * @param float $discountAmount
      * @param string $cartReference
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function useDiscountVoucherOnCart(string $voucherCode, float $discountAmount, string $cartReference)
     {
@@ -800,6 +804,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then cart :cartReference should contain gift product :productName
+     *
      * @Given cart :cartReference contains gift product :productName
      *
      * @param string $cartReference
@@ -837,6 +842,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then cart :cartReference should not contain gift product :productName
+     *
      * @Given cart :cartReference does not contain gift product :productName
      *
      * @param string $cartReference
@@ -1116,7 +1122,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         $cartTotal = $cartInfo->getSummary()->getTotalPriceWithTaxes();
         if ($cartTotal !== $expectedTotal) {
-            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $cartTotal));
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $cartTotal));
         }
     }
 

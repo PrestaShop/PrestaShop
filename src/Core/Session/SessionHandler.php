@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 class SessionHandler implements SessionHandlerInterface
 {
     /**
-     *  @var Session
+     * @var Session
      */
     protected $session;
 

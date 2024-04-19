@@ -48,7 +48,7 @@ class MaintenanceController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, FormInterface $form = null)
+    public function indexAction(Request $request, ?FormInterface $form = null)
     {
         if (null === $form) {
             $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();

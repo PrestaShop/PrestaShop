@@ -37,7 +37,7 @@ class HelperImageUploaderCore extends HelperUploader
 
     public function getFilePath($file_name = null)
     {
-        //Force file path
+        // Force file path
         return tempnam($this->getSavePath(), $this->getUniqueFileName());
     }
 

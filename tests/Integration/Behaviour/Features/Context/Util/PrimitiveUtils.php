@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Util;
 
+use DateTime;
 use Exception;
 use RuntimeException;
 
@@ -64,7 +65,7 @@ class PrimitiveUtils
                 return $element;
 
             case self::TYPE_DATETIME:
-                return new \DateTime($element);
+                return new DateTime($element);
 
             case self::TYPE_ARRAY:
                 if ('empty' === $element) {
@@ -83,7 +84,7 @@ class PrimitiveUtils
                     return $element;
                 }
 
-            // no break
+                // no break
             case self::TYPE_OBJECT:
             case self::TYPE_RESOURCE:
             case self::TYPE_UNKNOWN:

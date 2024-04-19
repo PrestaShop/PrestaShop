@@ -350,7 +350,7 @@ class HelperFormCore extends Helper
         } else {
             switch (Shop::getContext()) {
                 case Shop::CONTEXT_SHOP:
-                        $assos[Shop::getContextShopID()] = Shop::getContextShopID();
+                    $assos[Shop::getContextShopID()] = Shop::getContextShopID();
 
                     break;
 

@@ -43,14 +43,18 @@ use Doctrine\ORM\Mapping as ORM;
  * - mutator identifier: Identifier of associated mutator (usually an int matching the row, but can be a technical name for a module)
  *
  * @ORM\Table
+ *
  * @ORM\HasLifecycleCallbacks
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\MutationRepository")
  */
 class Mutation
 {
     /**
      * @ORM\Id
+     *
      * @ORM\Column(name="id_mutation", type="integer", options={"unsigned": true})
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private int $id;
@@ -176,6 +180,7 @@ class Mutation
      * Now we tell doctrine that before we persist or update we call the updateTimestamps() function.
      *
      * @ORM\PrePersist
+     *
      * @ORM\PreUpdate
      */
     public function updateTimestamps()

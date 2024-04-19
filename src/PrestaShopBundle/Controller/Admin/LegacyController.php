@@ -35,8 +35,10 @@ use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Routing\LegacyRouterChecker;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use PrestaShopBundle\Twig\Layout\SmartyVariablesFiller;
+use SmartyException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
 use function Symfony\Component\String\u;
 
 /**
@@ -131,7 +133,7 @@ class LegacyController extends PrestaShopAdminController
      *
      * @return Response
      *
-     * @throws \SmartyException
+     * @throws SmartyException
      */
     protected function renderPageContent(AdminController $adminController): Response
     {

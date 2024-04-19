@@ -47,7 +47,7 @@ class LanguageDefaultFontsCatalog
     /**
      * @param array|null $languageDefaultFonts
      */
-    public function __construct(array $languageDefaultFonts = null)
+    public function __construct(?array $languageDefaultFonts = null)
     {
         if (null !== $languageDefaultFonts) {
             $this->languageDefaultFonts = $languageDefaultFonts;

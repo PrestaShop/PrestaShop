@@ -581,7 +581,7 @@ class OrderDetailCore extends ObjectModel
      */
     protected function setProductTax(Order $order, $product)
     {
-        $this->ecotax = Tools::convertPrice((float) ($product['ecotax']), (int) ($order->id_currency));
+        $this->ecotax = Tools::convertPrice((float) $product['ecotax'], (int) $order->id_currency);
 
         // Include VAT
         if (Configuration::get('PS_TAX')) {
@@ -707,7 +707,7 @@ class OrderDetailCore extends ObjectModel
         $unit_price = Product::getPriceStatic(
             (int) $product['id_product'],
             true,
-            ($product['id_product_attribute'] ? (int) ($product['id_product_attribute']) : null),
+            $product['id_product_attribute'] ? (int) ($product['id_product_attribute']) : null,
             6,
             null,
             false,
@@ -965,7 +965,7 @@ class OrderDetailCore extends ObjectModel
         return parent::add($autodate = true, $null_values = false);
     }
 
-    //return the product OR product attribute whole sale price
+    // return the product OR product attribute whole sale price
     public function getWholeSalePrice()
     {
         $product = new Product($this->product_id);

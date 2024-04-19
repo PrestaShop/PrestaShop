@@ -28,6 +28,7 @@ namespace PrestaShopBundle\EventListener\Admin;
 
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use ReflectionMethod;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,7 +66,7 @@ class DemoModeEnabledListener
 
         [$controllerObject, $methodName] = $controller;
 
-        $method = new \ReflectionMethod($controllerObject, $methodName);
+        $method = new ReflectionMethod($controllerObject, $methodName);
         $attributes = $method->getAttributes(DemoRestricted::class);
 
         if ([] === $attributes) {

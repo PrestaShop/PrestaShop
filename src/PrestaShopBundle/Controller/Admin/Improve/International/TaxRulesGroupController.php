@@ -319,7 +319,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages(Exception $e = null): array
+    private function getErrorMessages(?Exception $e = null): array
     {
         return [
             CannotDeleteTaxRulesGroupException::class => $this->trans(

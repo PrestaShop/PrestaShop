@@ -64,7 +64,7 @@ class GetCountryForEditingHandler implements GetCountryForEditingHandlerInterfac
          * for now the string format is enough, but maybe we should introduce some kind of DTO or maybe even a smarter Domain object that stores this address format
          * https://github.com/PrestaShop/PrestaShop/pull/29591#discussion_r976471671
          */
-//        $format = AddressFormat::getAddressCountryFormat($countryId->getValue());
+        //        $format = AddressFormat::getAddressCountryFormat($countryId->getValue());
 
         return new CountryForEditing(
             $command->getCountryId(),
@@ -75,7 +75,7 @@ class GetCountryForEditingHandler implements GetCountryForEditingHandlerInterfac
             (int) $country->id_zone,
             (bool) $country->need_zip_code,
             (string) $country->zip_code_format,
-            '', //todo: add when address format will be added
+            '', // todo: add when address format will be added
             (bool) $country->active,
             (bool) $country->contains_states,
             (bool) $country->need_identification_number,

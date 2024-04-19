@@ -115,7 +115,7 @@ class RestrictionRule
         }
 
         throw new CartRuleConstraintException(
-          sprintf('Invalid type provided to %s', self::class),
+            sprintf('Invalid type provided to %s', self::class),
             CartRuleConstraintException::INVALID_RESTRICTION_RULE_TYPE
         );
     }

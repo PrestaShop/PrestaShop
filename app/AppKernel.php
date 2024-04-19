@@ -88,7 +88,7 @@ abstract class AppKernel extends Kernel
         if (!empty($installedModules)) {
             try {
                 $this->enableComposerAutoloaderOnModules($installedModules);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
         }
 
@@ -194,7 +194,7 @@ abstract class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
@@ -419,6 +419,6 @@ abstract class AppKernel extends Kernel
      */
     public function getAppType(): string
     {
-        return $this instanceof \FrontKernel ? 'front' : 'admin';
+        return $this instanceof FrontKernel ? 'front' : 'admin';
     }
 }

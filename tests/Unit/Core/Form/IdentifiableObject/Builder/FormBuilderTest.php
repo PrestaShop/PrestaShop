@@ -301,7 +301,7 @@ class FormBuilderTest extends TestCase
         $optionProviderMock
             ->expects($this->never())
             ->method('getDefaultOptions')
-            ;
+        ;
 
         return $optionProviderMock;
     }

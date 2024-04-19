@@ -267,7 +267,7 @@ class SampleFiltersBuilder extends AbstractFiltersBuilder implements TypedFilter
     /**
      * {@inheritDoc}
      */
-    public function buildFilters(Filters $filters = null)
+    public function buildFilters(?Filters $filters = null)
     {
         return new $this->filtersClass(['orderBy' => self::ORDER_BY], self::FILTER_ID);
     }
@@ -280,6 +280,6 @@ class SampleFiltersBuilder extends AbstractFiltersBuilder implements TypedFilter
         return
             SampleWithConstraintFilters::class === $filterClassName
             || SampleWithoutConstraintFilters::class === $filterClassName
-            ;
+        ;
     }
 }

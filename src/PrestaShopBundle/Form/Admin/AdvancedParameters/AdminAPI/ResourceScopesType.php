@@ -40,6 +40,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Traversable;
 
 class ResourceScopesType extends TranslatorAwareType implements DataMapperInterface
 {
@@ -67,7 +68,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         $builder->setDataMapper($this);
     }
 
-    public function mapDataToForms($viewData, \Traversable $forms)
+    public function mapDataToForms($viewData, Traversable $forms)
     {
         /** @var FormInterface[] $forms */
         $forms = iterator_to_array($forms);
@@ -86,7 +87,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         }
     }
 
-    public function mapFormsToData(\Traversable $forms, &$viewData)
+    public function mapFormsToData(Traversable $forms, &$viewData)
     {
         $associatedScopes = [];
         /** @var FormInterface $collection */

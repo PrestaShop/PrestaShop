@@ -129,7 +129,7 @@ class VoucherGenerator
             throw new OrderException('You cannot generate a voucher.');
         }
 
-        $customer = new Customer((int) ($order->id_customer));
+        $customer = new Customer((int) $order->id_customer);
 
         $params = [
             '{lastname}' => $customer->lastname,

@@ -110,10 +110,10 @@ final class ApiClientGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => $this->getRowActions(),
-            ])
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => $this->getRowActions(),
+                ])
             );
     }
 
@@ -125,13 +125,13 @@ final class ApiClientGridDefinitionFactory extends AbstractGridDefinitionFactory
         $rowActions = new RowActionCollection();
         $rowActions
             ->add((new LinkRowAction('edit'))
-            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-            ->setIcon('edit')
-            ->setOptions([
-                'route' => 'admin_api_clients_edit',
-                'route_param_name' => 'apiClientId',
-                'route_param_field' => 'id_api_client',
-            ])
+                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                ->setIcon('edit')
+                ->setOptions([
+                    'route' => 'admin_api_clients_edit',
+                    'route_param_name' => 'apiClientId',
+                    'route_param_field' => 'id_api_client',
+                ])
             )
             ->add(
                 $this->buildDeleteAction(

@@ -90,7 +90,7 @@ class ThemeManagerBuilder
         );
     }
 
-    public function buildRepository(Shop $shop = null)
+    public function buildRepository(?Shop $shop = null)
     {
         if (!$shop instanceof Shop) {
             $shop = $this->context->shop;

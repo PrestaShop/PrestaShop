@@ -416,7 +416,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             ->setData($data)
             ->setHeadersData($headers)
             ->setFileName('brands_' . date('Y-m-d_His') . '.csv')
-            ;
+        ;
     }
 
     /**
@@ -517,7 +517,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             ->setData($data)
             ->setHeadersData($headers)
             ->setFileName('address_' . date('Y-m-d_His') . '.csv')
-            ;
+        ;
     }
 
     /**
@@ -690,8 +690,8 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             MemoryLimitException::class => $this->trans(
-                    'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',
-                    'Admin.Notifications.Error'
+                'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',
+                'Admin.Notifications.Error'
             ),
             ImageUploadException::class => $this->trans(
                 'An error occurred while uploading the image.',

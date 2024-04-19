@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Webservice;
 
 use PrestaShopCollection;
+use PrestaShopException;
 use WebserviceKey;
 
 /**
@@ -41,7 +42,7 @@ final class WebserviceKeyEraser
      *
      * @return array<int, array<string, array|string>> - array of errors. If array is empty then erase operation succeeded.
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function erase(array $webServiceKeyIds)
     {

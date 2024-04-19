@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
+use DateTimeImmutable;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -38,14 +39,14 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 #[AutoconfigureTag('prestashop.api.normalizers')]
 class DateTimeImmutableNormalizer implements DenormalizerInterface, CacheableSupportsMethodInterface
 {
-    public function denormalize($data, string $type, string $format = null, array $context = [])
+    public function denormalize($data, string $type, ?string $format = null, array $context = [])
     {
-        return new \DateTimeImmutable($data);
+        return new DateTimeImmutable($data);
     }
 
-    public function supportsDenormalization($data, string $type, string $format = null)
+    public function supportsDenormalization($data, string $type, ?string $format = null)
     {
-        return \DateTimeImmutable::class === $type;
+        return DateTimeImmutable::class === $type;
     }
 
     /**

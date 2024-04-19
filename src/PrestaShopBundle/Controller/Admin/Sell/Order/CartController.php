@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use Cart;
+use CartRule;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
@@ -399,8 +401,8 @@ class CartController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new UpdateCartDeliverySettingsCommand(
                 $cartId,
                 $request->request->getBoolean('freeShipping'),
-                ($giftSettingsEnabled ? $request->request->getBoolean('isAGift', false) : null),
-                ($recycledPackagingEnabled ? $request->request->getBoolean('useRecycledPackaging', false) : null),
+                $giftSettingsEnabled ? $request->request->getBoolean('isAGift', false) : null,
+                $recycledPackagingEnabled ? $request->request->getBoolean('useRecycledPackaging', false) : null,
                 $request->request->get('giftMessage', null)
             ));
 
@@ -765,8 +767,8 @@ class CartController extends FrameworkBundleAdminController
      */
     private function getProductGiftedQuantity(int $cartId, int $productId, ?int $attributeId): int
     {
-        $cart = new \Cart($cartId);
-        $giftCartRules = $cart->getCartRules(\CartRule::FILTER_ACTION_GIFT, false);
+        $cart = new Cart($cartId);
+        $giftCartRules = $cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false);
         if (count($giftCartRules) <= 0) {
             return 0;
         }
@@ -774,8 +776,8 @@ class CartController extends FrameworkBundleAdminController
         $giftedQuantity = 0;
         foreach ($giftCartRules as $giftCartRule) {
             if (
-                $productId == $giftCartRule['gift_product'] &&
-                (null === $attributeId || $attributeId == $giftCartRule['gift_product_attribute'])
+                $productId == $giftCartRule['gift_product']
+                && (null === $attributeId || $attributeId == $giftCartRule['gift_product_attribute'])
             ) {
                 ++$giftedQuantity;
             }

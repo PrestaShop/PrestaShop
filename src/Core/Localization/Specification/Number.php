@@ -273,7 +273,7 @@ class Number implements NumberInterface
         }
 
         if (!isset($this->symbols)
-            || !(is_array($this->symbols))
+            || !is_array($this->symbols)
         ) {
             throw new LocalizationException('Invalid symbols');
         }

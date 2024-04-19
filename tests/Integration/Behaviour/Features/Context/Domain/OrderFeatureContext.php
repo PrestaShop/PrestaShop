@@ -39,7 +39,7 @@ use FrontController;
 use Order;
 use OrderInvoice;
 use OrderState;
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
@@ -75,6 +75,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
 use PrestaShopCollection;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Product;
 use RuntimeException;
 use SpecificPrice;
@@ -1221,6 +1223,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Given Order :orderReference has following prices:
+     *
      * @Then Order :orderReference should have following prices:
      */
     public function assertOrderPrices(string $orderReference, TableNode $table)
@@ -1286,8 +1289,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $invoicePosition
      * @param TableNode $table
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function addCartRuleAndUpdateSingleInvoice(string $orderReference, string $invoicePosition, TableNode $table)
     {
@@ -1584,9 +1587,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $productName
      *
-     * @throws RuntimeException
-     *
      * @return FoundProduct
+     *
+     * @throws RuntimeException
      */
     private function getProductByName(string $productName): FoundProduct
     {
@@ -1751,12 +1754,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      *
      * @return PrestaShopCollection
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function getOrderInvoices(int $orderId): PrestaShopCollection
     {
-        $order = new \Order($orderId);
+        $order = new Order($orderId);
 
         return $order->getInvoicesCollection();
     }
@@ -1856,8 +1859,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      *
      * @return TaxCalculator
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function getProductTaxCalculator(int $orderId, int $productId): TaxCalculator
     {

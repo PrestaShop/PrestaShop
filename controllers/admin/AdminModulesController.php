@@ -339,7 +339,7 @@ class AdminModulesControllerCore extends AdminController
      *
      * @return void
      *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException
+     * @throws PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException
      */
     protected function buildRtlAssets(Module $module): void
     {

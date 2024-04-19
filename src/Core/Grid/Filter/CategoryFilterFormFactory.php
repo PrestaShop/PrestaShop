@@ -91,7 +91,7 @@ final class CategoryFilterFormFactory implements GridFilterFormFactoryInterface
         $queryParams = [];
         $request = $this->requestStack->getCurrentRequest();
 
-        if ((null !== $request) && ($request->attributes->has('categoryId'))) {
+        if ((null !== $request) && $request->attributes->has('categoryId')) {
             $queryParams['categoryId'] = $request->attributes->get('categoryId');
         }
 

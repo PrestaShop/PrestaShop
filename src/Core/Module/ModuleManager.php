@@ -262,8 +262,8 @@ class ModuleManager implements ModuleManagerInterface
     public function reset(string $name, bool $keepData = false): bool
     {
         if (
-            !$this->adminModuleDataProvider->isAllowedAccess('install') ||
-            !$this->adminModuleDataProvider->isAllowedAccess('uninstall', $name)
+            !$this->adminModuleDataProvider->isAllowedAccess('install')
+            || !$this->adminModuleDataProvider->isAllowedAccess('uninstall', $name)
         ) {
             throw new Exception($this->translator->trans(
                 'You are not allowed to reset the module %module%.',

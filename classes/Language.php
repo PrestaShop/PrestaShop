@@ -529,7 +529,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @return bool
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     private function duplicateRowsFromDefaultShopLang($tableName, $shopDefaultLangId, $shopId)
     {
@@ -759,7 +759,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        return static::$_LANGUAGES[(int) ($id_lang)];
+        return static::$_LANGUAGES[(int) $id_lang];
     }
 
     /**
@@ -1472,7 +1472,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         $lang_pack = static::getLangDetails($iso);
         if (!empty($lang_pack['locale'])) {
-            //Update locale field if empty (manually created, or imported without it)
+            // Update locale field if empty (manually created, or imported without it)
             $language = new Language(Language::getIdByIso($iso));
             if ($language->id && empty($language->locale)) {
                 $language->locale = $lang_pack['locale'];
@@ -1641,7 +1641,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param LanguageCore $lang
      * @param Shop $shop
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
     private static function updateMultilangFromClassForShop(DataLangCore $classObject, self $lang, Shop $shop)

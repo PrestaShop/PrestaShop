@@ -285,7 +285,7 @@ class AdminTabsControllerCore extends AdminController
 
             return;
         }
-        /* PrestaShop demo mode*/
+        /* PrestaShop demo mode */
 
         if (($id_tab = (int) Tools::getValue('id_tab')) && ($direction = Tools::getValue('move')) && Validate::isLoadedObject($tab = new Tab($id_tab))) {
             if ($tab->move($direction)) {
@@ -366,8 +366,8 @@ class AdminTabsControllerCore extends AdminController
 
     public function ajaxProcessUpdatePositions()
     {
-        $way = (bool) (Tools::getValue('way'));
-        $id_tab = (int) (Tools::getValue('id'));
+        $way = (bool) Tools::getValue('way');
+        $id_tab = (int) Tools::getValue('id');
         $positions = Tools::getValue('tab');
 
         // when changing positions in a tab sub-list, the first array value is empty and needs to be removed

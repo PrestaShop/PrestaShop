@@ -48,11 +48,11 @@ class ImageThumbnailsRegenerator
     private int $startTime = 0;
 
     public function __construct(
-      private readonly ProductImageRepository $productImageRepository,
-      private readonly ImageFormatConfiguration $imageFormatConfiguration,
-      private readonly LanguageRepositoryInterface $langRepository,
-      private readonly ConfigurationInterface $configuration,
-      private readonly TranslatorInterface $translator,
+        private readonly ProductImageRepository $productImageRepository,
+        private readonly ImageFormatConfiguration $imageFormatConfiguration,
+        private readonly LanguageRepositoryInterface $langRepository,
+        private readonly ConfigurationInterface $configuration,
+        private readonly TranslatorInterface $translator,
     ) {
         // Save start time to calculate remaining time and to avoid timeout on long running processes
         $this->startTime = time();
@@ -163,7 +163,7 @@ class ImageThumbnailsRegenerator
                                         (int) $imageType->getWidth(),
                                         (int) $imageType->getHeight(),
                                         $imageFormat
-                                        )) {
+                                    )) {
                                         $errors[] = $this->translator->trans('Failed to resize image file (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
                                     }
                                 }
@@ -223,7 +223,7 @@ class ImageThumbnailsRegenerator
     }
 
     /* Hook watermark optimization */
-    public function regenerateWatermark(string $dir, array $formats = null): bool|string
+    public function regenerateWatermark(string $dir, ?array $formats = null): bool|string
     {
         $result = Db::getInstance()->executeS('
 		SELECT m.`name` FROM `' . _DB_PREFIX_ . 'module` m

@@ -793,9 +793,9 @@ class HookCore extends ObjectModel
      * @param int|null $id_shop If specified, hook will be execute the shop with this ID
      * @param bool $chain If specified, each module on this hook will receive the result of the previous one
      *
-     * @throws PrestaShopException
-     *
      * @return mixed|null Module's output
+     *
+     * @throws PrestaShopException
      */
     public static function exec(
         $hook_name,
@@ -1054,7 +1054,7 @@ class HookCore extends ObjectModel
 
         if ($different_shop
             && isset($old_shop, $old_context, $shop->id)
-             ) {
+        ) {
             $context->shop = $old_shop;
             $context->shop->setContext($old_context, $shop->id);
         }
@@ -1101,7 +1101,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * @return \PrestaShopBundle\DataCollector\HookRegistry|null
+     * @return PrestaShopBundle\DataCollector\HookRegistry|null
      */
     private static function getHookRegistry()
     {

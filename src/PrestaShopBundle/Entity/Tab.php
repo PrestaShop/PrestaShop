@@ -34,6 +34,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Tab.
  *
  * @ORM\Table()
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TabRepository")
  */
 class Tab
@@ -42,7 +43,9 @@ class Tab
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_tab", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -157,7 +160,7 @@ class Tab
         return $this->icon;
     }
 
-    public function getTabLangs(): Collection & Selectable
+    public function getTabLangs(): Collection&Selectable
     {
         return $this->tabLangs;
     }

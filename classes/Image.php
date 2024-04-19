@@ -136,7 +136,7 @@ class ImageCore extends ObjectModel
      *
      * {@inheritDoc}
      */
-    public function associateTo($id_shops, int $productId = null)
+    public function associateTo($id_shops, ?int $productId = null)
     {
         if (!$this->id) {
             return;
@@ -231,7 +231,7 @@ class ImageCore extends ObjectModel
      */
     public static function getBestImageAttribute($idShop, $idLang, $idProduct, $idProductAttribute)
     {
-        $cacheId = 'Image::getBestImageAttribute' . '-' . (int) $idProduct . '-' . (int) $idProductAttribute . '-' . (int) $idLang . '-' . (int) $idShop;
+        $cacheId = 'Image::getBestImageAttribute-' . (int) $idProduct . '-' . (int) $idProductAttribute . '-' . (int) $idLang . '-' . (int) $idShop;
 
         if (!Cache::isStored($cacheId)) {
             $row = Db::getInstance()->getRow('
@@ -379,8 +379,8 @@ class ImageCore extends ObjectModel
 			UPDATE `' . _DB_PREFIX_ . 'image`
 			SET `cover` = NULL
 			WHERE `id_product` = ' . (int) $idProduct
-        ) &&
-        Db::getInstance()->execute(
+        )
+        && Db::getInstance()->execute(
             '
 			UPDATE `' . _DB_PREFIX_ . 'image_shop` image_shop
 			SET image_shop.`cover` = NULL
@@ -445,7 +445,7 @@ class ImageCore extends ObjectModel
                         $imageNew->createImgFolder();
                         copy(
                             _PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg',
-                        $newPath . '-' . $imageType['name'] . '.jpg'
+                            $newPath . '-' . $imageType['name'] . '.jpg'
                         );
                         if (Configuration::get('WATERMARK_HASH')) {
                             $oldImagePath = _PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.jpg';
@@ -673,7 +673,7 @@ class ImageCore extends ObjectModel
         if (is_dir($this->image_dir . $this->getImgFolder())) {
             $deleteFolder = true;
             foreach (scandir($this->image_dir . $this->getImgFolder(), SCANDIR_SORT_NONE) as $file) {
-                if (($file != '.' && $file != '..')) {
+                if ($file != '.' && $file != '..') {
                     $deleteFolder = false;
 
                     break;
@@ -703,7 +703,7 @@ class ImageCore extends ObjectModel
         foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
             if (preg_match('/^[0-9]+(\-(.*))?\.' . $format . '$/', $file)) {
                 unlink($path . $file);
-            } elseif (is_dir($path . $file) && (preg_match('/^[0-9]$/', $file))) {
+            } elseif (is_dir($path . $file) && preg_match('/^[0-9]$/', $file)) {
                 Image::deleteAllImages($path . $file . '/', $format);
             }
         }
@@ -712,7 +712,7 @@ class ImageCore extends ObjectModel
         if (is_numeric(basename($path))) {
             $removeFolder = true;
             foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
-                if (($file != '.' && $file != '..' && $file != 'index.php')) {
+                if ($file != '.' && $file != '..' && $file != 'index.php') {
                     $removeFolder = false;
 
                     break;

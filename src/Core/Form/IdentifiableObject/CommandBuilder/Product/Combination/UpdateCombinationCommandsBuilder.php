@@ -120,8 +120,8 @@ class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInte
         if (
             // if low stock threshold switch is falsy, then we must set lowStockThreshold to its disabled value
             // which will end up being 0 after falsy bool to int conversion
-            isset($formData['stock']['options'][$lowStockThresholdSwitchKey]) &&
-            !$formData['stock']['options'][$lowStockThresholdSwitchKey]
+            isset($formData['stock']['options'][$lowStockThresholdSwitchKey])
+            && !$formData['stock']['options'][$lowStockThresholdSwitchKey]
         ) {
             $config->addMultiShopField(sprintf('[stock][options][%s]', $lowStockThresholdSwitchKey), 'setLowStockThreshold', DataField::TYPE_INT);
         } else {

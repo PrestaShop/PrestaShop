@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 use Hook;
 use Language;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use ReflectionException;
 
 class ProductListingPresenter extends ProductPresenter
 {
@@ -39,7 +40,7 @@ class ProductListingPresenter extends ProductPresenter
      *
      * @return ProductLazyArray|ProductListingLazyArray
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function present(
         ProductPresentationSettings $settings,

@@ -61,11 +61,11 @@ class DbTest extends TestCase
 
         $this->master = Db::getInstance();
 
-        //When
+        // When
         $this->firstSlave = Db::getInstance((bool) _PS_USE_SQL_SLAVE_);
         $this->secondSlave = Db::getInstance((bool) _PS_USE_SQL_SLAVE_);
 
-        //Then
+        // Then
         $this->assertNotSame($this->firstSlave, $this->secondSlave);
         $this->assertNotSame($this->master, $this->secondSlave);
         $this->assertNotSame($this->master, $this->firstSlave);

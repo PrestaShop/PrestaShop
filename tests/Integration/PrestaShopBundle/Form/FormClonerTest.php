@@ -30,6 +30,7 @@ namespace Tests\Integration\PrestaShopBundle\Form;
 
 use Closure;
 use PrestaShopBundle\Form\FormCloner;
+use ReflectionProperty;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\ChoiceList\ChoiceListInterface;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -237,7 +238,7 @@ class FormClonerTest extends AbstractFormTester
      */
     private function getTransformerChoiceList(DataTransformerInterface $transformer): ChoiceListInterface
     {
-        $reflectionProperty = new \ReflectionProperty(ChoiceToValueTransformer::class, 'choiceList');
+        $reflectionProperty = new ReflectionProperty(ChoiceToValueTransformer::class, 'choiceList');
         $reflectionProperty->setAccessible(true);
 
         $choiceList = $reflectionProperty->getValue($transformer);

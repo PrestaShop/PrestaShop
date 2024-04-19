@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception;
 
+use Exception;
+
 /**
  * Is thrown when adding/editing order return state with missing required fields
  */
@@ -41,7 +43,7 @@ class MissingOrderReturnStateRequiredFieldsException extends OrderReturnStateExc
      * @param string[] $missingRequiredFields
      * @param string $message
      * @param int $code
-     * @param \Exception|null $previous
+     * @param Exception|null $previous
      */
     public function __construct(array $missingRequiredFields, $message = '', $code = 0, $previous = null)
     {

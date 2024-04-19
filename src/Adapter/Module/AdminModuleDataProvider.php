@@ -98,7 +98,7 @@ class AdminModuleDataProvider implements ModuleInterface
         private readonly ModuleDataProvider $moduleProvider,
         private readonly TranslatorInterface $translator,
         private readonly ?Employee $employee = null,
-        ApiClientContext $apiClientContext = null,
+        ?ApiClientContext $apiClientContext = null,
     ) {
         $this->apiClientContext = $apiClientContext ?? new ApiClientContext(null);
     }

@@ -42,7 +42,7 @@ class ProductAssemblerCore
     /**
      * ProductAssemblerCore constructor.
      *
-     * @param \Context $context
+     * @param Context $context
      */
     public function __construct(Context $context)
     {

@@ -240,7 +240,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
 
                 if (isset($cartRules[$giftRuleId])) {
                     // it is possible that one cart rule can have a gift product, but also have other conditions,
-                    //so we need to sum their reduction values
+                    // so we need to sum their reduction values
                     /** @var CartForOrderCreation\CartRule $cartRule */
                     $cartRule = $cartRules[$giftRuleId];
                     $finalValue = $finalValue->plus(new DecimalNumber($cartRule->getValue()));
@@ -273,7 +273,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
         foreach ($legacySummary['products'] as $product) {
             $productKey = $this->generateUniqueProductKey($product);
 
-            //decrease product quantity for each identical product which is marked as gift
+            // decrease product quantity for each identical product which is marked as gift
             if (isset($mergedGifts[$productKey])) {
                 $identicalGiftedProduct = $mergedGifts[$productKey];
                 $product['quantity'] -= $identicalGiftedProduct['quantity'];
@@ -323,7 +323,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
                 $mergedGifts[$productKey] = $giftProduct;
                 $mergedGifts[$productKey]['quantity'] = 1;
             } else {
-                //increase existing gift quantity by 1
+                // increase existing gift quantity by 1
                 ++$mergedGifts[$productKey]['quantity'];
             }
         }
@@ -360,7 +360,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
         $deliveryOptionsByAddress = $cart->getDeliveryOptionList();
         $deliveryAddress = (int) $cart->id_address_delivery;
 
-        //Check if there is any delivery options available for cart delivery address
+        // Check if there is any delivery options available for cart delivery address
         if (!array_key_exists($deliveryAddress, $deliveryOptionsByAddress) && !$cart->isVirtualCart()) {
             return null;
         }
@@ -410,7 +410,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             }
         }
 
-        //make sure array is not associative
+        // make sure array is not associative
         return array_values($deliveryOptions);
     }
 
@@ -488,7 +488,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             return null;
         }
 
-        return new CartForOrderCreation\Customization($customizationId, $productCustomizedFieldsData);
+        return new Customization($customizationId, $productCustomizedFieldsData);
     }
 
     /**

@@ -70,7 +70,7 @@ class InvalidProductTypeException extends ProductException
      * @param string $message
      * @param Throwable|null $previous
      */
-    public function __construct($code, $message = '', Throwable $previous = null)
+    public function __construct($code, $message = '', ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

@@ -197,9 +197,9 @@ class PDFGeneratorCore extends TCPDF
      * @param string $filename
      * @param bool|string $display true:display to user, false:save, 'I','D','S' as fpdf display
      *
-     * @throws PrestaShopException
-     *
      * @return string HTML rendered
+     *
+     * @throws PrestaShopException
      */
     public function render($filename, $display = true)
     {

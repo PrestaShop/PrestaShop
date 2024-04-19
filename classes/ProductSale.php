@@ -169,7 +169,7 @@ class ProductSaleCore
      *
      * @return bool|array keys : id_product, link_rewrite, name, id_image, legend, sales, ean13, upc, link
      */
-    public static function getBestSalesLight($idLang, $pageNumber = 0, $nbProducts = 10, Context $context = null)
+    public static function getBestSalesLight($idLang, $pageNumber = 0, $nbProducts = 10, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();

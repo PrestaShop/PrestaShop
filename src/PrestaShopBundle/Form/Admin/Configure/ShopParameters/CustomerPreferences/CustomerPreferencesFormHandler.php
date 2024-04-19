@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences;
 
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\Handler;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 
@@ -67,7 +68,7 @@ final class CustomerPreferencesFormHandler extends Handler
      *
      * @param bool $b2bMode Current B2B mode status
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private function handleB2bUpdate($b2bMode)
     {

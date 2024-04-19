@@ -33,6 +33,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Shop.
  *
  * @ORM\Table()
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ShopRepository")
  */
 class Shop
@@ -41,13 +42,16 @@ class Shop
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_shop", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\ShopGroup", inversedBy="shops")
+     *
      * @ORM\JoinColumn(name="id_shop_group", referencedColumnName="id_shop_group", nullable=false)
      */
     private $shopGroup;
@@ -98,6 +102,7 @@ class Shop
      * @var Collection
      *
      * One group shop has many shops. This is the inverse side.
+     *
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\ShopUrl", mappedBy="shop")
      */
     private $shopUrls;
@@ -255,7 +260,7 @@ class Shop
     /**
      * Set shopGroup.
      *
-     * @param \PrestaShopBundle\Entity\ShopGroup $shopGroup
+     * @param ShopGroup $shopGroup
      *
      * @return Shop
      */
@@ -269,7 +274,7 @@ class Shop
     /**
      * Get shopGroup.
      *
-     * @return \PrestaShopBundle\Entity\ShopGroup
+     * @return ShopGroup
      */
     public function getShopGroup()
     {

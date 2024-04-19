@@ -220,39 +220,39 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                        (new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add(
+                            (new LinkRowAction('edit'))
+                                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                ->setIcon('edit')
+                                ->setOptions([
+                                    'route' => 'admin_customers_edit',
+                                    'route_param_name' => 'customerId',
+                                    'route_param_field' => 'id_customer',
+                                ])
+                        )
+                        ->add(
+                            (new LinkRowAction('view'))
+                                ->setName($this->trans('View', [], 'Admin.Actions'))
+                                ->setIcon('zoom_in')
+                                ->setOptions([
+                                    'route' => 'admin_customers_view',
+                                    'route_param_name' => 'customerId',
+                                    'route_param_field' => 'id_customer',
+                                    'clickable_row' => true,
+                                ])
+                        )
+                        ->add((new DeleteCustomerRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
                             ->setOptions([
-                                'route' => 'admin_customers_edit',
-                                'route_param_name' => 'customerId',
-                                'route_param_field' => 'id_customer',
+                                'customer_id_field' => 'id_customer',
+                                'customer_delete_route' => 'admin_customers_delete',
                             ])
-                    )
-                    ->add(
-                        (new LinkRowAction('view'))
-                            ->setName($this->trans('View', [], 'Admin.Actions'))
-                            ->setIcon('zoom_in')
-                            ->setOptions([
-                                'route' => 'admin_customers_view',
-                                'route_param_name' => 'customerId',
-                                'route_param_field' => 'id_customer',
-                                'clickable_row' => true,
-                            ])
-                    )
-                    ->add((new DeleteCustomerRowAction('delete'))
-                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                    ->setIcon('delete')
-                    ->setOptions([
-                        'customer_id_field' => 'id_customer',
-                        'customer_delete_route' => 'admin_customers_delete',
-                    ])
-                    ),
-            ])
+                        ),
+                ])
             );
 
         if ($this->isB2bFeatureEnabled) {
@@ -396,7 +396,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'required' => false,
                     ])
                     ->setAssociatedColumn('default_group')
-                );
+            );
         }
 
         return $filters;
@@ -465,10 +465,10 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add((new DeleteCustomersBulkAction('delete_selection'))
-            ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-            ->setOptions([
-                'customers_bulk_delete_route' => 'admin_customers_delete_bulk',
-            ])
+                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'customers_bulk_delete_route' => 'admin_customers_delete_bulk',
+                ])
             );
     }
 }

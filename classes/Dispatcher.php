@@ -192,7 +192,7 @@ class DispatcherCore
      *
      * @throws PrestaShopException
      */
-    public static function getInstance(SymfonyRequest $request = null)
+    public static function getInstance(?SymfonyRequest $request = null)
     {
         if (!self::$instance) {
             if (null === $request) {
@@ -211,7 +211,7 @@ class DispatcherCore
      *
      * @throws PrestaShopException
      */
-    protected function __construct(SymfonyRequest $request = null)
+    protected function __construct(?SymfonyRequest $request = null)
     {
         $this->setRequest($request);
 
@@ -248,7 +248,7 @@ class DispatcherCore
      *
      * @param SymfonyRequest|null $request
      */
-    private function setRequest(SymfonyRequest $request = null)
+    private function setRequest(?SymfonyRequest $request = null)
     {
         if (null === $request) {
             $request = SymfonyRequest::createFromGlobals();
@@ -275,7 +275,7 @@ class DispatcherCore
      *
      * @return string
      */
-    private function getDefaultController($frontControllerType, Employee $employee = null)
+    private function getDefaultController($frontControllerType, ?Employee $employee = null)
     {
         switch ($frontControllerType) {
             case self::FC_ADMIN:
@@ -378,7 +378,7 @@ class DispatcherCore
 
                 break;
 
-            // Dispatch module controller for front office
+                // Dispatch module controller for front office
             case self::FC_MODULE:
                 $module_name = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
                 $module = Module::getInstanceByName($module_name);
@@ -405,7 +405,7 @@ class DispatcherCore
 
                 break;
 
-            // Dispatch back office controller + module back office controller
+                // Dispatch back office controller + module back office controller
             case self::FC_ADMIN:
                 if ($this->use_default_controller
                     && !Tools::getValue('token')
@@ -524,7 +524,7 @@ class DispatcherCore
      *
      * @return string
      */
-    private function buildRequestUri($requestUri, $isMultiLanguageActivated, Shop $shop = null)
+    private function buildRequestUri($requestUri, $isMultiLanguageActivated, ?Shop $shop = null)
     {
         // Decode raw request URI
         $requestUri = rawurldecode($requestUri);
@@ -540,9 +540,9 @@ class DispatcherCore
 
         // If there are several languages, set $_GET['isolang'] and remove the language part from the request URI
         if (
-            $this->use_routes &&
-            $isMultiLanguageActivated &&
-            preg_match('#^/([a-z]{2})(?:/.*)?$#', $requestUri, $matches)
+            $this->use_routes
+            && $isMultiLanguageActivated
+            && preg_match('#^/([a-z]{2})(?:/.*)?$#', $requestUri, $matches)
         ) {
             $_GET['isolang'] = $matches[1];
             $requestUri = substr($requestUri, 3);

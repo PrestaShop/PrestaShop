@@ -66,7 +66,7 @@ class ModuleRepositoryTest extends TestCase
             $check_exceptions,
             $use_push,
             $id_shop
-            ) {
+        ) {
             // This mock represents a module that :
             // - overrides `dummy_payment` module `fullDescription` attributes
             // - adds `testAttribute` attributes to `dummy_payment` module

@@ -55,7 +55,7 @@ class ThemeRepository implements AddonRepositoryInterface
      */
     public $themes;
 
-    public function __construct(ConfigurationInterface $configuration, Filesystem $filesystem, Shop $shop = null)
+    public function __construct(ConfigurationInterface $configuration, Filesystem $filesystem, ?Shop $shop = null)
     {
         $this->appConfiguration = $configuration;
         $this->filesystem = $filesystem;

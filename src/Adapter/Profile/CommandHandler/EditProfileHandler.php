@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\CommandHandler\EditProfileHandlerI
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Profile;
 
 /**
@@ -63,8 +65,8 @@ final class EditProfileHandler implements EditProfileHandlerInterface
      * @return Profile
      *
      * @throws ProfileNotFoundException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function getProfile(ProfileId $profileId)
     {

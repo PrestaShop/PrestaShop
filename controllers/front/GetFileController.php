@@ -244,8 +244,8 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This file no longer exists.');
             }
 
-            if (isset($info['product_quantity_refunded'], $info['product_quantity_return']) &&
-                ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0)) {
+            if (isset($info['product_quantity_refunded'], $info['product_quantity_return'])
+                && ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0)) {
                 $this->displayCustomError('This product has been refunded.');
             }
 
@@ -288,7 +288,7 @@ class GetFileControllerCore extends FrontController
         if ($forceDownload) {
             header('Content-Disposition: attachment; filename="' . $filename . '"');
         }
-        //prevents max execution timeout, when reading large files
+        // prevents max execution timeout, when reading large files
         @set_time_limit(0);
         $fp = fopen($file, 'rb');
 
@@ -356,6 +356,6 @@ class GetFileControllerCore extends FrontController
         //]]>
         </script>
         <?php
-        exit();
+        exit;
     }
 }

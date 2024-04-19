@@ -265,7 +265,7 @@ class MenuBuilder
             return 'delete_image';
         } elseif ($request->query->has('delete' . $controllerTable)) {
             return 'delete';
-        } elseif (($request->query->has('status' . $controllerTable) || $request->query->has('status'))) {
+        } elseif ($request->query->has('status' . $controllerTable) || $request->query->has('status')) {
             return 'status';
         } elseif ($request->query->has('position')) {
             return 'position';

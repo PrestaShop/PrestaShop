@@ -1348,8 +1348,8 @@ class ProductController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             CannotBulkDeleteProductException::class => $this->trans(
-                    'An error occurred while deleting this selection.',
-                    'Admin.Notifications.Error'
+                'An error occurred while deleting this selection.',
+                'Admin.Notifications.Error'
             ),
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_PRICE => $this->trans(

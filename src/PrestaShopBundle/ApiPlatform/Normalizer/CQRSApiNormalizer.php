@@ -56,12 +56,12 @@ class CQRSApiNormalizer extends ObjectNormalizer
     protected $protectedObjectClassResolver;
 
     public function __construct(
-        ClassMetadataFactoryInterface $classMetadataFactory = null,
-        NameConverterInterface $nameConverter = null,
-        PropertyAccessorInterface $propertyAccessor = null,
-        PropertyTypeExtractorInterface $propertyTypeExtractor = null,
-        ClassDiscriminatorResolverInterface $classDiscriminatorResolver = null,
-        callable $objectClassResolver = null,
+        ?ClassMetadataFactoryInterface $classMetadataFactory = null,
+        ?NameConverterInterface $nameConverter = null,
+        ?PropertyAccessorInterface $propertyAccessor = null,
+        ?PropertyTypeExtractorInterface $propertyTypeExtractor = null,
+        ?ClassDiscriminatorResolverInterface $classDiscriminatorResolver = null,
+        ?callable $objectClassResolver = null,
         array $defaultContext = []
     ) {
         parent::__construct($classMetadataFactory, $nameConverter, $propertyAccessor, $propertyTypeExtractor, $classDiscriminatorResolver, $objectClassResolver, $defaultContext);
@@ -71,7 +71,7 @@ class CQRSApiNormalizer extends ObjectNormalizer
         };
     }
 
-    public function normalize($object, string $format = null, array $context = [])
+    public function normalize($object, ?string $format = null, array $context = [])
     {
         $normalizedObject = parent::normalize($object, $format, $context);
 
@@ -89,7 +89,7 @@ class CQRSApiNormalizer extends ObjectNormalizer
         ];
     }
 
-    protected function extractAttributes(object $object, string $format = null, array $context = []): array
+    protected function extractAttributes(object $object, ?string $format = null, array $context = []): array
     {
         $attributes = parent::extractAttributes($object, $format, $context);
 
@@ -100,10 +100,10 @@ class CQRSApiNormalizer extends ObjectNormalizer
 
         foreach ($reflClass->getMethods(ReflectionMethod::IS_PUBLIC) as $reflMethod) {
             if (
-                0 !== $reflMethod->getNumberOfRequiredParameters() ||
-                $reflMethod->isStatic() ||
-                $reflMethod->isConstructor() ||
-                $reflMethod->isDestructor()
+                0 !== $reflMethod->getNumberOfRequiredParameters()
+                || $reflMethod->isStatic()
+                || $reflMethod->isConstructor()
+                || $reflMethod->isDestructor()
             ) {
                 continue;
             }
@@ -123,7 +123,7 @@ class CQRSApiNormalizer extends ObjectNormalizer
         return $attributes;
     }
 
-    protected function getAttributeValue(object $object, string $attribute, string $format = null, array $context = []): mixed
+    protected function getAttributeValue(object $object, string $attribute, ?string $format = null, array $context = []): mixed
     {
         $attributeValue = parent::getAttributeValue($object, $attribute, $format, $context);
         // Value objects are not returned as is, the value itself is returned

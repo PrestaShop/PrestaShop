@@ -179,7 +179,7 @@ class AdminLoginControllerCore extends AdminController
         parent::initContent();
         $this->initFooter();
 
-        //force to disable modals
+        // force to disable modals
         $this->context->smarty->assign('modals', null);
     }
 

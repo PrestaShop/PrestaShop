@@ -750,7 +750,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
      */
     public function assertAllProductsExists(array $productIds): void
     {
-        //@todo: no shop association. Should it be checked here?
+        // @todo: no shop association. Should it be checked here?
         $ids = array_map(function (ProductId $productId): int {
             return $productId->getValue();
         }, $productIds);

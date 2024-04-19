@@ -131,7 +131,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
      *
      * @return ProductSearchQuery
      *
-     * @throws \PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException
+     * @throws PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException
      */
     protected function getProductSearchQuery()
     {

@@ -53,7 +53,7 @@ class HookEvent extends Event
      * @param array $contextParameters
      * @param array $hookParameters
      */
-    public function __construct(array $contextParameters = null, array $hookParameters = null)
+    public function __construct(?array $contextParameters = null, ?array $hookParameters = null)
     {
         if (null !== $contextParameters) {
             $this->contextParameters = $contextParameters;

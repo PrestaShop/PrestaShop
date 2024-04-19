@@ -37,6 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ApiClientRepository")
+ *
  * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="api_client_client_id_idx", fields={"clientId", "externalIssuer"}), @ORM\UniqueConstraint(name="api_client_client_name_idx", fields={"clientName", "externalIssuer"})})
  */
 #[UniqueEntity(fields: ['clientId', 'externalIssuer'], ignoreNull: false)]
@@ -45,7 +46,9 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
+     *
      * @ORM\Column(name="id_api_client", type="integer", options={"unsigned": true})
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     #[Assert\Positive]

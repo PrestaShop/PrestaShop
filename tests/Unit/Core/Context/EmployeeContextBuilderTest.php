@@ -101,7 +101,7 @@ class EmployeeContextBuilderTest extends TestCase
         return $employee;
     }
 
-    private function mockEmployeeRepository(Employee|MockObject $employee = null): EmployeeRepository|MockObject
+    private function mockEmployeeRepository(Employee|MockObject|null $employee = null): EmployeeRepository|MockObject
     {
         $repository = $this->createMock(EmployeeRepository::class);
         $repository

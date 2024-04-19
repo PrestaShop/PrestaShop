@@ -69,7 +69,7 @@ class InvalidCancelProductException extends OrderException
      * @param string $message
      * @param Throwable|null $previous
      */
-    public function __construct($code = 0, int $refundableQuantity = 0, $message = '', Throwable $previous = null)
+    public function __construct($code = 0, int $refundableQuantity = 0, $message = '', ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->refundableQuantity = $refundableQuantity;

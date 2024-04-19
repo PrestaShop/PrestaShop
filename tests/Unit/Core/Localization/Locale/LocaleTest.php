@@ -112,7 +112,7 @@ class LocaleTest extends TestCase
      *
      * @dataProvider provideValidNumbers
      *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws LocalizationException
      */
     public function testFormatNumber($number, $expected)
     {
@@ -171,7 +171,7 @@ class LocaleTest extends TestCase
      *
      * @dataProvider provideValidPriceData
      *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws LocalizationException
      */
     public function testFormatPrice($number, $currencyCode, $expected)
     {

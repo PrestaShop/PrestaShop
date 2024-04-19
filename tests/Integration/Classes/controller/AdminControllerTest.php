@@ -48,6 +48,8 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
+use ReflectionMethod;
+use ReflectionObject;
 use Shop;
 use Smarty;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -106,7 +108,7 @@ class AdminControllerTest extends TestCase
     public function testTrans(string $controllerClass): void
     {
         $testedController = new $controllerClass();
-        $transMethod = new \ReflectionMethod($testedController, 'trans');
+        $transMethod = new ReflectionMethod($testedController, 'trans');
         $transMethod->setAccessible(true);
         $trans = $transMethod->invoke($testedController, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
         $this->assertEquals('<a href="test">10 Succesful deletion "<b>stringTest</b>"</a>', $trans);
@@ -128,7 +130,7 @@ class AdminControllerTest extends TestCase
          * @var Controller $testedController
          */
         $testedController = new $controllerClass();
-        $refController = new \ReflectionObject($testedController);
+        $refController = new ReflectionObject($testedController);
         $refProperty = $refController->getProperty('container');
         $refProperty->setAccessible(true);
         $refProperty->setValue($testedController, $this->getMockContainerBuilder());

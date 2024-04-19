@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Exception\ImageTypeNotFoundE
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Query\GetImageTypeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\QueryResult\EditableImageType;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageTypeId;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -188,7 +189,7 @@ class ImageTypeContext extends AbstractDomainFeatureContext
         }
 
         if (count($errors) > 0) {
-            throw new \RuntimeException(sprintf('Fields %s are not identical', implode(', ', $errors)));
+            throw new RuntimeException(sprintf('Fields %s are not identical', implode(', ', $errors)));
         }
     }
 
@@ -199,7 +200,7 @@ class ImageTypeContext extends AbstractDomainFeatureContext
     {
         try {
             $this->getQueryBus()->handle(new GetImageTypeForEditing($this->getSharedStorage()->get($imageTypeName)));
-            throw new \RuntimeException(sprintf('Image type %s still exists', $imageTypeName));
+            throw new RuntimeException(sprintf('Image type %s still exists', $imageTypeName));
         } catch (ImageTypeNotFoundException $ex) {
             return;
         }

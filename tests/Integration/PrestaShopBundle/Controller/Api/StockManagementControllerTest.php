@@ -178,7 +178,7 @@ class StockManagementControllerTest extends ApiTestCase
     private function assertOkResponseOnList(
         string $routeName,
         array $parameters = [],
-        int $expectedTotalPages = null
+        ?int $expectedTotalPages = null
     ): void {
         $route = $this->router->generate($routeName, $parameters);
         self::$client->request('GET', $route);

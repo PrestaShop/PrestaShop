@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use OrderMessage;
 use RuntimeException;
 
 class OrderMessageContext extends AbstractPrestaShopFeatureContext
@@ -35,7 +36,7 @@ class OrderMessageContext extends AbstractPrestaShopFeatureContext
      */
     public function assertPropertyInDefaultLanguage(string $reference, string $propertyName, string $propertyValue)
     {
-        /** @var \OrderMessage $orderMessage */
+        /** @var OrderMessage $orderMessage */
         $orderMessage = SharedStorage::getStorage()->get($reference);
 
         $defaultLangId = CommonFeatureContext::getContainer()

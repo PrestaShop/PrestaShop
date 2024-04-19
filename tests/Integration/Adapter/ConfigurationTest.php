@@ -93,6 +93,7 @@ class ConfigurationTest extends KernelTestCase
      * @param array $setParams
      * @param array $getParams
      * @param bool $expectedResult
+     *
      * @dataProvider hasProvider
      */
     public function testHas(array $setParams, array $getParams, bool $expectedResult): void

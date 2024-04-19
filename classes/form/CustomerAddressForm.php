@@ -107,8 +107,8 @@ class CustomerAddressFormCore extends AbstractForm
         } elseif ($this->address) {
             $country = $this->formatter->getCountry();
         } elseif (
-            Tools::isCountryFromBrowserAvailable() &&
-            Country::getByIso($countryIsoCode = Tools::getCountryIsoCodeFromHeader(), true)
+            Tools::isCountryFromBrowserAvailable()
+            && Country::getByIso($countryIsoCode = Tools::getCountryIsoCodeFromHeader(), true)
         ) {
             $country = new Country((int) Country::getByIso($countryIsoCode, true), Language::getIdByIso($countryIsoCode));
         } else {
@@ -132,7 +132,7 @@ class CustomerAddressFormCore extends AbstractForm
                     'Invalid postcode - should look like "%zipcode%"',
                     ['%zipcode%' => $country->zip_code_format],
                     'Shop.Forms.Errors'
-               ));
+                ));
                 $is_valid = false;
             }
         }

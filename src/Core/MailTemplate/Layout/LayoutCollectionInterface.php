@@ -26,13 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Layout;
 
+use IteratorAggregate;
+
 /**
  * Interface MailLayoutCollectionInterface contains a list of layouts used to generate
  * mail templates. Modules can add/remove their own layouts to this collection through
  * the hook:
  *  ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK = actionListMailThemes
  */
-interface LayoutCollectionInterface extends \IteratorAggregate, \Countable
+interface LayoutCollectionInterface extends IteratorAggregate, \Countable
 {
     /**
      * @param LayoutInterface $layout

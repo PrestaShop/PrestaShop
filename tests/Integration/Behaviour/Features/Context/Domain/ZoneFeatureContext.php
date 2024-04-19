@@ -190,6 +190,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Given /^zone "(.*)" is (enabled|disabled)?$/
+     *
      * @Then /^zone "(.*)" should be (enabled|disabled)?$/
      *
      * @param string $zoneReference

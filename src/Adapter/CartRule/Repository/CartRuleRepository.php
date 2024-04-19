@@ -442,7 +442,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
 
     private function removeProductRestrictions(CartRuleId $cartRuleId): void
     {
-        //delete records from cart_rule_product_rule_value for this cart rule
+        // delete records from cart_rule_product_rule_value for this cart rule
         $this->connection->prepare('
             DELETE crprv
             FROM ' . $this->dbPrefix . 'cart_rule_product_rule_value AS crprv

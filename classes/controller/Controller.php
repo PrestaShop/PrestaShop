@@ -274,10 +274,10 @@ abstract class ControllerCore
         $this->ajax = $this->isAjax();
 
         if (
-            !headers_sent() &&
-            isset($_SERVER['HTTP_USER_AGENT']) &&
-            (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false ||
-            strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
+            !headers_sent()
+            && isset($_SERVER['HTTP_USER_AGENT'])
+            && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false
+            || strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
         ) {
             header('X-UA-Compatible: IE=edge,chrome=1');
         }
@@ -650,7 +650,7 @@ abstract class ControllerCore
         $this->context->cookie->write();
 
         $js_tag = 'js_def';
-        $this->context->smarty->assign($js_tag, \Media::getJsDef());
+        $this->context->smarty->assign($js_tag, Media::getJsDef());
 
         if (!is_array($templates)) {
             $templates = [$templates];

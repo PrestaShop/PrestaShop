@@ -97,83 +97,83 @@ class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
     {
         $columnCollection = (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
-            ->setOptions([
-                'bulk_field' => 'id_cart',
-                'disabled_field' => 'unremovable',
-            ])
+                ->setOptions([
+                    'bulk_field' => 'id_cart',
+                    'disabled_field' => 'unremovable',
+                ])
             )
             ->add((new DataColumn('id_cart'))
-            ->setName($this->trans('ID', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'id_cart',
-                'alignment' => 'center',
-            ])
+                ->setName($this->trans('ID', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_cart',
+                    'alignment' => 'center',
+                ])
             )
             ->add((new DataColumn('id_order'))
-            ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
-            ->setOptions([
-                'field' => 'id_order',
-                'alignment' => 'center',
-            ])
+                ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
+                ->setOptions([
+                    'field' => 'id_order',
+                    'alignment' => 'center',
+                ])
             )
             ->add((new BadgeColumn('status'))
-            ->setName($this->trans('Status', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'status',
-                'alignment' => 'center',
-                'badge_type' => '',
-                'badge_type_field' => 'status_badge_color',
-            ])
+                ->setName($this->trans('Status', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'status',
+                    'alignment' => 'center',
+                    'badge_type' => '',
+                    'badge_type_field' => 'status_badge_color',
+                ])
             )
             ->add((new DataColumn('customer_name'))
-            ->setName($this->trans('Customer', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'customer_name',
-            ])
+                ->setName($this->trans('Customer', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'customer_name',
+                ])
             )
             ->add((new BadgeColumn('cart_total'))
-            ->setName($this->trans('Total', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'cart_total',
-                'sortable' => false,
-                'alignment' => 'center',
-            ])
+                ->setName($this->trans('Total', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'cart_total',
+                    'sortable' => false,
+                    'alignment' => 'center',
+                ])
             )
             ->add((new DataColumn('carrier_name'))
-            ->setName($this->trans('Carrier', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'carrier_name',
-            ])
+                ->setName($this->trans('Carrier', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'carrier_name',
+                ])
             )
             ->add((new DateTimeColumn('date_add'))
-            ->setName($this->trans('Date', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'date_add',
-                'format' => $this->languageContext->getDateTimeFormat(),
-                'clickable' => true,
-            ])
+                ->setName($this->trans('Date', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'date_add',
+                    'format' => $this->languageContext->getDateTimeFormat(),
+                    'clickable' => true,
+                ])
             )
             ->add((new DataColumn('customer_online'))
-            ->setName($this->trans('Online', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'customer_online',
-            ])
+                ->setName($this->trans('Online', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'customer_online',
+                ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => $this->getRowActions(),
-            ])
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => $this->getRowActions(),
+                ])
             );
 
         if ($this->needShopNameColumn()) {
             $columnCollection->addAfter(
-               'customer_online',
-               (new DataColumn('shop_name'))
-                   ->setName($this->trans('Shop', [], 'Admin.Global'))
-                   ->setOptions([
-                       'field' => 'shop_name',
-                   ])
+                'customer_online',
+                (new DataColumn('shop_name'))
+                    ->setName($this->trans('Shop', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'shop_name',
+                    ])
             );
         }
 
@@ -187,23 +187,23 @@ class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
     {
         return (new GridActionCollection())
             ->add((new LinkGridAction('export'))
-            ->setName($this->trans('Export', [], 'Admin.Actions'))
-            ->setIcon('cloud_download')
-            ->setOptions([
-                'route' => 'admin_carts_export',
-            ])
+                ->setName($this->trans('Export', [], 'Admin.Actions'))
+                ->setIcon('cloud_download')
+                ->setOptions([
+                    'route' => 'admin_carts_export',
+                ])
             )
             ->add((new SimpleGridAction('common_refresh_list'))
-            ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
-            ->setIcon('refresh')
+                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                ->setIcon('refresh')
             )
             ->add((new SimpleGridAction('common_show_query'))
-            ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
-            ->setIcon('code')
+                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                ->setIcon('code')
             )
             ->add((new SimpleGridAction('common_export_sql_manager'))
-            ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
-            ->setIcon('storage')
+                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                ->setIcon('storage')
             );
     }
 
@@ -258,11 +258,11 @@ class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
                     ])
             )
             ->add(
-                 (new Filter('date_add', DateRangeType::class))
-                     ->setAssociatedColumn('date_add')
-                     ->setTypeOptions([
-                         'required' => false,
-                     ])
+                (new Filter('date_add', DateRangeType::class))
+                    ->setAssociatedColumn('date_add')
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
             )
             ->add(
                 (new Filter('customer_online', YesAndNoChoiceType::class))

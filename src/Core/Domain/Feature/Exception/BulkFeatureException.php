@@ -49,7 +49,7 @@ class BulkFeatureException extends FeatureException implements BulkCommandExcept
         array $exceptions,
         string $message = 'Errors occurred during Feature bulk action',
         int $code = 0,
-        Throwable $previous = null
+        ?Throwable $previous = null
     ) {
         $this->exceptions = $exceptions;
         parent::__construct($message, $code, $previous);

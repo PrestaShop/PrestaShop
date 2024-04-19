@@ -303,7 +303,7 @@ class AttachmentController extends FrameworkBundleAdminController
     /**
      * @param Exception $e
      */
-    private function getErrorMessages(Exception $e = null): array
+    private function getErrorMessages(?Exception $e = null): array
     {
         return [
             DeleteAttachmentException::class => $this->trans(
@@ -318,7 +318,7 @@ class AttachmentController extends FrameworkBundleAdminController
                 AttachmentConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',
                     'Admin.Notifications.Error'
-                    ),
+                ),
                 AttachmentConstraintException::INVALID_FILE_SIZE => $this->trans(
                     'Upload error. Please check your server configurations for the maximum upload size allowed.',
                     'Admin.Catalog.Notification'
@@ -334,7 +334,7 @@ class AttachmentController extends FrameworkBundleAdminController
                 AttachmentConstraintException::INVALID_FIELDS => $this->trans(
                     'An error occurred when attempting to update the required fields.',
                     'Admin.Notifications.Error'
-                    ),
+                ),
                 AttachmentConstraintException::INVALID_DESCRIPTION => $this->trans(
                     'Invalid description for %s language.',
                     'Admin.Catalog.Notification'
@@ -354,7 +354,7 @@ class AttachmentController extends FrameworkBundleAdminController
             CannotAddAttachmentException::class => $this->trans(
                 'This attachment was unable to be loaded into the database.',
                 'Admin.Catalog.Notification'
-                ),
+            ),
             CannotUpdateAttachmentException::class => $this->trans(
                 'This attachment was unable to be loaded into the database.',
                 'Admin.Catalog.Notification'

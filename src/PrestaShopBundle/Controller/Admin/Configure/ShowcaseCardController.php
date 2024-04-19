@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception\InvalidShowcaseCardNameException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
@@ -78,7 +79,7 @@ class ShowcaseCardController extends FrameworkBundleAdminController
                     'message' => '',
                 ]
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->json(
                 [
                     'success' => false,

@@ -165,7 +165,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         $aliasId = $this->getSharedStorage()->get($reference);
 
         try {
-            $this->getCommandBus()->handle(new DeleteAliasCommand(($aliasId)));
+            $this->getCommandBus()->handle(new DeleteAliasCommand($aliasId));
         } catch (AliasException $e) {
             $this->setLastException($e);
         }

@@ -62,13 +62,13 @@ class StoreController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'storeGrid' => $this->presentGrid($storeGrid),
             // @todo: uncomment when add action is implemented
-            //'layoutHeaderToolbarBtn' => [
-            //'add_store' => [
-            //'href' => $this->generateUrl('admin_stores_add'),
-            //'desc' => $this->trans('Add new store', 'Admin.Shopparameters.Feature'),
-            //'icon' => 'add_circle_outline',
-            //],
-            //],
+            // 'layoutHeaderToolbarBtn' => [
+            // 'add_store' => [
+            // 'href' => $this->generateUrl('admin_stores_add'),
+            // 'desc' => $this->trans('Add new store', 'Admin.Shopparameters.Feature'),
+            // 'icon' => 'add_circle_outline',
+            // ],
+            // ],
         ]);
     }
 
@@ -89,7 +89,7 @@ class StoreController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_stores_index');
     }
 
-//    public function bulkEnableStoreAction():
+    //    public function bulkEnableStoreAction():
     /**
      * @param int $storeId
      *

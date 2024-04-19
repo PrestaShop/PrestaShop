@@ -47,7 +47,7 @@ class BulkCartException extends CartException implements BulkCommandExceptionInt
         private readonly array $exceptions,
         string $message = 'Errors occurred during Cart bulk action',
         int $code = 0,
-        Throwable $previous = null
+        ?Throwable $previous = null
     ) {
         parent::__construct($message, $code, $previous);
     }

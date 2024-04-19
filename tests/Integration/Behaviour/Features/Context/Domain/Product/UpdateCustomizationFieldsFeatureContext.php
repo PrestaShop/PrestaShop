@@ -314,7 +314,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
                             );
                         }
                     }
-                    //unset this asserted customization field so we can check if there any left after loop
+                    // unset this asserted customization field so we can check if there any left after loop
                     unset($actualFields[$key]);
 
                     continue;

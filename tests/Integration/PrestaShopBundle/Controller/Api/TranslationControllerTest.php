@@ -349,7 +349,7 @@ class TranslationControllerTest extends ApiTestCase
     private function assertOkResponseOnTranslationEdition(array $params): void
     {
         $editTranslationRoute = $this->router->generate(
-        'api_translation_value_edit',
+            'api_translation_value_edit',
             ['locale' => 'en-US', 'domain' => 'AdminActions']
         );
 

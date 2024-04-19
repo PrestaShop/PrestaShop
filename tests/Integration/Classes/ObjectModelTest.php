@@ -33,6 +33,8 @@ use Db;
 use Language;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Install\SqlLoader;
+use ReflectionException;
+use ReflectionMethod;
 use Shop;
 use Tests\Resources\classes\TestableObjectModel;
 use Tests\Resources\DatabaseDump;
@@ -100,12 +102,12 @@ class ObjectModelTest extends TestCase
      *
      * @return void
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function testTrans(): void
     {
         $newObject = new TestableObjectModel();
-        $transMethod = new \ReflectionMethod($newObject, 'trans');
+        $transMethod = new ReflectionMethod($newObject, 'trans');
         $transMethod->setAccessible(true);
         $trans = $transMethod->invoke($newObject, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
         $this->assertEquals('<a href="test">10 Succesful deletion "<b>stringTest</b>"</a>', $trans);

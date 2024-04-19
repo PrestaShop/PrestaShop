@@ -58,7 +58,7 @@ class StockManagerFactoryCore
     /**
      *  Looks for a StockManager in the modules list.
      *
-     *  @return StockManagerInterface
+     * @return StockManagerInterface
      */
     public static function execHookStockManagerFactory()
     {

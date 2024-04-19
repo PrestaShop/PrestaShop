@@ -301,7 +301,7 @@ class OrderController extends FrameworkBundleAdminController
 
         // When using legacy generator,
         // we want to be sure that displaying PDF is the last thing this controller will do
-        die();
+        die;
     }
 
     /**
@@ -316,7 +316,7 @@ class OrderController extends FrameworkBundleAdminController
 
         // When using legacy generator,
         // we want to be sure that displaying PDF is the last thing this controller will do
-        die();
+        die;
     }
 
     /**
@@ -475,7 +475,7 @@ class OrderController extends FrameworkBundleAdminController
         ]);
 
         $currencyDataProvider = $this->get('prestashop.adapter.data_provider.currency');
-        //@todo: Fix me. Should not rely on legacy object model - Currency
+        // @todo: Fix me. Should not rely on legacy object model - Currency
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         $addProductRowForm = $this->createForm(AddProductRowType::class, [], [
@@ -1257,9 +1257,9 @@ class OrderController extends FrameworkBundleAdminController
 
         $routesCollection = $this->get('router')->getRouteCollection();
 
-        if (null !== $routesCollection &&
-            !$orderMessageForm->isValid() &&
-            $viewRoute = $routesCollection->get('admin_orders_view')
+        if (null !== $routesCollection
+            && !$orderMessageForm->isValid()
+            && $viewRoute = $routesCollection->get('admin_orders_view')
         ) {
             $attributes = $viewRoute->getDefaults();
             $attributes['orderId'] = $orderId;

@@ -187,7 +187,7 @@ class AdminSearchControllerCore extends AdminController
                             true,
                             [
                                 'route' => 'admin_orders_generate_invoice_pdf',
-                                'orderId' => (int) ($invoice->id_order),
+                                'orderId' => (int) $invoice->id_order,
                             ]
                         )
                     );
@@ -334,7 +334,7 @@ class AdminSearchControllerCore extends AdminController
             $genders_icon[$gender->id] = '../genders/' . (int) $gender->id . '.jpg';
             $genders[$gender->id] = $gender->name;
         }
-        $this->fields_list['customers'] = ([
+        $this->fields_list['customers'] = [
             'id_customer' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'width' => 25],
             'id_gender' => ['title' => $this->trans('Social title', [], 'Admin.Global'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders, 'width' => 25],
             'firstname' => ['title' => $this->trans('First name', [], 'Admin.Global'), 'align' => 'left', 'width' => 150],
@@ -345,7 +345,7 @@ class AdminSearchControllerCore extends AdminController
             'date_add' => ['title' => $this->trans('Registration date', [], 'Admin.Shopparameters.Feature'), 'align' => 'center', 'type' => 'date', 'width' => 75],
             'orders' => ['title' => $this->trans('Orders', [], 'Admin.Global'), 'align' => 'center', 'width' => 50],
             'active' => ['title' => $this->trans('Enabled', [], 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'width' => 25],
-        ]);
+        ];
     }
 
     protected function initProductList()
@@ -544,9 +544,9 @@ class AdminSearchControllerCore extends AdminController
      */
     protected function isCountableAndNotEmpty(array $array, string $key)
     {
-        return isset($array[$key]) &&
-            is_countable($array[$key]) &&
-            count($array[$key]);
+        return isset($array[$key])
+            && is_countable($array[$key])
+            && count($array[$key]);
     }
 
     /**

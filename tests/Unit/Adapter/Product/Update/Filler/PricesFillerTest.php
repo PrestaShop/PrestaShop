@@ -117,7 +117,7 @@ class PricesFillerTest extends ProductFillerTestCase
      */
     public function getDataToTestUnitPriceAndPricePropertiesFilling(): iterable
     {
-        //When product price is 0 and ecotax is disabled, it should force unit_price to 0 as well
+        // When product price is 0 and ecotax is disabled, it should force unit_price to 0 as well
         $command = $this->getEmptyCommand()
             ->setPrice('0')
         ;
@@ -140,7 +140,7 @@ class PricesFillerTest extends ProductFillerTestCase
             $expectedProduct,
         ];
 
-        //When product price is 0, and ecotax is enabled, then unit_price should not be forced to 0
+        // When product price is 0, and ecotax is enabled, then unit_price should not be forced to 0
         $command = $this->getEmptyCommand()
             ->setPrice('0')
         ;

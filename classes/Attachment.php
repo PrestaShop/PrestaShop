@@ -138,6 +138,7 @@ class AttachmentCore extends ObjectModel
      * @param array $attachments Attachments
      *
      * @return bool|int Whether the selection has been successfully deleted
+     *
      * @todo: Find out if $return can be initialized with true. (breaking change)
      */
     public function deleteSelection(array $attachments)

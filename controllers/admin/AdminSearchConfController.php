@@ -132,10 +132,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).',
-                                [],
-                                'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            'By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ) . '<br/>' .
                             $this->trans(
                                 'With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.',
                                 [],
@@ -160,10 +160,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, if you search "book", you will have "book", "bookcase" and "bookend".',
-                                [],
-                                'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            'By default, if you search "book", you will have "book", "bookcase" and "bookend".',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ) . '<br/>' .
                             $this->trans(
                                 'With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.',
                                 [],
@@ -188,10 +188,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".',
-                                [],
-                                'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            'By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ) . '<br/>' .
                             $this->trans(
                                 'Disabling this option will require exact spelling for the search to match results.',
                                 [],
@@ -273,25 +273,25 @@ class AdminSearchConfControllerCore extends AdminController
                 'title' => $this->trans('Weight', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-cogs',
                 'info' => $this->trans(
-                        'The "weight" represents its importance and relevance for the ranking of the products when completing a new search.',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ) . '<br />
+                    'The "weight" represents its importance and relevance for the ranking of the products when completing a new search.',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ) . '<br />
 						' . $this->trans(
-                        'A word with a weight of eight will have four times more value than a word with a weight of two.',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ) . '<br /><br />
+                    'A word with a weight of eight will have four times more value than a word with a weight of two.',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ) . '<br /><br />
 						' . $this->trans(
-                        'We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ) . '<br /><br />
+                    'We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ) . '<br /><br />
 						' . $this->trans(
-                        'Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ),
                 'fields' => [
                     'PS_SEARCH_WEIGHT_PNAME' => [
                         'title' => $this->trans('Product name weight', [], 'Admin.Shopparameters.Feature'),

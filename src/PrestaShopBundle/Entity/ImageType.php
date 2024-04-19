@@ -33,7 +33,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ImageTypeRepository")
+ *
  * @ORM\Table()
+ *
  * @UniqueEntity("name")
  */
 class ImageType
@@ -42,7 +44,9 @@ class ImageType
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_image_type", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;

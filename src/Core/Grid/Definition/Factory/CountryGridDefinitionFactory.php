@@ -117,7 +117,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'zone_name',
                     ])
             )
-            //todo: change it to ToggleColumn when toggle status route is created
+            // todo: change it to ToggleColumn when toggle status route is created
             ->add(
                 (new DataColumn('active'))
                     ->setName($this->trans('Enabled', [], 'Admin.Global'))
@@ -268,7 +268,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getBulkActions(): BulkActionCollectionInterface
     {
-        //todo: need to implement bulk actions
+        // todo: need to implement bulk actions
         return new BulkActionCollection();
     }
 }

@@ -325,7 +325,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         ;
 
         // set the sort order if provided in the URL
-        if (($encodedSortOrder = Tools::getValue('order'))) {
+        if ($encodedSortOrder = Tools::getValue('order')) {
             $query->setSortOrder(SortOrder::newFromString(
                 $encodedSortOrder
             ));
@@ -514,7 +514,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             return $link;
         }, $pagination->buildLinks());
 
-        //Filter next/previous link on first/last page
+        // Filter next/previous link on first/last page
         $pages = array_filter($pages, function ($page) use ($pagination) {
             if ('previous' === $page['type'] && 1 === $pagination->getPage()) {
                 return false;

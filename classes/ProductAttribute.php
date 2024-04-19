@@ -240,7 +240,7 @@ class ProductAttributeCore extends ObjectModel
      *
      * @return bool Quantity is available or not
      */
-    public static function checkAttributeQty($idProductAttribute, $qty, Shop $shop = null)
+    public static function checkAttributeQty($idProductAttribute, $qty, ?Shop $shop = null)
     {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -386,6 +386,7 @@ class ProductAttributeCore extends ObjectModel
      * @param int $idAttributeGroup AttributeGroup ID
      *
      * @return int $position Position
+     *
      * @todo: Shouldn't this be called getHighestPosition instead?
      */
     public static function getHigherPosition($idAttributeGroup)

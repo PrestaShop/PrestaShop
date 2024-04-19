@@ -45,7 +45,7 @@ class ModuleDataUpdater
      */
     public function removeModuleFromDisk($name)
     {
-        $fs = new FileSystem();
+        $fs = new Filesystem();
 
         try {
             $fs->remove(_PS_MODULE_DIR_ . '/' . $name);

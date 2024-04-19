@@ -51,7 +51,7 @@ class ImageWithPreviewType extends FileType
         $view->vars['csrf_delete_token_id'] = $options['csrf_delete_token_id'];
         $view->vars['show_size'] = $options['show_size'];
 
-        /* A warning message that will be shown if field is disabled.*/
+        /* A warning message that will be shown if field is disabled. */
         $view->vars['warning_message'] = $options['warning_message'];
     }
 

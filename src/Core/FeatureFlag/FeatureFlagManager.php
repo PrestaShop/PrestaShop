@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\TaggedLocator;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -62,9 +63,9 @@ class FeatureFlagManager implements FeatureFlagStateCheckerInterface, ResetInter
                     }
                 }
             }
-            throw new \RuntimeException(sprintf('No handler can be used for feature flag %s.', $featureFlagName));
+            throw new RuntimeException(sprintf('No handler can be used for feature flag %s.', $featureFlagName));
         }
-        throw new \RuntimeException(sprintf('The feature flag %s doesn\'t exist.', $featureFlagName));
+        throw new RuntimeException(sprintf('The feature flag %s doesn\'t exist.', $featureFlagName));
     }
 
     /**

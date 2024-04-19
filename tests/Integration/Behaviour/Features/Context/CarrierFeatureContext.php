@@ -34,6 +34,7 @@ use CartRule;
 use Configuration;
 use Context;
 use Country;
+use Exception;
 use Group;
 use RangePrice;
 use RangeWeight;
@@ -123,7 +124,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkZoneWithNameExists($zoneName);
         $countryId = Country::getByIso($isoCode, false);
         if (!$countryId) {
-            throw new \Exception('Country not found with iso code = ' . $isoCode);
+            throw new Exception('Country not found with iso code = ' . $isoCode);
         }
         $country = new Country($countryId);
         // clone country to be able to properly reset previous data

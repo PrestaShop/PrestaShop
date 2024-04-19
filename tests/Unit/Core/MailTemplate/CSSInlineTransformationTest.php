@@ -47,7 +47,7 @@ class CSSInlineTransformationTest extends TestCase
         $languageMock = $this->getMockBuilder(LanguageInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
-         ;
+        ;
         $this->assertEquals($transformation, $transformation->setLanguage($languageMock));
     }
 
