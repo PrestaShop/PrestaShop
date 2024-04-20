@@ -7146,7 +7146,7 @@ class ProductCore extends ObjectModel
 
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->executeS('
-            SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`,
+            SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`public_name` as `group`,
             pa.`reference`, pa.`ean13`, pa.`isbn`, pa.`upc`, pa.`mpn`,
             pal.`available_now`, pal.`available_later`
             FROM `' . _DB_PREFIX_ . 'attribute` a
