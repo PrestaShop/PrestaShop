@@ -106,17 +106,29 @@ class AttributeType extends TranslatorAwareType
                 'help' => $this->trans('Your internal name for this attribute.', 'Admin.Catalog.Help')
                     . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
                     . ' ' . TypedRegexValidator::CATALOG_CHARS,
-            ]);
+            ])
 
-        if ($hasAttributeGroupId === true && $attributeGroup->group_type === AttributeGroupType::ATTRIBUTE_GROUP_TYPE_COLOR) {
-            $builder->add('color', ColorType::class, [
+            ->add('color', ColorType::class, [
                 'label' => $this->trans('Color', 'Admin.Global'),
+                'row_attr'   =>  array(
+                    'class'   => 'js-attribute-type-color-form-row'),
                 'required' => false,
             ])->add('texture', FileType::class, [
                 'label' => $this->trans('Texture', 'Admin.Global'),
+                'row_attr'   =>  array(
+                    'class'   => 'js-attribute-type-texture-form-row'),
                 'required' => false,
             ]);
-        }
+
+        // if ($hasAttributeGroupId === true && $attributeGroup->group_type === AttributeGroupType::ATTRIBUTE_GROUP_TYPE_COLOR) {
+        //     $builder->add('color', ColorType::class, [
+        //         'label' => $this->trans('Color', 'Admin.Global'),
+        //         'required' => false,
+        //     ])->add('texture', FileType::class, [
+        //         'label' => $this->trans('Texture', 'Admin.Global'),
+        //         'required' => false,
+        //     ]);
+        // }
 
         if ($this->multistoreFeature->isUsed()) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
