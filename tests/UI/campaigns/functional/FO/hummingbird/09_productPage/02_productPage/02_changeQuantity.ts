@@ -94,9 +94,10 @@ describe('FO - Product page : Change quantity', async () => {
     });
 
     // @todo : https://github.com/PrestaShop/hummingbird/pull/600
-    it.skip('should set the quantity 0 and check that the add to cart button is disabled', async function () {
+    it('should set the quantity 0 and check that the add to cart button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButtonIsDisabled', baseContext);
 
+      this.skip();
       await productPage.setQuantity(page, 0);
 
       const isButtonDisabled = await productPage.isAddToCartButtonEnabled(page);
@@ -131,9 +132,10 @@ describe('FO - Product page : Change quantity', async () => {
     });
 
     // @todo : https://github.com/PrestaShop/hummingbird/pull/600
-    it.skip('should set \'-24\' in the quantity input', async function () {
+    it('should set \'-24\' in the quantity input', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput2', baseContext);
 
+      this.skip();
       await productPage.setQuantity(page, '-24');
 
       const isButtonDisabled = await productPage.isAddToCartButtonEnabled(page);
