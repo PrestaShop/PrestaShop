@@ -269,10 +269,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     public function processFinalize(): void
     {
         $this->initializeContext();
-
         $result = $this->model_install->finalize($this->session->adminFolderName);
-
-        // file_put_contents(_PS_ROOT_DIR_ . '/log-rand-process-' . time(), (string) $result);
 
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());

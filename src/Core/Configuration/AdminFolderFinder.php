@@ -33,12 +33,12 @@ use Symfony\Component\Finder\Finder;
 
 class AdminFolderFinder
 {
-     /*
-      * Look for potential admin folders, condition to meet:
-      * First level folders in the project folder contains a PHP file that define the const PS_ADMIN_DIR or _PS_ADMIN_DIR_
-      * The first folder found is used (alphabetical order, but files named index.php have the highest priority)
-      */
-    static function findAdminFolder(string $projectDir): Finder
+    /*
+     * Look for potential admin folders, condition to meet:
+     * First level folders in the project folder contains a PHP file that define the const PS_ADMIN_DIR or _PS_ADMIN_DIR_
+     * The first folder found is used (alphabetical order, but files named index.php have the highest priority)
+     */
+    public static function findAdminFolder(string $projectDir): Finder
     {
         $finder = new Finder();
 

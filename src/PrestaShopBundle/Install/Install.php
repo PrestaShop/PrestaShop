@@ -1220,9 +1220,14 @@ class Install extends AbstractInstall
         return true;
     }
 
-    public function finalize(string $rand): bool
+    public function finalize(?string $rand = null): bool
     {
         if (file_exists(_PS_ROOT_DIR_ . '/admin/')) {
+            $rand = $rand ?? sprintf(
+                'admin%03d%s/',
+                mt_rand(0, 999),
+                Tools::strtolower(Tools::passwdGen(16))
+            );
 
             // rename folder
             if (@rename(_PS_ROOT_DIR_ . '/admin/', _PS_ROOT_DIR_ . '/' . $rand)) {
@@ -1230,8 +1235,6 @@ class Install extends AbstractInstall
             } else {
                 return false;
             }
-
-            //return $rand;
         }
 
         return true;
