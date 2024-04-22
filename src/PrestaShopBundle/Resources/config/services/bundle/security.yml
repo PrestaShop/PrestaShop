@@ -4,8 +4,10 @@ parameters:
 services:
   _defaults:
     public: true
+
   prestashop.security.admin.provider:
     class: PrestaShopBundle\Security\Admin\EmployeeProvider
+    autowire: true
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.static_cache.adapter"

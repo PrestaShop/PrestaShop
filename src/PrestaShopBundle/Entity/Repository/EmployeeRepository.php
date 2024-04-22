@@ -27,7 +27,26 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+use PrestaShopBundle\Entity\Employee\Employee;
 
 class EmployeeRepository extends EntityRepository
 {
+    public function loadEmployeeByIdentifier(string $userIdentifier): ?Employee
+    {
+        $qb = $this->createQueryBuilder('e');
+        $qb
+            ->leftJoin('e.profile', 'p')
+            ->leftJoin('p.authorizationRoles', 'ar')
+            ->leftJoin('e.defaultLanguage', 'l')
+            ->addSelect('e')
+            ->addSelect('p')
+            ->addSelect('ar')
+            ->addSelect('l')
+            ->where('e.email = :userIdentifier')
+            ->setParameter('userIdentifier', $userIdentifier)
+        ;
+
+        return $qb->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
+    }
 }

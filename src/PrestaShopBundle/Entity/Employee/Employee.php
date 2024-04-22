@@ -47,6 +47,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Employee implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface
 {
+    public const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
+
     /**
      * @ORM\Id
      *
@@ -61,7 +63,7 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
      *
      * @ORM\JoinColumn(name="id_profile", referencedColumnName="id_profile", nullable=false, options={"unsigned": true})
      */
-    private $profile;
+    private Profile $profile;
 
     /**
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Lang")
@@ -212,7 +214,10 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
 
     public function getRoles(): array
     {
-        return $this->getProfile()->getAuthorizationRoles()->map(fn (AuthorizationRole $authorizationRole) => $authorizationRole->getSlug())->toArray();
+        return array_merge(
+            [self::ROLE_EMPLOYEE],
+            $this->getProfile()->getAuthorizationRoles()->map(fn (AuthorizationRole $authorizationRole) => $authorizationRole->getSlug())->toArray()
+        );
     }
 
     public function eraseCredentials()

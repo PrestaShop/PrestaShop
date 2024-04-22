@@ -28,28 +28,19 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Utility;
 
-use PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface;
-use PrestaShopBundle\Security\Admin\Employee;
+use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShopBundle\Security\Admin\EmployeeProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 trait LoginTrait
 {
+    abstract protected function createMock(string $originalClassName): MockObject;
+
     protected function loginUser(KernelBrowser $kernelBrowser): void
     {
-        $employeePermissionProvider = $kernelBrowser->getContainer()->get(EmployeePermissionProviderInterface::class);
-        $employeeId = 1;
-
-        $employee = new Employee(
-            (object) [
-                'email' => 'test@prestashop.com',
-                'id' => $employeeId,
-                'passwd' => '',
-            ]
-        );
-        $employee->setRoles(
-            array_merge(['ROLE_EMPLOYEE'], $employeePermissionProvider->getRoles($employeeId))
-        );
-
+        /** @var EmployeeProvider $employeeProvider */
+        $employeeProvider = $kernelBrowser->getContainer()->get(EmployeeProvider::class);
+        $employee = $employeeProvider->loadUserByIdentifier('test@prestashop.com');
         $kernelBrowser->loginUser($employee);
     }
 }
