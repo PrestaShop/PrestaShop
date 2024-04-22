@@ -29,19 +29,19 @@ class Product extends FOBasePage {
 
   protected productName: string;
 
-  private readonly productCoverImg: string;
+  protected productCoverImg: string;
 
-  private readonly thumbImg: (row: number) => string;
+  protected thumbImg: (row: number) => string;
 
   private readonly thumbImgProductModal: (row: number) => string;
 
-  private readonly scrollBoxImages: (direction: string) => string;
+  protected scrollBoxImages: (direction: string) => string;
 
-  private readonly zoomIcon: string;
+  protected zoomIcon: string;
 
   private readonly productModal: string;
 
-  private readonly productCoverImgProductModal: string;
+  protected productCoverImgProductModal: string;
 
   private readonly productQuantity: string;
 
@@ -608,6 +608,7 @@ class Product extends FOBasePage {
    */
   async scrollBoxArrowsImages(page: Page, direction: string): Promise<void> {
     await page.locator(this.scrollBoxImages(direction)).click();
+    await page.waitForTimeout(1000);
   }
 
   /**
