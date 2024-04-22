@@ -1220,23 +1220,18 @@ class Install extends AbstractInstall
         return true;
     }
 
-    public function finalize()
+    public function finalize(string $rand): bool
     {
         if (file_exists(_PS_ROOT_DIR_ . '/admin/')) {
-            // rename folder
-            $rand = sprintf(
-                'admin%03d%s/',
-                mt_rand(0, 999),
-                Tools::strtolower(Tools::passwdGen(16))
-            );
 
+            // rename folder
             if (@rename(_PS_ROOT_DIR_ . '/admin/', _PS_ROOT_DIR_ . '/' . $rand)) {
                 $this->clearCache();
             } else {
                 return false;
             }
 
-            return $rand;
+            //return $rand;
         }
 
         return true;

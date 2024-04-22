@@ -67,6 +67,18 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             if (!$this->session->admin_password_confirm || trim(Tools::getValue('admin_password_confirm'))) {
                 $this->session->admin_password_confirm = trim(Tools::getValue('admin_password_confirm'));
             }
+
+            if (!$this->session->adminFolderName) {
+                if (file_exists(_PS_ROOT_DIR_ . '/admin-dev')) {
+                    $this->session->adminFolderName = 'admin-dev';
+                } else {
+                    $this->session->adminFolderName = sprintf(
+                        'admin%03d%s/',
+                        mt_rand(0, 999),
+                        Tools::strtolower(Tools::passwdGen(16))
+                    );
+                }
+            }
         }
     }
 

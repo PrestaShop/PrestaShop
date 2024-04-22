@@ -270,17 +270,12 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $this->initializeContext();
 
-        $result = $this->model_install->finalize();
+        $result = $this->model_install->finalize($this->session->adminFolderName);
+
+        // file_put_contents(_PS_ROOT_DIR_ . '/log-rand-process-' . time(), (string) $result);
+
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
-        }
-
-        if (is_string($result)) {
-            $this->session->adminFolderName = $result;
-        } elseif (file_exists(_PS_ROOT_DIR_ . '/admin-dev')) {
-            $this->session->adminFolderName = '../admin-dev';
-        } elseif (file_exists(_PS_ROOT_DIR_ . '/admin')) {
-            $this->session->adminFolderName = '../admin';
         }
 
         $this->ajaxJsonAnswer(true);

@@ -85,7 +85,7 @@
             <?php echo $this->translator->trans('For security purposes, you must delete the "install" folder.', [], 'Install'); ?>
         </h3>
 
-        <div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open('<?php echo $this->session->adminFolderName; ?>')">
+        <div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open('<?php echo '../' . $this->session->adminFolderName; ?>')">
             <img src="theme/img/visu_boBlock.png" alt="" />
             <h3><?php echo $this->translator->trans('Back Office', [], 'Install'); ?></h3>
             <p class="description"><?php echo $this->translator->trans('Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.', [], 'Install'); ?></p>
