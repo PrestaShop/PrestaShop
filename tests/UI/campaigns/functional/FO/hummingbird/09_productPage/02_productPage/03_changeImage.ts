@@ -25,7 +25,7 @@ import ProductData from '@data/faker/product';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_changeImage';
+const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_changeImage';
 
 /*
 Pre-condition:
