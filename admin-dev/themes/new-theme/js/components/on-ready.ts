@@ -22,9 +22,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+const onReady = (callback: () => void): void => {
+  if (document.readyState !== 'loading') {
+    callback();
+  } else {
+    document.addEventListener('DOMContentLoaded', callback);
+  }
+};
 
-import onReady from '@components/on-ready';
-
-onReady(() => {
-  // Login code here
-});
+export default onReady;

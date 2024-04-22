@@ -94,8 +94,8 @@ class Admin
             return;
         }
 
-        $publicLegacyRoute = $event->getRequest()->attributes->get(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE);
-        if ($this->security->getUser() !== null || $publicLegacyRoute) {
+        $publicLegacyRoute = $event->getRequest()->attributes->get(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE;
+        if ($this->security->getUser() !== null || $publicLegacyRoute || $event->getRequest()->attributes->get('_route') === 'admin_login' || $event->getRequest()->attributes->get('_route') === 'admin_homepage') {
             return;
         }
 

@@ -57,7 +57,7 @@ class TokenizedUrlsListener
             return;
         }
 
-        if (!$event->isMainRequest() || !($event instanceof RequestEvent) || $event->getRequest()->attributes->get('_route') === 'admin_login') {
+        if (!$event->isMainRequest() || !($event instanceof RequestEvent) || $event->getRequest()->attributes->get('_route') === 'admin_login' || $event->getRequest()->attributes->get('_route') === 'admin_homepage') {
             return;
         }
 
