@@ -89,6 +89,11 @@ class Admin
      */
     public function onKernelRequest(RequestEvent $event): void
     {
+        // Sub requests and dev firewall context (mostly Symfony debug routes) are not checked
+        if (!$event->isMainRequest() || $event->getRequest()->attributes->get('_firewall_context') === 'security.firewall.map.context.dev') {
+            return;
+        }
+
         $publicLegacyRoute = $event->getRequest()->attributes->get(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE);
         if ($this->security->getUser() !== null || $publicLegacyRoute) {
             return;

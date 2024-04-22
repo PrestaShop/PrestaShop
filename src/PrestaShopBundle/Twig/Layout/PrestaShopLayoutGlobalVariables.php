@@ -128,4 +128,9 @@ class PrestaShopLayoutGlobalVariables
     {
         return $this->templateVariables->getBaseUrl();
     }
+
+    public function getBaseImgUrl(): string
+    {
+        return $this->templateVariables->getBaseUrl() . 'img/';
+    }
 }

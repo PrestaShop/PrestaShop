@@ -92,6 +92,8 @@ module.exports = {
     invoices: './js/pages/invoices',
     language: './js/pages/language',
     localization: './js/pages/localization',
+    login: './scss/pages/login/login.scss',
+    login_form: './js/pages/login',
     logs: './js/pages/logs',
     main: './js/theme',
     maintenance: './js/pages/maintenance',

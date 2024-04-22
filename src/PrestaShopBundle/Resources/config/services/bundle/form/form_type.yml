@@ -59,6 +59,9 @@ services:
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/*"
 
+  PrestaShopBundle\Form\Admin\LoginType:
+    autowire: true
+
   PrestaShopBundle\Form\Admin\Type\DatePickerType:
     arguments:
       - '@PrestaShopBundle\Form\DataTransformer\ArabicToLatinDigitDataTransformer'

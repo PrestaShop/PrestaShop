@@ -135,7 +135,7 @@
 {% endblock %}
 
 {% block widget_type_class %}
-{% if not compound and form.vars.block_prefixes|length > 2 %}
+{% if not compound|default(false) and form.vars.block_prefixes|length > 2 %}
  {% apply spaceless %}
 
     {% set index = form.vars.block_prefixes|length - 2 %}
