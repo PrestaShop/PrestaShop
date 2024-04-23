@@ -107,7 +107,6 @@ class AttributeType extends TranslatorAwareType
                     . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
                     . ' ' . TypedRegexValidator::CATALOG_CHARS,
             ])
-
             ->add('color', ColorType::class, [
                 'label' => $this->trans('Color', 'Admin.Global'),
                 'row_attr'   =>  array(
@@ -119,16 +118,6 @@ class AttributeType extends TranslatorAwareType
                     'class'   => 'js-attribute-type-texture-form-row'),
                 'required' => false,
             ]);
-
-        // if ($hasAttributeGroupId === true && $attributeGroup->group_type === AttributeGroupType::ATTRIBUTE_GROUP_TYPE_COLOR) {
-        //     $builder->add('color', ColorType::class, [
-        //         'label' => $this->trans('Color', 'Admin.Global'),
-        //         'required' => false,
-        //     ])->add('texture', FileType::class, [
-        //         'label' => $this->trans('Texture', 'Admin.Global'),
-        //         'required' => false,
-        //     ]);
-        // }
 
         if ($this->multistoreFeature->isUsed()) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
