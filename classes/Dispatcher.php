@@ -812,6 +812,20 @@ class DispatcherCore
     }
 
     /**
+     * Sets the controller
+     *
+     * @return null
+     */
+    public function setController(string $controller)
+    {
+        if (!Validate::isControllerName($controller)) {
+            throw new PrestaShopException('Dispatcher::setController() controller name is not valid');
+        }
+
+        $this->controller = $controller;
+    }
+
+    /**
      * Removes a route from a list of processed routes.
      *
      * @param string $route_id Name of the route
