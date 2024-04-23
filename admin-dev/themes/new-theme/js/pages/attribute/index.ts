@@ -33,6 +33,7 @@ import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import PositionExtension from '@components/grid/extension/position-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 
 const {$} = window;
 
@@ -48,4 +49,5 @@ $(() => {
   grid.addExtension(new BulkActionCheckboxExtension());
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new PositionExtension(grid));
+  grid.addExtension(new LinkRowActionExtension());
 });

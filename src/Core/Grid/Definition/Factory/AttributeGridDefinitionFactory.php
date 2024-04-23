@@ -159,6 +159,7 @@ final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinit
                                 'extra_route_params' => [
                                     'attributeId' => 'id_attribute',
                                 ],
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(

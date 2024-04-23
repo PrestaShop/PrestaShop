@@ -120,6 +120,7 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
                                 'route' => 'admin_attributes_index',
                                 'route_param_name' => 'attributeGroupId',
                                 'route_param_field' => 'id_attribute_group',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new LinkRowAction('edit'))
