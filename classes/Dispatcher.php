@@ -826,6 +826,24 @@ class DispatcherCore
     }
 
     /**
+     * Sets the front controller
+     *
+     * @return null
+     */
+    public function setFrontController(string $front_controller)
+    {
+        if (!in_array($front_controller, [
+            self::FC_ADMIN,
+            self::FC_FRONT,
+            self::FC_MODULE
+        ])) {
+            throw new PrestaShopException('Dispatcher::setFrontController() fron_controller name is not valid');
+        }
+
+        $this->front_controller = $front_controller;
+    }
+
+    /**
      * Removes a route from a list of processed routes.
      *
      * @param string $route_id Name of the route
