@@ -29,11 +29,19 @@ class Product extends FOBasePage {
 
   protected productName: string;
 
-  private readonly productCoverImg: string;
+  protected productCoverImg: string;
 
-  private readonly thumbFirstImg: string;
+  protected thumbImg: (row: number) => string;
 
-  private readonly thumbSecondImg: string;
+  private readonly thumbImgProductModal: (row: number) => string;
+
+  protected scrollBoxImages: (direction: string) => string;
+
+  protected zoomIcon: string;
+
+  private readonly productModal: string;
+
+  protected productCoverImgProductModal: string;
 
   private readonly productQuantity: string;
 
@@ -196,8 +204,12 @@ class Product extends FOBasePage {
     this.productFlag = (flag: string) => `#content li.product-flag${flag.length === 0 ? '' : `.${flag}`}`;
     this.productName = '#main h1';
     this.productCoverImg = '#content .product-cover img';
-    this.thumbFirstImg = '#content li:nth-child(1) img.js-thumb';
-    this.thumbSecondImg = '#content li:nth-child(2) img.js-thumb';
+    this.thumbImg = (row: number) => `#content li:nth-child(${row}) img.js-thumb`;
+    this.scrollBoxImages = (direction: string) => `#content div.scroll-box-arrows.scroll i.material-icons.${direction}`;
+    this.zoomIcon = 'div.images-container div.product-cover i.zoom-in';
+    this.productModal = '#product-modal';
+    this.productCoverImgProductModal = '#product-modal picture img.js-modal-product-cover';
+    this.thumbImgProductModal = (row: number) => `#thumbnails li:nth-child(${row}) picture img.js-modal-thumb`;
     this.productQuantity = '#quantity_wanted';
     this.shortDescription = '#product-description-short';
     this.productDescription = '#description';
@@ -510,7 +522,7 @@ class Product extends FOBasePage {
   async getProductImageUrls(page: Page): Promise<ProductImageUrls> {
     return {
       coverImage: await this.getAttributeContent(page, this.productCoverImg, 'src'),
-      thumbImage: await this.getAttributeContent(page, this.thumbFirstImg, 'src'),
+      thumbImage: await this.getAttributeContent(page, this.thumbImg(1), 'src'),
     };
   }
 
@@ -595,20 +607,80 @@ class Product extends FOBasePage {
   }
 
   /**
+   * get the URL of the cover image
+   * @param page {Page} Browser tab
+   * @returns {Promise<string|null>}
+   */
+  async getCoverImage(page: Page): Promise<string | null> {
+    return this.getAttributeContent(page, this.productCoverImg, 'src');
+  }
+
+  /**
    * Select thumb image
    * @param page {Page} Browser tab
-   * @param id {number} Id for the thumb
+   * @param imageRow {number} Row of the image
    * @returns {Promise<string>}
    */
-  async selectThumbImage(page: Page, id: number): Promise<string> {
-    if (id === 1) {
-      await this.waitForSelectorAndClick(page, this.thumbFirstImg);
-      await this.waitForVisibleSelector(page, `${this.thumbFirstImg}.selected`);
-    } else {
-      await this.waitForSelectorAndClick(page, this.thumbSecondImg);
-      await this.waitForVisibleSelector(page, `${this.thumbSecondImg}.selected`);
-    }
+  async selectThumbImage(page: Page, imageRow: number): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.thumbImg(imageRow));
+    await this.waitForVisibleSelector(page, `${this.thumbImg(imageRow)}.selected`);
+
     return this.getAttributeContent(page, this.productCoverImg, 'src');
+  }
+
+  /**
+   * Scroll box arrows images
+   * @param page {Page} Browser tab
+   * @param direction {string} Direction to scroll
+   * @returns {Promise<void>}
+   */
+  async scrollBoxArrowsImages(page: Page, direction: string): Promise<void> {
+    await page.locator(this.scrollBoxImages(direction)).click();
+    await page.waitForTimeout(1000);
+  }
+
+  /**
+   * Zoom cover image
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async zoomCoverImage(page: Page): Promise<boolean> {
+    await page.locator(this.zoomIcon).click({force: true});
+
+    return this.elementVisible(page, this.productModal, 1000);
+  }
+
+  /**
+   * Select thumb image
+   * @param page {Page} Browser tab
+   * @param imageRow {number} Row of the image
+   * @returns {Promise<string>}
+   */
+  async selectThumbImageFromProductModal(page: Page, imageRow: number): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.thumbImgProductModal(imageRow));
+    await this.waitForVisibleSelector(page, `${this.thumbImgProductModal(imageRow)}.selected`);
+
+    return this.getAttributeContent(page, this.productCoverImgProductModal, 'src');
+  }
+
+  /**
+   * get the URL of the cover image
+   * @param page {Page} Browser tab
+   * @returns {Promise<string|null>}
+   */
+  async getCoverImageFromProductModal(page: Page): Promise<string | null> {
+    return this.getAttributeContent(page, this.productCoverImg, 'src');
+  }
+
+  /**
+   * Close product modal
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeProductModal(page: Page): Promise<boolean> {
+    await page.mouse.click(5, 5);
+
+    return this.elementNotVisible(page, this.productModal, 2000);
   }
 
   /**
