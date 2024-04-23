@@ -2628,13 +2628,13 @@ class AdminTranslationsControllerCore extends AdminController
 
         $modules_has_mails = $this->getModulesHasMails(true);
 
-        $files_by_directiories = $this->getFileToParseByTypeTranslation();
+        $files_by_directories = $this->getFileToParseByTypeTranslation();
 
         if (!$this->theme_selected || !@filemtime($this->translations_informations[$this->type_selected]['override']['dir'])) {
             $this->copyMailFilesForAllLanguages();
         }
 
-        foreach ($files_by_directiories['php'] as $dir => $files) {
+        foreach ($files_by_directories['php'] as $dir => $files) {
             if (!empty($files)) {
                 foreach ($files as $file) {
                     // If file exist and is not in ignore_folder, in the next step we check if a folder or mail
