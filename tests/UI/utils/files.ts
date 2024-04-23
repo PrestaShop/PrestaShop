@@ -203,7 +203,7 @@ export default {
     if (filePath === null) {
       return false;
     }
-    let fileText: string = await fs.readFileSync(filePath, {
+    let fileText: string = fs.readFileSync(filePath, {
       encoding,
     });
     let text: string = textToCheckWith;
