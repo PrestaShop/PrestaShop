@@ -21,7 +21,7 @@ class Product extends FOBasePage {
 
   public readonly messageAlertNotificationAlreadyRegistered: string;
 
-  private readonly warningMessage: string;
+  protected warningMessage: string;
 
   protected productFlags: string;
 
@@ -29,13 +29,23 @@ class Product extends FOBasePage {
 
   protected productName: string;
 
-  private readonly productCoverImg: string;
+  protected productCoverImg: string;
 
-  private readonly thumbFirstImg: string;
+  protected thumbImg: (row: number) => string;
 
-  private readonly thumbSecondImg: string;
+  private readonly thumbImgProductModal: (row: number) => string;
+
+  protected scrollBoxImages: (direction: string) => string;
+
+  protected zoomIcon: string;
+
+  private readonly productModal: string;
+
+  protected productCoverImgProductModal: string;
 
   private readonly productQuantity: string;
+
+  protected productRowQuantityUpDownButton: (direction: string) => string;
 
   protected shortDescription: string;
 
@@ -196,9 +206,15 @@ class Product extends FOBasePage {
     this.productFlag = (flag: string) => `#content li.product-flag${flag.length === 0 ? '' : `.${flag}`}`;
     this.productName = '#main h1';
     this.productCoverImg = '#content .product-cover img';
-    this.thumbFirstImg = '#content li:nth-child(1) img.js-thumb';
-    this.thumbSecondImg = '#content li:nth-child(2) img.js-thumb';
+    this.thumbImg = (row: number) => `#content li:nth-child(${row}) img.js-thumb`;
+    this.scrollBoxImages = (direction: string) => `#content div.scroll-box-arrows.scroll i.material-icons.${direction}`;
+    this.zoomIcon = 'div.images-container div.product-cover i.zoom-in';
+    this.productModal = '#product-modal';
+    this.productCoverImgProductModal = '#product-modal picture img.js-modal-product-cover';
+    this.thumbImgProductModal = (row: number) => `#thumbnails li:nth-child(${row}) picture img.js-modal-thumb`;
     this.productQuantity = '#quantity_wanted';
+    this.productRowQuantityUpDownButton = (direction: string) => 'span.input-group-btn-vertical'
+      + ` button.bootstrap-touchspin-${direction}`;
     this.shortDescription = '#product-description-short';
     this.productDescription = '#description';
     this.customizationBlock = 'div.product-container div.product-information section.product-customization';
@@ -510,7 +526,7 @@ class Product extends FOBasePage {
   async getProductImageUrls(page: Page): Promise<ProductImageUrls> {
     return {
       coverImage: await this.getAttributeContent(page, this.productCoverImg, 'src'),
-      thumbImage: await this.getAttributeContent(page, this.thumbFirstImg, 'src'),
+      thumbImage: await this.getAttributeContent(page, this.thumbImg(1), 'src'),
     };
   }
 
@@ -595,30 +611,90 @@ class Product extends FOBasePage {
   }
 
   /**
+   * get the URL of the cover image
+   * @param page {Page} Browser tab
+   * @returns {Promise<string|null>}
+   */
+  async getCoverImage(page: Page): Promise<string | null> {
+    return this.getAttributeContent(page, this.productCoverImg, 'src');
+  }
+
+  /**
    * Select thumb image
    * @param page {Page} Browser tab
-   * @param id {number} Id for the thumb
+   * @param imageRow {number} Row of the image
    * @returns {Promise<string>}
    */
-  async selectThumbImage(page: Page, id: number): Promise<string> {
-    if (id === 1) {
-      await this.waitForSelectorAndClick(page, this.thumbFirstImg);
-      await this.waitForVisibleSelector(page, `${this.thumbFirstImg}.selected`);
-    } else {
-      await this.waitForSelectorAndClick(page, this.thumbSecondImg);
-      await this.waitForVisibleSelector(page, `${this.thumbSecondImg}.selected`);
-    }
+  async selectThumbImage(page: Page, imageRow: number): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.thumbImg(imageRow));
+    await this.waitForVisibleSelector(page, `${this.thumbImg(imageRow)}.selected`);
+
     return this.getAttributeContent(page, this.productCoverImg, 'src');
+  }
+
+  /**
+   * Scroll box arrows images
+   * @param page {Page} Browser tab
+   * @param direction {string} Direction to scroll
+   * @returns {Promise<void>}
+   */
+  async scrollBoxArrowsImages(page: Page, direction: string): Promise<void> {
+    await page.locator(this.scrollBoxImages(direction)).click();
+    await page.waitForTimeout(1000);
+  }
+
+  /**
+   * Zoom cover image
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async zoomCoverImage(page: Page): Promise<boolean> {
+    await page.locator(this.zoomIcon).click({force: true});
+
+    return this.elementVisible(page, this.productModal, 1000);
+  }
+
+  /**
+   * Select thumb image
+   * @param page {Page} Browser tab
+   * @param imageRow {number} Row of the image
+   * @returns {Promise<string>}
+   */
+  async selectThumbImageFromProductModal(page: Page, imageRow: number): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.thumbImgProductModal(imageRow));
+    await this.waitForVisibleSelector(page, `${this.thumbImgProductModal(imageRow)}.selected`);
+
+    return this.getAttributeContent(page, this.productCoverImgProductModal, 'src');
+  }
+
+  /**
+   * get the URL of the cover image
+   * @param page {Page} Browser tab
+   * @returns {Promise<string|null>}
+   */
+  async getCoverImageFromProductModal(page: Page): Promise<string | null> {
+    return this.getAttributeContent(page, this.productCoverImg, 'src');
+  }
+
+  /**
+   * Close product modal
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeProductModal(page: Page): Promise<boolean> {
+    await page.mouse.click(5, 5);
+
+    return this.elementNotVisible(page, this.productModal, 2000);
   }
 
   /**
    * Select product attributes
    * @param page {Page} Browser tab
-   * @param quantity {number} Quantity of the product that customer wants
+   * @param quantity {number|string} Quantity of the product that customer wants
    * @param attributes {ProductAttribute[]}  Product's attributes data to select
    * @returns {Promise<void>}
    */
-  async selectAttributes(page: Page, quantity: number, attributes: ProductAttribute[]): Promise<void> {
+  async selectAttributes(page: Page, quantity: number|string, attributes: ProductAttribute[]): Promise<void> {
     if (attributes.length === 0) {
       return;
     }
@@ -668,7 +744,7 @@ class Product extends FOBasePage {
   /**
    * Click on Add to cart button then on Proceed to checkout button in the modal
    * @param page {Page} Browser tab
-   * @param quantity {number} Quantity of the product that customer wants
+   * @param quantity {number|string} Quantity of the product that customer wants
    * @param combination {ProductAttribute[]}  Product's combination data to add to cart
    * @param proceedToCheckout {boolean|null} True to click on proceed to checkout button on modal
    * @param customizedText {string} Value of customization
@@ -676,7 +752,7 @@ class Product extends FOBasePage {
    */
   async addProductToTheCart(
     page: Page,
-    quantity: number = 1,
+    quantity: number |string = 1,
     combination: ProductAttribute[] = [],
     proceedToCheckout: boolean | null = true,
     customizedText: string = 'text',
@@ -766,11 +842,45 @@ class Product extends FOBasePage {
   /**
    * Set quantity
    * @param page {Page} Browser tab
-   * @param quantity {number} Quantity to set
+   * @param quantity {number|string} Quantity to set
    * @returns {Promise<void>}
    */
-  async setQuantity(page: Page, quantity: number): Promise<void> {
-    await this.setValue(page, this.productQuantity, quantity.toString());
+  async setQuantity(page: Page, quantity: number | string): Promise<void> {
+    await this.setValue(page, this.productQuantity, quantity);
+  }
+
+  /**
+   * Click on add to cart button
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnAddToCartButton(page: Page): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.addToCartButton);
+  }
+
+  /**
+   * Get product quantity
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getProductQuantity(page: Page): Promise<number> {
+    return parseInt(await page.locator(this.productQuantity).evaluate((node: HTMLSelectElement) => node.value), 10);
+  }
+
+  /**
+   * Update quantity value arrow up down in quick view modal
+   * @param page {Page} Browser tab
+   * @param quantityWanted {number} Value to add/subtract from quantity
+   * @param direction {string} Direction to click on
+   * @returns {Promise<string>}
+   */
+  async setQuantityByArrowUpDown(page: Page, quantityWanted: number, direction: string): Promise<void> {
+    const inputValue = await this.getProductQuantity(page);
+    const nbClick: number = Math.abs(inputValue - quantityWanted);
+
+    for (let i = 0; i < nbClick; i++) {
+      await page.locator(this.productRowQuantityUpDownButton(direction)).click();
+    }
   }
 
   /**
@@ -879,7 +989,7 @@ class Product extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isAddToCartButtonEnabled(page: Page): Promise<boolean> {
-    return this.elementNotVisible(page, `${this.addToCartButton}:disabled`, 1000);
+    return this.elementNotVisible(page, `${this.addToCartButton}:disabled`, 3000);
   }
 
   /**
