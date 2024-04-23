@@ -1,8 +1,7 @@
 import type {Page} from 'playwright';
 
 import type ProductData from '@data/faker/product';
-
-// Import pages
+import {ProductImageInformation} from '@data/types/product';
 import BOBasePage from '@pages/BO/BObasePage';
 
 /**
@@ -220,6 +219,40 @@ class DescriptionTab extends BOBasePage {
   }
 
   /**
+   * Get Product Image Information
+   * @param page {Page} Browser tab
+   * @param numImage {number} Number of the image
+   * @returns {Promise<ProductImageInformation>}
+   */
+  async getProductImageInformation(page: Page, numImage: number): Promise<ProductImageInformation> {
+    await page.locator(this.productImage).nth(numImage - 1).click();
+
+    const isCover = await page.locator(this.productImageDropZoneCover).isChecked();
+
+    await page.locator(this.productImageDropZoneBtnLang).click();
+    await this.elementVisible(page, this.productImageDropZoneDropdown);
+    await page.locator(this.productImageDropZoneDropdownItem('en')).click();
+    const captionEN = await page.locator(this.productImageDropZoneCaption).innerText();
+
+    await page.locator(this.productImageDropZoneBtnLang).click();
+    await this.elementVisible(page, this.productImageDropZoneDropdown);
+    await page.locator(this.productImageDropZoneDropdownItem('fr')).click();
+    const captionFR = await page.locator(this.productImageDropZoneCaption).innerText();
+
+    await page.locator(this.productImageDropZoneCloseButton).click();
+
+    return {
+      id: parseInt(await page.locator(this.productImage).nth(numImage - 1).getAttribute('data-id') ?? '0', 10),
+      isCover,
+      position: numImage,
+      caption: {
+        en: captionEN,
+        fr: captionFR,
+      },
+    };
+  }
+
+  /**
    * Set Product Image Information
    * @param page {Page} Browser tab
    * @param numImage {number} Number of the image
@@ -309,7 +342,7 @@ class DescriptionTab extends BOBasePage {
   }
 
   /**
-   * delete image
+   * Delete image
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
