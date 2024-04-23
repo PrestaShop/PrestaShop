@@ -75,10 +75,10 @@ class GuestTrackingControllerCore extends FrontController
         $this->order = Order::getByReferenceAndEmail($order_reference, $email);
         if (!Validate::isLoadedObject($this->order)) {
             $this->errors[] = $this->getTranslator()->trans(
-                    'We couldn\'t find your order with the information provided, please try again',
-                    [],
-                    'Shop.Notifications.Error'
-                );
+                'We couldn\'t find your order with the information provided, please try again',
+                [],
+                'Shop.Notifications.Error'
+            );
         }
 
         if (Tools::isSubmit('submitTransformGuestToCustomer') && Tools::getValue('password')) {
@@ -182,5 +182,13 @@ class GuestTrackingControllerCore extends FrontController
         }
 
         return $breadcrumbLinks;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL()
+    {
+        return $this->context->link->getPageLink('guest-tracking');
     }
 }

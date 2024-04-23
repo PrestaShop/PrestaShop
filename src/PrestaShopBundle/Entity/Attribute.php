@@ -36,6 +36,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     indexes={@ORM\Index(name="attribute_group", columns={"id_attribute_group"})}
  * )
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeRepository")
  */
 class Attribute
@@ -44,13 +45,16 @@ class Attribute
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_attribute", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\AttributeGroup", inversedBy="attributes")
+     *
      * @ORM\JoinColumn(name="id_attribute_group", referencedColumnName="id_attribute_group", nullable=false)
      */
     private $attributeGroup;
@@ -73,6 +77,7 @@ class Attribute
      * @var Collection
      *
      * @ORM\ManyToMany(targetEntity="PrestaShopBundle\Entity\Shop", cascade={"persist"})
+     *
      * @ORM\JoinTable(
      *      joinColumns={@ORM\JoinColumn(name="id_attribute", referencedColumnName="id_attribute")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", onDelete="CASCADE")}

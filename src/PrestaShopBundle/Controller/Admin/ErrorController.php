@@ -27,9 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Manages Error pages (e.g. 500)
@@ -39,14 +40,11 @@ class ErrorController extends PrestaShopAdminController
     /**
      * Enables debug mode from error page (500 for example)
      *
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminPerformance') && is_granted('create', 'AdminPerformance') && is_granted('delete', 'AdminPerformance')"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminPerformance') && is_granted('create', 'AdminPerformance') && is_granted('delete', 'AdminPerformance')")]
     public function enableDebugModeAction(Request $request): RedirectResponse
     {
         $this->dispatchCommand(new SwitchDebugModeCommand(true));
@@ -54,5 +52,10 @@ class ErrorController extends PrestaShopAdminController
         return $this->redirect(
             $request->request->get('_redirect_url')
         );
+    }
+
+    public function showAction(): Response
+    {
+        return $this->render('@PrestaShop/Admin/Exception/error.html.twig');
     }
 }

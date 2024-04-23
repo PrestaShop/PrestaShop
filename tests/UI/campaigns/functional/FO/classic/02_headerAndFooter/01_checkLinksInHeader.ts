@@ -8,9 +8,13 @@ import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
-// Import data
-import Customers from '@data/demo/customers';
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -74,7 +78,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
     // Sign in
-    await loginPage.customerLogin(page, Customers.johnDoe);
+    await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
@@ -94,10 +98,11 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
     await loginPage.goToHomePage(page);
     // Add product to cart by quick view
-    await homePage.addProductToCartByQuickView(page, 1, 3);
+    await homePage.quickViewProduct(page, 1);
+    await quickViewModal.setQuantityAndAddToCart(page, 3);
 
     // Close block cart modal
-    const isQuickViewModalClosed = await homePage.closeBlockCartModal(page);
+    const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page);
     expect(isQuickViewModalClosed).to.eq(true);
   });
 

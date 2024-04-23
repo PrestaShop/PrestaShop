@@ -61,7 +61,7 @@ class LegacyContext
      */
     public function __construct(
         $mailThemesUri = null,
-        Tools $tools = null
+        ?Tools $tools = null
     ) {
         $this->mailThemesUri = $mailThemesUri;
         $this->tools = null !== $tools ? $tools : new Tools();
@@ -71,9 +71,9 @@ class LegacyContext
      * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\context class,
      * that will contains all you need in the Core architecture.
      *
-     * @throws LogicException If legacy context is not set properly
-     *
      * @return Context the Legacy context, for Adapter use only
+     *
+     * @throws LogicException If legacy context is not set properly
      */
     public function getContext()
     {

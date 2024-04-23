@@ -59,7 +59,7 @@ services:
     tags:
       - 'console.command'
 
-  PrestaShopBundle\Command\SecurityAnnotationLinterCommand:
+  PrestaShopBundle\Command\SecurityAttributeLinterCommand:
     arguments:
       - '@prestashop.bundle.routing.linter.admin_route_provider'
       - '@prestashop.bundle.routing.linter.security_annotation_linter'

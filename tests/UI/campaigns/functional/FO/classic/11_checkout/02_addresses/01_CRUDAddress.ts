@@ -4,18 +4,20 @@ import helper from '@utils/helpers';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/account';
+import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 import Products from '@data/demo/products';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 
-// Import data
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -39,22 +41,22 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const customerData: CustomerData = new CustomerData();
-  const addressData: AddressData = new AddressData({
+  const customerData: FakerCustomer = new FakerCustomer();
+  const addressData: FakerAddress = new FakerAddress({
     email: customerData.email,
     country: 'France',
   });
-  const editAddressData: AddressData = new AddressData({
+  const editAddressData: FakerAddress = new FakerAddress({
     alias: 'First address',
     email: customerData.email,
     country: 'France',
   });
-  const newAddressData: AddressData = new AddressData({
+  const newAddressData: FakerAddress = new FakerAddress({
     alias: 'Second address',
     email: customerData.email,
     country: 'France',
   });
-  const newInvoiceAddressData: AddressData = new AddressData({
+  const newInvoiceAddressData: FakerAddress = new FakerAddress({
     alias: 'Third address',
     email: customerData.email,
     country: 'France',

@@ -10,8 +10,10 @@ import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import countriesPage from '@pages/BO/international/locations/countries';
 
-// Import data
-import Countries from '@data/demo/countries';
+import {
+  // Import data
+  dataCountries,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -78,7 +80,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
           testIdentifier: 'filterId',
           filterType: 'input',
           filterBy: 'id_country',
-          filterValue: Countries.france.id.toString(),
+          filterValue: dataCountries.france.id.toString(),
         },
       },
       {
@@ -86,7 +88,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
           testIdentifier: 'filterName',
           filterType: 'input',
           filterBy: 'b!name',
-          filterValue: Countries.netherlands.name,
+          filterValue: dataCountries.netherlands.name,
         },
       },
       {
@@ -94,7 +96,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
           testIdentifier: 'filterIsoCode',
           filterType: 'input',
           filterBy: 'iso_code',
-          filterValue: Countries.netherlands.isoCode,
+          filterValue: dataCountries.netherlands.isoCode,
         },
       },
       {
@@ -102,7 +104,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
           testIdentifier: 'filterPrefix',
           filterType: 'input',
           filterBy: 'call_prefix',
-          filterValue: Countries.unitedKingdom.callPrefix.toString(),
+          filterValue: dataCountries.unitedKingdom.callPrefix.toString(),
         },
       },
       {
@@ -110,7 +112,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
           testIdentifier: 'filterZone',
           filterType: 'select',
           filterBy: 'z!id_zone',
-          filterValue: Countries.unitedKingdom.zone,
+          filterValue: dataCountries.unitedKingdom.zone,
         },
       },
       {
@@ -118,7 +120,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
           testIdentifier: 'filterStatus',
           filterType: 'select',
           filterBy: 'a!active',
-          filterValue: Countries.france.active ? '1' : '0',
+          filterValue: dataCountries.france.active ? '1' : '0',
         },
       },
     ];
@@ -167,14 +169,14 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
         page,
         'input',
         'b!name',
-        Countries.germany.name,
+        dataCountries.germany.name,
       );
 
       const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.below(numberOfCountries);
 
       const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
-      expect(textColumn).to.contains(Countries.germany.name);
+      expect(textColumn).to.contains(dataCountries.germany.name);
     });
 
     [

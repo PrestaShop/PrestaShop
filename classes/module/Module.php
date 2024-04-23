@@ -290,7 +290,7 @@ abstract class ModuleCore implements ModuleInterface
      * @param string|null $name (Deprecated parameter)
      * @param Context|null $context
      */
-    public function __construct($name = null, Context $context = null)
+    public function __construct($name = null, ?Context $context = null)
     {
         if ($name !== null) {
             Tools::displayParameterAsDeprecated('name');
@@ -655,9 +655,14 @@ abstract class ModuleCore implements ModuleInterface
         static::$modules_cache[$module->name]['upgrade']['upgraded_from'] = $module->database_version;
         // Check the version of the module with the registered one and look if any upgrade file exist
         if (Tools::version_compare($module->version, $module->database_version, '>')) {
+            /*
+             * $old_version variable is saved on purpose here, because calling Module::getInstanceByName will wipe
+             * the $module->database_version information from the object.
+             */
+            $old_version = $module->database_version;
             $module = Module::getInstanceByName($module->name);
             if ($module instanceof Module) {
-                return $module->loadUpgradeVersionList($module->name, $module->version, $module->database_version);
+                return $module->loadUpgradeVersionList($module->name, $module->version, $old_version);
             }
         }
 
@@ -709,11 +714,19 @@ abstract class ModuleCore implements ModuleInterface
                         continue;
                     }
 
+                    /*
+                     * @TODO
+                     *
+                     * Some more verifications should be done here, because some faulty modules could use
+                     * filenames with dashes instead of dots, or non-standard versioning, breaking the process.
+                     *
+                     * Example - install-1-1.php
+                     */
                     $file_version = basename($tab[1], '.php');
                     // Compare version, if minor than actual, we need to upgrade the module
-                    if (count($tab) == 2 &&
-                         (Tools::version_compare($file_version, $module_version, '<=') &&
-                            Tools::version_compare($file_version, $registered_version, '>'))) {
+                    if (count($tab) == 2
+                         && (Tools::version_compare($file_version, $module_version, '<=')
+                            && Tools::version_compare($file_version, $registered_version, '>'))) {
                         $list[] = [
                             'file' => $upgrade_path . $file,
                             'version' => $file_version,
@@ -749,8 +762,8 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getUpgradeStatus($module_name)
     {
-        return isset(static::$modules_cache[$module_name]) &&
-            static::$modules_cache[$module_name]['upgrade']['success'];
+        return isset(static::$modules_cache[$module_name])
+            && static::$modules_cache[$module_name]['upgrade']['success'];
     }
 
     /**
@@ -1298,7 +1311,7 @@ abstract class ModuleCore implements ModuleInterface
         // Find translations
         global $_MODULES;
         $file = _PS_MODULE_DIR_ . $module . '/' . Context::getContext()->language->iso_code . '.php';
-        if (Tools::file_exists_cache($file) && include_once($file)) {
+        if (Tools::file_exists_cache($file) && include_once ($file)) {
             /* @phpstan-ignore-next-line Defined variable in translation file */
             if (isset($_MODULE) && is_array($_MODULE)) {
                 /** @phpstan-ignore-next-line Defined variable in translation file */
@@ -1374,7 +1387,7 @@ abstract class ModuleCore implements ModuleInterface
                 $config_file = _PS_MODULE_DIR_ . $module . '/config_' . $iso . '.xml';
             }
 
-            $xml_exist = (file_exists($config_file));
+            $xml_exist = file_exists($config_file);
             $need_new_config_file = $xml_exist ? (@filemtime($config_file) < @filemtime(_PS_MODULE_DIR_ . $module . '/' . $module . '.php')) : true;
 
             // If config.xml exists and that the use config flag is at true
@@ -1399,7 +1412,7 @@ abstract class ModuleCore implements ModuleInterface
                 // If no errors in Xml, no need instand and no need new config.xml file, we load only translations
                 if (!count($module_errors) && (int) $xml_module->need_instance == 0) {
                     $file = _PS_MODULE_DIR_ . $module . '/' . Context::getContext()->language->iso_code . '.php';
-                    if (Tools::file_exists_cache($file) && include_once($file)) {
+                    if (Tools::file_exists_cache($file) && include_once ($file)) {
                         /* @phpstan-ignore-next-line Defined variable in translation file */
                         if (isset($_MODULE) && is_array($_MODULE)) {
                             /** @phpstan-ignore-next-line Defined variable in translation file */
@@ -1407,7 +1420,7 @@ abstract class ModuleCore implements ModuleInterface
                         }
                     }
 
-                    $item = new StdClass();
+                    $item = new stdClass();
                     $item->id = 0;
                     $item->warning = '';
 
@@ -1430,7 +1443,7 @@ abstract class ModuleCore implements ModuleInterface
                     $module_list[$item->name . '_disk'] = $item;
 
                     $module_name_list[] = '\'' . pSQL($item->name) . '\'';
-                    $modules_name_to_cursor[Tools::strtolower((string) ($item->name))] = $item;
+                    $modules_name_to_cursor[Tools::strtolower((string) $item->name)] = $item;
                 }
             }
 
@@ -1463,7 +1476,7 @@ abstract class ModuleCore implements ModuleInterface
                     try {
                         $tmp_module = ServiceLocator::get($module);
 
-                        $item = new StdClass();
+                        $item = new stdClass();
 
                         $item->id = (int) $tmp_module->id;
                         $item->warning = $tmp_module->warning;
@@ -2239,9 +2252,9 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         if (!isset($this->current_subtemplate[$template . '_' . $cache_id . '_' . $compile_id])) {
-            if (false === strpos($template, 'module:') &&
-                !file_exists(_PS_ROOT_DIR_ . '/' . $template) &&
-                !file_exists($template)
+            if (false === strpos($template, 'module:')
+                && !file_exists(_PS_ROOT_DIR_ . '/' . $template)
+                && !file_exists($template)
             ) {
                 $template = $this->getTemplatePath($template);
             }
@@ -2469,7 +2482,7 @@ abstract class ModuleCore implements ModuleInterface
                     $matches
                 );
 
-                if (($key = array_search('1', $role))) {
+                if ($key = array_search('1', $role)) {
                     $roles[$matches['moduleName']][$key] = '1';
                 }
             }
@@ -2569,7 +2582,7 @@ abstract class ModuleCore implements ModuleInterface
             LEFT JOIN `' . _DB_PREFIX_ . 'module` m ON (m.`id_module` = mg.`id_module`)
             WHERE mg.`id_group` = ' . (int) $group_id . '
             AND `id_shop` IN ('
-                . (implode(',', array_map('intval', $shops)))
+                . implode(',', array_map('intval', $shops))
             . ')'
         );
     }
@@ -2736,7 +2749,7 @@ abstract class ModuleCore implements ModuleInterface
         $result = true;
         foreach (Tools::scandir($this->getLocalPath() . 'override', 'php', '', true) as $file) {
             $class = basename($file, '.php');
-            if (PrestaShopAutoload::getInstance()->getClassPath($class . 'Core') || Module::getModuleIdByName($class)) {
+            if (PrestashopAutoload::getInstance()->getClassPath($class . 'Core') || Module::getModuleIdByName($class)) {
                 $result &= $this->addOverride($class);
             }
         }
@@ -2758,7 +2771,7 @@ abstract class ModuleCore implements ModuleInterface
         $result = true;
         foreach (Tools::scandir($this->getLocalPath() . 'override', 'php', '', true) as $file) {
             $class = basename($file, '.php');
-            if (PrestaShopAutoload::getInstance()->getClassPath($class . 'Core') || Module::getModuleIdByName($class)) {
+            if (PrestashopAutoload::getInstance()->getClassPath($class . 'Core') || Module::getModuleIdByName($class)) {
                 $result &= $this->removeOverride($class);
             }
         }
@@ -2775,7 +2788,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function addOverride($classname)
     {
-        $orig_path = $path = PrestaShopAutoload::getInstance()->getClassPath($classname . 'Core');
+        $orig_path = $path = PrestashopAutoload::getInstance()->getClassPath($classname . 'Core');
         if (!$path) {
             $path = 'modules' . DIRECTORY_SEPARATOR . $classname . DIRECTORY_SEPARATOR . $classname . '.php';
         }
@@ -2791,7 +2804,7 @@ abstract class ModuleCore implements ModuleInterface
 
         $pattern_escape_com = '#(^\s*?\/\/.*?\n|\/\*(?!\n\s+\* module:.*?\* date:.*?\* version:.*?\*\/).*?\*\/)#ism';
         // Check if there is already an override file, if not, we just need to copy the file
-        $file = PrestaShopAutoload::getInstance()->getClassPath($classname);
+        $file = PrestashopAutoload::getInstance()->getClassPath($classname);
         $override_path = _PS_ROOT_DIR_ . '/' . $file;
 
         if ($file && file_exists($override_path)) {
@@ -2999,8 +3012,8 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function removeOverride($classname)
     {
-        $orig_path = $path = PrestaShopAutoload::getInstance()->getClassPath($classname . 'Core');
-        $file = PrestaShopAutoload::getInstance()->getClassPath($classname);
+        $orig_path = $path = PrestashopAutoload::getInstance()->getClassPath($classname . 'Core');
+        $file = PrestashopAutoload::getInstance()->getClassPath($classname);
 
         if ($orig_path && !$file) {
             return true;
@@ -3302,7 +3315,7 @@ abstract class ModuleCore implements ModuleInterface
         $result = [];
         foreach (Tools::scandir($this->getLocalPath() . 'override', 'php', '', true) as $file) {
             $class = basename($file, '.php');
-            if (PrestaShopAutoload::getInstance()->getClassPath($class . 'Core') || Module::getModuleIdByName($class)) {
+            if (PrestashopAutoload::getInstance()->getClassPath($class . 'Core') || Module::getModuleIdByName($class)) {
                 $result[] = $class;
             }
         }
@@ -3482,6 +3495,8 @@ abstract class ModuleCore implements ModuleInterface
     public static function resetStaticCache()
     {
         static::$_INSTANCE = [];
+        static::$modules_cache = null;
+        static::$cachedModuleNames = null;
         Cache::clean('Module::isEnabled*');
     }
 }

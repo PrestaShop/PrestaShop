@@ -12,6 +12,8 @@ class AddAddress extends AddAddressPage {
    */
   constructor() {
     super('hummingbird');
+
+    this.pageHeaderTitle = '#content-wrapper div h1';
   }
 }
 

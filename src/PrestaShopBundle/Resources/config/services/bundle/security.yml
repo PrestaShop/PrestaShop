@@ -4,7 +4,6 @@ parameters:
 services:
   _defaults:
     public: true
-
   prestashop.security.admin.provider:
     class: PrestaShopBundle\Security\Admin\EmployeeProvider
     arguments:
@@ -12,10 +11,9 @@ services:
       - "@prestashop.static_cache.adapter"
       - '@PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface'
 
-  prestashop.security.api-access.provider:
-    class: PrestaShopBundle\Security\OAuth2\Provider\ApiAccessProvider
+  PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider:
     arguments:
-      - '@PrestaShopBundle\Entity\Repository\ApiAccessRepository'
+      - '@PrestaShopBundle\Entity\Repository\ApiClientRepository'
       - '@Symfony\Component\PasswordHasher\PasswordHasherInterface'
 
   prestashop.security.role.dynamic_role_hierarchy:
@@ -30,19 +28,10 @@ services:
 
   PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer:
     public: false
+    autowire: true
+    autoconfigure: true
     arguments:
       - '@League\OAuth2\Server\ResourceServer'
-
-  PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface:
-    alias: PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer
-    public: false
-
-  # SSL middleware
-  PrestaShopBundle\Security\SslMiddleware:
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
   prestashop.security.password_hasher.factory:
     class: Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory

@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 
 class PasswordControllerCore extends FrontController
@@ -95,7 +96,7 @@ class PasswordControllerCore extends FrontController
                     '{email}' => $customer->email,
                     '{lastname}' => $customer->lastname,
                     '{firstname}' => $customer->firstname,
-                    '{url}' => $this->context->link->getPageLink('password', true, null, 'token=' . $customer->secure_key . '&id_customer=' . (int) $customer->id . '&reset_token=' . $customer->reset_password_token),
+                    '{url}' => $this->context->link->getPageLink('password', null, null, 'token=' . $customer->secure_key . '&id_customer=' . (int) $customer->id . '&reset_token=' . $customer->reset_password_token),
                 ];
 
                 if (
@@ -164,6 +165,34 @@ class PasswordControllerCore extends FrontController
                         $this->errors[] = $this->trans('The password is not in a valid format.', [], 'Shop.Notifications.Error');
                     }
                 }
+
+                if (Validate::isAcceptablePasswordLength($passwd) === false) {
+                    $this->errors[] = $this->translator->trans(
+                        'Password must be between %d and %d characters long',
+                        [
+                            Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH),
+                            Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH),
+                        ],
+                        'Shop.Notifications.Error'
+                    );
+                }
+
+                if (Validate::isAcceptablePasswordScore($passwd) === false) {
+                    $wordingsForScore = [
+                        $this->translator->trans('Very weak', [], 'Shop.Theme.Global'),
+                        $this->translator->trans('Weak', [], 'Shop.Theme.Global'),
+                        $this->translator->trans('Average', [], 'Shop.Theme.Global'),
+                        $this->translator->trans('Strong', [], 'Shop.Theme.Global'),
+                        $this->translator->trans('Very strong', [], 'Shop.Theme.Global'),
+                    ];
+                    $this->errors[] = $this->translator->trans(
+                        'The minimum score must be: %s',
+                        [
+                            $wordingsForScore[(int) Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE)],
+                        ],
+                        'Shop.Notifications.Error'
+                    );
+                }
             }
 
             if (!$isSubmit || $this->errors) {
@@ -179,7 +208,12 @@ class PasswordControllerCore extends FrontController
             } else {
                 // Both password fields posted. Check if all is right and store new password properly.
                 if (!$reset_token || (strtotime($customer->last_passwd_gen . '+' . (int) Configuration::get('PS_PASSWD_TIME_FRONT') . ' minutes') - time()) > 0) {
-                    Tools::redirect('index.php?controller=authentication&error_regen_pwd');
+                    Tools::redirect($this->context->link->getPageLink(
+                        'authentication',
+                        null,
+                        null,
+                        ['error_regen_pwd' => 1]
+                    ));
                 } else {
                     $customer->passwd = $this->get('hashing')->hash($password = Tools::getValue('passwd'), _COOKIE_KEY_);
                     $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
@@ -214,7 +248,7 @@ class PasswordControllerCore extends FrontController
                             ]);
                             $this->success[] = $this->trans('Your password has been successfully reset and a confirmation has been sent to your email address: %s', [$customer->email], 'Shop.Notifications.Success');
                             $this->context->updateCustomer($customer);
-                            $this->redirectWithNotifications('index.php?controller=my-account');
+                            $this->redirectWithNotifications($this->context->link->getPageLink('my-account'));
                         } else {
                             $this->errors[] = $this->trans('An error occurred while sending the email.', [], 'Shop.Notifications.Error');
                         }
@@ -290,5 +324,13 @@ class PasswordControllerCore extends FrontController
         ];
 
         return $breadcrumb;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL()
+    {
+        return $this->context->link->getPageLink('password');
     }
 }

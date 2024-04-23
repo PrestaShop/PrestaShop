@@ -60,7 +60,7 @@ class OrderDetailControllerCore extends FrontController
             if (!count($this->errors)) {
                 $order = new Order($idOrder);
                 if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
-                    //check if a thread already exist
+                    // check if a thread already exist
                     $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($this->context->customer->email, $order->id);
                     $id_product = (int) Tools::getValue('id_product');
                     $cm = new CustomerMessage();
@@ -137,7 +137,15 @@ class OrderDetailControllerCore extends FrontController
                         );
                     }
 
-                    Tools::redirect('index.php?controller=order-detail&id_order=' . $idOrder . '&messagesent');
+                    Tools::redirect($this->context->link->getPageLink(
+                        'order-detail',
+                        null,
+                        null,
+                        [
+                            'id_order' => $idOrder,
+                            'messagesent' => 1,
+                        ]
+                    ));
                 } else {
                     $this->redirect_after = '404';
                     $this->redirect();

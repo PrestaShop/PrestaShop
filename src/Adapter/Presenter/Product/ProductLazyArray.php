@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
+use ReflectionException;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
@@ -115,8 +116,8 @@ class ProductLazyArray extends AbstractLazyArray
         PriceFormatter $priceFormatter,
         ProductColorsRetriever $productColorsRetriever,
         TranslatorInterface $translator,
-        HookManager $hookManager = null,
-        Configuration $configuration = null
+        ?HookManager $hookManager = null,
+        ?Configuration $configuration = null
     ) {
         $this->settings = $settings;
         $this->product = $product;
@@ -345,7 +346,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return array
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getAttachments()
     {
@@ -930,12 +931,30 @@ class ProductLazyArray extends AbstractLazyArray
             $this->product['discount_to_display'] = $this->product['regular_price'];
         }
 
-        if (isset($product['unit_price']) && $product['unit_price']) {
-            $this->product['unit_price'] = $this->priceFormatter->format($product['unit_price']);
-            $this->product['unit_price_full'] = $this->priceFormatter->format($product['unit_price'])
-                . ' ' . $product['unity'];
+        /*
+         * Now, let's format unit price display.
+         *
+         * If we have a unit ("per 100 g") to display after the unit price AND we have the value, we can proceed with formatting.
+         * We are intentionally not using empty here, because unit price can be also zero.
+         *
+         * If not, we will pass empty strings.
+         */
+        if (!empty($this->product['unity']) && isset($this->product['unit_price_tax_excluded'], $this->product['unit_price_tax_included'])) {
+            /*
+             * We use the tax included or tax excluded price, depending on presentation settings.
+             * We have the prices calculated from the Product::computeUnitPriceRatio, that is called before it gets passed here.
+             *
+             * The prices are already adapted to account for specific prices and combinations.
+             */
+            $this->product['unit_price'] = $this->priceFormatter->format(
+                $settings->include_taxes ? $this->product['unit_price_tax_included'] : $this->product['unit_price_tax_excluded']
+            );
+
+            // And add the full version with the unit after the price
+            $this->product['unit_price_full'] = $this->product['unit_price'] . ' ' . $product['unity'];
         } else {
-            $this->product['unit_price'] = $this->product['unit_price_full'] = '';
+            $this->product['unit_price'] = '';
+            $this->product['unit_price_full'] = '';
         }
     }
 
@@ -962,7 +981,7 @@ class ProductLazyArray extends AbstractLazyArray
             return false;
         }
 
-        if (($product['customizable'] == ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION || !empty($product['customization_required']))) {
+        if ($product['customizable'] == ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION || !empty($product['customization_required'])) {
             $shouldEnable = false;
 
             if (isset($product['customizations'])) {
@@ -1116,7 +1135,7 @@ class ProductLazyArray extends AbstractLazyArray
                 }
             }
 
-            // Case 2 - Product not in stock, available for order
+        // Case 2 - Product not in stock, available for order
         } elseif ($product['allow_oosp']) {
             $this->product['availability_date'] = $product['available_date'];
             $this->product['availability'] = 'available';
@@ -1131,7 +1150,7 @@ class ProductLazyArray extends AbstractLazyArray
                 $this->product['availability_message'] = $config[$language->id] ?? null;
             }
 
-            // Case 3 - OOSP disabled and customer wants to add more items to cart than are in stock
+        // Case 3 - OOSP disabled and customer wants to add more items to cart than are in stock
         } elseif ($product['quantity'] > 0) {
             $this->product['availability_date'] = $product['available_date'];
             $this->product['availability'] = 'unavailable';

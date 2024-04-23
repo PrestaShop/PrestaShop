@@ -1,6 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import OrderStatusData from '@data/faker/orderStatus';
+import {
+  type FakerOrderStatus,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -68,10 +70,10 @@ class AddOrderStatus extends BOBasePage {
   /**
    * Fill order status form in create or edit page and save
    * @param page {Page} Browser tab
-   * @param orderStatusData {OrderStatusData} Data to set on order status form
+   * @param orderStatusData {FakerOrderStatus} Data to set on order status form
    * @return {Promise<string>}
    */
-  async setOrderStatus(page: Page, orderStatusData: OrderStatusData): Promise<string> {
+  async setOrderStatus(page: Page, orderStatusData: FakerOrderStatus): Promise<string> {
     await this.setValue(page, this.nameInput, orderStatusData.name);
 
     // Set color

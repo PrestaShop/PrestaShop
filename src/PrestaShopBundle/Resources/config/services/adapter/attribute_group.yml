@@ -43,3 +43,4 @@ services:
       - '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\Validate\AttributeGroupValidator:
+    autowire: true

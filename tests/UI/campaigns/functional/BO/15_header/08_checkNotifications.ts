@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // import common tests
-import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/classic/order';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
@@ -13,19 +13,23 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import orderDetails from '@pages/FO/classic/myAccount/orderDetails';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import viewOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import viewCustomerPage from '@pages/BO/customers/view';
 
 // import data
-import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
-import PaymentMethods from '@data/demo/paymentMethods';
-import CustomerData from '@data/faker/customer';
-import AddressData from '@data/faker/address';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -54,20 +58,20 @@ describe('BO - Header : Check notifications', async () => {
   let page: Page;
 
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   const messageSend: string = faker.lorem.sentence().substring(0, 35).trim();
   const messageOption: string = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes[0].values[0]} `
     + `- Color: ${Products.demo_1.attributes[1].values[0]})`;
-  const customerData: CustomerData = new CustomerData({password: ''});
-  const addressData: AddressData = new AddressData({country: 'France'});
+  const customerData: FakerCustomer = new FakerCustomer({password: ''});
+  const addressData: FakerAddress = new FakerAddress({country: 'France'});
   // New order by guest data
   const orderByGuestData: OrderData = new OrderData({
     customer: customerData,
@@ -78,7 +82,7 @@ describe('BO - Header : Check notifications', async () => {
       },
     ],
     deliveryAddress: addressData,
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // PRE-condition : Create order by default customer
@@ -147,7 +151,7 @@ describe('BO - Header : Check notifications', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -168,8 +172,8 @@ describe('BO - Header : Check notifications', async () => {
 
       await orderHistoryPage.goToDetailsPage(page);
 
-      const successMessageText = await orderDetails.addAMessage(page, messageOption, messageSend);
-      expect(successMessageText).to.equal(orderDetails.successMessageText);
+      const successMessageText = await orderDetailsPage.addAMessage(page, messageOption, messageSend);
+      expect(successMessageText).to.equal(orderDetailsPage.successMessageText);
     });
 
     it('should go back to BO', async function () {

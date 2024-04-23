@@ -34,28 +34,16 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
  */
 class OrderNotFoundException extends OrderException
 {
-    /**
-     * @var OrderId
-     */
-    private $orderId;
-
-    /**
-     * @param OrderId $orderId
-     * @param string $message
-     * @param int $code
-     * @param Exception|null $previous
-     */
-    public function __construct(OrderId $orderId, $message = '', $code = 0, $previous = null)
-    {
+    public function __construct(
+        private readonly ?OrderId $orderId = null,
+        string $message = '',
+        int $code = 0,
+        ?Exception $previous = null
+    ) {
         parent::__construct($message, $code, $previous);
-
-        $this->orderId = $orderId;
     }
 
-    /**
-     * @return OrderId
-     */
-    public function getOrderId()
+    public function getOrderId(): ?OrderId
     {
         return $this->orderId;
     }

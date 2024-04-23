@@ -16,6 +16,7 @@ type AttributeCreator = {
 type AttributeValueCreator = {
   id?: number
   position?: number
+  attributeID?: number;
   attributeName?: string;
   value?: string;
   url?: string;

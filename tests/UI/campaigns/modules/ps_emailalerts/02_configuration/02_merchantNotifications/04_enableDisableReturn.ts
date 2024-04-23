@@ -5,7 +5,7 @@ import mailHelper from '@utils/mailHelper';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
@@ -19,18 +19,22 @@ import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
-import foMerchandiseReturnsPage from '@pages/FO/classic/myAccount/merchandiseReturns';
-import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 // Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import Modules from '@data/demo/modules';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -64,14 +68,14 @@ describe('Mail alerts module - Enable/Disable return', async () => {
 
   // New order by customer data
   const orderData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 3,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create first order
@@ -151,7 +155,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     });
   });
 
-  describe(`BO: Change the first created orders status to '${OrderStatuses.delivered.name}'`, async () => {
+  describe(`BO: Change the first created orders status to '${dataOrderStatuses.delivered.name}'`, async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -179,15 +183,15 @@ describe('Mail alerts module - Enable/Disable return', async () => {
       expect(orderReference).to.not.eq(null);
     });
 
-    it(`should change the order status to '${OrderStatuses.delivered.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await ordersPage.setOrderStatus(page, 1, OrderStatuses.delivered);
+      const result = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
       expect(result).to.equal(ordersPage.successfulUpdateMessage);
     });
   });
 
-  describe(`BO: Change the second created orders status to '${OrderStatuses.delivered.name}'`, async () => {
+  describe(`BO: Change the second created orders status to '${dataOrderStatuses.delivered.name}'`, async () => {
     it('should get the second order ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderID2', baseContext);
 
@@ -202,10 +206,10 @@ describe('Mail alerts module - Enable/Disable return', async () => {
       expect(orderReference).to.not.eq(null);
     });
 
-    it(`should change the order status to '${OrderStatuses.delivered.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus2', baseContext);
 
-      const result = await ordersPage.setOrderStatus(page, 2, OrderStatuses.delivered);
+      const result = await ordersPage.setOrderStatus(page, 2, dataOrderStatuses.delivered);
       expect(result).to.equal(ordersPage.successfulUpdateMessage);
     });
   });
@@ -225,7 +229,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);

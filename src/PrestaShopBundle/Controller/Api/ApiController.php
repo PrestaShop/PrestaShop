@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -91,11 +92,11 @@ abstract class ApiController
      */
     protected function clearCache()
     {
-        $cacheRefresh = $this->container->get('prestashop.cache.refresh');
+        /** @var SymfonyCacheClearer $cacheClearer */
+        $cacheClearer = $this->container->get(SymfonyCacheClearer::class);
 
         try {
-            $cacheRefresh->addCacheClear();
-            $cacheRefresh->execute();
+            $cacheClearer->clear();
         } catch (Exception $exception) {
             $this->container->get('logger')->error($exception->getMessage());
         }
@@ -112,7 +113,7 @@ abstract class ApiController
      */
     protected function addAdditionalInfo(
         Request $request,
-        QueryParamsCollection $queryParams = null,
+        ?QueryParamsCollection $queryParams = null,
         $headers = []
     ) {
         $router = $this->container->get('router');
@@ -145,9 +146,9 @@ abstract class ApiController
             $info['previous_url'] = $router->generate($request->attributes->get('_route'), $previousParams);
         }
 
-        if (array_key_exists('Total-Pages', $headers) &&
-            array_key_exists('page_index', $allParams) &&
-            $headers['Total-Pages'] > $allParams['page_index']) {
+        if (array_key_exists('Total-Pages', $headers)
+            && array_key_exists('page_index', $allParams)
+            && $headers['Total-Pages'] > $allParams['page_index']) {
             $nextParams = $allParams;
             if (array_key_exists('page_index', $nextParams)) {
                 ++$nextParams['page_index'];
@@ -179,7 +180,7 @@ abstract class ApiController
     protected function jsonResponse(
         $data,
         Request $request,
-        QueryParamsCollection $queryParams = null,
+        ?QueryParamsCollection $queryParams = null,
         $status = 200,
         $headers = []
     ) {

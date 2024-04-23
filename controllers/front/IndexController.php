@@ -41,4 +41,12 @@ class IndexControllerCore extends FrontController
         ]);
         $this->setTemplate('index');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL()
+    {
+        return $this->context->link->getPageLink('index');
+    }
 }

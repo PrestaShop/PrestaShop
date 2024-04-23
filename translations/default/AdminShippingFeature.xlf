@@ -106,12 +106,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/cart_rules/actions.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/carts/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
-        <note>Line: 26</note>
+        <note>Line: 218</note>
       </trans-unit>
     </body>
   </file>
@@ -292,7 +292,7 @@
       <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
         <source>Name:</source>
         <target>Name:</target>
-        <note>Line: 861</note>
+        <note>Line: 866</note>
       </trans-unit>
     </body>
   </file>
@@ -351,6 +351,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/update_shipping_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5068c162a60b5859f973f701333f45c5">
+        <source>Tracking number</source>
+        <target>Tracking number</target>
+        <note>Line: 49</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/details.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
@@ -371,15 +380,6 @@
         <source>Shipping cost</source>
         <target>Shipping cost</target>
         <note>Line: 46</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/preview.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5068c162a60b5859f973f701333f45c5">
-        <source>Tracking number</source>
-        <target>Tracking number</target>
-        <note>Line: 48</note>
       </trans-unit>
     </body>
   </file>

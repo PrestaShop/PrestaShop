@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -156,7 +156,7 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
             $data['name'],
             new DecimalNumber($data['reduction']),
             PrimitiveUtils::castStringBooleanIntoBoolean($data['displayPriceTaxExcluded']),
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['showPrice']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['showPrice']),
             $this->referencesToIds($data['shopIds'])
         );
     }

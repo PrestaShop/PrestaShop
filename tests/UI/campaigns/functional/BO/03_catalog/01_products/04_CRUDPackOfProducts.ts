@@ -14,7 +14,7 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import productsPage from '@pages/BO/catalog/products';
 import packTab from '@pages/BO/catalog/products/add/packTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import ProductData from '@data/faker/product';
@@ -53,7 +53,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
   const editPackData: ProductPackOptions = {
     quantity: 100,
     minimalQuantity: 2,
-    packQuantitiesOption: 'Decrement pack only',
+    packQuantitiesOption: 'Use pack quantity',
   };
 
   // Data to edit the product price
@@ -307,7 +307,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'cancelDeleteProduct', baseContext);
 
       const isModalVisible = await packTab.deleteProduct(page, 1, false);
-      expect(isModalVisible).to.eq(true);
+      expect(isModalVisible).to.eq(false);
     });
 
     it('should delete the customized product', async function () {

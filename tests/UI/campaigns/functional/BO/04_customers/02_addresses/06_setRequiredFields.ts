@@ -16,9 +16,11 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addressesPage as foAddressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
-// Import data
-import Customers from '@data/demo/customers';
-import AddressData from '@data/faker/address';
+import {
+  // Import data
+  dataCustomers,
+  FakerAddress,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -35,8 +37,8 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
   let browserContext: BrowserContext;
   let page: Page;
 
-  const addressDataWithVatNumber: AddressData = new AddressData({country: 'France', vatNumber: '0102030405'});
-  const addressDataWithoutVatNumber: AddressData = new AddressData({country: 'France'});
+  const addressDataWithVatNumber: FakerAddress = new FakerAddress({country: 'France', vatNumber: '0102030405'});
+  const addressDataWithoutVatNumber: FakerAddress = new FakerAddress({country: 'France'});
 
   // before and after functions
   before(async function () {
@@ -94,7 +96,7 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
 
       // Go to create account page
       await foHomePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const connected = await foHomePage.isCustomerConnected(page);
       expect(connected, 'Customer is not connected in FO').to.eq(true);

@@ -60,7 +60,7 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $installedModules = $container->getParameter('prestashop.active_modules');
+        $installedModules = $container->getParameter('prestashop.installed_modules');
         $moduleDir = $container->getParameter('prestashop.module_dir');
 
         foreach ($installedModules as $moduleName) {

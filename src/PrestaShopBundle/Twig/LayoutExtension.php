@@ -74,12 +74,12 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
 
         try {
             $defaultCurrency = $this->context->getEmployeeCurrency() ?: $this->currencyDataProvider->getDefaultCurrency();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $defaultCurrency = null;
         }
         try {
             $rootUrl = $this->context->getRootUrl();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $rootUrl = null;
         }
 
@@ -129,7 +129,7 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
      *
      * @return mixed
      */
-    public function getConfiguration($key, $default = null, ShopConstraint $shopConstraint = null)
+    public function getConfiguration($key, $default = null, ?ShopConstraint $shopConstraint = null)
     {
         return $this->configuration->get($key, $default, $shopConstraint);
     }
@@ -152,9 +152,9 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
      * @param string $metaTitle
      * @param bool $useRegularH1Structure allows complex <h1> structure if set to false
      *
-     * @throws Exception if legacy layout has no $content var replacement
-     *
      * @return string The html layout
+     *
+     * @throws Exception if legacy layout has no $content var replacement
      */
     public function getLegacyLayout(
         $controllerName = '',

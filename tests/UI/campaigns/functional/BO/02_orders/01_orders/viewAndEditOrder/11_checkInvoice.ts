@@ -10,7 +10,7 @@ import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';
@@ -27,12 +27,16 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import data
 import Addresses from '@data/demo/address';
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import ProductData from '@data/faker/product';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -78,14 +82,14 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   const prefixNewProduct: string = 'TOTEST';
   // First order by customer data
   const firstOrderByCustomer: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   // Customized product data
   const customizedProduct: ProductData = new ProductData({
@@ -102,14 +106,14 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   });
   // Second order by customer
   const secondOrderByCustomer: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: customizedProduct,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   // Virtual product data
   const virtualProduct: ProductData = new ProductData({
@@ -301,13 +305,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         expect(numberOfOrders).to.be.above(0);
       });
 
-      it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+      it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+        await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
         const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-        expect(textColumn).to.contains(Customers.johnDoe.lastName);
+        expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
       });
 
       it('should view the order', async function () {
@@ -354,11 +358,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
       });
 
-      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
+      it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus1', baseContext);
 
-        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-        expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
+        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+        expect(textResult).to.equal(dataOrderStatuses.paymentAccepted.name);
       });
 
       it('should check that there is no carrier', async function () {
@@ -577,13 +581,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         expect(numberOfOrders).to.be.above(0);
       });
 
-      it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+      it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer2', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+        await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
         const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-        expect(textColumn).to.contains(Customers.johnDoe.lastName);
+        expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
       });
 
       it('should view the order', async function () {
@@ -597,11 +601,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     });
 
     describe('Create invoice', async () => {
-      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
+      it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus2', baseContext);
 
-        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-        expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
+        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+        expect(textResult).to.equal(dataOrderStatuses.paymentAccepted.name);
       });
 
       it('should get the invoice file name', async function () {

@@ -28,12 +28,30 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Gherkin\Node\TableNode;
 use Module;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
+use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ModuleFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @Given module :moduleReference has following infos:
+     */
+    public function assertModuleInfos(string $moduleReference, TableNode $tableNode): void
+    {
+        /** @var ModuleInfos $moduleInfos */
+        $moduleInfos = $this->getQueryBus()->handle(new GetModuleInfos($this->referenceToId($moduleReference)));
+
+        $data = $tableNode->getRowsHash();
+        Assert::assertEquals($data['technical_name'], $moduleInfos->getTechnicalName());
+        Assert::assertEquals($data['version'], $moduleInfos->getVersion());
+        Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']), $moduleInfos->isEnabled());
+    }
+
     /**
      * @When /^I bulk (enable|disable) modules: "(.+)"$/
      */

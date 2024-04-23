@@ -81,7 +81,7 @@ class DisablingSwitchExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // This particular field has the expected option enabled, so we assign the add listener to dynamically add the
         // associated DisablingSwitchType to the parent

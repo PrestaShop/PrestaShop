@@ -26,12 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception\InvalidShowcaseCardNameException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,13 +51,10 @@ class ShowcaseCardController extends FrameworkBundleAdminController
      *
      * @see ShowcaseCard
      *
-     * @AdminSecurity(
-     *     "is_granted('create', 'CONFIGURE') && is_granted('update', 'CONFIGURE')"
-     * )
-     *
      * @return JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_metas_index')]
+    #[AdminSecurity("is_granted('create', 'CONFIGURE') && is_granted('update', 'CONFIGURE')")]
     public function closeShowcaseCardAction(Request $request)
     {
         // check prerequisites
@@ -81,7 +79,7 @@ class ShowcaseCardController extends FrameworkBundleAdminController
                     'message' => '',
                 ]
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->json(
                 [
                     'success' => false,

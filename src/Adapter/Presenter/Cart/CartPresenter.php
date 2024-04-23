@@ -32,7 +32,9 @@ use CartRule;
 use Configuration;
 use Context;
 use Country;
+use Exception;
 use Hook;
+use Link;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
@@ -55,7 +57,7 @@ class CartPresenter implements PresenterInterface
     private $priceFormatter;
 
     /**
-     * @var \Link
+     * @var Link
      */
     private $link;
 
@@ -310,7 +312,7 @@ class CartPresenter implements PresenterInterface
     /**
      * @param Cart $cart
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function present($cart, bool $shouldSeparateGifts = false): array
     {
@@ -320,7 +322,7 @@ class CartPresenter implements PresenterInterface
         }
 
         if (!is_a($cart, 'Cart')) {
-            throw new \Exception('CartPresenter can only present instance of Cart');
+            throw new Exception('CartPresenter can only present instance of Cart');
         }
         if ($shouldSeparateGifts) {
             $rawProducts = $cart->getProductsWithSeparatedGifts();
@@ -601,7 +603,7 @@ class CartPresenter implements PresenterInterface
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
-                true,
+                null,
                 null,
                 [
                     'deleteDiscount' => $cartVoucher['id_cart_rule'],

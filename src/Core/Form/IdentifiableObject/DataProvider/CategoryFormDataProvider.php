@@ -29,67 +29,23 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\CategoryProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Router;
 
 /**
  * Provides data for category add/edit category forms
  */
 final class CategoryFormDataProvider implements FormDataProviderInterface
 {
-    /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
-    /**
-     * @var int
-     */
-    private $contextShopId;
-
-    /**
-     * @var int
-     */
-    private $contextShopRootCategoryId;
-
-    /**
-     * @var GroupDataProvider
-     */
-    private $groupDataProvider;
-
-    /**
-     * @var CategoryProvider
-     */
-    private $categoryProvider;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
-     * @param CommandBusInterface $queryBus
-     * @param int $contextShopId
-     * @param int $contextShopRootCategoryId
-     * @param GroupDataProvider $groupDataProvider
-     * @param CategoryProvider $categoryProvider
-     * @param UrlGeneratorInterface $router
-     */
     public function __construct(
-        CommandBusInterface $queryBus,
-        $contextShopId,
-        $contextShopRootCategoryId,
-        GroupDataProvider $groupDataProvider,
-        CategoryProvider $categoryProvider,
-        UrlGeneratorInterface $router
+        private readonly CommandBusInterface $queryBus,
+        private readonly GroupDataProvider $groupDataProvider,
+        private readonly CategoryProvider $categoryProvider,
+        private readonly Router $router,
+        private readonly ShopContext $shopContext,
     ) {
-        $this->queryBus = $queryBus;
-        $this->contextShopId = $contextShopId;
-        $this->contextShopRootCategoryId = $contextShopRootCategoryId;
-        $this->groupDataProvider = $groupDataProvider;
-        $this->categoryProvider = $categoryProvider;
-        $this->router = $router;
     }
 
     /**
@@ -140,6 +96,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'cover_image' => $coverImages,
             'thumbnail_image' => $thumbnailImages,
             'seo_preview' => $categoryUrl,
+            'redirect_option' => $this->extractRedirectOptionData($editableCategory),
         ];
     }
 
@@ -151,11 +108,30 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         $allGroupIds = $this->groupDataProvider->getAllGroupIds();
 
         return [
-            'id_parent' => $this->contextShopRootCategoryId,
+            'id_parent' => $this->shopContext->getCategoryId(),
             'group_association' => $allGroupIds,
-            'shop_association' => $this->contextShopId,
+            'shop_association' => $this->shopContext->getAssociatedShopIds(),
             'active' => true,
             'seo_preview' => $this->categoryProvider->getUrl(0, '{friendly-url}'),
+        ];
+    }
+
+    private function extractRedirectOptionData(EditableCategory $editableCategory): array
+    {
+        // It is important to return null when nothing is selected this way the transformer and therefore
+        // the form field have no value to try and display
+        $redirectTarget = null;
+        if (null !== $editableCategory->getRedirectTarget()) {
+            $redirectTarget = [
+                'id' => $editableCategory->getRedirectTarget()->getId(),
+                'name' => $editableCategory->getRedirectTarget()->getName(),
+                'image' => $editableCategory->getRedirectTarget()->getImage(),
+            ];
+        }
+
+        return [
+            'type' => $editableCategory->getRedirectType(),
+            'target' => $redirectTarget,
         ];
     }
 }

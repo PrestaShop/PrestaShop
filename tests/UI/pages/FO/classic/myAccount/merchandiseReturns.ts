@@ -30,8 +30,8 @@ class MerchandiseReturns extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on merchandise returns page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Order follow';
     this.alertNoMerchandiseReturns = 'You have no merchandise return authorizations.';
@@ -128,4 +128,5 @@ class MerchandiseReturns extends FOBasePage {
   }
 }
 
-export default new MerchandiseReturns();
+const merchandiseReturnsPage = new MerchandiseReturns();
+export {merchandiseReturnsPage, MerchandiseReturns};

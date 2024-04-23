@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotToggleStoreStatusExc
 use PrestaShop\PrestaShop\Core\Search\Filters\StoreFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,10 +47,9 @@ class StoreController extends FrameworkBundleAdminController
     use BulkActionsTrait;
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
         StoreFilters $storeFilters
@@ -63,23 +62,22 @@ class StoreController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'storeGrid' => $this->presentGrid($storeGrid),
             // @todo: uncomment when add action is implemented
-            //'layoutHeaderToolbarBtn' => [
-            //'add_store' => [
-            //'href' => $this->generateUrl('admin_stores_add'),
-            //'desc' => $this->trans('Add new store', 'Admin.Shopparameters.Feature'),
-            //'icon' => 'add_circle_outline',
-            //],
-            //],
+            // 'layoutHeaderToolbarBtn' => [
+            // 'add_store' => [
+            // 'href' => $this->generateUrl('admin_stores_add'),
+            // 'desc' => $this->trans('Add new store', 'Admin.Shopparameters.Feature'),
+            // 'icon' => 'add_circle_outline',
+            // ],
+            // ],
         ]);
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $storeId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function toggleStatusAction(int $storeId): Response
     {
         try {
@@ -91,15 +89,13 @@ class StoreController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_stores_index');
     }
 
-//    public function bulkEnableStoreAction():
-
+    //    public function bulkEnableStoreAction():
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param int $storeId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function deleteAction(int $storeId): Response
     {
         try {
@@ -112,12 +108,11 @@ class StoreController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function bulkDeleteAction(Request $request): Response
     {
         try {
@@ -130,24 +125,22 @@ class StoreController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function bulkEnableAction(Request $request): RedirectResponse
     {
         return $this->bulkUpdateStatus($request, true);
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function bulkDisableAction(Request $request): RedirectResponse
     {
         return $this->bulkUpdateStatus($request, false);

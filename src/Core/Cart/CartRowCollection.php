@@ -26,7 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Cart;
 
-class CartRowCollection implements \Iterator, \Countable
+use Countable;
+use Iterator;
+use ReturnTypeWillChange;
+
+class CartRowCollection implements Iterator, Countable
 {
     /**
      * @var CartRow[]
@@ -47,13 +51,13 @@ class CartRowCollection implements \Iterator, \Countable
     /**
      * @return CartRow
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function current()
     {
         return $this->cartRows[$this->getKey($this->iteratorPosition)];
     }
 
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->getKey($this->iteratorPosition);

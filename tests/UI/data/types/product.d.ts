@@ -22,6 +22,7 @@ type ProductCreator = {
   applyChangesToAllStores?: boolean
   summary?: string
   description?: string
+  descriptionFR?: string
   reference?: string
   mpn?: string | null
   upc?: string | null
@@ -183,6 +184,16 @@ type ProductImageUrls = {
   thumbImage: string
 };
 
+type ProductImageInformation = {
+  id: number,
+  isCover: boolean,
+  position: number,
+  caption: {
+    en: string,
+    fr: string
+  },
+};
+
 type ProductPackItem = {
   reference: string
   quantity: number
@@ -218,6 +229,12 @@ type ProductStockMovement = {
   employee: string
 };
 
+type ProductOrderConfirmation = {
+  image: string
+  details: string
+  prices: string
+};
+
 export {
   ProductAttribute,
   ProductAttributes,
@@ -234,6 +251,7 @@ export {
   ProductDiscount,
   ProductFilterMinMax,
   ProductHeaderSummary,
+  ProductImageInformation,
   ProductImageUrls,
   ProductInformations,
   ProductPackItem,
@@ -245,4 +263,5 @@ export {
   ProductFeatures,
   ProductFiles,
   ProductCustomizations,
+  ProductOrderConfirmation,
 };

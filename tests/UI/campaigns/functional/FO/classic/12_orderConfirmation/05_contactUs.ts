@@ -17,14 +17,20 @@ import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {cartPage} from '@pages/FO/classic/cart';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
-import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
-import PaymentMethods from '@data/demo/paymentMethods';
 import MessageData from '@data/faker/message';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -51,7 +57,7 @@ describe('FO - Order confirmation : Contact us', async () => {
   const contactUsData: MessageData = new MessageData({
     subject: 'Customer service',
     message: 'Test message to customer service for order reference',
-    emailAddress: Customers.johnDoe.email,
+    emailAddress: dataCustomers.johnDoe.email,
     reference: '',
   });
 
@@ -96,7 +102,7 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
@@ -112,8 +118,10 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should add first product to cart and Proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foHomePage.addProductToCartByQuickView(page, 1, 1);
-      await foHomePage.proceedToCheckout(page);
+      await foHomePage.quickViewProduct(page, 1);
+      await quickViewModal.addToCartByQuickView(page);
+      await blockCartModal.proceedToCheckout(page);
+
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
     });
@@ -160,7 +168,7 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should Pay by back wire and confirm order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
       const pageTitle = await orderConfirmationPage.getPageTitle(page);
       expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
 
@@ -193,7 +201,7 @@ describe('FO - Order confirmation : Contact us', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTheFormInfos', baseContext);
 
       const emailFieldValue = await contactUsPage.getEmailFieldValue(page);
-      expect(emailFieldValue).to.contains(Customers.johnDoe.email);
+      expect(emailFieldValue).to.contains(dataCustomers.johnDoe.email);
     });
 
     it('should send the message', async function () {

@@ -86,6 +86,14 @@ class AddLanguage extends LocalizationBasePage {
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
+
+  /**
+   * Return true if language is RTL
+   * @param page {Page}
+   */
+  async isRTL(page: Page): Promise<boolean> {
+    return this.isChecked(page, this.isRtlToggleInput(1));
+  }
 }
 
 export default new AddLanguage();

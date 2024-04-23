@@ -89,28 +89,28 @@ class TaxRulesGroupCore extends ObjectModel
     /**
      * Save the object with the field deleted to true.
      *
-     *  @return bool
+     * @return bool
      */
     public function historize(TaxRulesGroup $tax_rules_group)
     {
-        return $this->softDelete() &&
-        Db::getInstance()->execute('
+        return $this->softDelete()
+        && Db::getInstance()->execute('
 		INSERT INTO ' . _DB_PREFIX_ . 'tax_rule
 		(id_tax_rules_group, id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description)
 		(
 			SELECT ' . (int) $tax_rules_group->id . ', id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description
 			FROM ' . _DB_PREFIX_ . 'tax_rule
 			WHERE id_tax_rules_group=' . (int) $this->id . '
-		)') &&
-        Db::getInstance()->execute('
+		)')
+        && Db::getInstance()->execute('
 		UPDATE ' . _DB_PREFIX_ . 'product
 		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
-		WHERE id_tax_rules_group=' . (int) $this->id) &&
-        Db::getInstance()->execute('
+		WHERE id_tax_rules_group=' . (int) $this->id)
+        && Db::getInstance()->execute('
 		UPDATE ' . _DB_PREFIX_ . 'product_shop
 		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
-		WHERE id_tax_rules_group=' . (int) $this->id) &&
-        Db::getInstance()->execute('
+		WHERE id_tax_rules_group=' . (int) $this->id)
+        && Db::getInstance()->execute('
 		UPDATE ' . _DB_PREFIX_ . 'carrier_tax_rules_group_shop
 		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
 		WHERE id_tax_rules_group=' . (int) $this->id);
@@ -244,7 +244,8 @@ class TaxRulesGroupCore extends ObjectModel
         return (int) Db::getInstance()->getValue(
             'SELECT `id_tax_rules_group`
 			FROM `' . _DB_PREFIX_ . 'tax_rules_group` rg
-			WHERE `name` = \'' . pSQL($name) . '\''
+			WHERE `name` = \'' . pSQL($name) . '\'
+            ORDER BY `active` DESC, `deleted` ASC'
         );
     }
 

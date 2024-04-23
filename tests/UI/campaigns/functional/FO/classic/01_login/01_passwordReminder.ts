@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/account';
+import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
@@ -15,8 +15,12 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
 
 // Import data
-import CustomerData from '@data/faker/customer';
 import type MailDevEmail from '@data/types/maildevEmail';
+
+import {
+  // Import ,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type MailDev from 'maildev';
@@ -44,9 +48,9 @@ describe('FO - Login : Password reminder', async () => {
   let mailListener: MailDev;
 
   const resetPasswordMailSubject: string = 'Password query confirmation';
-  const customerData: CustomerData = new CustomerData();
+  const customerData: FakerCustomer = new FakerCustomer();
   const newPassword: string = 'new test password';
-  const customerNewPassword: CustomerData = new CustomerData();
+  const customerNewPassword: FakerCustomer = new FakerCustomer();
   customerNewPassword.email = customerData.email;
   customerNewPassword.password = newPassword;
 

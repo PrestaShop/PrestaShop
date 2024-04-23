@@ -118,6 +118,9 @@ services:
     autowire: true
     public: false
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttributeFormDataHandler:
+    autowire: true
+
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureValueFormDataHandler:
     autowire: true
     public: false
@@ -272,6 +275,10 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TitleFormDataHandler:
     autowire: true
 
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApiAccessFormDataHandler:
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApiClientFormDataHandler:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ImageTypeFormDataHandler:
     autowire: true
     public: false

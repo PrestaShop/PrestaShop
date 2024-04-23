@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository;
 
 use AttributeGroup;
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Adapter\AttributeGroup\Validate\AttributeGroupValidator;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotAddAttributeGroupException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotUpdateAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
@@ -42,29 +42,38 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository
 
 class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
-     * @var AttributeGroupValidator
-     */
-    private $validator;
-
     public function __construct(
-        Connection $connection,
-        string $dbPrefix,
-        AttributeGroupValidator $validator
+        private Connection $connection,
+        private string $dbPrefix,
     ) {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
-        $this->validator = $validator;
+    }
+
+    /**
+     * @param AttributeGroup $attributeGroup
+     *
+     * @return AttributeGroupId
+     *
+     * @throws CoreException
+     */
+    public function add(AttributeGroup $attributeGroup): AttributeGroupId
+    {
+        $attributeGroupId = $this->addObjectModelToShops(
+            $attributeGroup,
+            array_map(fn (int $shopId) => new ShopId((int) $shopId), $attributeGroup->id_shop_list),
+            CannotAddAttributeGroupException::class
+        );
+
+        return new AttributeGroupId($attributeGroupId);
+    }
+
+    public function partialUpdate(AttributeGroup $attribute, array $propertiesToUpdate, int $errorCode = 0): void
+    {
+        $this->partiallyUpdateObjectModel($attribute, $propertiesToUpdate, CannotUpdateAttributeGroupException::class, $errorCode);
+        $this->updateObjectModelShopAssociations(
+            (int) $attribute->id,
+            AttributeGroup::class,
+            $attribute->id_shop_list
+        );
     }
 
     /**
@@ -72,7 +81,7 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
      *
      * @return AttributeGroup
      *
-     * @throws AttributeGroupNotFoundException
+     * @throws ShopAssociationNotFound
      * @throws CoreException
      */
     public function get(AttributeGroupId $attributeGroupId): AttributeGroup
@@ -85,35 +94,6 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
         );
 
         return $attributeGroup;
-    }
-
-    /**
-     * @param AttributeGroup $attributeGroup
-     *
-     * @return AttributeGroupId
-     *
-     * @throws CoreException
-     */
-    public function add(AttributeGroup $attributeGroup): AttributeGroupId
-    {
-        $this->validator->validate($attributeGroup);
-        $id = $this->addObjectModel($attributeGroup, CannotAddAttributeGroupException::class);
-
-        return new AttributeGroupId($id);
-    }
-
-    /**
-     * @param AttributeGroup $attributeGroup
-     * @param int $errorCode
-     *
-     * @return void
-     *
-     * @throws CoreException
-     */
-    public function update(AttributeGroup $attributeGroup, int $errorCode = 0): void
-    {
-        $this->validator->validate($attributeGroup);
-        $this->updateObjectModel($attributeGroup, CannotAddAttributeGroupException::class, $errorCode);
     }
 
     /**

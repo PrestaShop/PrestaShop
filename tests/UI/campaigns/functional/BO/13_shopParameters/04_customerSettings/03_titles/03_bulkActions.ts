@@ -12,8 +12,9 @@ import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
 import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
 
-// Import data
-import TitleData from '@data/faker/title';
+import {
+  FakerTitle,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -25,9 +26,9 @@ describe('BO - Shop Parameters - Customer Settings : Bulk actions', async () => 
   let page: Page;
   let numberOfTitles: number = 0;
 
-  const titlesToCreate: TitleData[] = [
-    new TitleData({name: 'todelete1'}),
-    new TitleData({name: 'todelete2'}),
+  const titlesToCreate: FakerTitle[] = [
+    new FakerTitle({name: 'todelete1'}),
+    new FakerTitle({name: 'todelete2'}),
   ];
 
   // before and after functions
@@ -36,13 +37,13 @@ describe('BO - Shop Parameters - Customer Settings : Bulk actions', async () => 
     page = await helper.newTab(browserContext);
 
     // Create images
-    titlesToCreate.forEach((titleToCreate: TitleData) => files.generateImage(titleToCreate.imageName));
+    titlesToCreate.forEach((titleToCreate: FakerTitle) => files.generateImage(titleToCreate.imageName));
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
 
-    titlesToCreate.forEach((titleToCreate: TitleData) => files.deleteFile(titleToCreate.imageName));
+    titlesToCreate.forEach((titleToCreate: FakerTitle) => files.deleteFile(titleToCreate.imageName));
   });
 
   it('should login in BO', async function () {
@@ -80,7 +81,7 @@ describe('BO - Shop Parameters - Customer Settings : Bulk actions', async () => 
   });
 
   describe('Create 2 titles in BO', async () => {
-    titlesToCreate.forEach((titleToCreate: TitleData, index: number) => {
+    titlesToCreate.forEach((titleToCreate: FakerTitle, index: number) => {
       it('should go to add new title page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewTitlePage${index + 1}`, baseContext);
 

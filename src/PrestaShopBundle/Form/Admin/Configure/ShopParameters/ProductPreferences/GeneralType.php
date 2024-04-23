@@ -71,9 +71,9 @@ class GeneralType extends TranslatorAwareType
             ->add('catalog_mode', SwitchType::class, [
                 'label' => $this->trans('Catalog mode', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
-                        'Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.',
-                        'Admin.Shopparameters.Help'
-                    ),
+                    'Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.',
+                    'Admin.Shopparameters.Help'
+                ),
                 'required' => false,
             ])
             ->add('catalog_mode_with_prices', SwitchType::class, [
@@ -84,13 +84,13 @@ class GeneralType extends TranslatorAwareType
                 ) . '<br />' . $this->trans(
                     'To hide prices for a specific group, go to [1]Customer Settings > Groups[/1].',
                     'Admin.Shopparameters.Help',
-                        [
-                            '[1]' => sprintf(
-                                '<a target="_blank" href="%s">',
-                                $this->legacyContext->getAdminLink('AdminGroups')
-                            ),
-                            '[/1]' => '</a>',
-                        ]
+                    [
+                        '[1]' => sprintf(
+                            '<a target="_blank" href="%s">',
+                            $this->legacyContext->getAdminLink('AdminGroups')
+                        ),
+                        '[/1]' => '</a>',
+                    ]
                 ),
                 'row_attr' => [
                     'class' => 'catalog-mode-option',
@@ -136,6 +136,23 @@ class GeneralType extends TranslatorAwareType
                 ),
                 'help' => $this->trans(
                     'When enabled, friendly URL will be updated on every name change for offline products only.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'required' => false,
+            ])
+            ->add('product_breadcrumb_category', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Category used in breadcrumbs',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'choices' => [
+                    $this->trans('Product default category', 'Admin.Shopparameters.Feature') => 'default',
+                    $this->trans('Category the product was accessed from', 'Admin.Shopparameters.Feature') => 'current',
+                ],
+                'choice_translation_domain' => 'Admin.Global',
+                'placeholder' => false,
+                'help' => $this->trans(
+                    'Select which category to display on the product page breadcrumbs. It can be the product\'s default category or the category the customer came from.',
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,

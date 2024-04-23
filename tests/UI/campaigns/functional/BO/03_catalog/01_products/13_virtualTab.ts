@@ -15,19 +15,23 @@ import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab'
 import productSettings from '@pages/BO/shopParameters/productSettings';
 
 // Import FO pages
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
 import ProductData from '@data/faker/product';
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -146,7 +150,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
 
       // Personal information step - Login
       await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.customerLogin(page, Customers.johnDoe);
+      await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
     });
 
     it('should go to payment step', async function () {
@@ -159,7 +163,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
     it('should pay the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'payTheOrder', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
       expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);

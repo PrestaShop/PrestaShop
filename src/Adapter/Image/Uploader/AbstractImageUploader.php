@@ -76,9 +76,9 @@ abstract class AbstractImageUploader
      *
      * @param UploadedFile $image
      *
-     * @throws ImageUploadException
-     *
      * @return string
+     *
+     * @throws ImageUploadException
      */
     protected function createTemporaryImage(UploadedFile $image)
     {

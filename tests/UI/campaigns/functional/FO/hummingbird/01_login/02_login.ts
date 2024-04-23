@@ -3,15 +3,17 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
 import loginPage from '@pages/FO/hummingbird/login';
 
-// Import data
-import Customers from '@data/demo/customers';
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  dataCustomers,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -22,9 +24,9 @@ describe('FO - Login : Login in FO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const firstCredentialsData: CustomerData = new CustomerData();
-  const secondCredentialsData: CustomerData = new CustomerData({password: Customers.johnDoe.password});
-  const thirdCredentialsData: CustomerData = new CustomerData({email: Customers.johnDoe.email});
+  const firstCredentialsData: FakerCustomer = new FakerCustomer();
+  const secondCredentialsData: FakerCustomer = new FakerCustomer({password: dataCustomers.johnDoe.password});
+  const thirdCredentialsData: FakerCustomer = new FakerCustomer({email: dataCustomers.johnDoe.email});
 
   // Pre-condition : Install Hummingbird
   installHummingbird(`${baseContext}_preTest_1`);
@@ -102,7 +104,7 @@ describe('FO - Login : Login in FO', async () => {
     it('should enter a valid credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);

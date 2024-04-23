@@ -147,7 +147,7 @@ class CommandBuilder
     public function buildCommands(
         array $data,
         object $singleShopCommand,
-        object $allShopsCommand = null
+        ?object $allShopsCommand = null
     ): array {
         $updatedCommands = [];
 

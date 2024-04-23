@@ -30,6 +30,7 @@ use ArrayAccess;
 use Countable;
 use IteratorAggregate;
 use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCellInterface;
+use ReturnTypeWillChange;
 
 /**
  * Interface DataRowInterface describes a data row from imported file.
@@ -59,7 +60,7 @@ interface DataRowInterface extends ArrayAccess, IteratorAggregate, Countable
      *
      * @return DataCellInterface
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset);
 
     /**

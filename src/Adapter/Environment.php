@@ -47,10 +47,11 @@ class Environment implements EnvironmentInterface
     private $name;
 
     /**
-     * @param bool|null $isDebug
-     * @param string|null $name
+     * @var string
      */
-    public function __construct($isDebug = null, $name = null)
+    private $appId;
+
+    public function __construct(?bool $isDebug = null, ?string $name = null, ?string $appId = null)
     {
         if (null === $isDebug) {
             $this->isDebug = defined('_PS_MODE_DEV_') ? _PS_MODE_DEV_ : true;
@@ -65,6 +66,16 @@ class Environment implements EnvironmentInterface
                 $this->name = _PS_ENV_;
             } else {
                 $this->name = $this->isDebug ? 'dev' : 'prod';
+            }
+        }
+
+        if (null !== $appId) {
+            $this->appId = $appId;
+        } else {
+            if (defined('_PS_APP_ID_')) {
+                $this->appId = _PS_APP_ID_;
+            } else {
+                $this->appId = 'admin';
             }
         }
     }
@@ -85,6 +96,11 @@ class Environment implements EnvironmentInterface
         return $this->isDebug;
     }
 
+    public function getAppId(): string
+    {
+        return $this->appId;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -94,6 +110,6 @@ class Environment implements EnvironmentInterface
             return _PS_CACHE_DIR_;
         }
 
-        return _PS_ROOT_DIR_ . '/var/cache/' . $this->getName() . '/';
+        return _PS_ROOT_DIR_ . '/var/cache/' . $this->getName() . '/' . $this->getAppId() . '/';
     }
 }

@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShopBundle\Cache\LocalizationWarmer;
+use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Resources\Resetter\LocalizationPackResetter;
-use Tests\Resources\ResourceResetter;
 
 class RepositoryTest extends KernelTestCase
 {
@@ -67,7 +67,6 @@ class RepositoryTest extends KernelTestCase
     {
         parent::tearDownAfterClass();
         LocalizationPackResetter::resetLocalizationPacks();
-        (new ResourceResetter())->resetTestModules();
     }
 
     protected function setUp(): void
@@ -128,7 +127,7 @@ class RepositoryTest extends KernelTestCase
         // Install each language associated to the country
         $xml = @simplexml_load_string($xmlContent[0]);
         foreach ($xml->languages->language as $data) {
-            /** @var \SimpleXMLElement $data */
+            /** @var SimpleXMLElement $data */
             $attributes = $data->attributes();
             $this->checkAndInstallLanguage((string) $attributes['iso_code']);
         }
@@ -349,7 +348,7 @@ class RepositoryTest extends KernelTestCase
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'CNY',
                 'formattedPrice' => '¥1,234,568.12',
-                //'nativeFormattedPrice' => '￥1,234,568.12',
+                // 'nativeFormattedPrice' => '￥1,234,568.12',
             ],
             'Australia' => [
                 'localeCode' => 'en-US',

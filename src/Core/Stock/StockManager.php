@@ -32,12 +32,14 @@ use Configuration;
 use Context;
 use DateTime;
 use Employee;
+use Exception;
 use Mail;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Entity\StockMvt;
+use PrestaShopException;
 use Product;
 use StockAvailable;
 
@@ -276,8 +278,8 @@ class StockManager
      * @param int $id_product_attribute
      * @param int $newQuantity
      *
-     * @throws \Exception
-     * @throws \PrestaShopException
+     * @throws Exception
+     * @throws PrestaShopException
      */
     protected function sendLowStockAlert($product, $id_product_attribute, $newQuantity)
     {

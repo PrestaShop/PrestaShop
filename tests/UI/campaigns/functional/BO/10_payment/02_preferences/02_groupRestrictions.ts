@@ -13,14 +13,16 @@ import addCustomerPage from '@pages/BO/customers/add';
 import preferencesPage from '@pages/BO/payment/preferences';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Customers from '@data/demo/customers';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  dataCustomers,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -33,9 +35,9 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
 
   let numberOfCustomers: number = 0;
 
-  const address: AddressData = new AddressData({city: 'Paris', country: 'France'});
-  const visitorData: CustomerData = new CustomerData({defaultCustomerGroup: 'Visitor'});
-  const guestData: CustomerData = new CustomerData({defaultCustomerGroup: 'Guest'});
+  const address: FakerAddress = new FakerAddress({city: 'Paris', country: 'France'});
+  const visitorData: FakerCustomer = new FakerCustomer({defaultCustomerGroup: 'Visitor'});
+  const guestData: FakerCustomer = new FakerCustomer({defaultCustomerGroup: 'Guest'});
 
   // before and after functions
   before(async function () {
@@ -117,7 +119,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
     [
       {args: {groupName: 'Visitor', id: '0', customer: visitorData}},
       {args: {groupName: 'Guest', id: '1', customer: guestData}},
-      {args: {groupName: 'Customer', id: '2', customer: Customers.johnDoe}},
+      {args: {groupName: 'Customer', id: '2', customer: dataCustomers.johnDoe}},
     ].forEach((group, groupIndex: number) => {
       describe(`Configure '${group.args.groupName}' group restrictions then check in FO`, async () => {
         const tests = [

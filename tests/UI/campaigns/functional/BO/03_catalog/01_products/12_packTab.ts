@@ -16,17 +16,21 @@ import packTab from '@pages/BO/catalog/products/add/packTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import ProductData from '@data/faker/product';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -42,6 +46,8 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
   const productNameEn: string = 'My pack';
   const productNameFr: string = 'Mon pack';
   const productRetailPrice: number = 25.00;
+  // Automatically selected based on the mostly used tax on other products
+  const mostUsedTaxValue: number = 20;
   const productQuantity: number = 4;
   const productStock: number = 100;
 
@@ -288,8 +294,10 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
 
       const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
       expect(productHeaderSummary.priceTaxExc).to.equals(`€${productRetailPrice.toFixed(2)} tax excl.`);
-      expect(productHeaderSummary.priceTaxIncl).to.equals(
-        `€${productRetailPrice.toFixed(2)} tax incl. (tax rule: 0%)`,
+
+      const taxValue = await basicHelper.percentage(productRetailPrice, mostUsedTaxValue);
+      expect(productHeaderSummary.priceTaxIncl).to.equal(
+        `€${(productRetailPrice + taxValue).toFixed(2)} tax incl. (tax rule: ${mostUsedTaxValue}%)`,
       );
     });
 
@@ -307,7 +315,8 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
       const productInformation = await foProductPage.getProductInformation(page);
-      expect(productRetailPrice).to.eq(productInformation.price);
+      const taxValue = await basicHelper.percentage(productRetailPrice, mostUsedTaxValue);
+      expect(productRetailPrice + taxValue).to.eq(productInformation.price);
 
       const productsPrice = await foProductPage.getPackProductsPrice(page);
       const calculatedPrice = (
@@ -353,7 +362,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await cartPage.clickOnProceedToCheckout(page);
       // Connect
       await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.customerLogin(page, Customers.johnDoe);
+      await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
@@ -364,7 +373,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       expect(isStepDeliveryComplete).to.be.eq(true);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -399,7 +408,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
     });
   });
 
-  describe(`Set the order to ${OrderStatuses.delivered.name} & check stock`, async () => {
+  describe(`Set the order to ${dataOrderStatuses.delivered.name} & check stock`, async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -416,7 +425,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
     it('should update order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult: string = await ordersPage.setOrderStatus(page, 1, OrderStatuses.delivered);
+      const textResult: string = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
       expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
     });
 
@@ -469,7 +478,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
     it('should edit Pack Quantities "Decrement products in pack only"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editPackQuantities', baseContext);
 
-      await packTab.editPackStockType(page, 'Decrement products in pack only');
+      await packTab.editPackStockType(page, 'Use quantity of products in the pack');
 
       const updateProductMessage = await createProductsPage.saveProduct(page);
       expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
@@ -503,7 +512,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       expect(isStepDeliveryComplete).to.be.eq(true);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

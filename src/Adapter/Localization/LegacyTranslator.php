@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Localization;
 
+use Exception;
 use Translate;
 
 /**
@@ -46,7 +47,7 @@ class LegacyTranslator
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function translate(
         $moduleName,

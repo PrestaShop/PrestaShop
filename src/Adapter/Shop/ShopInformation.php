@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
+use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Version;
 use Tools;
@@ -38,7 +39,7 @@ use Tools;
 class ShopInformation
 {
     /**
-     * @var \Context
+     * @var Context
      */
     private $context;
 

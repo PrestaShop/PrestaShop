@@ -1,4 +1,5 @@
 import FOBasePage from '@pages/FO/FObasePage';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import type {Page} from 'playwright';
 
@@ -14,23 +15,25 @@ class SearchResultsPage extends FOBasePage {
 
   private readonly totalProduct: string;
 
-  private readonly productArticle: (number: number) => string;
+  protected productArticle: (number: number) => string;
 
-  private readonly productImg: (number: number) => string;
+  protected productImg: (number: number) => string;
 
   private readonly productDescriptionDiv: (number: number) => string;
 
-  private readonly productQuickViewLink: (number: number) => string;
+  private readonly productAttribute: (number: number, attribute: string) => string;
+
+  protected productQuickViewLink: (number: number) => string;
 
   protected productPrice: string;
 
-  private readonly productNoMatches: string;
+  protected productNoMatches: string;
 
-  private readonly quickViewModalDiv: string;
+  private readonly sortButton: string;
 
-  private readonly quickViewCoverImage: string;
+  protected sortDropDownMenu: string;
 
-  private readonly quickViewThumbImage: (position: number) => string;
+  private readonly sortOption: (sortBy: string) => string;
 
   /**
    * @constructs
@@ -45,16 +48,16 @@ class SearchResultsPage extends FOBasePage {
     this.productListTopDiv = '#js-product-list-top';
     this.totalProduct = `${this.productListTopDiv} .total-products`;
     this.productArticle = (number: number) => `#js-product-list .products div:nth-child(${number}) article`;
+    this.productAttribute = (number: number, attribute: string) => `${this.productArticle(number)} .product-${attribute}`;
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = (number: number) => `${this.productArticle(number)} div.product-description`;
     this.productQuickViewLink = (number: number) => `${this.productArticle(number)} a.quick-view`;
     this.productPrice = '#js-product-list div.product-description span.price';
     this.productNoMatches = '#product-search-no-matches';
-
-    // Quick View modal
-    this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
-    this.quickViewCoverImage = `${this.quickViewModalDiv} img.js-qv-product-cover`;
-    this.quickViewThumbImage = (position: number) => `${this.quickViewModalDiv} li:nth-child(${position}) img.js-thumb`;
+    // Selectors for sort button
+    this.sortButton = '#js-product-list-top  button.select-title';
+    this.sortDropDownMenu = 'div.dropdown-menu';
+    this.sortOption = (sortBy: string) => `#js-product-list-top a[href*='${sortBy}']`;
   }
 
   // Methods
@@ -72,8 +75,48 @@ class SearchResultsPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getSearchResultsNumber(page: Page): Promise<number> {
+  async getSearchResultsNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.totalProduct);
+  }
+
+  /**
+   * Get sort by value from button
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getSortByValue(page: Page): Promise<string> {
+    return this.getTextContent(page, this.sortButton);
+  }
+
+  /**
+   * Sort products list
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Value to sort by
+   * @return {Promise<void>}
+   */
+  async sortProductsList(page: Page, sortBy: string): Promise<void> {
+    await page.locator(this.sortButton).click();
+    await this.waitForVisibleSelector(page, this.sortDropDownMenu);
+    await this.clickAndWaitForURL(page, this.sortOption(sortBy));
+  }
+
+  /**
+   * Get all products attribute
+   * @param page {Page} Browser tab
+   * @param attribute {string} Attribute to get
+   * @returns {Promise<string[]>}
+   */
+  async getAllProductsAttribute(page: Page, attribute: string): Promise<string[]> {
+    let rowContent: string;
+    const rowsNumber: number = await this.getSearchResultsNumber(page);
+    const allRowsContentTable: string[] = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      rowContent = await this.getTextContent(page, this.productAttribute(i, attribute));
+      allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
   }
 
   /**
@@ -103,7 +146,7 @@ class SearchResultsPage extends FOBasePage {
       /* eslint-env browser */
       displayed = await page.evaluate(
         (selector) => {
-          const element: HTMLElement|null = document.querySelector(selector);
+          const element: HTMLElement | null = document.querySelector(selector);
 
           if (!element) {
             return false;
@@ -116,31 +159,9 @@ class SearchResultsPage extends FOBasePage {
     }
     /* eslint-enable no-await-in-loop */
     await Promise.all([
-      this.waitForVisibleSelector(page, this.quickViewModalDiv),
+      this.waitForVisibleSelector(page, quickViewModal.quickViewModalDiv),
       page.locator(this.productQuickViewLink(id)).evaluate((el: HTMLElement) => el.click()),
     ]);
-  }
-
-  /**
-   * Is quick view product modal visible
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  isQuickViewProductModalVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.quickViewModalDiv, 2000);
-  }
-
-  /**
-   * Select thumb image
-   * @param page {Page} Browser tab
-   * @param position {number} Position of the image
-   * @returns {Promise<string>}
-   */
-  async selectThumbImage(page: Page, position: number): Promise<string> {
-    await page.locator(this.quickViewThumbImage(position)).click();
-    await this.waitForVisibleSelector(page, `${this.quickViewThumbImage(position)}.selected`);
-
-    return this.getAttributeContent(page, this.quickViewCoverImage, 'src');
   }
 
   /**

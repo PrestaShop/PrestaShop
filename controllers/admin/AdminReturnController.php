@@ -164,7 +164,7 @@ class AdminReturnControllerCore extends AdminController
         $order = new Order($this->object->id_order);
         $quantity_displayed = [];
         // Customized products */
-        if ($returned_customizations = OrderReturn::getReturnedCustomizedProducts((int) ($this->object->id_order))) {
+        if ($returned_customizations = OrderReturn::getReturnedCustomizedProducts((int) $this->object->id_order)) {
             foreach ($returned_customizations as $returned_customization) {
                 $quantity_displayed[(int) $returned_customization['id_order_detail']] = isset($quantity_displayed[(int) $returned_customization['id_order_detail']]) ? $quantity_displayed[(int) $returned_customization['id_order_detail']] + (int) $returned_customization['product_quantity'] : (int) $returned_customization['product_quantity'];
             }
@@ -196,7 +196,7 @@ class AdminReturnControllerCore extends AdminController
             'url_order' => $orderUrl,
             'picture_folder' => _THEME_PROD_PIC_DIR_,
             'returnedCustomizations' => $returned_customizations,
-            'customizedDatas' => Product::getAllCustomizedDatas((int) ($order->id_cart)),
+            'customizedDatas' => Product::getAllCustomizedDatas((int) $order->id_cart),
             'products' => $products,
             'quantityDisplayed' => $quantity_displayed,
             'id_order_return' => $this->object->id,
@@ -228,14 +228,14 @@ class AdminReturnControllerCore extends AdminController
         $this->context = Context::getContext();
         if (Tools::isSubmit('deleteorder_return_detail')) {
             if ($this->access('delete')) {
-                if (($id_order_detail = (int) (Tools::getValue('id_order_detail'))) && Validate::isUnsignedId($id_order_detail)) {
-                    if (($id_order_return = (int) (Tools::getValue('id_order_return'))) && Validate::isUnsignedId($id_order_return)) {
+                if (($id_order_detail = (int) Tools::getValue('id_order_detail')) && Validate::isUnsignedId($id_order_detail)) {
+                    if (($id_order_return = (int) Tools::getValue('id_order_return')) && Validate::isUnsignedId($id_order_return)) {
                         $orderReturn = new OrderReturn($id_order_return);
                         if (!Validate::isLoadedObject($orderReturn)) {
                             die(Tools::displayError(sprintf('Order return with ID "%s" could not be loaded.', $id_order_return)));
                         }
-                        if ((int) ($orderReturn->countProduct()) > 1) {
-                            if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int) (Tools::getValue('id_customization', 0)))) {
+                        if ((int) $orderReturn->countProduct() > 1) {
+                            if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int) Tools::getValue('id_customization', 0))) {
                                 Tools::redirectAdmin(self::$currentIndex . '&updateorder_return&id_order_return=' . $id_order_return . '&conf=4&token=' . $this->token);
                             } else {
                                 $this->errors[] = $this->trans('An error occurred while deleting the details of your order return.', [], 'Admin.Orderscustomers.Notification');
@@ -254,12 +254,12 @@ class AdminReturnControllerCore extends AdminController
             }
         } elseif (Tools::isSubmit('submitAddorder_return') || Tools::isSubmit('submitAddorder_returnAndStay')) {
             if ($this->access('edit')) {
-                if (($id_order_return = (int) (Tools::getValue('id_order_return'))) && Validate::isUnsignedId($id_order_return)) {
+                if (($id_order_return = (int) Tools::getValue('id_order_return')) && Validate::isUnsignedId($id_order_return)) {
                     $orderReturn = new OrderReturn($id_order_return);
                     $order = new Order($orderReturn->id_order);
                     $customer = new Customer($orderReturn->id_customer);
                     $orderLanguage = new Language((int) $order->id_lang);
-                    $orderReturn->state = (int) (Tools::getValue('state'));
+                    $orderReturn->state = (int) Tools::getValue('state');
                     if ($orderReturn->save()) {
                         $orderReturnState = new OrderReturnState($orderReturn->state);
                         $vars = [

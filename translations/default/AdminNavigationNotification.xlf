@@ -17,30 +17,60 @@
         <target><![CDATA[Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.]]></target>
         <note>Line: 245</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/new-theme/template/components/layout/notifications_center.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="91a52a2a855d5abd5597a481c20f3972">
         <source>No new order for now :(</source>
         <target>No new order for now :(</target>
-        <note>Line: 87</note>
+        <note>Line: 339</note>
       </trans-unit>
       <trans-unit id="235a11509f6bd6143ddf165affbf7dad">
         <source>No new customer for now :(</source>
         <target>No new customer for now :(</target>
-        <note>Line: 97</note>
+        <note>Line: 349</note>
       </trans-unit>
       <trans-unit id="b7c3bb1b80422ee7587d604b1a97ce3c">
         <source>No new message for now.</source>
         <target>No new message for now.</target>
-        <note>Line: 107</note>
+        <note>Line: 359</note>
       </trans-unit>
       <trans-unit id="a2b8ed9c305b8ea86116b603cca78a97">
         <source>registered</source>
         <target>registered</target>
-        <note>Line: 132</note>
+        <note>Line: 68</note>
       </trans-unit>
+      <trans-unit id="13886bc255a80b7c11e0585013feeb30">
+        <source>All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.</source>
+        <target>All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.</target>
+        <note>Line: 231</note>
+      </trans-unit>
+      <trans-unit id="6f68993eb55ac938b8ae0fcba53b93db">
+        <source>Your store is in debug mode.</source>
+        <target>Your store is in debug mode.</target>
+        <note>Line: 231</note>
+      </trans-unit>
+      <trans-unit id="b0ba9e87fe502f010c233334e4159f29">
+        <source>Your store is in maintenance mode.</source>
+        <target>Your store is in maintenance mode.</target>
+        <note>Line: 243</note>
+      </trans-unit>
+      <trans-unit id="672d0c62dfc352f75e3a3f6b87c5cb38">
+        <source>Your visitors and customers cannot access your store while in maintenance mode.</source>
+        <target>Your visitors and customers cannot access your store while in maintenance mode.</target>
+        <note>Line: 246</note>
+      </trans-unit>
+      <trans-unit id="e836817be56f338bde214cef916764f4">
+        <source><![CDATA[To manage the maintenance settings, go to Shop Parameters > General > Maintenance tab.]]></source>
+        <target><![CDATA[To manage the maintenance settings, go to Shop Parameters > General > Maintenance tab.]]></target>
+        <note>Line: 249</note>
+      </trans-unit>
+      <trans-unit id="a69e9340de5fd491580e9bb528b36424">
+        <source>Admins can access the store front office without storing their IP.</source>
+        <target>Admins can access the store front office without storing their IP.</target>
+        <note>Line: 253</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/components/layout/notifications_center.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="00843f41bd87586508e233b4b4947cf2">
         <source>Orders[1][/1]</source>
         <target>Orders[1][/1]</target>
@@ -63,59 +93,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/new-theme/template/layout.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="13886bc255a80b7c11e0585013feeb30">
-        <source>All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.</source>
-        <target>All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="6f68993eb55ac938b8ae0fcba53b93db">
-        <source>Your store is in debug mode.</source>
-        <target>Your store is in debug mode.</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="b0ba9e87fe502f010c233334e4159f29">
-        <source>Your store is in maintenance mode.</source>
-        <target>Your store is in maintenance mode.</target>
-        <note>Line: 59</note>
-      </trans-unit>
-      <trans-unit id="672d0c62dfc352f75e3a3f6b87c5cb38">
-        <source>Your visitors and customers cannot access your store while in maintenance mode.</source>
-        <target>Your visitors and customers cannot access your store while in maintenance mode.</target>
-        <note>Line: 62</note>
-      </trans-unit>
-      <trans-unit id="e836817be56f338bde214cef916764f4">
-        <source><![CDATA[To manage the maintenance settings, go to Shop Parameters > General > Maintenance tab.]]></source>
-        <target><![CDATA[To manage the maintenance settings, go to Shop Parameters > General > Maintenance tab.]]></target>
-        <note>Line: 65</note>
-      </trans-unit>
-      <trans-unit id="a69e9340de5fd491580e9bb528b36424">
-        <source>Admins can access the store front office without storing their IP.</source>
-        <target>Admins can access the store front office without storing their IP.</target>
-        <note>Line: 69</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7c56f525288d680c6efa0c2d07d79d13">
-        <source>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</source>
-        <target>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</target>
-        <note>Line: 2105</note>
-      </trans-unit>
-      <trans-unit id="70821661a53b31c40fdd6c9f3bbff741">
-        <source>Are you active on social media these days?</source>
-        <target>Are you active on social media these days?</target>
-        <note>Line: 2118</note>
-      </trans-unit>
-      <trans-unit id="b5ffb1ab1fe4ad00831c65b8dab60c0c">
-        <source>Seems like all your customers are happy :)</source>
-        <target>Seems like all your customers are happy :)</target>
-        <note>Line: 2121</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c059561b30601ffaf8759ae84f2b44b9">
@@ -127,6 +104,25 @@
         <source>An error occurred while updating the new window property for this object.</source>
         <target>An error occurred while updating the new window property for this object.</target>
         <note>Line: 234</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Bridge/Smarty/HeaderConfigurator.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7c56f525288d680c6efa0c2d07d79d13">
+        <source>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</source>
+        <target>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</target>
+        <note>Line: 225</note>
+      </trans-unit>
+      <trans-unit id="70821661a53b31c40fdd6c9f3bbff741">
+        <source>Are you active on social media these days?</source>
+        <target>Are you active on social media these days?</target>
+        <note>Line: 237</note>
+      </trans-unit>
+      <trans-unit id="b5ffb1ab1fe4ad00831c65b8dab60c0c">
+        <source>Seems like all your customers are happy :)</source>
+        <target>Seems like all your customers are happy :)</target>
+        <note>Line: 240</note>
       </trans-unit>
     </body>
   </file>

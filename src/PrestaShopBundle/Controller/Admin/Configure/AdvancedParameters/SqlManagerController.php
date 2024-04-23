@@ -47,8 +47,8 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Stream;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -65,13 +65,12 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Show list of saved SQL's.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param RequestSqlFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, RequestSqlFilters $filters)
     {
         // handle "Export to SQL manager" action from legacy pages
@@ -103,16 +102,12 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Process Request SQL settings save.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *      redirectRoute="admin_sql_requests_index"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_sql_requests_index')]
     public function processFormAction(Request $request)
     {
         $handler = $this->getSettingsFormHandler();
@@ -133,16 +128,11 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Show Request SQL create page.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *      message="You do not have permission to create this.",
-     *      redirectRoute="admin_sql_requests_index"
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.', redirectRoute: 'admin_sql_requests_index')]
     public function createAction(Request $request)
     {
         $data = $this->getSqlRequestDataFromRequest($request);
@@ -179,18 +169,13 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Show Request SQL edit page.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_sql_requests_index"
-     * )
-     *
      * @param int $sqlRequestId
      * @param Request $request
      *
      * @return Response
      */
     #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_sql_requests_index')]
     public function editAction(int $sqlRequestId, Request $request)
     {
         $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
@@ -227,17 +212,12 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Delete selected Request SQL.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to delete this.",
-     *     redirectRoute="admin_sql_requests_index"
-     * )
-     *
      * @param int $sqlRequestId ID of selected Request SQL
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_sql_requests_index')]
     public function deleteAction(int $sqlRequestId)
     {
         try {
@@ -258,17 +238,12 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Process bulk action delete of RequestSql's.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to delete this.",
-     *     redirectRoute="admin_sql_requests_index"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_sql_requests_index')]
     public function deleteBulkAction(Request $request)
     {
         try {
@@ -291,17 +266,12 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * View Request SQL query data.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     message="You do not have permission to view this.",
-     *     redirectRoute="admin_sql_requests_index"
-     * )
-     *
      * @param Request $request
      * @param int $sqlRequestId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to view this.', redirectRoute: 'admin_sql_requests_index')]
     public function viewAction(Request $request, int $sqlRequestId)
     {
         try {
@@ -326,16 +296,12 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Export Request SQL data.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_sql_requests_index"
-     * )
-     *
      * @param int $sqlRequestId Request SQL id
      *
      * @return RedirectResponse|BinaryFileResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_sql_requests_index')]
     public function exportAction(int $sqlRequestId)
     {
         $requestSqlExporter = $this->get('prestashop.core.sql_manager.exporter.sql_request_exporter');
@@ -369,15 +335,11 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Get MySQL table columns data.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_sql_requests_index"
-     * )
-     *
      * @param string $mySqlTableName Database table name
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_sql_requests_index')]
     public function ajaxTableColumnsAction($mySqlTableName)
     {
         $query = new GetDatabaseTableFieldsList($mySqlTableName);

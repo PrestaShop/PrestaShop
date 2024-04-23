@@ -98,30 +98,18 @@ class PreferencesType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $configuration = $this->configuration;
-        $isSslEnabled = (bool) $configuration->get('PS_SSL_ENABLED');
 
         if ($this->requestStack->getCurrentRequest()->isSecure()) {
             $builder->add('enable_ssl', SwitchType::class, [
                 'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
-                    'If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for customer account identification and order processing.',
+                    'If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for all the pages of your shop.',
                     'Admin.Shopparameters.Help'
                 ),
             ]);
         }
 
         $builder
-            ->add('enable_ssl_everywhere', SwitchType::class, [
-                'disabled' => !$isSslEnabled,
-                'label' => $this->trans(
-                    'Enable SSL on all pages',
-                    'Admin.Shopparameters.Feature'
-                ),
-                'help' => $this->trans(
-                    'When enabled, all the pages of your shop will be SSL-secured.',
-                    'Admin.Shopparameters.Help'
-                ),
-            ])
             ->add('enable_token', SwitchType::class, [
                 'disabled' => !$this->isContextDependantOptionEnabled(),
                 'label' => $this->trans(
@@ -135,9 +123,9 @@ class PreferencesType extends TranslatorAwareType
             ])
             ->add('allow_html_iframes', SwitchType::class, [
                 'label' => $this->trans(
-                        'Allow iframes on HTML fields',
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'Allow iframes on HTML fields',
+                    'Admin.Shopparameters.Feature'
+                ),
                 'help' => $this->trans(
                     'Allow iframes on text fields like product description. We recommend that you leave this option disabled.',
                     'Admin.Shopparameters.Help'
@@ -145,9 +133,9 @@ class PreferencesType extends TranslatorAwareType
             ])
             ->add('use_htmlpurifier', SwitchType::class, [
                 'label' => $this->trans(
-                        'Use HTMLPurifier Library',
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'Use HTMLPurifier Library',
+                    'Admin.Shopparameters.Feature'
+                ),
                 'help' => $this->trans(
                     'Clean the HTML content on text fields. We recommend that you leave this option enabled.',
                     'Admin.Shopparameters.Help'

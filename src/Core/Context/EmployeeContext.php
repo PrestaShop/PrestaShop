@@ -49,33 +49,33 @@ class EmployeeContext
 
     public function hasAuthorizationOnShopGroup(int $shopGroupId): bool
     {
-        if (!$this->employee) {
+        if (!$this->getEmployee()) {
             return false;
         }
 
-        return $this->isSuperAdmin() || in_array($shopGroupId, $this->employee->getAssociatedShopGroupIds());
+        return $this->isSuperAdmin() || in_array($shopGroupId, $this->getEmployee()->getAssociatedShopGroupIds());
     }
 
     public function hasAuthorizationOnShop(int $shopId): bool
     {
-        if (!$this->employee) {
+        if (!$this->getEmployee()) {
             return false;
         }
 
-        return $this->isSuperAdmin() || in_array($shopId, $this->employee->getAssociatedShopIds());
+        return $this->isSuperAdmin() || in_array($shopId, $this->getEmployee()->getAssociatedShopIds());
     }
 
     public function getDefaultShopId(): int
     {
-        if (!$this->employee) {
+        if (!$this->getEmployee()) {
             return 0;
         }
 
-        return $this->employee->getDefaultShopId();
+        return $this->getEmployee()->getDefaultShopId();
     }
 
     public function isSuperAdmin(): bool
     {
-        return $this->employee && $this->employee->getProfileId() === self::SUPER_ADMIN_PROFILE_ID;
+        return $this->getEmployee() && $this->getEmployee()->getProfileId() === self::SUPER_ADMIN_PROFILE_ID;
     }
 }

@@ -111,7 +111,7 @@ class InformationType extends TranslatorAwareType
                 'help' => $this->trans(
                     'Only applicable if the voucher value is greater than the cart total.',
                     'Admin.Catalog.Help'
-                    ) . ' ' .
+                ) . ' ' .
                     $this->trans(
                         'If you do not allow partial use, the voucher value will be lowered to the total order amount. If you allow partial use, however, a new voucher will be created with the remainder.',
                         'Admin.Catalog.Help'

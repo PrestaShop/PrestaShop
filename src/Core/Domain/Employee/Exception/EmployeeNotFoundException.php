@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\Exception;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 
 /**
@@ -42,7 +43,7 @@ class EmployeeNotFoundException extends EmployeeException
      * @param EmployeeId $employeeId
      * @param string $message
      * @param int $code
-     * @param \Exception|null $previous
+     * @param Exception|null $previous
      */
     public function __construct(EmployeeId $employeeId, $message = '', $code = 0, $previous = null)
     {

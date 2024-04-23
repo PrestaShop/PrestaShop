@@ -49,10 +49,10 @@ class ModuleControllerRegisterPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        $activeModules = $container->getParameter('prestashop.active_modules');
+        $installedModules = $container->getParameter('prestashop.installed_modules');
         $moduleDir = $container->getParameter('prestashop.module_dir');
 
-        foreach ($activeModules as $moduleName) {
+        foreach ($installedModules as $moduleName) {
             $fileIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($moduleDir . $moduleName));
             $phpFiles = new RegexIterator($fileIterator, '/\.php$/');
 

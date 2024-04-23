@@ -45,7 +45,7 @@ class InvalidUnofficialCurrencyException extends CurrencyException
      *
      * @since 5.1.0
      */
-    public function __construct($message, $isoCode, $code = 0, Throwable $previous = null)
+    public function __construct($message, $isoCode, $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->isoCode = $isoCode;

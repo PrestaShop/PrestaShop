@@ -702,22 +702,22 @@ class AdminCartRulesControllerCore extends AdminController
 
         // All the filter are prefilled with the correct information
         $customer_filter = '';
-        if (Validate::isUnsignedId($current_object->id_customer) &&
-            Validate::isLoadedObject($customer = new Customer($current_object->id_customer))
+        if (Validate::isUnsignedId($current_object->id_customer)
+            && Validate::isLoadedObject($customer = new Customer($current_object->id_customer))
         ) {
             $customer_filter = $customer->firstname . ' ' . $customer->lastname . ' (' . $customer->email . ')';
         }
 
         $gift_product_filter = '';
-        if (Validate::isUnsignedId($current_object->gift_product) &&
-            Validate::isLoadedObject($product = new Product($current_object->gift_product, false, $this->context->language->id))
+        if (Validate::isUnsignedId($current_object->gift_product)
+            && Validate::isLoadedObject($product = new Product($current_object->gift_product, false, $this->context->language->id))
         ) {
             $gift_product_filter = (!empty($product->reference) ? $product->reference : $product->name);
         }
 
         $reduction_product_filter = '';
-        if (Validate::isUnsignedId($current_object->reduction_product) &&
-            Validate::isLoadedObject($product = new Product($current_object->reduction_product, false, $this->context->language->id))
+        if (Validate::isUnsignedId($current_object->reduction_product)
+            && Validate::isLoadedObject($product = new Product($current_object->reduction_product, false, $this->context->language->id))
         ) {
             $reduction_product_filter = (!empty($product->reference) ? $product->reference : $product->name);
         }

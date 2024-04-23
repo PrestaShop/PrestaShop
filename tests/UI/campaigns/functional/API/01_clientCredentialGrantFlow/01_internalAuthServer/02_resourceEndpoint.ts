@@ -4,18 +4,16 @@ import testContext from '@utils/testContext';
 
 // Import commonTest
 import loginCommon from '@commonTests/BO/loginBO';
-import {deleteAPIAccessTest} from '@commonTests/BO/advancedParameters/authServer';
-import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
+import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 
 // Import pages
 // Import BO pages
-import apiAccessPage from '@pages/BO/advancedParameters/APIAccess';
-import addNewApiAccessPage from '@pages/BO/advancedParameters/APIAccess/add';
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
+import apiClientPage from 'pages/BO/advancedParameters/APIClient';
+import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import APIAccessData from '@data/faker/APIAccess';
+import APIClientData from '@data/faker/APIClient';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
@@ -30,7 +28,7 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
   let accessTokenExpired: string;
   let clientSecret: string;
 
-  const clientAccess: APIAccessData = new APIAccessData({
+  const clientClient: APIClientData = new APIClientData({
     enabled: true,
     scopes: [
       'hook_read',
@@ -41,66 +39,63 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
-    apiContext = await helper.createAPIContext(global.BO.URL);
+    apiContext = await helper.createAPIContext(global.API.URL);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Pre-condition: Enable experimental feature : Authorization server
-  setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, true, `${baseContext}_enableAuthorizationServer`);
-
-  describe('BO - Advanced Parameter - API Access : CRUD', async () => {
+  describe('BO - Advanced Parameter - API Client : CRUD', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Advanced Parameters > API Access\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAuthorizationServerPage', baseContext);
+    it('should go to \'Advanced Parameters > API Client\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
         dashboardPage.advancedParametersLink,
-        dashboardPage.authorizationServerLink,
+        dashboardPage.adminAPILink,
       );
 
-      const pageTitle = await apiAccessPage.getPageTitle(page);
-      expect(pageTitle).to.eq(apiAccessPage.pageTitle);
+      const pageTitle = await apiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(apiClientPage.pageTitle);
     });
 
     it('should check that no records found', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatNoRecordFound', baseContext);
 
-      const noRecordsFoundText = await apiAccessPage.getTextForEmptyTable(page);
+      const noRecordsFoundText = await apiClientPage.getTextForEmptyTable(page);
       expect(noRecordsFoundText).to.contains('warning No records found');
     });
 
-    it('should go to add New API Access page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIAccessPage', baseContext);
+    it('should go to add New API Client page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIClientPage', baseContext);
 
-      await apiAccessPage.goToNewAPIAccessPage(page);
+      await apiClientPage.goToNewAPIClientPage(page);
 
-      const pageTitle = await addNewApiAccessPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewApiAccessPage.pageTitleCreate);
+      const pageTitle = await addNewApiClientPage.getPageTitle(page);
+      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleCreate);
     });
 
-    it('should create API Access', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createAPIAccess', baseContext);
+    it('should create API Client', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAPIClient', baseContext);
 
-      const textResult = await addNewApiAccessPage.addAPIAccess(page, clientAccess);
-      expect(textResult).to.contains(addNewApiAccessPage.successfulCreationMessage);
+      const textResult = await addNewApiClientPage.addAPIClient(page, clientClient);
+      expect(textResult).to.contains(addNewApiClientPage.successfulCreationMessage);
 
-      const textMessage = await addNewApiAccessPage.getAlertInfoBlockParagraphContent(page);
-      expect(textMessage).to.contains(addNewApiAccessPage.apiAccessGeneratedMessage);
+      const textMessage = await addNewApiClientPage.getAlertInfoBlockParagraphContent(page);
+      expect(textMessage).to.contains(addNewApiClientPage.apiClientGeneratedMessage);
     });
 
     it('should copy client secret', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'copyClientSecret', baseContext);
 
-      await addNewApiAccessPage.copyClientSecret(page);
+      await addNewApiClientPage.copyClientSecret(page);
 
-      clientSecret = await addNewApiAccessPage.getClipboardText(page);
+      clientSecret = await addNewApiClientPage.getClipboardText(page);
       expect(clientSecret.length).to.be.gt(0);
     });
   });
@@ -109,9 +104,9 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
     it('should request the authorization endpoint and fetch valid token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestAuthorizationEndpoint', baseContext);
 
-      const apiResponse = await apiContext.post('api/oauth2/token', {
+      const apiResponse = await apiContext.post('access_token', {
         form: {
-          client_id: clientAccess.clientId,
+          client_id: clientClient.clientId,
           client_secret: clientSecret,
           grant_type: 'client_credentials',
           scope: 'hook_read',
@@ -127,17 +122,17 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
       accessTokenExpired = api.setAccessTokenAsExpired(accessToken);
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status/1 without access token', async function () {
+    it('should request the endpoint /hook-status/1 without access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithoutAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('api/hook-status/1');
+      const apiResponse = await apiContext.get('hook-status/1');
       expect(apiResponse.status()).to.eq(401);
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status/1 with invalid access token', async function () {
+    it('should request the endpoint /hook-status/1 with invalid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithInvalidAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('api/hook-status/1', {
+      const apiResponse = await apiContext.get('hook-status/1', {
         headers: {
           Authorization: 'Bearer INVALIDTOKEN',
         },
@@ -147,10 +142,10 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
       expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status/1 with expired access token', async function () {
+    it('should request the endpoint /hook-status/1 with expired access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithExpiredAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('api/hook-status/1', {
+      const apiResponse = await apiContext.get('hook-status/1', {
         headers: {
           Authorization: `Bearer ${accessTokenExpired}`,
         },
@@ -160,10 +155,10 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
       expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/api/hook-status/1 with valid access token', async function () {
+    it('should request the endpoint /hook-status/1 with valid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithValidAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('api/hook-status/1', {
+      const apiResponse = await apiContext.get('hook-status/1', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -181,7 +176,5 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
     });
   });
 
-  deleteAPIAccessTest(`${baseContext}_postTest_0`);
-
-  setFeatureFlag(featureFlagPage.featureFlagAuthorizationServer, false, `${baseContext}_disableAuthorizationServer`);
+  deleteAPIClientTest(`${baseContext}_postTest_0`);
 });

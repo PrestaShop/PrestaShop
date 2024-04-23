@@ -13,13 +13,17 @@ import carriersPage from '@pages/BO/shipping/carriers';
 import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import foCheckoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage as foCheckoutPage} from '@pages/FO/classic/checkout';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -174,7 +178,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         if (index === 0) {
           // Personal information step - Login
           await foCheckoutPage.clickOnSignIn(page);
-          await foCheckoutPage.customerLogin(page, Customers.johnDoe);
+          await foCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
         }
 
         // Address step - Go to delivery step

@@ -6,7 +6,7 @@ import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import BO pages
@@ -28,9 +28,13 @@ import loginPageHummingbird from '@pages/FO/hummingbird/login';
 
 // Import data
 import Languages from '@data/demo/languages';
-import Customers from '@data/demo/customers';
 import Modules from '@data/demo/modules';
-import CustomerData from '@data/faker/customer';
+
+import {
+  // Import data
+  dataCustomers,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -44,7 +48,7 @@ describe('BO - International - Translation : Modify translation', async () => {
   let page: Page;
   let newMail: MailDevEmail;
   let mailListener: MailDev;
-  const customerData: CustomerData = new CustomerData();
+  const customerData: FakerCustomer = new FakerCustomer();
 
   // Pre-Condition: Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
@@ -182,7 +186,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should check the translation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTranslation', baseContext);
 
-      const title = await homePage.getBlockTitle(page);
+      const title = await homePage.getBlockTitle(page, 'popularproducts');
       expect(title).to.contain('translate');
     });
   });
@@ -255,7 +259,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should login by default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'login', baseContext);
 
-      await loginPageHummingbird.customerLogin(page, Customers.johnDoe);
+      await loginPageHummingbird.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await loginPageHummingbird.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);

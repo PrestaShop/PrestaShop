@@ -41,7 +41,7 @@ class InvalidLegacyTranslationKeyException extends CoreException
      */
     private $key;
 
-    public function __construct(string $missingElement, string $key, $code = 0, Throwable $previous = null)
+    public function __construct(string $missingElement, string $key, $code = 0, ?Throwable $previous = null)
     {
         $message = sprintf('Invalid key in legacy translation file: "%s" (missing %s)', $key, $missingElement);
         $this->key = $key;

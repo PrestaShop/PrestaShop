@@ -1,8 +1,10 @@
 // Import pages
 import themeAndLogoBasePage from '@pages/BO/design/themeAndLogo/themeAndLogo/themeAndLogoBasePage';
 
-// Import data
-import ModuleData from '@data/faker/module';
+import {
+  // Import data
+  type FakerModule,
+} from '@prestashop-core/ui-testing';
 
 import {Page} from 'playwright';
 
@@ -71,7 +73,7 @@ class PagesConfigurationPage extends themeAndLogoBasePage {
    * @param action {string} Action install/uninstall/enable/disable/reset
    * @return {Promise<string | null>}
    */
-  async setActionInModule(page: Page, module: ModuleData, action: string): Promise<string | null> {
+  async setActionInModule(page: Page, module: FakerModule, action: string): Promise<string | null> {
     await this.closeGrowlMessage(page);
 
     if (await this.elementVisible(page, this.actionModuleButton(module.tag, action), 1000)) {

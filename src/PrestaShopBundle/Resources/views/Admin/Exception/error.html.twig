@@ -47,7 +47,7 @@
               {{ 'Oops... looks like an unexpected error occurred'|trans({}, 'Admin.Notifications.Error') }}
             </p>
 
-            {% if exception %}
+            {% if exception is defined %}
               <div class="mx-auto">
                 <p class="mb-0">{{ exception.message }}</p>
                 <p class="mb-0">[{{ exception.class }}

@@ -12,7 +12,7 @@ import categoriesPage from '@pages/BO/catalog/categories';
 import editCategoryPage from '@pages/BO/catalog/categories/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import categoryPage from '@pages/FO/classic/category';
+import {categoryPage} from '@pages/FO/classic/category';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 

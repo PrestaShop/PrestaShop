@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -16,11 +16,15 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -44,14 +48,14 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
   const note: string = 'Test note for document';
   // New order by customer data
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition - Create order by default customer
@@ -120,13 +124,13 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       expect(numberOfOrders).to.be.above(0);
     });
 
-    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
@@ -205,13 +209,13 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       expect(numberOfOrders).to.be.above(0);
     });
 
-    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
@@ -322,11 +326,11 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       expect(amountValue).to.not.equal('');
     });
 
-    it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusPaymentAccepted', baseContext);
 
-      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-      expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
+      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+      expect(textResult).to.equal(dataOrderStatuses.paymentAccepted.name);
     });
 
     it('should check that the button \'Enter payment\' is not visible', async function () {
@@ -336,11 +340,11 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       expect(isVisible).to.eq(false);
     });
 
-    it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusShipped', baseContext);
 
-      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      expect(textResult).to.equal(OrderStatuses.shipped.name);
+      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      expect(textResult).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should check that documents number is equal to 2', async function () {

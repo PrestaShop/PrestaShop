@@ -40,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailE
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
@@ -123,14 +125,14 @@ class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHandlerIn
         if (!$customerServiceThreadId) {
             try {
                 $customerServiceThreadId = $this->createCustomerMessageThread($order);
-            } catch (\PrestaShopException $e) {
+            } catch (PrestaShopException $e) {
                 throw new CustomerMessageException('An unexpected error occurred when creating customer message thread', 0, $e);
             }
         }
 
         try {
             $this->createMessage($customerServiceThreadId, $command);
-        } catch (\PrestaShopException $e) {
+        } catch (PrestaShopException $e) {
             throw new CustomerMessageException('An unexpected error occurred when creating customer message', 0, $e);
         }
 
@@ -142,7 +144,7 @@ class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHandlerIn
             if (!$isSent) {
                 throw new CannotSendEmailException($failedMailSentMessage);
             }
-        } catch (\PrestaShopException $e) {
+        } catch (PrestaShopException $e) {
             throw new CannotSendEmailException($failedMailSentMessage, 0, $e);
         }
     }
@@ -168,8 +170,8 @@ class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHandlerIn
      *
      * @return int
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function createCustomerMessageThread(Order $order): int
     {
@@ -195,8 +197,8 @@ class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHandlerIn
      * @param int $customerServiceThreadId
      * @param AddOrderCustomerMessageCommand $command
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function createMessage(int $customerServiceThreadId, AddOrderCustomerMessageCommand $command): void
     {
@@ -217,8 +219,8 @@ class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHandlerIn
      *
      * @return bool
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function sendMail(Customer $customer, Order $order, AddOrderCustomerMessageCommand $command): bool
     {

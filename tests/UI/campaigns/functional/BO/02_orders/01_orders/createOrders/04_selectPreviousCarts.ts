@@ -16,17 +16,21 @@ import viewShoppingCartPage from '@pages/BO/orders/shoppingCarts/view';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
-import productPage from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Frame, Page} from 'playwright';
@@ -104,7 +108,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should search the non ordered shopping carts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts1', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+      await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
       numberOfNonOrderedShoppingCarts = await shoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfNonOrderedShoppingCarts).to.be.at.most(numberOfShoppingCarts);
@@ -122,7 +126,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
 
       if (numberOfNonOrderedShoppingCarts > 0) {
         const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-        expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+        expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulDeleteMessage);
       }
     });
 
@@ -172,10 +176,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should search for default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkExistentCustomerCard1', baseContext);
 
-      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
+      await addOrderPage.searchCustomer(page, dataCustomers.johnDoe.email);
 
       const customerName = await addOrderPage.getCustomerNameFromResult(page, 1);
-      expect(customerName).to.contains(`${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`);
+      expect(customerName).to.contains(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
     });
 
     it('should click on the choose button of the default customer', async function () {
@@ -221,7 +225,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should search the non ordered shopping carts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts2', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+      await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
       numberOfNonOrderedShoppingCarts = await shoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfNonOrderedShoppingCarts).to.be.at.most(numberOfShoppingCarts);
@@ -239,7 +243,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
 
       if (numberOfNonOrderedShoppingCarts > 0) {
         const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-        expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+        expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulDeleteMessage);
       }
     });
 
@@ -282,7 +286,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should sign in with customer credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -395,10 +399,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should search for default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkExistentCustomerCard2', baseContext);
 
-      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
+      await addOrderPage.searchCustomer(page, dataCustomers.johnDoe.email);
 
       const customerName = await addOrderPage.getCustomerNameFromResult(page, 1);
-      expect(customerName).to.contains(`${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`);
+      expect(customerName).to.contains(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
     });
 
     it('should click on the choose button of the default customer', async function () {
@@ -466,16 +470,16 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       const customerInformation = await viewShoppingCartPage
         .getCustomerInformation(shoppingCartPage!);
       expect(customerInformation)
-        .to.contains(`${Customers.johnDoe.socialTitle} ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`)
-        .and.to.contains(Customers.johnDoe.email)
+        .to.contains(`${dataCustomers.johnDoe.socialTitle} ${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`)
+        .and.to.contains(dataCustomers.johnDoe.email)
         .and.to.contains(todayCartFormat);
     });
 
-    it('should check the order Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock', baseContext);
+    it('should check the cart Information Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCartInformationBlock', baseContext);
 
       const orderInformation = await viewShoppingCartPage.getOrderInformation(shoppingCartPage!);
-      expect(orderInformation).to.contains('No order was created from this cart.');
+      expect(orderInformation).to.contains('The customer has not proceeded to checkout yet.');
 
       const hasButtonCreateOrderFromCart = await viewShoppingCartPage.hasButtonCreateOrderFromCart(shoppingCartPage!);
       expect(hasButtonCreateOrderFromCart).to.eq(true);
@@ -555,8 +559,8 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
 
       await addOrderPage.setSummaryAndCreateOrder(
         page,
-        PaymentMethods.checkPayment.moduleName,
-        OrderStatuses.paymentAccepted,
+        dataPaymentMethods.checkPayment.moduleName,
+        dataOrderStatuses.paymentAccepted,
       );
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);

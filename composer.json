@@ -26,7 +26,7 @@
         "ext-openssl": "*",
         "ext-simplexml": "*",
         "ext-zip": "*",
-        "api-platform/core": "^2.7",
+        "api-platform/core": "^3.2",
         "beberlei/doctrineextensions": "^1.0",
         "bjeavons/zxcvbn-php": "^1.3",
         "composer/ca-bundle": "^1.0",
@@ -71,7 +71,7 @@
         "prestashop/gsitemap": "^4",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^6.0",
-        "prestashop/ps_apiresources": "dev-dev",
+        "prestashop/ps_apiresources": "dev-upload-product-image",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
         "prestashop/ps_brandlist": "^1.0",
@@ -92,7 +92,7 @@
         "prestashop/ps_facetedsearch": "^3.2.1",
         "prestashop/ps_faviconnotificationbo": "^2",
         "prestashop/ps_featuredproducts": "^2",
-        "prestashop/ps_googleanalytics": "^4.1",
+        "prestashop/ps_googleanalytics": "^5",
         "prestashop/ps_imageslider": "^3",
         "prestashop/ps_languageselector": "^2",
         "prestashop/ps_linklist": "^6",
@@ -127,13 +127,13 @@
         "prestashop/statssearch": "^2",
         "prestashop/statsstock": "^2",
         "prestashop/translationtools-bundle": "^6.0.1",
-        "sensio/framework-extra-bundle": "^6.2",
         "smarty/smarty": "^4.3.1",
         "soundasleep/html2text": "^2.1.0",
         "symfony/asset": "6.4.*",
         "symfony/cache": "6.4.*",
         "symfony/config": "6.4.*",
         "symfony/console": "6.4.*",
+        "symfony/debug-bundle": "6.4.*",
         "symfony/dependency-injection": "6.4.*",
         "symfony/doctrine-bridge": "6.4.*",
         "symfony/doctrine-messenger": "6.4.*",
@@ -178,6 +178,7 @@
         "symfony/var-dumper": "6.4.*",
         "symfony/var-exporter": "6.4.*",
         "symfony/web-link": "6.4.*",
+        "symfony/web-profiler-bundle": "6.4.*",
         "symfony/yaml": "6.4.*",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
@@ -188,7 +189,7 @@
     "require-dev": {
         "behat/behat": "^3.5",
         "ergebnis/composer-normalize": "^2.8",
-        "friendsofphp/php-cs-fixer": "^v3.2.0",
+        "friendsofphp/php-cs-fixer": "^v3",
         "johnkary/phpunit-speedtrap": "^v4.0.1",
         "mikey179/vfsstream": "^1.6",
         "phpstan/extension-installer": "^1.2",
@@ -198,10 +199,8 @@
         "spaze/phpstan-disallowed-calls": "^2.10",
         "symfony/browser-kit": "6.4.*",
         "symfony/css-selector": "6.4.*",
-        "symfony/debug-bundle": "6.4.*",
         "symfony/phpunit-bridge": "6.4.*",
-        "symfony/stopwatch": "6.4.*",
-        "symfony/web-profiler-bundle": "6.4.*"
+        "symfony/stopwatch": "6.4.*"
     },
     "config": {
         "allow-plugins": {
@@ -240,6 +239,7 @@
         "classmap": [
             "app/AppKernel.php",
             "app/AdminKernel.php",
+            "app/AdminAPIKernel.php",
             "app/FrontKernel.php",
             "app/AppCache.php"
         ]
@@ -251,9 +251,20 @@
             "FakeModule\\": "tests/Unit/Resources/api_platform/fake_module_resources/fake_module/src"
         }
     },
+    "repositories": {
+        "ps_apiresources": {
+            "type": "vcs",
+            "url": "https://github.com/jolelievre/ps_apiresources.git"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "api-module-tests": [
+            "@composer create-test-db",
+            "@composer dump-autoload --dev --working-dir=modules/ps_apiresources",
+            "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c modules/ps_apiresources/tests/Integration/phpunit-ci.xml"
+        ],
         "create-release": "@php tools/build/CreateRelease.php",
         "create-test-db": [
             "@php ./tests/bin/create-test-db.php",

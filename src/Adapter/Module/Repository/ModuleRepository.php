@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Module\Repository;
 
+use Db;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleId;
@@ -51,6 +52,11 @@ class ModuleRepository extends AbstractObjectModelRepository
      * @var array
      */
     private $activeModulesPaths;
+
+    /**
+     * @var array
+     */
+    private $installedModulesPaths;
 
     /**
      * @var string
@@ -99,7 +105,7 @@ class ModuleRepository extends AbstractObjectModelRepository
 
         $activeModules = [];
         try {
-            $modulesData = \Db::getInstance()->executeS(
+            $modulesData = Db::getInstance()->executeS(
                 'SELECT m.* FROM `' . _DB_PREFIX_ . 'module` m WHERE m.`active` = 1'
             );
 
@@ -138,7 +144,7 @@ class ModuleRepository extends AbstractObjectModelRepository
 
         $installedModules = [];
         try {
-            $modulesData = \Db::getInstance()->executeS(
+            $modulesData = Db::getInstance()->executeS(
                 'SELECT m.* FROM `' . _DB_PREFIX_ . 'module` m'
             );
 
@@ -158,6 +164,27 @@ class ModuleRepository extends AbstractObjectModelRepository
         }
 
         return $installedModules;
+    }
+
+    /**
+     * Returns installed module file paths.
+     *
+     * @return array<string, string> File paths indexed by module name
+     */
+    public function getInstalledModulesPaths(): array
+    {
+        if (null === $this->installedModulesPaths) {
+            $this->installedModulesPaths = [];
+            $installedModules = $this->getInstalledModules();
+
+            foreach ($this->getModulesFromFolder() as $moduleName => $modulePath) {
+                if (in_array($moduleName, $installedModules)) {
+                    $this->installedModulesPaths[$moduleName] = $modulePath;
+                }
+            }
+        }
+
+        return $this->installedModulesPaths;
     }
 
     /**

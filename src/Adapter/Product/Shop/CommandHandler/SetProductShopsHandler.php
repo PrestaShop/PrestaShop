@@ -123,8 +123,8 @@ class SetProductShopsHandler implements SetProductShopsHandlerInterface
         $differentShopIds = [];
         foreach ($searchableShopIds as $searchableShopId) {
             if (
-                $searchableShopId->getValue() === $shopToIgnore->getValue() ||
-                $this->shopInArray($searchableShopId, $shopIds)
+                $searchableShopId->getValue() === $shopToIgnore->getValue()
+                || $this->shopInArray($searchableShopId, $shopIds)
             ) {
                 continue;
             }

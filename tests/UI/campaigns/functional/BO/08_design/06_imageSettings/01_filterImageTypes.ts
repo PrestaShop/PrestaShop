@@ -104,7 +104,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterProducts',
             filterType: 'select',
             filterBy: 'products',
-            filterValue: ImageTypes.first.productsStatus ? '1' : '0',
+            filterValue: ImageTypes.first.productsStatus ? 'Yes' : 'No',
           },
       },
       {
@@ -113,7 +113,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterCategories',
             filterType: 'select',
             filterBy: 'categories',
-            filterValue: ImageTypes.first.categoriesStatus ? '1' : '0',
+            filterValue: ImageTypes.first.categoriesStatus ? 'Yes' : 'No',
           },
       },
       {
@@ -122,7 +122,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterManufacturers',
             filterType: 'select',
             filterBy: 'manufacturers',
-            filterValue: ImageTypes.first.manufacturersStatus ? '1' : '0',
+            filterValue: ImageTypes.first.manufacturersStatus ? 'Yes' : 'No',
           },
       },
       {
@@ -131,7 +131,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterSuppliers',
             filterType: 'select',
             filterBy: 'suppliers',
-            filterValue: ImageTypes.first.suppliersStatus ? '1' : '0',
+            filterValue: ImageTypes.first.suppliersStatus ? 'Yes' : 'No',
           },
       },
       {
@@ -140,7 +140,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterStores',
             filterType: 'select',
             filterBy: 'stores',
-            filterValue: ImageTypes.first.storesStatus ? '1' : '0',
+            filterValue: ImageTypes.first.storesStatus ? 'Yes' : 'No',
           },
       },
     ];

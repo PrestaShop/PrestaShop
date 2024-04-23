@@ -31,8 +31,9 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Exception\InvalidModuleException;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +43,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 /**
  * Admin controller for the International pages.
  */
+#[AllShopContext]
 class TranslationsController extends FrameworkBundleAdminController
 {
     public const CONTROLLER_NAME = 'ADMINTRANSLATIONS';
@@ -53,9 +55,8 @@ class TranslationsController extends FrameworkBundleAdminController
 
     /**
      * Renders the translation page
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function overviewAction()
     {
         return $this->render('@PrestaShop/Admin/Improve/International/Translations/overview.html.twig', [
@@ -67,12 +68,11 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Extract theme using locale and theme name.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return BinaryFileResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function exportThemeAction(Request $request)
     {
         $themeName = $request->request->get('theme-name');
@@ -95,12 +95,11 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Show translations settings page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function showSettingsAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
@@ -127,18 +126,17 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Modify translations action.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function modifyTranslationsAction(Request $request)
     {
         try {
             $routeFinder = $this->get('prestashop.adapter.translation_route_finder');
-            $route = $routeFinder->findRoute($request->query);
-            $routeParameters = $routeFinder->findRouteParameters($request->query);
+            $route = $routeFinder->findRoute($request);
+            $routeParameters = $routeFinder->findRouteParameters($request);
         } catch (InvalidModuleException $e) {
             $this->addFlash('error', $this->trans('An error has occurred, this module does not exist: %s', 'Admin.International.Notification', [$e->getMessage()]));
 
@@ -152,12 +150,11 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Add language pack for new languages and updates for the existing ones action.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))"))
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function addUpdateLanguageAction(Request $request)
     {
         $formHandler = $this->getAddUpdateLanguageTranslationsFormHandler();
@@ -191,12 +188,11 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Extract catalogues using locale.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return BinaryFileResponse|RedirectResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function exportCataloguesAction(Request $request)
     {
         $formHandler = $this->getExportTranslationCataloguesFormHandler();
@@ -288,12 +284,11 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Copy language action.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function copyLanguageAction(Request $request)
     {
         $formHandler = $this->getCopyLanguageTranslationsFormHandler();

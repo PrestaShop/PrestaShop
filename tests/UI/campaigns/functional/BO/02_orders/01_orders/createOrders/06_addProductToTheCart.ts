@@ -22,11 +22,15 @@ import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 
 // Import data
-import Currencies from '@data/demo/currencies';
-import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 import ProductData from '@data/faker/product';
+
+import {
+  // Import data
+  dataCurrencies,
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -194,7 +198,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   enableEcoTaxTest(`${baseContext}_preTest_1`);
 
   // Pre-condition: Create currency
-  createCurrencyTest(Currencies.mad, `${baseContext}_preTest_2`);
+  createCurrencyTest(dataCurrencies.mad, `${baseContext}_preTest_2`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -401,10 +405,10 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
       expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
-    it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
+    it(`should choose customer ${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer', baseContext);
 
-      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
+      await addOrderPage.searchCustomer(page, dataCustomers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
       expect(isCartsTableVisible, 'History block is not visible!').to.eq(true);
@@ -702,7 +706,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   disableEcoTaxTest(`${baseContext}_postTest_2`);
 
   // Post-condition: Delete currency
-  deleteCurrencyTest(Currencies.mad, `${baseContext}_postTest_3`);
+  deleteCurrencyTest(dataCurrencies.mad, `${baseContext}_postTest_3`);
 
   // Post-condition: Delete cart rule
   deleteCartRuleTest(newCartRuleData.name, `${baseContext}_postTest_4`);

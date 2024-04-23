@@ -69,7 +69,8 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
             domain: $legacyShop->domain ?? '',
             domainSSL: $legacyShop->domain_ssl ?? '',
             active: (bool) $legacyShop->active,
-            secured: $this->secureMode
+            secured: $this->secureMode,
+            associatedShopIds: $this->shopRepository->getAssociatedShopIds($this->shopConstraint)
         );
     }
 

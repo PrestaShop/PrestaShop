@@ -65,7 +65,6 @@ class GetCategoryForEditingHandlerTest extends KernelTestCase
             'category_lang',
             'category_group',
             'category_shop',
-            'layered_category',
         ]);
     }
 

@@ -21,19 +21,23 @@ import stocksPage from '@pages/BO/catalog/stocks';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
 import Categories from '@data/demo/categories';
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import EmployeeData from '@data/faker/employee';
 import {ProductCombinationBulk} from '@data/types/product';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -176,7 +180,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, Customers.johnDoe);
+        await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
       });
 
       it('should go to delivery step', async function () {
@@ -199,7 +203,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -244,7 +248,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it('should update order status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.delivered);
+        const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
         expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
       });
     });

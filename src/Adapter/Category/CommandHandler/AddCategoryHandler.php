@@ -27,13 +27,13 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 
 /**
  * Adds new category using legacy object model.
@@ -41,18 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
  * @internal
  */
 #[AsCommandHandler]
-final class AddCategoryHandler extends AbstractObjectModelHandler implements AddCategoryHandlerInterface
+final class AddCategoryHandler extends AbstractEditCategoryHandler implements AddCategoryHandlerInterface
 {
-    /**
-     * @var CategoryImageUploader
-     */
-    private $categoryImageUploader;
-
-    public function __construct(CategoryImageUploader $categoryImageUploader)
-    {
-        $this->categoryImageUploader = $categoryImageUploader;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -81,8 +71,8 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
      * @return Category
      *
      * @throws CannotAddCategoryException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function createCategoryFromCommand(AddCategoryCommand $command)
     {
@@ -128,6 +118,10 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
 
         if (false === $category->validateFieldsLang(false)) {
             throw new CannotAddCategoryException('Invalid language data for creating category.');
+        }
+
+        if (null !== $command->getRedirectOption()) {
+            $this->fillWithRedirectOption($category, $command->getRedirectOption());
         }
 
         if (false === $category->add()) {

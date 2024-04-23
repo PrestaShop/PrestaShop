@@ -13,15 +13,19 @@ import emailPage from '@pages/BO/advancedParameters/email';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import Customers from '@data/demo/customers';
 import Languages from '@data/demo/languages';
-import PaymentMethods from '@data/demo/paymentMethods';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -90,7 +94,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
 
       // Personal information step - Login
       await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.customerLogin(page, Customers.johnDoe);
+      await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
     });
 
     it('should go to delivery step', async function () {
@@ -113,7 +117,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await testContext.addContextItem(this, 'testIdentifier', 'payTheOrder', baseContext);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -177,7 +181,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
             identifier: 'filterByRecipient',
             filterType: 'input',
             filterBy: 'recipient',
-            filterValue: Customers.johnDoe.email,
+            filterValue: dataCustomers.johnDoe.email,
           },
       },
       {
@@ -204,7 +208,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
             identifier: 'filterBySubject',
             filterType: 'input',
             filterBy: 'subject',
-            filterValue: PaymentMethods.wirePayment.name.toLowerCase(),
+            filterValue: dataPaymentMethods.wirePayment.name.toLowerCase(),
           },
       },
     ];
@@ -263,7 +267,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     it('should filter email list by \'subject\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterBySubjectToDelete', baseContext);
 
-      await emailPage.filterEmailLogs(page, 'input', 'subject', PaymentMethods.wirePayment.name);
+      await emailPage.filterEmailLogs(page, 'input', 'subject', dataPaymentMethods.wirePayment.name);
 
       const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
       expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);

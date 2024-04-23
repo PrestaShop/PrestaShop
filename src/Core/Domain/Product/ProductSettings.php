@@ -46,8 +46,8 @@ class ProductSettings
      */
     public const MAX_NAME_LENGTH = 128;
     public const MAX_MPN_LENGTH = 40;
-    public const MAX_META_TITLE_LENGTH = 70;
-    public const MAX_META_DESCRIPTION_LENGTH = 160;
+    public const MAX_META_TITLE_LENGTH = 128;
+    public const MAX_META_DESCRIPTION_LENGTH = 512;
 
     /**
      * This is the default value for short description (a.k.a. summary) maximum length,

@@ -50,4 +50,14 @@ class AttributeGroupConstraintException extends AttributeGroupException
      * Used when attribute group name is invalid.
      */
     public const INVALID_NAME = 40;
+
+    /**
+     * Used when attribute group public name is invalid.
+     */
+    public const INVALID_PUBLIC_NAME = 50;
+
+    /**
+     * Used when attribute group type is invalid.
+     */
+    public const INVALID_TYPE = 60;
 }

@@ -13,9 +13,11 @@ import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
 import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
 
-// Import data
-import Titles from '@data/demo/titles';
-import TitleData from '@data/faker/title';
+import {
+  // Import data
+  dataTitles,
+  FakerTitle,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -80,17 +82,17 @@ describe('BO _ Shop Parameters - Customer Settings : Filter, sort and pagination
     const tests = [
       {
         args: {
-          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_gender', filterValue: Titles.Mrs.id.toString(),
+          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_gender', filterValue: dataTitles.Mrs.id.toString(),
         },
       },
       {
         args: {
-          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: Titles.Mrs.name,
+          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: dataTitles.Mrs.name,
         },
       },
       {
         args: {
-          testIdentifier: 'filterGender', filterType: 'select', filterBy: 'type', filterValue: Titles.Mrs.gender,
+          testIdentifier: 'filterGender', filterType: 'select', filterBy: 'type', filterValue: dataTitles.Mrs.gender,
         },
       },
     ];
@@ -186,7 +188,7 @@ describe('BO _ Shop Parameters - Customer Settings : Filter, sort and pagination
   describe('Create 9 titles', async () => {
     const creationTests: number[] = new Array(9).fill(0, 0, 9);
     creationTests.forEach((value: number, index: number) => {
-      const titleToCreate: TitleData = new TitleData({name: `toSortAndPaginate${index}`, imageName: 'image.png'});
+      const titleToCreate: FakerTitle = new FakerTitle({name: `toSortAndPaginate${index}`, imageName: 'image.png'});
 
       it('should go to add new title page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewTitle${index}`, baseContext);

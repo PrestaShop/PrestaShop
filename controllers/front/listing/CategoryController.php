@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\Category\CategoryProductSearchProvider;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Category\CategoryPresenter;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
@@ -86,11 +87,41 @@ class CategoryControllerCore extends ProductListingFrontController
 
         parent::init();
 
-        if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
-            header('HTTP/1.1 404 Not Found');
-            header('Status: 404 Not Found');
-            $this->setTemplate('errors/404');
-            $this->notFound = true;
+        if (!Validate::isLoadedObject($this->category) || !$this->category->active || !$this->category->existsInShop($this->context->shop->id)) {
+            if (!$this->category->id_type_redirected) {
+                if (in_array($this->category->redirect_type, [RedirectType::TYPE_PERMANENT, RedirectType::TYPE_TEMPORARY])) {
+                    $this->category->id_type_redirected = Category::getRootCategory()->id;
+                }
+            }
+
+            switch ($this->category->redirect_type) {
+                case RedirectType::TYPE_PERMANENT:
+                    header('HTTP/1.1 301 Moved Permanently');
+                    header('Location: ' . $this->context->link->getCategoryLink($this->category->id_type_redirected));
+                    exit;
+                case RedirectType::TYPE_TEMPORARY:
+                    header('HTTP/1.1 302 Moved Temporarily');
+                    header('Cache-Control: no-cache');
+                    header('Location: ' . $this->context->link->getCategoryLink($this->category->id_type_redirected));
+                    exit;
+                case RedirectType::TYPE_GONE:
+                    header('HTTP/1.1 410 Gone');
+                    header('Status: 410 Gone');
+                    $this->errors[] = $this->trans('This category is no longer available.', [], 'Shop.Notifications.Error');
+                    $this->setTemplate('errors/410');
+                    $this->notFound = true;
+
+                    break;
+                case RedirectType::TYPE_NOT_FOUND:
+                default:
+                    header('HTTP/1.1 404 Not Found');
+                    header('Status: 404 Not Found');
+                    $this->errors[] = $this->trans('This category is no longer available.', [], 'Shop.Notifications.Error');
+                    $this->setTemplate('errors/404');
+                    $this->notFound = true;
+
+                    break;
+            }
 
             return;
         } elseif (!$this->category->checkAccess($this->context->customer->id)) {
@@ -124,6 +155,7 @@ class CategoryControllerCore extends ProductListingFrontController
             Validate::isLoadedObject($this->category)
             && $this->category->active
             && $this->category->checkAccess($this->context->customer->id)
+            && $this->category->existsInShop($this->context->shop->id)
         ) {
             $this->doProductSearch(
                 'catalog/listing/category',
@@ -169,7 +201,7 @@ class CategoryControllerCore extends ProductListingFrontController
      *
      * @return ProductSearchQuery
      *
-     * @throws \PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException
+     * @throws PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException
      */
     protected function getProductSearchQuery()
     {

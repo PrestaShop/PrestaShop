@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
@@ -58,7 +58,8 @@ describe('FO - Search Page : Search a product and validate', async () => {
   it('should choose product on the autocomplete list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseProductOnList', baseContext);
 
-    await homePage.clickAutocompleteSearchResult(page, Products.demo_8.name, 1);
+    await homePage.setProductNameInSearchInput(page, Products.demo_8.name);
+    await homePage.clickAutocompleteSearchResult(page, 1);
 
     const pageTitle = await productPage.getPageTitle(page);
     expect(pageTitle).to.contains(Products.demo_8.name);

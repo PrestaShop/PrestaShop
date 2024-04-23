@@ -44,7 +44,7 @@ class System extends AbstractInstall
         return self::checkTests(ConfigurationTest::getDefaultTestsOp(), 'optional');
     }
 
-    //get symfony requirements
+    // get symfony requirements
     public function checkSf2Requirements()
     {
         $symfonyRequirements = new SymfonyRequirements();
@@ -53,7 +53,7 @@ class System extends AbstractInstall
         return $errors;
     }
 
-    //get symfony recommendations
+    // get symfony recommendations
     public function checkSf2Recommendations()
     {
         $symfonyRequirements = new SymfonyRequirements();

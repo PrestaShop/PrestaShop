@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 
@@ -33,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
  * StockMvt.
  *
  * @ORM\Table(indexes={@ORM\Index(name="id_stock", columns={"id_stock"}), @ORM\Index(name="id_stock_mvt_reason", columns={"id_stock_mvt_reason"})})
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\StockMovementRepository")
  */
 class StockMvt
@@ -41,7 +43,9 @@ class StockMvt
      * @var int
      *
      * @ORM\Column(name="id_stock_mvt", type="bigint")
+     *
      * @ORM\Id
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idStockMvt;
@@ -79,7 +83,7 @@ class StockMvt
      *
      * @ORM\Column(name="id_employee", type="integer", nullable=false)
      */
-    private $idEmployee;
+    private $idEmployee = 0;
 
     /**
      * @var string
@@ -103,7 +107,7 @@ class StockMvt
     private $physicalQuantity;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="date_add", type="datetime", nullable=false)
      */
@@ -355,7 +359,7 @@ class StockMvt
     /**
      * Set dateAdd.
      *
-     * @param \DateTime $dateAdd
+     * @param DateTime $dateAdd
      *
      * @return StockMvt
      */
@@ -369,7 +373,7 @@ class StockMvt
     /**
      * Get dateAdd.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateAdd()
     {

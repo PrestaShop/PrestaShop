@@ -1,20 +1,24 @@
 import type ProductData from '@data/faker/product';
-import type AddressData from '@data/faker/address';
-import type CustomerData from '@data/faker/customer';
-import type PaymentMethodData from '@data/faker/paymentMethod';
-import type OrderStatusData from '@data/faker/orderStatus';
+
+import {
+  // Import data
+  type FakerAddress,
+  type FakerCustomer,
+  type FakerOrderStatus,
+  type FakerPaymentMethod,
+} from '@prestashop-core/ui-testing';
 
 type OrderCreator = {
   id?: number
   reference?: string
   newClient?: boolean
-  customer?: CustomerData
+  customer?: FakerCustomer
   totalPaid?: number
-  paymentMethod?: PaymentMethodData
-  status?: OrderStatusData
+  paymentMethod?: FakerPaymentMethod
+  status?: FakerOrderStatus
   delivery?: string
-  deliveryAddress?: AddressData
-  invoiceAddress?: AddressData
+  deliveryAddress?: FakerAddress
+  invoiceAddress?: FakerAddress
   products?: OrderProduct[]
   discountPercentValue?: number
   discountGiftValue?: number

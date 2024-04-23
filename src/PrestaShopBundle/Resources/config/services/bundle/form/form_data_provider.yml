@@ -106,7 +106,6 @@ services:
     arguments:
       - '@prestashop.adapter.general.configuration'
       - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_SSL_ENABLED")'
-      - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_SSL_ENABLED_EVERYWHERE")'
 
   prestashop.adapter.administration.upload_quota.form_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaDataProvider'
@@ -270,19 +269,23 @@ services:
 
   prestashop.admin.configure.advanced_parameters.stable_feature_flags_form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsFormDataProvider'
+    autowire: true
     arguments:
       - '@doctrine.orm.entity_manager'
       - 'stable'
-      - '@prestashop.bundle.routing.converter.cache_provider'
+      - '@prestashop.core.cache.clearer.cache_clearer_chain'
       - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager'
+      - '@PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
 
   prestashop.admin.configure.advanced_parameters.beta_feature_flags_form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsFormDataProvider'
+    autowire: true
     arguments:
       - '@doctrine.orm.entity_manager'
       - 'beta'
-      - '@prestashop.bundle.routing.converter.cache_provider'
+      - '@prestashop.core.cache.clearer.cache_clearer_chain'
       - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager'
+      - '@PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
 
   prestashop.adapter.security.general.form_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\FormDataProvider'
@@ -293,3 +296,14 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\FormDataProvider'
     arguments:
       - '@prestashop.adapter.security.password_policy.configuration'
+
+  prestashop.admin.improve.design.image_settings.form_data_provider:
+    class: 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageSettingsFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@prestashop.core.command_bus'
+
+  prestashop.adapter.admin_api.form_provider:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\AdminAPI\FormDataProvider'
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\AdminAPI\AdminAPIConfiguration'

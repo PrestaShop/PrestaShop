@@ -1,5 +1,9 @@
-import type GroupData from '@data/faker/group';
 import CategoryData from '@data/faker/category';
+
+import {
+  // Import data
+  type FakerGroup,
+} from '@prestashop-core/ui-testing';
 
 type CategoryCreator = {
   id?: number
@@ -9,11 +13,13 @@ type CategoryCreator = {
   description?: string
   metaTitle?: string
   metaDescription?: string
-  groupAccess?: GroupData
+  groupAccess?: FakerGroup
   coverImage?: string
   thumbnailImage?: string
   children?: CategoryData[]
   products?: string[]
+  redirectionWhenNotDisplayed?: CategoryRedirection
+  redirectedCategory?: CategoryData|null
 };
 
 type CategoryFilter = {
@@ -21,7 +27,10 @@ type CategoryFilter = {
   value: string
 };
 
+type CategoryRedirection = '301'|'302'|'404'|'410';
+
 export {
   CategoryCreator,
   CategoryFilter,
+  CategoryRedirection,
 };

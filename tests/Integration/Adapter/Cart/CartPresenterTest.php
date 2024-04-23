@@ -31,6 +31,7 @@ namespace Tests\Integration\Adapter\Cart;
 use Configuration;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
+use ReflectionClass;
 
 class CartPresenterTest extends TestCase
 {
@@ -169,7 +170,7 @@ class CartPresenterTest extends TestCase
      */
     protected function invokeMethod(&$object, string $methodName, array $parameters = [])
     {
-        $reflection = new \ReflectionClass(get_class($object));
+        $reflection = new ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
         $method->setAccessible(true);
 

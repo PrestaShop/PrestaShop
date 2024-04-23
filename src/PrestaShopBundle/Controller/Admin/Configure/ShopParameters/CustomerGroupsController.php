@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerGroupsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -42,13 +42,12 @@ class CustomerGroupsController extends FrameworkBundleAdminController
     /**
      * Show Groups tab.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @param Request $request
      * @param CustomerGroupsFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function indexAction(Request $request, CustomerGroupsFilters $filters): Response
     {
         $customerGroupsGridFactory = $this->get('prestashop.core.grid.factory.customer_groups');
@@ -65,14 +64,9 @@ class CustomerGroupsController extends FrameworkBundleAdminController
     /**
      * Displays and handles customer group form.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customer_groups_index",
-     *     message="You need permission to create this."
-     * )
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_groups_index', message: 'You need permission to create this.')]
     public function createAction(): Response
     {
         return $this->redirect(
@@ -90,16 +84,11 @@ class CustomerGroupsController extends FrameworkBundleAdminController
     /**
      * Displays title form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customer_groups_index",
-     *     message="You need permission to edit this."
-     * )
-     *
      * @param int $groupId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_groups_index', message: 'You need permission to edit this.')]
     public function editAction(int $groupId): Response
     {
         return $this->redirect(

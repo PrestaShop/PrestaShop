@@ -24,7 +24,7 @@ class MyAccountPage extends FOBasePage {
 
   private readonly merchandiseReturnsLink: string;
 
-  private readonly orderSlipsLink: string;
+  protected orderSlipsLink: string;
 
   private readonly successMessageAlert: string;
 

@@ -67,7 +67,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
   it('should search the non ordered shopping carts and delete them if exist', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
 
-    await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+    await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
     const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
     expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
@@ -81,7 +81,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
 
     if (numberOfShoppingCartsAfterFilter > 0) {
       const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-      expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulDeleteMessage);
     }
   });
 
@@ -92,16 +92,16 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
   });
 
-  it('should change pagination to 300 items per page', async function () {
+  it('should change pagination to 100 items per page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo300', baseContext);
 
-    let paginationNumber: string = '0';
+    let paginationNumber: string = '1';
 
     if (numberOfShoppingCarts >= 21) {
-      paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 300);
+      paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 100);
     }
 
-    expect(paginationNumber).to.equal('1');
+    expect(paginationNumber).to.contains('(page 1 / 1)');
   });
 
   const tests = [
@@ -119,7 +119,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
         {
           testIdentifier: 'filterOrderID',
           filterType: 'input',
-          filterBy: 'status',
+          filterBy: 'id_order',
           filterValue: ShoppingCarts[2].orderID.toString(),
         },
     },
@@ -128,7 +128,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
         {
           testIdentifier: 'filterCustomer',
           filterType: 'input',
-          filterBy: 'c!lastname',
+          filterBy: 'customer_name',
           filterValue: ShoppingCarts[3].customer.lastName,
         },
     },
@@ -137,7 +137,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
         {
           testIdentifier: 'filterCarrier',
           filterType: 'input',
-          filterBy: 'ca!name',
+          filterBy: 'carrier_name',
           filterValue: ShoppingCarts[0].carrier.name,
         },
     },
@@ -146,8 +146,8 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
         {
           testIdentifier: 'filterOnline',
           filterType: 'select',
-          filterBy: 'id_guest',
-          filterValue: ShoppingCarts[4].online ? '1' : '0',
+          filterBy: 'customer_online',
+          filterValue: ShoppingCarts[4].online ? 'Yes' : 'No',
         },
     },
   ];
@@ -196,7 +196,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
 
     for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
-      const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'date');
+      const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'date_add');
       expect(textColumn).to.contains(todayDate);
     }
   });

@@ -5,22 +5,26 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import deleteCacheTest from '@commonTests/BO/advancedParameters/cache';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/account';
+import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
-import productPage from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import Products from '@data/demo/products';
-import CustomerData from '@data/faker/customer';
-import AddressData from '@data/faker/address';
+
+import {
+  // Import data
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -48,10 +52,10 @@ describe('FO - Account : CRUD address', async () => {
   let firstAddressPosition: number = 0;
   let secondAddressPosition: number = 0;
 
-  const newCustomerData: CustomerData = new CustomerData();
-  const createAddressData: AddressData = new AddressData({country: 'France'});
-  const editAddressData: AddressData = new AddressData({country: 'France'});
-  const secondAddressData: AddressData = new AddressData({country: 'France'});
+  const newCustomerData: FakerCustomer = new FakerCustomer();
+  const createAddressData: FakerAddress = new FakerAddress({country: 'France'});
+  const editAddressData: FakerAddress = new FakerAddress({country: 'France'});
+  const secondAddressData: FakerAddress = new FakerAddress({country: 'France'});
 
   // Pre-condition: Delete cache
   deleteCacheTest(baseContext);

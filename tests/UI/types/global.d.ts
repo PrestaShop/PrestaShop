@@ -25,6 +25,10 @@ type GlobalBO = {
   LASTNAME: string
 }
 
+type GlobalAPI = {
+  URL: string
+}
+
 type GlobalBrowserConfig = {
   headless: any
   timeout: number
@@ -71,6 +75,7 @@ type GlobalKeycloakConfig = {
   keycloakAdminUser: string
   keycloakAdminPass: string
   keycloakClientId: string
+  keycloakClientSecret: string
 }
 
 declare global {
@@ -78,6 +83,8 @@ declare global {
   var URLHasPort: boolean;
   var FO: GlobalFO;
   var BO: GlobalBO;
+
+  var API: GlobalAPI;
   var PSConfig: GlobalPSConfig;
   var BROWSER: GlobalBrowser;
   var GENERATE_FAILED_STEPS: any;

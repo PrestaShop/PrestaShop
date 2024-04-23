@@ -13,14 +13,16 @@ import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
-import productPage from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Customers from '@data/demo/customers';
-import CarrierData from '@data/faker/carrier';
+import {
+  // Import data
+  dataCustomers,
+  FakerCarrier,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -40,8 +42,8 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
   let numberOfCarriers: number = 0;
   let carrierID: number = 0;
 
-  const createCarrierData: CarrierData = new CarrierData({freeShipping: false, zoneID: 4, allZones: false});
-  const editCarrierData: CarrierData = new CarrierData({
+  const createCarrierData: FakerCarrier = new FakerCarrier({freeShipping: false, zoneID: 4, allZones: false});
+  const editCarrierData: FakerCarrier = new FakerCarrier({
     freeShipping: false,
     rangeSup: 50,
     allZones: true,
@@ -159,7 +161,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -289,7 +291,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'secondSighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

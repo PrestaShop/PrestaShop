@@ -148,6 +148,7 @@ class GroupReductionCore extends ObjectModel
 			FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache`
 			WHERE `id_product` = ' . (int) $id_product . ' AND `id_group` = ' . (int) $id_group);
         }
+
         // Should return string (decimal in database) and not a float
         return self::$reduction_cache[$id_product . '-' . $id_group];
     }

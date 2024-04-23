@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,15 +41,11 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
     /**
      * Show payment preferences page.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *      message="Access denied."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function indexAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
@@ -80,16 +76,11 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
     /**
      * Process payment modules preferences form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="Access denied.",
-     *     redirectRoute="admin_payment_preferences"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'Access denied.', redirectRoute: 'admin_payment_preferences')]
     public function processFormAction(Request $request)
     {
         $paymentPreferencesFormHandler = $this->getPaymentPreferencesFormHandler();

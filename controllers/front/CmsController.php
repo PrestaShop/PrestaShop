@@ -49,7 +49,7 @@ class CmsControllerCore extends FrontController
 
     public function canonicalRedirection(string $canonicalURL = '')
     {
-        if (Validate::isLoadedObject($this->cms) && ($canonicalURL = $this->context->link->getCMSLink($this->cms, $this->cms->link_rewrite, $this->ssl))) {
+        if (Validate::isLoadedObject($this->cms) && ($canonicalURL = $this->context->link->getCMSLink($this->cms, $this->cms->link_rewrite))) {
             parent::canonicalRedirection($canonicalURL);
         } elseif (Validate::isLoadedObject($this->cms_category) && ($canonicalURL = $this->context->link->getCMSCategoryLink($this->cms_category))) {
             parent::canonicalRedirection($canonicalURL);
@@ -262,5 +262,19 @@ class CmsControllerCore extends FrontController
     public function getCmsCategory()
     {
         return $this->cms_category;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL()
+    {
+        if (Validate::isLoadedObject($this->cms)) {
+            return $this->context->link->getCMSLink($this->cms, $this->cms->link_rewrite);
+        } elseif (Validate::isLoadedObject($this->cms_category)) {
+            return $this->context->link->getCMSCategoryLink($this->cms_category);
+        }
+
+        return '';
     }
 }

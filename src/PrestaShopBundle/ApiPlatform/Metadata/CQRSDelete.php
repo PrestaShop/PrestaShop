@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
+use Attribute;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 /**
@@ -35,7 +36,7 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
  * based on a CQRS command, it is custom tailed for update operations and forces using the PUT method by default,
  * but you can also use PATCH method.
  */
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class CQRSDelete extends AbstractCQRSOperation
 {
     public function __construct(
@@ -115,6 +116,7 @@ class CQRSDelete extends AbstractCQRSOperation
         array $scopes = [],
         ?array $CQRSQueryMapping = null,
         ?array $ApiResourceMapping = null,
+        ?bool $experimentalOperation = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_DELETE;

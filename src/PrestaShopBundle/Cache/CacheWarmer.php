@@ -33,7 +33,7 @@ class CacheWarmer implements CacheWarmerInterface
 {
     private $fileSystem;
 
-    public function __construct(FileSystem $fileSystem)
+    public function __construct(Filesystem $fileSystem)
     {
         $this->fileSystem = $fileSystem;
     }

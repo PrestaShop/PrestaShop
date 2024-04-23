@@ -4,19 +4,23 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
-import productPage from '@pages/FO/classic/product';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {productPage} from '@pages/FO/classic/product';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -78,7 +82,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
   it('should sign in with customer credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-    await loginPage.customerLogin(page, Customers.johnDoe);
+    await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -141,7 +145,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
   it('should choose a payment method and validate the order', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'choosePaymentMethod', baseContext);
 
-    await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+    await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
     // Check the confirmation message
     const cardTitle: string = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -158,7 +162,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
   });
 
-  it('Go to order details abd check the messages box', async function () {
+  it('should go to order details and check the messages box', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetailsPage', baseContext);
 
     await orderHistoryPage.goToDetailsPage(page);

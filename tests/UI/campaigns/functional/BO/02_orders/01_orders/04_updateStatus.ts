@@ -6,7 +6,7 @@ import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import pages
@@ -20,11 +20,15 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -58,14 +62,14 @@ describe('BO - orders : Update order status', async () => {
   let mailListener: MailDev;
 
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create order in FO
@@ -128,12 +132,12 @@ describe('BO - orders : Update order status', async () => {
 
   describe('Change orders status in BO then check it in FO', async () => {
     [
-      {args: {orderStatus: OrderStatuses.canceled, email: 'Canceled'}},
-      {args: {orderStatus: OrderStatuses.refunded, email: 'Refunded'}},
-      {args: {orderStatus: OrderStatuses.onBackorderNotPaid, email: 'On backorder (not paid)'}},
-      {args: {orderStatus: OrderStatuses.onBackorderPaid, email: 'On backorder (paid)'}},
-      {args: {orderStatus: OrderStatuses.paymentAccepted, email: 'Payment accepted'}},
-      {args: {orderStatus: OrderStatuses.shipped, email: 'Shipped'}},
+      {args: {orderStatus: dataOrderStatuses.canceled, email: 'Canceled'}},
+      {args: {orderStatus: dataOrderStatuses.refunded, email: 'Refunded'}},
+      {args: {orderStatus: dataOrderStatuses.onBackorderNotPaid, email: 'On backorder (not paid)'}},
+      {args: {orderStatus: dataOrderStatuses.onBackorderPaid, email: 'On backorder (paid)'}},
+      {args: {orderStatus: dataOrderStatuses.paymentAccepted, email: 'Payment accepted'}},
+      {args: {orderStatus: dataOrderStatuses.shipped, email: 'Shipped'}},
     ].forEach((test, index: number) => {
       describe(`Change orders status to '${test.args.orderStatus.name}' in BO`, async () => {
         it('should update order status', async function () {
@@ -156,7 +160,7 @@ describe('BO - orders : Update order status', async () => {
           expect(allEmails[allEmails.length - 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] ${test.args.email}`);
         });
 
-        if (test.args.orderStatus.name === OrderStatuses.paymentAccepted.name) {
+        if (test.args.orderStatus.name === dataOrderStatuses.paymentAccepted.name) {
           it('should download invoice', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
 
@@ -194,7 +198,7 @@ describe('BO - orders : Update order status', async () => {
           });
         }
 
-        if (test.args.orderStatus.name === OrderStatuses.delivered.name) {
+        if (test.args.orderStatus.name === dataOrderStatuses.delivered.name) {
           it('should download delivery slip', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'downloadDeliverySlip', baseContext);
 
@@ -258,7 +262,7 @@ describe('BO - orders : Update order status', async () => {
           it('should sign in with default customer', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `sighInFoToCheckStatus${index}`, baseContext);
 
-            await foLoginPage.customerLogin(page, Customers.johnDoe);
+            await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
             const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
             expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -281,7 +285,7 @@ describe('BO - orders : Update order status', async () => {
           expect(orderStatusFO, 'Order status is not correct').to.equal(test.args.orderStatus.name);
         });
 
-        if (test.args.orderStatus.name === OrderStatuses.paymentAccepted.name) {
+        if (test.args.orderStatus.name === dataOrderStatuses.paymentAccepted.name) {
           it('should check if the last invoice is visible', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkLastInvoice${index}`, baseContext);
 

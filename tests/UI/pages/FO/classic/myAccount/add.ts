@@ -1,8 +1,10 @@
 // Import FO pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-// Import data
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  type FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -34,6 +36,8 @@ class CreateAccountPage extends FOBasePage {
 
   private readonly customerPrivacyCheckbox: string;
 
+  private readonly psgdprLabel: string;
+
   private readonly psgdprCheckbox: string;
 
   private readonly partnerOfferCheckbox: string;
@@ -62,6 +66,7 @@ class CreateAccountPage extends FOBasePage {
     this.newPasswordInput = `${this.createAccountForm} input[name='password']`;
     this.birthdateInput = `${this.createAccountForm} input[name='birthday']`;
     this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;
+    this.psgdprLabel = `${this.createAccountForm} label[for="field-psgdpr"] + div > span.custom-checkbox > label`;
     this.psgdprCheckbox = `${this.createAccountForm} input[name='psgdpr']`;
     this.partnerOfferCheckbox = `${this.createAccountForm} input[name='optin']`;
     this.companyInput = `${this.createAccountForm} input[name='company']`;
@@ -77,17 +82,17 @@ class CreateAccountPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getHeaderTitle(page: Page): Promise<string> {
+  async getHeaderTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.pageHeaderTitle);
   }
 
   /**
    * Create new customer account
    * @param page {Page} Browser tab
-   * @param customer {object} Customer's information (email and password)
+   * @param customer {FakerCustomer} Customer's information (email and password)
    * @returns {Promise<void>}
    */
-  async createAccount(page: Page, customer: CustomerData): Promise<void> {
+  async createAccount(page: Page, customer: FakerCustomer): Promise<void> {
     await this.waitForSelectorAndClick(page, this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2));
     await this.setValue(page, this.firstNameInput, customer.firstName);
     await this.setValue(page, this.lastNameInput, customer.lastName);
@@ -141,6 +146,24 @@ class CreateAccountPage extends FOBasePage {
    */
   async isCompanyInputVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.companyInput, 1000);
+  }
+
+  /**
+   * Return the label for the GDPR field
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getGDPRLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.psgdprLabel);
+  }
+
+  /**
+   * Return if the GDPR field is present
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async hasGDPRLabel(page: Page): Promise<boolean> {
+    return await page.locator(this.psgdprLabel).count() !== 0;
   }
 }
 

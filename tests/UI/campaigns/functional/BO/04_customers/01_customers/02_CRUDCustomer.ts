@@ -15,8 +15,10 @@ import dashboardPage from '@pages/BO/dashboard';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
-// Import data
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -29,8 +31,8 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
   let page: Page;
   let numberOfCustomers: number = 0;
 
-  const createCustomerData: CustomerData = new CustomerData();
-  const editCustomerData: CustomerData = new CustomerData({enabled: false});
+  const createCustomerData: FakerCustomer = new FakerCustomer();
+  const editCustomerData: FakerCustomer = new FakerCustomer({enabled: false});
 
   const createCustomerName: string = `${createCustomerData.firstName[0]}. ${createCustomerData.lastName}`;
   const editCustomerName: string = `${editCustomerData.firstName[0]}. ${editCustomerData.lastName}`;

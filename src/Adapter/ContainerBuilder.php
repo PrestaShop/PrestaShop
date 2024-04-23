@@ -101,7 +101,9 @@ class ContainerBuilder
             );
         }
         if (!isset(self::$containers[$containerName])) {
-            $builder = new ContainerBuilder(new Environment($isDebug));
+            // Container builder is only used for FO now, so we hard code the Environment to use the front appId so that
+            // it uses the cache dir from FrontKernel (in var/cache/{dev|prod}/front)
+            $builder = new ContainerBuilder(new Environment($isDebug, $isDebug ? 'dev' : 'prod', 'front'));
             self::$containers[$containerName] = $builder->buildContainer($containerName);
         }
 
@@ -130,8 +132,8 @@ class ContainerBuilder
         $this->dumpFile = $this->environment->getCacheDir() . DIRECTORY_SEPARATOR . $this->containerClassName . '.php';
         $this->containerConfigCache = new ConfigCache($this->dumpFile, $this->environment->isDebug());
 
-        //These methods load required files like autoload or annotation metadata so we need to load
-        //them at each container creation, this can't be compiled.
+        // These methods load required files like autoload or annotation metadata so we need to load
+        // them at each container creation, this can't be compiled.
         $this->loadDoctrineAnnotationMetadata();
 
         $container = $this->loadDumpedContainer();
@@ -170,13 +172,13 @@ class ContainerBuilder
     private function compileContainer()
     {
         $container = new LegacyContainerBuilder();
-        //If the container builder is modified the container logically should be rebuilt
+        // If the container builder is modified the container logically should be rebuilt
         $container->addResource(new FileResource(__FILE__));
 
         $container->addCompilerPass(new LoadServicesFromModulesPass($this->containerName), PassConfig::TYPE_BEFORE_OPTIMIZATION, PrestaShopBundle::LOAD_MODULE_SERVICES_PASS_PRIORITY);
         $container->addCompilerPass(new LegacyCompilerPass());
 
-        //Build extensions
+        // Build extensions
         $builderExtensions = [
             new ContainerParametersExtension($this->environment),
             new DoctrineBuilderExtension($this->environment),
@@ -190,7 +192,7 @@ class ContainerBuilder
         $this->loadModulesAutoloader($container);
         $container->compile();
 
-        //Dump the container file
+        // Dump the container file
         $dumper = new PhpDumper($container);
         $this->containerConfigCache->write(
             $dumper->dump([
@@ -211,7 +213,7 @@ class ContainerBuilder
      */
     private function loadDoctrineAnnotationMetadata()
     {
-        //IMPORTANT: we need to provide a cache because doctrine tries to init a connection on redis, memcached, ... on its own
+        // IMPORTANT: we need to provide a cache because doctrine tries to init a connection on redis, memcached, ... on its own
         $cacheProvider = DoctrineProvider::wrap(new ArrayAdapter());
         Setup::createAnnotationMetadataConfiguration([], $this->environment->isDebug(), null, $cacheProvider);
     }

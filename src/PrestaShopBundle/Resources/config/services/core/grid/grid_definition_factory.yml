@@ -413,7 +413,17 @@ services:
     autowire: true
     public: true
 
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiAccessGridDefinitionFactory:
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiClientGridDefinitionFactory:
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    autowire: true
+    public: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory:
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    autowire: true
+    public: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ImageTypeGridDefinitionFactory:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     autowire: true
     public: true

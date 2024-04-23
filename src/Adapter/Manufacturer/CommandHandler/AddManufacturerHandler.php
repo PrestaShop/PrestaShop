@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerComman
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler\AddManufacturerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 
 /**
  * Handles command which adds new manufacturer using legacy object model
@@ -57,7 +59,7 @@ final class AddManufacturerHandler extends AbstractManufacturerHandler implement
                 throw new ManufacturerException(sprintf('Failed to add new manufacturer "%s"', $command->getName()));
             }
             $this->addShopAssociation($manufacturer, $command);
-        } catch (\PrestaShopException $e) {
+        } catch (PrestaShopException $e) {
             throw new ManufacturerException(sprintf('Failed to add new manufacturer "%s"', $command->getName()));
         }
 
@@ -70,7 +72,7 @@ final class AddManufacturerHandler extends AbstractManufacturerHandler implement
      * @param Manufacturer $manufacturer
      * @param AddManufacturerCommand $command
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     private function addShopAssociation(Manufacturer $manufacturer, AddManufacturerCommand $command)
     {

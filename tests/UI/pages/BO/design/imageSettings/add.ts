@@ -12,7 +12,7 @@ import type {Page} from 'playwright';
 class AddImageType extends BOBasePage {
   public readonly pageTitleCreate: string;
 
-  public readonly pageTitleEdit: string;
+  public readonly pageTitleEdit: (name: string) => string;
 
   private readonly imageTypeForm: string;
 
@@ -22,15 +22,15 @@ class AddImageType extends BOBasePage {
 
   private readonly heightInput: string;
 
-  private readonly productsToggle: (toggle: string) => string;
+  private readonly productsToggle: (toggle: number) => string;
 
-  private readonly categoriesToggle: (toggle: string) => string;
+  private readonly categoriesToggle: (toggle: number) => string;
 
-  private readonly manufacturersToggle: (toggle: string) => string;
+  private readonly manufacturersToggle: (toggle: number) => string;
 
-  private readonly suppliersToggle: (toggle: string) => string;
+  private readonly suppliersToggle: (toggle: number) => string;
 
-  private readonly storesToggle: (toggle: string) => string;
+  private readonly storesToggle: (toggle: number) => string;
 
   private readonly saveButton: string;
 
@@ -41,22 +41,20 @@ class AddImageType extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Image Settings > Add new • ';
-    this.pageTitleEdit = 'Image Settings > Edit:';
-
-    this.alertSuccessBlockParagraph = '.alert-success';
+    this.pageTitleCreate = `Add new • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = (name: string) => `Edit: ${name} • ${global.INSTALL.SHOP_NAME}`;
 
     // Form selectors
-    this.imageTypeForm = '#image_type_form';
-    this.nameInput = '#name';
-    this.widthInput = '#width';
-    this.heightInput = '#height';
-    this.productsToggle = (toggle: string) => `${this.imageTypeForm} #products_${toggle}`;
-    this.categoriesToggle = (toggle: string) => `${this.imageTypeForm} #categories_${toggle}`;
-    this.manufacturersToggle = (toggle: string) => `${this.imageTypeForm} #manufacturers_${toggle}`;
-    this.suppliersToggle = (toggle: string) => `${this.imageTypeForm} #suppliers_${toggle}`;
-    this.storesToggle = (toggle: string) => `${this.imageTypeForm} #stores_${toggle}`;
-    this.saveButton = '#image_type_form_submit_btn';
+    this.imageTypeForm = 'form[name="image_type"]';
+    this.nameInput = `${this.imageTypeForm} #image_type_name`;
+    this.widthInput = `${this.imageTypeForm} #image_type_width`;
+    this.heightInput = `${this.imageTypeForm} #image_type_height`;
+    this.productsToggle = (toggle: number) => `${this.imageTypeForm} #image_type_products_${toggle}`;
+    this.categoriesToggle = (toggle: number) => `${this.imageTypeForm} #image_type_categories_${toggle}`;
+    this.manufacturersToggle = (toggle: number) => `${this.imageTypeForm} #image_type_manufacturers_${toggle}`;
+    this.suppliersToggle = (toggle: number) => `${this.imageTypeForm} #image_type_suppliers_${toggle}`;
+    this.storesToggle = (toggle: number) => `${this.imageTypeForm} #image_type_stores_${toggle}`;
+    this.saveButton = `${this.imageTypeForm} #save-button`;
   }
 
   /* Methods */
@@ -73,11 +71,11 @@ class AddImageType extends BOBasePage {
     await this.setValue(page, this.heightInput, imageTypeData.height.toString());
 
     // Set status for image type
-    await this.setChecked(page, this.productsToggle(imageTypeData.productsStatus ? 'on' : 'off'));
-    await this.setChecked(page, this.categoriesToggle(imageTypeData.categoriesStatus ? 'on' : 'off'));
-    await this.setChecked(page, this.manufacturersToggle(imageTypeData.manufacturersStatus ? 'on' : 'off'));
-    await this.setChecked(page, this.suppliersToggle(imageTypeData.suppliersStatus ? 'on' : 'off'));
-    await this.setChecked(page, this.storesToggle(imageTypeData.storesStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.productsToggle(imageTypeData.productsStatus ? 1 : 0));
+    await this.setChecked(page, this.categoriesToggle(imageTypeData.categoriesStatus ? 1 : 0));
+    await this.setChecked(page, this.manufacturersToggle(imageTypeData.manufacturersStatus ? 1 : 0));
+    await this.setChecked(page, this.suppliersToggle(imageTypeData.suppliersStatus ? 1 : 0));
+    await this.setChecked(page, this.storesToggle(imageTypeData.storesStatus ? 1 : 0));
 
     // Save image type
     await this.clickAndWaitForURL(page, this.saveButton);

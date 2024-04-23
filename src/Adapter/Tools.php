@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
+use PrestaShopException;
 use Tools as LegacyTools;
 
 /**
@@ -194,7 +195,7 @@ class Tools
      *
      * @return string
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function displayDate($date, $full = false)
     {

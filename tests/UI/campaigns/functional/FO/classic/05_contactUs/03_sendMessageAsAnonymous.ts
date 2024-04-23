@@ -20,10 +20,14 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
 // Import data
-import Customers from '@data/demo/customers';
 import MessageData from '@data/faker/message';
 import MailDevEmail from '@data/types/maildevEmail';
 import Modules from '@data/demo/modules';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -54,29 +58,29 @@ describe('FO - Contact us : Send message from contact us page with customer not 
   let mailListener: MailDev;
 
   const contactUsEmptyEmail: MessageData = new MessageData({
-    firstName: Customers.johnDoe.firstName,
-    lastName: Customers.johnDoe.lastName,
+    firstName: dataCustomers.johnDoe.firstName,
+    lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: '',
   });
   const contactUsInvalidEmail: MessageData = new MessageData({
-    firstName: Customers.johnDoe.firstName,
-    lastName: Customers.johnDoe.lastName,
+    firstName: dataCustomers.johnDoe.firstName,
+    lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: 'demo@prestashop',
   });
   const contactUsEmptyContent: MessageData = new MessageData({
-    firstName: Customers.johnDoe.firstName,
-    lastName: Customers.johnDoe.lastName,
+    firstName: dataCustomers.johnDoe.firstName,
+    lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: Customers.johnDoe.email,
+    emailAddress: dataCustomers.johnDoe.email,
     message: '',
   });
   const contactUsData: MessageData = new MessageData({
-    firstName: Customers.johnDoe.firstName,
-    lastName: Customers.johnDoe.lastName,
+    firstName: dataCustomers.johnDoe.firstName,
+    lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: Customers.johnDoe.email,
+    emailAddress: dataCustomers.johnDoe.email,
   });
 
   // Pre-Condition : Setup config SMTP
@@ -221,16 +225,15 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
       await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
-      // @todo https://github.com/PrestaShop/PrestaShop/issues/34770
-      //const validationMessage = await contactUsPage.getAlertSuccess(page);
-      //expect(validationMessage).to.equal(contactUsPage.validationMessage);
+
+      const validationMessage = await contactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(contactUsPage.validationMessage);
     });
 
-    // @todo https://github.com/PrestaShop/PrestaShop/issues/34770
-    it.skip('should check that the confirmation mail is in mailbox', async function () {
+    it('should check that the confirmation mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMail', baseContext);
 
-      expect(newMail.subject).to.contains('Message from contact form');
+      expect(newMail.subject).to.contains(`[${global.INSTALL.SHOP_NAME}] Your message has been correctly sent`);
     });
   });
 

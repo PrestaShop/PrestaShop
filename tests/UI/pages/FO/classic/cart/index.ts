@@ -30,55 +30,55 @@ class CartPage extends FOBasePage {
 
   public readonly noItemsInYourCartMessage: string;
 
-  private readonly productItem: (number: number) => string;
+  protected productItem: (number: number) => string;
 
-  private readonly productName: (number: number) => string;
+  protected productName: (number: number) => string;
 
-  private readonly productRegularPrice: (number: number) => string;
+  protected productRegularPrice: (number: number) => string;
 
-  private readonly productDiscountPercentage: (number: number) => string;
+  protected productDiscountPercentage: (number: number) => string;
 
-  private readonly productPrice: (number: number) => string;
+  protected productPrice: (number: number) => string;
 
-  private readonly productTotalPrice: (number: number) => string;
+  protected productTotalPrice: (number: number) => string;
 
-  private readonly productQuantity: (number: number) => string;
+  protected productQuantity: (number: number) => string;
 
-  private readonly productQuantityScrollUpButton: string;
+  protected productQuantityScrollUpButton: (number: number) => string;
 
-  private readonly productQuantityScrollDownButton: string;
+  protected productQuantityScrollDownButton: (number: number) => string;
 
-  private readonly productSize: (number: number) => string;
+  protected productSize: (number: number) => string;
 
-  private readonly productColor: (number: number) => string;
+  protected productColor: (number: number) => string;
 
-  private readonly productImage: (number: number) => string;
+  protected productImage: (number: number) => string;
 
-  private readonly deleteIcon: (number: number) => string;
+  protected readonly deleteIcon: (number: number) => string;
 
   private readonly itemsNumber: string;
 
-  private readonly noItemsInYourCartSpan: string;
+  protected noItemsInYourCartSpan: string;
 
-  private readonly alertMessage: string;
+  protected alertMessage: string;
 
   private readonly subtotalDiscountValueSpan: string;
 
-  private readonly cartTotalATI: string;
+  protected cartTotalATI: string;
 
-  private readonly blockPromoDiv: string;
+  protected blockPromoDiv: string;
 
-  private readonly cartSummaryLine: (line: number) => string;
+  protected cartSummaryLine: (line: number) => string;
 
-  private readonly cartRuleName: (line: number) => string;
+  protected cartRuleName: (line: number) => string;
 
-  private readonly discountValue: (line: number) => string;
+  protected discountValue: (line: number) => string;
 
-  private readonly promoCodeLink: string;
+  protected promoCodeLink: string;
 
   private readonly promoCodeBlock: string;
 
-  private readonly promoInput: string;
+  protected promoInput: string;
 
   private readonly addPromoCodeButton: string;
 
@@ -86,9 +86,9 @@ class CartPage extends FOBasePage {
 
   private readonly cartRuleAlertMessage: string;
 
-  private readonly highlightPromoCodeBlock: string;
+  protected highlightPromoCodeBlock: string;
 
-  private readonly highlightPromoCode: string;
+  protected highlightPromoCode: string;
 
   public readonly cartRuleChooseCarrierAlertMessageText: string;
 
@@ -100,7 +100,7 @@ class CartPage extends FOBasePage {
 
   private readonly alertWarning: string;
 
-  private readonly proceedToCheckoutButton: string;
+  protected proceedToCheckoutButton: string;
 
   private readonly disabledProceedToCheckoutButton: string;
 
@@ -139,8 +139,10 @@ class CartPage extends FOBasePage {
     this.productTotalPrice = (number: number) => `${this.productItem(number)} span.product-price`;
     this.productQuantity = (number: number) => `${this.productItem(number)} div.input-group `
       + 'input.js-cart-line-product-quantity';
-    this.productQuantityScrollUpButton = 'button.js-increase-product-quantity.bootstrap-touchspin-up';
-    this.productQuantityScrollDownButton = 'button.js-decrease-product-quantity.bootstrap-touchspin-down';
+    this.productQuantityScrollUpButton = (number: number) => `${this.productItem(number)} `
+      + 'button.js-increase-product-quantity.bootstrap-touchspin-up';
+    this.productQuantityScrollDownButton = (number: number) => `${this.productItem(number)} `
+      + 'button.js-decrease-product-quantity.bootstrap-touchspin-down';
     this.productSize = (number: number) => `${this.productItem(number)} div.product-line-info.size span.value`;
     this.productColor = (number: number) => `${this.productItem(number)} div.product-line-info.color span.value`;
     this.productImage = (number: number) => `${this.productItem(number)} span.product-image img`;
@@ -279,26 +281,26 @@ class CartPage extends FOBasePage {
   /**
    * Set product quantity
    * @param page {Page} Browser tab
-   * @param productID {number} ID of the product
+   * @param productRow {number} Row of the product
    * @param quantity {number} New quantity of the product
    * @returns {Promise<number>}
    */
-  async setProductQuantity(page: Page, productID: number = 1, quantity: number = 1): Promise<number> {
-    const productQuantity: number = parseInt(await this.getAttributeContent(page, this.productQuantity(productID), 'value'), 10);
+  async setProductQuantity(page: Page, productRow: number = 1, quantity: number = 1): Promise<number> {
+    const productQuantity: number = parseInt(await this.getAttributeContent(page, this.productQuantity(productRow), 'value'), 10);
 
     if (productQuantity < quantity) {
       for (let i: number = 1; i < quantity; i++) {
-        await page.locator(this.productQuantityScrollUpButton).click();
+        await page.locator(this.productQuantityScrollUpButton(productRow)).click();
         await page.waitForTimeout(1000);
       }
     } else {
       for (let i: number = productQuantity; i > quantity; i--) {
-        await page.locator(this.productQuantityScrollDownButton).click();
+        await page.locator(this.productQuantityScrollDownButton(productRow)).click();
         await page.waitForTimeout(1000);
       }
     }
 
-    return parseInt(await this.getAttributeContent(page, this.productQuantity(productID), 'value'), 10);
+    return parseInt(await this.getAttributeContent(page, this.productQuantity(productRow), 'value'), 10);
   }
 
   /**
@@ -316,7 +318,7 @@ class CartPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getATIPrice(page: Page): Promise<number> {
+  async getATIPrice(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.cartTotalATI, 2000);
   }
 
@@ -325,7 +327,7 @@ class CartPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getSubtotalDiscountValue(page: Page): Promise<number> {
+  async getSubtotalDiscountValue(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.subtotalDiscountValueSpan, 2000);
   }
 
@@ -407,7 +409,10 @@ class CartPage extends FOBasePage {
    */
   async clickOnPromoCode(page: Page): Promise<void> {
     await this.waitForSelectorAndClick(page, this.highlightPromoCode);
-    await page.locator(this.addPromoCodeButton).click();
+    await Promise.all([
+      page.locator(this.addPromoCodeButton).click(),
+      page.waitForResponse((response) => response.url().includes('action=refresh')),
+    ]);
   }
 
   /**
@@ -443,11 +448,13 @@ class CartPage extends FOBasePage {
    * Remove voucher
    * @param page {Page} Browser tab
    * @param line {number} Cart summary line
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
-  async removeVoucher(page: Page, line: number = 1): Promise<void> {
+  async removeVoucher(page: Page, line: number = 1): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.promoCodeRemoveIcon(line));
     await this.waitForHiddenSelector(page, this.promoCodeRemoveIcon(line));
+
+    return this.elementNotVisible(page, this.promoCodeRemoveIcon(line), 1000);
   }
 }
 

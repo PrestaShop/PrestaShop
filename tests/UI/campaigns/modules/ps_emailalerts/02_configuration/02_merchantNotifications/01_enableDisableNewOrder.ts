@@ -16,18 +16,22 @@ import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage, loginPage} from '@pages/FO/classic/login';
-import productPage from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 // Import data
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import Modules from '@data/demo/modules';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -60,14 +64,14 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
 
   // New order by customer data
   const orderData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 3,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-Condition : Setup config SMTP
@@ -102,7 +106,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPageEnableNewOrder', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -116,14 +120,14 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
 
     it(`should search the module ${Modules.psEmailAlerts.name}`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'searchModuleEnableNewOrder', baseContext);
 
       const isModuleVisible = await moduleManager.searchModule(page, Modules.psEmailAlerts);
       expect(isModuleVisible).to.equal(true);
     });
 
     it(`should go to the configuration page of the module '${Modules.psEmailAlerts.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPageEnableNewOrder', baseContext);
 
       await moduleManager.goToConfigurationPage(page, Modules.psEmailAlerts.tag);
 
@@ -154,7 +158,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
@@ -320,7 +324,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
 
     it('should add product to cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
@@ -334,7 +338,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
 
     it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep2', baseContext);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
@@ -345,7 +349,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
 
     it('should go to payment step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep2', baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
@@ -353,7 +357,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     });
 
     it('should choose payment method and confirm the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder2', baseContext);
 
       // Payment step - Choose payment step
       await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);

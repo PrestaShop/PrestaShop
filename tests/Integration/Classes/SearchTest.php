@@ -32,7 +32,7 @@ use Configuration;
 use PHPUnit\Framework\TestCase;
 use Search;
 
-class SearchTest extends Testcase
+class SearchTest extends TestCase
 {
     /**
      * @dataProvider providerSearchString()

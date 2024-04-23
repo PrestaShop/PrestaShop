@@ -4,15 +4,21 @@ import helper from '@utils/helpers';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -58,7 +64,7 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
   it('should sign In in FO with default account', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
-    await loginPage.customerLogin(page, Customers.johnDoe);
+    await loginPage.customerLogin(page, dataCustomers.johnDoe);
 
     const connected = await homePage.isCustomerConnected(page);
     expect(connected, 'Customer is not connected in FO').to.eq(true);
@@ -77,11 +83,20 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
     expect(result).to.eq(true);
   });
 
+  it('should quick view the first product', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'quickViewFirstProduct', baseContext);
+
+    await homePage.quickViewProduct(page, 1);
+
+    const isQuickViewModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+    expect(isQuickViewModalVisible).to.equal(true);
+  });
+
   it('should add first product to cart and Proceed to checkout', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-    await homePage.addProductToCartByQuickView(page, 1, 1);
-    await homePage.proceedToCheckout(page);
+    await quickViewModal.addToCartByQuickView(page);
+    await blockCartModal.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);
     expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -130,7 +145,7 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
   it('should Pay by back wire and confirm order', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
-    await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+    await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
     const pageTitle = await orderConfirmationPage.getPageTitle(page);
     expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);

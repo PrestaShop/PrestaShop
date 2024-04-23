@@ -7,8 +7,10 @@ import homePage from '@pages/FO/hummingbird/home';
 import foLoginPage from '@pages/FO/hummingbird/login';
 import foCreateAccountPage from '@pages/FO/hummingbird/myAccount/add';
 
-// Import data
-import type CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -18,10 +20,10 @@ let page: Page;
 
 /**
  * Function to create account in FO
- * @param customerData {CustomerData} Data to set when creating the account
+ * @param customerData {FakerCustomer} Data to set when creating the account
  * @param baseContext {string} String to identify the test
  */
-function createAccountTest(customerData: CustomerData, baseContext: string = 'commonTests-createAccountTest'): void {
+function createAccountTest(customerData: FakerCustomer, baseContext: string = 'commonTests-createAccountTest'): void {
   describe('PRE-TEST: Create account on FO', async () => {
     // before and after functions
     before(async function () {

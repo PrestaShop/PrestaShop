@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class Vouchers extends FOBasePage {
+class VouchersPage extends FOBasePage {
   public readonly pageTitle: string;
 
   private readonly vouchersTable: string;
@@ -36,8 +36,8 @@ class Vouchers extends FOBasePage {
    * @constructs
    * Setting up texts and selectors to use on vouchers page
    */
-  constructor() {
-    super();
+  constructor(theme: string = 'classic') {
+    super(theme);
 
     this.pageTitle = 'Discount';
 
@@ -115,4 +115,5 @@ class Vouchers extends FOBasePage {
   }
 }
 
-export default new Vouchers();
+const vouchersPage = new VouchersPage();
+export {vouchersPage, VouchersPage};

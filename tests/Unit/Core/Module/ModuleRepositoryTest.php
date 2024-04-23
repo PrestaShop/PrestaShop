@@ -85,7 +85,7 @@ class ModuleRepositoryTest extends TestCase
 
     public function testGetList(): void
     {
-        $this->assertCount(10, $this->moduleRepository->getList());
+        $this->assertCount(11, $this->moduleRepository->getList());
     }
 
     public function testGetInstalledModules(): void
@@ -106,7 +106,7 @@ class ModuleRepositoryTest extends TestCase
     public function testGetModulePath(): void
     {
         $this->assertEquals(
-           dirname(__DIR__, 3) . '/Resources/modules/bankwire',
+            dirname(__DIR__, 3) . '/Resources/modules/bankwire',
             $this->moduleRepository->getModulePath('bankwire')
         );
         $this->assertNull($this->moduleRepository->getModulePath('no-existing-module'));

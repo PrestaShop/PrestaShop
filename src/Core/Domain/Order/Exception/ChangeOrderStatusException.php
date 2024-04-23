@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
@@ -54,7 +55,7 @@ class ChangeOrderStatusException extends OrderException
      * @param OrderId[] $ordersWithAssignedStatus
      * @param string $message
      * @param int $code
-     * @param \Exception|null $previous
+     * @param Exception|null $previous
      */
     public function __construct(
         array $ordersWithFailedToUpdateStatus,

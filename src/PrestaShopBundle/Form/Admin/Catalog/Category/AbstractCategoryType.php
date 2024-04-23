@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Form\Admin\Sell\Category\SEO\RedirectOptionType;
 use PrestaShopBundle\Form\Admin\Type\CategorySeoPreviewType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\ImageWithPreviewType;
@@ -164,13 +165,13 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ->add('active', SwitchType::class, [
                 'label' => $this->trans('Enabled', 'Admin.Global'),
                 'help' => $this->trans(
-                        'If you want a category to appear in your store\'s menu, configure your menu module in [1]Modules > Module Manager[/1].',
-                        'Admin.Catalog.Help',
-                        [
-                            '[1]' => '<a href="' . $this->router->generate('admin_module_manage') . '" target="_blank" rel="noopener noreferrer nofollow">',
-                            '[/1]' => '</a>',
-                        ]
-                    ),
+                    'If you want a category to appear in your store\'s menu, configure your menu module in [1]Modules > Module Manager[/1].',
+                    'Admin.Catalog.Help',
+                    [
+                        '[1]' => '<a href="' . $this->router->generate('admin_module_manage') . '" target="_blank" rel="noopener noreferrer nofollow">',
+                        '[/1]' => '</a>',
+                    ]
+                ),
                 'required' => false,
             ])
             ->add('cover_image', ImageWithPreviewType::class, [
@@ -316,6 +317,11 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     ],
                 ],
             ])
+            ->add('redirect_option', RedirectOptionType::class, [
+                'id_category' => $options['id_category'] ?? 0,
+                'isRootCategory' => $this instanceof RootCategoryType,
+                'alert_message' => $this->getRedirectionAlertMessages(),
+            ])
             ->add('group_association', MaterialChoiceTableType::class, [
                 'label' => $this->trans('Group access', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('Select the customer groups which will have access to this category.', 'Admin.Catalog.Help'),
@@ -333,5 +339,28 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'label' => $this->trans('Store association', 'Admin.Global'),
             ]);
         }
+    }
+
+    private function getRedirectionAlertMessages(): array
+    {
+        $formatParameters = [
+            '[1]' => '<strong>',
+            '[/1]' => '</strong>',
+            '[2]' => '<br>',
+        ];
+
+        $alertMessages = [
+            $this->trans('[1]No redirection (404), display error page[/1] [2] Do not redirect anywhere and display a 404 "Not Found" page.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]No redirection (410), display error page[/1] [2] Do not redirect anywhere and display a 410 "Gone" page.', 'Admin.Catalog.Help', $formatParameters),
+        ];
+
+        if (!$this instanceof RootCategoryType) {
+            $alertMessages = array_merge([
+                $this->trans('[1]Permanent redirection (301)[/1] [2] Permanently display another category instead.', 'Admin.Catalog.Help', $formatParameters),
+                $this->trans('[1]Temporary redirection (302)[/1] [2] Temporarily display another category instead.', 'Admin.Catalog.Help', $formatParameters),
+            ], $alertMessages);
+        }
+
+        return $alertMessages;
     }
 }

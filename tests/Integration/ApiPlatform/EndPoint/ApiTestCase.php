@@ -28,16 +28,18 @@ declare(strict_types=1);
 
 namespace Tests\Integration\ApiPlatform\EndPoint;
 
+use AdminAPIKernel;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase as ApiPlatformTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
-use PrestaShop\PrestaShop\Core\Domain\ApiAccess\Command\AddApiAccessCommand;
+use Configuration;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\AddApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Shop;
 use ShopGroup;
-use Tests\Resources\DatabaseDump;
+use Tests\Resources\Resetter\ApiClientResetter;
 
 abstract class ApiTestCase extends ApiPlatformTestCase
 {
@@ -49,14 +51,26 @@ abstract class ApiTestCase extends ApiPlatformTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        DatabaseDump::restoreTables(['api_access']);
+        self::updateConfiguration('PS_ADMIN_API_FORCE_DEBUG_SECURED', 0);
+        ApiClientResetter::resetApiClient();
     }
 
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        DatabaseDump::restoreTables(['api_access']);
+        ApiClientResetter::resetApiClient();
+        self::updateConfiguration('PS_ADMIN_API_FORCE_DEBUG_SECURED', 1);
         self::$clientSecret = null;
+    }
+
+    /**
+     * API endpoints are only available in the OAuth application so we force using the proper kernel here.
+     *
+     * @return string
+     */
+    protected static function getKernelClass(): string
+    {
+        return AdminAPIKernel::class;
     }
 
     protected static function createClient(array $kernelOptions = [], array $defaultOptions = []): Client
@@ -65,31 +79,39 @@ abstract class ApiTestCase extends ApiPlatformTestCase
             $defaultOptions['headers']['accept'] = ['application/json'];
         }
 
+        if (!isset($defaultOptions['headers']['content-type'])) {
+            $defaultOptions['headers']['content-type'] = ['application/json'];
+        }
+
         return parent::createClient($kernelOptions, $defaultOptions);
     }
 
-    protected function getBearerToken(array $scopes = []): string
+    protected function getBearerToken(array $scopes = [], array $kernelOptions = [], array $clientOptions = []): string
     {
         if (null === self::$clientSecret) {
-            self::createApiAccess($scopes);
+            self::createApiClient($scopes);
         }
-        $client = static::createClient();
-        $parameters = ['parameters' => [
-            'client_id' => static::CLIENT_ID,
-            'client_secret' => static::$clientSecret,
-            'grant_type' => 'client_credentials',
-            'scope' => $scopes,
-        ]];
-        $options = ['extra' => $parameters];
-        $response = $client->request('POST', '/api/oauth2/token', $options);
+        $options = [
+            'extra' => [
+                'parameters' => [
+                    'client_id' => static::CLIENT_ID,
+                    'client_secret' => static::$clientSecret,
+                    'grant_type' => 'client_credentials',
+                    'scope' => $scopes,
+                ],
+            ],
+            'headers' => [
+                'content-type' => 'application/x-www-form-urlencoded',
+            ],
+        ];
+        $response = static::createClient($kernelOptions, $clientOptions)->request('POST', '/access_token', $options);
 
         return json_decode($response->getContent())->access_token;
     }
 
-    protected static function createApiAccess(array $scopes = [], int $lifetime = 10000): void
+    protected static function createApiClient(array $scopes = [], int $lifetime = 10000): void
     {
-        $client = static::createClient();
-        $command = new AddApiAccessCommand(
+        $command = new AddApiClientCommand(
             static::CLIENT_NAME,
             static::CLIENT_ID,
             true,
@@ -98,16 +120,15 @@ abstract class ApiTestCase extends ApiPlatformTestCase
             $scopes
         );
 
-        $container = $client->getContainer();
+        $container = static::createClient()->getContainer();
         $commandBus = $container->get('prestashop.core.command_bus');
-        $createdApiAccess = $commandBus->handle($command);
+        $createdApiClient = $commandBus->handle($command);
 
-        self::$clientSecret = $createdApiAccess->getSecret();
+        self::$clientSecret = $createdApiClient->getSecret();
     }
 
     protected static function addLanguageByLocale(string $locale): int
     {
-        $client = static::createClient();
         $isoCode = substr($locale, 0, strpos($locale, '-'));
 
         // Copy resource assets into tmp folder to mimic an upload file path
@@ -134,13 +155,13 @@ abstract class ApiTestCase extends ApiPlatformTestCase
             [1]
         );
 
-        $container = $client->getContainer();
+        $container = static::createClient()->getContainer();
         $commandBus = $container->get('prestashop.core.command_bus');
 
         return $commandBus->handle($command)->getValue();
     }
 
-    protected static function addShopGroup(string $groupName, string $color = null): int
+    protected static function addShopGroup(string $groupName, ?string $color = null): int
     {
         $shopGroup = new ShopGroup();
         $shopGroup->name = $groupName;
@@ -157,7 +178,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         return (int) $shopGroup->id;
     }
 
-    protected static function addShop(string $shopName, int $shopGroupId, string $color = null): int
+    protected static function addShop(string $shopName, int $shopGroupId, ?string $color = null): int
     {
         $shop = new Shop();
         $shop->active = true;
@@ -183,5 +204,6 @@ abstract class ApiTestCase extends ApiPlatformTestCase
     protected static function updateConfiguration(string $configurationKey, $value, ?ShopConstraint $shopConstraint = null): void
     {
         self::getContainer()->get(ShopConfigurationInterface::class)->set($configurationKey, $value, $shopConstraint ?: ShopConstraint::allShops());
+        Configuration::resetStaticCache();
     }
 }

@@ -26,10 +26,14 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use Cart;
+use CartRule;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\BulkDeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
@@ -39,7 +43,10 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCom
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductPriceInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteCartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteOrderedCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
@@ -55,22 +62,147 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\Customizat
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\PackOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\Search\Filters\CartFilter;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Controller\BulkActionsTrait;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CartController extends FrameworkBundleAdminController
 {
+    use BulkActionsTrait;
+
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * Shows list of carts
      *
+     * @param Request $request
+     * @param CartFilter $filters
+     *
+     * @return Response
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function indexAction(Request $request, CartFilter $filters): Response
+    {
+        $cartsKpiFactory = $this->get('prestashop.core.kpi_row.factory.carts');
+        $cartGridFactory = $this->get('prestashop.core.grid.factory.cart');
+        $cartGrid = $cartGridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Cart/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => [
+                'add' => [
+                    'href' => $this->generateUrl('admin_carts_export'),
+                    'desc' => $this->trans('Export carts', 'Admin.Orderscustomers.Feature'),
+                    'icon' => 'cloud_download',
+                ],
+            ],
+            'cartGrid' => $this->presentGrid($cartGrid),
+            'cartsKpi' => $cartsKpiFactory->build(),
+        ]);
+    }
+
+    /**
+     * Delete given cart
+     *
+     * @param int $cartId
+     *
+     * @return RedirectResponse
+     */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    public function deleteCartAction(int $cartId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteCartCommand($cartId));
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (CartException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_carts_index');
+    }
+
+    /**
+     * Deletes carts on bulk action
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    public function bulkDeleteCartAction(Request $request): RedirectResponse
+    {
+        $cartIds = $this->getBulkActionIds($request, 'cart_bulk');
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCartCommand($cartIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_carts_index');
+    }
+
+    /**
+     * Export carts in CSV
+     *
+     * @param Request $request
+     * @param CartFilter $filters
+     *
+     * @return CsvResponse
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function exportCartAction(Request $request, CartFilter $filters): CsvResponse
+    {
+        $filters = new CartFilter($filters->getShopConstraint(), ['limit' => null] + $filters->all());
+        $cartGridFactory = $this->get('prestashop.core.grid.factory.cart');
+        $cartGrid = $cartGridFactory->getGrid($filters);
+
+        $headers = [
+            'id_cart' => $this->trans('ID', 'Admin.Global'),
+            'id_order' => $this->trans('Order ID', 'Admin.Orderscustomers.Feature'),
+            'customer_name' => $this->trans('Customer', 'Admin.Global'),
+            'cart_total' => $this->trans('Total', 'Admin.Global'),
+            'carrier_name' => $this->trans('Carrier', 'Admin.Global'),
+            'date_add' => $this->trans('Date', 'Admin.Global'),
+            'customer_online' => $this->trans('Online', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($cartGrid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_cart' => $record['id_cart'],
+                'id_order' => $record['id_order'],
+                'customer_name' => $record['customer_name'],
+                'cart_total' => $record['cart_total'],
+                'carrier_name' => $record['carrier_name'],
+                'date_add' => $record['date_add'],
+                'customer_online' => $record['customer_online_id'] > 0 ? 1 : 0,
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('cart_' . date('Y-m-d_His') . '.csv');
+    }
+
+    /**
      * @param Request $request
      * @param int $cartId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function viewAction(Request $request, $cartId)
     {
         try {
@@ -78,9 +210,10 @@ class CartController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
-            return $this->redirect($this->getAdminLink('AdminCarts', [], true));
+            return $this->redirectToRoute('admin_carts_index');
         }
 
+        // Prepare KPI row
         $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.cart');
         $kpiRowFactory->setOptions([
             'cart_id' => $cartId,
@@ -103,12 +236,11 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Gets requested cart information
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $cartId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function getInfoAction(int $cartId)
     {
         try {
@@ -129,12 +261,11 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Creates empty cart
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function createAction(Request $request): JsonResponse
     {
         try {
@@ -153,13 +284,12 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Changes the cart address information
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $cartId
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function editAddressesAction(int $cartId, Request $request): JsonResponse
     {
         $invoiceAddressId = $request->request->getInt('invoiceAddressId');
@@ -182,13 +312,12 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $cartId
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function editCurrencyAction(int $cartId, Request $request): JsonResponse
     {
         try {
@@ -207,13 +336,12 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $cartId
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function editLanguageAction(int $cartId, Request $request): JsonResponse
     {
         try {
@@ -232,13 +360,12 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function editCarrierAction(Request $request, int $cartId): JsonResponse
     {
         try {
@@ -258,13 +385,12 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param int $cartId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function updateDeliverySettingsAction(Request $request, int $cartId)
     {
         $configuration = $this->getConfiguration();
@@ -275,8 +401,8 @@ class CartController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new UpdateCartDeliverySettingsCommand(
                 $cartId,
                 $request->request->getBoolean('freeShipping'),
-                ($giftSettingsEnabled ? $request->request->getBoolean('isAGift', false) : null),
-                ($recycledPackagingEnabled ? $request->request->getBoolean('useRecycledPackaging', false) : null),
+                $giftSettingsEnabled ? $request->request->getBoolean('isAGift', false) : null,
+                $recycledPackagingEnabled ? $request->request->getBoolean('useRecycledPackaging', false) : null,
                 $request->request->get('giftMessage', null)
             ));
 
@@ -292,13 +418,12 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Adds cart rule to cart
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function addCartRuleAction(Request $request, int $cartId): JsonResponse
     {
         $cartRuleId = $request->request->getInt('cartRuleId');
@@ -317,13 +442,12 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Deletes cart rule from cart
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $cartId
      * @param int $cartRuleId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function deleteCartRuleAction(int $cartId, int $cartRuleId)
     {
         try {
@@ -341,13 +465,12 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Adds product to cart
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function addProductAction(Request $request, int $cartId): JsonResponse
     {
         $productId = $request->request->getInt('product_id');
@@ -383,14 +506,13 @@ class CartController extends FrameworkBundleAdminController
      * Modifying a price for a product in the cart is actually performed by using generated specific prices,
      * that are used only for this cart and this product.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      * @param int $productId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function editProductPriceAction(Request $request, int $cartId, int $productId): JsonResponse
     {
         $commandBus = $this->getCommandBus();
@@ -418,14 +540,13 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Changes product in cart quantity
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      * @param int $productId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function editProductQuantityAction(Request $request, int $cartId, int $productId)
     {
         try {
@@ -458,13 +579,12 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Deletes product from cart
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function deleteProductAction(Request $request, int $cartId): JsonResponse
     {
         try {
@@ -609,6 +729,14 @@ class CartController extends FrameworkBundleAdminController
                     $minimalQuantity,
                 ]
             ),
+            CannotDeleteCartException::class => $this->trans(
+                'Invalid selection',
+                'Admin.Notifications.Error'
+            ),
+            CannotDeleteOrderedCartException::class => $this->trans(
+                'An order has already been placed with this cart.',
+                'Admin.Catalog.Notification'
+            ),
         ];
     }
 
@@ -639,8 +767,8 @@ class CartController extends FrameworkBundleAdminController
      */
     private function getProductGiftedQuantity(int $cartId, int $productId, ?int $attributeId): int
     {
-        $cart = new \Cart($cartId);
-        $giftCartRules = $cart->getCartRules(\CartRule::FILTER_ACTION_GIFT, false);
+        $cart = new Cart($cartId);
+        $giftCartRules = $cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false);
         if (count($giftCartRules) <= 0) {
             return 0;
         }
@@ -648,8 +776,8 @@ class CartController extends FrameworkBundleAdminController
         $giftedQuantity = 0;
         foreach ($giftCartRules as $giftCartRule) {
             if (
-                $productId == $giftCartRule['gift_product'] &&
-                (null === $attributeId || $attributeId == $giftCartRule['gift_product_attribute'])
+                $productId == $giftCartRule['gift_product']
+                && (null === $attributeId || $attributeId == $giftCartRule['gift_product_attribute'])
             ) {
                 ++$giftedQuantity;
             }

@@ -14,7 +14,7 @@ import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 
 // Import data

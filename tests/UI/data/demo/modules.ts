@@ -1,59 +1,75 @@
-import ModuleData from '@data/faker/module';
+import {
+  // Import data
+  FakerModule,
+} from '@prestashop-core/ui-testing';
 
 export default {
-  blockwishlist: new ModuleData({
+  blockwishlist: new FakerModule({
     tag: 'blockwishlist',
     name: 'Wishlist',
   }),
-  psApiResources: new ModuleData({
+  psApiResources: new FakerModule({
     tag: 'ps_apiresources',
     name: 'PrestaShop API Resources',
   }),
-  psCashOnDelivery: new ModuleData({
+  psCashOnDelivery: new FakerModule({
     tag: 'ps_cashondelivery',
     name: 'Cash on delivery (COD)',
   }),
-  psCheckPayment: new ModuleData({
+  psCategoryProducts: new FakerModule({
+    tag: 'ps_categoryproducts',
+    name: 'Products in the same category',
+  }),
+  psCheckPayment: new FakerModule({
     tag: 'ps_checkpayment',
     name: 'Payments by check',
   }),
-  psEmailAlerts: new ModuleData({
+  psEmailAlerts: new FakerModule({
     tag: 'ps_emailalerts',
     name: 'Mail alerts',
     releaseZip: 'https://github.com/PrestaShop/ps_emailalerts/releases/download/v3.0.0/ps_emailalerts.zip',
   }),
-  psEmailSubscription: new ModuleData({
+  psEmailSubscription: new FakerModule({
     tag: 'ps_emailsubscription',
     name: 'Newsletter subscription',
   }),
-  psFacetedSearch: new ModuleData({
+  psFacetedSearch: new FakerModule({
     tag: 'ps_facetedsearch',
     name: 'Faceted search',
-    releaseZip: 'https://github.com/PrestaShop/ps_facetedsearch/releases/download/v3.14.1/ps_facetedsearch.zip',
+    releaseZip: 'https://github.com/PrestaShop/ps_facetedsearch/releases/download/v3.15.1/ps_facetedsearch.zip',
   }),
-  psThemeCusto: new ModuleData({
+  psGdpr: new FakerModule({
+    tag: 'psgdpr',
+    name: 'Official GDPR compliance',
+  }),
+  psNewProducts: new FakerModule({
+    tag: 'ps_newproducts',
+    name: 'New products',
+  }),
+  psThemeCusto: new FakerModule({
     tag: 'ps_themecusto',
     name: 'Theme Customization',
+    releaseZip: 'https://github.com/PrestaShop/ps_themecusto/releases/download/v1.2.4/ps_themecusto.zip',
   }),
-  contactForm: new ModuleData({
+  contactForm: new FakerModule({
     tag: 'contactform',
     name: 'Contact form',
   }),
-  themeCustomization: new ModuleData({
+  themeCustomization: new FakerModule({
     tag: 'ps_themecusto',
     name: 'Theme Customization',
   }),
-  availableQuantities: new ModuleData({
+  availableQuantities: new FakerModule({
     tag: 'statsstock',
     name: 'Available quantities',
   }),
-  mainMenu: new ModuleData({
+  mainMenu: new FakerModule({
     tag: 'ps_mainmenu',
     name: 'Main menu',
   }),
-  keycloak: new ModuleData({
+  keycloak: new FakerModule({
     tag: 'keycloak_connector_demo',
     name: 'Keycloak OAuth2 connector demo',
-    releaseZip: 'https://github.com/PrestaShop/keycloak_connector_demo/releases/download/v1.0.4/keycloak_connector_demo.zip',
+    releaseZip: 'https://github.com/PrestaShop/keycloak_connector_demo/releases/download/v1.1.0/keycloak_connector_demo.zip',
   }),
 };

@@ -200,7 +200,7 @@ class TitleGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('actions')
             )
-            ;
+        ;
     }
 
     /**

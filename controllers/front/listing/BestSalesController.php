@@ -109,7 +109,7 @@ class BestSalesControllerCore extends ProductListingFrontController
 
         $breadcrumb['links'][] = [
             'title' => $this->trans('Best sellers', [], 'Shop.Theme.Catalog'),
-            'url' => $this->context->link->getPageLink('best-sales', true),
+            'url' => $this->context->link->getPageLink('best-sales'),
         ];
 
         return $breadcrumb;

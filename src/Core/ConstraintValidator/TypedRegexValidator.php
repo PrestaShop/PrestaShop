@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Gtin;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
@@ -145,6 +146,8 @@ class TypedRegexValidator extends ConstraintValidator
                 return Upc::VALID_PATTERN;
             case TypedRegex::TYPE_EAN_13:
                 return Ean13::VALID_PATTERN;
+            case TypedRegex::TYPE_GTIN:
+                return Gtin::VALID_PATTERN;
             case TypedRegex::TYPE_ISBN:
                 return Isbn::VALID_PATTERN;
             case TypedRegex::TYPE_REFERENCE:
@@ -163,6 +166,8 @@ class TypedRegexValidator extends ConstraintValidator
                 }
 
                 return '/^[_a-zA-Z0-9\-]+$/';
+            case TypedRegex::TYPE_IMAGE_TYPE_NAME:
+                return '/^[a-zA-Z0-9_ -]+$/';
             default:
                 $definedTypes = implode(', ', array_values((new ReflectionClass(TypedRegex::class))->getConstants()));
                 throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, $definedTypes));

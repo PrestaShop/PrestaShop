@@ -144,9 +144,9 @@ class AdminDashboardControllerCore extends AdminController
                         'title' => $module->displayName,
                         'desc' => $this->trans(
                             'Choose a variable fee for each order placed with a foreign currency with %module%. It will be applied on the total paid with taxes.',
-                             ['%module%' => $module->displayName],
-                             'Admin.Dashboard.Help'
-                            ),
+                            ['%module%' => $module->displayName],
+                            'Admin.Dashboard.Help'
+                        ),
                         'validation' => 'isPercentage',
                         'cast' => 'floatval',
                         'type' => 'text',
@@ -368,7 +368,7 @@ class AdminDashboardControllerCore extends AdminController
                 ) . $this->trans(
                     'If this is your main domain, please {link}change it now{/link}.',
                     [
-                        '{link}' => '<a href="index.php?controller=AdminShopUrl&id_shop_url=' . (int) $shop->id . '&updateshop_url&token=' . Tools::getAdminTokenLite('AdminShopUrl') . '">',
+                        '{link}' => '<a href="' . $this->context->link->getAdminLink('AdminShopUrl', true, [], ['id_shop_url' => (int) $shop->id, 'updateshop_url' => 1]) . '">',
                         '{/link}' => '</a>',
                     ],
                     'Admin.Dashboard.Notification'
@@ -378,7 +378,7 @@ class AdminDashboardControllerCore extends AdminController
 				' . $this->trans(
                     'If this is your main domain, please {link}change it now{/link}.',
                     [
-                        '{link}' => '<a href="index.php?controller=AdminMeta&token=' . Tools::getAdminTokenLite('AdminMeta') . '#meta_fieldset_shop_url">',
+                        '{link}' => '<a href="' . $this->context->link->getAdminLink('AdminMeta') . '#meta_fieldset_shop_url">',
                         '{/link}' => '</a>',
                     ],
                     'Admin.Dashboard.Notification'

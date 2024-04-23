@@ -32,6 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
  * AdminFilter.
  *
  * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="admin_filter_search_id_idx", columns={"employee", "shop", "controller", "action", "filter_id"})})
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AdminFilterRepository")
  */
 class AdminFilter
@@ -40,7 +41,9 @@ class AdminFilter
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\Column(name="id", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;

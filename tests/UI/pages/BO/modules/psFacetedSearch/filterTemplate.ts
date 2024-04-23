@@ -10,7 +10,13 @@ import type {Page} from 'playwright';
 class PsFacetedSearchFilterTemplate extends ModuleConfiguration {
   public readonly title: string;
 
+  private readonly panel: string;
+
   private readonly panelTitle: string;
+
+  private readonly templateNameInput: string;
+
+  private readonly templateControllerCheckbox: (controller: string) => string;
 
   public readonly submitFilter: string;
 
@@ -24,7 +30,10 @@ class PsFacetedSearchFilterTemplate extends ModuleConfiguration {
     this.title = 'New filters template';
 
     // Selectors
-    this.panelTitle = '#content .panel h3';
+    this.panel = '#content .panel';
+    this.panelTitle = `${this.panel} h3`;
+    this.templateNameInput = `${this.panel} #layered_tpl_name`;
+    this.templateControllerCheckbox = (controller: string) => `${this.panel} #fs_controller_${controller}`;
     this.submitFilter = '#submit-filter';
   }
 
@@ -39,14 +48,38 @@ class PsFacetedSearchFilterTemplate extends ModuleConfiguration {
   }
 
   /**
-   * Returns the panel title
+   * Set the template name
+   * @param page {Page} Browser tab
+   * @param name {string} Name of the template
+   * @returns {Promise<void>}
+   */
+  async setTemplateName(page: Page, name: string): Promise<void> {
+    await page.locator(this.templateNameInput).fill(name);
+  }
+
+  /**
+   * Set the template name
+   * @param page {Page} Browser tab
+   * @param controllers {string[]} Controllers
+   * @returns {Promise<void>}
+   */
+  async setTemplatePages(page: Page, controllers: string[]): Promise<void> {
+    for (let c = 0; c < controllers.length; c++) {
+      const controller: string = controllers[c];
+
+      await page.locator(this.templateControllerCheckbox(controller)).setChecked(true);
+    }
+  }
+
+  /**
+   * Set filters
    * @param page {Page} Browser tab
    * @param filterName {string} Filter Name
    * @param status {boolean} Status
    * @param filterType {string} Filter Type (checkbox, radio, dropdown)
-   * @returns {Promise<string>}
+   * @returns {Promise<void>}
    */
-  async setFilterForm(page: Page, filterName: string, status: boolean, filterType: string = ''): Promise<string> {
+  async setTemplateFilterForm(page: Page, filterName: string, status: boolean, filterType: string = ''): Promise<void> {
     let selectorStatus: string;
     let selectorFilterType: string;
 
@@ -78,7 +111,14 @@ class PsFacetedSearchFilterTemplate extends ModuleConfiguration {
       }
       await this.selectByVisibleText(page, `select[name="${selectorStatus}_filter_type"]`, selectorFilterType);
     }
+  }
 
+  /**
+   * Returns the panel title
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async saveTemplate(page: Page): Promise<string> {
     await this.clickAndWaitForURL(page, this.submitFilter);
 
     return this.getAlertSuccessBlockContent(page);

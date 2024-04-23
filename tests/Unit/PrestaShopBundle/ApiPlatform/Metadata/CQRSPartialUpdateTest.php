@@ -32,7 +32,6 @@ use ApiPlatform\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSPartialUpdate;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
-use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 class CQRSPartialUpdateTest extends TestCase
 {
@@ -49,6 +48,7 @@ class CQRSPartialUpdateTest extends TestCase
         $this->assertNotEmpty($operation->getDenormalizationContext());
         $this->assertArrayHasKey('deep_object_to_populate', $operation->getDenormalizationContext());
         $this->assertFalse($operation->getDenormalizationContext()['deep_object_to_populate']);
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With positioned parameters
         $operation = new CQRSPartialUpdate('/uri');
@@ -57,9 +57,11 @@ class CQRSPartialUpdateTest extends TestCase
         $this->assertEquals(CQRSPartialUpdate::METHOD_PATCH, $operation->getMethod());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(['json'], $operation->getFormats());
 
         // With named parameters
         $operation = new CQRSPartialUpdate(
+            formats: ['json', 'html'],
             read: true,
             extraProperties: ['scopes' => ['test']],
         );
@@ -67,6 +69,7 @@ class CQRSPartialUpdateTest extends TestCase
         $this->assertNull($operation->getProvider());
         $this->assertEquals(['scopes' => ['test']], $operation->getExtraProperties());
         $this->assertTrue($operation->canRead());
+        $this->assertEquals(['json', 'html'], $operation->getFormats());
     }
 
     public function testScopes(): void
@@ -161,7 +164,7 @@ class CQRSPartialUpdateTest extends TestCase
             CQRSQuery: 'My\\Namespace\\MyQuery',
         );
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
-        $this->assertEquals(QueryProvider::class, $operation->getProvider());
+        $this->assertEquals(null, $operation->getProvider());
         $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
@@ -170,7 +173,7 @@ class CQRSPartialUpdateTest extends TestCase
             extraProperties: ['CQRSQuery' => 'My\\Namespace\\MyQuery'],
         );
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
-        $this->assertEquals(QueryProvider::class, $operation->getProvider());
+        $this->assertEquals(null, $operation->getProvider());
         $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
@@ -180,7 +183,7 @@ class CQRSPartialUpdateTest extends TestCase
             CQRSQuery: 'My\\Namespace\\MyQuery',
         );
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
-        $this->assertEquals(QueryProvider::class, $operation->getProvider());
+        $this->assertEquals(null, $operation->getProvider());
         $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
@@ -202,7 +205,7 @@ class CQRSPartialUpdateTest extends TestCase
 
         $operation3 = $operation->withCQRSQuery('My\\Namespace\\MyQuery');
         $this->assertEquals(CommandProcessor::class, $operation3->getProcessor());
-        $this->assertEquals(QueryProvider::class, $operation3->getProvider());
+        $this->assertEquals(null, $operation3->getProvider());
         $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery'], $operation3->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyQuery', $operation3->getCQRSQuery());
         // And initial operation as not modified of course
@@ -329,5 +332,59 @@ class CQRSPartialUpdateTest extends TestCase
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
         $this->assertEquals('Specifying an extra property ApiResourceMapping and a ApiResourceMapping argument that are different is invalid', $caughtException->getMessage());
+    }
+
+    public function testExperimentalOperation(): void
+    {
+        // Default value is false (no extra property added)
+        $operation = new CQRSPartialUpdate();
+        $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(false, $operation->getExperimentalOperation());
+
+        // Scopes parameters in constructor
+        $operation = new CQRSPartialUpdate(
+            experimentalOperation: true,
+        );
+        $this->assertEquals(['experimentalOperation' => true], $operation->getExtraProperties());
+        $this->assertEquals(true, $operation->getExperimentalOperation());
+
+        // Extra properties parameters in constructor
+        $operation = new CQRSPartialUpdate(
+            extraProperties: ['experimentalOperation' => false]
+        );
+        $this->assertEquals(['experimentalOperation' => false], $operation->getExtraProperties());
+        $this->assertEquals(false, $operation->getExperimentalOperation());
+
+        // Extra properties AND scopes parameters in constructor, both values get merged but remain unique
+        $operation = new CQRSPartialUpdate(
+            extraProperties: ['experimentalOperation' => true],
+            experimentalOperation: true,
+        );
+        $this->assertEquals(['experimentalOperation' => true], $operation->getExtraProperties());
+        $this->assertEquals(true, $operation->getExperimentalOperation());
+
+        // Use with method, returned object is a clone All values are replaced
+        $operation2 = $operation->withExperimentalOperation(false);
+        $this->assertNotEquals($operation2, $operation);
+        $this->assertEquals(['experimentalOperation' => false], $operation2->getExtraProperties());
+        $this->assertEquals(false, $operation2->getExperimentalOperation());
+        // Initial operation not modified of course
+        $this->assertEquals(['experimentalOperation' => true], $operation->getExtraProperties());
+        $this->assertEquals(true, $operation->getExperimentalOperation());
+
+        // When both values are specified, but they are different trigger an exception
+        $caughtException = null;
+        try {
+            new CQRSPartialUpdate(
+                extraProperties: ['experimentalOperation' => true],
+                experimentalOperation: false,
+            );
+        } catch (InvalidArgumentException $e) {
+            $caughtException = $e;
+        }
+
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
+        $this->assertEquals('Specifying an extra property experimentalOperation and a experimentalOperation argument that are different is invalid', $caughtException->getMessage());
     }
 }

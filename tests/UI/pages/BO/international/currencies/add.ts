@@ -1,7 +1,10 @@
 import LocalizationBasePage from '@pages/BO/international/localization/localizationBasePage';
 
-import type CurrencyData from '@data/faker/currency';
 import {CurrencyFormat} from '@data/types/currency';
+
+import {
+  type FakerCurrency,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -117,10 +120,10 @@ class AddCurrency extends LocalizationBasePage {
   /**
    * Add official currency
    * @param page {Page} Browser tab
-   * @param currencyData {CurrencyData} Data to set on add currency form
+   * @param currencyData {FakerCurrency} Data to set on add currency form
    * @returns {Promise<string>}, successful text message that appears
    */
-  async addOfficialCurrency(page: Page, currencyData: CurrencyData): Promise<string> {
+  async addOfficialCurrency(page: Page, currencyData: FakerCurrency): Promise<string> {
     // Select currency
     await this.selectByValue(page, this.currencySelect, currencyData.isoCode);
     await this.waitForVisibleSelector(page, `${this.currencyLoadingModal}.show`);
@@ -173,10 +176,10 @@ class AddCurrency extends LocalizationBasePage {
   /**
    * Create unofficial currency
    * @param page {Page} Browser tab
-   * @param currencyData {CurrencyData} Data to set on add currency form
+   * @param currencyData {FakerCurrency} Data to set on add currency form
    * @returns {Promise<string>}
    */
-  async createUnOfficialCurrency(page: Page, currencyData: CurrencyData): Promise<string> {
+  async createUnOfficialCurrency(page: Page, currencyData: FakerCurrency): Promise<string> {
     await this.setCheckedWithIcon(page, this.alternativeCurrencyCheckBox);
     await this.setValue(page, this.currencyNameInput(1), currencyData.name);
     await this.setValue(page, this.isoCodeInput, currencyData.isoCode);

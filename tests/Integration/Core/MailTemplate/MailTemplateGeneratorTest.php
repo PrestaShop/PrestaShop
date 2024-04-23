@@ -222,7 +222,7 @@ class MailTemplateGeneratorTest extends TestCase
         $generator->generateTemplates($this->theme, $this->createLanguageMock('fr'), $this->coreTempDir, $this->modulesTempDir);
         $this->checkExpectedFiles(array_merge($expectedFiles, $previousFiles));
 
-        //Now check overwriting
+        // Now check overwriting
         $generator = new MailTemplateGenerator($this->createRendererMock(3, 3));
         $this->assertNotNull($generator);
 

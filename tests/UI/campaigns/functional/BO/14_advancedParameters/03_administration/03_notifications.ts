@@ -16,19 +16,23 @@ import addCustomerPage from '@pages/BO/customers/add';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
-import productPage from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import orderDetails from '@pages/FO/classic/myAccount/orderDetails';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
-import CustomerData from '@data/faker/customer';
 import Products from '@data/demo/products';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
@@ -39,7 +43,7 @@ const baseContext: string = 'functional_BO_advancedParameters_administration_not
 describe('BO - Advanced Parameters - Administration : Check notifications', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const createCustomerData: CustomerData = new CustomerData();
+  const createCustomerData: FakerCustomer = new FakerCustomer();
   const messageSend: string = faker.lorem.sentence().substring(0, 35).trim();
   const messageOption: string = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes[0].values[0]} `
     + `- Color: ${Products.demo_1.attributes[1].values[0]})`;
@@ -142,7 +146,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO2', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -182,7 +186,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -360,8 +364,8 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
 
       await orderHistoryPage.goToDetailsPage(page);
 
-      const successMessageText = await orderDetails.addAMessage(page, messageOption, messageSend);
-      expect(successMessageText).to.equal(orderDetails.successMessageText);
+      const successMessageText = await orderDetailsPage.addAMessage(page, messageOption, messageSend);
+      expect(successMessageText).to.equal(orderDetailsPage.successMessageText);
     });
 
     it('should go back to BO', async function () {

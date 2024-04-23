@@ -126,12 +126,12 @@ class ProductPresenterTest extends KernelTestCase
         }
     }
 
-    private function getPresentedProduct(string $field = null)
+    private function getPresentedProduct(?string $field = null)
     {
         return $this->_presentProduct(ProductPresenter::class, $field);
     }
 
-    private function getPresentedProductForListing(string $field = null)
+    private function getPresentedProductForListing(?string $field = null)
     {
         return $this->_presentProduct(ProductListingPresenter::class, $field);
     }

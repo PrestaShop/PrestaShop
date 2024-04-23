@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_googleanalytics/classes/Form/ConfigurationForm.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Save</target>
+        <note>Line: 189</note>
+      </trans-unit>
+      <trans-unit id="630f6dc397fe74e52d5189e2c80f282b">
+        <source>Back to list</source>
+        <target>Back to list</target>
+        <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="f4f70727dc34561dfde1a3c529b6205c">
+        <source>Settings</source>
+        <target>Settings</target>
+        <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="2e696d0b719265a07fbe7a75d85747b6">
+        <source>Google Analytics tracking ID</source>
+        <target>Google Analytics Tracking ID</target>
+        <note>Line: 88</note>
+      </trans-unit>
+      <trans-unit id="130810e62e0d7cdbf73af7c58082841f">
+        <source>This information is available in your Google Analytics account. Google Analytics 4 tracking ID starts with "G-".</source>
+        <target>This information is available in your Google Analytics account. Google Analytics 4 tracking ID starts with "G-".</target>
+        <note>Line: 92</note>
+      </trans-unit>
+      <trans-unit id="bcd08e73ca9d8bfed2cccd50dd6d8328">
+        <source>Enable User ID tracking</source>
+        <target>Enable User ID tracking</target>
+        <note>Line: 96</note>
+      </trans-unit>
+      <trans-unit id="6b209a2d1c30215f71bcf66fb5179664">
+        <source>This option adds unique user ID to the tag to better track the customer. Use this option only if it complies with laws in your country.</source>
+        <target>This option adds unique user ID to the tag to better track the customer. Use this option only if it complies with laws in your country.</target>
+        <note>Line: 98</note>
+      </trans-unit>
+      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
+        <source>Yes</source>
+        <target>Yes</target>
+        <note>Line: 170</note>
+      </trans-unit>
+      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
+        <source>No</source>
+        <target>No</target>
+        <note>Line: 175</note>
+      </trans-unit>
+      <trans-unit id="62d498990ba9938425763b6314b5c42a">
+        <source>Anonymize IP</source>
+        <target>Anonymize IP</target>
+        <note>Line: 114</note>
+      </trans-unit>
+      <trans-unit id="86b9320b6ef4da2e8845a6e77e7341d3">
+        <source>Use this option to anonymize the visitor’s IP to comply with data privacy laws in some countries</source>
+        <target>Use this option to anonymize the visitor’s IP to comply with data privacy laws in some countries</target>
+        <note>Line: 116</note>
+      </trans-unit>
+      <trans-unit id="68781676631d52efc531acfe2a7d924e">
+        <source>Enable back office tracking</source>
+        <target>Enable Back Office Tracking</target>
+        <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="9ac629042e524981b0296be43913202e">
+        <source>Use this option to enable the tracking inside the back -office</source>
+        <target>Use this option to enable the tracking inside the Back Office</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="233b2b197d921eebd8c0f45e4354fea7">
+        <source>Canceled order states</source>
+        <target>Canceled order states</target>
+        <note>Line: 150</note>
+      </trans-unit>
+      <trans-unit id="a84c67e52c5b1e19356369baae77d859">
+        <source>Choose order states in which you consider the given order canceled. This will usually be the default "Canceled" state, but some stores may have extra states like "Returned", etc.</source>
+        <target>Choose order states in which you consider the given order canceled. This will usually be the default "Canceled" state, but some stores may have extra states like "Returned", etc.</target>
+        <note>Line: 152</note>
+      </trans-unit>
+      <trans-unit id="d5448915ef8577d6b08407c0b4136afb">
+        <source>Re-send failed orders</source>
+        <target>Re-send failed orders</target>
+        <note>Line: 163</note>
+      </trans-unit>
+      <trans-unit id="64e6960a5535473a69e6505c6a3c7a8a">
+        <source>This option will resend all orders that failed to be sent normally in the front office, due to failures or ad-blockers.</source>
+        <target>This option will resend all orders that failed to be sent normally in front-office, due to failures or ad-blockers.</target>
+        <note>Line: 165</note>
+      </trans-unit>
+      <trans-unit id="7e3e525741740ee3418936b003eabbca">
+        <source>Failed orders period</source>
+        <target>Failed orders period</target>
+        <note>Line: 181</note>
+      </trans-unit>
+      <trans-unit id="205277b9a12a73980e07b1ac1add0a7b">
+        <source>If you want to resend failed orders, specify how many days back the module should look for them. Default: 30.</source>
+        <target>If you want to resend failed orders, specify how many days back the module should look for them. Default: 30.</target>
+        <note>Line: 185</note>
+      </trans-unit>
+      <trans-unit id="8dd2f915acf4ec98006d11c9a4b0945b">
+        <source>Settings updated successfully.</source>
+        <target>Settings updated successfully.</target>
+        <note>Line: 251</note>
+      </trans-unit>
+      <trans-unit id="851bd83a102d143ee17d97f9e15e15af">
+        <source>Google Analytics Tracking ID</source>
+        <target>Google Analytics Tracking ID</target>
+        <note>Line: 88</note>
+      </trans-unit>
+      <trans-unit id="86b29d17f0ac2035844b54408374ea0f">
+        <source>Enable Back Office Tracking</source>
+        <target>Enable Back Office Tracking</target>
+        <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="0767b68fe502b38f6ea34a0611925473">
+        <source>Use this option to enable the tracking inside the Back Office</source>
+        <target>Use this option to enable the tracking inside the Back Office</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="4c3222a797a0f86905fab4e092c1cfc9">
+        <source>This option will resend all orders that failed to be sent normally in front-office, due to failures or ad-blockers.</source>
+        <target>This option will resend all orders that failed to be sent normally in front-office, due to failures or ad-blockers.</target>
+        <note>Line: 165</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_googleanalytics/ps_googleanalytics.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d86cf69a8b82547a94ca3f6a307cf9a6">
+        <source>Google Analytics</source>
+        <target>Google Analytics</target>
+        <note>Line: 58</note>
+      </trans-unit>
+      <trans-unit id="135d2522825fa02688ab25a2e1c88c73">
+        <source>Gain clear insights into important metrics about your customers, using Google Analytics</source>
+        <target>Gain clear insights into important metrics about your customers, using Google Analytics</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="7ed5c154078e30b30b2f214299c5e9f5">
+        <source>Are you sure you want to uninstall Google Analytics? You will lose all the data related to this module.</source>
+        <target>Are you sure you want to uninstall Google Analytics? You will lose all the data related to this module.</target>
+        <note>Line: 60</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_googleanalytics/views/templates/admin/configuration.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="deb905422d07a5bb74cb3178df580e81">
+        <source>Your customers go everywhere; shouldn't your analytics.</source>
+        <target>Your customers go everywhere; shouldn't your analytics.</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="7063e771c3bb338ba74ac4e4716dbae1">
+        <source>Google Analytics shows you the full customer picture across ads and videos, websites and social tools, tables and smartphones. That makes it easier to serve your current customers and win new ones.</source>
+        <target>Google Analytics shows you the full customer picture across ads and videos, websites and social tools, tables and smartphones. That makes it easier to serve your current customers and win new ones.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="df15c5cf264eb769b087f9d81aff029f">
+        <source>With ecommerce functionality in Google Analytics you can gain clear insight into important metrics about shopper behavior and conversion, including:</source>
+        <target>With ecommerce functionality in Google Analytics you can gain clear insight into important metrics about shopper behavior and conversion, including:</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="613c191b4a1f82a454b72a840d96eefd">
+        <source>Product detail views</source>
+        <target>Product detail views</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="d88b192dfe623e2a628a919b99fc1a4b">
+        <source>Internal merchandising Success</source>
+        <target>Internal merchandising Success</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="ade6a18bb6c147db87bc9463240e455a">
+        <source>"Add to cart" actions</source>
+        <target>"Add to cart" actions</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="c975b6b93d71b19da73114c4adcedbda">
+        <source>The checkout process</source>
+        <target>The checkout process</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="33f50b54625790316b86485ff3e794c4">
+        <source>Internal campaign clicks</source>
+        <target>Internal campaign clicks</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="89c48ff165eedcc3cd1bd0007115669d">
+        <source>And purchase</source>
+        <target>And purchase</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="f847da4909da9863545a910cdcf16d4b">
+        <source>Create your account to get started</source>
+        <target>Create your account to get started</target>
+        <note>Line: 40</note>
+      </trans-unit>
+      <trans-unit id="4632d86a96205013262bcfdd0279b39f">
+        <source>Merchants are able to understand how far along users get in the buying process and where they are dropping off.</source>
+        <target>Merchants are able to understand how far along users get in the buying process and where they are dropping off.</target>
+        <note>Line: 45</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

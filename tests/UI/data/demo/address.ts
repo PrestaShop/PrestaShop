@@ -1,7 +1,10 @@
-import AddressData from '@data/faker/address';
+import {
+  // Import data
+  FakerAddress,
+} from '@prestashop-core/ui-testing';
 
 export default {
-  first: new AddressData({
+  first: new FakerAddress({
     id: 1,
     firstName: 'Anonymous',
     lastName: 'Anonymous',
@@ -10,7 +13,7 @@ export default {
     city: 'Anonymous',
     country: 'France',
   }),
-  second: new AddressData({
+  second: new FakerAddress({
     id: 2,
     name: 'Mon adresse',
     firstName: 'John',
@@ -23,7 +26,7 @@ export default {
     country: 'France',
     phone: '0102030405',
   }),
-  third: new AddressData({
+  third: new FakerAddress({
     id: 5,
     dni: '',
     alias: 'My address',

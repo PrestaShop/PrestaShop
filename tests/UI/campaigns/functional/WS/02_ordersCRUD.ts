@@ -11,7 +11,7 @@ import OrderWS from '@webservices/order/orderWs';
 // Import commonTests
 import {addWebserviceKey, removeWebserviceKey, setWebserviceStatus} from '@commonTests/BO/advancedParameters/ws';
 import loginCommon from '@commonTests/BO/loginBO';
-import createShoppingCart from '@commonTests/FO/shoppingCart';
+import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
@@ -26,11 +26,15 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import Address from '@data/demo/address';
-import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 import {WebservicePermission} from '@data/types/webservice';
 import getOrderXml from '@data/xml/order';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';
 import chaiString from 'chai-string';
@@ -51,7 +55,7 @@ describe('WS - Orders : CRUD', async () => {
   let idShoppingCart: number;
 
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     deliveryAddress: Address.second,
     invoiceAddress: Address.third,
     products: [
@@ -161,7 +165,7 @@ describe('WS - Orders : CRUD', async () => {
         it('should search the non ordered shopping cart', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
 
-          await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+          await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
           const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
           expect(numberOfShoppingCartsAfterFilter).to.gte(1);

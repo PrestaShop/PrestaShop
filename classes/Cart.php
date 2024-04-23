@@ -140,9 +140,9 @@ class CartCore extends ObjectModel
             'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'recyclable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'gift' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'],
+            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 4194303],
             'mobile_theme' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'delivery_option' => ['type' => self::TYPE_STRING],
+            'delivery_option' => ['type' => self::TYPE_STRING, 'size' => 4194303],
             'secure_key' => ['type' => self::TYPE_STRING, 'size' => 32],
             'allow_seperated_package' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
@@ -359,7 +359,7 @@ class CartCore extends ObjectModel
      */
     public function delete()
     {
-        if ($this->orderExists()) { //NOT delete a cart which is associated with an order
+        if ($this->orderExists()) { // NOT delete a cart which is associated with an order
             return false;
         }
 
@@ -557,6 +557,7 @@ class CartCore extends ObjectModel
      * @param int $id_cart_rule CartRule ID
      *
      * @return int Amount of Customer Discounts
+     *
      * @todo: What are customer discounts? Isn't this just a PriceRule and shouldn't this method be renamed instead?
      */
     public function getDiscountsCustomer($id_cart_rule)
@@ -744,6 +745,19 @@ class CartCore extends ObjectModel
                     $reduction_type_row = ['reduction_type' => 0];
                 }
 
+                /*
+                 * In case of packs, we need to properly calculate the quantity in stock. We can't just use
+                 * the quantity from the query, because stocks can be set to use the quantity of the products
+                 * in them. The quantity in stock_available then has no meaning and could be always zero.
+                 *
+                 * When calling Pack::getQuantity here, you MUST use null for $cart parameter. Otherwise it
+                 * will subtract the quantity that is already in the cart. Basically resulting in a nonsense,
+                 * half of quantity you have. We need the REAL quantity.
+                 */
+                if (Pack::isPack($product['id_product'])) {
+                    $product['quantity_available'] = Pack::getQuantity((int) $product['id_product'], (int) $product['id_product_attribute']);
+                }
+
                 $products[$key] = array_merge($product, $reduction_type_row);
             }
         }
@@ -772,9 +786,9 @@ class CartCore extends ObjectModel
                             }
 
                             if (
-                                $product['id_product'] == $gift['gift_product'] &&
-                                $product['id_product_attribute'] == $gift['gift_product_attribute'] &&
-                                empty($product['id_customization'])
+                                $product['id_product'] == $gift['gift_product']
+                                && $product['id_product_attribute'] == $gift['gift_product_attribute']
+                                && empty($product['id_customization'])
                             ) {
                                 $product['is_gift'] = true;
                                 $products[$rowIndex] = $product;
@@ -803,8 +817,9 @@ class CartCore extends ObjectModel
                 $product['reduction_without_tax'] = $props['reduction_without_tax'];
                 $product['price_without_reduction'] = $props['price_without_reduction'];
                 $product['specific_prices'] = $props['specific_prices'];
+                $product['unit_price'] = $props['unit_price_tax_excluded'];
                 $product['unit_price_ratio'] = $props['unit_price_ratio'];
-                $product['unit_price'] = $product['unit_price_tax_excluded'] = $props['unit_price_tax_excluded'];
+                $product['unit_price_tax_excluded'] = $props['unit_price_tax_excluded'];
                 $product['unit_price_tax_included'] = $props['unit_price_tax_included'];
                 unset($props);
 
@@ -1425,7 +1440,7 @@ class CartCore extends ObjectModel
         $id_customization = false,
         $operator = 'up',
         $id_address_delivery = 0,
-        Shop $shop = null,
+        ?Shop $shop = null,
         $auto_add_cart_rule = true,
         $skipAvailabilityCheckOutOfStock = false,
         bool $preserveGiftRemoval = true,
@@ -1919,6 +1934,7 @@ class CartCore extends ObjectModel
      * @param int $id_cart Cart ID
      *
      * @return string Formatted total amount in Cart
+     *
      * @todo: What is this?
      */
     public static function getOrderTotalUsingTaxCalculationMethod($id_cart)
@@ -1945,7 +1961,7 @@ class CartCore extends ObjectModel
      *
      * @return float Order total
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getOrderTotal(
         $withTaxes = true,
@@ -1971,7 +1987,7 @@ class CartCore extends ObjectModel
             Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING,
         ];
         if (!in_array($type, $allowedTypes)) {
-            throw new \Exception('Invalid calculation type: ' . $type);
+            throw new Exception('Invalid calculation type: ' . $type);
         }
 
         // EARLY RETURNS
@@ -2058,7 +2074,7 @@ class CartCore extends ObjectModel
 
                 break;
             default:
-                throw new \Exception('unknown cart calculation type : ' . $type);
+                throw new Exception('unknown cart calculation type : ' . $type);
         }
 
         // TAXES ?
@@ -2079,7 +2095,7 @@ class CartCore extends ObjectModel
      * @param int|null $computePrecision
      * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
-     * @return \PrestaShop\PrestaShop\Core\Cart\Calculator
+     * @return Calculator
      */
     public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null, bool $keepOrderPrices = false)
     {
@@ -2581,7 +2597,7 @@ class CartCore extends ObjectModel
      *               );
      *               If there are no carriers available for an address, return an empty  array
      */
-    public function getDeliveryOptionList(Country $default_country = null, $flush = false)
+    public function getDeliveryOptionList(?Country $default_country = null, $flush = false)
     {
         if (isset(static::$cacheDeliveryOptionList[$this->id]) && !$flush) {
             return static::$cacheDeliveryOptionList[$this->id];
@@ -2801,8 +2817,8 @@ class CartCore extends ObjectModel
                 && in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)
                 && $cart_rule['minimum_amount'] <= $total_price) {
                 $cr = new CartRule((int) $cart_rule['id_cart_rule']);
-                if (Validate::isLoadedObject($cr) &&
-                    $cr->checkValidity($context, in_array((int) $cart_rule['id_cart_rule'], $cart_rules_in_cart), false, false)) {
+                if (Validate::isLoadedObject($cr)
+                    && $cr->checkValidity($context, in_array((int) $cart_rule['id_cart_rule'], $cart_rules_in_cart), false, false)) {
                     $carriers = $cr->getAssociatedRestrictions('carrier', true, false);
                     if (is_array($carriers) && count($carriers) && isset($carriers['selected'])) {
                         foreach ($carriers['selected'] as $carrier) {
@@ -3155,7 +3171,7 @@ class CartCore extends ObjectModel
      *
      * @return float Shipping total
      */
-    public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
+    public function getTotalShippingCost($delivery_option = null, $use_tax = true, ?Country $default_country = null)
     {
         if (isset(Context::getContext()->cookie->id_country)) {
             $default_country = new Country((int) Context::getContext()->cookie->id_country);
@@ -3192,7 +3208,7 @@ class CartCore extends ObjectModel
      *
      * @return float Shipping total
      */
-    public function getCarrierCost($id_carrier, $useTax = true, Country $default_country = null, $delivery_option = null)
+    public function getCarrierCost($id_carrier, $useTax = true, ?Country $default_country = null, $delivery_option = null)
     {
         if (null === $delivery_option) {
             $delivery_option = $this->getDeliveryOption($default_country);
@@ -3233,7 +3249,7 @@ class CartCore extends ObjectModel
     public function getPackageShippingCost(
         $id_carrier = null,
         $use_tax = true,
-        Country $default_country = null,
+        ?Country $default_country = null,
         $product_list = null,
         $id_zone = null,
         bool $keepOrderPrices = false
@@ -3280,7 +3296,7 @@ class CartCore extends ObjectModel
     protected function getPackageShippingCostValue(
         $id_carrier = null,
         $use_tax = true,
-        Country $default_country = null,
+        ?Country $default_country = null,
         $product_list = null,
         $id_zone = null,
         bool $keepOrderPrices = false
@@ -3487,7 +3503,7 @@ class CartCore extends ObjectModel
             $free_fees_price = Tools::convertPrice((float) $configuration['PS_SHIPPING_FREE_PRICE'], Currency::getCurrencyInstance((int) $this->id_currency));
         }
         $orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
-        if ($orderTotalwithDiscounts >= (float) ($free_fees_price) && (float) ($free_fees_price) > 0) {
+        if ($orderTotalwithDiscounts >= (float) $free_fees_price && (float) $free_fees_price > 0) {
             $shipping_cost = $this->getPackageShippingCostFromModule($carrier, $shipping_cost, $products);
             Cache::store($cache_id, $shipping_cost);
 
@@ -3538,7 +3554,7 @@ class CartCore extends ObjectModel
 
         $shipping_cost = Tools::convertPrice($shipping_cost, Currency::getCurrencyInstance((int) $this->id_currency));
 
-        //get external shipping cost from module
+        // get external shipping cost from module
         $shipping_cost = $this->getPackageShippingCostFromModule($carrier, $shipping_cost, $products);
         if ($shipping_cost === false) {
             Cache::store($cache_id, false);
@@ -3798,9 +3814,8 @@ class CartCore extends ObjectModel
 
         foreach ($this->getProducts() as $product) {
             if (
-                !$product['active'] ||
-                !$product['available_for_order'] ||
-                (!$product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity'])
+                !$product['active']
+                || !$product['available_for_order']
             ) {
                 return $returnProductOnFailure ? $product : false;
             }
@@ -4274,6 +4289,7 @@ class CartCore extends ObjectModel
      * @param array $values Values from webservice
      *
      * @return bool Whether the values have been successfully inserted
+     *
      * @todo: This function always returns true, make it depend on actual result of DB query
      */
     public function setWsCartRows($values)
@@ -4404,6 +4420,7 @@ class CartCore extends ObjectModel
      * Check if the specified carrier is in range
      *
      * @id_carrier int
+     *
      * @id_zone int
      */
     public function isCarrierInRange($id_carrier, $id_zone)
@@ -4597,8 +4614,8 @@ class CartCore extends ObjectModel
     /**
      * @return Country
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function getTaxCountry(): Country
     {
@@ -4693,7 +4710,7 @@ class CartCore extends ObjectModel
         }
 
         foreach ($cart_rules as $key => &$cart_rule) {
-            if (((float) $cart_rule['value_real'] == 0 && (int) $cart_rule['free_shipping'] == 0)) {
+            if ((float) $cart_rule['value_real'] == 0 && (int) $cart_rule['free_shipping'] == 0) {
                 unset($cart_rules[$key]);
             }
         }

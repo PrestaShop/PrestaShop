@@ -130,7 +130,7 @@ class AddressControllerCore extends FrontController
                 $mod = Tools::getValue('mod');
                 $this->redirectWithNotifications('index.php?controller=' . $back . ($mod ? '&back=' . $mod : ''));
             } else {
-                $this->redirectWithNotifications('index.php?controller=addresses');
+                $this->redirectWithNotifications($this->context->link->getPageLink('addresses'));
             }
         }
 

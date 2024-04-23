@@ -28,15 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
+use Attribute;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
-use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 /**
  * Class CQRSCommand handles parameters to ease the configuration of an operation relying on CommandProcessor
  * it doesn't force any arguments, so it is suitable for custom usage, but it is recommended to use CQRSCreate
  * or CQRSUpdate instead as they handle default values that help the configuration and avoid unexpected behaviour.
  */
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class CQRSCommand extends AbstractCQRSOperation
 {
     public function __construct(
@@ -116,6 +116,7 @@ class CQRSCommand extends AbstractCQRSOperation
         ?array $CQRSQueryMapping = null,
         ?array $ApiResourceMapping = null,
         ?array $CQRSCommandMapping = null,
+        ?bool $experimentalOperation = null,
     ) {
         $passedArguments = \get_defined_vars();
 
@@ -129,11 +130,6 @@ class CQRSCommand extends AbstractCQRSOperation
         if (!empty($CQRSCommandMapping)) {
             $this->checkArgumentAndExtraParameterValidity('CQRSCommandMapping', $CQRSCommandMapping, $passedArguments['extraProperties']);
             $passedArguments['extraProperties']['CQRSCommandMapping'] = $CQRSCommandMapping;
-        }
-
-        // If a CQRSQuery is specified without a provider we use the QueryProvider by default
-        if (!empty($CQRSQuery) || !empty($passedArguments['extraProperties']['CQRSQuery'])) {
-            $passedArguments['provider'] = $provider ?? QueryProvider::class;
         }
 
         // Remove custom arguments
@@ -160,9 +156,6 @@ class CQRSCommand extends AbstractCQRSOperation
     {
         $self = clone $this;
         $self->extraProperties['CQRSQuery'] = $CQRSQuery;
-        if (empty($self->provider)) {
-            $self->provider = QueryProvider::class;
-        }
 
         return $self;
     }

@@ -15,20 +15,24 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import productsPage from '@pages/BO/catalog/products';
 import ordersPage from '@pages/BO/orders';
 import {homePage} from '@pages/FO/classic/home';
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 import type MailDevEmail from '@data/types/maildevEmail';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -237,7 +241,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, Customers.johnDoe);
+        await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
       });
 
       it('should go to payment step', async function () {
@@ -252,7 +256,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'payTheOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -285,7 +289,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       it('should update order status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
+        const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
         expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
       });
 

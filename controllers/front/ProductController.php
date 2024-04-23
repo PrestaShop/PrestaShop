@@ -406,7 +406,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             $this->context->smarty->assign('packItems', $presentedPackItems);
             $this->context->smarty->assign('noPackPrice', $this->product->getNoPackPrice());
-            $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < Pack::noPackPrice((int) $this->product->id)));
+            $this->context->smarty->assign('displayPackPrice', $pack_items && $productPrice < Pack::noPackPrice((int) $this->product->id));
             $this->context->smarty->assign('priceDisplay', $priceDisplay);
             $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
@@ -655,7 +655,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * Assign template vars related to attribute groups and colors.
      */
-    protected function assignAttributesGroups(ProductLazyArray|null $product_for_template = null)
+    protected function assignAttributesGroups(?ProductLazyArray $product_for_template = null)
     {
         $colors = [];
         $groups = [];
@@ -668,7 +668,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $combination_prices_set = [];
             foreach ($attributes_groups as $k => $row) {
                 // Color management
-                if (isset($row['is_color_group']) && $row['is_color_group'] && (isset($row['attribute_color']) && $row['attribute_color']) || (file_exists(_PS_COL_IMG_DIR_ . $row['id_attribute'] . '.jpg'))) {
+                if (isset($row['is_color_group']) && $row['is_color_group'] && (isset($row['attribute_color']) && $row['attribute_color']) || file_exists(_PS_COL_IMG_DIR_ . $row['id_attribute'] . '.jpg')) {
                     $colors[$row['id_attribute']]['value'] = $row['attribute_color'];
                     $colors[$row['id_attribute']]['name'] = $row['attribute_name'];
                     if (!isset($colors[$row['id_attribute']]['attributes_quantity'])) {
@@ -692,7 +692,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     'selected' => (isset($product_for_template['attributes'][$row['id_attribute_group']]['id_attribute']) && $product_for_template['attributes'][$row['id_attribute_group']]['id_attribute'] == $row['id_attribute']) ? true : false,
                 ];
 
-                //$product.attributes.$id_attribute_group.id_attribute eq $id_attribute
+                // $product.attributes.$id_attribute_group.id_attribute eq $id_attribute
                 if ($row['default_on'] && $groups[$row['id_attribute_group']]['default'] == -1) {
                     $groups[$row['id_attribute_group']]['default'] = (int) $row['id_attribute'];
                 }
@@ -787,7 +787,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             foreach ($groups as &$group) {
                 ++$count;
                 if ($count > 1) {
-                    //find attributes of current group, having a possible combination with current selected
+                    // find attributes of current group, having a possible combination with current selected
                     $id_product_attributes = [0];
                     $query = 'SELECT pac.`id_product_attribute`
                         FROM `' . _DB_PREFIX_ . 'product_attribute_combination` pac
@@ -819,7 +819,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         }
                     }
                 }
-                //find selected attribute or first of group
+                // find selected attribute or first of group
                 $index = 0;
                 $current_selected_attribute = 0;
                 foreach ($group['attributes'] as $key => $attribute) {
@@ -1242,9 +1242,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->trans('Items', [], 'Shop.Theme.Catalog') : $this->trans('Item', [], 'Shop.Theme.Catalog');
         $product_full['quantity_discounts'] = $this->quantity_discounts;
 
-        // Adapt unit price to display settings
-        $product_full['unit_price'] = $productSettings->include_taxes ? $product_full['unit_price_tax_included'] : $product_full['unit_price_tax_excluded'];
-
         $group_reduction = GroupReduction::getValueForProduct($this->product->id, (int) Group::getCurrent()->id);
         if ($group_reduction === false) {
             $group_reduction = Group::getReduction((int) $this->context->cookie->id_customer) / 100;
@@ -1350,13 +1347,29 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         return $requiredQuantity;
     }
 
-    public function getBreadcrumbLinks()
+    /**
+     * Generates breadcrumb according to product category tree.
+     * If the product is accessed from another category than product default category, it will generate the breadcrumb according to current category.
+     *
+     * @return array
+     *
+     * @throws PrestaShopException
+     */
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
-        $categoryDefault = new Category($this->product->id_category_default, $this->context->language->id);
+        // $productBreadcrumbCategory can have two possible values
+        // - current : Category the product was accessed from
+        // - default : Product default category
+        if (('current' === Configuration::get('PS_PRODUCT_BREADCRUMB_CATEGORY'))
+            && !empty($this->category)) {
+            $productBreadcrumbCategory = $this->category;
+        } else {
+            $productBreadcrumbCategory = new Category($this->product->id_category_default, $this->context->language->id);
+        }
 
-        foreach ($categoryDefault->getAllParents() as $category) {
+        foreach ($productBreadcrumbCategory->getAllParents() as $category) {
             /** @var Category $category */
             if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
                 $breadcrumb['links'][] = [
@@ -1366,10 +1379,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
         }
 
-        if ($categoryDefault->id_parent != 0 && !$categoryDefault->is_root_category && $categoryDefault->active) {
+        if ($productBreadcrumbCategory->id_parent != 0 && !$productBreadcrumbCategory->is_root_category && $productBreadcrumbCategory->active) {
             $breadcrumb['links'][] = [
-                'title' => $categoryDefault->name,
-                'url' => $this->context->link->getCategoryLink($categoryDefault),
+                'title' => $productBreadcrumbCategory->name,
+                'url' => $this->context->link->getCategoryLink($productBreadcrumbCategory),
             ];
         }
 
@@ -1516,7 +1529,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return string
      */
-    private function getProductPageTitle(array $meta = null)
+    private function getProductPageTitle(?array $meta = null)
     {
         $title = $this->product->name;
         if (isset($meta['title'])) {

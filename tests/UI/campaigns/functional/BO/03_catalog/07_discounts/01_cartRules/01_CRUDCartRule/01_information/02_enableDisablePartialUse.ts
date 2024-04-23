@@ -12,17 +12,21 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import dashboardPage from '@pages/BO/dashboard';
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
-import foProductPage from '@pages/FO/classic/product';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
-import foVouchersPage from '@pages/FO/classic/myAccount/vouchers';
-import checkoutPage from '@pages/FO/classic/checkout';
+import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 
 // Import data
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -162,7 +166,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         await checkoutPage.clickOnSignIn(page);
 
-        const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
+        const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
         expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
       });
 
@@ -186,7 +190,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -264,7 +268,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         const customer = await addCartRulePage.getLimitSingleCustomer(page);
         expect(customer).to.equal(
-          `${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName} (${Customers.johnDoe.email})`);
+          `${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName} (${dataCustomers.johnDoe.email})`);
       });
 
       it('should check the cart rule amount value', async function () {
@@ -385,7 +389,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder2', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

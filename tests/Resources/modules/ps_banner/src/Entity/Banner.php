@@ -30,6 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
+ *
  * @ORM\Entity()
  */
 class Banner
@@ -38,7 +39,9 @@ class Banner
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_product_comment", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;

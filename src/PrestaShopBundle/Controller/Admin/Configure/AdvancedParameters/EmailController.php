@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Search\Filters\EmailLogsFilter;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSendingType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,13 +46,12 @@ class EmailController extends FrameworkBundleAdminController
     /**
      * Show email configuration page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @param Request $request
      * @param EmailLogsFilter $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function indexAction(Request $request, EmailLogsFilter $filters)
     {
         $configuration = $this->getConfiguration();
@@ -87,16 +86,12 @@ class EmailController extends FrameworkBundleAdminController
     /**
      * Process email configuration saving.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="Access denied."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_emails_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function saveOptionsAction(Request $request)
     {
         $formHandler = $this->getEmailConfigurationFormHandler();
@@ -122,13 +117,12 @@ class EmailController extends FrameworkBundleAdminController
     /**
      * Delete selected email logs.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_emails_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function deleteBulkAction(Request $request)
     {
         $mailLogsToDelete = $request->request->all('email_logs_delete_email_logs');
@@ -151,11 +145,10 @@ class EmailController extends FrameworkBundleAdminController
     /**
      * Delete all email logs.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_emails_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function deleteAllAction()
     {
         $mailLogsEraser = $this->get('prestashop.adapter.email.email_log_eraser');
@@ -170,13 +163,12 @@ class EmailController extends FrameworkBundleAdminController
     /**
      * Delete single email log.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @param int $mailId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_emails_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function deleteAction($mailId)
     {
         $mailLogsEraser = $this->get('prestashop.adapter.email.email_log_eraser');

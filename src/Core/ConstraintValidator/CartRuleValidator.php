@@ -68,7 +68,7 @@ class CartRuleValidator extends ConstraintValidator
 
         if (
             DiscountApplicationType::SELECTED_PRODUCTS === $discountApplicationType
-            //@todo: restrictions are not implemented, so this will still adapt,
+            // @todo: restrictions are not implemented, so this will still adapt,
             //       but the point is to check if any products restrictions are applied
             //       also need to check more in depth if its legit with products only or also with categories/attributes etc.)
             && empty($formData['conditions']['product_restrictions'])

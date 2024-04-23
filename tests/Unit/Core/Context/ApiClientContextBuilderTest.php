@@ -32,78 +32,104 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
-use PrestaShopBundle\Entity\ApiAccess;
-use PrestaShopBundle\Entity\Repository\ApiAccessRepository;
+use PrestaShopBundle\Entity\ApiClient;
+use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use Tests\Unit\Core\Configuration\MockConfigurationTrait;
 
 class ApiClientContextBuilderTest extends TestCase
 {
     use MockConfigurationTrait;
 
-    public function testBuild(): void
+    private const SHOP_ID = 42;
+    private const API_CLIENT_ID = 51;
+
+    /**
+     * @dataProvider getExternalIssuers
+     */
+    public function testBuild(?string $externalIssuer): void
     {
-        $apiAccess = $this->getApiAccessEntity();
+        $apiClient = $this->getApiClientEntity($externalIssuer);
         $builder = new ApiClientContextBuilder(
-            $this->mockRepository($apiAccess),
-            $this->mockConfiguration(['PS_SHOP_DEFAULT' => 42])
+            $this->mockRepository($apiClient, $externalIssuer),
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::SHOP_ID])
         );
 
         $builder->setClientId('client_id');
-        $apiAccessContext = $builder->build();
-        $this->assertNotNull($apiAccessContext->getApiClient());
-        $this->assertEquals($apiAccess->getClientId(), $apiAccessContext->getApiClient()->getClientId());
-        $this->assertEquals($apiAccess->getScopes(), $apiAccessContext->getApiClient()->getScopes());
-        $this->assertEquals(42, $apiAccessContext->getApiClient()->getShopId());
+        $builder->setExternalIssuer($externalIssuer);
+        $apiClientContext = $builder->build();
+        $this->assertNotNull($apiClientContext->getApiClient());
+        $this->assertEquals(self::API_CLIENT_ID, $apiClientContext->getApiClient()->getId());
+        $this->assertEquals('client_id', $apiClientContext->getApiClient()->getClientId());
+        $this->assertEquals(['scope1', 'scope3'], $apiClientContext->getApiClient()->getScopes());
+        $this->assertEquals($externalIssuer, $apiClientContext->getApiClient()->getExternalIssuer());
+        $this->assertEquals(self::SHOP_ID, $apiClientContext->getApiClient()->getShopId());
     }
 
     public function testBuildWithStringValue(): void
     {
-        $apiAccess = $this->getApiAccessEntity();
+        $apiClient = $this->getApiClientEntity();
         $builder = new ApiClientContextBuilder(
-            $this->mockRepository($apiAccess),
-            $this->mockConfiguration(['PS_SHOP_DEFAULT' => '42'])
+            $this->mockRepository($apiClient),
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => (string) self::SHOP_ID])
         );
 
         $builder->setClientId('client_id');
-        $apiAccessContext = $builder->build();
-        $this->assertNotNull($apiAccessContext->getApiClient());
-        $this->assertEquals($apiAccess->getClientId(), $apiAccessContext->getApiClient()->getClientId());
-        $this->assertEquals($apiAccess->getScopes(), $apiAccessContext->getApiClient()->getScopes());
-        $this->assertEquals(42, $apiAccessContext->getApiClient()->getShopId());
+        $apiClientContext = $builder->build();
+        $this->assertNotNull($apiClientContext->getApiClient());
+        $this->assertEquals($apiClient->getClientId(), $apiClientContext->getApiClient()->getClientId());
+        $this->assertEquals($apiClient->getScopes(), $apiClientContext->getApiClient()->getScopes());
+        $this->assertEquals(null, $apiClientContext->getApiClient()->getExternalIssuer());
+        $this->assertEquals(self::SHOP_ID, $apiClientContext->getApiClient()->getShopId());
     }
 
-    public function testBuildNoApiAccess(): void
+    public function testBuildNoApiClient(): void
     {
         $builder = new ApiClientContextBuilder(
-            $this->createMock(ApiAccessRepository::class),
+            $this->createMock(ApiClientRepository::class),
             $this->createMock(ShopConfigurationInterface::class)
         );
 
-        $apiAccessContext = $builder->build();
-        $this->assertNull($apiAccessContext->getApiClient());
+        $apiClientContext = $builder->build();
+        $this->assertNull($apiClientContext->getApiClient());
     }
 
-    private function mockRepository(ApiAccess $apiAccess): ApiAccessRepository|MockObject
+    public function getExternalIssuers(): iterable
     {
-        $repository = $this->createMock(ApiAccessRepository::class);
+        yield 'no external issuer' => [
+            null,
+        ];
+
+        yield 'external issuer specified' => [
+            'http://external_authorization_server',
+        ];
+    }
+
+    private function mockRepository(ApiClient $apiClient, ?string $externalIssuer = null): ApiClientRepository|MockObject
+    {
+        $repository = $this->createMock(ApiClientRepository::class);
         $repository
             ->method('getByClientId')
-            ->willReturn($apiAccess)
+            ->with($apiClient->getClientId(), $externalIssuer)
+            ->willReturn($apiClient)
         ;
 
         return $repository;
     }
 
-    private function getApiAccessEntity(): ApiAccess
+    private function getApiClientEntity(?string $externalIssuer = null): ApiClient
     {
-        $apiAccess = new ApiAccess();
-        $apiAccess
-            ->setId(42)
+        $apiClient = new ApiClient();
+        $apiClient
+            ->setId(self::API_CLIENT_ID)
             ->setClientId('client_id')
             ->setClientName('client_name')
             ->setScopes(['scope1', 'scope3'])
         ;
 
-        return $apiAccess;
+        if (!empty($externalIssuer)) {
+            $apiClient->setExternalIssuer($externalIssuer);
+        }
+
+        return $apiClient;
     }
 }

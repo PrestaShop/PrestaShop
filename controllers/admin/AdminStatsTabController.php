@@ -303,7 +303,7 @@ abstract class AdminStatsTabControllerCore extends AdminController
                         'has_errors' => false,
                         'date_from' => $this->context->employee->stats_date_from,
                         'date_to' => $this->context->employee->stats_date_to, ]
-                    ));
+                ));
             }
         }
     }

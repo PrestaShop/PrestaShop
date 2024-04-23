@@ -333,10 +333,6 @@
       <alias>actionBeforeSubmitAccount</alias>
       <name>actionSubmitAccountBefore</name>
     </hook_alias>
-    <hook_alias id="actionAfterDeleteProductInCart">
-      <alias>actionAfterDeleteProductInCart</alias>
-      <name>actionDeleteProductInCartAfter</name>
-    </hook_alias>
     <hook_alias id="displayInvoice">
       <alias>displayInvoice</alias>
       <name>displayAdminOrderTop</name>

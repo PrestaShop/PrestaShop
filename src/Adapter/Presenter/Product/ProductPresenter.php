@@ -80,8 +80,8 @@ class ProductPresenter
         PriceFormatter $priceFormatter,
         ProductColorsRetriever $productColorsRetriever,
         TranslatorInterface $translator,
-        HookManager $hookManager = null,
-        Configuration $configuration = null
+        ?HookManager $hookManager = null,
+        ?Configuration $configuration = null
     ) {
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;

@@ -51,7 +51,7 @@ class ConnectionsSourceCore extends ObjectModel
         ],
     ];
 
-    public static function logHttpReferer(Cookie $cookie = null)
+    public static function logHttpReferer(?Cookie $cookie = null)
     {
         if (!$cookie) {
             $cookie = Context::getContext()->cookie;
@@ -120,7 +120,7 @@ class ConnectionsSourceCore extends ObjectModel
 		INNER JOIN ' . _DB_PREFIX_ . 'guest g ON g.id_customer = o.id_customer
 		INNER JOIN ' . _DB_PREFIX_ . 'connections co  ON co.id_guest = g.id_guest
 		INNER JOIN ' . _DB_PREFIX_ . 'connections_source cos ON cos.id_connections = co.id_connections
-		WHERE id_order = ' . (int) ($idOrder) . '
+		WHERE id_order = ' . (int) $idOrder . '
 		ORDER BY cos.date_add DESC');
     }
 }

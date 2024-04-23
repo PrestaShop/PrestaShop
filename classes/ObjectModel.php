@@ -27,7 +27,7 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShopBundle\Translation\TranslatorComponent;
 
-abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation\Database\EntityInterface
+abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\Database\EntityInterface
 {
     /**
      * List of field types.
@@ -278,7 +278,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         if ($id) {
-            /** @var \PrestaShop\PrestaShop\Adapter\EntityMapper $entity_mapper */
+            /** @var PrestaShop\PrestaShop\Adapter\EntityMapper $entity_mapper */
             $entity_mapper = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper');
             $entity_mapper->load($id, $this->id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
         }
@@ -605,7 +605,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // Database insertion
         if (Shop::checkIdShopDefault($this->def['table']) && array_key_exists('id_shop_default', get_object_vars($this))) {
-            /* @phpstan-ignore-next-line  */
+            /* @phpstan-ignore-next-line */
             $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
         }
 
@@ -683,7 +683,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 					SELECT *
 					FROM `' . _DB_PREFIX_ . bqSQL($definition['table']) . '`
 					WHERE `' . bqSQL($definition['primary']) . '` = ' . (int) $this->id
-                );
+        );
         if (!$res) {
             return false;
         }
@@ -785,9 +785,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $id_shop_list = $this->id_shop_list;
         }
 
-        /* @phpstan-ignore-next-line  */
+        /* @phpstan-ignore-next-line */
         if (Shop::checkIdShopDefault($this->def['table']) && array_key_exists('id_shop_default', get_object_vars($this)) && !$this->id_shop_default) {
-            /* @phpstan-ignore-next-line  */
+            /* @phpstan-ignore-next-line */
             $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
         }
         // Database update
@@ -1104,8 +1104,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Checks if multilingual object field values are valid before database interaction.
      *
-     * @param bool $die
-     * @param bool $errorReturn
+     * @param bool $die [default=true] If false, return a value instead of throwing an exception on error
+     * @param bool $errorReturn [default=false] If true, return error message instead of false on error
      *
      * @return bool|string true, false or error message
      *
@@ -1287,7 +1287,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * Returns field name translation.
+     * Returns the human readable, translated field name.
      *
      * @param string $field Field name
      * @param string $class ObjectModel class name
@@ -1296,26 +1296,25 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @return string
      */
-    public static function displayFieldName($field, $class = __CLASS__, $htmlentities = true, Context $context = null)
+    public static function displayFieldName($field, $class = __CLASS__, $htmlentities = true, ?Context $context = null)
     {
-        global $_FIELDS;
-
         if (!isset($context)) {
             $context = Context::getContext();
         }
 
-        if ($_FIELDS === null && file_exists(_PS_TRANSLATIONS_DIR_ . $context->language->iso_code . '/fields.php')) {
-            @trigger_error(
-                 'Translating ObjectModel fields using fields.php is deprecated since version 8.0.0.',
-                E_USER_DEPRECATED
+        if (isset(static::$definition['fields'][$field]['trans'])) {
+            $message = static::$definition['fields'][$field]['trans'];
+            $translated = $context->getTranslator()->trans(
+                $message['key'],
+                [],
+                $message['domain'],
+                $context->language->locale
             );
-
-            include_once _PS_TRANSLATIONS_DIR_ . $context->language->iso_code . '/fields.php';
+        } else {
+            $translated = $field;
         }
 
-        $key = $class . '_' . md5($field);
-
-        return (is_array($_FIELDS) && array_key_exists($key, $_FIELDS)) ? ($htmlentities ? htmlentities($_FIELDS[$key], ENT_QUOTES, 'utf-8') : $_FIELDS[$key]) : $field;
+        return $htmlentities ? htmlentities($translated, ENT_QUOTES, 'utf-8') : $translated;
     }
 
     /**
@@ -1358,18 +1357,18 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             if (!empty($value) || $value === '0' || ($field == 'postcode' && $value == '0')) {
                 if (isset($data['validate']) && (!call_user_func('Validate::' . $data['validate'], $value) && (!empty($value) || $data['required']))) {
                     $errors[$field] = $this->trans(
-                            '%s is invalid.',
-                            [
-                                '<b>' . self::displayFieldName($field, get_class($this), $htmlentities) . '</b>',
-                            ],
-                            'Admin.Notifications.Error'
-                        );
+                        '%s is invalid.',
+                        [
+                            '<b>' . self::displayFieldName($field, get_class($this), $htmlentities) . '</b>',
+                        ],
+                        'Admin.Notifications.Error'
+                    );
                 } else {
                     if (isset($data['copy_post']) && !$data['copy_post']) {
                         continue;
                     }
                     if ($field == 'passwd') {
-                        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+                        /** @var PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
                         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
                         if ($value = Tools::getValue($field)) {
                             $this->{$field} = $crypto->hash($value, _COOKIE_KEY_);
@@ -2012,12 +2011,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         $row = Db::getInstance()->getRow(
-                (new DbQuery())
-                    ->select('e.`' . $primary . '` as id')
-                    ->from($table, 'e')
-                    ->where('e.`' . $primary . '` = ' . (int) $id_entity),
-                false
-            );
+            (new DbQuery())
+                ->select('e.`' . $primary . '` as id')
+                ->from($table, 'e')
+                ->where('e.`' . $primary . '` = ' . (int) $id_entity),
+            false
+        );
 
         return isset($row['id']);
     }

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -47,9 +47,9 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
     /**
      * @param CustomerGroup $customerGroup
      *
-     * @throws GroupConstraintException
-     *
      * @return void
+     *
+     * @throws GroupConstraintException
      */
     public function validate(CustomerGroup $customerGroup): void
     {
@@ -62,9 +62,9 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
     /**
      * @param array $shopIds
      *
-     * @throws GroupConstraintException
-     *
      * @return void
+     *
+     * @throws GroupConstraintException
      */
     private function validateThereIsAtLeastOneShop(array $shopIds): void
     {
@@ -91,9 +91,9 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
     /**
      * @param int $priceDisplayMethod
      *
-     * @throws GroupConstraintException
-     *
      * @return void
+     *
+     * @throws GroupConstraintException
      */
     private function validatePriceDisplayMethod(int $priceDisplayMethod): void
     {
@@ -112,9 +112,9 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
     /**
      * @param string[] $names
      *
-     * @throws GroupConstraintException
-     *
      * @return void
+     *
+     * @throws GroupConstraintException
      */
     private function validateGroupNames(array $names): void
     {
@@ -132,9 +132,9 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
     /**
      * @param string $name
      *
-     * @throws GroupConstraintException
-     *
      * @return void
+     *
+     * @throws GroupConstraintException
      */
     private function validateGroupName(string $name): void
     {

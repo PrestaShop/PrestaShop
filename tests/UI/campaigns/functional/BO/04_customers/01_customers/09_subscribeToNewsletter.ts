@@ -12,8 +12,12 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 
 // Import data
-import Customers from '@data/demo/customers';
 import Modules from '@data/demo/modules';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -60,10 +64,10 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
     expect(numberOfCustomers).to.be.above(0);
   });
 
-  it(`should filter by email '${Customers.johnDoe.email}'`, async function () {
+  it(`should filter by email '${dataCustomers.johnDoe.email}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByEmail', baseContext);
 
-    await customersPage.filterCustomers(page, 'input', 'email', Customers.johnDoe.email);
+    await customersPage.filterCustomers(page, 'input', 'email', dataCustomers.johnDoe.email);
 
     const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
     expect(numberOfCustomersAfterFilter).to.equal(1);
@@ -113,9 +117,9 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       const listOfEmails = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
 
       if (test.args.value) {
-        expect(listOfEmails).to.include(Customers.johnDoe.email);
+        expect(listOfEmails).to.include(dataCustomers.johnDoe.email);
       } else {
-        expect(listOfEmails).to.not.include(Customers.johnDoe.email);
+        expect(listOfEmails).to.not.include(dataCustomers.johnDoe.email);
       }
     });
 

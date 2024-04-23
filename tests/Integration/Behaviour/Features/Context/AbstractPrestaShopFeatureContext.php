@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Context\Context as BehatContext;
+use RuntimeException;
 
 /**
  * PrestaShopFeatureContext provides behat hooks to perform necessary operations for testing:
@@ -39,8 +40,6 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
 {
     use SharedStorageTrait;
 
-    public const MODULES_DIRECTORY = __DIR__ . '/../../../../Resources/modules';
-
     protected function checkFixtureExists(array $fixtures, $fixtureName, $fixtureIndex)
     {
         $searchLength = 10;
@@ -49,7 +48,7 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
             $fixtureNames = array_keys($fixtures);
             $firstFixtureNames = array_splice($fixtureNames, 0, $searchLength);
             $firstFixtureNamesStr = implode(',', $firstFixtureNames);
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 '%s named "%s" was not added in fixtures. First %d added are: %s',
                 $fixtureName,
                 $fixtureIndex,

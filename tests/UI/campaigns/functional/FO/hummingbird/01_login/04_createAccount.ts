@@ -4,15 +4,17 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
 import loginPage from '@pages/FO/hummingbird/login';
 import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
 
-// Import data
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -23,7 +25,7 @@ describe('FO - Login : Create account', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const customerData: CustomerData = new CustomerData();
+  const customerData: FakerCustomer = new FakerCustomer();
 
   // Pre-condition : Install Hummingbird
   installHummingbird(`${baseContext}_preTest_1`);

@@ -30,6 +30,7 @@ namespace PrestaShopBundle\ApiPlatform;
 
 use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
+use PrestaShopBundle\ApiPlatform\Serializer\DomainSerializer;
 
 trait QueryResultSerializerTrait
 {

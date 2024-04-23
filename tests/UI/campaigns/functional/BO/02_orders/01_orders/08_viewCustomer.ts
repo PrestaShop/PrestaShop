@@ -10,8 +10,10 @@ import viewCustomerPage from '@pages/BO/customers/view';
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 
-// Import data
-import Customers from '@data/demo/customers';
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -69,7 +71,7 @@ describe('BO - Orders : View customer from orders page', async () => {
       page,
       'input',
       'customer',
-      Customers.johnDoe.lastName,
+      dataCustomers.johnDoe.lastName,
     );
 
     const numberOfOrders = await ordersPage.getNumberOfElementInGrid(page);
@@ -84,7 +86,7 @@ describe('BO - Orders : View customer from orders page', async () => {
 
     const pageTitle = await viewCustomerPage.getPageTitle(page);
     expect(pageTitle).to
-      .eq(viewCustomerPage.pageTitle(`${Customers.johnDoe.firstName[0]}. ${Customers.johnDoe.lastName}`));
+      .eq(viewCustomerPage.pageTitle(`${dataCustomers.johnDoe.firstName[0]}. ${dataCustomers.johnDoe.lastName}`));
   });
 
   it('should go back to \'Orders > Orders\' page', async function () {

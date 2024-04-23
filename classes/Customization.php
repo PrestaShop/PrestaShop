@@ -128,12 +128,12 @@ class CustomizationCore extends ObjectModel
 			SELECT ore.`id_order_return`, ord.`id_order_detail`, ord.`id_customization`, ord.`product_quantity`
 			FROM `' . _DB_PREFIX_ . 'order_return` ore
 			INNER JOIN `' . _DB_PREFIX_ . 'order_return_detail` ord ON (ord.`id_order_return` = ore.`id_order_return`)
-			WHERE ore.`id_order` = ' . (int) ($idOrder) . ' AND ord.`id_customization` != 0')) === false) {
+			WHERE ore.`id_order` = ' . (int) $idOrder . ' AND ord.`id_customization` != 0')) === false) {
             return false;
         }
         $customizations = [];
         foreach ($result as $row) {
-            $customizations[(int) ($row['id_customization'])] = $row;
+            $customizations[(int) $row['id_customization']] = $row;
         }
 
         return $customizations;
@@ -149,12 +149,12 @@ class CustomizationCore extends ObjectModel
      */
     public static function getOrderedCustomizations($idCart)
     {
-        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_customization`, `quantity` FROM `' . _DB_PREFIX_ . 'customization` WHERE `id_cart` = ' . (int) ($idCart))) {
+        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_customization`, `quantity` FROM `' . _DB_PREFIX_ . 'customization` WHERE `id_cart` = ' . (int) $idCart)) {
             return false;
         }
         $customizations = [];
         foreach ($result as $row) {
-            $customizations[(int) ($row['id_customization'])] = $row;
+            $customizations[(int) $row['id_customization']] = $row;
         }
 
         return $customizations;
@@ -269,7 +269,7 @@ class CustomizationCore extends ObjectModel
 
         if (!empty($inValues)) {
             $results = Db::getInstance()->executeS(
-                            'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
+                'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
 							 FROM `' . _DB_PREFIX_ . 'customization`
 							 WHERE `id_customization` IN (' . $inValues . ')'
             );

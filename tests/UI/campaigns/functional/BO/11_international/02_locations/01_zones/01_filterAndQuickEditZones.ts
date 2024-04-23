@@ -9,8 +9,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 
-// Import data
-import Zones from '@data/demo/zones';
+import {
+  // Import data
+  dataZones,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -68,7 +70,7 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
           testIdentifier: 'filterId',
           filterType: 'input',
           filterBy: 'id_zone',
-          filterValue: Zones.europe.id.toString(),
+          filterValue: dataZones.europe.id.toString(),
         },
       },
       {
@@ -76,7 +78,7 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
           testIdentifier: 'filterZone',
           filterType: 'input',
           filterBy: 'name',
-          filterValue: Zones.europe.name,
+          filterValue: dataZones.europe.name,
         },
       },
       {
@@ -84,7 +86,7 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
           testIdentifier: 'filterStatus',
           filterType: 'select',
           filterBy: 'active',
-          filterValue: Zones.europe.status ? '1' : '0',
+          filterValue: dataZones.europe.status ? '1' : '0',
         },
       },
     ].forEach((test) => {
@@ -126,21 +128,21 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
   });
 
   describe('Quick edit zone', async () => {
-    it(`should filter by name '${Zones.northAmerica.name}'`, async function () {
+    it(`should filter by name '${dataZones.northAmerica.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
       await zonesPage.filterZones(
         page,
         'input',
         'name',
-        Zones.northAmerica.name,
+        dataZones.northAmerica.name,
       );
 
       const numberOfZonesAfterFilter = await zonesPage.getNumberOfElementInGrid(page);
       expect(numberOfZonesAfterFilter).to.be.below(numberOfZones);
 
       const textColumn = await zonesPage.getTextColumn(page, 1, 'name');
-      expect(textColumn).to.contains(Zones.northAmerica.name);
+      expect(textColumn).to.contains(dataZones.northAmerica.name);
     });
 
     [

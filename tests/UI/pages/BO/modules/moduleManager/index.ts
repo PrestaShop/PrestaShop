@@ -1,6 +1,10 @@
 import BOBasePage from '@pages/BO/BObasePage';
+import type {ModuleInfo} from '@data/types/module';
 
-import ModuleData from '@data/faker/module';
+import {
+  // Import data
+  type FakerModule,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -58,11 +62,13 @@ class ModuleManager extends BOBasePage {
 
   private readonly modulesListBlockTitle: string;
 
-  private readonly allModulesBlock: string;
+  private readonly moduleItem: string;
+
+  private readonly moduleItemNth: (nth: number) => string;
 
   private readonly moduleBlocks: string;
 
-  private readonly moduleBlock: (moduleTag: string) => string;
+  private readonly moduleItemName: (moduleTag: string) => string;
 
   private readonly moduleCheckboxButton: (moduleTag: string) => string;
 
@@ -154,10 +160,11 @@ class ModuleManager extends BOBasePage {
     // Modules list selectors
     this.modulesListBlock = '.module-short-list:not([style=\'display: none;\'])';
     this.modulesListBlockTitle = `${this.modulesListBlock} span.module-search-result-title`;
-    this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
+    this.moduleItem = `${this.modulesListBlock} .module-item-list`;
+    this.moduleItemNth = (nth: number) => `${this.moduleItem}:nth-child(${nth})`;
     this.moduleBlocks = 'div.module-short-list';
-    this.moduleBlock = (moduleTag: string) => `${this.allModulesBlock}[data-tech-name=${moduleTag}]`;
-    this.moduleCheckboxButton = (moduleTag: string) => `${this.moduleBlock(moduleTag)}`
+    this.moduleItemName = (moduleTag: string) => `${this.moduleItem}[data-tech-name=${moduleTag}]`;
+    this.moduleCheckboxButton = (moduleTag: string) => `${this.moduleItemName(moduleTag)}`
       + ' div.module-checkbox-bulk-list.md-checkbox label i';
     this.seeMoreButton = (blockName: string) => `#main-div div.module-short-list button.see-more[data-category=${blockName}]`;
     this.seeLessButton = (blockName: string) => `#main-div div.module-short-list button.see-less[data-category=${blockName}]`;
@@ -225,10 +232,10 @@ class ModuleManager extends BOBasePage {
   /**
    * Search Module in Page module Catalog
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Tag of the Module
+   * @param module {FakerModule} Tag of the Module
    * @return {Promise<boolean>}
    */
-  async searchModule(page: Page, module: ModuleData): Promise<boolean> {
+  async searchModule(page: Page, module: FakerModule): Promise<boolean> {
     await this.reloadPage(page);
     await page.locator(this.searchModuleTagInput).fill(module.tag);
     await page.locator(this.searchModuleButton).click();
@@ -239,21 +246,21 @@ class ModuleManager extends BOBasePage {
   /**
    * Return if the module is visible
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Tag of the Module
+   * @param module {FakerModule} Tag of the Module
    * @return {Promise<boolean>}
    */
-  async isModuleVisible(page: Page, module: ModuleData): Promise<boolean> {
-    return this.elementVisible(page, this.moduleBlock(module.tag), 10000);
+  async isModuleVisible(page: Page, module: FakerModule): Promise<boolean> {
+    return this.elementVisible(page, this.moduleItemName(module.tag), 10000);
   }
 
   /**
    * Get module name
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Tag of the Module
+   * @param module {FakerModule} Tag of the Module
    * @return {Promise<string>}
    */
-  async getModuleName(page: Page, module: ModuleData): Promise<string> {
-    return this.getAttributeContent(page, `${this.moduleBlock(module.tag)} [data-original-title]`, 'data-original-title');
+  async getModuleName(page: Page, module: FakerModule): Promise<string> {
+    return this.getAttributeContent(page, `${this.moduleItemName(module.tag)} [data-original-title]`, 'data-original-title');
   }
 
   /**
@@ -400,7 +407,7 @@ class ModuleManager extends BOBasePage {
    */
   async getAllModulesTechNames(page: Page): Promise<(string | null)[]> {
     return page
-      .locator(this.allModulesBlock)
+      .locator(this.moduleItem)
       .evaluateAll(
         (all) => all.map((el) => el.getAttribute('data-tech-name')),
       );
@@ -409,7 +416,7 @@ class ModuleManager extends BOBasePage {
   /**
    * Uninstall/install/enable/disable/reset module
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Module data to install/uninstall
+   * @param module {FakerModule} Module data to install/uninstall
    * @param action {string} Action install/uninstall/enable/disable/reset
    * @param cancel {boolean} Cancel the action
    * @param forceDeletion {boolean} Delete module folder after uninstall
@@ -417,7 +424,7 @@ class ModuleManager extends BOBasePage {
    */
   async setActionInModule(
     page: Page,
-    module: ModuleData,
+    module: FakerModule,
     action: string,
     cancel: boolean = false,
     forceDeletion: boolean = false,
@@ -453,9 +460,9 @@ class ModuleManager extends BOBasePage {
   /**
    Returns the main action module action
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Module data
+   * @param module {FakerModule} Module data
    */
-  async getMainActionInModule(page: Page, module: ModuleData): Promise<string> {
+  async getMainActionInModule(page: Page, module: FakerModule): Promise<string> {
     const actions: string[] = [
       'enable',
       'disable',
@@ -477,11 +484,11 @@ class ModuleManager extends BOBasePage {
   /**
    * Returns if the action module modal is visible
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Module data to install/uninstall
+   * @param module {FakerModule} Module data to install/uninstall
    * @param action {string} Action install/uninstall/enable/disable/reset
    * @return {Promise<string | null>}
    */
-  async isModalActionVisible(page: Page, module: ModuleData, action: string): Promise<boolean> {
+  async isModalActionVisible(page: Page, module: FakerModule, action: string): Promise<boolean> {
     return this.elementVisible(page, this.modalConfirmAction(module.tag, action));
   }
 
@@ -546,6 +553,32 @@ class ModuleManager extends BOBasePage {
    */
   async getNumberOfModulesInBlock(page: Page, blockName: string): Promise<number> {
     return page.locator(this.moduleListBlock(blockName)).count();
+  }
+
+  /**
+   * Get number of modules
+   * @param page {Page} Browser tab
+   * @return {Promise<number>}
+   */
+  async getNumberOfModules(page: Page): Promise<number> {
+    return page.locator(this.moduleItem).count();
+  }
+
+  /**
+   * Return informations about nTh module
+   * @param page {Page} Browser tab
+   * @param nth {number} Module tag
+   * @return {Promise<ModuleInfo>}
+   */
+  async getModuleInformationNth(page: Page, nth: number): Promise<ModuleInfo> {
+    const technicalName = await this.getAttributeContent(page, this.moduleItemNth(nth), 'data-tech-name');
+
+    return {
+      moduleId: parseInt(await this.getAttributeContent(page, this.moduleItemNth(nth), 'data-id'), 10),
+      technicalName,
+      version: await this.getAttributeContent(page, this.moduleItemNth(nth), 'data-version'),
+      enabled: await this.elementNotVisible(page, this.actionModuleButton(technicalName, 'enabled'), 1000),
+    };
   }
 }
 

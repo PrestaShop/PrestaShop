@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
-<form id="header_search" class="component bo_search_form" method="post" action="{$baseAdminUrl}index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}" role="search">
+<form id="header_search" class="component bo_search_form" method="post" action="{$link->getAdminLink('AdminSearch')}" role="search">
 	<div class="form-group">
 		<input type="hidden" name="bo_search_type" id="bo_search_type" />
 		<div class="input-group">

@@ -11,9 +11,10 @@ import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 
-// Import data
-import Currencies from '@data/demo/currencies';
-import CurrencyData from '@data/faker/currency';
+import {
+  dataCurrencies,
+  type FakerCurrency,
+} from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';
 import chaiString from 'chai-string';
@@ -28,10 +29,10 @@ describe('CLDR : Delete a currency', async () => {
   let page: Page;
   let numberOfCurrencies: number;
 
-  const currencies: CurrencyData[] = [
-    Currencies.gbp,
-    Currencies.jpy,
-    Currencies.usd,
+  const currencies: FakerCurrency[] = [
+    dataCurrencies.gbp,
+    dataCurrencies.jpy,
+    dataCurrencies.usd,
   ];
 
   before(async function () {
@@ -77,7 +78,7 @@ describe('CLDR : Delete a currency', async () => {
     expect(numberOfCurrencies).to.be.above(0);
   });
 
-  currencies.forEach((currency: CurrencyData, index : number) => {
+  currencies.forEach((currency: FakerCurrency, index : number) => {
     it('should go to create new currency page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCurrencyPage${currency.isoCode}`, baseContext);
 
@@ -109,10 +110,13 @@ describe('CLDR : Delete a currency', async () => {
     expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
-  it(`should choose '${Currencies.usd.isoCode}' as default currency`, async function () {
+  it(`should choose '${dataCurrencies.usd.isoCode}' as default currency`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setUSDAsDefaultCurrency', baseContext);
 
-    const textResult = await localizationPage.setDefaultCurrency(page, `${Currencies.usd.name} (${Currencies.usd.isoCode})`);
+    const textResult = await localizationPage.setDefaultCurrency(
+      page,
+      `${dataCurrencies.usd.name} (${dataCurrencies.usd.isoCode})`,
+    );
     expect(textResult).to.contains(localizationPage.successfulSettingsUpdateMessage);
   });
 
@@ -125,11 +129,11 @@ describe('CLDR : Delete a currency', async () => {
     expect(pageTitle).to.contains(currenciesPage.pageTitle);
   });
 
-  it(`should filter by iso code of currency '${Currencies.usd.isoCode}'`, async function () {
+  it(`should filter by iso code of currency '${dataCurrencies.usd.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToUSDCurrency0', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.usd.isoCode);
+    await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.usd.isoCode);
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
@@ -137,7 +141,7 @@ describe('CLDR : Delete a currency', async () => {
 
     // Check currency
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    expect(textColumn).to.contains(Currencies.usd.isoCode);
+    expect(textColumn).to.contains(dataCurrencies.usd.isoCode);
   });
 
   it('should delete currency', async function () {
@@ -156,10 +160,13 @@ describe('CLDR : Delete a currency', async () => {
     expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
-  it(`should choose '${Currencies.euro.isoCode}' as default currency`, async function () {
+  it(`should choose '${dataCurrencies.euro.isoCode}' as default currency`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setEURAsDefaultCurrency', baseContext);
 
-    const textResult = await localizationPage.setDefaultCurrency(page, `${Currencies.euro.name} (${Currencies.euro.isoCode})`);
+    const textResult = await localizationPage.setDefaultCurrency(
+      page,
+      `${dataCurrencies.euro.name} (${dataCurrencies.euro.isoCode})`,
+    );
     expect(textResult).to.contains(localizationPage.successfulSettingsUpdateMessage);
   });
 
@@ -172,11 +179,11 @@ describe('CLDR : Delete a currency', async () => {
     expect(pageTitle).to.contains(currenciesPage.pageTitle);
   });
 
-  it(`should filter by iso code of currency '${Currencies.usd.isoCode}'`, async function () {
+  it(`should filter by iso code of currency '${dataCurrencies.usd.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToUSDCurrency1', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.usd.isoCode);
+    await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.usd.isoCode);
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
@@ -184,7 +191,7 @@ describe('CLDR : Delete a currency', async () => {
 
     // Check currency
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    expect(textColumn).to.contains(Currencies.usd.isoCode);
+    expect(textColumn).to.contains(dataCurrencies.usd.isoCode);
   });
 
   it('should delete currency', async function () {
@@ -194,7 +201,7 @@ describe('CLDR : Delete a currency', async () => {
     expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
   });
 
-  it(`should select rows except '${Currencies.euro.isoCode}'`, async function () {
+  it(`should select rows except '${dataCurrencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAndSelectRowsExceptEUR', baseContext);
 
     const numberOfCurrenciesAfterDelete = await currenciesPage.resetAndGetNumberOfLines(page);
@@ -206,7 +213,7 @@ describe('CLDR : Delete a currency', async () => {
     for (let numRow = 1; numRow <= numberOfCurrenciesAfterDelete; numRow++) {
       const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, numRow, 'iso_code');
 
-      if (textColumn !== Currencies.euro.isoCode) {
+      if (textColumn !== dataCurrencies.euro.isoCode) {
         await currenciesPage.selectRow(page, numRow);
       }
     }

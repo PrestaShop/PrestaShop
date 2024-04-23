@@ -223,7 +223,7 @@ class TaxCore extends ObjectModel
      *
      * @return float
      */
-    public static function getProductTaxRate($id_product, $id_address = null, Context $context = null)
+    public static function getProductTaxRate($id_product, $id_address = null, ?Context $context = null)
     {
         if ($context == null) {
             $context = Context::getContext();

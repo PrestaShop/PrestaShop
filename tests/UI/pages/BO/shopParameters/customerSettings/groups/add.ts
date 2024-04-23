@@ -1,7 +1,11 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
+import {
+  // Import data
+  type FakerGroup,
+} from '@prestashop-core/ui-testing';
+
 import type {Page} from 'playwright';
-import GroupData from '@data/faker/group';
 
 /**
  * Add group page, contains functions that can be used on the page
@@ -81,10 +85,10 @@ class AddGroup extends BOBasePage {
   /**
    * Fill group form and get successful message
    * @param page {Page} Browser tab
-   * @param groupData {GroupData} Data to set on create/edit form
+   * @param groupData {FakerGroup} Data to set on create/edit form
    * @return {Promise<string>}
    */
-  async createEditGroup(page: Page, groupData: GroupData): Promise<string> {
+  async createEditGroup(page: Page, groupData: FakerGroup): Promise<string> {
     await this.changeLanguage(page, 1);
     await this.setValue(page, this.nameInput(1), groupData.name);
 
@@ -118,6 +122,29 @@ class AddGroup extends BOBasePage {
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Returns the value of a form element
+   * @param page {Page}
+   * @param inputName {string}
+   * @param languageId {number | undefined}
+   */
+  async getValue(page: Page, inputName: string, languageId?: number): Promise<string> {
+    switch (inputName) {
+      case 'displayPriceTaxExcluded':
+        return page.locator(this.priceDisplayMethodSelect).evaluate(
+          (node: HTMLSelectElement) => node.options[node.options.selectedIndex].textContent?.trim() ?? '',
+        );
+      case 'localizedNames':
+        return this.getAttributeContent(page, this.nameInput(languageId!), 'value');
+      case 'reductionPercent':
+        return this.getAttributeContent(page, this.discountInput, 'value');
+      case 'showPrice':
+        return (await this.isChecked(page, this.showPricesToggle('on'))) ? '1' : '0';
+      default:
+        throw new Error(`Input ${inputName} was not found`);
+    }
   }
 }
 

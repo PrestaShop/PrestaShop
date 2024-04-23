@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OutstandingFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,11 +44,10 @@ class OutstandingController extends FrameworkBundleAdminController
     /**
      * Show list of outstandings.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param OutstandingFilters $filters
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, OutstandingFilters $filters)
     {
         $grid = $this->get('prestashop.core.grid.factory.outstanding')->getGrid($filters);
@@ -66,12 +65,11 @@ class OutstandingController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_outstanding_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_outstanding_index')]
     public function searchAction(Request $request)
     {
         /** @var ResponseBuilder $responseBuilder */

@@ -125,6 +125,7 @@ class MediaCore
                 return $rtlMedia;
             }
         }
+
         // End RTL
         return Media::getMediaPath($cssUri, $cssMediaType);
     }
@@ -226,7 +227,7 @@ class MediaCore
             $uiPath['js'][] = Media::getJSPath($folder . $file);
         }
 
-        //add i18n file for datepicker
+        // add i18n file for datepicker
         if ($component == 'ui.datepicker') {
             $datePickerIsoCode = Context::getContext()->language->iso_code;
             if (array_key_exists($datePickerIsoCode, self::$jquery_ui_datepicker_iso_code)) {
@@ -251,7 +252,7 @@ class MediaCore
         $pluginPath = ['js' => [], 'css' => []];
         if ($folder === null) {
             $folder = _PS_JS_DIR_ . 'jquery/plugins/';
-        } //set default folder
+        } // set default folder
 
         $file = 'jquery.' . $name . '.js';
         $urlData = parse_url($folder);
@@ -281,7 +282,7 @@ class MediaCore
     {
         if ($folder === null) {
             $folder = _PS_JS_DIR_ . 'jquery/plugins/';
-        } //set default folder
+        } // set default folder
         $file = 'jquery.' . $name . '.css';
         $urlData = parse_url($folder);
         $fileUri = _PS_ROOT_DIR_ . Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $urlData['path']);

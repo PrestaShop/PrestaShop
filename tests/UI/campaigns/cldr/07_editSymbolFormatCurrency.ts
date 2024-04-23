@@ -11,8 +11,9 @@ import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 
-// Import data
-import Currencies from '@data/demo/currencies';
+import {
+  dataCurrencies,
+} from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';
 import chaiString from 'chai-string';
@@ -72,11 +73,11 @@ describe('CLDR : Edit symbol / format currency', async () => {
     expect(numberOfCurrencies).to.be.above(0);
   });
 
-  it(`should filter by iso code of currency '${Currencies.euro.isoCode}'`, async function () {
+  it(`should filter by iso code of currency '${dataCurrencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToEurCurrency0', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.euro.isoCode);
+    await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.euro.isoCode);
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
@@ -84,16 +85,16 @@ describe('CLDR : Edit symbol / format currency', async () => {
 
     // Check currency created
     const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    expect(textColumn).to.contains(Currencies.euro.isoCode);
+    expect(textColumn).to.contains(dataCurrencies.euro.isoCode);
   });
 
-  it(`should edit the currency '${Currencies.euro.isoCode}'`, async function () {
+  it(`should edit the currency '${dataCurrencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEuroCurrencyPage0', baseContext);
 
     await currenciesPage.goToEditCurrencyPage(page, 1);
 
     const pageTitle = await addCurrencyPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addCurrencyPage.pageTitleEdit(Currencies.euro.name));
+    expect(pageTitle).to.contains(addCurrencyPage.pageTitleEdit(dataCurrencies.euro.name));
   });
 
   it('should have multiples currencies formats', async function () {
@@ -128,7 +129,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
     expect(growlMessage).to.be.eq(addCurrencyPage.resetCurrencyFormatMessage);
 
     const exampleFormat = await addCurrencyPage.getTextColumnFromTable(page, 1, 2);
-    expect(exampleFormat).to.startWith(Currencies.euro.symbol);
+    expect(exampleFormat).to.startWith(dataCurrencies.euro.symbol);
   });
 
   [1, 2].forEach((numRow: number) => {
@@ -161,13 +162,13 @@ describe('CLDR : Edit symbol / format currency', async () => {
     expect(symbolCurrency).to.be.eq(customSymbol);
   });
 
-  it(`should edit the currency '${Currencies.euro.isoCode}'`, async function () {
+  it(`should edit the currency '${dataCurrencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEuroCurrencyPage1', baseContext);
 
     await currenciesPage.goToEditCurrencyPage(page, 1);
 
     const pageTitle = await addCurrencyPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addCurrencyPage.pageTitleEdit(Currencies.euro.name));
+    expect(pageTitle).to.contains(addCurrencyPage.pageTitleEdit(dataCurrencies.euro.name));
   });
 
   it('should restore default settings\'', async function () {
@@ -181,10 +182,10 @@ describe('CLDR : Edit symbol / format currency', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkRestorationDone', baseContext);
 
     const exampleFormatRow1 = await addCurrencyPage.getTextColumnFromTable(page, 1, 2);
-    expect(exampleFormatRow1).to.startWith(Currencies.euro.symbol);
+    expect(exampleFormatRow1).to.startWith(dataCurrencies.euro.symbol);
 
     const exampleFormatRow2 = await addCurrencyPage.getTextColumnFromTable(page, 2, 2);
-    expect(exampleFormatRow2).to.endWith(` ${Currencies.euro.symbol}`);
+    expect(exampleFormatRow2).to.endWith(` ${dataCurrencies.euro.symbol}`);
   });
 
   it('should update the currency', async function () {
@@ -194,7 +195,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
     expect(result).to.be.eq(currenciesPage.successfulUpdateMessage);
 
     const symbolCurrency = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'symbol');
-    expect(symbolCurrency).to.be.eq(Currencies.euro.symbol);
+    expect(symbolCurrency).to.be.eq(dataCurrencies.euro.symbol);
   });
 
   it('should reset all filters', async function () {

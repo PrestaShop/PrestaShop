@@ -2,7 +2,7 @@ services:
   prestashop.bundle.routing.module_route_loader:
     class: 'PrestaShopBundle\Routing\YamlModuleLoader'
     arguments:
-      - '@=service("prestashop.adapter.module.repository.module_repository").getActiveModulesPaths()'
+      - '@=service("prestashop.adapter.module.repository.module_repository").getInstalledModulesPaths()'
     tags: [ routing.loader ]
 
   prestashop.bundle.routing.converter.legacy_url_converter:
@@ -49,7 +49,7 @@ services:
       - '%kernel.environment%'
 
   prestashop.bundle.routing.linter.security_annotation_linter:
-    class: 'PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter'
+    class: 'PrestaShopBundle\Routing\Linter\SecurityAttributeLinter'
     arguments:
       - '@annotation_reader'
     public: true

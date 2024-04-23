@@ -15,16 +15,20 @@ import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageMessagesBlock from '@pages/BO/orders/view/messagesBlock';
 // Import FO pages
-import checkoutPage from '@pages/FO/classic/checkout';
+import {checkoutPage} from '@pages/FO/classic/checkout';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 import type MailDevEmail from '@data/types/maildevEmail';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -61,7 +65,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
       tax: 'Tax excluded',
     },
   });
-  const paymentMethodModuleName: string = PaymentMethods.checkPayment.moduleName;
+  const paymentMethodModuleName: string = dataPaymentMethods.checkPayment.moduleName;
   const orderMessage: string = 'Test order message';
 
   // Pre-condition: Create cart rule with code
@@ -120,10 +124,10 @@ describe('BO - Orders - Create order : Check summary', async () => {
       expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
-    it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
+    it(`should choose customer ${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer', baseContext);
 
-      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
+      await addOrderPage.searchCustomer(page, dataCustomers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
       expect(isCartsTableVisible, 'History block is not visible!').to.eq(true);
@@ -320,7 +324,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnCreateOrder3', baseContext);
 
           await addOrderPage.setPaymentMethod(page, paymentMethodModuleName);
-          await addOrderPage.setOrderStatus(page, OrderStatuses.paymentAccepted);
+          await addOrderPage.setOrderStatus(page, dataOrderStatuses.paymentAccepted);
 
           const isOrderCreated = await addOrderPage.clickOnCreateOrderButton(page, true);
           expect(isOrderCreated, 'The order is created!').to.eq(true);

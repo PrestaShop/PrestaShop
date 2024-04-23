@@ -49,12 +49,12 @@ class AttributeGroupCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             'is_color_group' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'group_type' => ['type' => self::TYPE_STRING, 'required' => true],
+            'group_type' => ['type' => self::TYPE_STRING, 'required' => true, 'trans' => ['key' => 'Attribute type', 'domain' => 'Admin.Catalog.Feature']],
             'position' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
 
             /* Lang fields */
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128],
-            'public_name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128, 'trans' => ['key' => 'Name', 'domain' => 'Admin.Global']],
+            'public_name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64, 'trans' => ['key' => 'Public name', 'domain' => 'Admin.Catalog.Feature']],
         ],
     ];
 
@@ -188,11 +188,11 @@ class AttributeGroupCore extends ObjectModel
             if (count($toRemove)) {
                 if (!Db::getInstance()->execute('
 				DELETE FROM `' . _DB_PREFIX_ . 'attribute_lang`
-				WHERE `id_attribute`	IN (' . implode(',', $toRemove) . ')') ||
-                !Db::getInstance()->execute('
+				WHERE `id_attribute`	IN (' . implode(',', $toRemove) . ')')
+                || !Db::getInstance()->execute('
 				DELETE FROM `' . _DB_PREFIX_ . 'attribute_shop`
-				WHERE `id_attribute`	IN (' . implode(',', $toRemove) . ')') ||
-                !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'attribute` WHERE `id_attribute_group` = ' . (int) $this->id)) {
+				WHERE `id_attribute`	IN (' . implode(',', $toRemove) . ')')
+                || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'attribute` WHERE `id_attribute_group` = ' . (int) $this->id)) {
                     return false;
                 }
             }
@@ -285,7 +285,7 @@ class AttributeGroupCore extends ObjectModel
     {
         $ids = [];
         foreach ($values as $value) {
-            $ids[] = (int) ($value['id']);
+            $ids[] = (int) $value['id'];
         }
         if (!empty($ids)) {
             Db::getInstance()->execute(

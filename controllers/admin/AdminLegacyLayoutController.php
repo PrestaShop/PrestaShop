@@ -179,15 +179,12 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
         $this->show_page_header_toolbar = (bool) $this->showContentHeader;
 
-        // @todo remove once the product page has been made responsive
-        $isProductPage = ('AdminProducts' === $this->controller_name);
-
         $vars = [
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
             'maintenance_allow_admins' => (bool) Configuration::get('PS_MAINTENANCE_ALLOW_ADMINS'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'headerTabContent' => $this->headerTabContent,
-            'content' => '{$content}', //replace content by original smarty tag var
+            'content' => '{$content}', // replace content by original smarty tag var
             'enableSidebar' => $this->enableSidebar,
             'lite_display' => $this->lite_display,
             'url_post' => self::$currentIndex . '&token=' . $this->token,

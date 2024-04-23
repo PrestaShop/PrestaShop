@@ -20,17 +20,21 @@ import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
-import foProductPage from '@pages/FO/classic/product';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
-import TaxRuleData from '@data/faker/taxRule';
 import TaxRulesGroupData from '@data/faker/taxRulesGroup';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerTaxRule,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -56,12 +60,12 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
   let secondInvoiceFileName: string | null;
 
   const taxRuleGroupToCreate: TaxRulesGroupData = new TaxRulesGroupData();
-  const firstTaxRuleToCreate: TaxRuleData = new TaxRuleData({
+  const firstTaxRuleToCreate: FakerTaxRule = new FakerTaxRule({
     country: 'France',
     behaviour: 'Combine',
     name: 'TVA FR 20%',
   });
-  const secondTaxRuleToCreate: TaxRuleData = new TaxRuleData({
+  const secondTaxRuleToCreate: FakerTaxRule = new FakerTaxRule({
     country: 'France',
     behaviour: 'Combine',
     name: 'TVA FR 10%',
@@ -254,7 +258,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, Customers.johnDoe);
+        await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
       });
 
       it('should go to delivery step', async function () {
@@ -277,7 +281,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -318,11 +322,11 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
-      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}' and check it`, async function () {
+      it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeOrderStatusTaxBreakdown', baseContext);
 
-        const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-        expect(result).to.equal(OrderStatuses.paymentAccepted.name);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+        expect(result).to.equal(dataOrderStatuses.paymentAccepted.name);
       });
 
       it('should download the invoice', async function () {

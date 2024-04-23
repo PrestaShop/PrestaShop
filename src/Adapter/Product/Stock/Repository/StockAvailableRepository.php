@@ -154,9 +154,9 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
         $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue(), null, $shopId->getValue());
         if ($stockAvailableId <= 0) {
             throw new StockAvailableNotFoundException(sprintf(
-                    'Cannot find StockAvailable for product #%d',
-                    $productId->getValue()
-                )
+                'Cannot find StockAvailable for product #%d',
+                $productId->getValue()
+            )
             );
         }
 
@@ -200,7 +200,7 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
      */
     public function getStockIdByCombination(CombinationId $combinationId, ShopId $shopId): StockId
     {
-        //@todo: add shop conditions based on shop group sharing stock or not. like in ProductCombinationQueryBuilder
+        // @todo: add shop conditions based on shop group sharing stock or not. like in ProductCombinationQueryBuilder
         $qb = $this
             ->connection
             ->createQueryBuilder()

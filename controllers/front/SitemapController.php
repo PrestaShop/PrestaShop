@@ -234,9 +234,17 @@ class SitemapControllerCore extends FrontController
 
         $breadcrumb['links'][] = [
             'title' => $this->trans('Sitemap', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('sitemap', true),
+            'url' => $this->context->link->getPageLink('sitemap'),
         ];
 
         return $breadcrumb;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL()
+    {
+        return $this->context->link->getPageLink('sitemap');
     }
 }

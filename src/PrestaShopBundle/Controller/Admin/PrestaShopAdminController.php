@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Controller\Admin;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Default controller for PrestaShop admin pages.
@@ -40,6 +41,7 @@ class PrestaShopAdminController extends AbstractController
     public static function getSubscribedServices(): array
     {
         return parent::getSubscribedServices() + [
+            TranslatorInterface::class => TranslatorInterface::class,
             CommandBusInterface::class => CommandBusInterface::class,
             HookDispatcherInterface::class => HookDispatcherInterface::class,
         ];
@@ -48,13 +50,31 @@ class PrestaShopAdminController extends AbstractController
     /**
      * Get commands bus to execute commands.
      */
-    protected function dispatchCommand(mixed $command): void
+    protected function dispatchCommand(mixed $command): mixed
     {
-        $this->container->get(CommandBusInterface::class)->handle($command);
+        return $this->container->get(CommandBusInterface::class)->handle($command);
     }
 
     protected function dispatchHookWithParameters(string $hookName, array $parameters = []): void
     {
         $this->container->get(HookDispatcherInterface::class)->dispatchWithParameters($hookName, $parameters);
+    }
+
+    protected function trans(string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
+    {
+        return $this->container->get(TranslatorInterface::class)->trans($id, $parameters, $domain, $locale);
+    }
+
+    /**
+     * Adds a list of errors as flash error message.
+     *
+     * @param array $errorMessages Error message, can be a string or an array with parameters for trans method
+     */
+    protected function addFlashErrors(array $errorMessages)
+    {
+        foreach ($errorMessages as $error) {
+            $message = is_array($error) ? $this->trans($error['key'], $error['parameters'], $error['domain']) : $error;
+            $this->addFlash('error', $message);
+        }
     }
 }

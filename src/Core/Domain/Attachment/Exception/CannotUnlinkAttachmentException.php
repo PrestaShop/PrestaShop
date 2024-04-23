@@ -44,7 +44,7 @@ class CannotUnlinkAttachmentException extends CannotUnlinkFileException
      * @param string $message
      * @param int $code
      */
-    public function __construct($message = '', $code = 0, Throwable $previous = null, string $filePath = '')
+    public function __construct($message = '', $code = 0, ?Throwable $previous = null, string $filePath = '')
     {
         parent::__construct($message, $code, $previous);
         $this->filePath = $filePath;

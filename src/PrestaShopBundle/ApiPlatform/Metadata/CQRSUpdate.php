@@ -28,15 +28,18 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
+use Attribute;
+
 /**
  * Class CQRSUpdate is a custom operation that provides extra parameters to help configure an operation
  * based on a CQRS command, it is custom tailed for update operations and forces using the PUT method by default,
  * but you can also use PATCH method.
  */
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class CQRSUpdate extends CQRSCommand
 {
     public function __construct(
+        string $method = self::METHOD_PUT,
         ?string $uriTemplate = null,
         ?array $types = null,
         $formats = null,
@@ -115,9 +118,9 @@ class CQRSUpdate extends CQRSCommand
         ?array $CQRSQueryMapping = null,
         ?array $ApiResourceMapping = null,
         ?array $CQRSCommandMapping = null,
+        ?bool $experimentalOperation = null,
     ) {
         $passedArguments = \get_defined_vars();
-        $passedArguments['method'] = self::METHOD_PUT;
         // Disable read listener because it is forced when using PUT method, but we don't need it since we rely on CQRS commands/queries
         $passedArguments['read'] = $read ?? false;
 

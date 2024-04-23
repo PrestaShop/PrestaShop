@@ -70,8 +70,8 @@ use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -86,17 +86,12 @@ class CustomerController extends AbstractAdminController
     /**
      * Show customers listing.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customers_index",
-     *     message="You do not have permission to view this."
-     * )
-     *
      * @param Request $request
      * @param CustomerFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to view this.')]
     public function indexAction(Request $request, CustomerFilters $filters)
     {
         $customersKpiFactory = $this->get('prestashop.core.kpi_row.factory.customers');
@@ -127,12 +122,11 @@ class CustomerController extends AbstractAdminController
     /**
      * Show customer create form & handle processing of it.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(Request $request)
     {
         if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
@@ -196,13 +190,12 @@ class CustomerController extends AbstractAdminController
     /**
      * Show customer edit form & handle processing of it.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $customerId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function editAction($customerId, Request $request)
     {
         $this->addGroupSelectionToRequest($request);
@@ -260,8 +253,6 @@ class CustomerController extends AbstractAdminController
     /**
      * View customer information.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_customers_index")
-     *
      * @param int $customerId
      * @param Request $request
      * @param CustomerDiscountFilters $customerDiscountFilters
@@ -274,6 +265,7 @@ class CustomerController extends AbstractAdminController
      * @return Response
      */
     #[DemoRestricted(redirectRoute: 'admin_customers_index')]
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index')]
     public function viewAction(
         $customerId,
         Request $request,
@@ -368,16 +360,12 @@ class CustomerController extends AbstractAdminController
     /**
      * Set private note about customer.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
-     *      redirectRoute="admin_customers_index"
-     * )
-     *
      * @param int $customerId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index')]
     public function setPrivateNoteAction($customerId, Request $request)
     {
         $privateNoteForm = $this->createForm(PrivateNoteType::class);
@@ -408,16 +396,12 @@ class CustomerController extends AbstractAdminController
     /**
      * Transforms guest to customer
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
-     *      redirectRoute="admin_customers_index"
-     * )
-     *
      * @param int $customerId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index')]
     public function transformGuestToCustomerAction($customerId, Request $request)
     {
         try {
@@ -445,15 +429,11 @@ class CustomerController extends AbstractAdminController
     /**
      * Sets required fields for customer
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
-     *      redirectRoute="admin_customers_index"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index')]
     public function setRequiredFieldsAction(Request $request)
     {
         $requiredFieldsForm = $this->getRequiredFieldsForm();
@@ -473,12 +453,11 @@ class CustomerController extends AbstractAdminController
     /**
      * Search for customers by query.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function searchAction(Request $request)
     {
         $query = $request->query->get('customer_search');
@@ -520,12 +499,11 @@ class CustomerController extends AbstractAdminController
     /**
      * Provides customer information for address creation in json format
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function getCustomerInformationAction(Request $request): Response
     {
         try {
@@ -553,16 +531,11 @@ class CustomerController extends AbstractAdminController
     /**
      * Toggle customer status.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customers_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $customerId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
     public function toggleStatusAction($customerId)
     {
         try {
@@ -591,16 +564,11 @@ class CustomerController extends AbstractAdminController
     /**
      * Toggle customer newsletter subscription status.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customers_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $customerId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
     public function toggleNewsletterSubscriptionAction($customerId)
     {
         try {
@@ -631,16 +599,11 @@ class CustomerController extends AbstractAdminController
     /**
      * Toggle customer partner offer subscription status.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customers_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $customerId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
     public function togglePartnerOfferSubscriptionAction($customerId)
     {
         try {
@@ -669,16 +632,11 @@ class CustomerController extends AbstractAdminController
     /**
      * Delete customers in bulk action.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customers_index",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to delete this.')]
     public function deleteBulkAction(Request $request)
     {
         $form = $this->createForm(DeleteCustomersType::class);
@@ -714,16 +672,11 @@ class CustomerController extends AbstractAdminController
     /**
      * Delete customer.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customers_index",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to delete this.')]
     public function deleteAction(Request $request)
     {
         $form = $this->createForm(DeleteCustomersType::class);
@@ -754,16 +707,11 @@ class CustomerController extends AbstractAdminController
     /**
      * Enable customers in bulk action.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customers_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
     public function enableBulkAction(Request $request)
     {
         $customerIds = array_map(function ($customerId) {
@@ -786,16 +734,11 @@ class CustomerController extends AbstractAdminController
     /**
      * Disable customers in bulk action.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_customers_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
     public function disableBulkAction(Request $request)
     {
         try {
@@ -818,12 +761,11 @@ class CustomerController extends AbstractAdminController
     /**
      * Export filtered customers
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param CustomerFilters $filters
      *
      * @return CsvResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function exportAction(CustomerFilters $filters)
     {
         $filters = new CustomerFilters(['limit' => null] + $filters->all());
@@ -873,12 +815,11 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $customerId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function getCartsAction(int $customerId)
     {
         try {
@@ -896,12 +837,11 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $customerId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function getOrdersAction(int $customerId)
     {
         try {

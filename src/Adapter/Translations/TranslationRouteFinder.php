@@ -31,7 +31,7 @@ use Module;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Service\TranslationService;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -92,13 +92,11 @@ class TranslationRouteFinder
     /**
      * Finds the correct translation route out of given query.
      *
-     * @param ParameterBag $query
-     *
      * @return string
      */
-    public function findRoute(ParameterBag $query)
+    public function findRoute(Request $request)
     {
-        $routeProperties = $query->get('form');
+        $routeProperties = $request->request->all('form');
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $route = 'admin_international_translation_overview';
 
@@ -150,13 +148,11 @@ class TranslationRouteFinder
     /**
      * Finds parameters for translation route out of given query.
      *
-     * @param ParameterBag $query
-     *
      * @return array of route parameters
      */
-    public function findRouteParameters(ParameterBag $query)
+    public function findRouteParameters(Request $request): array
     {
-        $routeProperties = $query->get('form');
+        $routeProperties = $request->request->all('form');
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $language = $propertyAccessor->getValue($routeProperties, '[language]');
 

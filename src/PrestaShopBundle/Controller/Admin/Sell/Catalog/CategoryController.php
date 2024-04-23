@@ -59,8 +59,8 @@ use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,16 +76,12 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show categories listing.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to list this."
-     * )
-     *
      * @param Request $request
      * @param CategoryFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to list this.')]
     public function indexAction(Request $request, CategoryFilters $filters)
     {
         $categoriesKpiFactory = $this->get('prestashop.core.kpi_row.factory.categories');
@@ -131,16 +127,11 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show "Add new" form and handle form submit.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     message="You do not have permission to create this.",
-     *     redirectRoute="admin_categories_index"
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.', redirectRoute: 'admin_categories_index')]
     public function createAction(Request $request)
     {
         $configuration = $this->getConfiguration();
@@ -193,16 +184,11 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show "Add new root category" page & process adding.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     message="You do not have permission to create this.",
-     *     redirectRoute="admin_categories_index"
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.', redirectRoute: 'admin_categories_index')]
     public function createRootAction(Request $request)
     {
         $rootCategoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
@@ -242,17 +228,12 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show & process category editing.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_categories_index"
-     * )
-     *
      * @param int $categoryId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_categories_index')]
     public function editAction($categoryId, Request $request)
     {
         try {
@@ -330,17 +311,12 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show and process category editing.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_categories_index"
-     * )
-     *
      * @param int $categoryId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_categories_index')]
     public function editRootAction($categoryId, Request $request)
     {
         try {
@@ -408,18 +384,12 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Deletes category cover image.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_categories_edit",
-     *     redirectQueryParamsToKeep={"categoryId"}
-     * )
-     *
      * @param Request $request
      * @param int $categoryId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_categories_edit', redirectQueryParamsToKeep: ['categoryId'])]
     public function deleteCoverImageAction(Request $request, $categoryId)
     {
         if (!$this->isCsrfTokenValid('delete-cover-image', $request->request->get('_csrf_token'))) {
@@ -449,15 +419,11 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Toggle category status.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this."
-     * )
-     *
      * @param int $categoryId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
     public function toggleStatusAction($categoryId)
     {
         if ($this->isDemoModeEnabled()) {
@@ -491,17 +457,12 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Process bulk action for categories status enabling.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to update this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_categories_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_categories_index', message: 'You do not have permission to update this.')]
     public function bulkEnableStatusAction(Request $request)
     {
         try {
@@ -525,17 +486,12 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Process bulk action for categories status disabling.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to update this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_categories_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_categories_index', message: 'You do not have permission to update this.')]
     public function bulkDisableStatusAction(Request $request)
     {
         try {
@@ -559,17 +515,12 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Processes bulk categories deleting.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_categories_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_categories_index', message: 'You do not have permission to delete this.')]
     public function bulkDeleteAction(Request $request)
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
@@ -606,17 +557,12 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Process single category deleting.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_categories_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_categories_index', message: 'You do not have permission to delete this.')]
     public function deleteAction(Request $request)
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
@@ -647,17 +593,12 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Export filtered categories.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to view this."
-     * )
-     *
      * @param CategoryFilters $filters
      *
      * @return Response
      */
     #[DemoRestricted(redirectRoute: 'admin_categories_index')]
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_categories_index', message: 'You do not have permission to view this.')]
     public function exportAction(CategoryFilters $filters)
     {
         $filters = new CategoryFilters(['limit' => null] + $filters->all());
@@ -693,15 +634,11 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Updates category position
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     * )
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_categories_index')]
     public function updatePositionAction(Request $request)
     {
         try {
@@ -726,8 +663,6 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminProducts')")
-     *
      * Get Categories formatted like ajax_product_file.php.
      *
      * @param int $limit
@@ -735,6 +670,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminProducts')")]
     public function getAjaxCategoriesAction($limit, Request $request)
     {
         if (!$request->isXmlHttpRequest()) {
@@ -747,12 +683,11 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminProducts')")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminProducts')")]
     public function getCategoriesTreeAction(Request $request): JsonResponse
     {
         $langId = $request->query->getInt('langId') ?: (int) $this->getContextLangId();

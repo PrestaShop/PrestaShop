@@ -15,19 +15,23 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
-import productPage from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import OrderShippingData from '@data/faker/orderShipping';
+
+import {
+  // Import data
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -50,10 +54,10 @@ describe('BO - Orders : Preview order', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const customerData: CustomerData = new CustomerData({password: ''});
-  const addressData: AddressData = new AddressData({country: 'France'});
-  const editShippingAddressData: AddressData = new AddressData({country: 'France'});
-  const editInvoiceAddressData: AddressData = new AddressData({country: 'France'});
+  const customerData: FakerCustomer = new FakerCustomer({password: ''});
+  const addressData: FakerAddress = new FakerAddress({country: 'France'});
+  const editShippingAddressData: FakerAddress = new FakerAddress({country: 'France'});
+  const editInvoiceAddressData: FakerAddress = new FakerAddress({country: 'France'});
   const shippingDetailsData: OrderShippingData = new OrderShippingData({
     trackingNumber: '123654789',
     carrier: Carriers.myCarrier.name,
@@ -158,7 +162,7 @@ describe('BO - Orders : Preview order', async () => {
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message

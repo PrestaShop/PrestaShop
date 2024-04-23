@@ -28,9 +28,13 @@
 trans('Attribute groups', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated attribute page.', 'Admin.Advparameters.Help');
 
-// Authorization server feature flag
-trans('Authorization server', 'Admin.Advparameters.Feature');
-trans('Enable or disable the authorization server page.', 'Admin.Advparameters.Help');
+// Admin API - Multistore feature flag
+trans('Admin API - Multistore', 'Admin.Advparameters.Feature');
+trans('Enable or disable the Admin API when multistore is enabled.', 'Admin.Advparameters.Help');
+
+// Admin Api - Enable experimental endpoints
+trans('Admin API - Enable experimental endpoints', 'Admin.Advparameters.Feature');
+trans('Experimental API endpoints are disabled by default in prod environment, this configuration allows to forcefully enable them.', 'Admin.Advparameters.Help');
 
 // Cart rules feature flag
 trans('Cart rules', 'Admin.Advparameters.Feature');
@@ -71,9 +75,6 @@ trans('Enable or disable the migrated customer threads page.', 'Admin.Advparamet
 // Order states feature flag
 trans('Order states', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated order states page.', 'Admin.Advparameters.Help');
-
-trans('Features', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated features page.', 'Admin.Advparameters.Help');
 
 trans('Symfony layout', 'Admin.Advparameters.Feature');
 trans('Enable / Disable symfony layout (in opposition to legacy layout).', 'Admin.Advparameters.Help');

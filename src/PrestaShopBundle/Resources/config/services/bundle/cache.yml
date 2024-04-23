@@ -28,3 +28,9 @@ services:
       - "@kernel"
     calls:
       - [ addCacheClear, [ ] ]
+
+  PrestaShopBundle\Cache\TranslationCacheClearer:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      $legacyCacheDir: '%prestashop.legacy_cache_dir%'

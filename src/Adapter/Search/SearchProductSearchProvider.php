@@ -71,7 +71,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         $products = [];
         $count = 0;
 
-        if (($string = $query->getSearchString())) {
+        if ($string = $query->getSearchString()) {
             $queryString = Tools::replaceAccentedChars(urldecode($string));
 
             $result = Search::find(
@@ -95,7 +95,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 // deprecated since 1.7.x
                 'expr' => $queryString,
             ]);
-        } elseif (($tag = $query->getSearchTag())) {
+        } elseif ($tag = $query->getSearchTag()) {
             $queryString = urldecode($tag);
 
             $products = Search::searchTag(
@@ -141,12 +141,12 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
             // We use default set of sort orders + option to sort by position (relevance), which makes sense only here and on category page
             $result->setAvailableSortOrders(
                 array_merge(
-                [
-                    (new SortOrder('product', 'position', 'desc'))->setLabel(
-                        $this->translator->trans('Relevance', [], 'Shop.Theme.Catalog')
-                    ),
-                ],
-                $this->sortOrdersCollection->getDefaults())
+                    [
+                        (new SortOrder('product', 'position', 'desc'))->setLabel(
+                            $this->translator->trans('Relevance', [], 'Shop.Theme.Catalog')
+                        ),
+                    ],
+                    $this->sortOrdersCollection->getDefaults())
             );
         }
 

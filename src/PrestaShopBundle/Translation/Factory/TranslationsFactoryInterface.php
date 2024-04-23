@@ -38,9 +38,9 @@ interface TranslationsFactoryInterface
      * @param string $identifier Domain identifier
      * @param string $locale Locale identifier
      *
-     * @throws ProviderNotFoundException
-     *
      * @return MessageCatalogueInterface
+     *
+     * @throws ProviderNotFoundException
      */
     public function createCatalogue($identifier, $locale = self::DEFAULT_LOCALE);
 
@@ -52,9 +52,9 @@ interface TranslationsFactoryInterface
      * @param null $theme
      * @param null $search
      *
-     * @throws ProviderNotFoundException
-     *
      * @return array Translation tree structure
+     *
+     * @throws ProviderNotFoundException
      */
     public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null, $search = null);
 }

@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -70,10 +70,9 @@ class ModuleController extends ModuleAbstractController
     /**
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
      *
-     * @AdminSecurity("is_granted('read', 'ADMINMODULESSF_')")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', 'ADMINMODULESSF_')")]
     public function manageAction()
     {
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
@@ -116,14 +115,11 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('read', 'ADMINMODULESSF_') || is_granted('create', 'ADMINMODULESSF_') || is_granted('update', 'ADMINMODULESSF_') || is_granted('delete', 'ADMINMODULESSF_')"
-     * )
-     *
      * @param Request $module_name
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', 'ADMINMODULESSF_') || is_granted('create', 'ADMINMODULESSF_') || is_granted('update', 'ADMINMODULESSF_') || is_granted('delete', 'ADMINMODULESSF_')")]
     public function configureModuleAction($module_name)
     {
         /** @var UrlGeneratorInterface $legacyUrlGenerator */

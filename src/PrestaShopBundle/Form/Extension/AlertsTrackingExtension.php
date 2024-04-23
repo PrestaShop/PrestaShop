@@ -56,7 +56,7 @@ class AlertsTrackingExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        //We dont want to add alerts on every single child form, just the parent one.
+        // We dont want to add alerts on every single child form, just the parent one.
         if ($form->getParent()) {
             return;
         }

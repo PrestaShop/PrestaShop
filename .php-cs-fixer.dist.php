@@ -3,12 +3,14 @@
 ini_set('memory_limit','256M');
 
 $finder = PhpCsFixer\Finder::create()->in([
+    __DIR__.'/app',
     __DIR__.'/src',
     __DIR__.'/classes',
     __DIR__.'/controllers',
     __DIR__.'/tests',
     __DIR__.'/tools/profiling',
 ])->notPath([
+    __DIR__.'/app/parameters.php',
     'Unit/Resources/config/params.php',
     'Unit/Resources/config/params_modified.php',
 ]);
@@ -47,6 +49,12 @@ return (new PhpCsFixer\Config())
         'yoda_style' => false,
         'single_line_throw' => false,
         'no_alias_language_construct_call' => false,
+        'no_null_property_initialization' => false,
+        'global_namespace_import' => [
+            'import_classes' => true,
+            'import_constants' => false,
+            'import_functions' => false,
+        ],
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache');

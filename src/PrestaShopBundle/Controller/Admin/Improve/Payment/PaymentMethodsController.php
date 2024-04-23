@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,12 +39,11 @@ class PaymentMethodsController extends FrameworkBundleAdminController
     /**
      * Show payment method modules.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');

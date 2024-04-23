@@ -7,7 +7,7 @@ import testContext from '@utils/testContext';
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {createProductTest, bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderSpecificProductTest} from '@commonTests/FO/order';
+import {createOrderSpecificProductTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -17,11 +17,15 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import OrderData from '@data/faker/order';
 import ProductData from '@data/faker/product';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -71,14 +75,14 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
   });
   // New order by customer data
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: firstProduct,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
   const carrierDataToSelect: OrderShippingData = new OrderShippingData({
     trackingNumber: '',
@@ -132,13 +136,13 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       expect(numberOfOrders, 'Number of orders is not correct!').to.be.above(0);
     });
 
-    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn, 'Lastname is not correct').to.contains(Customers.johnDoe.lastName);
+      expect(textColumn, 'Lastname is not correct').to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
@@ -153,10 +157,10 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
   // 2 - Create first invoice
   describe('Create the first invoice', async () => {
-    it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult = await orderPageTabListBlock.updateOrderStatus(page, OrderStatuses.paymentAccepted.name);
+      const textResult = await orderPageTabListBlock.updateOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
       expect(textResult).to.equal(orderPageProductsBlock.successfulUpdateMessage);
     });
 

@@ -25,19 +25,23 @@ import stocksPage from '@pages/BO/catalog/stocks';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import Customers from '@data/demo/customers';
 import Modules from '@data/demo/modules';
 import ProductData from '@data/faker/product';
 import MailDevEmail from '@data/types/maildevEmail';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
@@ -262,7 +266,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     it('should login on the Front Office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFrontOffice', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foProductPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
@@ -404,7 +408,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -446,10 +450,10 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it(`should change the order status to '${OrderStatuses.delivered.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await ordersPage.setOrderStatus(page, 1, OrderStatuses.delivered);
+      const result = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
       expect(result).to.equal(ordersPage.successfulUpdateMessage);
     });
 

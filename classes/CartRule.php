@@ -368,8 +368,8 @@ class CartRuleCore extends ObjectModel
      * @param int $id_lang Language ID
      * @param int $id_customer Customer ID
      * @param bool $active Active vouchers only
-     * @param bool $includeGeneric Include generic AND highlighted vouchers, regardless of highlight_only setting
-     * @param bool $inStock Vouchers in stock only
+     * @param bool $includeGeneric Include generic vouchers that don't have specific customer
+     * @param bool $inStock Vouchers that have "total quantity" remaining
      * @param CartCore|null $cart Cart
      * @param bool $free_shipping_only Free shipping only
      * @param bool $highlight_only Highlighted vouchers only
@@ -384,7 +384,7 @@ class CartRuleCore extends ObjectModel
         $active = false,
         $includeGeneric = true,
         $inStock = false,
-        CartCore $cart = null,
+        ?CartCore $cart = null,
         $free_shipping_only = false,
         $highlight_only = false
     ) {
@@ -392,30 +392,35 @@ class CartRuleCore extends ObjectModel
             return [];
         }
 
-        $sql_part1 = '* FROM `' . _DB_PREFIX_ . 'cart_rule` cr
-            LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
+        // Basic part of the query, we are selecting all cart rules
+        $sql = '
+            SELECT SQL_NO_CACHE * FROM `' . _DB_PREFIX_ . 'cart_rule` cr
+            LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl
+            ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
 
-        $sql_where = ' WHERE ((cr.`id_customer` = ' . (int) $id_customer . ' OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = "")))';
+        // We will definitely include vouchers for this specific customer
+        $sql .= ' WHERE (cr.`id_customer` = ' . (int) $id_customer;
 
+        // And if required, all the generic ones, that don't have any specific customer set
         if ($includeGeneric && (int) $id_customer !== 0) {
-            $sql_where .= ' OR cr.`id_customer` = 0)';
-        } else {
-            $sql_where .= ')';
+            $sql .= ' OR cr.`id_customer` = 0';
         }
+        $sql .= ')';
 
-        $sql_part2 = ' AND NOW() BETWEEN cr.date_from AND cr.date_to
+        // Then, conditions for date, voucher active property and total amount of vouchers in stock
+        $sql .= ' AND NOW() BETWEEN cr.date_from AND cr.date_to
             ' . ($active ? 'AND cr.`active` = 1' : '') . '
             ' . ($inStock ? 'AND cr.`quantity` > 0' : '');
 
+        // If we want to select only vouchers that have free shipping as the action
         if ($free_shipping_only) {
-            $sql_part2 .= ' AND free_shipping = 1 AND carrier_restriction = 1';
+            $sql .= ' AND free_shipping = 1 AND carrier_restriction = 1';
         }
 
+        // If we want to select only vouchers with "Highlight" option activated
         if ($highlight_only) {
-            $sql_part2 .= ' AND highlight = 1 AND code NOT LIKE "' . pSQL(CartRule::BO_ORDER_CODE_PREFIX) . '%"';
+            $sql .= ' AND highlight = 1 AND code NOT LIKE "' . pSQL(CartRule::BO_ORDER_CODE_PREFIX) . '%"';
         }
-
-        $sql = 'SELECT SQL_NO_CACHE ' . $sql_part1 . $sql_where . $sql_part2;
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
@@ -528,7 +533,7 @@ class CartRuleCore extends ObjectModel
         $query = new DbQuery();
         $query->select('cr.*, crl.name');
         $query->from('cart_rule', 'cr');
-        $query->where('cr.id_customer = ' . $customerId . ' OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = ""))');
+        $query->where('cr.id_customer = ' . $customerId);
         $query->leftJoin('cart_rule_lang', 'crl', 'cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = ' . (int) Configuration::get('PS_LANG_DEFAULT'));
         $query->orderBy('cr.active DESC, cr.id_customer DESC');
 
@@ -556,14 +561,14 @@ class CartRuleCore extends ObjectModel
         CartCore $cart
     ) {
         return static::getCustomerCartRules(
-           $languageId,
-           $customerId,
-           $active = true,
-           $includeGeneric = true,
-           $inStock = true,
-           $cart,
-           $freeShippingOnly = false,
-           $highlightOnly = true
+            $languageId,
+            $customerId,
+            $active = true,
+            $includeGeneric = true,
+            $inStock = true,
+            $cart,
+            $freeShippingOnly = false,
+            $highlightOnly = true
         );
     }
 
@@ -680,11 +685,11 @@ class CartRuleCore extends ObjectModel
     /**
      * Check if this CartRule can be applied.
      *
-     * @param Context $context Context instance
-     * @param bool $alreadyInCart Check if the voucher is already on the cart
-     * @param bool $display_error Display error
-     * @param bool $check_carrier
-     * @param bool $useOrderPrices
+     * @param Context $context Context instance to use
+     * @param bool $alreadyInCart Special validation flag to use, that has different conditions for vouchers already in a cart
+     * @param bool $display_error If true, method returns nothing if valid or an error message. If false, always returns a boolean
+     * @param bool $check_carrier Disable this flag if you want to validate the cart rule for a different carrier than assigned to the cart
+     * @param bool $useOrderPrices When true use the Order saved prices instead of the most recent ones from catalog
      *
      * @return bool|mixed|string
      */
@@ -694,6 +699,42 @@ class CartRuleCore extends ObjectModel
             return false;
         }
         $cart = $context->cart;
+
+        /*
+         * Custom cart rule validation from modules. Allows to create infinite possibilities of rules.
+         *
+         * If null is provided, nothing happens and built-in validation is ran. Useful if you want your own conditions,
+         * but also want to retain functionality of the core.
+         *
+         * If true is provided, the validation ends here and the rule is VALID, ignoring the rest of core validation.
+         *
+         * If false is provided, the validation ends here and the rule is not VALID, ignoring the rest of core validation.
+         * In this case, it's recommended to properly alter the isValidatedByModulesError error message so the user knows why.
+         */
+        $isValidatedByModules = null;
+        $isValidatedByModulesError = $this->trans('This voucher is not valid.', [], 'Shop.Notifications.Error');
+        Hook::exec(
+            'actionValidateCartRule',
+            [
+                'cart_rule' => $this,
+                'cart' => $cart,
+                'alreadyInCart' => $alreadyInCart,
+                'display_error' => $display_error,
+                'check_carrier' => $check_carrier,
+                'useOrderPrices' => $useOrderPrices,
+                'isValidatedByModules' => &$isValidatedByModules,
+                'isValidatedByModulesError' => &$isValidatedByModulesError,
+            ]
+        );
+
+        // @phpstan-ignore-next-line
+        if ($isValidatedByModules === false) {
+            return (!$display_error) ? false : $isValidatedByModulesError;
+        }
+        // @phpstan-ignore-next-line
+        if ($isValidatedByModules === true) {
+            return (!$display_error) ? true : null;
+        }
 
         // All these checks are necessary when you add the cart rule the first time, so when it's not in cart yet
         // However when it's in the cart and you are checking if the cart rule is still valid (when performing auto remove)
@@ -1200,7 +1241,7 @@ class CartRuleCore extends ObjectModel
      *
      * @return float|int|string
      */
-    public function getContextualValue($use_tax, Context $context = null, $filter = null, $package = null, $use_cache = true)
+    public function getContextualValue($use_tax, ?Context $context = null, $filter = null, $package = null, $use_cache = true)
     {
         if (!CartRule::isFeatureActive()) {
             return 0;
@@ -1692,7 +1733,7 @@ class CartRuleCore extends ObjectModel
      * @param Context|null $context Context instance
      * @param bool $useOrderPrices
      */
-    public static function autoAddToCart(Context $context = null, bool $useOrderPrices = false)
+    public static function autoAddToCart(?Context $context = null, bool $useOrderPrices = false)
     {
         if ($context === null) {
             $context = Context::getContext();
@@ -1769,7 +1810,7 @@ class CartRuleCore extends ObjectModel
      *
      * @return array Error messages
      */
-    public static function autoRemoveFromCart(Context $context = null, bool $useOrderPrice = false)
+    public static function autoRemoveFromCart(?Context $context = null, bool $useOrderPrice = false)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1895,7 +1936,7 @@ class CartRuleCore extends ObjectModel
      */
     protected function filterProducts($products, $eligibleProducts, $ruleType)
     {
-        //If the two same array, no verification todo.
+        // If the two same array, no verification todo.
         if ($products === $eligibleProducts) {
             return $products;
         }

@@ -60,7 +60,7 @@ class ProductSearchContext
      */
     private $stockSharingBetweenShopGroupEnabled = false;
 
-    public function __construct(Context $context = null)
+    public function __construct(?Context $context = null)
     {
         if ($context) {
             $shopGroup = $context->shop->getGroup();

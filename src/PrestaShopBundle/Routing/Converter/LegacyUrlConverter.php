@@ -184,9 +184,9 @@ final class LegacyUrlConverter
             $legacyAction = $parameters['action'];
         }
 
-        //Actions can be defined as simple query parameter (e.g: ?controller=AdminProducts&save)
+        // Actions can be defined as simple query parameter (e.g: ?controller=AdminProducts&save)
         if (null === $legacyAction) {
-            //We prioritize the actions defined in the migrated routes
+            // We prioritize the actions defined in the migrated routes
             $controllerActions = $this->legacyRouteProvider->getActionsByController($parameters['controller']);
             foreach ($parameters as $parameter => $value) {
                 if (in_array($parameter, $controllerActions)) {
@@ -197,12 +197,12 @@ final class LegacyUrlConverter
             }
         }
 
-        //Last chance if a non migrated action is present (note: a bit risky since any empty parameter can be
-        //interpreted as an action.. but some old link need this feature, ?controller=AdminModulesPositions&addToHook)
+        // Last chance if a non migrated action is present (note: a bit risky since any empty parameter can be
+        // interpreted as an action.. but some old link need this feature, ?controller=AdminModulesPositions&addToHook)
         if (null === $legacyAction) {
             foreach ($parameters as $parameter => $value) {
                 if ($value === '' || $value === '1' || $value === 1) {
-                    //Avoid confusing an entity/row id with an action
+                    // Avoid confusing an entity/row id with an action
                     // e.g.
                     //  create=1 is an action
                     //  id_product=1 is NOT an action

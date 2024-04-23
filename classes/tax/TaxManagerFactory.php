@@ -95,7 +95,7 @@ class TaxManagerFactoryCore
     /**
      * Create a unique identifier for the address.
      *
-     * @param Address$address
+     * @param Address $address
      *
      * @return string
      */

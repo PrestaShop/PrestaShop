@@ -12,8 +12,10 @@ import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import OrderStatuses from '@data/demo/orderStatuses';
+import {
+  // Import data
+  dataOrderStatuses,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -42,8 +44,8 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
 
   describe('Create 2 invoices by changing the order status', async () => {
     [
-      {args: {orderRow: 1, status: OrderStatuses.shipped.name}},
-      {args: {orderRow: 2, status: OrderStatuses.paymentAccepted.name}},
+      {args: {orderRow: 1, status: dataOrderStatuses.shipped.name}},
+      {args: {orderRow: 2, status: dataOrderStatuses.paymentAccepted.name}},
     ].forEach((orderToEdit, index: number) => {
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index + 1}`, baseContext);
@@ -103,7 +105,7 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoInvoiceMessageError', baseContext);
 
       // Choose one status
-      await invoicesPage.chooseStatus(page, OrderStatuses.canceled.name);
+      await invoicesPage.chooseStatus(page, dataOrderStatuses.canceled.name);
 
       // Generate PDF
       const textMessage = await invoicesPage.generatePDFByStatusAndFail(page);
@@ -114,8 +116,8 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'selectStatusesAndCheckInvoiceExistence', baseContext);
 
       // Choose 2 statuses
-      await invoicesPage.chooseStatus(page, OrderStatuses.paymentAccepted.name);
-      await invoicesPage.chooseStatus(page, OrderStatuses.shipped.name);
+      await invoicesPage.chooseStatus(page, dataOrderStatuses.paymentAccepted.name);
+      await invoicesPage.chooseStatus(page, dataOrderStatuses.shipped.name);
 
       // Generate PDF
       filePath = await invoicesPage.generatePDFByStatusAndDownload(page);
@@ -132,7 +134,7 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'selectOneStatusAndCheckInvoiceExistence', baseContext);
 
       // Choose one status
-      await invoicesPage.chooseStatus(page, OrderStatuses.paymentAccepted.name);
+      await invoicesPage.chooseStatus(page, dataOrderStatuses.paymentAccepted.name);
 
       // Generate PDF
       filePath = await invoicesPage.generatePDFByStatusAndDownload(page);

@@ -102,8 +102,8 @@ class PageCore extends ObjectModel
 				SELECT id_page_type
 				FROM ' . _DB_PREFIX_ . 'page_type
 				WHERE name = \'' . pSQL($name) . '\''
-                )
-            ) {
+        )
+        ) {
             return $value;
         }
 

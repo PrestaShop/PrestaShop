@@ -4,16 +4,20 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import createShoppingCart from '@commonTests/FO/shoppingCart';
+import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
 // Import data
-import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -35,7 +39,7 @@ describe('BO - Orders : Create shopping cart and delete abandoned one', async ()
   let numberOfShoppingCartsAfterFilter: number;
 
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
@@ -85,7 +89,7 @@ describe('BO - Orders : Create shopping cart and delete abandoned one', async ()
     it('should search the non ordered shopping carts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+      await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
       numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
@@ -102,7 +106,7 @@ describe('BO - Orders : Create shopping cart and delete abandoned one', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'deleteNonOrderedShoppingCarts', baseContext);
 
       const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-      expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+      expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {

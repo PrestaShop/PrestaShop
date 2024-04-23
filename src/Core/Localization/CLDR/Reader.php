@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
+use DateTime;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationFileNotFoundException;
 use SimpleXMLElement;
@@ -267,7 +268,7 @@ class Reader implements ReaderInterface
     /**
      * Maps locale data from SimplexmlElement to a LocaleData object.
      *
-     * @param SimplexmlElement $xmlLocaleData
+     * @param SimpleXMLElement $xmlLocaleData
      *                                        XML locale data
      * @param array $supplementalData
      *                                Supplemental locale data
@@ -387,9 +388,9 @@ class Reader implements ReaderInterface
         // Decimal patterns (by numbering system)
         if (isset($numbersData->decimalFormats)) {
             $decimalPatterns = $localeData->getDecimalPatterns();
-            /** @var SimplexmlElement $format */
+            /** @var SimpleXMLElement $format */
             foreach ($numbersData->decimalFormats as $format) {
-                /** @var SimplexmlElement $format */
+                /** @var SimpleXMLElement $format */
                 $numberSystem = (string) $format['numberSystem'];
                 $patternResult = $format->xpath('decimalFormatLength[not(@type)]/decimalFormat/pattern');
                 if (isset($patternResult[0])) {
@@ -400,15 +401,15 @@ class Reader implements ReaderInterface
             // We browse aliases after all regular patterns have been defined, and duplicate data for target number
             // systems.
             foreach ($numbersData->decimalFormats as $format) {
-                /** @var SimplexmlElement $format */
+                /** @var SimpleXMLElement $format */
                 $numberSystem = (string) $format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
                 if (isset($alias['path']) && preg_match(
-                        "#^\.\.\/decimalFormats\[@numberSystem='([^)]+)'\]$#",
-                        (string) $alias['path'],
-                        $matches
-                    )
+                    "#^\.\.\/decimalFormats\[@numberSystem='([^)]+)'\]$#",
+                    (string) $alias['path'],
+                    $matches
+                )
                 ) {
                     $aliasNumSys = $matches[1];
                     $decimalPatterns[$numberSystem] = $decimalPatterns[$aliasNumSys];
@@ -432,15 +433,15 @@ class Reader implements ReaderInterface
             // We browse aliases after all regular patterns have been defined, and duplicate data for target number
             // systems.
             foreach ($numbersData->percentFormats as $format) {
-                /** @var SimplexmlElement $format */
+                /** @var SimpleXMLElement $format */
                 $numberSystem = (string) $format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
                 if (isset($alias['path']) && preg_match(
-                        "#^\.\.\/percentFormats\[@numberSystem='([^)]+)'\]$#",
-                        (string) $alias['path'],
-                        $matches
-                    )
+                    "#^\.\.\/percentFormats\[@numberSystem='([^)]+)'\]$#",
+                    (string) $alias['path'],
+                    $matches
+                )
                 ) {
                     $aliasNumSys = $matches[1];
                     $percentPatterns[$numberSystem] = $percentPatterns[$aliasNumSys];
@@ -454,7 +455,7 @@ class Reader implements ReaderInterface
         if (isset($numbersData->currencyFormats)) {
             $currencyPatterns = $localeData->getCurrencyPatterns();
             foreach ($numbersData->currencyFormats as $format) {
-                /** @var SimplexmlElement $format */
+                /** @var SimpleXMLElement $format */
                 $numberSystem = (string) $format['numberSystem'];
                 $patternResult = $format->xpath(
                     'currencyFormatLength[not(@*)]/currencyFormat[@type="standard"]/pattern'
@@ -467,15 +468,15 @@ class Reader implements ReaderInterface
             // We browse aliases after all regular patterns have been defined, and duplicate data for target number
             // systems.
             foreach ($numbersData->currencyFormats as $format) {
-                /** @var SimplexmlElement $format */
+                /** @var SimpleXMLElement $format */
                 $numberSystem = (string) $format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
                 if (isset($alias['path']) && preg_match(
-                        "#^\.\.\/currencyFormats\[@numberSystem='([^)]+)'\]$#",
-                        (string) $alias['path'],
-                        $matches
-                    )
+                    "#^\.\.\/currencyFormats\[@numberSystem='([^)]+)'\]$#",
+                    (string) $alias['path'],
+                    $matches
+                )
                 ) {
                     $aliasNumSys = $matches[1];
                     $currencyPatterns[$numberSystem] = $currencyPatterns[$aliasNumSys];
@@ -538,7 +539,7 @@ class Reader implements ReaderInterface
                 );
 
                 if (!empty($codesMapping)) {
-                    /** @var SimplexmlElement $codesMapping */
+                    /** @var SimpleXMLElement $codesMapping */
                     $codesMapping = $codesMapping[0];
                     $numericIsoCode = (string) $codesMapping->attributes()->numeric;
                     if (strlen($numericIsoCode) < 3) {
@@ -558,7 +559,7 @@ class Reader implements ReaderInterface
                 }
 
                 if (!empty($fractionsData)) {
-                    /** @var SimplexmlElement $fractionsData */
+                    /** @var SimpleXMLElement $fractionsData */
                     $fractionsData = $fractionsData[0];
                     $currencyData->setDecimalDigits((int) (string) $fractionsData->attributes()->digits);
                 }
@@ -602,7 +603,7 @@ class Reader implements ReaderInterface
      *
      * @return bool
      */
-    protected function shouldCurrencyBeReturned($currencyCode, SimplexmlElement $supplementalData, $currencyActiveDateThreshold)
+    protected function shouldCurrencyBeReturned($currencyCode, SimpleXMLElement $supplementalData, $currencyActiveDateThreshold)
     {
         // dont store test currency
         if ($currencyCode == self::CURRENCY_CODE_TEST) {
@@ -635,7 +636,7 @@ class Reader implements ReaderInterface
             }
 
             // date "to" given: check if currency was active in near past to propose it
-            $dateTo = \DateTime::createFromFormat('Y-m-d', $currencyDate->attributes()->to);
+            $dateTo = DateTime::createFromFormat('Y-m-d', $currencyDate->attributes()->to);
             if (false !== $dateTo && $dateTo->getTimestamp() > $currencyActiveDateThreshold) {
                 return true;
             }

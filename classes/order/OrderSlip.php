@@ -116,7 +116,7 @@ class OrderSlipCore extends ObjectModel
     public function addSlipDetail($orderDetailList, $productQtyList)
     {
         foreach ($orderDetailList as $key => $id_order_detail) {
-            if ($qty = (int) ($productQtyList[$key])) {
+            if ($qty = (int) $productQtyList[$key]) {
                 $order_detail = new OrderDetail((int) $id_order_detail);
 
                 if (Validate::isLoadedObject($order_detail)) {
@@ -137,7 +137,7 @@ class OrderSlipCore extends ObjectModel
         return Db::getInstance()->executeS('
         SELECT *
         FROM `' . _DB_PREFIX_ . 'order_slip`
-        WHERE `id_customer` = ' . (int) ($customer_id) .
+        WHERE `id_customer` = ' . (int) $customer_id .
             ($order_id ? ' AND `id_order` = ' . (int) ($order_id) : '') . '
         ORDER BY `date_add` DESC');
     }

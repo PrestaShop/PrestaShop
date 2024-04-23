@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Query\GetSearchEngineForEditi
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryResult\SearchEngineForEditing;
 use PrestaShop\PrestaShop\Core\Search\Filters\SearchEngineFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,13 +51,12 @@ class SearchEnginesController extends FrameworkBundleAdminController
     /**
      * Show search engines listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      * @param SearchEngineFilters $filters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, SearchEngineFilters $filters): Response
     {
         $searchEngineGridFactory = $this->get('prestashop.core.grid.factory.search_engines');
@@ -73,12 +72,11 @@ class SearchEnginesController extends FrameworkBundleAdminController
     /**
      * Shows search engine creation form page and handle its submit.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(Request $request): Response
     {
         $searchEngineFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.search_engine_form_handler');
@@ -114,13 +112,12 @@ class SearchEnginesController extends FrameworkBundleAdminController
     /**
      * Show search engine edit form page and handles its submit.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $searchEngineId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function editAction(int $searchEngineId, Request $request): Response
     {
         $searchEngineFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.search_engine_form_handler');
@@ -172,15 +169,11 @@ class SearchEnginesController extends FrameworkBundleAdminController
     /**
      * Deletes search engine.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_search_engines_index",
-     * )
-     *
      * @param int $searchEngineId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_search_engines_index')]
     public function deleteAction(int $searchEngineId): RedirectResponse
     {
         try {
@@ -197,15 +190,11 @@ class SearchEnginesController extends FrameworkBundleAdminController
     /**
      * Deletes search engines in bulk action.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_search_engines_index",
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_search_engines_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $searchEngineIds = $this->getBulkSearchEnginesFromRequest($request);

@@ -260,6 +260,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Given /^manufacturer "(.*)" is (enabled|disabled)?$/
+     *
      * @Then /^manufacturer "(.*)" should be (enabled|disabled)?$/
      */
     public function assertStatus(string $manufacturerReference, string $expectedStatus)

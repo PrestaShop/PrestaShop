@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShopException;
+use ReflectionException;
 use Tools;
 
 class OrderReturnLazyArray extends AbstractLazyArray
@@ -53,7 +54,7 @@ class OrderReturnLazyArray extends AbstractLazyArray
      * @param Link $link
      * @param array $orderReturn
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct($prefix, Link $link, array $orderReturn)
     {
@@ -83,7 +84,7 @@ class OrderReturnLazyArray extends AbstractLazyArray
     {
         return $this->link->getPageLink(
             'order-detail',
-            true,
+            null,
             null,
             'id_order=' . (int) $this->orderReturn['id_order']
         );
@@ -98,7 +99,7 @@ class OrderReturnLazyArray extends AbstractLazyArray
     {
         return $this->link->getPageLink(
             'order-return',
-            true,
+            null,
             null,
             'id_order_return=' . (int) $this->orderReturn['id_order_return']
         );
@@ -136,7 +137,7 @@ class OrderReturnLazyArray extends AbstractLazyArray
         return ($this->orderReturn['state'] == 2)
             ? $this->link->getPageLink(
                 'pdf-order-return',
-                true,
+                null,
                 null,
                 'id_order_return=' . (int) $this->orderReturn['id_order_return']
             )

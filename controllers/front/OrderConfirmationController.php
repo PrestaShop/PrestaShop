@@ -77,15 +77,15 @@ class OrderConfirmationControllerCore extends FrontController
          *
          * It's not implemented yet, however.
          */
-        $this->id_order = Order::getIdByCartId((int) ($this->id_cart));
+        $this->id_order = Order::getIdByCartId((int) $this->id_cart);
         $this->secure_key = Tools::getValue('key', false);
-        $this->order = new Order((int) ($this->id_order));
-        $this->id_module = (int) (Tools::getValue('id_module', 0));
+        $this->order = new Order((int) $this->id_order);
+        $this->id_module = (int) Tools::getValue('id_module', 0);
 
         // This data is kept only for backward compatibility purposes
         $this->reference = (string) $this->order->reference;
 
-        $redirectLink = $this->context->link->getPageLink('history', $this->ssl);
+        $redirectLink = $this->context->link->getPageLink('history');
 
         // The confirmation link must contain a unique order secure key matching the key saved in database,
         // this prevents user to view other customer's order confirmations
@@ -104,14 +104,14 @@ class OrderConfirmationControllerCore extends FrontController
             }
         } else {
             // Otherwise we run a normal check that module matches
-            $module = Module::getInstanceById((int) ($this->id_module));
+            $module = Module::getInstanceById((int) $this->id_module);
             if ($this->order->module !== $module->name) {
                 Tools::redirect($redirectLink);
             }
         }
 
         // If checks passed, initialize customer, we will need him anyway
-        $this->customer = new Customer((int) ($this->order->id_customer));
+        $this->customer = new Customer((int) $this->order->id_customer);
     }
 
     /**
@@ -286,7 +286,17 @@ class OrderConfirmationControllerCore extends FrontController
         // note the id_module parameter with value -1
         // it acts as a marker for the module check to use "free_payment"
         // for the check
-        Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int) $cart->id . '&id_module=-1&id_order=' . (int) $order->currentOrder . '&key=' . $cart->secure_key);
+        Tools::redirect($this->context->link->getPageLink(
+            'order-confirmation',
+            null,
+            null,
+            [
+                'id_cart' => (int) $cart->id,
+                'id_module' => '-1',
+                'id_order' => (int) $order->currentOrder,
+                'key' => $cart->secure_key,
+            ]
+        ));
     }
 
     public function getBreadcrumbLinks()

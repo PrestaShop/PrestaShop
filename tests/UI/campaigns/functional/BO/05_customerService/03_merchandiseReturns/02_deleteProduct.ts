@@ -14,19 +14,23 @@ import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
-import foMerchandiseReturnsPage from '@pages/FO/classic/myAccount/merchandiseReturns';
-import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
-// Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -84,7 +88,7 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -96,16 +100,19 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
       await foLoginPage.goToHomePage(page);
 
       // Add first product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 1, 2);
-      await homePage.continueShopping(page);
+      await homePage.quickViewProduct(page, 1);
+      await quickViewModal.setQuantityAndAddToCart(page, 2);
+      await blockCartModal.continueShopping(page);
 
       // Add second product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 2, 2);
-      await homePage.continueShopping(page);
+      await homePage.quickViewProduct(page, 2);
+      await quickViewModal.setQuantityAndAddToCart(page, 2);
+      await blockCartModal.continueShopping(page);
 
       // Add third product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 3, 2);
-      await homePage.proceedToCheckout(page);
+      await homePage.quickViewProduct(page, 3);
+      await quickViewModal.setQuantityAndAddToCart(page, 2);
+      await blockCartModal.proceedToCheckout(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(6);
@@ -130,7 +137,7 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     it('should choose payment method and confirm the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
       expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
@@ -187,11 +194,11 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
       expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
     });
 
-    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await viewOrderBasePage.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      expect(result).to.equal(OrderStatuses.shipped.name);
+      const result = await viewOrderBasePage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should check if the button \'Return products\' is visible', async function () {

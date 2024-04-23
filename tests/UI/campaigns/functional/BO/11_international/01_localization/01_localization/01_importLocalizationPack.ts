@@ -15,8 +15,11 @@ import languagesPage from '@pages/BO/international/languages';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 // Import data
-import Currencies from '@data/demo/currencies';
 import Languages from '@data/demo/languages';
+
+import {
+  dataCurrencies,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -92,10 +95,10 @@ describe('BO - International - Localization : Import a localization pack', async
       await testContext.addContextItem(this, 'testIdentifier', 'changeFoCurrency', baseContext);
 
       // Check currency
-      await foHomePage.changeCurrency(page, Currencies.chileanPeso.isoCode, Currencies.chileanPeso.symbol);
+      await foHomePage.changeCurrency(page, dataCurrencies.chileanPeso.isoCode, dataCurrencies.chileanPeso.symbol);
 
       const shopCurrency = await foHomePage.getDefaultCurrency(page);
-      expect(shopCurrency).to.contain(Currencies.chileanPeso.isoCode);
+      expect(shopCurrency).to.contain(dataCurrencies.chileanPeso.isoCode);
     });
 
     it('should change FO language', async function () {
@@ -164,13 +167,13 @@ describe('BO - International - Localization : Import a localization pack', async
       expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });
 
-    it(`should filter by iso code of currency '${Currencies.chileanPeso.isoCode}'`, async function () {
+    it(`should filter by iso code of currency '${dataCurrencies.chileanPeso.isoCode}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterCurrencies', baseContext);
 
-      await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.chileanPeso.isoCode);
+      await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.chileanPeso.isoCode);
 
       const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-      expect(textColumn).to.contains(Currencies.chileanPeso.isoCode);
+      expect(textColumn).to.contains(dataCurrencies.chileanPeso.isoCode);
     });
 
     it('should delete currency', async function () {

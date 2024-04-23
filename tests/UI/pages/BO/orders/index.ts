@@ -1,6 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type OrderStatusData from '@data/faker/orderStatus';
+import {
+  type FakerOrderStatus,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -407,10 +409,10 @@ class Order extends BOBasePage {
    * Set order status
    * @param page {Page} Browser tab
    * @param row {number} Order row in table
-   * @param status {OrderStatusData} Order status on table
+   * @param status {FakerOrderStatus} Order status on table
    * @returns {Promise<string>}
    */
-  async setOrderStatus(page: Page, row: number, status: OrderStatusData): Promise<string> {
+  async setOrderStatus(page: Page, row: number, status: FakerOrderStatus): Promise<string> {
     await Promise.all([
       page.locator(this.updateStatusInTableButton(row)).click(),
       this.waitForVisibleSelector(page, `${this.updateStatusInTableDropdown(row)}.show`),

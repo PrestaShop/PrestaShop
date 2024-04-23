@@ -4,4 +4,14 @@ type ModuleDataCreator = {
   releaseZip?: string
 }
 
-export default ModuleDataCreator;
+type ModuleInfo = {
+  moduleId: number
+  technicalName: string
+  version: string
+  enabled: boolean
+}
+
+export {
+  ModuleDataCreator,
+  ModuleInfo,
+};

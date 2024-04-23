@@ -10,8 +10,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import customersPage from '@pages/BO/customers';
 import viewCustomerPage from '@pages/BO/customers/view';
@@ -21,17 +21,21 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
-import gdprPersonalDataPage from '@pages/FO/classic/myAccount/gdprPersonalData';
+import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 import ordersPage from '@pages/BO/orders';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
-import productPage from '@pages/FO/classic/product';
+import {productPage} from '@pages/FO/classic/product';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
 import MessageData from '@data/faker/message';
-import CustomerData from '@data/faker/customer';
+
+import {
+  // Import data
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -65,13 +69,13 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   let ipAddress: string;
   let connectionOrigin: string;
 
-  const customerData: CustomerData = new CustomerData({
+  const customerData: FakerCustomer = new FakerCustomer({
     firstName: 'Marc',
     lastName: 'Beier',
     email: 'presta@prestashop.com',
   });
   const date: Date = new Date();
-  const addressData: AddressData = new AddressData({
+  const addressData: FakerAddress = new FakerAddress({
     firstName: 'Marc',
     lastName: 'Beier',
     country: 'France',
@@ -436,19 +440,19 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should filter list by customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
 
-        await shoppingCartsPage.filterTable(page, 'input', 'c!lastname', customerData.lastName);
+        await shoppingCartsPage.filterTable(page, 'input', 'customer_name', customerData.lastName);
 
         const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
         expect(numberOfShoppingCartsAfterFilter).to.equal(1);
 
-        const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'c!lastname');
+        const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'customer_name');
         expect(textColumn).to.contains(customerData.lastName);
       });
 
       it('should get shopping cart ID and Date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getShoppingCartIDAndDate', baseContext);
 
-        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date');
+        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date_add');
         shoppingCartDate = `${shoppingCartDate.substring(6, 10)}-${shoppingCartDate.substring(0, 2)}-`
           + `${shoppingCartDate.substring(3, 5)}${shoppingCartDate.substring(11, 19)}`;
 
@@ -517,7 +521,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

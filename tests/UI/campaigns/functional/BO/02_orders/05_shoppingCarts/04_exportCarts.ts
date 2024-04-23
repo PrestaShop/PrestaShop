@@ -55,13 +55,6 @@ describe('BO - Orders - Shopping carts: Export carts', async () => {
     expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
   });
 
-  it('should change the items number to 300 per page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo300', baseContext);
-
-    const paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 300);
-    expect(paginationNumber).to.equal('1');
-  });
-
   it('should export carts to a csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'exportCarts', baseContext);
 
@@ -83,11 +76,5 @@ describe('BO - Orders - Shopping carts: Export carts', async () => {
       const textExist = await files.isTextInFile(filePath, cartInCsvFormat, true, true);
       expect(textExist, `${cartInCsvFormat} was not found in the file`).to.eq(true);
     }
-  });
-
-  it('should go back to default pagination number', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
-
-    await shoppingCartsPage.selectPaginationLimit(page, 50);
   });
 });

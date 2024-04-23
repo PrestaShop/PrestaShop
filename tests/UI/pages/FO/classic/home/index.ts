@@ -1,9 +1,6 @@
 // Import FO Pages
 import FOBasePage from '@pages/FO/FObasePage';
-
-// Import data
-import CartProductDetails from '@data/types/cart';
-import {ProductAttribute} from '@data/types/product';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import type {Page} from 'playwright';
 
@@ -17,123 +14,61 @@ class HomePage extends FOBasePage {
 
   public readonly successAddToCartMessage: string;
 
-  private readonly carouselSliderId: string;
+  protected carouselSliderId: string;
 
-  private readonly carouselControlDirectionLink: (direction: string) => string;
+  protected carouselControlDirectionLink: (direction: string) => string;
 
-  private readonly carouselSliderInnerList: string;
+  protected carouselSliderInnerList: string;
 
   private readonly carouselSliderInnerListItems: string;
 
-  private readonly carouselSliderURL: string;
+  protected carouselSliderURL: string;
 
-  private readonly carouselSliderInnerListItem: (position: number) => string;
+  protected carouselSliderInnerListItem: (position: number) => string;
 
   private readonly homePageSection: string;
 
-  private productsBlock: (blockId: number) => string;
+  private readonly productsBlock: (blockId: string) => string;
 
-  private readonly productsBlockTitle: (blockId: number) => string;
+  protected productsBlockTitle: (blockId: string) => string;
 
-  private readonly productsBlockDiv: (blockId: number) => string;
+  protected productsBlockDiv: (blockId: string) => string;
 
-  public productArticle: (number: number) => string;
+  public productArticle: (row: number) => string;
 
-  private readonly productImg: (number: number) => string;
+  protected productImg: (row: number) => string;
 
-  private readonly productDescriptionDiv: (number: number) => string;
+  private readonly productDescriptionDiv: (row: number) => string;
 
-  private readonly productQuickViewLink: (number: number) => string;
+  protected productQuickViewLink: (row: number) => string;
 
-  private readonly productColorLink: (number: number, color: string) => string;
+  private readonly productColors: (row: number) => string;
 
-  private readonly allProductsBlockLink: (blockId: number) => string;
+  private readonly productColorLink: (row: number, color: string) => string;
 
-  private readonly totalProducts: string;
+  protected allProductsBlockLink: (blockId: number | string) => string;
 
-  private readonly productPrice: (number: number) => string;
+  private readonly productPrice: (row: number) => string;
 
-  private readonly newFlag: (number: number) => string;
+  private readonly newFlag: (row: number) => string;
 
   private readonly bannerImg: string;
 
   private readonly customTextBlock: string;
 
-  private readonly newsletterFormField: string;
+  private readonly newsletterBlock: string;
 
-  private readonly newsletterSubmitButton: string;
+  protected newsletterFormField: string;
 
-  private readonly subscriptionAlertMessage: string;
+  private readonly newsletterRGPDBlock: string;
 
-  private readonly quickViewModalDiv: string;
+  private readonly newsletterRGPDBlockCheckbox: string;
 
-  private readonly quickViewCloseButton: string;
+  private readonly newsletterRGPDBlockLabel: string;
 
-  private readonly quickViewProductName: string;
+  protected newsletterSubmitButton: string;
 
-  private readonly quickViewRegularPrice: string;
-
-  private readonly quickViewProductPrice: string;
-
-  private readonly quickViewDiscountPercentage: string;
-
-  private readonly quickViewTaxShippingDeliveryLabel: string;
-
-  private readonly quickViewShortDescription: string;
-
-  private readonly quickViewProductVariants: string;
-
-  private readonly quickViewProductSize: string;
-
-  private readonly quickViewProductColor: string;
-
-  private readonly quickViewProductDimension: string;
-
-  private readonly productAvailability: string;
-
-  private readonly quickViewCoverImage: string;
-
-  private readonly quickViewThumbImage: string;
-
-  private readonly quickViewQuantityWantedInput: string;
-
-  private readonly quickViewFacebookSocialSharing: string;
-
-  private readonly quickViewTwitterSocialSharing: string;
-
-  private readonly quickViewPinterestSocialSharing: string;
-
-  private readonly addToCartButton: string;
-
-  private readonly blockCartLabel: string;
-
-  private readonly blockCartModalDiv: string;
-
-  private readonly blockCartModalCloseButton: string;
-
-  private readonly cartModalProductNameBlock: string;
-
-  private readonly cartModalProductPriceBlock: string;
-
-  private readonly cartModalProductSizeBlock: string;
-
-  private readonly cartModalProductColorBlock: string;
-
-  private readonly cartModalProductQuantityBlock: string;
-
-  private readonly cartContentBlock: string;
-
-  private readonly cartModalProductsCountBlock: string;
-
-  private readonly cartModalShippingBlock: string;
-
-  private readonly cartModalSubtotalBlock: string;
-
-  private readonly cartModalProductTaxInclBlock: string;
-
-  private readonly cartModalCheckoutLink: string;
-
-  private readonly continueShoppingButton: string;
+  protected subscriptionAlertMessage: string;
 
   public readonly successSubscriptionMessage: string;
 
@@ -142,14 +77,6 @@ class HomePage extends FOBasePage {
   public readonly successSendConfirmationEmailMessage: string;
 
   public readonly alreadyUsedEmailMessage: string;
-
-  public readonly productHummingbird: (number: number) => string;
-
-  public readonly productImgHummingbird: (number: number) => string;
-
-  public readonly quickViewButtonHummingbird: (number: number) => string;
-
-  public readonly blockCartModalCloseButtonHummingbird: string;
 
   /**
    * @constructs
@@ -161,6 +88,12 @@ class HomePage extends FOBasePage {
     this.pageTitle = global.INSTALL.SHOP_NAME;
     this.successAddToCartMessage = 'Product successfully added to your shopping cart';
 
+    // Newsletter subscription messages
+    this.successSubscriptionMessage = 'You have successfully subscribed to this newsletter.';
+    this.successSendVerificationEmailMessage = 'A verification email has been sent. Please check your inbox.';
+    this.successSendConfirmationEmailMessage = 'A confirmation email has been sent. Please check your inbox.';
+    this.alreadyUsedEmailMessage = 'This email address is already registered.';
+
     // Selectors of slider
     this.carouselSliderId = '#carousel';
     this.carouselControlDirectionLink = (direction: string) => `${this.carouselSliderId} a.${direction}.carousel-control`;
@@ -169,93 +102,44 @@ class HomePage extends FOBasePage {
     this.carouselSliderURL = `${this.carouselSliderInnerListItems} a`;
     this.carouselSliderInnerListItem = (position: number) => `${this.carouselSliderInnerListItems}:nth-child(${position})`;
 
-    // Selectors for home page
+    // selectors for home page content
     this.homePageSection = 'section#content.page-home';
-    this.productsBlock = (blockId: number) => `#content section:nth-child(${blockId})`;
-    this.productsBlockTitle = (blockId: number) => `${this.productsBlock(blockId)} h2`;
-    this.productsBlockDiv = (blockId: number) => `${this.productsBlock(blockId)} div.products div.js-product`;
-    this.productArticle = (number: number) => `${this.productsBlock(2)} .products div:nth-child(${number}) article`;
-    this.productImg = (number: number) => `${this.productArticle(number)} img`;
-    this.productDescriptionDiv = (number: number) => `${this.productArticle(number)} div.product-description`;
-    this.productQuickViewLink = (number: number) => `${this.productArticle(number)} a.quick-view`;
-    this.productColorLink = (number: number, color: string) => `${this.productArticle(number)} .variant-links`
+
+    // Selectors for products block
+    this.productsBlock = (blockName: string) => `#content section[data-type="${blockName}"]`;
+    this.productsBlockTitle = (blockName: string) => `${this.productsBlock(blockName)} h2`;
+    this.productsBlockDiv = (blockName: string) => `${this.productsBlock(blockName)} div.products div.js-product`;
+    this.allProductsBlockLink = (blockId: number | string) => `#content section:nth-child(${blockId}) a.all-product-link`;
+
+    // Selectors for list of products
+    this.productArticle = (row: number) => `${this.productsBlock('popularproducts')} .products `
+      + `div:nth-child(${row}) article`;
+    this.productImg = (row: number) => `${this.productArticle(row)} img`;
+    this.productDescriptionDiv = (row: number) => `${this.productArticle(row)} div.product-description`;
+    this.productQuickViewLink = (row: number) => `${this.productArticle(row)} a.quick-view`;
+    this.productColors = (row: number) => `${this.productArticle(row)} .variant-links`;
+    this.productColorLink = (row: number, color: string) => `${this.productArticle(row)} .variant-links`
       + ` a[aria-label='${color}']`;
-    this.allProductsBlockLink = (blockId: number) => `#content section:nth-child(${blockId}) a.all-product-link`;
-    this.totalProducts = '#js-product-list-top .total-products > p';
-    this.productPrice = (number: number) => `${this.productArticle(number)} span[aria-label="Price"]`;
-    this.newFlag = (number: number) => `${this.productArticle(number)} .product-flag.new`;
+    this.productPrice = (row: number) => `${this.productArticle(row)} span[aria-label="Price"]`;
+    this.newFlag = (row: number) => `${this.productArticle(row)} .product-flag.new`;
+
+    // Selectors for banner and custom text
     this.bannerImg = '.banner img';
     this.customTextBlock = '#custom-text';
-    this.newsletterFormField = '.block_newsletter [name=email]';
-    this.newsletterSubmitButton = '.block_newsletter [name="submitNewsletter"][value="Subscribe"]';
 
-    // Newsletter Subscription alert message
+    // Newsletter Subscription selectors
+    this.newsletterBlock = '.block_newsletter';
+    this.newsletterFormField = `${this.newsletterBlock} [name=email]`;
+    this.newsletterRGPDBlock = `${this.newsletterBlock} div[class^="gdpr_consent gdpr_module_"]`;
+    this.newsletterRGPDBlockCheckbox = `${this.newsletterRGPDBlock} label.psgdpr_consent_message input[type="checkbox"]`;
+    this.newsletterRGPDBlockLabel = `${this.newsletterRGPDBlock} label.psgdpr_consent_message span:nth-of-type(2)`;
+    this.newsletterSubmitButton = `${this.newsletterBlock} [name="submitNewsletter"][value="Subscribe"]`;
     this.subscriptionAlertMessage = '.block_newsletter_alert';
-
-    // Quick View modal
-    this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
-    this.quickViewCloseButton = `${this.quickViewModalDiv} button.close`;
-    this.quickViewProductName = `${this.quickViewModalDiv} h1`;
-    this.quickViewRegularPrice = `${this.quickViewModalDiv} span.regular-price`;
-    this.quickViewProductPrice = `${this.quickViewModalDiv} div.current-price span.current-price-value`;
-    this.quickViewDiscountPercentage = `${this.quickViewModalDiv} div.current-price span.discount-percentage`;
-    this.quickViewTaxShippingDeliveryLabel = `${this.quickViewModalDiv} div.tax-shipping-delivery-label`;
-    this.quickViewShortDescription = `${this.quickViewModalDiv} div#product-description-short`;
-    this.quickViewProductVariants = `${this.quickViewModalDiv} div.product-variants`;
-    this.quickViewProductSize = `${this.quickViewProductVariants} select#group_1`;
-    this.quickViewProductColor = `${this.quickViewProductVariants} ul#group_2`;
-    this.quickViewProductDimension = `${this.quickViewProductVariants} select#group_3`;
-    this.productAvailability = '#product-availability';
-    this.quickViewCoverImage = `${this.quickViewModalDiv} img.js-qv-product-cover`;
-    this.quickViewThumbImage = `${this.quickViewModalDiv} img.js-thumb.selected`;
-    this.quickViewQuantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
-    this.quickViewFacebookSocialSharing = `${this.quickViewModalDiv} .facebook a`;
-    this.quickViewTwitterSocialSharing = `${this.quickViewModalDiv} .twitter a`;
-    this.quickViewPinterestSocialSharing = `${this.quickViewModalDiv} .pinterest a`;
-    this.addToCartButton = `${this.quickViewModalDiv} button[data-button-action='add-to-cart']`;
-
-    // Block Cart Modal
-    this.blockCartModalDiv = '#blockcart-modal';
-    this.blockCartLabel = '#myModalLabel';
-    this.blockCartModalCloseButton = `${this.blockCartModalDiv} button.close`;
-    this.cartModalProductNameBlock = `${this.blockCartModalDiv} .product-name`;
-    this.cartModalProductPriceBlock = `${this.blockCartModalDiv} .product-price`;
-    this.cartModalProductSizeBlock = `${this.blockCartModalDiv} .size strong`;
-    this.cartModalProductColorBlock = `${this.blockCartModalDiv} .color strong`;
-    this.cartModalProductQuantityBlock = `${this.blockCartModalDiv} .product-quantity`;
-    this.cartContentBlock = `${this.blockCartModalDiv} .cart-content`;
-    this.cartModalProductsCountBlock = `${this.cartContentBlock} .cart-products-count`;
-    this.cartModalShippingBlock = `${this.cartContentBlock} .shipping.value`;
-    this.cartModalSubtotalBlock = `${this.cartContentBlock} .subtotal.value`;
-    this.cartModalProductTaxInclBlock = `${this.cartContentBlock} .product-total .value`;
-    this.cartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-content-btn a`;
-    this.continueShoppingButton = `${this.blockCartModalDiv} div.cart-content-btn button.btn-secondary`;
-
-    // Newsletter subscription messages
-    this.successSubscriptionMessage = 'You have successfully subscribed to this newsletter.';
-    this.successSendVerificationEmailMessage = 'A verification email has been sent. Please check your inbox.';
-    this.successSendConfirmationEmailMessage = 'A confirmation email has been sent. Please check your inbox.';
-    this.alreadyUsedEmailMessage = 'This email address is already registered.';
-
-    // Hummingbird
-    this.productHummingbird = (number: number) => `#content .products div:nth-child(${number})`;
-    this.productImgHummingbird = (number: number) => `${this.productHummingbird(number)} img`;
-    this.quickViewButtonHummingbird = (number: number) => `${this.productHummingbird(number)} .product-miniature__quickview `
-      + 'button';
-    this.blockCartModalCloseButtonHummingbird = `${this.blockCartModalDiv} button.btn-close`;
   }
 
+  // Methods in home page
   /**
-   *
-   * @param page {Page} Browser tab
-   * @returns {Promise<number>}
-   */
-  async getProductsNumber(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.totalProducts);
-  }
-
-  /**
-   * Check home page
+   * Check is home page
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
@@ -263,6 +147,7 @@ class HomePage extends FOBasePage {
     return this.elementVisible(page, this.homePageSection, 3000);
   }
 
+  // Methods to check slider
   /**
    * Click on right/left arrow of the slider
    * @param page {Page} Browser tab
@@ -294,6 +179,7 @@ class HomePage extends FOBasePage {
     return this.getAttributeContent(page, this.carouselSliderURL, 'href');
   }
 
+  // Methods to check list of products
   /**
    * Go to the product page
    * @param page {Page} Browser tab
@@ -336,66 +222,35 @@ class HomePage extends FOBasePage {
   /**
    * Get products block title
    * @param page {Page} Browser tab
-   * @param blockID {number} The block number in the page
+   * @param blockName {'bestsellers'|'newproducts'|'onsale'|'popularproducts'| string} The block name in the page
    * @returns {Promise<string>}
    */
-  async getBlockTitle(page: Page, blockID: number = 1): Promise<string> {
-    let columnSelector: string;
-
-    switch (blockID) {
-      case 1:
-        columnSelector = this.productsBlockTitle(2);
-        break;
-
-      case 2:
-        columnSelector = this.productsBlockTitle(5);
-        break;
-
-      case 3:
-        columnSelector = this.productsBlockTitle(6);
-        break;
-
-      case 4:
-        columnSelector = this.productsBlockTitle(7);
-        break;
-
-      default:
-        throw new Error(`Block ${blockID} was not found`);
-    }
-
-    return this.getTextContent(page, columnSelector);
+  async getBlockTitle(
+    page: Page,
+    blockName: 'bestsellers' | 'newproducts' | 'onsale' | 'popularproducts' | string): Promise<string> {
+    return this.getTextContent(page, this.productsBlockTitle(blockName));
   }
 
   /**
    * Get products block number
-   * @param blockID {number} The block number in the page
+   * @param blockName {'bestsellers'|'newproducts'|'onsale'|'popularproducts'} The block name in the page
    * @param page {Page} Browser tab
+   * @return {Promise<number>}
    */
-  async getProductsBlockNumber(page: Page, blockID: number = 1): Promise<number> {
-    let columnSelector: string;
+  async getProductsBlockNumber(
+    page: Page,
+    blockName: 'bestsellers' | 'newproducts' | 'onsale' | 'popularproducts' | string): Promise<number> {
+    return page.locator(this.productsBlockDiv(blockName)).count();
+  }
 
-    switch (blockID) {
-      case 1:
-        columnSelector = this.productsBlockDiv(2);
-        break;
-
-      case 2:
-        columnSelector = this.productsBlockDiv(5);
-        break;
-
-      case 3:
-        columnSelector = this.productsBlockDiv(6);
-        break;
-
-      case 4:
-        columnSelector = this.productsBlockDiv(7);
-        break;
-
-      default:
-        throw new Error(`Block ${blockID} was not found`);
-    }
-
-    return page.locator(columnSelector).count();
+  /**
+   * Has products block
+   * @param blockName {'bestsellers'|'newproducts'|'onsale'|'popularproducts'} The block name in the page
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async hasProductsBlock(page: Page, blockName: 'bestsellers' | 'newproducts' | 'onsale' | 'popularproducts'): Promise<boolean> {
+    return (await page.locator(this.productsBlock(blockName)).count()) > 0;
   }
 
   /**
@@ -434,6 +289,7 @@ class HomePage extends FOBasePage {
   /**
    * Is banner visible
    * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
    */
   async isBannerVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.bannerImg, 1000);
@@ -442,28 +298,44 @@ class HomePage extends FOBasePage {
   /**
    * Is custom text block visible
    * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
    */
   async isCustomTextBlockVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.customTextBlock, 1000);
   }
 
-  // Quick view methods
   /**
-   * Click on Quick view Product
+   * Is quickView link visible
    * @param page {Page} Browser tab
-   * @param id {number} Index of product in list of products
+   * @param row {number} Row of product to quick view
+   * @return {Promise<boolean>}
+   */
+  async isQuickViewLinkVisible(page: Page, row: number): Promise<boolean> {
+    await page.locator(this.productImg(row)).hover();
+
+    return this.elementVisible(page, this.productQuickViewLink(row), 1000);
+  }
+
+  /**
+   * Is colored boxes visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row of product to quick view
+   * @return {Promise<boolean>}
+   */
+  async isColoredBoxesVisible(page: Page, row: number): Promise<boolean> {
+    await page.locator(this.productImg(row)).hover();
+
+    return this.elementVisible(page, this.productColors(row), 1000);
+  }
+
+  /**
+   * Quick view product
+   * @param page {Page} Browser tab
+   * @param row {number} Row of product to quick view
    * @return {Promise<void>}
    */
-  async quickViewProduct(page: Page, id: number): Promise<void> {
-    if (this.theme === 'hummingbird') {
-      await page.locator(this.productImgHummingbird(id)).first().hover();
-      await this.waitForVisibleSelector(page, this.quickViewButtonHummingbird(id));
-      await page.locator(this.quickViewButtonHummingbird(id)).first().click();
-
-      return;
-    }
-
-    await page.locator(this.productImg(id)).hover();
+  async quickViewProduct(page: Page, row: number): Promise<void> {
+    await page.locator(this.productImg(row)).hover();
     let displayed: boolean = false;
 
     /* eslint-disable no-await-in-loop */
@@ -480,251 +352,26 @@ class HomePage extends FOBasePage {
           }
           return window.getComputedStyle(element, ':after').getPropertyValue('display') === 'block';
         },
-        this.productDescriptionDiv(id),
+        this.productDescriptionDiv(row),
       );
       await page.waitForTimeout(100);
     }
     /* eslint-enable no-await-in-loop */
     await Promise.all([
-      this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.locator(this.productQuickViewLink(id)).evaluate((el: HTMLElement) => el.click()),
+      this.waitForVisibleSelector(page, quickViewModal.quickViewModalDiv),
+      page.locator(this.productQuickViewLink(row)).evaluate((el: HTMLElement) => el.click()),
     ]);
-  }
-
-  /**
-   * Is quick view product modal visible
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async isQuickViewProductModalVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.quickViewModalDiv, 2000);
-  }
-
-  /**
-   * Add product to cart with Quick view
-   * @param page {Page} Browser tab
-   * @param id {number} Index of product in list of products
-   * @param quantityWanted {number} Quantity to order
-   * @return {Promise<string>}
-   */
-  async addProductToCartByQuickView(page: Page, id: number, quantityWanted: number = 1): Promise<string> {
-    await this.quickViewProduct(page, id);
-    await this.setValue(page, this.quickViewQuantityWantedInput, quantityWanted);
-    await Promise.all([
-      this.waitForVisibleSelector(page, this.blockCartModalDiv),
-      page.locator(this.addToCartButton).click(),
-    ]);
-
-    return this.getTextContent(page, this.blockCartLabel);
-  }
-
-  /**
-   * Is add to cart button disabled
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async isAddToCartButtonDisabled(page: Page): Promise<boolean> {
-    return this.elementVisible(page, `${this.addToCartButton}[disabled]`, 1000);
-  }
-
-  /**
-   * Change product attributes
-   * @param page {Page} Browser tab
-   * @param attributes {ProductAttribute} The attributes data (size, color, dimension)
-   * @returns {Promise<void>}
-   */
-  async changeAttributes(page: Page, attributes: ProductAttribute): Promise<void> {
-    switch (attributes.name) {
-      case 'color':
-        await this.waitForSelectorAndClick(page, `${this.quickViewProductColor} input[title='${attributes.value}']`);
-        await this.waitForVisibleSelector(
-          page,
-          `${this.quickViewProductColor} input[title='${attributes.value}'][checked]`,
-        );
-        break;
-      case 'dimension':
-        await Promise.all([
-          page.waitForResponse((response) => response.url().includes('product&token=')),
-          this.selectByVisibleText(page, this.quickViewProductDimension, attributes.value),
-        ]);
-        break;
-      case 'size':
-        await this.selectByVisibleText(page, this.quickViewProductSize, attributes.value);
-        break;
-      default:
-        throw new Error(`${attributes.name} has not being in defined in "changeAttributes"`);
-    }
-  }
-
-  /**
-   * Change product quantity
-   * @param page {Page} Browser tab
-   * @param quantity {number} The product quantity to change
-   * @returns {Promise<void>}
-   */
-  async changeQuantity(page: Page, quantity: number): Promise<void> {
-    await this.setValue(page, this.quickViewQuantityWantedInput, quantity);
-  }
-
-  /**
-   * Click on add to cart button from quick view modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<void>}
-   */
-  async addToCartByQuickView(page: Page): Promise<void> {
-    await this.waitForSelectorAndClick(page, this.addToCartButton);
-  }
-
-  /**
-   * Change attributes and add to cart
-   * @param page {Page} Browser tab
-   * @param attributes {ProductAttribute[]} The attributes data (size, color, quantity)
-   * @param quantity {number} The attributes data (size, color, quantity)
-   * @returns {Promise<void>}
-   */
-  async changeAttributesAndAddToCart(page: Page, attributes: ProductAttribute[], quantity: number): Promise<void> {
-    for (let i: number = 0; i < attributes.length; i++) {
-      await this.changeAttributes(page, attributes[i]);
-    }
-    await this.changeQuantity(page, quantity);
-    await this.addToCartByQuickView(page);
-  }
-
-  /**
-   * Get product with discount details from quick view modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<{discountPercentage: string, thumbImage: string|null, price: number, taxShippingDeliveryLabel: string,
-   * regularPrice: number, coverImage: string|null, name: string, shortDescription: string}>}
-   */
-  async getProductWithDiscountDetailsFromQuickViewModal(page: Page): Promise<{
-    discountPercentage: string,
-    thumbImage: string | null,
-    price: number,
-    taxShippingDeliveryLabel: string,
-    regularPrice: number,
-    coverImage: string | null,
-    name: string,
-    shortDescription: string,
-  }> {
-    return {
-      name: await this.getTextContent(page, this.quickViewProductName),
-      regularPrice: parseFloat((await this.getTextContent(page, this.quickViewRegularPrice)).replace('€', '')),
-      price: parseFloat((await this.getTextContent(page, this.quickViewProductPrice)).replace('€', '')),
-      discountPercentage: await this.getTextContent(page, this.quickViewDiscountPercentage),
-      taxShippingDeliveryLabel: await this.getTextContent(page, this.quickViewTaxShippingDeliveryLabel),
-      shortDescription: await this.getTextContent(page, this.quickViewShortDescription),
-      coverImage: await this.getAttributeContent(page, this.quickViewCoverImage, 'src'),
-      thumbImage: await this.getAttributeContent(page, this.quickViewThumbImage, 'src'),
-    };
-  }
-
-  /**
-   * Get product details from quick view modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<{thumbImage: string|null, price: number, taxShippingDeliveryLabel: string,
-   * coverImage: string|null, name: string, shortDescription: string}>}
-   */
-  async getProductDetailsFromQuickViewModal(page: Page): Promise<{
-    thumbImage: string | null,
-    price: number,
-    taxShippingDeliveryLabel: string,
-    coverImage: string | null,
-    name: string,
-    shortDescription: string,
-  }> {
-    return {
-      name: await this.getTextContent(page, this.quickViewProductName),
-      price: parseFloat((await this.getTextContent(page, this.quickViewProductPrice)).replace('€', '')),
-      taxShippingDeliveryLabel: await this.getTextContent(page, this.quickViewTaxShippingDeliveryLabel),
-      shortDescription: await this.getTextContent(page, this.quickViewShortDescription),
-      coverImage: await this.getAttributeContent(page, this.quickViewCoverImage, 'src'),
-      thumbImage: await this.getAttributeContent(page, this.quickViewThumbImage, 'src'),
-    };
-  }
-
-  /**
-   * Get selected attribute from quick view
-   * @param page {Page} Browser tab
-   * @param attribute {ProductAttribute} Attribute to get value
-   * @returns {Promise<ProductAttribute[]>}
-   */
-  async getSelectedAttributesFromQuickViewModal(
-    page: Page,
-    attribute: ProductAttribute,
-  ): Promise<ProductAttribute[]> {
-    const attributes: ProductAttribute[] = [];
-
-    if ('color' in attribute && 'size' in attribute) {
-      attributes.push({
-        name: 'size',
-        value: await this.getAttributeContent(page, `${this.quickViewProductSize} option[selected]`, 'title'),
-      });
-      attributes.push({
-        name: 'color',
-        value: await this.getAttributeContent(page, `${this.quickViewProductColor} input[checked='checked']`, 'title'),
-      });
-    } else {
-      attributes.push({
-        name: 'dimension',
-        value: await this.getAttributeContent(page, `${this.quickViewProductDimension} option[selected]`, 'title'),
-      });
-    }
-    return attributes;
-  }
-
-  /**
-   * Get product attributes from quick view modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<ProductAttribute[]>}
-   */
-  async getProductAttributesFromQuickViewModal(page: Page): Promise<ProductAttribute[]> {
-    return [
-      {
-        name: 'size',
-        value: await this.getTextContent(page, this.quickViewProductSize),
-      },
-      {
-        name: 'color',
-        value: await this.getTextContent(page, this.quickViewProductColor, false),
-      },
-    ];
-  }
-
-  /**
-   * Close quick view modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async closeQuickViewModal(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, this.quickViewCloseButton);
-
-    return this.elementNotVisible(page, this.quickViewModalDiv, 1000);
-  }
-
-  /**
-   * Close block cart modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async closeBlockCartModal(page: Page): Promise<boolean> {
-    if (this.theme === 'hummingbird') {
-      await this.waitForSelectorAndClick(page, this.blockCartModalCloseButtonHummingbird);
-    } else {
-      await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
-    }
-
-    return this.elementNotVisible(page, this.blockCartModalDiv, 1000);
   }
 
   /**
    * Select product color
    * @param page {Page} Browser tab
-   * @param id {number} Id of the current product
+   * @param row {number} Row of the selected product
    * @param color {string} The color to select
    * @returns {Promise<void>}
    */
-  async selectProductColor(page: Page, id: number, color: string): Promise<void> {
-    await page.locator(this.productImg(id)).hover();
+  async selectProductColor(page: Page, row: number, color: string): Promise<void> {
+    await page.locator(this.productImg(row)).hover();
     let displayed = false;
 
     /* eslint-disable no-await-in-loop */
@@ -741,127 +388,16 @@ class HomePage extends FOBasePage {
           }
           return window.getComputedStyle(element, ':after').getPropertyValue('display') === 'block';
         },
-        this.productDescriptionDiv(id),
+        this.productDescriptionDiv(row),
       );
       await page.waitForTimeout(100);
     }
     /* eslint-enable no-await-in-loop */
 
-    await this.clickAndWaitForURL(page, this.productColorLink(id, color));
+    await this.clickAndWaitForURL(page, this.productColorLink(row, color));
   }
 
-  /**
-   * Get product availability text
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
-  async getProductAvailabilityText(page: Page): Promise<string> {
-    return this.getTextContent(page, this.productAvailability);
-  }
-
-  /**
-   * Is add to cart button enabled
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async isAddToCartButtonEnabled(page: Page): Promise<boolean> {
-    return !await this.elementVisible(page, `${this.addToCartButton}[disabled]`, 1000);
-  }
-
-  // Block cart modal methods
-  /**
-   * Is block cart modal visible
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  isBlockCartModalVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.blockCartModalDiv, 2000);
-  }
-
-  /**
-   * Get product details from blockCart modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<CartProductDetails>}
-   */
-  async getProductDetailsFromBlockCartModal(page: Page): Promise<CartProductDetails> {
-    return {
-      name: await this.getTextContent(page, this.cartModalProductNameBlock),
-      price: parseFloat((await this.getTextContent(page, this.cartModalProductPriceBlock)).replace('€', '')),
-      quantity: await this.getNumberFromText(page, this.cartModalProductQuantityBlock),
-      cartProductsCount: await this.getNumberFromText(page, this.cartModalProductsCountBlock),
-      cartSubtotal: parseFloat((await this.getTextContent(page, this.cartModalSubtotalBlock)).replace('€', '')),
-      cartShipping: await this.getTextContent(page, this.cartModalShippingBlock),
-      totalTaxIncl: parseFloat((await this.getTextContent(page, this.cartModalProductTaxInclBlock)).replace('€', '')),
-    };
-  }
-
-  /**
-   * Get product attributes from block cart modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<ProductAttribute[]>}
-   */
-  async getProductAttributesFromBlockCartModal(page: Page): Promise<ProductAttribute[]> {
-    return [
-      {
-        name: 'size',
-        value: await this.getTextContent(page, this.cartModalProductSizeBlock),
-      },
-      {
-        name: 'color',
-        value: await this.getTextContent(page, this.cartModalProductColorBlock),
-      },
-    ];
-  }
-
-  /**
-   * Click on proceed to checkout after adding product to cart (in modal homePage)
-   * @param page {Page} Browser tab
-   * @return {Promise<void>}
-   */
-  async proceedToCheckout(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, this.cartModalCheckoutLink);
-    await page.waitForLoadState('domcontentloaded');
-  }
-
-  /**
-   * Click on continue shopping
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async continueShopping(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, this.continueShoppingButton);
-    return this.elementNotVisible(page, this.blockCartModalDiv, 2000);
-  }
-
-  /**
-   * Go to social sharing link
-   * @param page {Page} Browser tab
-   * @param socialSharing {string} The social network name
-   * @returns {Promise<string>}
-   */
-  async getSocialSharingLink(page: Page, socialSharing: string): Promise<string> {
-    let selector;
-
-    switch (socialSharing) {
-      case 'Facebook':
-        selector = this.quickViewFacebookSocialSharing;
-        break;
-
-      case 'Twitter':
-        selector = this.quickViewTwitterSocialSharing;
-        break;
-
-      case 'Pinterest':
-        selector = this.quickViewPinterestSocialSharing;
-        break;
-
-      default:
-        throw new Error(`${socialSharing} was not found`);
-    }
-
-    return this.getAttributeContent(page, selector, 'href');
-  }
-
+  // Subscribe to newsletter methods
   /**
    * Subscribe to the newsletter from the FO homepage
    * @param page {Page} Browser tab
@@ -870,9 +406,30 @@ class HomePage extends FOBasePage {
    */
   async subscribeToNewsletter(page: Page, email: string): Promise<string> {
     await this.setValue(page, this.newsletterFormField, email);
+    if (await this.hasSubscribeNewsletterRGPD(page)) {
+      await this.setChecked(page, this.newsletterRGPDBlockCheckbox, true);
+    }
     await this.waitForSelectorAndClick(page, this.newsletterSubmitButton);
 
     return this.getTextContent(page, this.subscriptionAlertMessage);
+  }
+
+  /**
+   * Returns if the block RGPD for the newsletter is visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async hasSubscribeNewsletterRGPD(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.newsletterRGPDBlock, 3000);
+  }
+
+  /**
+   * Returns the label of the block RGPD for the newsletter
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getSubscribeNewsletterRGPDLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.newsletterRGPDBlockLabel);
   }
 }
 

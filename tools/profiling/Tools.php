@@ -25,7 +25,7 @@
  */
 class Tools extends ToolsCore
 {
-    public static function redirect($url, $base_uri = __PS_BASE_URI__, Link $link = null, $headers = null)
+    public static function redirect($url, $base_uri = __PS_BASE_URI__, ?Link $link = null, $headers = null)
     {
         if (!$link) {
             $link = Context::getContext()->link;
@@ -95,7 +95,7 @@ class Tools extends ToolsCore
                 $controller->setRedirectAfter($url);
                 $controller->run();
                 Context::getContext()->controller = $controller;
-                die();
+                die;
             } catch (PrestaShopException $e) {
                 $e->displayMessage();
             }

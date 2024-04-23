@@ -55,15 +55,15 @@ class CountryControllerTest extends FormGridControllerTestCase
     {
         $this->client->disableReboot();
 
-        //todo: uncomment and use it when address format PR is merged
-//        $addressFormat = 'firstname lastname
-//            company
-//            vat_number
-//            address1
-//            address2
-//            postcode city
-//            Country:name
-//            phone';
+        // todo: uncomment and use it when address format PR is merged
+        //        $addressFormat = 'firstname lastname
+        //            company
+        //            vat_number
+        //            address1
+        //            address2
+        //            postcode city
+        //            Country:name
+        //            phone';
         $isoCode = 'AA';
         $zipCodeFormat = '1NL';
 
@@ -76,7 +76,7 @@ class CountryControllerTest extends FormGridControllerTestCase
             'country[zone]' => 1,
             'country[need_zip_code]' => '1',
             'country[zip_code_format]' => $zipCodeFormat,
-            'country[address_format]' => '', //todo: add when address format logic is added
+            'country[address_format]' => '', // todo: add when address format logic is added
             'country[is_enabled]' => 1,
             'country[contains_states]' => 0,
             'country[need_identification_number]' => 0,
@@ -113,7 +113,7 @@ address1 address2
 city, State:name postcode
 Country:name
 phone';
-        //todo: change addressFormat and test if it was correctly changed when address format PR is merged. Now it only takes default value
+        // todo: change addressFormat and test if it was correctly changed when address format PR is merged. Now it only takes default value
         $isoCode = 'BB';
         $zipCodeFormat = '2NL';
 
@@ -126,7 +126,7 @@ phone';
             'country[zone]' => 1,
             'country[need_zip_code]' => '1',
             'country[zip_code_format]' => $zipCodeFormat,
-            'country[address_format]' => '', //todo: add address format when logic is added
+            'country[address_format]' => '', // todo: add address format when logic is added
             'country[is_enabled]' => 1,
             'country[contains_states]' => 0,
             'country[need_identification_number]' => 0,
@@ -134,9 +134,9 @@ phone';
         ];
         $this->editEntityFromPage(['countryId' => $countryId], $formData);
 
-        //todo: check this part with cache more deeply when address format logic is done.
+        // todo: check this part with cache more deeply when address format logic is done.
         // need to clear cache because prestashop caches address format and without clear it sees the one before update
-//        Cache::clear();
+        //        Cache::clear();
 
         // Then check that it was correctly updated
         $this->assertFormValuesFromPage(

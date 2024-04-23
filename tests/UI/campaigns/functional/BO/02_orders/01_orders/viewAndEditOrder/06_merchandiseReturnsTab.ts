@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
@@ -18,17 +18,21 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
-import foMerchandiseReturnsPage from '@pages/FO/classic/myAccount/merchandiseReturns';
-import orderDetailsPage from '@pages/FO/classic/myAccount/orderDetails';
+import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
-import Customers from '@data/demo/customers';
 import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -61,14 +65,14 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
   const today: string = date.getDateFormat('mm/dd/yyyy');
   // New order by customer data
   const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+    customer: dataCustomers.johnDoe,
     products: [
       {
         product: Products.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create order by default customer
@@ -87,7 +91,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe(`Change the new order status to '${OrderStatuses.shipped.name}'`, async () => {
+  describe(`Change the new order status to '${dataOrderStatuses.shipped.name}'`, async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -108,10 +112,10 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrder1', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should get the order ID', async function () {
@@ -131,11 +135,11 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      expect(result).to.equal(OrderStatuses.shipped.name);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should check if the button \'Return products\' is visible', async function () {
@@ -171,7 +175,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     it('should sign in with customer credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -272,10 +276,10 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrder2', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should go to the first order page', async function () {
@@ -378,10 +382,10 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       it('should filter the Orders table by the default customer and check the result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterOrder0${index}`, baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+        await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
         const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-        expect(textColumn).to.contains(Customers.johnDoe.lastName);
+        expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
       });
 
       it('should go to the first order page', async function () {

@@ -180,6 +180,9 @@ class MetaType extends AbstractType
                                 'Admin.Notifications.Error'
                             ),
                         ]),
+                        new Length([
+                            'max' => self::META_DESCRIPTION_MAX_CHARS,
+                        ]),
                     ],
                     'attr' => [
                         'class' => 'js-taggable-field',

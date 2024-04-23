@@ -7,7 +7,7 @@ import testContext from '@utils/testContext';
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
-import createShoppingCart from '@commonTests/FO/shoppingCart';
+import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -17,12 +17,16 @@ import shoppingCartViewPage from '@pages/BO/orders/shoppingCarts/view';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
 import OrderData from '@data/faker/order';
+
+import {
+  // Import data
+  dataOrderStatuses,
+  dataPaymentMethods,
+  FakerAddress,
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -49,7 +53,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
   let numberOfShoppingCarts: number;
   let orderId: number;
 
-  const customerData: CustomerData = new CustomerData();
+  const customerData: FakerCustomer = new FakerCustomer();
   const orderData: OrderData = new OrderData({
     customer: customerData,
     products: [
@@ -59,7 +63,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       },
     ],
   });
-  const addressData: AddressData = new AddressData({
+  const addressData: FakerAddress = new FakerAddress({
     email: customerData.email,
     country: 'France',
   });
@@ -110,7 +114,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should search the non ordered shopping cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+      await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
       const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfShoppingCartsAfterFilter).to.equal(1);
@@ -147,11 +151,11 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
         .and.to.contains(todayCartFormat);
     });
 
-    it('should check the order Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock1', baseContext);
+    it('should check the cart Information Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCartInformationBlock1', baseContext);
 
       const orderInformation = await shoppingCartViewPage.getOrderInformation(page);
-      expect(orderInformation).to.contains('No order was created from this cart.');
+      expect(orderInformation).to.contains('The customer has not proceeded to checkout yet.');
 
       const hasButtonCreateOrderFromCart = await shoppingCartViewPage.hasButtonCreateOrderFromCart(page);
       expect(hasButtonCreateOrderFromCart).to.eq(true);
@@ -201,9 +205,9 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'fillAndCreateOrder', baseContext);
 
       // Choose payment method
-      await addOrderPage.setPaymentMethod(page, PaymentMethods.checkPayment.moduleName);
+      await addOrderPage.setPaymentMethod(page, dataPaymentMethods.checkPayment.moduleName);
       // Set order status
-      await addOrderPage.setOrderStatus(page, OrderStatuses.paymentAccepted);
+      await addOrderPage.setOrderStatus(page, dataOrderStatuses.paymentAccepted);
       // Create the order
       await addOrderPage.clickOnCreateOrderButton(page);
 
@@ -230,12 +234,13 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should search a shopping cart with a specific order Id', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchSpecificOrderShoppingCarts', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', orderId.toString());
+      await shoppingCartsPage.resetFilter(page);
+      await shoppingCartsPage.filterTable(page, 'input', 'id_order', orderId.toString());
 
       const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfShoppingCartsAfterFilter).to.be.at.equal(1);
 
-      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'status');
+      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'id_order');
       expect(textColumn).to.contains(orderId);
     });
 

@@ -14,8 +14,9 @@ import addOrderStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/
 import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
-// Import data
-import OrderStatusData from '@data/faker/orderStatus';
+import {
+  FakerOrderStatus,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -34,8 +35,8 @@ describe('BO - Shop Parameters - Order Settings - Statuses : CRUD order status',
   let numberOfOrderStatuses: number = 0;
 
   const tableName: string = 'order';
-  const createOrderStatusData: OrderStatusData = new OrderStatusData();
-  const editOrderStatusData: OrderStatusData = new OrderStatusData({name: `edit_${createOrderStatusData.name}`});
+  const createOrderStatusData: FakerOrderStatus = new FakerOrderStatus();
+  const editOrderStatusData: FakerOrderStatus = new FakerOrderStatus({name: `edit_${createOrderStatusData.name}`});
 
   // before and after functions
   before(async function () {

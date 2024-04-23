@@ -94,49 +94,50 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
     {
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
-            ->setOptions([
-                'bulk_field' => 'id_feature_value',
-            ])
+                ->setOptions([
+                    'bulk_field' => 'id_feature_value',
+                ])
             )
             ->add((new DataColumn('id_feature_value'))
-            ->setName($this->trans('ID', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'id_feature_value',
-            ])
+                ->setName($this->trans('ID', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_feature_value',
+                ])
             )
             ->add((new DataColumn('value'))
-            ->setName($this->trans('Value', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'value',
-            ])
+                ->setName($this->trans('Value', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'value',
+                ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                        (new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_feature_values_edit',
-                                'route_param_name' => 'featureValueId',
-                                'route_param_field' => 'id_feature_value',
-                                'extra_route_params' => [
-                                    'featureId' => 'id_feature',
-                                ],
-                            ])
-                    )
-                    ->add(
-                        $this->buildDeleteAction(
-                            'admin_feature_values_delete',
-                            'featureValueId',
-                            'id_feature_value',
-                            Request::METHOD_DELETE,
-                            ['featureId' => 'id_feature'],
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add(
+                            (new LinkRowAction('edit'))
+                                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                ->setIcon('edit')
+                                ->setOptions([
+                                    'route' => 'admin_feature_values_edit',
+                                    'route_param_name' => 'featureValueId',
+                                    'route_param_field' => 'id_feature_value',
+                                    'extra_route_params' => [
+                                        'featureId' => 'id_feature',
+                                    ],
+                                    'clickable_row' => true,
+                                ])
                         )
-                    ),
-            ])
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_feature_values_delete',
+                                'featureValueId',
+                                'id_feature_value',
+                                Request::METHOD_DELETE,
+                                ['featureId' => 'id_feature'],
+                            )
+                        ),
+                ])
             )
         ;
     }
@@ -158,22 +159,22 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
         // some filters (which depends on request filters) are added inside FeatureValueGridFactory
         return (new FilterCollection())
             ->add((new Filter('id_feature_value', NumberType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('id_feature_value')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('id_feature_value')
             )
             ->add((new Filter('value', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search value', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('value')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search value', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('value')
             );
     }
 

@@ -1,10 +1,13 @@
-import Countries from '@data/demo/countries';
-import type CountryData from '@data/faker/country';
 import SupplierCreator from '@data/types/supplier';
+import {
+  // Import data
+  dataCountries,
+  type FakerCountry,
+} from '@prestashop-core/ui-testing';
 
 import {fakerFR as faker} from '@faker-js/faker';
 
-const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
+const countriesNames: string[] = Object.values(dataCountries).map((country: FakerCountry) => country.name);
 
 /**
  * Create new supplier to use on supplier creation form on BO

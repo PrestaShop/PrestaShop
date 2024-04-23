@@ -17,19 +17,25 @@ import dashboardPage from '@pages/BO/dashboard';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import Products from '@data/demo/products';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import orderDetails from '@pages/FO/classic/myAccount/orderDetails';
+import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {cartPage} from '@pages/FO/classic/cart';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
-import PaymentMethods from '@data/demo/paymentMethods';
-import Customers from '@data/demo/customers';
 import MessageData from '@data/faker/message';
 import EmployeeData from '@data/faker/employee';
 import type MailDevEmail from '@data/types/maildevEmail';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import MailDev from 'maildev';
@@ -115,7 +121,7 @@ describe('BO - Customer Service : Forward message', async () => {
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await loginPage.customerLogin(page, dataCustomers.johnDoe);
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
@@ -128,11 +134,20 @@ describe('BO - Customer Service : Forward message', async () => {
       expect(result).to.eq(true);
     });
 
+    it('should quick view the first product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'quickViewFirstProduct', baseContext);
+
+      await homePage.quickViewProduct(page, 1);
+
+      const isCartModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      expect(isCartModalVisible).to.equal(true);
+    });
+
     it('should add first product to cart and Proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await homePage.addProductToCartByQuickView(page, 1, 1);
-      await homePage.proceedToCheckout(page);
+      await quickViewModal.addToCartByQuickView(page);
+      await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -167,7 +182,7 @@ describe('BO - Customer Service : Forward message', async () => {
     it('should Pay and confirm order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
       expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
@@ -188,8 +203,8 @@ describe('BO - Customer Service : Forward message', async () => {
 
       await orderHistoryPage.goToDetailsPage(page);
 
-      const successMessageText = await orderDetails.addAMessage(page, messageOption, messageSend);
-      expect(successMessageText).to.equal(orderDetails.successMessageText);
+      const successMessageText = await orderDetailsPage.addAMessage(page, messageOption, messageSend);
+      expect(successMessageText).to.equal(orderDetailsPage.successMessageText);
     });
 
     it('should check if the mail is in mailbox', async function () {

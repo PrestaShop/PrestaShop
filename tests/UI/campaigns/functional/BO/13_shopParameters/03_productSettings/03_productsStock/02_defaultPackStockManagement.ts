@@ -12,17 +12,21 @@ import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import foProductPage from '@pages/FO/classic/product';
+import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {cartPage} from '@pages/FO/classic/cart';
-import checkoutPage from '@pages/FO/classic/checkout';
-import orderConfirmationPage from '@pages/FO/classic/checkout/orderConfirmation';
+import {checkoutPage} from '@pages/FO/classic/checkout';
+import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
+
+import {
+  // Import data
+  dataCustomers,
+  dataPaymentMethods,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -116,7 +120,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
     const tests = [
       {
         args: {
-          option: 'Decrement pack only.',
+          option: 'Use pack quantity',
           packQuantity: productPackData.quantity - 1,
           firstProductQuantity: firstProductData.quantity,
           secondProductQuantity: secondProductData.quantity,
@@ -124,7 +128,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       },
       {
         args: {
-          option: 'Decrement products in pack only.',
+          option: 'Use quantity of products in the pack',
           packQuantity: productPackData.quantity - 1,
           firstProductQuantity: firstProductData.quantity - productPackData.pack[0].quantity,
           secondProductQuantity: secondProductData.quantity - productPackData.pack[1].quantity,
@@ -132,7 +136,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       },
       {
         args: {
-          option: 'Decrement both.',
+          option: 'Use both, whatever is lower',
           packQuantity: productPackData.quantity - 2,
           firstProductQuantity: firstProductData.quantity - 2 * productPackData.pack[0].quantity,
           secondProductQuantity: secondProductData.quantity - 2 * productPackData.pack[1].quantity,
@@ -183,7 +187,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
         it('should sign in with default customer', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighInFO${index}`, baseContext);
 
-          await foLoginPage.customerLogin(page, Customers.johnDoe);
+          await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
           const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -240,7 +244,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `confirmTheOrder${index}`, baseContext);
 
           // Payment step - Choose payment step
-          await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+          await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

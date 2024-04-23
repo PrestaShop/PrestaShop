@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
+use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,7 +49,7 @@ class Admin
     private $context;
 
     /**
-     * @var \Context
+     * @var Context
      */
     private $legacyContext;
 
@@ -89,14 +89,11 @@ class Admin
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (
-            $this->security->getUser() !== null
-            || $event->getRequest()->get('_controller') === AccessTokenController::class
-        ) {
+        if ($this->security->getUser() !== null) {
             return;
         }
 
-        //if employee loggdin in legacy context, authenticate him into sf2 security context
+        // if employee loggdin in legacy context, authenticate him into sf2 security context
         if (isset($this->legacyContext->employee) && $this->legacyContext->employee->isLoggedBack()) {
             $user = $this->userProvider->loadUserByIdentifier($this->legacyContext->employee->email);
             $token = new UsernamePasswordToken($user, 'admin', $user->getRoles());
@@ -112,7 +109,7 @@ class Admin
             return;
         }
 
-        //employee not logged in
+        // employee not logged in
         $event->stopPropagation();
 
         // If an ajax request is being performed the redirection is not relevant, instead simply return a forbidden response

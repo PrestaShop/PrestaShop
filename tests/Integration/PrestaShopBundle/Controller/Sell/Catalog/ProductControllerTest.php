@@ -344,8 +344,8 @@ class ProductControllerTest extends FormGridControllerTestCase
     {
         return new TestEntityDTO(
             (int) trim($tr->filter('.column-id_product')->text()),
-           [
-           ]
+            [
+            ]
         );
     }
 

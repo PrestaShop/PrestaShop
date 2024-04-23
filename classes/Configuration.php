@@ -57,7 +57,7 @@ class ConfigurationCore extends ObjectModel
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 254],
             'id_shop_group' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
             'id_shop' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
-            'value' => ['type' => self::TYPE_STRING],
+            'value' => ['type' => self::TYPE_STRING, 'size' => 4194303],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
@@ -174,8 +174,8 @@ class ConfigurationCore extends ObjectModel
         $sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
                FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '` c
                LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl ON (c.`' . bqSQL(
-               self::$definition['primary']
-            ) . '` = cl.`' . bqSQL(self::$definition['primary']) . '`)';
+            self::$definition['primary']
+        ) . '` = cl.`' . bqSQL(self::$definition['primary']) . '`)';
         $db = Db::getInstance();
         $results = $db->executeS($sql);
         if ($results) {
@@ -307,14 +307,14 @@ class ConfigurationCore extends ObjectModel
     /**
      * Get several configuration values (in one language only).
      *
-     * @throws PrestaShopException
-     *
      * @param array $keys Keys wanted
      * @param int $idLang Language ID
      * @param int $idShopGroup
      * @param int $idShop
      *
      * @return array Values
+     *
+     * @throws PrestaShopException
      */
     public static function getMultiple($keys, $idLang = null, $idShopGroup = null, $idShop = null)
     {
@@ -462,8 +462,8 @@ class ConfigurationCore extends ObjectModel
             $storedValue = Configuration::get($key, $lang, $idShopGroup, $idShop);
             // if there isn't a $stored_value, we must insert $value
             if (
-              ((!is_numeric($value) && $value === $storedValue) || (is_numeric($value) && $value == $storedValue))
-               && Configuration::hasKey($key, $lang, $idShopGroup, $idShop)
+                ((!is_numeric($value) && $value === $storedValue) || (is_numeric($value) && $value == $storedValue))
+                 && Configuration::hasKey($key, $lang, $idShopGroup, $idShop)
             ) {
                 continue;
             }
@@ -597,7 +597,7 @@ class ConfigurationCore extends ObjectModel
      * @param int $idShopGroup
      * @param int $idShop
      */
-    public static function deleteFromContext($key, int $idShopGroup = null, int $idShop = null)
+    public static function deleteFromContext($key, ?int $idShopGroup = null, ?int $idShop = null)
     {
         if (Shop::getContext() == Shop::CONTEXT_ALL) {
             return;
@@ -695,11 +695,11 @@ class ConfigurationCore extends ObjectModel
      */
     public static function isCatalogMode()
     {
-        return Configuration::get('PS_CATALOG_MODE') ||
-            !Configuration::showPrices() ||
-            (
-                is_a(Context::getContext()->controller, 'FrontController') &&
-                Context::getContext()->controller->getRestrictedCountry() == Country::GEOLOC_CATALOG_MODE
+        return Configuration::get('PS_CATALOG_MODE')
+            || !Configuration::showPrices()
+            || (
+                is_a(Context::getContext()->controller, 'FrontController')
+                && Context::getContext()->controller->getRestrictedCountry() == Country::GEOLOC_CATALOG_MODE
             );
     }
 

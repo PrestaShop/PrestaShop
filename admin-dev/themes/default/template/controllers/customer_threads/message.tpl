@@ -32,7 +32,7 @@
 			{else}
 				<i class="icon-user"></i>
 				{if !empty($message.id_customer)}
-					<a href="index.php?controller=AdminCustomers&amp;id_customer={$message.id_customer}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}" title="{l|escape s='View customer' d='Admin.Orderscustomers.Feature'}">
+					<a href="{$link->getAdminLink('AdminCustomers', true, [], ['id_customer' => $message.id_customer, 'viewcustomer' => 1])}" title="{l|escape s='View customer' d='Admin.Orderscustomers.Feature'}">
 						{$message.customer_name}
 					</a>
 				{else}
@@ -45,7 +45,7 @@
 			<dl class="dl-horizontal">
 				<dt>{l s='Customer ID:' d='Admin.Orderscustomers.Feature'}</dt>
 				<dd>
-					<a href="index.php?controller=AdminCustomers&amp;id_customer={$message.id_customer}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}" title="{l|escape s='View customer' d='Admin.Orderscustomers.Feature'}">
+					<a href="{$link->getAdminLink('AdminCustomers', true, [], ['id_customer' => $message.id_customer, 'viewcustomer' => 1])}" title="{l|escape s='View customer' d='Admin.Orderscustomers.Feature'}">
 						{$message.id_customer} <i class="icon-search"></i>
 					</a>
 				</dd>
@@ -65,7 +65,7 @@
 			<dl class="dl-horizontal">
 				<dt>{l s='File attachment' d='Admin.Orderscustomers.Feature'}</dt>
 				<dd>
-					<a href="index.php?controller=AdminCustomerThreads&amp;id_customer_thread={$message.id_customer_thread}&amp;viewcustomer_thread&amp;token={getAdminToken tab='AdminCustomerThreads'}&amp;filename={$message.file_name}"
+					<a href="{$link->getAdminLink('AdminCustomerThreads', true, [], ['id_customer_thread' => $message.id_customer_thread, 'viewcustomer_thread' => 1, 'filename' => $message.file_name])}"
 					title="{l|escape s='View file' d='Admin.Orderscustomers.Feature'}">
 						<i class="icon-search"></i>
 					</a>
@@ -75,7 +75,7 @@
 			{if !empty($message.id_order) && $is_valid_order_id && empty($message.id_employee)}
 				<dl class="dl-horizontal">
 					<dt>{l s='Order #' d='Admin.Orderscustomers.Feature'}</dt>
-					<dd><a href="index.php?controller=AdminOrders&amp;id_order={$message.id_order}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}" title="{l|escape s='View order' d='Admin.Orderscustomers.Feature'}">{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='View' d='Admin.Actions'}" /></a>
+					<dd><a href="{$link->getAdminLink('AdminOrders', true, [], ['id_order' => $message.id_order, 'vieworder' => 1])}" title="{l|escape s='View order' d='Admin.Orderscustomers.Feature'}">{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='View' d='Admin.Actions'}" /></a>
 					</dd>
 				</dl>
 			{/if}

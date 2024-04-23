@@ -1,0 +1,58 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% form_theme regenThumbnailsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{{ form_start(regenThumbnailsForm, {'action': path('admin_image_settings_regenerate_thumbnails')}) }}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">image</i>
+      {{ 'Regenerate thumbnails'|trans({}, 'Admin.Design.Feature') }}
+    </h3>
+    <div class="alert alert-warning mx-3 mt-3 mb-0">
+      {{ 'Be careful! Depending on the options selected, former manually uploaded thumbnails might be erased and replaced by automatically generated thumbnails.'|trans({}, 'Admin.Design.Notification') }}
+      <br />
+      {{ 'Also, regenerating thumbnails for all existing images can take several minutes, please be patient.'|trans({}, 'Admin.Design.Notification') }}
+    </div>
+    <div class="card-body">
+      <div class="form-wrapper">
+        {% block form_regenerate_thumbnails_widget %}
+          {{ form_rest(regenThumbnailsForm) }}
+        {% endblock %}
+      </div>
+    </div>
+    <div class="card-footer clearfix">
+      <div class="d-inline-flex float-right">
+        <button
+          class="btn btn-primary btn-confirm-form"
+          id="regenerate-thumbnails-button"
+          data-confirm-message="{{ 'Regenerate thumbnails for the selected images? With the "erase" option enabled, the previously selected thumbnails will be deleted.'|trans({}, 'Admin.Design.Notification') }}"
+          data-confirm-title="{{ 'Regenerate thumbnails'|trans({}, 'Admin.Design.Feature') }}"
+          data-confirm-cancel="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
+          data-confirm-apply="{{ 'Regenerate thumbnails'|trans({}, 'Admin.Actions') }}"
+        >{{ 'Regenerate thumbnails'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
+{{ form_end(regenThumbnailsForm) }}

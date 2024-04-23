@@ -186,7 +186,7 @@ class ExchangeRateProvider
             return null;
         }
 
-        //Cache the feed
+        // Cache the feed
         $cacheItem = $this->cache->getItem(self::CACHE_KEY_XML);
         $cacheItem->set($feedContent);
         $this->cache->save($cacheItem);
@@ -201,7 +201,7 @@ class ExchangeRateProvider
     {
         $xmlCurrencies = $xmlFeed->list->currency;
 
-        $this->sourceIsoCode = (string) ($xmlFeed->source['iso_code']);
+        $this->sourceIsoCode = (string) $xmlFeed->source['iso_code'];
         foreach ($xmlCurrencies as $currency) {
             $this->currencies[(string) $currency['iso_code']] = new DecimalNumber((string) $currency['rate']);
         }

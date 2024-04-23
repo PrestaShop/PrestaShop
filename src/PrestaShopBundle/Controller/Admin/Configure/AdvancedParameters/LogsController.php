@@ -31,8 +31,8 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\LogsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\Repository\LogRepository;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,12 +48,11 @@ class LogsController extends FrameworkBundleAdminController
     public const CONTROLLER_NAME = 'AdminLogs';
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @param LogsFilters $filters the list of filters from the request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function indexAction(LogsFilters $filters)
     {
         $gridLogFactory = $this->get('prestashop.core.grid.log_factory');
@@ -74,16 +73,12 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.", redirectRoute="admin_logs_index"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_logs_index')]
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_logs_index')]
     public function searchAction(Request $request)
     {
         $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
@@ -99,16 +94,12 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.", redirectRoute="admin_logs_index"
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_logs_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_logs_index')]
     public function saveSettingsAction(Request $request)
     {
         $logsByEmailForm = $this->getFormHandler()->getForm();
@@ -134,12 +125,11 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_logs_index")
-     *
      * @return RedirectResponse
      *
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_logs_index')]
     public function deleteAllAction()
     {
         $this->getLogRepository()->deleteAll();

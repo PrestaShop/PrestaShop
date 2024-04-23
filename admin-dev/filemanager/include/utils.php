@@ -295,33 +295,47 @@ function config_loading($current_path, $fld)
     return false;
 }
 
+/**
+ * Check if memory is enough to process image
+ *
+ * @param string $img
+ * @param int $max_breedte
+ * @param int $max_hoogte
+ *
+ * @return bool
+ */
 function image_check_memory_usage($img, $max_breedte, $max_hoogte)
 {
-    if (file_exists($img)) {
-        $K64 = 65536;    // number of bytes in 64K
-    $memory_usage = memory_get_usage();
-        $memory_limit = abs((int) (str_replace('M', '', ini_get('memory_limit'))*1024*1024));
-        $image_properties = getimagesize($img);
-        $image_width = $image_properties[0];
-        $image_height = $image_properties[1];
-        $image_bits = $image_properties['bits'];
-        $image_memory_usage = $K64 + ($image_width * $image_height * ($image_bits)  * 2);
-        $thumb_memory_usage = $K64 + ($max_breedte * $max_hoogte * ($image_bits) * 2);
-        $memory_needed = (int) ($memory_usage + $image_memory_usage + $thumb_memory_usage);
+	if (file_exists($img))
+	{
+		$K64 = 65536; // number of bytes in 64K
+		$memory_usage = memory_get_usage();
+		if(ini_get('memory_limit') > 0 ){
+			
+			$mem = ini_get('memory_limit');
+			$memory_limit = 0;
+			if (strpos($mem, 'M') !== false) $memory_limit = abs(intval(str_replace(array('M'), '', $mem) * 1024 * 1024));
+			if (strpos($mem, 'G') !== false) $memory_limit = abs(intval(str_replace(array('G'), '', $mem) * 1024 * 1024 * 1024));
+			
+			$image_properties = getimagesize($img);
+			$image_width = $image_properties[0];
+			$image_height = $image_properties[1];
+			if (isset($image_properties['bits']))
+				$image_bits = $image_properties['bits'];
+			else
+				$image_bits = 0;
+			$image_memory_usage = $K64 + ($image_width * $image_height * ($image_bits >> 3) * 2);
+			$thumb_memory_usage = $K64 + ($max_breedte * $max_hoogte * ($image_bits >> 3) * 2);
+			$memory_needed = abs(intval($memory_usage + $image_memory_usage + $thumb_memory_usage));
 
-        if ($memory_needed > $memory_limit) {
-            ini_set('memory_limit', ((int) ($memory_needed/1024/1024)+5) . 'M');
-            if (ini_get('memory_limit') == ((int) ($memory_needed/1024/1024)+5) . 'M') {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return true;
-        }
-    } else {
-        return false;
-    }
+			if ($memory_needed > $memory_limit)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
 }
 
 function endsWith($haystack, $needle)

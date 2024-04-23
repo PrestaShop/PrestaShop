@@ -888,5 +888,14 @@ Country</value>
     <configuration id="PS_DEBUG_COOKIE_VALUE" name="PS_DEBUG_COOKIE_VALUE">
       <value/>
     </configuration>
+    <configuration id="PS_PRODUCT_BREADCRUMB_CATEGORY" name="PS_PRODUCT_BREADCRUMB_CATEGORY">
+      <value>default</value>
+    </configuration>
+    <configuration id="PS_ENABLE_ADMIN_API" name="PS_ENABLE_ADMIN_API">
+      <value>1</value>
+    </configuration>
+    <configuration id="PS_ADMIN_API_FORCE_DEBUG_SECURED" name="PS_ADMIN_API_FORCE_DEBUG_SECURED">
+      <value>1</value>
+    </configuration>
   </entities>
 </entity_configuration>

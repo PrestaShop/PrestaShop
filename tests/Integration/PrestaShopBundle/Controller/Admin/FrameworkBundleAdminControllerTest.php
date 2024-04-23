@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use Psr\Log\NullLogger;
 use Shop;
+use Smarty;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Router;
@@ -142,7 +143,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
         ]));
 
         $smartyMock = $this
-            ->getMockBuilder(\Smarty::class)
+            ->getMockBuilder(Smarty::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -249,7 +250,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
     {
         return [
             // @todo: something is missing for Vuejs application in translations page.
-            //'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
+            // 'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
             'admin_administration' => ['Administration', 'admin_administration'],
             'admin_attachments_create' => ['Add new', 'admin_attachments_create'],
             'admin_attachments_index' => ['Files', 'admin_attachments_index'],

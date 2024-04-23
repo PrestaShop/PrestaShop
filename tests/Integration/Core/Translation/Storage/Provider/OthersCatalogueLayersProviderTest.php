@@ -48,7 +48,7 @@ class OthersCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderT
 
         $expected = [
             'messages' => [
-                'count' => 522,
+                'count' => 516,
                 'translations' => [
                     'Attributes generator' => 'Générateur de déclinaisons de produits',
                 ],
@@ -69,7 +69,7 @@ class OthersCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderT
 
         $expected = [
             'messages' => [
-                'count' => 522,
+                'count' => 516,
                 'translations' => [
                     'Attributes generator' => '',
                 ],

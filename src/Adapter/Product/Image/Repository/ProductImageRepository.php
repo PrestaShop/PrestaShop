@@ -90,6 +90,22 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * @return Image[]
+     */
+    public function getAllImages(): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('i.id_image')
+            ->from($this->dbPrefix . 'image', 'i')
+            ->addOrderBy('i.id_image', 'ASC')
+        ;
+
+        return array_map(static function (string $id): Image {
+            return new Image((int) $id);
+        }, $qb->executeQuery()->fetchFirstColumn());
+    }
+
+    /**
      * @param ProductId $productId
      *
      * @return Image[]
@@ -132,10 +148,10 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
         if (!$shopConstraint->forAllShops()) {
             $qb
                 ->innerJoin(
-                'i',
-                $this->dbPrefix . 'image_shop',
-                'img_shop',
-                'img_shop.id_image = i.id_image'
+                    'i',
+                    $this->dbPrefix . 'image_shop',
+                    'img_shop',
+                    'img_shop.id_image = i.id_image'
                 )
                 ->addGroupBy('i.id_image')
             ;
@@ -432,7 +448,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
         }
 
         $this->deleteObjectModelFromShops(
-        // We fetch the image from first shop, the values don't matter anyway we just need an Image instance
+            // We fetch the image from first shop, the values don't matter anyway we just need an Image instance
             $this->get($imageId, reset($shopIds)),
             $shopIds,
             CannotDeleteProductImageException::class
@@ -518,7 +534,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->andWhere('cover = 1')
             ->executeQuery()
             ->fetchOne()
-            ;
+        ;
 
         return $result ? new ImageId((int) $result) : null;
     }
@@ -594,11 +610,11 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             }
             $this->connection->createQueryBuilder()
                 ->update($this->dbPrefix . 'image_shop')
-                ->set($this->dbPrefix . 'image_shop' . '.cover', ':cover')
+                ->set($this->dbPrefix . 'image_shop.cover', ':cover')
                 ->setParameter('cover', $newValue)
-                ->andWhere($this->dbPrefix . 'image_shop' . '.id_image = :imageId')
+                ->andWhere($this->dbPrefix . 'image_shop.id_image = :imageId')
                 ->setParameter('imageId', (int) $image['id_image'])
-                ->andWhere($this->dbPrefix . 'image_shop' . '.id_shop = :shopId')
+                ->andWhere($this->dbPrefix . 'image_shop.id_shop = :shopId')
                 ->setParameter('shopId', (int) $image['id_shop'])
                 ->executeStatement()
             ;

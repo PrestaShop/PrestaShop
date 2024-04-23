@@ -97,7 +97,7 @@ class PricesDropControllerCore extends ProductListingFrontController
 
         $breadcrumb['links'][] = [
             'title' => $this->trans('Prices drop', [], 'Shop.Theme.Catalog'),
-            'url' => $this->context->link->getPageLink('prices-drop', true),
+            'url' => $this->context->link->getPageLink('prices-drop'),
         ];
 
         return $breadcrumb;

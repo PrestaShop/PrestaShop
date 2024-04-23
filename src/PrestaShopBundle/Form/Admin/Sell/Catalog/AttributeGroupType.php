@@ -28,9 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType as GroupType;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -46,13 +48,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class AttributeGroupType extends TranslatorAwareType
 {
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     */
     public function __construct(
         TranslatorInterface $translator,
-        array $locales
+        array $locales,
+        protected FeatureInterface $multistoreFeature
     ) {
         parent::__construct($translator, $locales);
     }
@@ -66,6 +65,9 @@ class AttributeGroupType extends TranslatorAwareType
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
                 'label' => $this->trans('Name', 'Admin.Global'),
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
@@ -80,6 +82,9 @@ class AttributeGroupType extends TranslatorAwareType
             ->add('public_name', TranslatableType::class, [
                 'type' => TextType::class,
                 'label' => $this->trans('Public name', 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
@@ -87,7 +92,7 @@ class AttributeGroupType extends TranslatorAwareType
                         ]),
                     ],
                 ],
-                'help' => $this->trans('Your internal name for this attribute.', 'Admin.Catalog.Help')
+                'help' => $this->trans('The public name for this attribute, displayed to the customers.', 'Admin.Catalog.Help')
                     . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
                     . ' ' . TypedRegexValidator::CATALOG_CHARS,
             ])
@@ -99,7 +104,11 @@ class AttributeGroupType extends TranslatorAwareType
                     $this->trans('Radio buttons', 'Admin.Global') => GroupType::ATTRIBUTE_GROUP_TYPE_RADIO,
                     $this->trans('Color or texture', 'Admin.Catalog.Feature') => GroupType::ATTRIBUTE_GROUP_TYPE_COLOR,
                 ],
-            ])->add('shop_association', ShopChoiceTreeType::class, [
+            ])
+        ;
+
+        if ($this->multistoreFeature->isUsed()) {
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
                 'label' => $this->trans('Shop association', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [
@@ -110,6 +119,7 @@ class AttributeGroupType extends TranslatorAwareType
                     ]),
                 ],
             ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -13,8 +13,12 @@ import {loginPage} from '@pages/FO/classic/login';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 // Import data
-import CustomerData from '@data/faker/customer';
 import type MailDevEmail from '@data/types/maildevEmail';
+
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type MailDev from 'maildev';
@@ -25,11 +29,10 @@ const baseContext: string = 'functional_FO_classic_login_createAccount';
 describe('FO - Login : Create account', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let allEmails: MailDevEmail[];
-  let numberOfEmails: number;
+  let newMail: MailDevEmail;
   let mailListener: MailDev;
 
-  const customerData: CustomerData = new CustomerData();
+  const customerData: FakerCustomer = new FakerCustomer();
 
   // before and after functions
   before(async function () {
@@ -39,10 +42,9 @@ describe('FO - Login : Create account', async () => {
     mailListener = mailHelper.createMailListener();
     mailHelper.startListener(mailListener);
 
-    // get all emails
-    // @ts-ignore
-    mailListener.getAllEmail((err: Error, emails: MailDevEmail[]) => {
-      allEmails = emails;
+    // Handle every new email
+    mailListener.on('new', (email: MailDevEmail) => {
+      newMail = email;
     });
   });
 
@@ -101,15 +103,13 @@ describe('FO - Login : Create account', async () => {
     it('should check if welcome mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWelcomeMail', baseContext);
 
-      numberOfEmails = allEmails.length;
-      expect(numberOfEmails).to.equal(1);
-      expect(allEmails[numberOfEmails - 1].subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Welcome!`);
+      expect(newMail.subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Welcome!`);
     });
 
     it('should check the content of the email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmailText', baseContext);
 
-      expect(allEmails[numberOfEmails - 1].text).to.contains(`Hi ${customerData.firstName} ${customerData.lastName}`)
+      expect(newMail.text).to.contains(`Hi ${customerData.firstName} ${customerData.lastName}`)
         .and.to.contains(`Thank you for creating a customer account at ${global.INSTALL.SHOP_NAME}.`)
         .and.to.contains(`Email address: ${customerData.email}`);
     });

@@ -11,8 +11,9 @@ import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 import localizationPage from '@pages/BO/international/localization';
 
-// Import data
-import type CurrencyData from '@data/faker/currency';
+import {
+  type FakerCurrency,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -22,10 +23,10 @@ let page: Page;
 
 /**
  * Function to create currency
- * @param currencyData {CurrencyData} Data to set to create currency
+ * @param currencyData {FakerCurrency} Data to set to create currency
  * @param baseContext {string} String to identify the test
  */
-function createCurrencyTest(currencyData: CurrencyData, baseContext: string = 'commonTests-createCurrencyTest'): void {
+function createCurrencyTest(currencyData: FakerCurrency, baseContext: string = 'commonTests-createCurrencyTest'): void {
   describe('PRE-TEST: Create currency', async () => {
     // before and after functions
     before(async function () {
@@ -86,10 +87,10 @@ function createCurrencyTest(currencyData: CurrencyData, baseContext: string = 'c
 
 /**
  * Function to delete currency
- * @param currencyData {CurrencyData} Data to set to delete currency
+ * @param currencyData {FakerCurrency} Data to set to delete currency
  * @param baseContext {string} String to identify the test
  */
-function deleteCurrencyTest(currencyData: CurrencyData, baseContext: string = 'commonTests-deleteCurrencyTest'): void {
+function deleteCurrencyTest(currencyData: FakerCurrency, baseContext: string = 'commonTests-deleteCurrencyTest'): void {
   describe('POST-TEST: Delete currency', async () => {
     // before and after functions
     before(async function () {

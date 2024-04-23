@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use InvalidArgumentException;
 use PrestaShopBundle\Entity\Tab;
 
 class TabRepository extends EntityRepository
@@ -58,7 +59,7 @@ class TabRepository extends EntityRepository
     /**
      * @param string $className
      *
-     * @return \PrestaShopBundle\Entity\Tab|null
+     * @return Tab|null
      */
     public function findOneByClassName($className)
     {
@@ -91,12 +92,12 @@ class TabRepository extends EntityRepository
      * @param string $className tab's class name
      * @param bool $status wanted status for the tab
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function changeStatusByClassName($className, $status)
     {
         if (!is_bool($status)) {
-            throw new \InvalidArgumentException(sprintf('Invalid type: bool expected, got %s', gettype($status)));
+            throw new InvalidArgumentException(sprintf('Invalid type: bool expected, got %s', gettype($status)));
         }
 
         /** @var Tab $tab */

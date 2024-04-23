@@ -31,7 +31,7 @@
 
     <p class="mx-auto showcase-list-card__message">
       {{ 'Combinations are the different variations of a product, with attributes like its size, weight or color taking different values.'|trans({}, 'Admin.Catalog.Feature') }}
-      {{ 'To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].'|trans({'%attributes_and_features_label%': 'Attributes & Features'|trans({}, 'Admin.Navigation.Menu'), '[1]': '<a class="alert-link" href=' ~ getAdminLink("AdminAttributesGroups") ~ ' target="_blank">', '[/1]': '</a>'}, 'Admin.Catalog.Help')|raw }}
+      {{ 'To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].'|trans({'%attributes_and_features_label%': 'Attributes & Features'|trans({}, 'Admin.Navigation.Menu'), '[1]': '<a class="alert-link" href=' ~ path('admin_attribute_groups_index') ~ ' target="_blank">', '[/1]': '</a>'}, 'Admin.Catalog.Help')|raw }}
     </p>
 
     <div class="mt-4">

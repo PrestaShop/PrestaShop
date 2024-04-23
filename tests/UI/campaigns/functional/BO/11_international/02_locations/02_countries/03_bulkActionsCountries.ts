@@ -11,8 +11,10 @@ import zonesPage from '@pages/BO/international/locations';
 import countriesPage from '@pages/BO/international/locations/countries';
 import addCountryPage from '@pages/BO/international/locations/countries/add';
 
-// Import data
-import CountryData from '@data/faker/country';
+import {
+  // Import data
+  FakerCountry,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -30,7 +32,7 @@ describe('BO - International - Countries : Bulk actions', async () => {
   let page: Page;
   let numberOfCountries: number = 0;
 
-  const firstCountryToCreate: CountryData = new CountryData({
+  const firstCountryToCreate: FakerCountry = new FakerCountry({
     name: 'todelete1',
     isoCode: 'CT',
     callPrefix: '216',
@@ -38,7 +40,7 @@ describe('BO - International - Countries : Bulk actions', async () => {
     zipCodeFormat: 'NNNN',
     active: true,
   });
-  const secondCountryToCreate: CountryData = new CountryData({
+  const secondCountryToCreate: FakerCountry = new FakerCountry({
     name: 'todelete2',
     isoCode: 'JF',
     callPrefix: '333',
@@ -93,7 +95,7 @@ describe('BO - International - Countries : Bulk actions', async () => {
 
   describe('Create country', async () => {
     [firstCountryToCreate, secondCountryToCreate]
-      .forEach((countryToCreate: CountryData, index: number) => {
+      .forEach((countryToCreate: FakerCountry, index: number) => {
         it('should go to add new country page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCountryPage${index}`, baseContext);
 

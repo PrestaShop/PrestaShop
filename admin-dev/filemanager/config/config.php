@@ -27,7 +27,9 @@
 session_start();
 
 if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', dirname(__FILE__).'/../../');
+    // Properly assign admin directory path, we don't want to use relative traversal here,
+    // it creates problems in some methods that use basename(_PS_ADMIN_DIR_), like Link class.
+    define('_PS_ADMIN_DIR_', dirname(__DIR__, 2));
 }
 
 require_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
@@ -60,7 +62,7 @@ if (!$products_accesses['edit'] && !$cms_accesses['edit']) {
 //    |   |   |   |   |- plugin.min.js
 
 $base_url = Tools::getHttpHost(true);  // DON'T TOUCH (base url (only domain) of site (without final /)).
-$base_url = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE') ? $base_url : str_replace('https', 'http', $base_url);
+$base_url = Configuration::get('PS_SSL_ENABLED') ? $base_url : str_replace('https', 'http', $base_url);
 $upload_dir = Context::getContext()->shop->getBaseURI().'img/cms/'; // path from base_url to base of upload folder (with start and final /)
 $current_path = _PS_ROOT_DIR_.'/img/cms/'; // relative path from filemanager folder to upload folder (with final /)
 //thumbs folder can't put inside upload folder

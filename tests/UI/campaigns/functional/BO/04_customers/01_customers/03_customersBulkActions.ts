@@ -10,8 +10,10 @@ import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
 import dashboardPage from '@pages/BO/dashboard';
 
-// Import data
-import CustomerData from '@data/faker/customer';
+import {
+  // Import data
+  FakerCustomer,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -27,8 +29,8 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
   let page: Page;
   let numberOfCustomers: number = 0;
 
-  const firstCustomerData: CustomerData = new CustomerData({firstName: 'todelete'});
-  const secondCustomerData: CustomerData = new CustomerData({firstName: 'todelete'});
+  const firstCustomerData: FakerCustomer = new FakerCustomer({firstName: 'todelete'});
+  const secondCustomerData: FakerCustomer = new FakerCustomer({firstName: 'todelete'});
 
   // before and after functions
   before(async function () {

@@ -98,7 +98,7 @@ class PrestaShopExceptionCore extends Exception
         $this->logError();
 
         if ($dieAfterDisplay) {
-            //We only need the error code 1 in cli context
+            // We only need the error code 1 in cli context
             exit((int) ToolsCore::isPHPCLI());
         }
     }
@@ -122,7 +122,7 @@ class PrestaShopExceptionCore extends Exception
         $lines = array_slice($lines, $offset, $total);
         ++$offset;
 
-        echo '<div class="psTrace" id="psTrace_' . $id . '" ' . ((null === $id ? 'style="display: block"' : '')) . '><pre>';
+        echo '<div class="psTrace" id="psTrace_' . $id . '" ' . (null === $id ? 'style="display: block"' : '') . '><pre>';
         foreach ($lines as $k => $l) {
             $string = ($offset + $k) . '. ' . htmlspecialchars($l);
             if ($offset + $k == $line) {
@@ -160,10 +160,10 @@ class PrestaShopExceptionCore extends Exception
         $hiddenArgs = [];
 
         try {
-            $class = new \ReflectionClass($trace['class']);
-            /** @var \ReflectionMethod $method */
+            $class = new ReflectionClass($trace['class']);
+            /** @var ReflectionMethod $method */
             $method = $class->getMethod($trace['function']);
-            /** @var \ReflectionParameter $parameter */
+            /** @var ReflectionParameter $parameter */
             foreach ($method->getParameters() as $argIndex => $parameter) {
                 if ($argIndex >= count($args)) {
                     break;
@@ -176,7 +176,7 @@ class PrestaShopExceptionCore extends Exception
                 }
             }
         } catch (ReflectionException $e) {
-            //In worst case scenario there are some critical args we could't detect so we return an empty array
+            // In worst case scenario there are some critical args we could't detect so we return an empty array
         }
 
         return $hiddenArgs;

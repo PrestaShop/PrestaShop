@@ -29,92 +29,96 @@
     ({{ viewableManufacturer.manufacturerProducts|length }})
   </h3>
   <div class="card-body">
-    {% for product in viewableManufacturer.manufacturerProducts %}
-      <div class="card">
-        <div class="card-header clearfix">
-          <a href="{{ path('admin_products_edit', {'productId': product.id}) }}">{{ product.name }}</a>
+    {% if viewableManufacturer.manufacturerProducts is not empty %}
+      {% for product in viewableManufacturer.manufacturerProducts %}
+        <div class="card">
+          <div class="card-header clearfix">
+            <a href="{{ path('admin_products_edit', {'productId': product.id}) }}">{{ product.name }}</a>
 
-          <div class="d-inline-block float-right">
-            <div class="btn-group-action text-right">
-              <div class="btn-group">
-                <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split p-0 no-rotate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <a class="btn tooltip-link js-submit-row-action dropdown-item"
-                     href="{{ path('admin_products_edit', {'productId': product.id}) }}"
-                  >
-                    {{ 'Edit'|trans({}, 'Admin.Actions') }}
+            <div class="d-inline-block float-right">
+              <div class="btn-group-action text-right">
+                <div class="btn-group">
+                  <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split p-0 no-rotate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   </a>
-                  <button class="btn tooltip-link js-form-submit-btn dropdown-item"
-                          type="button"
-                          data-form-submit-url="{{ path('admin_products_delete_from_all_shops', {'productId': product.id}) }}"
-                          data-form-confirm-message="{{ '%s%s?'|format('Delete item #'|trans({}, 'Admin.International.Feature'), product.id) }}"
-                  >
-                    {{ 'Delete'|trans({}, 'Admin.Actions') }}
-                  </button>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a class="btn tooltip-link js-submit-row-action dropdown-item"
+                      href="{{ path('admin_products_edit', {'productId': product.id}) }}"
+                    >
+                      {{ 'Edit'|trans({}, 'Admin.Actions') }}
+                    </a>
+                    <button class="btn tooltip-link js-form-submit-btn dropdown-item"
+                            type="button"
+                            data-form-submit-url="{{ path('admin_products_delete_from_all_shops', {'productId': product.id}) }}"
+                            data-form-confirm-message="{{ '%s%s?'|format('Delete item #'|trans({}, 'Admin.International.Feature'), product.id) }}"
+                    >
+                      {{ 'Delete'|trans({}, 'Admin.Actions') }}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="card-body">
-          {% if product.combinations is not empty %}
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>{{ 'Attribute name'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
-                  <th>{{ 'EAN-13'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  <th>{{ 'UPC'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  <th>{{ 'MPN'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  {% if not isAllShopContext and isStockManagementEnabled %}
-                    <th>{{ 'Available quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  {% endif %}
-                </tr>
-              </thead>
-              <tbody>
-                {% for combination in product.combinations %}
+          <div class="card-body">
+            {% if product.combinations is not empty %}
+              <table class="table">
+                <thead>
                   <tr>
-                    <td>{{ combination.attributes }}</td>
-                    <td>{{ combination.reference }}</td>
-                    <td>{{ combination.ean13 }}</td>
-                    <td>{{ combination.upc }}</td>
-                    <td>{{ combination.mpn }}</td>
+                    <th>{{ 'Attribute name'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                    <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
+                    <th>{{ 'EAN-13'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                    <th>{{ 'UPC'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                    <th>{{ 'MPN'|trans({}, 'Admin.Catalog.Feature') }}</th>
                     {% if not isAllShopContext and isStockManagementEnabled %}
-                      <td>{{ combination.quantity }}</td>
+                      <th>{{ 'Available quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
                     {% endif %}
                   </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          {% else %}
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>{{ 'Ref:'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  <th>{{ 'EAN-13:'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  <th>{{ 'UPC:'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  <th>{{ 'MPN:'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  {% if isStockManagementEnabled %}
-                    <th>{{ 'Qty:'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  {% endif %}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{{ product.reference }}</td>
-                  <td>{{ product.ean13 }}</td>
-                  <td>{{  product.upc }}</td>
-                  <td>{{  product.mpn }}</td>
-                  {% if isStockManagementEnabled %}
-                    <td>{{ product.quantity }}</td>
-                  {% endif %}
-                </tr>
-              </tbody>
-            </table>
-          {% endif %}
+                </thead>
+                <tbody>
+                  {% for combination in product.combinations %}
+                    <tr>
+                      <td>{{ combination.attributes }}</td>
+                      <td>{{ combination.reference }}</td>
+                      <td>{{ combination.ean13 }}</td>
+                      <td>{{ combination.upc }}</td>
+                      <td>{{ combination.mpn }}</td>
+                      {% if not isAllShopContext and isStockManagementEnabled %}
+                        <td>{{ combination.quantity }}</td>
+                      {% endif %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% else %}
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>{{ 'Ref:'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                    <th>{{ 'EAN-13:'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                    <th>{{ 'UPC:'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                    <th>{{ 'MPN:'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                    {% if isStockManagementEnabled %}
+                      <th>{{ 'Qty:'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                    {% endif %}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{ product.reference }}</td>
+                    <td>{{ product.ean13 }}</td>
+                    <td>{{  product.upc }}</td>
+                    <td>{{  product.mpn }}</td>
+                    {% if isStockManagementEnabled %}
+                      <td>{{ product.quantity }}</td>
+                    {% endif %}
+                  </tr>
+                </tbody>
+              </table>
+            {% endif %}
+          </div>
         </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    {% else %}
+      {{ 'No products has been found for this brand.'|trans({}, 'Admin.Catalog.Notification') }}
+    {% endif %}
   </div>
 </div>

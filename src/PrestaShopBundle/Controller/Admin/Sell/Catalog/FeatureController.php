@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -53,9 +53,7 @@ class FeatureController extends FrameworkBundleAdminController
 {
     use BulkActionsTrait;
 
-    /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(Request $request, FeatureFilters $filters): Response
     {
         $featureGridFactory = $this->get('prestashop.core.grid.grid_factory.feature');
@@ -92,12 +90,11 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * Create feature action.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(Request $request): Response
     {
         if (!$this->isFeatureEnabled()) {
@@ -134,13 +131,12 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * Edit feature action.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $featureId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function editAction(int $featureId, Request $request): Response
     {
         try {
@@ -183,12 +179,11 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param FeatureFilters $filters
      *
      * @return CsvResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function exportAction(FeatureFilters $filters): CsvResponse
     {
         $filters = new FeatureFilters($filters->getShopConstraint(), ['limit' => null] + $filters->all());
@@ -221,12 +216,11 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param int $featureId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function deleteAction(int $featureId): Response
     {
         try {
@@ -241,12 +235,11 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function bulkDeleteAction(Request $request): Response
     {
         try {
@@ -322,20 +315,16 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    private function getSettingsTipMessage(): string
+    private function getSettingsTipMessage()
     {
+        if ($this->isFeatureEnabled()) {
+            return null;
+        }
+
         $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_performance'));
         $urlEnding = '</a>';
-
-        if ($this->isFeatureEnabled()) {
-            return $this->trans(
-                'The features are enabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.',
-                'Admin.Catalog.Notification',
-                [$urlOpening, $urlEnding]
-            );
-        }
 
         return $this->trans(
             'The features are disabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.',

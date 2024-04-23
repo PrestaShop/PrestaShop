@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectType;
 
 /**
  * Class CategoryCore.
@@ -79,6 +80,18 @@ class CategoryCore extends ObjectModel
     /** @var mixed string or array of Meta description */
     public $meta_description;
 
+    /**
+     * @var string Redirection type
+     *
+     * @see RedirectType
+     */
+    public $redirect_type = RedirectType::TYPE_PERMANENT;
+
+    /**
+     * @var int Product identifier or Category identifier depends on redirect_type
+     */
+    public $id_type_redirected = 0;
+
     /** @var string Object creation date */
     public $date_add;
 
@@ -115,6 +128,8 @@ class CategoryCore extends ObjectModel
             'id_shop_default' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'is_root_category' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'position' => ['type' => self::TYPE_INT],
+            'redirect_type' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'id_type_redirected' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             /* Lang fields */
@@ -760,15 +775,15 @@ class CategoryCore extends ObjectModel
         }
 
         $cacheId = 'Category::getNestedCategories_' . md5(
-                (int) $idRootCategory .
-                (int) $idLang .
-                (int) $active .
-                (int) $useShopRestriction .
-                (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '') .
-                $sqlFilter .
-                $orderBy .
-                $limit
-            );
+            (int) $idRootCategory .
+            (int) $idLang .
+            (int) $active .
+            (int) $useShopRestriction .
+            (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '') .
+            $sqlFilter .
+            $orderBy .
+            $limit
+        );
 
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance()->executeS(
@@ -953,7 +968,7 @@ class CategoryCore extends ObjectModel
         $random = false,
         $randomNumberProducts = 1,
         $checkAccess = true,
-        Context $context = null
+        ?Context $context = null
     ) {
         if (!$context) {
             $context = Context::getContext();
@@ -1084,7 +1099,7 @@ class CategoryCore extends ObjectModel
      *
      * @return Category object
      */
-    public static function getRootCategory($idLang = null, Shop $shop = null)
+    public static function getRootCategory($idLang = null, ?Shop $shop = null)
     {
         $context = Context::getContext();
         if (null === $idLang) {
@@ -1225,7 +1240,7 @@ class CategoryCore extends ObjectModel
      *
      * @internal param int $id_product Product ID
      */
-    public static function getChildrenWithNbSelectedSubCat($idParent, $selectedCategory, $idLang, Shop $shop = null, $useShopContext = true)
+    public static function getChildrenWithNbSelectedSubCat($idParent, $selectedCategory, $idLang, ?Shop $shop = null, $useShopContext = true)
     {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -1369,7 +1384,7 @@ class CategoryCore extends ObjectModel
      *
      * @return string FO URL to this Category
      */
-    public function getLink(Link $link = null, $idLang = null)
+    public function getLink(?Link $link = null, $idLang = null)
     {
         if (!$link) {
             $link = Context::getContext()->link;
@@ -1801,7 +1816,7 @@ class CategoryCore extends ObjectModel
             ' . Shop::addSqlAssociation('category', 'cp') . '
             WHERE cp.`id_parent` = ' . (int) $this->id_parent . '
             ORDER BY category_shop.`position` ASC')
-            ) {
+        ) {
             return false;
         }
 
@@ -1869,8 +1884,8 @@ class CategoryCore extends ObjectModel
             $return = $return
                 && Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'category` c ' . Shop::addSqlAssociation('category', 'c') . '
-                    SET c.`position` = ' . (int) ($i) . ',
-                    category_shop.`position` = ' . (int) ($i) . ',
+                    SET c.`position` = ' . (int) $i . ',
+                    category_shop.`position` = ' . (int) $i . ',
                     c.`date_upd` = "' . date('Y-m-d H:i:s') . '"
                     WHERE c.`id_parent` = ' . (int) $idCategoryParent . ' AND c.`id_category` = ' . (int) $result[$i]['id_category']
                 );
@@ -1948,7 +1963,7 @@ class CategoryCore extends ObjectModel
      *
      * @since 1.5.0
      */
-    public function inShop(Shop $shop = null)
+    public function inShop(?Shop $shop = null)
     {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -1971,7 +1986,7 @@ class CategoryCore extends ObjectModel
      *
      * @since 1.5.0
      */
-    public static function inShopStatic($idCategory, Shop $shop = null)
+    public static function inShopStatic($idCategory, ?Shop $shop = null)
     {
         if (!$shop || !is_object($shop)) {
             $shop = Context::getContext()->shop;

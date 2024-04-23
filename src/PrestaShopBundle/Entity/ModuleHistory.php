@@ -33,7 +33,9 @@ use Doctrine\ORM\Mapping as ORM;
  * ModuleHistory.
  *
  * @ORM\Table
+ *
  * @ORM\Entity
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class ModuleHistory
@@ -42,7 +44,9 @@ class ModuleHistory
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\Column(name="id", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -62,14 +66,14 @@ class ModuleHistory
     private $idModule;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="date_add", type="datetime")
      */
     private $dateAdd;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="date_upd", type="datetime")
      */
@@ -136,7 +140,7 @@ class ModuleHistory
     /**
      * Set dateAdd.
      *
-     * @param \DateTime $dateAdd
+     * @param DateTime $dateAdd
      *
      * @return ModuleHistory
      */
@@ -150,7 +154,7 @@ class ModuleHistory
     /**
      * Get dateAdd.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateAdd()
     {
@@ -160,7 +164,7 @@ class ModuleHistory
     /**
      * Set dateUpd.
      *
-     * @param \DateTime $dateUpd
+     * @param DateTime $dateUpd
      *
      * @return ModuleHistory
      */
@@ -174,7 +178,7 @@ class ModuleHistory
     /**
      * Get dateUpd.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateUpd()
     {
@@ -185,6 +189,7 @@ class ModuleHistory
      * Now we tell doctrine that before we persist or update we call the updatedTimestamps() function.
      *
      * @ORM\PrePersist
+     *
      * @ORM\PreUpdate
      */
     public function updatedTimestamps()

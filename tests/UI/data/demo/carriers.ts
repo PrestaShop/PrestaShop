@@ -1,7 +1,10 @@
-import CarrierData from '@data/faker/carrier';
+import {
+  // Import data
+  FakerCarrier,
+} from '@prestashop-core/ui-testing';
 
 export default {
-  default: new CarrierData({
+  default: new FakerCarrier({
     id: 1,
     name: 'Click and collect',
     delay: 'Pick up in-store',
@@ -9,7 +12,7 @@ export default {
     freeShipping: true,
     position: 1,
   }),
-  myCarrier: new CarrierData({
+  myCarrier: new FakerCarrier({
     id: 2,
     name: 'My carrier',
     delay: 'Delivery next day!',
@@ -19,7 +22,7 @@ export default {
     freeShipping: false,
     position: 2,
   }),
-  cheapCarrier: new CarrierData({
+  cheapCarrier: new FakerCarrier({
     id: 3,
     name: 'My cheap carrier',
     delay: 'Buy more to pay less!',
@@ -27,7 +30,7 @@ export default {
     freeShipping: false,
     position: 3,
   }),
-  lightCarrier: new CarrierData({
+  lightCarrier: new FakerCarrier({
     id: 4,
     name: 'My light carrier',
     delay: 'The lighter the cheaper!',

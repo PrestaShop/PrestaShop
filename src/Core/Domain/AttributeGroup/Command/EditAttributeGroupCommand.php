@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\InvalidAttributeGroupTypeException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType;
 
@@ -38,63 +37,28 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupT
  */
 class EditAttributeGroupCommand
 {
-    /**
-     * @var AttributeGroupId
-     */
-    private $attributeGroupId;
+    private AttributeGroupId $attributeGroupId;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
-    private $localizedNames;
+    private ?array $localizedNames;
 
     /**
-     * @var int[]
+     * @var int[]|null
      */
-    private $shopAssociation;
+    private ?array $associatedShopIds;
 
     /**
-     * @var array
+     * @var string[]|null
      */
-    private $localizedPublicNames;
+    private ?array $localizedPublicNames;
 
-    /**
-     * @var AttributeGroupType
-     */
-    private $type;
+    private ?AttributeGroupType $type;
 
-    /**
-     * @param int $attributeGroupId
-     * @param string[] $localizedNames
-     * @param array $localizedPublicNames
-     * @param string $type
-     * @param int[] $shopAssociation
-     *
-     * @throws AttributeGroupConstraintException
-     * @throws InvalidAttributeGroupTypeException
-     */
-    public function __construct(
-        int $attributeGroupId,
-        array $localizedNames,
-        array $localizedPublicNames,
-        string $type,
-        array $shopAssociation
-    ) {
+    public function __construct(int $attributeGroupId)
+    {
         $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
-        $this->assertNamesAreValid(
-            $localizedNames,
-            'Attribute name cannot be empty',
-            AttributeGroupConstraintException::EMPTY_NAME
-        );
-        $this->assertNamesAreValid(
-            $localizedPublicNames,
-            'Attribute public name cannot be empty',
-            AttributeGroupConstraintException::EMPTY_PUBLIC_NAME
-        );
-        $this->localizedNames = $localizedNames;
-        $this->localizedPublicNames = $localizedPublicNames;
-        $this->type = new AttributeGroupType($type);
-        $this->shopAssociation = $shopAssociation;
     }
 
     /**
@@ -105,36 +69,81 @@ class EditAttributeGroupCommand
         return $this->attributeGroupId;
     }
 
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames(): array
+    public function getLocalizedNames(): ?array
     {
-        return $this->localizedNames;
+        return $this->localizedNames ?? null;
     }
 
     /**
-     * @return string[]
+     * @param string[] $localizedNames
+     *
+     * @return $this
+     *
+     * @throws AttributeGroupConstraintException
      */
-    public function getLocalizedPublicNames(): array
+    public function setLocalizedNames(array $localizedNames): self
     {
-        return $this->localizedPublicNames;
+        $this->assertNamesAreValid(
+            $localizedNames,
+            'Attribute name cannot be empty',
+            AttributeGroupConstraintException::EMPTY_NAME
+        );
+        $this->localizedNames = $localizedNames;
+
+        return $this;
+    }
+
+    public function getLocalizedPublicNames(): ?array
+    {
+        return $this->localizedPublicNames ?? null;
     }
 
     /**
-     * @return AttributeGroupType
+     * @param string[] $localizedPublicNames
+     *
+     * @return $this
+     *
+     * @throws AttributeGroupConstraintException
      */
-    public function getType(): AttributeGroupType
+    public function setLocalizedPublicNames(array $localizedPublicNames): self
     {
-        return $this->type;
+        $this->assertNamesAreValid(
+            $localizedPublicNames,
+            'Attribute public name cannot be empty',
+            AttributeGroupConstraintException::EMPTY_PUBLIC_NAME
+        );
+        $this->localizedPublicNames = $localizedPublicNames;
+
+        return $this;
+    }
+
+    public function getType(): ?AttributeGroupType
+    {
+        return $this->type ?? null;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = new AttributeGroupType($type);
+
+        return $this;
+    }
+
+    public function getAssociatedShopIds(): ?array
+    {
+        return $this->associatedShopIds ?? null;
     }
 
     /**
-     * @return int[]
+     * @param int[] $associatedShopIds
+     *
+     * @return $this
      */
-    public function getShopAssociation(): array
+    public function setAssociatedShopIds(array $associatedShopIds): self
     {
-        return $this->shopAssociation;
+        $this->associatedShopIds = $associatedShopIds;
+
+        return $this;
     }
 
     /**
