@@ -64,6 +64,9 @@ describe('FO - Product page - Quick view : Change image', async () => {
     await files.generateImage(newProductData.thumbImage!);
     await files.generateImage('secondThumbImage.jpg');
     await files.generateImage('thirdThumbImage.jpg');
+    await files.generateImage('fourthThumbImage.jpg');
+    await files.generateImage('fifthThumbImage.jpg');
+    await files.generateImage('sixthThumbImage.jpg');
   });
 
   after(async () => {
@@ -72,9 +75,12 @@ describe('FO - Product page - Quick view : Change image', async () => {
     await files.deleteFile(newProductData.thumbImage!);
     await files.deleteFile('secondThumbImage.jpg');
     await files.deleteFile('thirdThumbImage.jpg');
+    await files.deleteFile('fourthThumbImage.jpg');
+    await files.deleteFile('fifthThumbImage.jpg');
+    await files.deleteFile('sixthThumbImage.jpg');
   });
 
-  describe(`PRE-TEST: Create new product '${newProductData.name}' with 4 images`, async () => {
+  describe(`PRE-TEST: Create new product '${newProductData.name}' with 7 images`, async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -117,14 +123,15 @@ describe('FO - Product page - Quick view : Change image', async () => {
       expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
-    it('should add 4 images', async function () {
+    it('should add 7 images', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addImage', baseContext);
 
       await descriptionTab.addProductImages(page,
-        [newProductData.coverImage, newProductData.thumbImage, 'secondThumbImage.jpg', 'thirdThumbImage.jpg']);
+        [newProductData.coverImage, newProductData.thumbImage, 'secondThumbImage.jpg', 'thirdThumbImage.jpg',
+          'fourthThumbImage.jpg', 'fifthThumbImage.jpg', 'sixthThumbImage.jpg']);
 
       const numOfImages = await descriptionTab.getNumberOfImages(page);
-      expect(numOfImages).to.equal(4);
+      expect(numOfImages).to.equal(7);
     });
   });
 
@@ -215,6 +222,15 @@ describe('FO - Product page - Quick view : Change image', async () => {
 
       const secondCoverImagePosition = await productPage.getCoverImage(page);
       expect(coverImagePosition).to.not.equal(secondCoverImagePosition);
+    });
+
+    it('should click on the last image and check it', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickLastImage', baseContext);
+
+      const coverImagePosition = await productPage.getCoverImage(page);
+
+      const lastCoverImagePosition = await productPage.selectThumbImage(page, 7);
+      expect(coverImagePosition).to.not.equal(lastCoverImagePosition);
     });
   });
 

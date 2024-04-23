@@ -652,7 +652,7 @@ class Product extends FOBasePage {
   async closeProductModal(page: Page): Promise<boolean> {
     await page.mouse.click(5, 5);
 
-    return this.elementNotVisible(page, '#product-modal', 2000);
+    return this.elementNotVisible(page, this.productModal, 2000);
   }
 
   /**
