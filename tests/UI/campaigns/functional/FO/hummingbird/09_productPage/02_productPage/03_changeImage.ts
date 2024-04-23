@@ -30,7 +30,7 @@ const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_c
 /*
 Pre-condition:
 - Install the theme hummingbird
-- Create product with 4 images
+- Create product with 7 images
 Scenario:
 - Go to FO
 - Go to the created product page
