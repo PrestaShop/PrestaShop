@@ -21,7 +21,7 @@ class Product extends FOBasePage {
 
   public readonly messageAlertNotificationAlreadyRegistered: string;
 
-  private readonly warningMessage: string;
+  protected warningMessage: string;
 
   protected productFlags: string;
 
@@ -44,6 +44,8 @@ class Product extends FOBasePage {
   protected productCoverImgProductModal: string;
 
   private readonly productQuantity: string;
+
+  protected productRowQuantityUpDownButton: (direction: string) => string;
 
   protected shortDescription: string;
 
@@ -211,6 +213,8 @@ class Product extends FOBasePage {
     this.productCoverImgProductModal = '#product-modal picture img.js-modal-product-cover';
     this.thumbImgProductModal = (row: number) => `#thumbnails li:nth-child(${row}) picture img.js-modal-thumb`;
     this.productQuantity = '#quantity_wanted';
+    this.productRowQuantityUpDownButton = (direction: string) => 'span.input-group-btn-vertical'
+      + ` button.bootstrap-touchspin-${direction}`;
     this.shortDescription = '#product-description-short';
     this.productDescription = '#description';
     this.customizationBlock = 'div.product-container div.product-information section.product-customization';
@@ -686,11 +690,11 @@ class Product extends FOBasePage {
   /**
    * Select product attributes
    * @param page {Page} Browser tab
-   * @param quantity {number} Quantity of the product that customer wants
+   * @param quantity {number|string} Quantity of the product that customer wants
    * @param attributes {ProductAttribute[]}  Product's attributes data to select
    * @returns {Promise<void>}
    */
-  async selectAttributes(page: Page, quantity: number, attributes: ProductAttribute[]): Promise<void> {
+  async selectAttributes(page: Page, quantity: number|string, attributes: ProductAttribute[]): Promise<void> {
     if (attributes.length === 0) {
       return;
     }
@@ -740,7 +744,7 @@ class Product extends FOBasePage {
   /**
    * Click on Add to cart button then on Proceed to checkout button in the modal
    * @param page {Page} Browser tab
-   * @param quantity {number} Quantity of the product that customer wants
+   * @param quantity {number|string} Quantity of the product that customer wants
    * @param combination {ProductAttribute[]}  Product's combination data to add to cart
    * @param proceedToCheckout {boolean|null} True to click on proceed to checkout button on modal
    * @param customizedText {string} Value of customization
@@ -748,7 +752,7 @@ class Product extends FOBasePage {
    */
   async addProductToTheCart(
     page: Page,
-    quantity: number = 1,
+    quantity: number |string = 1,
     combination: ProductAttribute[] = [],
     proceedToCheckout: boolean | null = true,
     customizedText: string = 'text',
@@ -838,11 +842,45 @@ class Product extends FOBasePage {
   /**
    * Set quantity
    * @param page {Page} Browser tab
-   * @param quantity {number} Quantity to set
+   * @param quantity {number|string} Quantity to set
    * @returns {Promise<void>}
    */
-  async setQuantity(page: Page, quantity: number): Promise<void> {
-    await this.setValue(page, this.productQuantity, quantity.toString());
+  async setQuantity(page: Page, quantity: number | string): Promise<void> {
+    await this.setValue(page, this.productQuantity, quantity);
+  }
+
+  /**
+   * Click on add to cart button
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnAddToCartButton(page: Page): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.addToCartButton);
+  }
+
+  /**
+   * Get product quantity
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getProductQuantity(page: Page): Promise<number> {
+    return parseInt(await page.locator(this.productQuantity).evaluate((node: HTMLSelectElement) => node.value), 10);
+  }
+
+  /**
+   * Update quantity value arrow up down in quick view modal
+   * @param page {Page} Browser tab
+   * @param quantityWanted {number} Value to add/subtract from quantity
+   * @param direction {string} Direction to click on
+   * @returns {Promise<string>}
+   */
+  async setQuantityByArrowUpDown(page: Page, quantityWanted: number, direction: string): Promise<void> {
+    const inputValue = await this.getProductQuantity(page);
+    const nbClick: number = Math.abs(inputValue - quantityWanted);
+
+    for (let i = 0; i < nbClick; i++) {
+      await page.locator(this.productRowQuantityUpDownButton(direction)).click();
+    }
   }
 
   /**
@@ -951,7 +989,7 @@ class Product extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isAddToCartButtonEnabled(page: Page): Promise<boolean> {
-    return this.elementNotVisible(page, `${this.addToCartButton}:disabled`, 1000);
+    return this.elementNotVisible(page, `${this.addToCartButton}:disabled`, 3000);
   }
 
   /**
