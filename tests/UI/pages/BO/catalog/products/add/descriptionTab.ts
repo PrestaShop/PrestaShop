@@ -232,12 +232,16 @@ class DescriptionTab extends BOBasePage {
     await page.locator(this.productImageDropZoneBtnLang).click();
     await this.elementVisible(page, this.productImageDropZoneDropdown);
     await page.locator(this.productImageDropZoneDropdownItem('en')).click();
-    const captionEN = await page.locator(this.productImageDropZoneCaption).innerText();
+    const captionEN = await page
+      .locator(this.productImageDropZoneCaption)
+      .evaluate((node: HTMLTextAreaElement): string => node.value);
 
     await page.locator(this.productImageDropZoneBtnLang).click();
     await this.elementVisible(page, this.productImageDropZoneDropdown);
     await page.locator(this.productImageDropZoneDropdownItem('fr')).click();
-    const captionFR = await page.locator(this.productImageDropZoneCaption).innerText();
+    const captionFR = await page
+      .locator(this.productImageDropZoneCaption)
+      .evaluate((node: HTMLTextAreaElement): string => node.value);
 
     await page.locator(this.productImageDropZoneCloseButton).click();
 
