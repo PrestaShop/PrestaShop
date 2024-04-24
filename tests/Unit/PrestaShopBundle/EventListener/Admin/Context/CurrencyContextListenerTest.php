@@ -48,6 +48,8 @@ class CurrencyContextListenerTest extends ContextEventListenerTestCase
         $listener = new CurrencyContextListener(
             $currencyContextBuilder,
             $this->mockConfiguration(['PS_CURRENCY_DEFAULT' => 42]),
+            $this->mockFeatureFlagStateChecker(),
+            true,
         );
 
         $event = $this->createRequestEvent(new Request());

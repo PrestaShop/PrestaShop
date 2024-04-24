@@ -48,6 +48,8 @@ class CountryContextListenerTest extends ContextEventListenerTestCase
         $listener = new CountryContextListener(
             $countryContextBuilder,
             $this->mockConfiguration(['PS_COUNTRY_DEFAULT' => 42]),
+            $this->mockFeatureFlagStateChecker(),
+            true,
         );
 
         $event = $this->createRequestEvent(new Request());

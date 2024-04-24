@@ -1,10 +1,15 @@
 # Dedicated services for Admin app
 parameters:
-  # All admin context listeners should be executed before the router listener, this way even if no symfony route is found they context are initialized
+  # We set priorities lower than the RouterListener (32) so that the LegacyRouterChecker class is called first.
+  # The correct behaviour of Context Listeners on legacy routes depends on LegacyRouterChecker.
+  employee_listener_priority: 31
+  language_listener_priority: 30
+  default_listener_priority: 29
+  # All admin context listeners should be executed before the router listener, this way even if no symfony route is found the contexts are initialized correctly
   # and can be used in admin legacy pages as well (router listener priority is 32)
-  employee_listener_priority: 35
-  language_listener_priority: 34
-  default_listener_priority: 33
+  legacy_employee_listener_priority: 35
+  legacy_language_listener_priority: 34
+  legacy_default_listener_priority: 33
 
 services:
   _defaults:
@@ -75,25 +80,78 @@ services:
 
   # Employee context must have a higher priority because Shop and Language depend on it
   PrestaShopBundle\EventListener\Admin\Context\EmployeeContextListener:
+    arguments:
+      $isSymfonyLayout: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%employee_listener_priority%' }
 
+  PrestaShopBundle\EventListener\Admin\Context\EmployeeContextListener.legacy:
+    class: PrestaShopBundle\EventListener\Admin\Context\EmployeeContextListener
+    arguments:
+      $isSymfonyLayout: false
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%legacy_employee_listener_priority%' }
+
+  PrestaShopBundle\EventListener\Admin\Context\DefaultLanguageContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%legacy_language_listener_priority%' }
+
   # Language depends on Employee so its priority is lower, however it has higher priority than Currency and Country because they depend on Language
   PrestaShopBundle\EventListener\Admin\Context\LanguageContextListener:
+    arguments:
+      $isSymfonyLayout: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%language_listener_priority%' }
 
+  PrestaShopBundle\EventListener\Admin\Context\LanguageContextListener.legacy:
+    class: PrestaShopBundle\EventListener\Admin\Context\LanguageContextListener
+    arguments:
+      $isSymfonyLayout: false
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%legacy_language_listener_priority%' }
+
+  PrestaShopBundle\EventListener\Admin\Context\DefaultShopContextListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%legacy_default_listener_priority%' }
+
   PrestaShopBundle\EventListener\Admin\Context\ShopContextListener:
+    arguments:
+      $isSymfonyLayout: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%default_listener_priority%' }
+
+  PrestaShopBundle\EventListener\Admin\Context\ShopContextListener.legacy:
+    class: PrestaShopBundle\EventListener\Admin\Context\ShopContextListener
+    arguments:
+      $isSymfonyLayout: false
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%legacy_default_listener_priority%' }
 
   PrestaShopBundle\EventListener\Admin\Context\CurrencyContextListener:
+    arguments:
+      $isSymfonyLayout: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%default_listener_priority%' }
 
+  PrestaShopBundle\EventListener\Admin\Context\CurrencyContextListener.legacy:
+    class: PrestaShopBundle\EventListener\Admin\Context\CurrencyContextListener
+    arguments:
+      $isSymfonyLayout: false
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%legacy_default_listener_priority%' }
+
   PrestaShopBundle\EventListener\Admin\Context\CountryContextListener:
+    arguments:
+      $isSymfonyLayout: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%default_listener_priority%' }
+
+  PrestaShopBundle\EventListener\Admin\Context\CountryContextListener.legacy:
+    class: PrestaShopBundle\EventListener\Admin\Context\CountryContextListener
+    arguments:
+      $isSymfonyLayout: false
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%legacy_default_listener_priority%' }
 
   # This listener must run after the router listener since it's based on the request attributes that are defined by the router
   PrestaShopBundle\EventListener\Admin\Context\LegacyControllerContextListener:

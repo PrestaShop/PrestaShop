@@ -29,21 +29,19 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * Listener dedicated to set up Country context for the Back-Office/Admin application.
+ * Listener dedicated to set up default Language context for the Back-Office/Admin application.
+ * We need to initialize the LanguageContext earlier because it's used by components in the Symfony
+ * layout that will be displayed in the Not Found legacy page
  */
-class CountryContextListener
+class DefaultLanguageContextListener
 {
     public function __construct(
-        private readonly CountryContextBuilder $countryContextBuilder,
+        private readonly LanguageContextBuilder $languageContextBuilder,
         private readonly ConfigurationInterface $configuration,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
-        private readonly bool $isSymfonyLayout,
     ) {
     }
 
@@ -53,10 +51,8 @@ class CountryContextListener
             return;
         }
 
-        if ($this->isSymfonyLayout !== $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)) {
-            return;
-        }
-
-        $this->countryContextBuilder->setCountryId((int) $this->configuration->get('PS_COUNTRY_DEFAULT'));
+        $defaultLanguageId = (int) $this->configuration->get('PS_LANG_DEFAULT');
+        $this->languageContextBuilder->setDefaultLanguageId($defaultLanguageId);
+        $this->languageContextBuilder->setLanguageId($defaultLanguageId);
     }
 }
