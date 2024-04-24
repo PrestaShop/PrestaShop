@@ -31,6 +31,7 @@ use Context;
 use Country;
 use Currency;
 use Customer;
+use Employee;
 use Language;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -96,7 +97,7 @@ abstract class ContextStateTestCase extends TestCase
      * @param string $className
      * @param int $objectId
      *
-     * @return MockObject|Cart|Country|Currency|Customer|Language|Shop
+     * @return MockObject|Cart|Country|Currency|Customer|Employee|Language|Shop
      */
     protected function createContextFieldMock(string $className, int $objectId)
     {
