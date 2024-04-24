@@ -5,13 +5,16 @@ services:
   _defaults:
     public: true
 
-  prestashop.security.admin.provider:
-    class: PrestaShopBundle\Security\Admin\EmployeeProvider
+  PrestaShopBundle\Security\Admin\EmployeeProvider:
     autowire: true
     arguments:
-      - "@prestashop.adapter.legacy.context"
       - "@prestashop.static_cache.adapter"
-      - '@PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface'
+
+  prestashop.security.admin.provider:
+    alias: PrestaShopBundle\Security\Admin\EmployeeProvider
+
+  PrestaShopBundle\Security\Admin\SessionEmployeeProvider:
+    autowire: true
 
   PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider:
     arguments:

@@ -28,20 +28,23 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\EventListener\Admin\Context;
 
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\EventListener\Admin\Context\EmployeeContextListener;
+use PrestaShopBundle\Security\Admin\SessionEmployeeProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class EmployeeContextListenerTest extends ContextEventListenerTestCase
 {
-    public function testFindEmployee(): void
+    public function testEmployeeFromLegacyContext(): void
     {
         $employeeBuilder = new EmployeeContextBuilder(
-            $this->createMock(EmployeeRepository::class)
+            $this->createMock(EmployeeRepository::class),
+            $this->createMock(ContextStateManager::class),
         );
         $listener = new EmployeeContextListener(
             $employeeBuilder,
@@ -49,6 +52,7 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
             $this->createMock(Security::class),
             $this->mockFeatureFlagStateChecker(),
             true,
+            $this->createMock(SessionEmployeeProvider::class),
         );
 
         $event = $this->createRequestEvent(new Request());
@@ -60,7 +64,8 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
     {
         $event = $this->createRequestEvent(new Request());
         $employeeBuilder = new EmployeeContextBuilder(
-            $this->createMock(EmployeeRepository::class)
+            $this->createMock(EmployeeRepository::class),
+            $this->createMock(ContextStateManager::class),
         );
         $listener = new EmployeeContextListener(
             $employeeBuilder,
@@ -68,6 +73,7 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
             $this->createMock(Security::class),
             $this->mockFeatureFlagStateChecker(),
             true,
+            $this->createMock(SessionEmployeeProvider::class),
         );
         $listener->onKernelRequest($event);
         $this->assertEquals(null, $this->getPrivateField($employeeBuilder, 'employeeId'));
@@ -76,7 +82,8 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
     public function testEmployeeFromSymfonySecurity(): void
     {
         $employeeBuilder = new EmployeeContextBuilder(
-            $this->createMock(EmployeeRepository::class)
+            $this->createMock(EmployeeRepository::class),
+            $this->createMock(ContextStateManager::class),
         );
         $employeeMock = $this->createMock(Employee::class);
         $employeeMock->method('getId')->willReturn(51);
@@ -88,6 +95,33 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
             $securityMock,
             $this->mockFeatureFlagStateChecker(),
             true,
+            $this->createMock(SessionEmployeeProvider::class),
+        );
+
+        $event = $this->createRequestEvent(new Request());
+        $listener->onKernelRequest($event);
+        $this->assertEquals(51, $this->getPrivateField($employeeBuilder, 'employeeId'));
+    }
+
+    public function testEmployeeFromSessionEmployeeProvider(): void
+    {
+        $employeeBuilder = new EmployeeContextBuilder(
+            $this->createMock(EmployeeRepository::class),
+            $this->createMock(ContextStateManager::class),
+        );
+        $employeeMock = $this->createMock(Employee::class);
+        $employeeMock->method('getId')->willReturn(51);
+
+        $sessionEmployeeProvider = $this->createMock(SessionEmployeeProvider::class);
+        $sessionEmployeeProvider->method('getEmployeeFromSession')->willReturn($employeeMock);
+
+        $listener = new EmployeeContextListener(
+            $employeeBuilder,
+            $this->mockLegacyContext(['id_employee' => null]),
+            $this->createMock(Security::class),
+            $this->mockFeatureFlagStateChecker(),
+            true,
+            $sessionEmployeeProvider,
         );
 
         $event = $this->createRequestEvent(new Request());

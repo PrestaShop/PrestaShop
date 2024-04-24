@@ -65,8 +65,8 @@ services:
       - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
   PrestaShopBundle\EventListener\Admin\UserLocaleListener:
+    autowire: true
     arguments:
-      - "@prestashop.adapter.legacy.context"
       - "@prestashop.adapter.legacy.configuration"
       - "@prestashop.core.admin.lang.repository"
     tags:
