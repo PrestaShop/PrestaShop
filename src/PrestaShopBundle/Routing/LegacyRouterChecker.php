@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Routing;
 
 use Dispatcher;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -44,9 +45,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 #[AsRoutingConditionService(priority: -1)]
 class LegacyRouterChecker
 {
-    public const LEGACY_CONTROLLER_CLASS_ATTRIBUTE = '_legacy_controller_class';
-    public const LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE = '_legacy_controller_is_module';
-
     public function __construct(
         protected readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
         protected readonly TabRepository $tabRepository,
@@ -111,13 +109,24 @@ class LegacyRouterChecker
             // It's clearer to actually return a not found exception, for now the dispatcher is still used as fallback in index.php
             // but when it's cleared and only Symfony handles the whole routing then we can display a proper not found Symfony page
             if (!isset($controllers[strtolower($queryController)])) {
-                throw new NotFoundHttpException(sprintf('Unknown controller %s', $queryController));
+                $controllerClass = 'AdminNotFoundController';
+            } else {
+                $controllerClass = $controllers[strtolower($queryController)];
             }
-
-            $controllerClass = $controllers[strtolower($queryController)];
         }
-        $request->attributes->set(self::LEGACY_CONTROLLER_CLASS_ATTRIBUTE, $controllerClass);
-        $request->attributes->set(self::LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE, $isModule);
+        // We load the controller early in the process (during router matching actually), because the controller
+        // configuration has many impacts on the contexts, the security listeners, ... And the relevant data can
+        // only be retrieved once the legacy class is instantiated to access its public configuration
+        // But for performance issues we only instantiate (and init) the controller here once and then store it (along
+        // with other related attributes) in the request attributes so they can be retrieved easily by the code depending on them
+        $adminController = new $controllerClass();
+        $adminController->init();
+
+        $request->attributes->set(LegacyControllerConstants::INSTANCE_ATTRIBUTE, $adminController);
+        $request->attributes->set(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE, $adminController->isAnonymousAllowed());
+        $request->attributes->set(LegacyControllerConstants::IS_ALL_SHOP_CONTEXT_ATTRIBUTE, $adminController->multishop_context === ShopConstraint::ALL_SHOPS);
+        $request->attributes->set(LegacyControllerConstants::CLASS_ATTRIBUTE, $controllerClass);
+        $request->attributes->set(LegacyControllerConstants::IS_MODULE_ATTRIBUTE, $isModule);
 
         return true;
     }

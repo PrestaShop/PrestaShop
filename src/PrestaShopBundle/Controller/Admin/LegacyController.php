@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Routing\LegacyRouterChecker;
+use PrestaShopBundle\Routing\LegacyControllerConstants;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use PrestaShopBundle\Twig\Layout\SmartyVariablesFiller;
 use SmartyException;
@@ -84,11 +84,11 @@ class LegacyController extends PrestaShopAdminController
         // These parameters have already been set as request attributes by LegacyRouterChecker
         $dispatcherHookParameters = [
             'controller_type' => Dispatcher::FC_ADMIN,
-            'controller_class' => $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_CLASS_ATTRIBUTE),
-            'is_module' => $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE),
+            'controller_class' => $request->attributes->get(LegacyControllerConstants::CLASS_ATTRIBUTE),
+            'is_module' => $request->attributes->get(LegacyControllerConstants::IS_MODULE_ATTRIBUTE),
         ];
 
-        $adminController = $this->initController($dispatcherHookParameters);
+        $adminController = $this->initController($request, $dispatcherHookParameters);
         // Redirect if necessary after post process
         if (!empty($adminController->getRedirectAfter())) {
             // After each request the cookie must be written to save its modified state during AdminController workflow
@@ -196,30 +196,8 @@ class LegacyController extends PrestaShopAdminController
         } elseif (method_exists($adminController, 'displayAjax')) {
             $adminController->displayAjax();
         }
-        $outputContent = ob_get_clean();
 
-        // The output of the controller is either directly echoed or it can be properly appended in AdminController::content
-        // it depends on the implementation of the controllers.
-        if (!empty($outputContent) && !empty($adminController->content)) {
-            // Sometimes they are both done and are equal, in which case we only return one content to avoid duplicates.
-            if ($outputContent === $adminController->content) {
-                $responseContent = $outputContent;
-            } else {
-                // In case both contents are present and are different we concatenate them, first the echoed output and then the controller
-                // one since it is displayed last by smarty in the original workflow
-                // This concatenation approach is theoretical and naive and was not tested because of the lack of use cases, so it may need
-                // to be improved in the future
-                $responseContent = $outputContent . $adminController->content;
-            }
-        } elseif (!empty($outputContent)) {
-            $responseContent = $outputContent;
-        } elseif (!empty($adminController->content)) {
-            $responseContent = $adminController->content;
-        } else {
-            $responseContent = '';
-        }
-
-        return new Response($responseContent);
+        return new Response(ob_get_clean());
     }
 
     /**
@@ -228,17 +206,16 @@ class LegacyController extends PrestaShopAdminController
      *
      * Note: some legacy controllers may already use die at this point (to echo content and finish the process) when postProcess is called.
      *
+     * @param Request $request
      * @param array $dispatcherHookParameters
      *
      * @return AdminController
      */
-    protected function initController(array $dispatcherHookParameters): AdminController
+    protected function initController(Request $request, array $dispatcherHookParameters): AdminController
     {
-        $controllerClass = $dispatcherHookParameters['controller_class'];
-
-        // Loading controller
+        // Retrieving the controller instantiated in LegacyRouterChecker
         /** @var AdminController $adminController */
-        $adminController = new $controllerClass();
+        $adminController = $request->attributes->get(LegacyControllerConstants::INSTANCE_ATTRIBUTE);
 
         // Fill default smarty variables as they can be used in partial templates rendered in init methods
         $this->assignSmartyVariables->fillDefault();
@@ -248,7 +225,6 @@ class LegacyController extends PrestaShopAdminController
 
         // This part comes from AdminController::run method, it has been stripped from permission checks since the permission is already
         // handled by this Symfony controller
-        $adminController->init();
         $adminController->setMedia(false);
         $adminController->postProcess();
 
