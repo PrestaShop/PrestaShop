@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShop\PrestaShop\Core\Configuration\AdminFolderFinder;
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use PrestaShopBundle\Security\Admin\SessionRenewer;
 use Symfony\Component\HttpFoundation\IpUtils;
@@ -112,27 +111,27 @@ class AdminLoginControllerCore extends AdminController
             $this->context->smarty->assign('wrong_install_name', true);
         }
 
-        $rand = '';
-
+        $randomizedAdminFolderName = '';
         if (
             // The install is well finished
             !file_exists(_PS_ROOT_DIR_ . '/var/.install.prestashop')
             && basename(_PS_ADMIN_DIR_) == 'admin'
         ) {
-            // find the randomly generated admin folder
-            $finder = AdminFolderFinder::findAdminFolder(_PS_ROOT_DIR_);
-            foreach ($finder as $adminIndexFile) {
-                $rand = $adminIndexFile->getPath();
-                // Container freshness depends on this file existence
-                break;
-            }
+            $this->context->smarty->assign([
+                'wrong_folder_name' => true,
+            ]);
+            $randomizedAdminFolderName = sprintf(
+                'admin%03d%s/',
+                mt_rand(0, 999),
+                Tools::strtolower(Tools::passwdGen(16))
+            );
         } else {
-            $rand = basename(_PS_ADMIN_DIR_) . '/';
+            $randomizedAdminFolderName = basename(_PS_ADMIN_DIR_) . '/';
         }
 
         $this->context->smarty->assign([
-            'randomNb' => $rand,
-            'adminUrl' => Tools::getCurrentUrlProtocolPrefix() . Tools::getShopDomain() . __PS_BASE_URI__ . $rand,
+            'randomNb' => $randomizedAdminFolderName,
+            'adminUrl' => Tools::getCurrentUrlProtocolPrefix() . Tools::getShopDomain() . __PS_BASE_URI__ . $randomizedAdminFolderName,
             'homeUrl' => Tools::getCurrentUrlProtocolPrefix() . Tools::getShopDomain() . __PS_BASE_URI__,
         ]);
 
