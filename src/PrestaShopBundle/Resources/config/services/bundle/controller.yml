@@ -161,3 +161,7 @@ services:
       productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
     tags:
       - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
+
+  PrestaShopBundle\Controller\Admin\SecuredFileReaderController:
+    arguments:
+      $uploadDir: !php/const _PS_UPLOAD_DIR_

@@ -116,7 +116,7 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
             if (!empty($message['file_name'])
                 && file_exists(_PS_UPLOAD_DIR_ . $message['file_name'])
             ) {
-                $attachmentFile = _THEME_PROD_PIC_DIR_ . $message['file_name'];
+                $attachmentFile = $message['file_name'];
             }
 
             $productId = null;
