@@ -26,7 +26,6 @@
 
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\Configuration\AdminFolderFinder;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Version;
 use PrestaShop\TranslationToolsBundle\TranslationToolsBundle;
@@ -244,7 +243,25 @@ abstract class AppKernel extends Kernel
             } elseif (defined('_PS_ADMIN_DIR_') && is_dir(_PS_ADMIN_DIR_)) {
                 $adminDir = _PS_ADMIN_DIR_;
             } else {
-                $finder = AdminFolderFinder::findAdminFolder($this->getProjectDir());
+                // Look for potential admin folders, condition to meet:
+                //  - first level folders in the project folder
+                //  - contains a PHP file that define the const PS_ADMIN_DIR or _PS_ADMIN_DIR_
+                //  - the first folder found is used (alphabetical order, but files named index.php have the highest priority)
+                $finder = new Symfony\Component\Finder\Finder();
+                $finder->files()
+                    ->name('*.php')
+                    ->contains('/define\([\'\"](_)?PS_ADMIN_DIR(_)?[\'\"]/')
+                    ->depth('== 1')
+                    ->sort(function (SplFileInfo $a, SplFileInfo $b): int {
+                        // Prioritize files named index.php
+                        if ($a->getFilename() === 'index.php') {
+                            return -1;
+                        }
+
+                        return strcmp($a->getRealPath(), $b->getRealPath());
+                    })
+                    ->in($this->getProjectDir())
+                ;
                 foreach ($finder as $adminIndexFile) {
                     $adminDir = $adminIndexFile->getPath();
                     // Container freshness depends on this file existence
