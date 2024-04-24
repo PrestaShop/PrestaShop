@@ -60,7 +60,7 @@ class LegacyRouterChecker
 
         $controller = $request->get('controller');
         // AdminLogin must remain accessible so ignoring it prevents having to handle multiple exceptions to ignore security on it
-        if (empty($controller) || $controller === 'AdminLogin') {
+        if (empty($controller)) {
             return false;
         }
 

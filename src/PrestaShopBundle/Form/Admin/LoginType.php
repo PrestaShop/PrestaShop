@@ -51,14 +51,15 @@ class LoginType extends AbstractType
             ->add('email', TextType::class, [
                 'label' => $this->translator->trans('Email address', [], 'Admin.Global'),
             ])
-            ->add('password', PasswordType::class, [
+            ->add('passwd', PasswordType::class, [
                 'label' => $this->translator->trans('Password', [], 'Admin.Global'),
             ])
             ->add('submit_login', SubmitType::class, [
                 'label' => $this->translator->trans('Log in', [], 'Admin.Login.Feature'),
             ])
-            ->add('remember_me', CheckboxType::class, [
+            ->add('stay_logged_in', CheckboxType::class, [
                 'label' => $this->translator->trans('Stay logged in', [], 'Admin.Login.Feature'),
+                'required' => false,
             ])
         ;
     }
@@ -70,5 +71,10 @@ class LoginType extends AbstractType
             'label' => false,
             'form_theme' => '@PrestaShop/Admin/Login/form_theme.html.twig',
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return '';
     }
 }

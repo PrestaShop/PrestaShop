@@ -45,8 +45,23 @@ class LoginController extends PrestaShopAdminController
     ) {
     }
 
-    public function loginAction(): Response
+    /**
+     * This route and controller are defined in the firewall as login_path and check_path
+     * so the controller doesn't need to handle the form submission logic, it is handled
+     * internally by the FormLoginAuthenticator
+     *
+     * See https://symfony.com/doc/current/security.html#form-login
+     *
+     * @param Security $security
+     *
+     * @return Response
+     */
+    public function loginAction(Security $security): Response
     {
+        if ($security->getUser()) {
+            return $this->redirectToRoute('admin_homepage');
+        }
+
         $loginForm = $this->createForm(LoginType::class);
 
         return $this->render('@PrestaShop/Admin/Login/login.html.twig', [
@@ -56,6 +71,37 @@ class LoginController extends PrestaShopAdminController
         ]);
     }
 
+    /**
+     * This controller is not even called since the logout_path is defined in the firewall
+     * so the logout path is watched and Symfony handles the logout part and the redirection
+     * but we still need to define a route to benefit from the _legacy_link feature so it
+     * doesn't hurt to have a consistent controller here anyway.
+     *
+     * See https://symfony.com/doc/current/security.html#logging-out
+     *
+     * @param Security $security
+     *
+     * @return RedirectResponse
+     */
+    public function logoutAction(Security $security): RedirectResponse
+    {
+        if ($security->getUser()) {
+            $security->logout();
+        }
+
+        return $this->redirectToRoute('admin_login');
+    }
+
+    /**
+     * Automatically redirects to the Employee configured homepage, or AdminDashboard
+     * as a fallback, or to the login in case the employee is not logged in.
+     *
+     * @param Security $security
+     * @param TabRepository $tabRepository
+     * @param LegacyContext $legacyContext
+     *
+     * @return RedirectResponse
+     */
     public function homepageAction(Security $security, TabRepository $tabRepository, LegacyContext $legacyContext): RedirectResponse
     {
         $loggedUser = $security->getUser();

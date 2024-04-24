@@ -23,3 +23,24 @@ security:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
+
+    main:
+      lazy: true
+      provider: admin
+      form_login:
+        login_path: admin_login
+        check_path: admin_login
+        username_parameter: email
+        password_parameter: passwd
+      remember_me:
+        secret: "%kernel.secret%"
+        lifetime: 3600
+        remember_me_parameter: stay_logged_in
+        signature_properties: [ 'password' ]
+      logout:
+        path: /logout
+        target: admin_login
+
+  access_control:
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/, roles: IS_AUTHENTICATED }

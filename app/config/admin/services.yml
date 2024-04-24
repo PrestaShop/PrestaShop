@@ -18,16 +18,6 @@ services:
     autoconfigure: true
 
   # SECURITY
-  prestashop.adapter.security.admin:
-    class: "%AdapterSecurityAdminClass%"
-    arguments:
-      - "@prestashop.adapter.legacy.context"
-      - "@security.token_storage"
-      - "@prestashop.security.admin.provider"
-      - "@security.helper"
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
   PrestaShopBundle\EventListener\Admin\TokenizedUrlsListener:
     autowire: true
     tags:
