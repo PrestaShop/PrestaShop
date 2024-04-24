@@ -41,43 +41,33 @@ use InvalidArgumentException;
 class AttributeGroup
 {
     /**
-     * @var int
-     *
      * @ORM\Id
      *
      * @ORM\Column(name="id_attribute_group", type="integer")
      *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="is_color_group", type="boolean")
      */
-    private $isColorGroup;
+    private bool $isColorGroup;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="group_type", type="string", length=255)
      */
-    private $groupType;
+    private string $groupType;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="position", type="integer")
      */
-    private $position;
+    private int $position;
 
     /**
-     * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\Attribute", mappedBy="attributeGroup", orphanRemoval=true)
      */
-    private $attributes;
+    private Collection $attributes;
 
     /**
      * @ORM\ManyToMany(targetEntity="PrestaShopBundle\Entity\Shop", cascade={"persist"})
@@ -87,14 +77,14 @@ class AttributeGroup
      *      inverseJoinColumns={@ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", onDelete="CASCADE")}
      * )
      */
-    private $shops;
+    private Collection $shops;
 
     /**
-     * @var ArrayCollection<AttributeGroupLang>
+     * @var Collection<AttributeGroupLang>
      *
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\AttributeGroupLang", mappedBy="attributeGroup", orphanRemoval=true)
      */
-    private $attributeGroupLangs;
+    private Collection $attributeGroupLangs;
 
     private $groupTypeAvailable = [
         'select',
@@ -107,50 +97,27 @@ class AttributeGroup
         $this->groupType = 'select';
         $this->shops = new ArrayCollection();
         $this->attributes = new ArrayCollection();
+        $this->attributeGroupLangs = new ArrayCollection();
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set isColorGroup.
-     *
-     * @param bool $isColorGroup
-     *
-     * @return AttributeGroup
-     */
-    public function setIsColorGroup($isColorGroup)
+    public function setIsColorGroup(bool $isColorGroup): static
     {
         $this->isColorGroup = $isColorGroup;
 
         return $this;
     }
 
-    /**
-     * Get isColorGroup.
-     *
-     * @return bool
-     */
-    public function getIsColorGroup()
+    public function getIsColorGroup(): bool
     {
         return $this->isColorGroup;
     }
 
-    /**
-     * Set groupType.
-     *
-     * @param string $groupType
-     *
-     * @return AttributeGroup
-     */
-    public function setGroupType($groupType)
+    public function setGroupType(string $groupType): static
     {
         if (!in_array($groupType, $this->groupTypeAvailable)) {
             throw new InvalidArgumentException('Invalid group type');
@@ -161,36 +128,19 @@ class AttributeGroup
         return $this;
     }
 
-    /**
-     * Get groupType.
-     *
-     * @return string
-     */
-    public function getGroupType()
+    public function getGroupType(): string
     {
         return $this->groupType;
     }
 
-    /**
-     * Set position.
-     *
-     * @param int $position
-     *
-     * @return AttributeGroup
-     */
-    public function setPosition($position)
+    public function setPosition(int $position): static
     {
         $this->position = $position;
 
         return $this;
     }
 
-    /**
-     * Get position.
-     *
-     * @return int
-     */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -203,41 +153,24 @@ class AttributeGroup
         return $this->attributes;
     }
 
-    /**
-     * Add shop.
-     *
-     * @param Shop $shop
-     *
-     * @return AttributeGroup
-     */
-    public function addShop(Shop $shop)
+    public function addShop(Shop $shop): static
     {
         $this->shops[] = $shop;
 
         return $this;
     }
 
-    /**
-     * Remove shop.
-     *
-     * @param Shop $shop
-     */
-    public function removeShop(Shop $shop)
+    public function removeShop(Shop $shop): void
     {
         $this->shops->removeElement($shop);
     }
 
-    /**
-     * Get shops.
-     *
-     * @return Collection
-     */
-    public function getShops()
+    public function getShops(): Collection
     {
         return $this->shops;
     }
 
-    public function addAttributeGroupLang(AttributeGroupLang $attributeGroupLang)
+    public function addAttributeGroupLang(AttributeGroupLang $attributeGroupLang): static
     {
         $this->attributeGroupLangs[] = $attributeGroupLang;
 
@@ -246,7 +179,7 @@ class AttributeGroup
         return $this;
     }
 
-    public function removeAttributeGroupLang(AttributeGroupLang $attributeGroupLang)
+    public function removeAttributeGroupLang(AttributeGroupLang $attributeGroupLang): void
     {
         $this->attributeGroupLangs->removeElement($attributeGroupLang);
     }
@@ -254,7 +187,7 @@ class AttributeGroup
     /**
      * @return Collection<AttributeGroupLang>
      */
-    public function getAttributeGroupLangs()
+    public function getAttributeGroupLangs(): Collection
     {
         return $this->attributeGroupLangs;
     }

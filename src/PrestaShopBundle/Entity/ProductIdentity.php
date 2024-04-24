@@ -33,29 +33,20 @@ class ProductIdentity
     /**
      * @var int
      */
-    private $productId;
+    private int $productId;
 
     /**
      * @var int
      */
-    private $combinationId = 0;
+    private int $combinationId = 0;
 
-    /**
-     * @param int $productId
-     * @param int $combinationId
-     */
-    public function __construct($productId, $combinationId = 0)
+    public function __construct(int $productId, int $combinationId = 0)
     {
         $this->productId = $productId;
         $this->combinationId = $combinationId;
     }
 
-    /**
-     * @param array $identifiers
-     *
-     * @return ProductIdentity
-     */
-    public static function fromArray(array $identifiers)
+    public static function fromArray(array $identifiers): ProductIdentity
     {
         if (!array_key_exists('product_id', $identifiers)) {
             throw new BadRequestHttpException('The "productId" parameter is required');
@@ -68,21 +59,15 @@ class ProductIdentity
             $combinationId = (int) $identifiers['combination_id'];
         }
 
-        return new self($productId, $combinationId);
+        return new static($productId, $combinationId);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getProductId()
+    public function getProductId(): int
     {
         return $this->productId;
     }
 
-    /**
-     * @return int
-     */
-    public function getCombinationId()
+    public function getCombinationId(): int
     {
         return $this->combinationId;
     }
