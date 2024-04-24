@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -35,7 +36,6 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -109,13 +109,16 @@ class AttributeType extends TranslatorAwareType
             ])
             ->add('color', ColorType::class, [
                 'label' => $this->trans('Color', 'Admin.Global'),
-                'row_attr'   =>  array(
-                    'class'   => 'js-attribute-type-color-form-row'),
+                'row_attr' => [
+                    'class' => 'js-attribute-type-color-form-row',
+                ],
                 'required' => false,
-            ])->add('texture', FileType::class, [
+            ])
+            ->add('texture', FileType::class, [
                 'label' => $this->trans('Texture', 'Admin.Global'),
-                'row_attr'   =>  array(
-                    'class'   => 'js-attribute-type-texture-form-row'),
+                'row_attr' => [
+                    'class' => 'js-attribute-type-texture-form-row',
+                ],
                 'required' => false,
             ]);
 
@@ -126,7 +129,8 @@ class AttributeType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty.', 'Admin.Notifications.Error'
+                            'This field cannot be empty.',
+                            'Admin.Notifications.Error'
                         ),
                     ]),
                 ],
