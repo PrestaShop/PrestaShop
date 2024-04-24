@@ -4395,7 +4395,7 @@ class AdminControllerCore extends Controller
      *
      * @return bool
      */
-    protected function isAnonymousAllowed()
+    public function isAnonymousAllowed()
     {
         return $this->allowAnonymous;
     }
