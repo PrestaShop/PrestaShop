@@ -46,6 +46,9 @@ parameters:
     - '#^Function smartyRegisterFunction not found\.$#'
     ## Doctrine Entities
     - '#Property PrestaShopBundle\\Entity\\[A-Za-z]+\:\:\$[A-Za-z]+ is never written, only read.#'
+    - message: "#^Dead catch \\- Symfony\\\\Component\\\\HttpFoundation\\\\File\\\\Exception\\\\FileNotFoundException is never thrown in the try block\\.$#"
+      count: 1
+      path: src/PrestaShopBundle/Controller/Admin/SecuredFileReaderController.php
   reportUnmatchedIgnoredErrors: false
   universalObjectCratesClasses:
     - Cookie
