@@ -1220,19 +1220,21 @@ class Install extends AbstractInstall
         return true;
     }
 
-    public function finalize(?string $rand = null): bool
+    public function finalize(?string $randomizedAdminFolderName = null): bool
     {
         if (file_exists(_PS_ROOT_DIR_ . '/admin/')) {
-            $rand = $rand ?? sprintf(
+            $randomizedAdminFolderName = $randomizedAdminFolderName ?? sprintf(
                 'admin%03d%s/',
                 mt_rand(0, 999),
                 Tools::strtolower(Tools::passwdGen(16))
             );
 
             // rename folder
-            if (@rename(_PS_ROOT_DIR_ . '/admin/', _PS_ROOT_DIR_ . '/' . $rand)) {
+            if (@rename(_PS_ROOT_DIR_ . '/admin/', _PS_ROOT_DIR_ . '/' . $randomizedAdminFolderName)) {
                 $this->clearCache();
             } else {
+                $this->setError($this->translator->trans('The admin folder could not be renamed into %folderName%', ['%folderName%' => $randomizedAdminFolderName], 'Install'));
+
                 return false;
             }
         }
