@@ -78,7 +78,7 @@ class SecuredFileReaderController extends AbstractController
      */
     public function readUploadDocument(Request $request): Response
     {
-        $fileName = $request->query->get('fileName');
+        $fileName = basename($request->query->get('fileName'));
         if (!$fileName) {
             throw new PrestaShopException('No file name specified');
         }
