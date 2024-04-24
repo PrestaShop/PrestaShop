@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Security\Hashing;
-use PrestaShopBundle\Service\DataProvider\UserProvider;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -54,24 +54,28 @@ class UserTokenManager
     public function __construct(
         private readonly CsrfTokenManagerInterface $tokenManager,
         private readonly EmployeeContext $employeeContext,
-        private readonly UserProvider $userProvider,
         private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
         private readonly MenuBuilder $menuBuilder,
         private readonly Hashing $hashing,
         private readonly string $cookieKey,
         private readonly RequestStack $requestStack,
+        private readonly Security $security,
     ) {
     }
 
     public function getSymfonyToken(): string
     {
-        $username = $this->userProvider->getUsername();
-        // Do not generate token each time we need one, one token per request is enough and can be used for all generated URLs
-        if (!isset($this->tokens[$username])) {
-            $this->tokens[$username] = $this->tokenManager->getToken($username)->getValue();
+        if (null === $this->security->getUser()) {
+            return '';
         }
 
-        return $this->tokens[$username];
+        $userIdentifier = $this->security->getUser()->getUserIdentifier();
+        // Do not generate token each time we need one, one token per request is enough and can be used for all generated URLs
+        if (!isset($this->tokens[$userIdentifier])) {
+            $this->tokens[$userIdentifier] = $this->tokenManager->getToken($userIdentifier)->getValue();
+        }
+
+        return $this->tokens[$userIdentifier];
     }
 
     public function isTokenValid(): bool
@@ -101,7 +105,11 @@ class UserTokenManager
 
     private function isCsrfTokenValid(string $tokenValue): bool
     {
-        $token = new CsrfToken($this->userProvider->getUsername(), $tokenValue);
+        if (!$this->security->getUser()) {
+            return false;
+        }
+
+        $token = new CsrfToken($this->security->getUser()->getUserIdentifier(), $tokenValue);
 
         return $this->tokenManager->isTokenValid($token);
     }

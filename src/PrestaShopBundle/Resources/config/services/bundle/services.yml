@@ -71,9 +71,8 @@ services:
   PrestaShopBundle\Service\DataProvider\UserProvider:
     autowire: true
     public: false
-    arguments:
-      $userProvider: '@prestashop.security.admin.provider'
 
+  # Only used in legacy code, otherwise prefer using the Security service
   prestashop.user_provider:
     alias: PrestaShopBundle\Service\DataProvider\UserProvider
     deprecated:
