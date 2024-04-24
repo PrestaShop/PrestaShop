@@ -1231,6 +1231,12 @@ class Install extends AbstractInstall
 
             // rename folder
             if (@rename(_PS_ROOT_DIR_ . '/admin/', _PS_ROOT_DIR_ . '/' . $randomizedAdminFolderName)) {
+                $successLogMessage = sprintf(
+                    'The admin folder was renamed into %s, you can now access your backoffice at %s.',
+                    $randomizedAdminFolderName,
+                    Tools::getHttpHost() . '/' . $randomizedAdminFolderName
+                );
+                $this->getLogger()->log($successLogMessage);
                 $this->clearCache();
             } else {
                 $this->setError($this->translator->trans('The admin folder could not be renamed into %folderName%', ['%folderName%' => $randomizedAdminFolderName], 'Install'));

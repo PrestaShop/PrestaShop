@@ -337,21 +337,9 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             return true;
         }
 
-        // admin folder exists, we must give it a random name
-        $randomizedAdminFolderName = sprintf(
-            'admin%03d%s/',
-            mt_rand(0, 999),
-            Tools::strtolower(Tools::passwdGen(16))
-        );
+        $result = $this->model_install->finalize();
 
-        $result = $this->model_install->finalize($randomizedAdminFolderName);
-
-        if ($result) {
-            echo sprintf(
-                'The admin folder has been renamed into %s ' . PHP_EOL,
-                $randomizedAdminFolderName
-            );
-        } else {
+        if (!$result) {
             $this->printErrors();
         }
 
