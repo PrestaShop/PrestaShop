@@ -147,11 +147,16 @@ class BlockCartModal extends FOBasePage {
   /**
    * Close block cart modal
    * @param page {Page} Browser tab
+   * @param clickOutside {boolean} True if we need to click outside to close the modal
    * @returns {Promise<boolean>}
    */
-  async closeBlockCartModal(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
-
+  async closeBlockCartModal(page: Page, clickOutside: boolean = false): Promise<boolean> {
+    if (clickOutside) {
+      await page.waitForTimeout(1000);
+      await page.mouse.click(5, 5);
+    } else {
+      await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
+    }
     return this.elementNotVisible(page, this.blockCartModalDiv, 1000);
   }
 }
