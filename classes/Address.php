@@ -291,21 +291,6 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Returns fields required for an address in an array hash.
-     *
-     * @return array Hash values
-     */
-    public static function getFieldsValidate()
-    {
-        $tmp_addr = new Address();
-        $out = $tmp_addr->fieldsValidate;
-
-        unset($tmp_addr);
-
-        return $out;
-    }
-
-    /**
      * Get Zone ID for a given address.
      *
      * @param int $id_address Address ID for which we want to get the Zone ID

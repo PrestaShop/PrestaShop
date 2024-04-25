@@ -214,7 +214,6 @@ class AddressFormatCore extends ObjectModel
     public function checkFormatFields()
     {
         $this->_errorFormatList = [];
-        $fieldsValidate = Address::getFieldsValidate();
         $usedKeyList = [];
 
         $multipleLineFields = explode(self::FORMAT_NEW_LINE, $this->format);

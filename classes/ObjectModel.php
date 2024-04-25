@@ -100,48 +100,6 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     protected $identifier;
 
     /**
-     * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
-     *
-     * @var array
-     */
-    protected $fieldsRequired = [];
-
-    /**
-     * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
-     *
-     * @var array
-     */
-    protected $fieldsSize = [];
-
-    /**
-     * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
-     *
-     * @var array
-     */
-    protected $fieldsValidate = [];
-
-    /**
-     * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
-     *
-     * @var array
-     */
-    protected $fieldsRequiredLang = [];
-
-    /**
-     * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
-     *
-     * @var array
-     */
-    protected $fieldsSizeLang = [];
-
-    /**
-     * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
-     *
-     * @var array
-     */
-    protected $fieldsValidateLang = [];
-
-    /**
      * @deprecated 1.5.0.1
      *
      * @var array
@@ -212,27 +170,6 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     }
 
     /**
-     * Returns object validation rules (fields validity).
-     *
-     * @param string $class Child class name for static use (optional)
-     *
-     * @return array Validation rules (fields validity)
-     */
-    public static function getValidationRules($class = __CLASS__)
-    {
-        $object = new $class();
-
-        return [
-            'required' => $object->fieldsRequired,
-            'size' => $object->fieldsSize,
-            'validate' => $object->fieldsValidate,
-            'requiredLang' => $object->fieldsRequiredLang,
-            'sizeLang' => $object->fieldsSizeLang,
-            'validateLang' => $object->fieldsValidateLang,
-        ];
-    }
-
-    /**
      * Builds the object.
      *
      * @param int|null $id if specified, loads and existing object from DB (optional)
@@ -248,7 +185,6 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         $class_name = get_class($this);
         if (!isset(ObjectModel::$loaded_classes[$class_name])) {
             $this->def = ObjectModel::getDefinition($class_name);
-            $this->setDefinitionRetrocompatibility();
             if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table'])) {
                 throw new PrestaShopException('Identifier or table format not valid for class ' . $class_name);
             }
@@ -1059,8 +995,6 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             if ((!$this->id_lang && isset($this->{$field_name}[$id_language]) && !empty($this->{$field_name}[$id_language]))
             || ($this->id_lang && isset($this->$field_name) && !empty($this->$field_name))) {
                 $fields[$id_language][$field_name] = $this->id_lang ? pSQL($this->$field_name, $html) : pSQL($this->{$field_name}[$id_language], $html);
-            } elseif (in_array($field_name, $this->fieldsRequiredLang)) {
-                $fields[$id_language][$field_name] = pSQL($this->id_lang ? $this->$field_name : $this->{$field_name}[Configuration::get('PS_LANG_DEFAULT')], $html);
             } else {
                 $fields[$id_language][$field_name] = '';
             }
@@ -2173,74 +2107,6 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         }
 
         return Cache::retrieve($cache_id);
-    }
-
-    /**
-     * Retrocompatibility for classes without $definition static.
-     *
-     * @TODO Remove this in 1.6 !
-     *
-     * @since 1.5.0.1
-     */
-    protected function setDefinitionRetrocompatibility()
-    {
-        // Retrocompatibility with $table property ($definition['table'])
-        if (isset($this->def['table'])) {
-            $this->table = $this->def['table'];
-        } else {
-            $this->def['table'] = $this->table;
-        }
-
-        // Retrocompatibility with $identifier property ($definition['primary'])
-        if (isset($this->def['primary'])) {
-            $this->identifier = $this->def['primary'];
-        } else {
-            $this->def['primary'] = $this->identifier;
-        }
-
-        // Check multilang retrocompatibility
-        if (method_exists($this, 'getTranslationsFieldsChild')) {
-            $this->def['multilang'] = true;
-        }
-
-        // Retrocompatibility with $fieldsValidate, $fieldsRequired and $fieldsSize properties ($definition['fields'])
-        if (isset($this->def['fields'])) {
-            foreach ($this->def['fields'] as $field => $data) {
-                $suffix = (isset($data['lang']) && $data['lang']) ? 'Lang' : '';
-                if (isset($data['validate'])) {
-                    $this->{'fieldsValidate' . $suffix}[$field] = $data['validate'];
-                }
-                if (isset($data['required']) && $data['required']) {
-                    $this->{'fieldsRequired' . $suffix}[] = $field;
-                }
-                if (isset($data['size'])) {
-                    $this->{'fieldsSize' . $suffix}[$field] = $data['size'];
-                }
-            }
-        } else {
-            $this->def['fields'] = [];
-            $suffixs = ['', 'Lang'];
-            foreach ($suffixs as $suffix) {
-                foreach ($this->{'fieldsValidate' . $suffix} as $field => $validate) {
-                    $this->def['fields'][$field]['validate'] = $validate;
-                    if ($suffix == 'Lang') {
-                        $this->def['fields'][$field]['lang'] = true;
-                    }
-                }
-                foreach ($this->{'fieldsRequired' . $suffix} as $field) {
-                    $this->def['fields'][$field]['required'] = true;
-                    if ($suffix == 'Lang') {
-                        $this->def['fields'][$field]['lang'] = true;
-                    }
-                }
-                foreach ($this->{'fieldsSize' . $suffix} as $field => $size) {
-                    $this->def['fields'][$field]['size'] = $size;
-                    if ($suffix == 'Lang') {
-                        $this->def['fields'][$field]['lang'] = true;
-                    }
-                }
-            }
-        }
     }
 
     /**

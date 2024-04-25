@@ -1017,11 +1017,6 @@ class AdminTranslationsControllerCore extends AdminController
 
                 break;
 
-            case 'fields':
-                $directories['php'] = $this->listFiles(_PS_CLASS_DIR_, [], 'php');
-
-                break;
-
             case 'pdf':
                 $tpl_theme = Tools::file_exists_cache(_PS_THEME_SELECTED_DIR_ . 'pdf/') ? scandir(_PS_THEME_SELECTED_DIR_ . 'pdf/', SCANDIR_SORT_NONE) : [];
                 $directories = [
@@ -2106,95 +2101,6 @@ class AdminTranslationsControllerCore extends AdminController
 
         $this->initToolbar();
         $this->base_tpl_view = 'translation_errors.tpl';
-
-        return parent::renderView();
-    }
-
-    /**
-     * This method generate the form for fields translations.
-     */
-    public function initFormFields()
-    {
-        $name_var = $this->translations_informations[$this->type_selected]['var'];
-        $GLOBALS[$name_var] = $this->fileExists();
-        $missing_translations_fields = [];
-        $class_array = [];
-        $tabs_array = [];
-        $count = 0;
-
-        $files_by_directory = $this->getFileToParseByTypeTranslation();
-
-        foreach ($files_by_directory['php'] as $dir => $files) {
-            foreach ($files as $file) {
-                $exclude_files = ['index.php', 'StockManagerInterface.php',
-                    'TaxManagerInterface.php', 'WebserviceOutputInterface.php', 'WebserviceSpecificManagementInterface.php',
-                ];
-
-                if (!preg_match('/\.php$/', $file) || in_array($file, $exclude_files)) {
-                    continue;
-                }
-
-                $class_name = substr($file, 0, -4);
-                if (!is_subclass_of($class_name . 'Core', 'ObjectModel')) {
-                    continue;
-                }
-                $class_array[$class_name] = call_user_func([$class_name, 'getValidationRules'], $class_name);
-            }
-        }
-        foreach ($class_array as $prefix_key => $rules) {
-            if (isset($rules['validate'])) {
-                foreach ($rules['validate'] as $key => $value) {
-                    if (isset($GLOBALS[$name_var][$prefix_key . '_' . md5($key)])) {
-                        $tabs_array[$prefix_key][$key]['trad'] = html_entity_decode($GLOBALS[$name_var][$prefix_key . '_' . md5($key)], ENT_COMPAT, 'UTF-8');
-                        ++$count;
-                    } else {
-                        if (!isset($tabs_array[$prefix_key][$key]['trad'])) {
-                            $tabs_array[$prefix_key][$key]['trad'] = '';
-                            if (!isset($missing_translations_fields[$prefix_key])) {
-                                $missing_translations_fields[$prefix_key] = 1;
-                            } else {
-                                ++$missing_translations_fields[$prefix_key];
-                            }
-                            ++$count;
-                        }
-                    }
-                }
-            }
-            if (isset($rules['validateLang'])) {
-                foreach ($rules['validateLang'] as $key => $value) {
-                    if (isset($GLOBALS[$name_var][$prefix_key . '_' . md5($key)])) {
-                        $tabs_array[$prefix_key][$key]['trad'] = '';
-                        if (array_key_exists($prefix_key . '_' . md5(addslashes($key)), $GLOBALS[$name_var])) {
-                            $tabs_array[$prefix_key][$key]['trad'] = html_entity_decode($GLOBALS[$name_var][$prefix_key . '_' . md5(addslashes($key))], ENT_COMPAT, 'UTF-8');
-                        }
-
-                        ++$count;
-                    } else {
-                        if (!isset($tabs_array[$prefix_key][$key]['trad'])) {
-                            $tabs_array[$prefix_key][$key]['trad'] = '';
-                            if (!isset($missing_translations_fields[$prefix_key])) {
-                                $missing_translations_fields[$prefix_key] = 1;
-                            } else {
-                                ++$missing_translations_fields[$prefix_key];
-                            }
-                            ++$count;
-                        }
-                    }
-                }
-            }
-        }
-
-        $this->tpl_view_vars = array_merge($this->tpl_view_vars, [
-            'count' => $count,
-            'limit_warning' => $this->displayLimitPostWarning($count),
-            'mod_security_warning' => Tools::apacheModExists('mod_security'),
-            'tabsArray' => $tabs_array,
-            'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
-            'missing_translations' => $missing_translations_fields,
-        ]);
-
-        $this->initToolbar();
-        $this->base_tpl_view = 'translation_form.tpl';
 
         return parent::renderView();
     }
