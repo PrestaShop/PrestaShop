@@ -1,4 +1,3 @@
-import {Page} from 'playwright';
 // Import FO Pages
 import {BlockCartModal} from '@pages/FO/classic/modal/blockCart';
 
