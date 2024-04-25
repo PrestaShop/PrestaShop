@@ -288,11 +288,6 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      */
     public function getFieldsLang()
     {
-        // Backward compatibility
-        if (method_exists($this, 'getTranslationsFieldsChild')) {
-            return $this->getTranslationsFieldsChild();
-        }
-
         $this->validateFieldsLang();
         $is_lang_multishop = $this->isLangMultishop();
 
@@ -936,69 +931,6 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
 
         // Change status to active/inactive
         return $this->update(false);
-    }
-
-    /**
-     * @deprecated 1.5.0.1 (use getFieldsLang())
-     *
-     * @param array $fields_array
-     *
-     * @return array
-     *
-     * @throws PrestaShopException
-     */
-    protected function getTranslationsFields($fields_array)
-    {
-        $fields = [];
-
-        if ($this->id_lang == null) {
-            foreach (Language::getIDs(false) as $id_lang) {
-                $this->makeTranslationFields($fields, $fields_array, $id_lang);
-            }
-        } else {
-            $this->makeTranslationFields($fields, $fields_array, $this->id_lang);
-        }
-
-        return $fields;
-    }
-
-    /**
-     * @deprecated 1.5.0.1
-     *
-     * @param array $fields
-     * @param array $fields_array
-     * @param int $id_language
-     *
-     * @throws PrestaShopException
-     */
-    protected function makeTranslationFields(&$fields, &$fields_array, $id_language)
-    {
-        $fields[$id_language]['id_lang'] = $id_language;
-        $fields[$id_language][$this->def['primary']] = (int) $this->id;
-        if ($this->id_shop && $this->isLangMultishop()) {
-            $fields[$id_language]['id_shop'] = (int) $this->id_shop;
-        }
-        foreach ($fields_array as $k => $field) {
-            $html = false;
-            $field_name = $field;
-            if (is_array($field)) {
-                $field_name = $k;
-                $html = (isset($field['html'])) ? $field['html'] : false;
-            }
-
-            /* Check fields validity */
-            if (!Validate::isTableOrIdentifier($field_name)) {
-                throw new PrestaShopException('identifier is not table or identifier : ' . $field_name);
-            }
-
-            // Copy the field, or the default language field if it's both required and empty
-            if ((!$this->id_lang && isset($this->{$field_name}[$id_language]) && !empty($this->{$field_name}[$id_language]))
-            || ($this->id_lang && isset($this->$field_name) && !empty($this->$field_name))) {
-                $fields[$id_language][$field_name] = $this->id_lang ? pSQL($this->$field_name, $html) : pSQL($this->{$field_name}[$id_language], $html);
-            } else {
-                $fields[$id_language][$field_name] = '';
-            }
-        }
     }
 
     /**
