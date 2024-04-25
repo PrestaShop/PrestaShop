@@ -21,9 +21,9 @@ import ProductData from '@data/faker/product';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_productPage_productPage_addCustomization';
+const baseContext: string = 'functional_FO_classic_productPage_productPage_addTextCustomization';
 
-describe('FO - Product page - Product page : Add customization', async () => {
+describe('FO - Product page - Product page : Add a text customization', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   // Data to create standard product with 2 customizations
