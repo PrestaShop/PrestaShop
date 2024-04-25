@@ -155,6 +155,13 @@ describe('FO - Product page - Product page : Add a required customization', asyn
       expect(firstCustomImage).to.equal(false);
     });
 
+    it('should check that add to card button is still disabled', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButtonDisabled2', baseContext);
+
+      const isAddToCartButtonDisabled = await foProductPage.isAddToCartButtonDisplayed(page);
+      expect(isAddToCartButtonDisabled).to.equal(true);
+    });
+
     it('should add the text and the file customizations and save', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setCustomizations', baseContext);
 
