@@ -91,7 +91,7 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
     });
 
     it('should close the blockCart modal by clicking outside the modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeBlockCartModal', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'closeBlockCartModal2', baseContext);
 
       const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page, true);
       expect(isQuickViewModalClosed).to.equal(true);
