@@ -39,10 +39,12 @@ class EmployeeRepository extends EntityRepository
             ->leftJoin('e.profile', 'p')
             ->leftJoin('p.authorizationRoles', 'ar')
             ->leftJoin('e.defaultLanguage', 'l')
+            ->leftJoin('e.sessions', 's')
             ->addSelect('e')
             ->addSelect('p')
             ->addSelect('ar')
             ->addSelect('l')
+            ->addSelect('s')
             ->where('e.email = :userIdentifier')
             ->setParameter('userIdentifier', $userIdentifier)
         ;

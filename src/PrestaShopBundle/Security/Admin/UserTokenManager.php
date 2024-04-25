@@ -60,16 +60,24 @@ class UserTokenManager
         private readonly string $cookieKey,
         private readonly RequestStack $requestStack,
         private readonly Security $security,
+        private readonly SessionEmployeeProvider $sessionEmployeeProvider,
     ) {
     }
 
     public function getSymfonyToken(): string
     {
-        if (null === $this->security->getUser()) {
+        // When user is logged we can get it from Security service
+        if ($this->security->getUser()) {
+            $userIdentifier = $this->security->getUser()->getUserIdentifier();
+        } else {
+            // When user is not initialized yet (like in LegacyRouterChecker) we fetch the employee based on saved session data
+            $userIdentifier = $this->sessionEmployeeProvider->getEmployeeIdentifierFromSession();
+        }
+
+        if (empty($userIdentifier)) {
             return '';
         }
 
-        $userIdentifier = $this->security->getUser()->getUserIdentifier();
         // Do not generate token each time we need one, one token per request is enough and can be used for all generated URLs
         if (!isset($this->tokens[$userIdentifier])) {
             $this->tokens[$userIdentifier] = $this->tokenManager->getToken($userIdentifier)->getValue();

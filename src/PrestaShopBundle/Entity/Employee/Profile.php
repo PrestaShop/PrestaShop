@@ -46,7 +46,7 @@ class Profile
      *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private int $id;
+    private ?int $id = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="PrestaShopBundle\Entity\Employee\AuthorizationRole")
@@ -59,8 +59,9 @@ class Profile
      */
     private Collection $authorizationRoles;
 
-    public function __construct()
+    public function __construct(?int $id = null)
     {
+        $this->id = $id;
         $this->authorizationRoles = new ArrayCollection();
     }
 

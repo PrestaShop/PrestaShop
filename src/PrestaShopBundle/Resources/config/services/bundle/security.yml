@@ -7,8 +7,6 @@ services:
 
   PrestaShopBundle\Security\Admin\EmployeeProvider:
     autowire: true
-    arguments:
-      - "@prestashop.static_cache.adapter"
 
   prestashop.security.admin.provider:
     alias: PrestaShopBundle\Security\Admin\EmployeeProvider

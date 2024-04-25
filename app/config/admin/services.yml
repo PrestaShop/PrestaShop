@@ -23,6 +23,12 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+  PrestaShopBundle\EventListener\Admin\EmployeeSessionSubscriber:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      $entityManager: '@doctrine.orm.default_entity_manager'
+
   # Priority 40 to be called before the RouterListener (which has priority 32)
   PrestaShopBundle\EventListener\Admin\LegacyUrlListener:
     arguments:

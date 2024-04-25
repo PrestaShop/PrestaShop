@@ -30,18 +30,16 @@ namespace Tests\Integration\PrestaShopBundle\Controller;
 
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Routing\RouterInterface;
 use Tests\Integration\PrestaShopBundle\Controller\FormFiller\FormFiller;
-use Tests\Integration\Utility\ContextMockerTrait;
 use Tests\Integration\Utility\LoginTrait;
 use Tests\Resources\DatabaseDump;
+use Tests\TestCase\SymfonyIntegrationTestCase;
 
-abstract class GridControllerTestCase extends WebTestCase
+abstract class GridControllerTestCase extends SymfonyIntegrationTestCase
 {
-    use ContextMockerTrait;
     use LoginTrait;
 
     /**
@@ -73,8 +71,7 @@ abstract class GridControllerTestCase extends WebTestCase
 
     public function setUp(): void
     {
-        self::mockContext();
-        $this->client = static::createClient();
+        parent::setUp();
         $this->loginUser($this->client);
         $this->router = $this->client->getContainer()->get('router');
         $this->formFiller = new FormFiller();

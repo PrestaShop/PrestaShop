@@ -28,7 +28,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Utility;
 
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShopBundle\Entity\Employee\Employee;
+use PrestaShopBundle\Entity\Employee\EmployeeSession;
 use PrestaShopBundle\Security\Admin\EmployeeProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -40,7 +43,23 @@ trait LoginTrait
     {
         /** @var EmployeeProvider $employeeProvider */
         $employeeProvider = $kernelBrowser->getContainer()->get(EmployeeProvider::class);
+        /** @var Employee $employee */
         $employee = $employeeProvider->loadUserByIdentifier('test@prestashop.com');
+
+        if ($employee->getSessions()->isEmpty()) {
+            $employeeSession = new EmployeeSession();
+            $employeeSession->setToken('fake_token');
+            $employee->addSession($employeeSession);
+            $entityManager = $kernelBrowser->getContainer()->get(EntityManagerInterface::class);
+            $entityManager->persist($employeeSession);
+            $entityManager->flush();
+        } else {
+            $employeeSession = $employee->getSessions()->first();
+        }
+        $employee
+            ->setSessionId($employeeSession->getId())
+            ->setSessionToken($employeeSession->getToken())
+        ;
         $kernelBrowser->loginUser($employee);
     }
 }

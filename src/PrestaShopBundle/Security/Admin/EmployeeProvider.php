@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Security\Admin;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Employee\Employee as DoctrineEmployee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
-use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -45,8 +44,12 @@ class EmployeeProvider implements UserProviderInterface
      */
     public const ROLE_EMPLOYEE = Employee::ROLE_EMPLOYEE;
 
+    /**
+     * @var array<string, Employee>
+     */
+    private array $employees = [];
+
     public function __construct(
-        private readonly CacheItemPoolInterface $cache,
         private readonly EmployeeRepository $employeeRepository,
     ) {
     }
@@ -63,40 +66,40 @@ class EmployeeProvider implements UserProviderInterface
      */
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $cacheKey = sha1($identifier);
-        $cachedEmployee = $this->cache->getItem("app.employees_{$cacheKey}");
-
-        if ($cachedEmployee->isHit()) {
-            return $cachedEmployee->get();
+        if (isset($this->employees[$identifier])) {
+            return $this->employees[$identifier];
         }
 
-        $doctrineEmployee = $this->loadEmployee($identifier);
-        $cachedEmployee->set($doctrineEmployee);
-        $this->cache->save($cachedEmployee);
+        $this->employees[$identifier] = $this->loadEmployee($identifier);
 
-        return $cachedEmployee->get();
+        return $this->employees[$identifier];
     }
 
     /**
-     * Reload an Employee and returns a fresh instance.
+     * Reload an Employee based on the serialized one and returns a fresh instance.
      *
-     * @param UserInterface $employee
+     * @param UserInterface $user
      *
      * @return UserInterface
      */
-    public function refreshUser(UserInterface $employee)
+    public function refreshUser(UserInterface $user)
     {
-        if (!$employee instanceof DoctrineEmployee) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $employee::class));
+        if (!$user instanceof DoctrineEmployee) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
         // Always reload the employee regardless of the cache
-        $freshEmployee = $this->loadEmployee($employee->getUserIdentifier());
+        $freshEmployee = $this->loadEmployee($user->getUserIdentifier());
+
+        // Sets the session persisted in session because this fresh instance ill be used for the serialization at the end of
+        // the request, if we don't want to lose the session identifiers we must maintain it on each request.
+        $freshEmployee
+            ->setSessionId($user->getSessionId())
+            ->setSessionToken($user->getSessionToken())
+        ;
 
         // Update the cache so that loadUserByIdentifier is updated
-        $cacheKey = sha1($employee->getUserIdentifier());
-        $cachedEmployee = $this->cache->getItem("app.employees_{$cacheKey}");
-        $this->cache->save($cachedEmployee);
+        $this->employees[$user->getUserIdentifier()] = $freshEmployee;
 
         return $freshEmployee;
     }
