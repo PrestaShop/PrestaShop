@@ -87,7 +87,7 @@ class Mutation
     /**
      * @ORM\Column(name="mutation_details", type="string", length=255, nullable=true)
      */
-    private string $mutationDetails;
+    private ?string $mutationDetails;
 
     /**
      * @ORM\Column(name="date_add", type="datetime", nullable=false)
@@ -104,7 +104,7 @@ class Mutation
         return $this->mutationTable;
     }
 
-    public function setMutationTable(string $mutationTable): self
+    public function setMutationTable(string $mutationTable): static
     {
         $this->mutationTable = $mutationTable;
 
@@ -116,7 +116,7 @@ class Mutation
         return $this->mutationRowId;
     }
 
-    public function setMutationRowId(int $mutationRowId): self
+    public function setMutationRowId(int $mutationRowId): static
     {
         $this->mutationRowId = $mutationRowId;
 
@@ -128,7 +128,7 @@ class Mutation
         return $this->action;
     }
 
-    public function setAction(MutationAction $action): self
+    public function setAction(MutationAction $action): static
     {
         $this->action = $action;
 
@@ -140,7 +140,7 @@ class Mutation
         return $this->mutatorType;
     }
 
-    public function setMutatorType(MutatorType $mutatorType): self
+    public function setMutatorType(MutatorType $mutatorType): static
     {
         $this->mutatorType = $mutatorType;
 
@@ -152,19 +152,19 @@ class Mutation
         return $this->mutatorIdentifier;
     }
 
-    public function setMutatorIdentifier(string $mutatorIdentifier): self
+    public function setMutatorIdentifier(string $mutatorIdentifier): static
     {
         $this->mutatorIdentifier = $mutatorIdentifier;
 
         return $this;
     }
 
-    public function getMutationDetails(): string
+    public function getMutationDetails(): ?string
     {
         return $this->mutationDetails;
     }
 
-    public function setMutationDetails(string $mutationDetails): self
+    public function setMutationDetails(?string $mutationDetails): static
     {
         $this->mutationDetails = $mutationDetails;
 

@@ -74,7 +74,7 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(name="client_secret", type="string", length=255, nullable=true)
      */
     #[Assert\Length(max: 255)]
-    private ?string $clientSecret;
+    private ?string $clientSecret = null;
 
     /**
      * @ORM\Column(name="enabled", type="boolean")
@@ -115,7 +115,7 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function setId(int $id): self
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -127,7 +127,7 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->clientId;
     }
 
-    public function setClientId(string $clientId): self
+    public function setClientId(string $clientId): static
     {
         $this->clientId = $clientId;
 
@@ -139,7 +139,7 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->clientName;
     }
 
-    public function setClientName(string $clientName): self
+    public function setClientName(string $clientName): static
     {
         $this->clientName = $clientName;
 
@@ -151,7 +151,7 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->clientSecret;
     }
 
-    public function setClientSecret(?string $clientSecret): self
+    public function setClientSecret(?string $clientSecret): static
     {
         $this->clientSecret = $clientSecret;
 
@@ -163,7 +163,7 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->enabled;
     }
 
-    public function setEnabled(bool $enabled): self
+    public function setEnabled(bool $enabled): static
     {
         $this->enabled = $enabled;
 
@@ -175,7 +175,7 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->scopes;
     }
 
-    public function setScopes(array $scopes): self
+    public function setScopes(array $scopes): static
     {
         $this->scopes = $scopes;
 
@@ -187,7 +187,7 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(string $description): static
     {
         $this->description = $description;
 
@@ -199,7 +199,7 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lifetime;
     }
 
-    public function setLifetime(int $lifetime): self
+    public function setLifetime(int $lifetime): static
     {
         $this->lifetime = $lifetime;
 
@@ -211,7 +211,7 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->externalIssuer;
     }
 
-    public function setExternalIssuer(string $externalIssuer): self
+    public function setExternalIssuer(?string $externalIssuer): static
     {
         $this->externalIssuer = $externalIssuer;
 
@@ -226,11 +226,6 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPassword(): string
     {
         return $this->getClientSecret();
-    }
-
-    public function getSalt()
-    {
-        return null;
     }
 
     public function eraseCredentials(): void

@@ -41,71 +41,53 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class ImageType
 {
     /**
-     * @var int
-     *
      * @ORM\Id
      *
      * @ORM\Column(name="id_image_type", type="integer")
      *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
-    private $name;
+    private string $name;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="width", type="integer")
      */
-    private $width;
+    private int $width;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="height", type="integer")
      */
-    private $height;
+    private int $height;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="products", type="boolean")
      */
-    private $products;
+    private bool $products;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="categories", type="boolean")
      */
-    private $categories;
+    private bool $categories;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="manufacturers", type="boolean")
      */
-    private $manufacturers;
+    private bool $manufacturers;
 
     /**
-     * @var bool
-     *
-     * @orm\column(name="suppliers", type="boolean")
+     * @ORM\Column(name="suppliers", type="boolean")
      */
-    private $suppliers;
+    private bool $suppliers;
 
     /**
-     * @var bool
-     *
-     * @orm\column(name="stores", type="boolean")
+     * @ORM\Column(name="stores", type="boolean")
      */
-    private $stores;
+    private bool $stores;
 
     public function getId(): int
     {
@@ -117,7 +99,7 @@ class ImageType
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -129,7 +111,7 @@ class ImageType
         return $this->width;
     }
 
-    public function setWidth(int $width): self
+    public function setWidth(int $width): static
     {
         $this->width = $width;
 
@@ -141,7 +123,7 @@ class ImageType
         return $this->height;
     }
 
-    public function setHeight(int $height): self
+    public function setHeight(int $height): static
     {
         $this->height = $height;
 
@@ -153,7 +135,7 @@ class ImageType
         return $this->products;
     }
 
-    public function setProducts(bool $products): self
+    public function setProducts(bool $products): static
     {
         $this->products = $products;
 
@@ -165,7 +147,7 @@ class ImageType
         return $this->categories;
     }
 
-    public function setCategories(bool $categories): self
+    public function setCategories(bool $categories): static
     {
         $this->categories = $categories;
 
@@ -177,7 +159,7 @@ class ImageType
         return $this->manufacturers;
     }
 
-    public function setManufacturers(bool $manufacturers): self
+    public function setManufacturers(bool $manufacturers): static
     {
         $this->manufacturers = $manufacturers;
 
@@ -189,7 +171,7 @@ class ImageType
         return $this->suppliers;
     }
 
-    public function setSuppliers(bool $suppliers): self
+    public function setSuppliers(bool $suppliers): static
     {
         $this->suppliers = $suppliers;
 
@@ -201,7 +183,7 @@ class ImageType
         return $this->stores;
     }
 
-    public function setStores(bool $stores): self
+    public function setStores(bool $stores): static
     {
         $this->stores = $stores;
 
