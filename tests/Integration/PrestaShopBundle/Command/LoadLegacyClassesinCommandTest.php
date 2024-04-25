@@ -53,6 +53,8 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
     {
         parent::setUp();
         self::bootKernel();
+        global $kernel;
+        $kernel = self::$kernel;
         $this->previousErrorReportingLevel = error_reporting(E_WARNING);
     }
 
