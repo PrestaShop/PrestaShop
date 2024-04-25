@@ -8,3 +8,5 @@ framework:
   router:
     resource: "%kernel.project_dir%/app/config/admin/routing.yml"
     strict_requirements: ~
+  session:
+    cookie_secure: 'auto'
