@@ -27,17 +27,6 @@ class BlockCart extends BlockCartModal {
     this.cartModalShippingBlock = `${this.blockCartModalSummary} .product-shipping .shipping.value`;
     this.cartModalProductTaxInclBlock = `${this.blockCartModalSummary} .product-total .value`;
   }
-
-  /**
-   * Close block cart modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async closeBlockCartModal(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
-
-    return this.elementNotVisible(page, this.blockCartModalDiv, 1000);
-  }
 }
 
 export default new BlockCart();
