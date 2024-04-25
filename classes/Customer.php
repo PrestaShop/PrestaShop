@@ -1430,27 +1430,6 @@ class CustomerCore extends ObjectModel
     }
 
     /**
-     * Validate controller and check password
-     *
-     * @param bool $htmlentities
-     *
-     * @return array
-     *
-     * @deprecated 8.1.0 The password check has been moved in controllers and this method is not called anywhere since 1.7.0
-     */
-    public function validateController($htmlentities = true)
-    {
-        $errors = parent::validateController($htmlentities);
-        /** @var PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-        if ($value = Tools::getValue('passwd')) {
-            $this->passwd = $crypto->hash($value);
-        }
-
-        return $errors;
-    }
-
-    /**
      * Get outstanding amount.
      *
      * @return float Outstanding amount

@@ -3637,6 +3637,11 @@ class AdminControllerCore extends Controller
         /** @var ObjectModel $object */
         $object = new $class_name();
 
+        /*
+         * If a specific getValidationRules method is implemented on the controller,
+         * it will be used to validate the data. Otherwise, we will use the ObjectModel
+         * definition of the object.
+         */
         if (method_exists($this, 'getValidationRules')) {
             $definition = $this->getValidationRules();
         } else {
