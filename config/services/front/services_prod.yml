@@ -72,8 +72,4 @@ services:
       lazy: true
       arguments:
         $employeeRepository: '@PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository'
-        $tabRepository: '@PrestaShopBundle\Entity\Repository\TabRepository'
-        $hashing: '@PrestaShop\PrestaShop\Core\Security\Hashing'
-        $cookieKey: '%cookie_key%'
         $requestStack: '@request_stack'
-        $featureFlagStateChecker: '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'

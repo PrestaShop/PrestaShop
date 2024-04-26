@@ -59,11 +59,6 @@ class PrestaShopLayoutGlobalVariables
         return $this->templateVariables->getIsoUser();
     }
 
-    public function isSymfonyLayoutEnabled(): bool
-    {
-        return $this->templateVariables->isSymfonyLayoutEnabled();
-    }
-
     public function isRtlLanguage(): bool
     {
         return $this->templateVariables->isRtlLanguage();

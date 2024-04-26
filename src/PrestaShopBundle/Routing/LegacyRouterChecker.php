@@ -30,8 +30,6 @@ namespace PrestaShopBundle\Routing;
 
 use Dispatcher;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Attribute\AsRoutingConditionService;
@@ -46,7 +44,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class LegacyRouterChecker
 {
     public function __construct(
-        protected readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
         protected readonly TabRepository $tabRepository,
         protected readonly HookDispatcherInterface $hookDispatcher,
     ) {
@@ -61,11 +58,6 @@ class LegacyRouterChecker
         $controller = $request->get('controller');
         // AdminLogin must remain accessible so ignoring it prevents having to handle multiple exceptions to ignore security on it
         if (empty($controller)) {
-            return false;
-        }
-
-        // LegacyController is only enabled when symfony layout feature flag is enabled
-        if (!$this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)) {
             return false;
         }
 

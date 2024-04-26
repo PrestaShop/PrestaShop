@@ -50,8 +50,6 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
             $employeeBuilder,
             $this->mockLegacyContext(['id_employee' => 42]),
             $this->createMock(Security::class),
-            $this->mockFeatureFlagStateChecker(),
-            true,
             $this->createMock(SessionEmployeeProvider::class),
         );
 
@@ -71,8 +69,6 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
             $employeeBuilder,
             $this->mockLegacyContext(['id_employee' => null]),
             $this->createMock(Security::class),
-            $this->mockFeatureFlagStateChecker(),
-            true,
             $this->createMock(SessionEmployeeProvider::class),
         );
         $listener->onKernelRequest($event);
@@ -93,8 +89,6 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
             $employeeBuilder,
             $this->mockLegacyContext(['id_employee' => null]),
             $securityMock,
-            $this->mockFeatureFlagStateChecker(),
-            true,
             $this->createMock(SessionEmployeeProvider::class),
         );
 
@@ -119,8 +113,6 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
             $employeeBuilder,
             $this->mockLegacyContext(['id_employee' => null]),
             $this->createMock(Security::class),
-            $this->mockFeatureFlagStateChecker(),
-            true,
             $sessionEmployeeProvider,
         );
 

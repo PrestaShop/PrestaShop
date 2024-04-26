@@ -30,8 +30,6 @@ namespace PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
@@ -42,8 +40,6 @@ class LanguageContextListener
     public function __construct(
         private readonly LanguageContextBuilder $languageContextBuilder,
         private readonly EmployeeContext $employeeContext,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
-        private readonly bool $isSymfonyLayout,
     ) {
     }
 
@@ -53,9 +49,6 @@ class LanguageContextListener
             return;
         }
 
-        if ($this->isSymfonyLayout !== $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)) {
-            return;
-        }
         if ($this->employeeContext->getEmployee()) {
             // Use the employee language if available
             $this->languageContextBuilder->setLanguageId($this->employeeContext->getEmployee()->getLanguageId());

@@ -84,7 +84,7 @@ class CmsControllerCore extends FrontController
                 $this->redirect();
             } elseif (!$this->cms->active) {
                 $adminTokenValidator = $this->getContainer()->get(LegacyAdminTokenValidator::class);
-                $isAdminTokenValid = $adminTokenValidator->isTokenValid('AdminCmsContent', (int) Tools::getValue('id_employee'), Tools::getValue('adtoken'));
+                $isAdminTokenValid = $adminTokenValidator->isTokenValid((int) Tools::getValue('id_employee'), Tools::getValue('adtoken'));
                 if (!$isAdminTokenValid) {
                     $this->redirect_after = '404';
                     $this->redirect();

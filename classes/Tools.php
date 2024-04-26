@@ -29,8 +29,6 @@ use PHPSQLParser\PHPSQLParser;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
@@ -1139,16 +1137,10 @@ class ToolsCore
     {
         $container = SymfonyContainer::getInstance();
         if (null !== $container) {
-            /** @var FeatureFlagStateCheckerInterface $featureFlagChecker */
-            $featureFlagChecker = $container->get(FeatureFlagStateCheckerInterface::class);
+            /** @var UserTokenManager $userTokenManager */
+            $userTokenManager = $container->get(UserTokenManager::class);
 
-            // When symfony layout is enabled even the legacy page must use a Symfony token
-            if ($featureFlagChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)) {
-                /** @var UserTokenManager $userTokenManager */
-                $userTokenManager = $container->get(UserTokenManager::class);
-
-                return $userTokenManager->getSymfonyToken();
-            }
+            return $userTokenManager->getSymfonyToken();
         }
 
         return !empty($string) ? Tools::hash($string) : false;

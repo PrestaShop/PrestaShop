@@ -199,7 +199,7 @@ abstract class ControllerCore
             ]
         );
 
-        if (_PS_MODE_DEV_ && $this->controller_type == 'admin' && !($this instanceof AdminLegacyLayoutControllerCore)) {
+        if (_PS_MODE_DEV_ && $this->controller_type == 'admin') {
             set_error_handler([__CLASS__, 'myErrorHandler']);
         }
 

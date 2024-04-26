@@ -33,8 +33,6 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Security\Hashing;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\TabRepository;
@@ -67,7 +65,6 @@ class QuickAccessGenerator
         protected readonly EmployeeContext $employeeContext,
         private readonly Hashing $hashing,
         private readonly string $cookieKey,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
         private readonly Security $security,
     ) {
     }
@@ -147,9 +144,8 @@ class QuickAccessGenerator
     {
         $separator = strpos($baseUrl, '?') ? '&' : '?';
 
-        $symfonyLayoutEnabled = $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT);
         $userIdentifier = $this->security->getUser()?->getUserIdentifier();
-        if ($symfonyLayoutEnabled && !str_contains('_token', $baseUrl)) {
+        if (!str_contains('_token', $baseUrl)) {
             $baseUrl .= $separator . '_token=' . $this->tokenManager->getToken($userIdentifier)->getValue();
         } else {
             preg_match('/controller=(\w*)/', $baseUrl, $adminTab);

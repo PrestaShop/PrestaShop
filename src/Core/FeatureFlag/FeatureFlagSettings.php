@@ -52,6 +52,5 @@ class FeatureFlagSettings
 
     public const FEATURE_FLAG_ADMIN_API_MULTISTORE = 'admin_api_multistore';
     public const FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS = 'admin_api_experimental_endpoints';
-    public const FEATURE_FLAG_SYMFONY_LAYOUT = 'symfony_layout';
     public const FEATURE_FLAG_FRONT_CONTAINER_V2 = 'front_container_v2';
 }

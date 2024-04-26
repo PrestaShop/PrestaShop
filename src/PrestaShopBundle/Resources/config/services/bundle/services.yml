@@ -104,8 +104,6 @@ services:
 
   PrestaShopBundle\Security\Admin\UserTokenManager:
     autowire: true
-    arguments:
-      $cookieKey: '%cookie_key%'
 
   PrestaShopBundle\Service\Database\TransactionManager:
     public: false

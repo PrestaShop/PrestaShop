@@ -30,8 +30,6 @@ namespace PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Security\Admin\SessionEmployeeProvider;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -46,8 +44,6 @@ class EmployeeContextListener
         private readonly EmployeeContextBuilder $employeeContextBuilder,
         private readonly LegacyContext $legacyContext,
         private readonly Security $security,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
-        private readonly bool $isSymfonyLayout,
         private readonly SessionEmployeeProvider $sessionEmployeeProvider,
     ) {
     }
@@ -55,10 +51,6 @@ class EmployeeContextListener
     public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
-            return;
-        }
-
-        if ($this->isSymfonyLayout !== $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)) {
             return;
         }
 

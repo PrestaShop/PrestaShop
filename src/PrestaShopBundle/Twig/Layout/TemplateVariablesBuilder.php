@@ -35,8 +35,6 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
@@ -55,7 +53,6 @@ class TemplateVariablesBuilder
         private readonly ConfigurationInterface $configuration,
         private readonly MenuBuilder $menuBuilder,
         private readonly TabRepository $tabRepository,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
         private readonly EmployeeContext $employeeContext,
         private readonly LanguageContext $languageContext,
         private readonly ShopContext $shopContext,
@@ -69,7 +66,6 @@ class TemplateVariablesBuilder
     {
         return new TemplateVariables(
             $this->languageContext->getIsoCode(),
-            $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT),
             $this->languageContext->isRTL(),
             $this->legacyControllerContext->controller_name,
             $this->multistoreFeature->isActive(),

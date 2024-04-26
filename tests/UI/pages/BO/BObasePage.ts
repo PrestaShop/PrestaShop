@@ -256,13 +256,9 @@ export default class BOBasePage extends CommonPage {
 
   private readonly helpDocumentURL: string;
 
-  private readonly invalidTokenContinueLinkLegacy: string;
+  private readonly invalidTokenContinueLink: string;
 
-  private readonly invalidTokenCancelLinkLegacy: string;
-
-  private readonly invalidTokenContinueLinkSymfony: string;
-
-  private readonly invalidTokenCancelLinkSymfony: string;
+  private readonly invalidTokenCancelLink: string;
 
   public readonly debugModeToolbar: string;
 
@@ -617,10 +613,8 @@ export default class BOBasePage extends CommonPage {
     this.helpDocumentURL = `${this.rightSidebar} div.quicknav-scroller._fullspace object`;
 
     // Invalid token block
-    this.invalidTokenContinueLinkLegacy = 'a.btn-continue';
-    this.invalidTokenCancelLinkLegacy = 'a.btn-cancel';
-    this.invalidTokenContinueLinkSymfony = '#security-compromised-page #csrf-white-container div a:nth-child(1)';
-    this.invalidTokenCancelLinkSymfony = '#security-compromised-page #csrf-white-container div a:nth-child(2)';
+    this.invalidTokenContinueLink = '#security-compromised-page #csrf-white-container div a:nth-child(1)';
+    this.invalidTokenCancelLink = '#security-compromised-page #csrf-white-container div a:nth-child(2)';
   }
 
   /*
@@ -1167,18 +1161,10 @@ export default class BOBasePage extends CommonPage {
    */
   async navigateToPageWithInvalidToken(page: Page, url: string, continueToPage: boolean = true): Promise<void> {
     await this.goTo(page, url);
-    // Legacy Layout
-    if (await this.elementVisible(page, this.invalidTokenContinueLinkLegacy, 10000)) {
+    if (await this.elementVisible(page, this.invalidTokenContinueLink, 10000)) {
       await this.clickAndWaitForURL(
         page,
-        continueToPage ? this.invalidTokenContinueLinkLegacy : this.invalidTokenCancelLinkLegacy,
-      );
-    }
-    // Symfony Layout
-    if (await this.elementVisible(page, this.invalidTokenContinueLinkSymfony, 10000)) {
-      await this.clickAndWaitForURL(
-        page,
-        continueToPage ? this.invalidTokenContinueLinkSymfony : this.invalidTokenCancelLinkSymfony,
+        continueToPage ? this.invalidTokenContinueLink : this.invalidTokenCancelLink,
       );
     }
   }

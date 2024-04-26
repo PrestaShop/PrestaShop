@@ -28,13 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Security\Admin;
 
-use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
-use PrestaShop\PrestaShop\Core\Security\Hashing;
-use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -53,11 +47,6 @@ class UserTokenManager
 
     public function __construct(
         private readonly CsrfTokenManagerInterface $tokenManager,
-        private readonly EmployeeContext $employeeContext,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
-        private readonly MenuBuilder $menuBuilder,
-        private readonly Hashing $hashing,
-        private readonly string $cookieKey,
         private readonly RequestStack $requestStack,
         private readonly Security $security,
         private readonly SessionEmployeeProvider $sessionEmployeeProvider,
@@ -89,22 +78,15 @@ class UserTokenManager
     public function isTokenValid(): bool
     {
         $request = $this->requestStack->getMainRequest();
-        $symfonyLayoutEnabled = $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT);
-
-        // Check if legacy token is present and valid, but only when Symfony layout is disabled, when it's enabled the token is always a CSRF one
-        if (!$symfonyLayoutEnabled && $this->isLegacyTokenValid($request)) {
-            return true;
-        }
-
         // Check usual CSRF _token value for migrated pages
         if ($request->query->has('_token') && $this->isCsrfTokenValid($request->query->get('_token'))) {
             return true;
         }
 
-        // Legacy urls use token instead of _token as the URL parameter, so it's a valid alternative but only when symfony layout is enabled
+        // Legacy urls use token instead of _token as the URL parameter, so it's a valid alternative
         // Token can be posted via GET or POST parameters
         $legacyRequestToken = $request->get('token');
-        if ($symfonyLayoutEnabled && !empty($legacyRequestToken) && $this->isCsrfTokenValid($legacyRequestToken)) {
+        if (!empty($legacyRequestToken) && $this->isCsrfTokenValid($legacyRequestToken)) {
             return true;
         }
 
@@ -120,21 +102,5 @@ class UserTokenManager
         $token = new CsrfToken($this->security->getUser()->getUserIdentifier(), $tokenValue);
 
         return $this->tokenManager->isTokenValid($token);
-    }
-
-    private function isLegacyTokenValid(Request $request): bool
-    {
-        // Token and controllers can be posted via GET or POST parameters
-        $legacyRequestToken = $request->get('token');
-        $controllerName = $request->get('controller');
-        if (empty($legacyRequestToken) || empty($controllerName)) {
-            return false;
-        }
-
-        $employeeId = (int) $this->employeeContext->getEmployee()?->getId();
-        $currentTabId = $this->menuBuilder->getCurrentTab()?->getId();
-        $expectedLegacyTokenValue = $this->hashing->hash($controllerName . $currentTabId . $employeeId, $this->cookieKey);
-
-        return $expectedLegacyTokenValue === $legacyRequestToken;
     }
 }
