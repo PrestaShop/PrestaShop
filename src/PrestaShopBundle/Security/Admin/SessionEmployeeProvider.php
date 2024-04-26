@@ -56,22 +56,38 @@ class SessionEmployeeProvider
     }
 
     /**
-     * Most of this code is inspired from the ContextListener, it's just that we need to get the employee ID
+     * Most of this code is inspired from the ContextListener, it's just that we need to get the employee
      * before the firewall listener in order to preset the PrestaShop contexts.
      */
     public function getEmployeeFromSession(?Request $request = null): ?Employee
     {
+        $userIdentifier = $this->getEmployeeIdentifierFromSession($request);
+        if (!empty($userIdentifier)) {
+            $employee = $this->employeeProvider->loadUserByIdentifier($userIdentifier);
+            if ($employee instanceof Employee) {
+                return $employee;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Sometimes only the employee identifier is needed (like for token generation)
+     */
+    public function getEmployeeIdentifierFromSession(?Request $request = null): ?string
+    {
         $request = $request ?? $this->requestStack->getCurrentRequest();
+        if (null === $request) {
+            return null;
+        }
         $session = $request->hasPreviousSession() ? $request->getSession() : null;
         if (null !== $session) {
             $token = $session->get($this->sessionKey);
             if (null !== $token) {
                 $token = $this->safelyUnserialize($token);
                 if ($token instanceof TokenInterface) {
-                    $employee = $this->employeeProvider->loadUserByIdentifier($token->getUser()->getUserIdentifier());
-                    if ($employee instanceof Employee) {
-                        return $employee;
-                    }
+                    return $token->getUser()->getUserIdentifier();
                 }
             }
         }
