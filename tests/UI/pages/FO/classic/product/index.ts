@@ -55,11 +55,11 @@ class Product extends FOBasePage {
 
   protected customizedTextarea: (row: number) => string;
 
-  protected readonly customizedFile: (row: number) => string;
+  private readonly customizedFile: (row: number) => string;
 
   protected customizationsMessage: (row: number) => string;
 
-  protected readonly customizationImg: (row: number) => string;
+  private readonly customizationImg: (row: number) => string;
 
   private readonly saveCustomizationButton: string;
 
