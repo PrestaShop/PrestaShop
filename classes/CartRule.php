@@ -478,41 +478,30 @@ class CartRuleCore extends ObjectModel
                 }
             }
         }
-        $result_bak = $result;
-        $result = [];
-        $country_restriction = false;
-        foreach ($result_bak as $key => $cart_rule) {
+
+        /*
+         * Now, we check the country restrictions on this cart rule.
+         * The rule is will be displayed, if the customer has at least one
+         * address with country in the allowed list.
+         *
+         * If the customer has no addresses, we won't display anything.
+         */
+        foreach ($result as $key => $cart_rule) {
             if ($cart_rule['country_restriction']) {
-                $country_restriction = true;
-                $countries = Db::getInstance()->executeS(
-                    '
-                    SELECT `id_country`
-                    FROM `' . _DB_PREFIX_ . 'address`
-                    WHERE `id_customer` = ' . (int) $id_customer . '
-                    AND `deleted` = 0'
+                $validAddressExists = Db::getInstance()->getValue('
+                    SELECT crc.id_cart_rule 
+                    FROM ' . _DB_PREFIX_ . 'cart_rule_country crc 
+                    INNER JOIN ' . _DB_PREFIX_ . 'address a
+                    ON a.id_customer = ' . (int) $id_customer . ' AND
+                    a.deleted = 0 AND
+                    a.id_country = crc.id_country
+                    WHERE crc.id_cart_rule = ' . (int) $cart_rule['id_cart_rule']
                 );
 
-                if (is_array($countries) && count($countries)) {
-                    foreach ($countries as $country) {
-                        $id_cart_rule = (bool) Db::getInstance()->getValue('
-                            SELECT crc.id_cart_rule
-                            FROM ' . _DB_PREFIX_ . 'cart_rule_country crc
-                            WHERE crc.id_cart_rule = ' . (int) $cart_rule['id_cart_rule'] . '
-                            AND crc.id_country = ' . (int) $country['id_country']);
-                        if ($id_cart_rule) {
-                            $result[] = $result_bak[$key];
-
-                            break;
-                        }
-                    }
+                if (empty($validAddressExists)) {
+                    unset($result[$key]);
                 }
-            } else {
-                $result[] = $result_bak[$key];
             }
-        }
-
-        if (!$country_restriction) {
-            $result = $result_bak;
         }
 
         return $result;
