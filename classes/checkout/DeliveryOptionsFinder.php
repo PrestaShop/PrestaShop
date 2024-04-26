@@ -72,71 +72,91 @@ class DeliveryOptionsFinderCore
 
     public function getDeliveryOptions()
     {
-        $delivery_option_list = $this->context->cart->getDeliveryOptionList();
+        // Load up configuration
         $include_taxes = !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer) && (int) Configuration::get('PS_TAX');
         $display_taxes_label = (Configuration::get('PS_TAX') && $this->context->country->display_tax_label && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'));
 
-        $carriers_available = [];
+        // Get delivery options from list
+        $delivery_option_list = $this->context->cart->getDeliveryOptionList();
 
-        if (isset($delivery_option_list[$this->context->cart->id_address_delivery])) {
-            foreach ($delivery_option_list[$this->context->cart->id_address_delivery] as $id_carriers_list => $carriers_list) {
-                foreach ($carriers_list as $carriers) {
-                    if (is_array($carriers)) {
-                        foreach ($carriers as $carrier) {
-                            $carrier = array_merge($carrier, $this->objectPresenter->present($carrier['instance']));
-                            $delay = $carrier['delay'][$this->context->language->id];
-                            unset($carrier['instance'], $carrier['delay']);
-                            $carrier['delay'] = $delay;
-                            if ($this->isFreeShipping($this->context->cart, $carriers_list)) {
-                                $carrier['price'] = $this->translator->trans(
-                                    'Free',
-                                    [],
-                                    'Shop.Theme.Checkout'
-                                );
-                            } else {
-                                if ($include_taxes) {
-                                    $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_with_tax']);
-                                    if ($display_taxes_label) {
-                                        $carrier['price'] = $this->translator->trans(
-                                            '%price% tax incl.',
-                                            ['%price%' => $carrier['price']],
-                                            'Shop.Theme.Checkout'
-                                        );
-                                    }
-                                } else {
-                                    $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_without_tax']);
-                                    if ($display_taxes_label) {
-                                        $carrier['price'] = $this->translator->trans(
-                                            '%price% tax excl.',
-                                            ['%price%' => $carrier['price']],
-                                            'Shop.Theme.Checkout'
-                                        );
-                                    }
-                                }
-                            }
+        // Prepare empty list we will populate
+        $formattedDeliveryOptions = [];
 
-                            if (count($carriers) > 1) {
-                                $carrier['label'] = $carrier['price'];
-                            } else {
-                                $carrier['label'] = $carrier['name'] . ' - ' . $carrier['delay'] . ' - ' . $carrier['price'];
-                            }
+        // If there are no carriers available, nothing to do here
+        if (empty($delivery_option_list[$this->context->cart->id_address_delivery])) {
+            return $formattedDeliveryOptions;
+        }
 
-                            // If carrier related to a module, check for additionnal data to display
-                            $carrier['extraContent'] = '';
-                            if ($carrier['is_module']) {
-                                if ($moduleId = Module::getModuleIdByName($carrier['external_module_name'])) {
-                                    // Hook called only for the module concerned
-                                    $carrier['extraContent'] = Hook::exec('displayCarrierExtraContent', ['carrier' => $carrier], $moduleId);
-                                }
-                            }
+        foreach ($delivery_option_list[$this->context->cart->id_address_delivery] as $deliveryOptionId => $deliveryOptionData) {
+            /*
+             * Prepare empty delivery option.
+             * For some properties, we will use the whole list. For others, data from carriers themselves.
+             */
+            $formattedDeliveryOption = $deliveryOptionData;
+            $formattedDeliveryOption['id'] = $deliveryOptionId;
 
-                            $carriers_available[$id_carriers_list] = $carrier;
-                        }
+            // Add pricing information
+            if ($this->isFreeShipping($this->context->cart, $deliveryOptionData)) {
+                $formattedDeliveryOption['price'] = $this->translator->trans(
+                    'Free',
+                    [],
+                    'Shop.Theme.Checkout'
+                );
+            } else {
+                $formattedDeliveryOption['price'] = $this->priceFormatter->format(
+                    $include_taxes ? $deliveryOptionData['total_price_with_tax'] : $deliveryOptionData['total_price_without_tax']
+                );
+                if ($display_taxes_label) {
+                    $formattedDeliveryOption['price'] = $this->translator->trans(
+                        $include_taxes ? '%price% tax incl.' : '%price% tax excl.',
+                        ['%price%' => $formattedDeliveryOption['price']],
+                        'Shop.Theme.Checkout'
+                    );
+                }
+            }
+
+            /* 
+             * Add names and delivery delays.
+             * 
+             * When the delivery option consists of more carriers, we join up their names and delays.
+             * If it's only one carrier, we just use it.
+             */
+            if (count($deliveryOptionData['carrier_list']) > 1) {
+                $formattedDeliveryOption['logo'] = null;
+                $names = [];
+                $delays = [];
+                foreach ($deliveryOptionData['carrier_list'] as $carrier) {
+                    $names[] = $carrier['instance']->name;
+                    $delays[] = $carrier['instance']->delay[$this->context->language->id];
+                }
+                $formattedDeliveryOption['name'] = implode(', ', $names);
+                $formattedDeliveryOption['delay'] = implode(', ', $delays);
+            } else {
+                $carrier = reset($deliveryOptionData['carrier_list']);
+                $formattedDeliveryOption['logo'] = $carrier['logo'];
+                $formattedDeliveryOption['name'] = $carrier['instance']->name;
+                $formattedDeliveryOption['delay'] = $carrier['instance']->delay[$this->context->language->id];
+            }
+
+            /* 
+             * If carriers are related to a module, check for additionnal data to display.
+             * We will call these hooks all the carriers in the delivery option, so
+             * all modules can display their extra data - pickup branches etc.
+             */
+            $formattedDeliveryOption['extraContent'] = '';
+            foreach ($deliveryOptionData['carrier_list'] as $carrier) {
+                if ($carrier['instance']->is_module) {
+                    if ($moduleId = Module::getModuleIdByName($carrier['instance']->external_module_name)) {
+                        // Hook called only for the module concerned
+                        $formattedDeliveryOption['extraContent'] .= Hook::exec('displayCarrierExtraContent', ['carrier' => $carrier['instance']], $moduleId);
                     }
                 }
             }
+
+            // Add it to our list
+            $formattedDeliveryOptions[$deliveryOptionId] = $formattedDeliveryOption;
         }
 
-        return $carriers_available;
+        return $formattedDeliveryOptions;
     }
 }
