@@ -28,4 +28,7 @@
  */
 export default {
   attributeShopAssociationInput: '#attribute_shop_association',
+  attributeGroupSelect: '#attribute_attribute_group',
+  attributeColorFormRow: '.js-attribute-type-color-form-row',
+  attributeTextureFormRow: '.js-attribute-type-texture-form-row',
 };

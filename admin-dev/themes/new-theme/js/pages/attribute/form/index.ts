@@ -39,32 +39,28 @@ $(() => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  const attributeGroupSelect: HTMLElement | null = document.querySelector('#attribute_attribute_group');
-  const attributeColorRow: HTMLElement | null = document.querySelector('.js-attribute-type-color-form-row');
-  const attributeTextureRow: HTMLElement | null = document.querySelector('.js-attribute-type-texture-form-row');
-
+  const attributeGroupSelect = document.querySelector(AttributeFormMap.attributeGroupSelect) as HTMLInputElement | null;
+  const attributeColorRow = document.querySelector(AttributeFormMap.attributeColorFormRow) as HTMLElement | null;
+  const attributeTextureRow = document.querySelector(AttributeFormMap.attributeTextureFormRow) as HTMLElement | null;
   const attributeGroupSelectValue = (attributeGroupSelect as HTMLInputElement | null)?.value;
 
-  if (attributeColorRow && attributeTextureRow) {
-    if (attributeGroupSelectValue === '2') {
-      attributeColorRow.style.display = 'flex';
-      attributeTextureRow.style.display = 'flex';
-    } else {
-      attributeColorRow.style.display = 'none';
-      attributeTextureRow.style.display = 'none';
+  const toggleDisplay = (value: string | null) => {
+    if (attributeColorRow && attributeTextureRow) {
+      const displayValue = value === '2' ? 'flex' : 'none';
+      attributeColorRow.style.display = displayValue;
+      attributeTextureRow.style.display = displayValue;
     }
+  };
+
+  if (attributeGroupSelectValue) {
+    toggleDisplay(attributeGroupSelectValue);
   }
+
   attributeGroupSelect?.addEventListener('change', () => {
     const NewattributeGroupSelectValue = (attributeGroupSelect as HTMLInputElement | null)?.value;
 
-    if (attributeColorRow && attributeTextureRow) {
-      if (NewattributeGroupSelectValue === '2') {
-        attributeColorRow.style.display = 'flex';
-        attributeTextureRow.style.display = 'flex';
-      } else {
-        attributeColorRow.style.display = 'none';
-        attributeTextureRow.style.display = 'none';
-      }
+    if (NewattributeGroupSelectValue) {
+      toggleDisplay(NewattributeGroupSelectValue);
     }
   });
 });
