@@ -23,25 +23,21 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DeliveryOptionsFinderCore
 {
     private $context;
-    private $objectPresenter;
     private $translator;
     private $priceFormatter;
 
     public function __construct(
         Context $context,
         TranslatorInterface $translator,
-        ObjectPresenter $objectPresenter,
         PriceFormatter $priceFormatter
     ) {
         $this->context = $context;
-        $this->objectPresenter = $objectPresenter;
         $this->translator = $translator;
         $this->priceFormatter = $priceFormatter;
     }
@@ -115,9 +111,9 @@ class DeliveryOptionsFinderCore
                 }
             }
 
-            /* 
+            /*
              * Add names and delivery delays.
-             * 
+             *
              * When the delivery option consists of more carriers, we join up their names and delays.
              * If it's only one carrier, we just use it.
              */
@@ -138,7 +134,7 @@ class DeliveryOptionsFinderCore
                 $formattedDeliveryOption['delay'] = $carrier['instance']->delay[$this->context->language->id];
             }
 
-            /* 
+            /*
              * If carriers are related to a module, check for additionnal data to display.
              * We will call these hooks all the carriers in the delivery option, so
              * all modules can display their extra data - pickup branches etc.

@@ -121,7 +121,6 @@ class OrderControllerCore extends FrontController
         $deliveryOptionsFinder = new DeliveryOptionsFinder(
             $this->context,
             $this->getTranslator(),
-            $this->objectPresenter,
             new PriceFormatter()
         );
 
