@@ -33,6 +33,10 @@ class Cart extends CartPage {
     this.productImage = (number: number) => `${this.productItem(number)} div.product-line__image img`;
     this.productSize = (number: number) => `${this.productItem(number)} div.product-line__info.size span.value`;
     this.productColor = (number: number) => `${this.productItem(number)} div.product-line__info.color span.value`;
+    this.customizationLink = (row: number) => `${this.productItem(row)} div.product-customization-modal__content`
+      + " button[data-bs-target*='#product-customization-modal']";
+    this.customizationModal = (row: number) => `${this.productItem(row)} [id*="product-customization-modal"]`;
+    this.customizationModalCloseButton = (row: number) => `${this.customizationModal(row)} .modal-header button.btn-close`;
 
     // Summary block
     this.cartTotalATI = 'div.cart-summary__totals span.cart-summary__value';
