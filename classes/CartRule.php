@@ -426,7 +426,11 @@ class CartRuleCore extends ObjectModel
             return [];
         }
 
-        // Remove cart rule that does not match the customer groups
+        /*
+         * Remove cart rule that does not match the customer groups.
+         * Even if empty $id_customer was provided, we will still get
+         * a visitor group.
+         */
         $customerGroups = Customer::getGroupsStatic($id_customer);
 
         foreach ($result as $key => $cart_rule) {
@@ -488,6 +492,22 @@ class CartRuleCore extends ObjectModel
          */
         foreach ($result as $key => $cart_rule) {
             if ($cart_rule['country_restriction']) {
+                /*
+                 * If the rule has country restriction and there is no customer ID
+                 * provided, it doesn't make sense to check anything else.
+                 *
+                 * This customer can't have any addresses, thus no cart rule will be valid.
+                 */
+                if (empty($id_customer)) {
+                    unset($result[$key]);
+                    continue;
+                }
+
+                /*
+                 * Now, when we are sure that we have some sensible customer ID to validate upon,
+                 * we can check if he has any valid addresses that intersect with the allowed countries
+                 * in the cart rule. So he will be able to use it.
+                 */
                 $validAddressExists = Db::getInstance()->getValue('
                     SELECT crc.id_cart_rule 
                     FROM ' . _DB_PREFIX_ . 'cart_rule_country crc 
