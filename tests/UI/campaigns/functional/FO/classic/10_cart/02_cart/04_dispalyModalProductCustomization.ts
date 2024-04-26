@@ -15,7 +15,7 @@ import Products from '@data/demo/products';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_cart_modal_displayModalProductCustomization';
+const baseContext: string = 'functional_FO_classic_cart_cart_displayModalProductCustomization';
 
 describe('FO - cart : Display modal of product customization', async () => {
   let browserContext: BrowserContext;
