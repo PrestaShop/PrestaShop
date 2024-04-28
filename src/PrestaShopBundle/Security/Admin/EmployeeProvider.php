@@ -90,14 +90,6 @@ class EmployeeProvider implements UserProviderInterface
 
         // Always reload the employee regardless of the cache
         $freshEmployee = $this->loadEmployee($user->getUserIdentifier());
-
-        // Sets the session persisted in session because this fresh instance ill be used for the serialization at the end of
-        // the request, if we don't want to lose the session identifiers we must maintain it on each request.
-        $freshEmployee
-            ->setSessionId($user->getSessionId())
-            ->setSessionToken($user->getSessionToken())
-        ;
-
         // Update the cache so that loadUserByIdentifier is updated
         $this->employees[$user->getUserIdentifier()] = $freshEmployee;
 

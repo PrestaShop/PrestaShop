@@ -32,7 +32,13 @@ use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Employee\EmployeeSession;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
 use PrestaShopBundle\Security\Admin\EmployeeProvider;
+use PrestaShopBundle\Utils\SafeUnserializeTrait;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
@@ -44,69 +50,101 @@ use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
  */
 class EmployeeSessionSubscriber implements EventSubscriberInterface
 {
+    use SafeUnserializeTrait;
+
+    public const EMPLOYEE_SESSION_TOKEN_ATTRIBUTE = '_employee_session';
+
     public function __construct(
-        private readonly LegacyContext $legacyContext,
         private readonly EmployeeProvider $employeeProvider,
         private readonly EmployeeRepository $employeeRepository,
         private readonly EntityManagerInterface $entityManager,
+        private readonly Security $security,
+        private readonly LoggerInterface $logger,
+        private readonly LegacyContext $legacyContext,
     ) {
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            LoginSuccessEvent::class => 'onLoginSuccess',
+            AuthenticationTokenCreatedEvent::class => 'createEmployeeSession',
+            LoginSuccessEvent::class => 'updateLegacyCookie',
+            // Must be executed after the firewall listener
+            KernelEvents::REQUEST => [['checkEmployeeSession', 7]],
             LogoutEvent::class => 'onLogout',
-            TokenDeauthenticatedEvent::class => 'onTokenDeauthenticated',
+            TokenDeauthenticatedEvent::class => 'cleanEmployeeSessions',
         ];
     }
 
-    public function onLoginSuccess(LoginSuccessEvent $event): void
+    public function createEmployeeSession(AuthenticationTokenCreatedEvent $event): void
     {
-        // Load doctrine employee because the even maybe contain an unserialized object not recognized by the Entity manager
-        $employee = $this->employeeRepository->loadEmployeeByIdentifier($event->getUser()->getUserIdentifier());
+        // Load doctrine employee because the event may contain an unserialized object not recognized by the Entity manager
+        $employee = $this->employeeRepository->loadEmployeeByIdentifier($event->getAuthenticatedToken()->getUserIdentifier());
 
         // Create new employee session
         $employeeSession = new EmployeeSession();
         $employeeSession->setToken(sha1(time() . uniqid()));
-        // $employee->addSession($employeeSession);
-        $employeeSession->setEmployee($employee);
+        $employee->addSession($employeeSession);
         $this->entityManager->persist($employeeSession);
         $this->entityManager->flush();
 
-        // Update legacy cookie
-
-        // Mimic legacy login controller behaviour
-        $legacyCookie = $this->legacyContext->getContext()->cookie;
-        $legacyCookie->email = $employee->getEmail();
-        $legacyCookie->profile = $employee->getProfile()->getId();
-        $legacyCookie->passwd = $employee->getPassword();
-        $legacyCookie->remote_addr = (int) ip2long($event->getRequest()->getClientIp());
-        // Mimic Cookie::registerSession behaviour
-        $legacyCookie->id_employee = $employee->getId();
-        $legacyCookie->session_id = $employeeSession->getId();
-        $legacyCookie->session_token = $employeeSession->getToken();
-
-        $legacyCookie->write();
-
-        /** @var Employee $loggedInEmployee */
-        $loggedInEmployee = $event->getUser();
-        // We set the session token and session ID on the event user because it will then be serialized in the session
-        // thus allowing us to check if the session is still alive in future requests.
-        $loggedInEmployee
-            ->setSessionId($employeeSession->getId())
-            ->setSessionToken($employeeSession->getToken())
-        ;
+        // Set the EmployeeSession as a token attribute so that it is serialized in the session
+        $event->getAuthenticatedToken()->setAttribute(self::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE, $employeeSession);
     }
 
-    public function onTokenDeauthenticated(TokenDeauthenticatedEvent $event): void
+    public function updateLegacyCookie(LoginSuccessEvent $event): void
+    {
+        $legacyCookie = $this->legacyContext->getContext()->cookie;
+
+        // Mimic AdminLogin login action
+        $legacyCookie->remote_addr = (int) ip2long($event->getRequest()->getClientIp());
+        $employee = $this->security->getUser();
+        if ($employee instanceof Employee) {
+            $legacyCookie->id_employee = $employee->getId();
+            $legacyCookie->email = $employee->getEmail();
+            $legacyCookie->profile = $employee->getProfile()->getId();
+            $legacyCookie->passwd = $employee->getPassword();
+        }
+
+        // Mimic Cookie::registerSession behaviour
+        $employeeSession = $this->getEmployeeSessionFromToken();
+        if ($employeeSession instanceof EmployeeSession) {
+            $legacyCookie->session_id = $employeeSession->getId();
+            $legacyCookie->session_token = $employeeSession->getToken();
+        }
+    }
+
+    public function checkEmployeeSession(KernelEvent $event): void
+    {
+        if (!$this->security->getUser() instanceof Employee) {
+            return;
+        }
+
+        $employeeSession = $this->getEmployeeSessionFromToken();
+        if (!$employeeSession instanceof EmployeeSession) {
+            $this->logger->debug('User is logout because no EmployeeSession was found in token');
+            $this->security->logout(false);
+
+            return;
+        }
+
+        /** @var Employee $employee */
+        $employee = $this->security->getUser();
+        // Check that session is still persisted nad matches the initial saved token
+        if (!$employee->hasSession($employeeSession->getId(), $employeeSession->getToken())) {
+            $this->logger->debug(sprintf('Employee lo longer has this session token: %d:%s', $employeeSession->getId(), $employeeSession->getToken()));
+            $this->security->logout(false);
+        }
+    }
+
+    public function cleanEmployeeSessions(TokenDeauthenticatedEvent $event): void
     {
         /** @var Employee $employee */
         $employee = $this->employeeProvider->loadUserByIdentifier($event->getOriginalToken()->getUserIdentifier());
         if ($employee instanceof Employee) {
-            // If the employee has been forcefully deauthenticated it may be because someone is trying to still their
-            // session so for safety all current sessions are removed, it means the employee is logged out on all the
-            // devices he as logged on
+            // If the employee has been forcefully deauthenticated, it is safe to assume that all his related sessions
+            // can no longer be considered safe so they are all removed, thus the employee will be logged out on all
+            // their devices
             $employee->removeAllSessions();
             $this->entityManager->flush();
         }
@@ -115,15 +153,25 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
     public function onLogout(LogoutEvent $event): void
     {
         $user = $event->getToken()->getUser();
-        if ($user instanceof Employee && !empty($user->getSessionId())) {
+        $employeeSession = $this->getEmployeeSessionFromToken();
+        if ($employeeSession instanceof EmployeeSession) {
             // Fetch the Doctrine employee to modify the DB content
             /** @var Employee $employee */
             $employee = $this->employeeProvider->loadUserByIdentifier($user->getUserIdentifier());
-            $employee->removeSessionById($user->getSessionId());
+            $employee->removeSessionById($employeeSession->getId());
             $this->entityManager->flush();
         }
 
         // Logout cookie for backward compatibility
         $this->legacyContext->getContext()->cookie->logout();
+    }
+
+    protected function getEmployeeSessionFromToken(): ?EmployeeSession
+    {
+        if (!$this->security->getToken()?->hasAttribute(self::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE)) {
+            return null;
+        }
+
+        return $this->security->getToken()->getAttribute(self::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE);
     }
 }

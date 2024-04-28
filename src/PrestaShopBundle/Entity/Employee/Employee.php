@@ -211,19 +211,6 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
      */
     private int $lastCustomerId;
 
-    /**
-     * Used to store the current session ID in the database (this is persisted in the serialized employee in session)
-     */
-    private ?int $sessionId = null;
-
-    /**
-     * Used to store the current session token in the database (this is persisted in the serialized employee in session)
-     * this value is set once during the login process and never modified after, so it at one point it doesn't match the
-     * value in the database it means someone is messing with it, or it has been removed from the DB. So the employee check
-     * in isEqualTo will detect it and the employee will be logged out.
-     */
-    private ?string $sessionToken = null;
-
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
@@ -254,7 +241,7 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
     /**
      * If you change this method you should probably also update the serialize/unserialize methods.
      *
-     * @param UserInterface $user this is the fresh user, so it's the one that can check if the session is alive
+     * @param UserInterface $user
      *
      * @return bool
      */
@@ -265,7 +252,6 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
             && $user->getUserIdentifier() === $this->getUserIdentifier()
             && $user->getPassword() === $this->getPassword()
             && $user->getProfile()->getId() === $this->getProfile()->getId()
-            && $user->hasSession($this->getSessionId(), $this->getSessionToken())
         ;
     }
 
@@ -663,35 +649,11 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
         return $this;
     }
 
-    public function getSessionId(): ?int
-    {
-        return $this->sessionId;
-    }
-
-    public function setSessionId(?int $sessionId): static
-    {
-        $this->sessionId = $sessionId;
-
-        return $this;
-    }
-
-    public function getSessionToken(): ?string
-    {
-        return $this->sessionToken;
-    }
-
-    public function setSessionToken(?string $sessionToken): static
-    {
-        $this->sessionToken = $sessionToken;
-
-        return $this;
-    }
-
     /**
      * Optimize the way the employee is serialized in the session, it is important to return
      * all the required info to later check that the serialized data is equal to the Employee
-     * in DB (including the profile and the session data). If you change the isEqualTo method
-     * you should probably update this serialization as well.
+     * in DB (including the profile). If you change the isEqualTo method you should probably
+     * update this serialization as well.
      */
     public function __serialize(): array
     {
@@ -699,8 +661,6 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
             'id' => $this->id,
             'email' => $this->email,
             'password' => $this->password,
-            'sessionId' => $this->sessionId,
-            'sessionToken' => $this->sessionToken,
             'profileId' => $this->getProfile()->getId(),
         ];
     }
@@ -710,8 +670,6 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
         $this->id = $data['id'];
         $this->email = $data['email'];
         $this->password = $data['password'];
-        $this->sessionId = $data['sessionId'];
-        $this->sessionToken = $data['sessionToken'];
         $this->profile = new Profile($data['profileId']);
     }
 }

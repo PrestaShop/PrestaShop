@@ -32,6 +32,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Employee\EmployeeSession;
+use PrestaShopBundle\EventListener\Admin\EmployeeSessionSubscriber;
 use PrestaShopBundle\Security\Admin\EmployeeProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -56,10 +57,6 @@ trait LoginTrait
         } else {
             $employeeSession = $employee->getSessions()->first();
         }
-        $employee
-            ->setSessionId($employeeSession->getId())
-            ->setSessionToken($employeeSession->getToken())
-        ;
-        $kernelBrowser->loginUser($employee);
+        $kernelBrowser->loginUser($employee, 'main', [EmployeeSessionSubscriber::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE => $employeeSession]);
     }
 }

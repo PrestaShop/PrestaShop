@@ -126,4 +126,18 @@ class EmployeeSession
             $this->dateAdd = new DateTime();
         }
     }
+
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'token' => $this->token,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->id = $data['id'];
+        $this->token = $data['token'];
+    }
 }
