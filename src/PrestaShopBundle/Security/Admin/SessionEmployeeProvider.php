@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Security\Admin;
 
-use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Utils\SafeUnserializeTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -50,7 +49,6 @@ class SessionEmployeeProvider
 
     public function __construct(
         private readonly RequestStack $requestStack,
-        private readonly EmployeeProvider $employeeProvider,
         private readonly string $sessionKey = '_security_main',
     ) {
     }
@@ -59,23 +57,7 @@ class SessionEmployeeProvider
      * Most of this code is inspired from the ContextListener, it's just that we need to get the employee
      * before the firewall listener in order to preset the PrestaShop contexts.
      */
-    public function getEmployeeFromSession(?Request $request = null): ?Employee
-    {
-        $userIdentifier = $this->getEmployeeIdentifierFromSession($request);
-        if (!empty($userIdentifier)) {
-            $employee = $this->employeeProvider->loadUserByIdentifier($userIdentifier);
-            if ($employee instanceof Employee) {
-                return $employee;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Sometimes only the employee identifier is needed (like for token generation)
-     */
-    public function getEmployeeIdentifierFromSession(?Request $request = null): ?string
+    public function getEmployeeFromSession(?Request $request = null): ?SessionEmployeeInterface
     {
         $request = $request ?? $this->requestStack->getCurrentRequest();
         if (null === $request) {
@@ -86,8 +68,8 @@ class SessionEmployeeProvider
             $token = $session->get($this->sessionKey);
             if (null !== $token) {
                 $token = $this->safelyUnserialize($token);
-                if ($token instanceof TokenInterface) {
-                    return $token->getUser()->getUserIdentifier();
+                if ($token instanceof TokenInterface && $token->getUser() instanceof SessionEmployeeInterface) {
+                    return $token->getUser();
                 }
             }
         }

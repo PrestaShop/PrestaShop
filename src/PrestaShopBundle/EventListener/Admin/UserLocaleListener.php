@@ -28,7 +28,7 @@ namespace PrestaShopBundle\EventListener\Admin;
 
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
-use PrestaShopBundle\Entity\Employee\Employee;
+use PrestaShopBundle\Security\Admin\SessionEmployeeInterface;
 use PrestaShopBundle\Security\Admin\SessionEmployeeProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -50,33 +50,20 @@ class UserLocaleListener
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        if ($this->security->getUser() instanceof Employee) {
+        if ($this->security->getUser() instanceof SessionEmployeeInterface) {
             $employee = $this->security->getUser();
         } else {
             $employee = $this->sessionEmployeeProvider->getEmployeeFromSession($event->getRequest());
         }
 
-        if ($employee instanceof Employee) {
-            $request = $event->getRequest();
-            $locale = $this->getLocaleFromEmployee($employee);
-            $request->setDefaultLocale($locale);
-
-            $request->setLocale($locale);
-        }
-    }
-
-    /**
-     * @param Employee $employee
-     *
-     * @return string
-     */
-    private function getLocaleFromEmployee(Employee $employee): string
-    {
-        $employeeLanguage = $employee->getDefaultLanguage();
-        if (!$employeeLanguage) {
-            $employeeLanguage = $this->langRepository->find($this->configuration->get('PS_LANG_DEFAULT'));
+        if ($employee instanceof SessionEmployeeInterface) {
+            $locale = $employee->getDefaultLocale();
+        } else {
+            $locale = $this->langRepository->find($this->configuration->get('PS_LANG_DEFAULT'))->getLocale();
         }
 
-        return $employeeLanguage->getLocale();
+        $request = $event->getRequest();
+        $request->setDefaultLocale($locale);
+        $request->setLocale($locale);
     }
 }

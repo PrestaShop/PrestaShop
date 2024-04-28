@@ -31,6 +31,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use PrestaShopBundle\Entity\Lang;
+use PrestaShopBundle\Security\Admin\SessionEmployeeInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -47,7 +48,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     },
  *  )
  */
-class Employee implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface
+class Employee implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface, SessionEmployeeInterface
 {
     public const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
 
@@ -260,6 +261,11 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
         return $this->profile;
     }
 
+    public function getProfileId(): int
+    {
+        return $this->getProfile()->getId();
+    }
+
     public function setProfile(Profile $profile): static
     {
         $this->profile = $profile;
@@ -328,6 +334,11 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
     public function getDefaultLanguage(): ?Lang
     {
         return $this->defaultLanguage;
+    }
+
+    public function getDefaultLocale(): string
+    {
+        return $this->getDefaultLanguage()->getLocale();
     }
 
     public function setDefaultLanguageId(?Lang $defaultLanguage): static
@@ -662,14 +673,18 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
             'email' => $this->email,
             'password' => $this->password,
             'profileId' => $this->getProfile()->getId(),
+            // This is added in the serialized data so that early listeners can get the value from session early
+            'defaultLocale' => $this->getDefaultLocale(),
         ];
     }
 
     public function __unserialize(array $data): void
     {
-        $this->id = $data['id'];
-        $this->email = $data['email'];
-        $this->password = $data['password'];
-        $this->profile = new Profile($data['profileId']);
+        $this->id = $data['id'] ?? 0;
+        $this->email = $data['email'] ?? '';
+        $this->password = $data['password'] ?? '';
+        $this->profile = new Profile($data['profileId'] ?? 0);
+        $this->defaultLanguage = new Lang();
+        $this->defaultLanguage->setLocale($data['defaultLocale'] ?? 'en');
     }
 }

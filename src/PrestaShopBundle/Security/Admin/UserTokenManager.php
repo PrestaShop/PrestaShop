@@ -60,7 +60,7 @@ class UserTokenManager
             $userIdentifier = $this->security->getUser()->getUserIdentifier();
         } else {
             // When user is not initialized yet (like in LegacyRouterChecker) we fetch the employee based on saved session data
-            $userIdentifier = $this->sessionEmployeeProvider->getEmployeeIdentifierFromSession();
+            $userIdentifier = $this->sessionEmployeeProvider->getEmployeeFromSession()?->getUserIdentifier();
         }
 
         if (empty($userIdentifier)) {
