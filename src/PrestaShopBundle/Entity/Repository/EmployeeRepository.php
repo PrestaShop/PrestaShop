@@ -27,28 +27,39 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use PrestaShopBundle\Entity\Employee\Employee;
 
 class EmployeeRepository extends EntityRepository
 {
+    /**
+     * This query is used by the authorization process when the full employee is needed,
+     * we optimized it to avoid lazy loading on too many relations. We don't join the
+     * profile.authorizationRoles relation ON PURPOSE, it turns out hydrating this many
+     * elements in a single query dropped the performance hugely. So it's better to let
+     * Doctrine fetch this part lazily itself (it's a few ms versus 500ms with the full
+     * join and heady hydration).
+     *
+     * @param string $userIdentifier
+     *
+     * @return Employee|null
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function loadEmployeeByIdentifier(string $userIdentifier): ?Employee
     {
         $qb = $this->createQueryBuilder('e');
         $qb
             ->leftJoin('e.profile', 'p')
-            ->leftJoin('p.authorizationRoles', 'ar')
             ->leftJoin('e.defaultLanguage', 'l')
             ->leftJoin('e.sessions', 's')
             ->addSelect('e')
             ->addSelect('p')
-            ->addSelect('ar')
             ->addSelect('l')
             ->addSelect('s')
             ->where('e.email = :userIdentifier')
             ->setParameter('userIdentifier', $userIdentifier)
         ;
 
-        return $qb->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }
