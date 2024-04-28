@@ -32,6 +32,7 @@ security:
         check_path: admin_login
         username_parameter: email
         password_parameter: passwd
+        success_handler: PrestaShopBundle\Security\Admin\AdminAuthenticationSuccessHandler
       remember_me:
         secret: "%kernel.secret%"
         lifetime: 3600

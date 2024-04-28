@@ -32,12 +32,14 @@ use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Employee\EmployeeSession;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
 use PrestaShopBundle\Security\Admin\EmployeeProvider;
-use PrestaShopBundle\Utils\SafeUnserializeTrait;
+use PrestaShopBundle\Service\Routing\Router;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
@@ -50,8 +52,6 @@ use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
  */
 class EmployeeSessionSubscriber implements EventSubscriberInterface
 {
-    use SafeUnserializeTrait;
-
     public const EMPLOYEE_SESSION_TOKEN_ATTRIBUTE = '_employee_session';
 
     public function __construct(
@@ -61,6 +61,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         private readonly Security $security,
         private readonly LoggerInterface $logger,
         private readonly LegacyContext $legacyContext,
+        private readonly CsrfTokenManagerInterface $tokenManager,
     ) {
     }
 
@@ -68,7 +69,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
     {
         return [
             AuthenticationTokenCreatedEvent::class => 'createEmployeeSession',
-            LoginSuccessEvent::class => 'updateLegacyCookie',
+            LoginSuccessEvent::class => 'onLoginSuccess',
             // Must be executed after the firewall listener
             KernelEvents::REQUEST => [['checkEmployeeSession', 7]],
             LogoutEvent::class => 'onLogout',
@@ -92,8 +93,19 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         $event->getAuthenticatedToken()->setAttribute(self::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE, $employeeSession);
     }
 
-    public function updateLegacyCookie(LoginSuccessEvent $event): void
+    public function onLoginSuccess(LoginSuccessEvent $event): void
     {
+        // At the end of login success Symfony has a mechanism that removes all CSRF tokens for security, but it means it also remove
+        // our CSRF token used for URL token validation, thus the redirect url will be invalid and display a compromised page To avoid
+        // this we replace the URL token at the last minute with a fresh token that will be valid for the redirected url
+        $eventResponse = $event->getResponse();
+        if ($eventResponse instanceof RedirectResponse) {
+            $tokenizedUrl = Router::generateTokenizedUrl($eventResponse->getTargetUrl(), $this->tokenManager->refreshToken($event->getAuthenticatedToken()->getUserIdentifier())->getValue());
+            $eventResponse->setTargetUrl($tokenizedUrl);
+            $event->setResponse($eventResponse);
+        }
+
+        // Update legacy cookie for backward compatibility, simply set the values and let the cookie write itself
         $legacyCookie = $this->legacyContext->getContext()->cookie;
 
         // Mimic AdminLogin login action
