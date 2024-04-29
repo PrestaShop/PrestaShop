@@ -59,6 +59,7 @@
  * @property string $content_theme
  * @property bool $content_install_fixtures
  * @property int $moduleAction
+ * @property string $adminFolderName
  */
 class InstallSession
 {

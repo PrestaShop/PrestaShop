@@ -13,3 +13,5 @@ services:
     restart: unless-stopped
     depends_on:
       - mysql
+    networks:
+      - prestashop-network

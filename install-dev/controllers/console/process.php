@@ -119,7 +119,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {
-            $steps = ['database', 'modules', 'theme', 'fixtures', 'postInstall'];
+            $steps = ['database', 'modules', 'theme', 'fixtures', 'postInstall', 'finalize'];
         }
         if (!file_exists(PS_INSTALLATION_LOCK_FILE)) {
             // Set the install lock file
@@ -185,6 +185,12 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
         if (in_array('postInstall', $steps)) {
             if (!$this->processPostInstall()) {
+                $this->printErrors();
+            }
+        }
+
+        if (in_array('finalize', $steps)) {
+            if (!$this->processFinalize()) {
                 $this->printErrors();
             }
         }
@@ -320,6 +326,24 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     public function processPostInstall(): bool
     {
         return $this->model_install->postInstall();
+    }
+
+    public function processFinalize(): bool
+    {
+        $this->initializeContext();
+
+        // if admin folder doesn't exist, then there's nothing to do here
+        if (!file_exists(_PS_ROOT_DIR_ . '/admin/')) {
+            return true;
+        }
+
+        $result = $this->model_install->finalize();
+
+        if (!$result) {
+            $this->printErrors();
+        }
+
+        return $result;
     }
 
     /**
