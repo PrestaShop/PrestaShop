@@ -31,12 +31,12 @@ use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
-use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
@@ -48,7 +48,6 @@ class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerI
         private readonly Security $security,
         private readonly TabRepository $tabRepository,
         private readonly LegacyContext $legacyContext,
-        private readonly HttpUtils $httpUtils,
     ) {
     }
 
@@ -57,15 +56,14 @@ class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerI
         if ($request->hasPreviousSession()) {
             $redirectUrl = $this->getTargetPath($request->getSession(), 'main');
         }
-
         if (empty($redirectUrl)) {
             $redirectUrl = $this->getHomepageUrl();
         }
         if (empty($redirectUrl)) {
-            $redirectUrl = 'admin_homepage';
+            $redirectUrl = $this->router->generate('admin_homepage');
         }
 
-        return $this->httpUtils->createRedirectResponse($request, $redirectUrl);
+        return new RedirectResponse($redirectUrl);
     }
 
     private function getHomepageUrl(): ?string

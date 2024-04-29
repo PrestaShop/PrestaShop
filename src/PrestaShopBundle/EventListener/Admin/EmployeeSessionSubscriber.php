@@ -38,13 +38,15 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\KernelEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 /**
  * This subscriber watches the various authentication event and saves or removes the persisted
@@ -53,6 +55,8 @@ use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
  */
 class EmployeeSessionSubscriber implements EventSubscriberInterface
 {
+    use TargetPathTrait;
+
     public const EMPLOYEE_SESSION_TOKEN_ATTRIBUTE = '_employee_session';
 
     public function __construct(
@@ -63,6 +67,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         private readonly LoggerInterface $logger,
         private readonly LegacyContext $legacyContext,
         private readonly CsrfTokenManagerInterface $tokenManager,
+        private readonly RouterInterface $router,
     ) {
     }
 
@@ -110,7 +115,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         $this->updateLegacyCookie($event->getRequest());
     }
 
-    public function onKernelRequest(KernelEvent $event): void
+    public function onKernelRequest(RequestEvent $event): void
     {
         if (!$this->security->getUser() instanceof Employee) {
             return;
@@ -119,7 +124,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         $employeeSession = $this->getEmployeeSessionFromToken();
         if (!$employeeSession instanceof EmployeeSession) {
             $this->logger->debug('User is logout because no EmployeeSession was found in token');
-            $this->security->logout(false);
+            $this->logoutAndStopEvent($event);
 
             return;
         }
@@ -129,7 +134,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         // Check that session is still persisted nad matches the initial saved token
         if (!$employee->hasSession($employeeSession->getId(), $employeeSession->getToken())) {
             $this->logger->debug(sprintf('Employee lo longer has this session token: %d:%s', $employeeSession->getId(), $employeeSession->getToken()));
-            $this->security->logout(false);
+            $this->logoutAndStopEvent($event);
 
             return;
         }
@@ -166,6 +171,22 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
 
         // Logout cookie for backward compatibility
         $this->legacyContext->getContext()->cookie->logout();
+    }
+
+    protected function logoutAndStopEvent(RequestEvent $event): void
+    {
+        // Logout the user
+        $this->security->logout(false);
+
+        // Set the redirection so the process stops right away
+        $event->setResponse(new RedirectResponse($this->router->generate('admin_login')));
+
+        // Sve the target path so the next login will redirect to the url request at the moment of the logout
+        $this->saveTargetPath($event->getRequest()->getSession(), 'main', $event->getRequest()->getUri());
+
+        // Stop the event propagation, nothing more needs to happen except for redirection, and it prevents the event to
+        // keep travelling and be caught by other unwanted listeners (like the TokenizedUrlsListener)
+        $event->stopPropagation();
     }
 
     protected function getEmployeeSessionFromToken(): ?EmployeeSession
