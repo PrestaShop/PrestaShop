@@ -24,11 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin;
+namespace PrestaShopBundle\Form\Admin\Login;
 
-use PrestaShopBundle\Form\Admin\Type\ButtonCollectionType;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,37 +37,42 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ResetPasswordType extends AbstractType
+/**
+ * Back-office login form
+ */
+class LoginType extends AbstractType
 {
     public function __construct(
-        protected readonly TranslatorInterface $translator
+        protected readonly TranslatorInterface $translator,
+        protected readonly ShopContext $shopContext,
     ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email_forgot', TextType::class, [
-                'required' => true,
+            ->add('email', TextType::class, [
                 'label' => $this->translator->trans('Email address', [], 'Admin.Global'),
                 'constraints' => [
                     new Email(),
                 ],
             ])
-            ->add('buttons', ButtonCollectionType::class, [
-                'buttons' => [
-                    'cancel' => [
-                        'type' => ButtonType::class,
-                        'options' => [
-                            'label' => $this->translator->trans('Cancel', [], 'Admin.Global'),
-                        ],
-                    ],
-                    'submit_login' => [
-                        'type' => SubmitType::class,
-                        'options' => [
-                            'label' => $this->translator->trans('Send reset link', [], 'Admin.Login.Feature'),
-                        ],
-                        'group' => 'right',
+            ->add('passwd', PasswordType::class, [
+                'label' => $this->translator->trans('Password', [], 'Admin.Global'),
+            ])
+            ->add('submit_login', SubmitType::class, [
+                'label' => $this->translator->trans('Log in', [], 'Admin.Login.Feature'),
+            ])
+            ->add('stay_logged_in', CheckboxType::class, [
+                'label' => $this->translator->trans('Stay logged in', [], 'Admin.Login.Feature'),
+                'required' => false,
+                'external_link' => [
+                    'href' => '#forgotten_password',
+                    'text' => $this->translator->trans('I forgot my password', [], 'Admin.Login.Feature'),
+                    'open_in_new_tab' => false,
+                    'attr' => [
+                        'id' => 'forgot-password-link',
+                        'class' => 'show-forgot-password',
                     ],
                 ],
             ])
@@ -77,12 +83,17 @@ class ResetPasswordType extends AbstractType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'label' => $this->translator->trans('Forgot your password?', [], 'Admin.Login.Feature'),
+            'label' => $this->shopContext->getName(),
             'label_tag_name' => 'h4',
             'form_theme' => '@PrestaShop/Admin/Login/form_theme.html.twig',
             'attr' => [
-                'id' => 'forgot_password_form',
+                'id' => 'login_form',
             ],
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return '';
     }
 }

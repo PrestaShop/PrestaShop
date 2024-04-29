@@ -25,11 +25,11 @@
 {% extends '@PrestaShop/Admin/Layout/login_layout.html.twig' %}
 
 {% block content %}
-  {{ form_start(loginForm, {action: path('admin_login'), attr: {class: showResetForm ? 'd-none' : '' }}) }}
+  {{ form_start(loginForm, {action: path('admin_login'), attr: {class: showRequestPasswordResetForm ? 'd-none' : '' }}) }}
     {{ form_row(loginForm) }}
   {{ form_end(loginForm) }}
 
-  {{ form_start(resetPasswordForm, {action: path('admin_request_password_reset'), attr: {class: showResetForm ? '' : 'd-none' }}) }}
-    {{ form_row(resetPasswordForm) }}
-  {{ form_end(resetPasswordForm) }}
+  {{ form_start(requestPasswordResetForm, {action: path('admin_request_password_reset'), attr: {class: showRequestPasswordResetForm ? '' : 'd-none' }}) }}
+    {{ form_row(requestPasswordResetForm) }}
+  {{ form_end(requestPasswordResetForm) }}
 {% endblock %}

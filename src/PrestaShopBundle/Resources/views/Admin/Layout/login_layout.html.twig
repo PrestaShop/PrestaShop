@@ -31,6 +31,8 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   {{ component('LoginHeadTag') }}
+  {% block javascrips %}{% endblock %}
+  {% block stylesheets %}{% endblock %}
 </head>
 <body class="lang-{{ ps.isoUser }}{% if ps.isRtlLanguage %} lang-rtl{% endif %} ps_back-office bootstrap">
   <div id="login">

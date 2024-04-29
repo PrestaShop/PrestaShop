@@ -132,6 +132,7 @@ module.exports = {
     product_shops: './js/pages/product/shop',
     pre_select_product_shop: './js/pages/product/shop/pre-select-product-shop',
     profiles: './js/pages/profiles',
+    reset_password: './js/pages/login/reset-password',
     search_engine: './js/pages/search-engine',
     search: './js/pages/search',
     security: './js/pages/security',

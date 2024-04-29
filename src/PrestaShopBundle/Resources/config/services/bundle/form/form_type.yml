@@ -58,12 +58,8 @@ services:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Improve/International/Localization/*"
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/*"
-
-  PrestaShopBundle\Form\Admin\LoginType:
-    autowire: true
-
-  PrestaShopBundle\Form\Admin\ResetPasswordType:
-    autowire: true
+  PrestaShopBundle\Form\Admin\Login\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Login/*"
 
   PrestaShopBundle\Form\Admin\Type\DatePickerType:
     arguments:

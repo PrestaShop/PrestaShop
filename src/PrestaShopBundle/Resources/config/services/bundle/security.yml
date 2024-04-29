@@ -16,8 +16,9 @@ services:
 
   PrestaShopBundle\Security\Admin\EmployeePasswordResetter:
     autowire: true
+    lazy: true
     arguments:
-      $secret: '%kernel.secret%'
+      $cookieKey: '%cookie_key%'
 
   PrestaShopBundle\Security\Admin\AdminAuthenticationSuccessHandler:
     autowire: true

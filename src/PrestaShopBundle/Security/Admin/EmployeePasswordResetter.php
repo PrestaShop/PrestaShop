@@ -33,6 +33,7 @@ use Doctrine\ORM\UnexpectedResultException;
 use Mail;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Entity\Employee\Employee;
@@ -52,6 +53,8 @@ class EmployeePasswordResetter
         private readonly RouterInterface $router,
         private readonly TranslatorInterface $translator,
         private readonly ShopContext $shopContext,
+        private readonly Hashing $hashing,
+        private readonly string $cookieKey,
     ) {
     }
 
@@ -67,6 +70,54 @@ class EmployeePasswordResetter
         $this->checkLastSentMail($employee, $email);
         $this->updateEmployeeResetData($employee);
         $this->doSendResetEmail($employee);
+    }
+
+    public function getEmployeeByValidaResetPasswordToken(string $resetPasswordToken): ?Employee
+    {
+        try {
+            /** @var Employee|null $employee */
+            $employee = $this->employeeRepository->findOneBy(['resetPasswordToken' => $resetPasswordToken]);
+        } catch (UnexpectedResultException) {
+            return null;
+        }
+
+        if (!empty($employee)
+            && $employee->hasValidResetPasswordToken()
+            && $employee->getResetPasswordToken() === $resetPasswordToken) {
+            return $employee;
+        }
+
+        return null;
+    }
+
+    public function resetPassword(Employee $employee, string $newPassword): void
+    {
+        $employee
+            ->setResetPasswordValidity(null)
+            ->setResetPasswordToken(null)
+            ->setPassword($this->hashing->hash($newPassword, $this->cookieKey))
+            ->setPasswordLastGeneration(new DateTime())
+        ;
+        $this->entityManager->flush();
+
+        $params = [
+            '{email}' => $employee->getEmail(),
+            '{lastname}' => $employee->getLastName(),
+            '{firstname}' => $employee->getFirstName(),
+        ];
+        $employeeName = $this->translator->trans('%firstname% %lastname%', [
+            '%firstname%' => $employee->getFirstName(),
+            '%lastname%' => $employee->getLastName(),
+        ], 'Admin.Global');
+
+        Mail::Send(
+            $employee->getDefaultLanguage()->getId(),
+            'password',
+            $this->translator->trans('Your new password', [], 'Emails.Subject', $employee->getDefaultLanguage()->getLocale()),
+            $params,
+            $employee->getEmail(),
+            $employeeName,
+        );
     }
 
     private function checkLastSentMail(?Employee $employee, string $email): void
@@ -89,7 +140,7 @@ class EmployeePasswordResetter
                     $this->fakeSendEmail($unknownResetEmails, $email);
                 }
             }
-        } elseif ($employee->getResetPasswordValidity()->getTimestamp() > time()) {
+        } elseif ($employee->getResetPasswordValidity() && $employee->getResetPasswordValidity()->getTimestamp() > time()) {
             throw new PendingPasswordResetExistingException();
         }
     }

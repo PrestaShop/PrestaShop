@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -22,27 +23,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import 'prestakit/dist/js/prestashop-ui-kit';
-import 'jquery-ui-dist/jquery-ui';
 
-import LoginFormMap from '@pages/login/login-map';
-import onReady from '@components/on-ready';
+namespace PrestaShopBundle\Security\Admin\Exception;
 
-onReady(() => {
-  const loginForm = document.querySelector<HTMLFormElement>(LoginFormMap.loginForm);
-  const forgotPasswordForm = document.querySelector<HTMLFormElement>(LoginFormMap.forgotPasswordForm);
+use RuntimeException;
 
-  document.querySelector(LoginFormMap.forgotPasswordLink)?.addEventListener('click', (event) => {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    loginForm?.classList.add('d-none');
-    forgotPasswordForm?.classList.remove('d-none');
-  });
-
-  document.querySelector(LoginFormMap.cancelResetPasswordButton)?.addEventListener('click', (event) => {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    loginForm?.classList.remove('d-none');
-    forgotPasswordForm?.classList.add('d-none');
-  });
-});
+class InvalidResetPaswordTokenException extends RuntimeException
+{
+}

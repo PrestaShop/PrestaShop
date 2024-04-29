@@ -22,27 +22,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import 'prestakit/dist/js/prestashop-ui-kit';
-import 'jquery-ui-dist/jquery-ui';
 
-import LoginFormMap from '@pages/login/login-map';
-import onReady from '@components/on-ready';
-
-onReady(() => {
-  const loginForm = document.querySelector<HTMLFormElement>(LoginFormMap.loginForm);
-  const forgotPasswordForm = document.querySelector<HTMLFormElement>(LoginFormMap.forgotPasswordForm);
-
-  document.querySelector(LoginFormMap.forgotPasswordLink)?.addEventListener('click', (event) => {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    loginForm?.classList.add('d-none');
-    forgotPasswordForm?.classList.remove('d-none');
-  });
-
-  document.querySelector(LoginFormMap.cancelResetPasswordButton)?.addEventListener('click', (event) => {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    loginForm?.classList.remove('d-none');
-    forgotPasswordForm?.classList.add('d-none');
-  });
-});
+/**
+ * Defines all selectors that are used in employee add/edit form.
+ */
+export default {
+  loginForm: '#login_form',
+  forgotPasswordForm: '#forgot_password_form',
+  forgotPasswordLink: '#forgot-password-link',
+  cancelResetPasswordButton: '#reset_password_buttons_cancel',
+  passwordStrengthFeedbackContainer: '.password-strength-feedback',
+  resetNewPassword: '#reset_password_new_password_first',
+  resetNewPasswordConfirmation: '#reset_password_new_password_second',
+  resetSubmitButton: '#reset_password_submit_login',
+};

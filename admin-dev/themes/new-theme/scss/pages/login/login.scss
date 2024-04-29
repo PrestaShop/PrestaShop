@@ -53,9 +53,14 @@ label {
       }
     }
 
-    #forgot_password_form {
-      h4 {
-        text-align: center;
+    h4 {
+      text-align: center;
+    }
+
+    // Hide required asterisks
+    .required {
+      span.text-danger {
+        display: none;
       }
     }
   }
