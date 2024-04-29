@@ -70,7 +70,7 @@ class EmployeeProvider implements UserProviderInterface
             return $this->employees[$identifier];
         }
 
-        $this->employees[$identifier] = $this->loadEmployee($identifier);
+        $this->employees[$identifier] = $this->loadEmployee($identifier, false);
 
         return $this->employees[$identifier];
     }
@@ -89,7 +89,7 @@ class EmployeeProvider implements UserProviderInterface
         }
 
         // Always reload the employee regardless of the cache
-        $freshEmployee = $this->loadEmployee($user->getUserIdentifier());
+        $freshEmployee = $this->loadEmployee($user->getUserIdentifier(), true);
         // Update the cache so that loadUserByIdentifier is updated
         $this->employees[$user->getUserIdentifier()] = $freshEmployee;
 
@@ -108,10 +108,10 @@ class EmployeeProvider implements UserProviderInterface
         return $class === DoctrineEmployee::class;
     }
 
-    protected function loadEmployee(string $email): DoctrineEmployee
+    protected function loadEmployee(string $email, bool $refresh): DoctrineEmployee
     {
         /** @var DoctrineEmployee|null $doctrineEmployee */
-        $doctrineEmployee = $this->employeeRepository->loadEmployeeByIdentifier($email);
+        $doctrineEmployee = $this->employeeRepository->loadEmployeeByIdentifier($email, $refresh);
         if (empty($doctrineEmployee)) {
             throw new UserNotFoundException(sprintf('Identifier "%s" does not exist.', $email));
         }

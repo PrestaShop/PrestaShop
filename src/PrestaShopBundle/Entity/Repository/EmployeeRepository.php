@@ -43,12 +43,13 @@ class EmployeeRepository extends EntityRepository
      * join and heady hydration).
      *
      * @param string $userIdentifier
+     * @param bool $refresh Force return a fresh entity
      *
      * @return Employee|null
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function loadEmployeeByIdentifier(string $userIdentifier): ?Employee
+    public function loadEmployeeByIdentifier(string $userIdentifier, bool $refresh = false): ?Employee
     {
         $email = $this->idnConverter->emailToUtf8($userIdentifier);
         $qb = $this->createQueryBuilder('e');
@@ -64,7 +65,15 @@ class EmployeeRepository extends EntityRepository
             ->setParameter('email', $email)
         ;
 
-        return $qb->getQuery()->getOneOrNullResult();
+        // This method is involved in security worflow so we always need to be sure the returned data is up to date,
+        // since Doctrine caches the entities by default and the DB could be modified by legacy code we force doctrine
+        // to return a fresh entity.
+        $employee = $qb->getQuery()->getOneOrNullResult();
+        if ($employee && $refresh) {
+            $this->getEntityManager()->refresh($employee);
+        }
+
+        return $employee ?: null;
     }
 
     public function getIdnConverter(): InternationalizedDomainNameConverter
