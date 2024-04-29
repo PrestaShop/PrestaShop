@@ -433,8 +433,8 @@ class CartRuleRepository extends AbstractObjectModelRepository
     private function removeRestrictedCartRules(CartRuleId $cartRuleId): void
     {
         $this->connection->createQueryBuilder()
-            ->delete($this->dbPrefix . 'cart_rule_combination', 'crc')
-            ->where('crc.id_cart_rule_1 = :cartRuleId OR crc.id_cart_rule_2 = :cartRuleId')
+            ->delete($this->dbPrefix . 'cart_rule_combination')
+            ->where('id_cart_rule_1 = :cartRuleId OR id_cart_rule_2 = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
             ->executeStatement()
         ;
@@ -516,8 +516,8 @@ class CartRuleRepository extends AbstractObjectModelRepository
     private function removeRestrictionsByName(CartRuleId $cartRuleId, string $entityName)
     {
         $this->connection->createQueryBuilder()
-            ->delete($this->dbPrefix . 'cart_rule_' . $entityName, 'crc')
-            ->where('crc.id_cart_rule = :cartRuleId')
+            ->delete($this->dbPrefix . 'cart_rule_' . $entityName)
+            ->where('id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
             ->executeStatement()
         ;
