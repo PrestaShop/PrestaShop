@@ -62,6 +62,9 @@ services:
   PrestaShopBundle\Form\Admin\LoginType:
     autowire: true
 
+  PrestaShopBundle\Form\Admin\ResetPasswordType:
+    autowire: true
+
   PrestaShopBundle\Form\Admin\Type\DatePickerType:
     arguments:
       - '@PrestaShopBundle\Form\DataTransformer\ArabicToLatinDigitDataTransformer'

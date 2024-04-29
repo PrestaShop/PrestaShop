@@ -101,6 +101,7 @@ class ExternalLinkExtension extends AbstractTypeExtension
                 'attr' => [],
                 'align' => 'left',
                 'position' => 'append',
+                'open_in_new_tab' => true,
             ])
             ->setAllowedTypes('href', 'string')
             ->setAllowedTypes('text', 'string')
@@ -108,6 +109,7 @@ class ExternalLinkExtension extends AbstractTypeExtension
             ->setAllowedTypes('position', 'string')
             ->setAllowedTypes('attr', ['null', 'array'])
             ->setAllowedValues('position', ['append', 'prepend'])
+            ->setAllowedTypes('open_in_new_tab', 'bool')
         ;
 
         return $externalLinkResolver;

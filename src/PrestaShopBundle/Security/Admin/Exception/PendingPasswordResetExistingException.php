@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,19 +22,16 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+ */
 
-{# Prevent custom rendering from bootstrap theme for submit and checkbox #}
-{% block submit_row -%}
-  <div class="form-group{{ block('widget_type_class') }}{% if force_error|default(false) and not valid %} has-error{% endif %}{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}">
-    {{- form_widget(form) -}}
-  </div>
-{% endblock %}
+namespace PrestaShopBundle\Security\Admin\Exception;
 
-{% block checkbox_row %}
-  <div class="form-group{{ block('widget_type_class') }}{% if force_error|default(false) and not valid %} has-error{% endif %}{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}">
-    {{- form_widget(form) -}}
-    {{- block('form_external_link') -}}
-  </div>
-{% endblock %}
+use RuntimeException;
+
+/**
+ * This exception is sent by the EmployeePasswordResetter when a reset mail action is performed
+ * too soon.
+ */
+class PendingPasswordResetExistingException extends RuntimeException
+{
+}

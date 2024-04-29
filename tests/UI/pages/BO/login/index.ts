@@ -39,7 +39,7 @@ class Login extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'PrestaShop';
+    this.pageTitle = global.INSTALL.SHOP_NAME;
     this.loginErrorText = 'The employee does not exist, or the password provided is incorrect.';
     this.resetPasswordSuccessText = 'Please, check your mailbox.';
 

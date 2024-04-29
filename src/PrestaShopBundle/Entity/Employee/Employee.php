@@ -468,6 +468,15 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
         return $this;
     }
 
+    public function hasValidResetPasswordToken(): bool
+    {
+        return
+            !empty($this->resetPasswordToken)
+            && !empty($this->resetPasswordValidity)
+            && $this->resetPasswordValidity->getTimestamp() > time()
+        ;
+    }
+
     public function isHasEnabledGravatar(): bool
     {
         return $this->hasEnabledGravatar;

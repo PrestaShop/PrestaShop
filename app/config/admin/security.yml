@@ -44,4 +44,7 @@ security:
 
   access_control:
     - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/request-password-reset, roles: PUBLIC_ACCESS }
+    - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+    - { path: ^/$, roles: PUBLIC_ACCESS }
     - { path: ^/, roles: IS_AUTHENTICATED }

@@ -42,6 +42,13 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class TokenizedUrlsListener
 {
+    public const PUBLIC_ROUTES = [
+        'admin_login',
+        'admin_homepage',
+        'admin_request_password_reset',
+        'admin_reset_password',
+    ];
+
     public function __construct(
         private readonly RouterInterface $router,
         private readonly UserTokenManager $userTokenManager,
@@ -57,7 +64,7 @@ class TokenizedUrlsListener
             return;
         }
 
-        if (!$event->isMainRequest() || !($event instanceof RequestEvent) || $event->getRequest()->attributes->get('_route') === 'admin_login' || $event->getRequest()->attributes->get('_route') === 'admin_homepage') {
+        if (!$event->isMainRequest() || !($event instanceof RequestEvent) || in_array($event->getRequest()->attributes->get('_route'), self::PUBLIC_ROUTES)) {
             return;
         }
 

@@ -26,5 +26,20 @@
 import onReady from '@components/on-ready';
 
 onReady(() => {
-  // Login code here
+  const loginForm = document.querySelector<HTMLFormElement>('#login_form');
+  const forgotPasswordForm = document.querySelector<HTMLFormElement>('#forgot_password_form');
+
+  document.querySelector('#forgot-password-link')?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    loginForm?.classList.add('d-none');
+    forgotPasswordForm?.classList.remove('d-none');
+  });
+
+  document.querySelector('#reset_password_buttons_cancel')?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    loginForm?.classList.remove('d-none');
+    forgotPasswordForm?.classList.add('d-none');
+  });
 });

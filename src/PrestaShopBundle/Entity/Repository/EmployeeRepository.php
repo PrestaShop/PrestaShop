@@ -27,10 +27,13 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use PrestaShopBundle\Entity\Employee\Employee;
 
 class EmployeeRepository extends EntityRepository
 {
+    private InternationalizedDomainNameConverter $idnConverter;
+
     /**
      * This query is used by the authorization process when the full employee is needed,
      * we optimized it to avoid lazy loading on too many relations. We don't join the
@@ -47,6 +50,7 @@ class EmployeeRepository extends EntityRepository
      */
     public function loadEmployeeByIdentifier(string $userIdentifier): ?Employee
     {
+        $email = $this->idnConverter->emailToUtf8($userIdentifier);
         $qb = $this->createQueryBuilder('e');
         $qb
             ->leftJoin('e.profile', 'p')
@@ -56,10 +60,22 @@ class EmployeeRepository extends EntityRepository
             ->addSelect('p')
             ->addSelect('l')
             ->addSelect('s')
-            ->where('e.email = :userIdentifier')
-            ->setParameter('userIdentifier', $userIdentifier)
+            ->where('e.email = :email')
+            ->setParameter('email', $email)
         ;
 
         return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    public function getIdnConverter(): InternationalizedDomainNameConverter
+    {
+        return $this->idnConverter;
+    }
+
+    public function setIdnConverter(InternationalizedDomainNameConverter $idnConverter): EmployeeRepository
+    {
+        $this->idnConverter = $idnConverter;
+
+        return $this;
     }
 }

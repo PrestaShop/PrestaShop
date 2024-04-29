@@ -2,6 +2,10 @@ body {
   font-size: 12px;
 }
 
+label {
+  font-size: 14px;
+}
+
 #login-panel {
   position: relative;
   width: 500px;
@@ -29,6 +33,30 @@ body {
     .submit-widget button {
       width: 100%;
       text-transform: uppercase;
+    }
+
+    #login_form {
+      .checkbox-widget {
+        position: relative;
+
+        .form-external-link {
+          position: absolute;
+          top: 0;
+          right: 0;
+
+          a.btn {
+            padding: 0;
+            font-size: 12px;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+
+    #forgot_password_form {
+      h4 {
+        text-align: center;
+      }
     }
   }
 

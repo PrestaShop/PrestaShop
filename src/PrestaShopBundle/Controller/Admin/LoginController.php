@@ -34,9 +34,16 @@ use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Form\Admin\LoginType;
+use PrestaShopBundle\Form\Admin\ResetPasswordType;
+use PrestaShopBundle\Security\Admin\EmployeePasswordResetter;
+use PrestaShopBundle\Security\Admin\Exception\PendingPasswordResetExistingException;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Throwable;
 
 class LoginController extends PrestaShopAdminController
 {
@@ -63,12 +70,9 @@ class LoginController extends PrestaShopAdminController
         }
 
         $loginForm = $this->createForm(LoginType::class);
+        $resetPasswordForm = $this->createForm(ResetPasswordType::class);
 
-        return $this->render('@PrestaShop/Admin/Login/login.html.twig', [
-            'loginForm' => $loginForm,
-            'imgDir' => $this->shopContext->getBaseURI() . 'img/',
-            'shopName' => $this->getConfiguration()->get('PS_SHOP_NAME'),
-        ]);
+        return $this->renderLoginPage($loginForm, $resetPasswordForm, false);
     }
 
     /**
@@ -127,5 +131,60 @@ class LoginController extends PrestaShopAdminController
         }
 
         return $this->redirectToRoute('admin_login');
+    }
+
+    public function requestPasswordResetAction(Request $request, EmployeePasswordResetter $employeePasswordResetter): Response
+    {
+        $loginForm = $this->createForm(LoginType::class);
+        $resetPasswordForm = $this->createForm(ResetPasswordType::class);
+        $resetPasswordForm->handleRequest($request);
+
+        if ($resetPasswordForm->isSubmitted()) {
+            if ($resetPasswordForm->isValid()) {
+                $email = $resetPasswordForm->get('email_forgot')->getData();
+                $infoMessage = $errorMessage = null;
+                try {
+                    $employeePasswordResetter->sendResetEmail($email);
+                    $infoMessage = $this->trans('Please, check your mailbox. A link to reset your password has been sent to you.', [], 'Admin.Login.Notification');
+                } catch (UserNotFoundException) {
+                    // If the email doesn't match a known employee we still display a generic error message to avoid any hacker using this
+                    // to find out the employee's emails via brute force.
+                    $infoMessage = $this->trans('Please, check your mailbox. A link to reset your password has been sent to you.', [], 'Admin.Login.Notification');
+                } catch (PendingPasswordResetExistingException) {
+                    $validityDuration = (int) ($this->getConfiguration()->get('PS_PASSWD_RESET_VALIDITY') ?: 1440);
+                    $errorMessage = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', ['%interval%' => $validityDuration], 'Admin.Login.Notification');
+                } catch (Throwable) {
+                    $errorMessage = $this->trans('An error occurred while attempting to reset your password.', [], 'Admin.Login.Notification');
+                }
+
+                if (!empty($infoMessage)) {
+                    $this->addFlash('info', $infoMessage);
+                } elseif (!empty($errorMessage)) {
+                    $this->addFlash('error', $errorMessage);
+                }
+
+                return $this->redirectToRoute('admin_login');
+            }
+
+            return $this->renderLoginPage($loginForm, $resetPasswordForm, true);
+        }
+
+        return $this->redirectToRoute('admin_login');
+    }
+
+    public function resetPasswordAction(Request $request, string $resetToken): Response
+    {
+        return $this->redirectToRoute('admin_login');
+    }
+
+    private function renderLoginPage(FormInterface $loginForm, FormInterface $resetPasswordForm, bool $showResetForm): Response
+    {
+        return $this->render('@PrestaShop/Admin/Login/login.html.twig', [
+            'loginForm' => $loginForm->createView(),
+            'resetPasswordForm' => $resetPasswordForm->createView(),
+            'showResetForm' => $showResetForm,
+            'imgDir' => $this->shopContext->getBaseURI() . 'img/',
+            'shopName' => $this->getConfiguration()->get('PS_SHOP_NAME'),
+        ]);
     }
 }
