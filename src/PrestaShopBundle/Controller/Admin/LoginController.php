@@ -43,7 +43,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Throwable;
 
 class LoginController extends PrestaShopAdminController
@@ -64,7 +66,7 @@ class LoginController extends PrestaShopAdminController
      *
      * @return Response
      */
-    public function loginAction(Security $security): Response
+    public function loginAction(Security $security, AuthenticationUtils $authenticationUtils): Response
     {
         if ($security->getUser()) {
             return $this->redirectToRoute('admin_homepage');
@@ -72,6 +74,10 @@ class LoginController extends PrestaShopAdminController
 
         $loginForm = $this->createForm(LoginType::class);
         $requestPasswordResetForm = $this->createForm(RequestPasswordResetType::class);
+
+        if ($authenticationUtils->getLastAuthenticationError() instanceof AuthenticationException) {
+            $this->addFlash('error', $this->trans('The employee does not exist, or the password provided is incorrect.', [], 'Admin.Login.Notification'));
+        }
 
         return $this->renderLoginPage($loginForm, $requestPasswordResetForm, false);
     }
