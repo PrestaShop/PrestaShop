@@ -457,7 +457,7 @@ abstract class PaymentModuleCore extends Module
                     'id_product' => $product['id_product'],
                     'id_product_attribute' => $product['id_product_attribute'],
                     'reference' => $product['reference'],
-                    'name' => (!empty($product['attributes']) ? ' - ' . $product['attributes'] : ''),
+                    'name' => $product['name'] . (!empty($product['attributes']) ? ' - ' . $product['attributes'] : ''),
                     'price' => Tools::getContextLocale($this->context)->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
                     'quantity' => $product['quantity'],
                     'customization' => [],
