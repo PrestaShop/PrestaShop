@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Group;
 use PrestaShop\PrestaShop\Adapter\Entity\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Entity\ImageType;
 use PrestaShop\PrestaShop\Adapter\Entity\Language as EntityLanguage;
+use PrestaShop\PrestaShop\Adapter\Entity\Link;
 use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
 use PrestaShop\PrestaShop\Adapter\Entity\Module as ModuleEntity;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
@@ -1218,6 +1219,36 @@ class Install extends AbstractInstall
         foreach ($languages as $iso) {
             $this->copyLanguageImages($iso);
         }
+
+        return true;
+    }
+
+    public function finalize(?string $randomizedAdminFolderName = null): bool
+    {
+        $adminFolder = 'admin-dev';
+        if (file_exists(_PS_ROOT_DIR_ . '/admin/')) {
+            $randomizedAdminFolderName = $randomizedAdminFolderName ?? sprintf(
+                'admin%03d%s/',
+                mt_rand(0, 999),
+                Tools::strtolower(Tools::passwdGen(16))
+            );
+            $adminFolder = $randomizedAdminFolderName;
+
+            // rename folder
+            if (@rename(_PS_ROOT_DIR_ . '/admin/', _PS_ROOT_DIR_ . '/' . $randomizedAdminFolderName)) {
+                $successLogMessage = sprintf('The admin folder was renamed into %s', $randomizedAdminFolderName);
+                $this->getLogger()->log($successLogMessage);
+                $this->clearCache();
+            } else {
+                $this->setError($this->translator->trans('The admin folder could not be renamed into %folderName%', ['%folderName%' => $randomizedAdminFolderName], 'Install'));
+
+                return false;
+            }
+        }
+        Context::getContext()->shop = new Shop(1);
+        Context::getContext()->link = new Link();
+        $adminUrl = rtrim(Context::getContext()->link->getAdminBaseLink(), '/') . '/' . $adminFolder;
+        $this->getLogger()->log(sprintf('You can now access your backoffice at %s.', $adminUrl));
 
         return true;
     }
