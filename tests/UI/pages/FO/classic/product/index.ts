@@ -175,15 +175,15 @@ class Product extends FOBasePage {
 
   private readonly closeReviewSentConfirmationModalButton: string;
 
-  private readonly productInPackList: (productInList: number) => string;
+  protected readonly productInPackList: (productInList: number) => string;
 
-  private readonly productInPackImage: (productInList: number) => string;
+  protected productInPackImage: (productInList: number) => string;
 
-  private readonly productInPackName: (productInList: number) => string;
+  protected productInPackName: (productInList: number) => string;
 
-  private readonly productInPackPrice: (productInList: number) => string;
+  protected productInPackPrice: (productInList: number) => string;
 
-  private readonly productInPackQuantity: (productInList: number) => string;
+  protected productInPackQuantity: (productInList: number) => string;
 
   private readonly productsBlock: (blockName: string) => string;
 
@@ -452,6 +452,19 @@ class Product extends FOBasePage {
       price: await this.getTextContent(page, this.productInPackPrice(productIdentifier)),
       quantity: await this.getNumberFromText(page, this.productInPackQuantity(productIdentifier)),
     };
+  }
+
+  /**
+   * Click on product in pack
+   * @param page {Page} Browser tab
+   * @param productInList {number} Product in pack list
+   * @returns {Promise<void>}
+   */
+  async clickProductInPackList(page: Page, productInList: number = 1): Promise<void> {
+    // Add +1 due to span before the article
+    const productIdentifier: number = productInList + 1;
+
+    return this.clickAndWaitForURL(page, this.productInPackName(productIdentifier));
   }
 
   /**

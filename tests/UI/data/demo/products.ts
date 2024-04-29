@@ -89,6 +89,12 @@ export default {
     id: 5,
     name: 'Today is a good day Framed poster',
     reference: 'demo_7',
+    attributes: [
+      {
+        name: 'dimension',
+        values: ['40x60cm', '60x90cm', '80x120cm'],
+      },
+    ],
     price: 34.80,
     status: true,
   }),
@@ -198,6 +204,14 @@ export default {
     price: 9,
     finalPrice: 10.80,
     quantity: 300,
+    status: true,
+  }),
+  demo_21: new ProductData({
+    id: 15,
+    name: 'Pack Mug + Framed poster',
+    nameFR: 'Pack Mug + Affiche encadrée',
+    reference: 'demo_21',
+    category: 'Home Accessories',
     status: true,
   }),
 };

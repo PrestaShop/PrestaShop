@@ -38,6 +38,14 @@ class ProductPage extends Product {
     // Product prices block
     this.productPricesBlock = 'div.product__prices';
     this.productPrice = `${this.productPricesBlock} .product__current-price`;
+
+    // Products in pack selectors
+    this.productInPackImage = (productInList: number) => `${this.productInPackList(productInList)} div.product-pack__image img`;
+    this.productInPackName = (productInList: number) => `${this.productInPackList(productInList)} p.product-pack__name`;
+    this.productInPackPrice = (productInList: number) => `${this.productInPackList(productInList)} p.product-pack__price `
+      + 'strong';
+    this.productInPackQuantity = (productInList: number) => `${this.productInPackList(productInList)}`
+      + ' p.product-pack__quantity';
   }
 
   /**
