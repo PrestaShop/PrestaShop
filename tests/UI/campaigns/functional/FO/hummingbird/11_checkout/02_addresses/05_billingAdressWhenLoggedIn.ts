@@ -73,7 +73,7 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
       expect(isCheckoutPage).to.eq(true);
     });
 
-    it('should sign in by created customer', async function () {
+    it('should sign in by default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await checkoutPage.clickOnSignIn(page);
