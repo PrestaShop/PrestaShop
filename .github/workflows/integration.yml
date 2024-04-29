@@ -29,6 +29,7 @@ jobs:
       - name: Setup MariaDB
         uses: getong/mariadb-action@v1.1
         with:
+          mariadb version: '11.3.2'
           mysql database: 'prestashop'
           mysql root password: 'password'
       - name: Setup Node
