@@ -26,10 +26,9 @@ jobs:
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup MySQL
-        uses: mirromutth/mysql-action@v1.1
+      - name: Setup MariaDB
+        uses: getong/mariadb-action@v1.1
         with:
-          mysql version: '8.0'
           mysql database: 'prestashop'
           mysql root password: 'password'
       - name: Setup Node
@@ -74,8 +73,8 @@ jobs:
       - name: Build all assets
         run: make assets
 
-      - name: Change MySQL authentication method
-        run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
+      - name: Change MariaDB authentication method
+        run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password USING PASSWORD('password'); FLUSH PRIVILEGES;"
 
       - name: Run integration-tests
         run: composer run-script integration-tests --timeout=0
