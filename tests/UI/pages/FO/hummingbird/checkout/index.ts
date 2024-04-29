@@ -81,7 +81,7 @@ class Checkout extends CheckoutPage {
    * Get product details
    * @param page {Page} Browser tab
    * @param productRow {number} Product row in details block
-   * @returns {Promise<ProductDetailsBasic>
+   * @returns {Promise<ProductDetailsBasic>}
    */
   async getProductDetails(page: Page, productRow: number): Promise<ProductDetailsBasic> {
     return {
@@ -90,6 +90,15 @@ class Checkout extends CheckoutPage {
       quantity: parseInt((await this.getTextContent(page, this.productDetailsBody(productRow))).split('Quantity x')[1], 10),
       price: await this.getPriceFromText(page, this.productDetailsPrice(productRow)),
     };
+  }
+
+  /**
+   * Check if the Adresses Step is displayed
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isAdressesStep(page: Page): Promise<boolean> {
+    return this.elementVisible(page, `${this.addressStepSection}.checkout__steps--current`, 1000);
   }
 }
 

@@ -425,7 +425,7 @@ class CheckoutPage extends FOBasePage {
    * Get product details
    * @param page {Page} Browser tab
    * @param productRow {number} Product row in details block
-   * @returns {Promise<ProductDetailsBasic>
+   * @returns {Promise<ProductDetailsBasic>}
    */
   async getProductDetails(page: Page, productRow: number): Promise<ProductDetailsBasic> {
     return {
@@ -688,6 +688,18 @@ class CheckoutPage extends FOBasePage {
   }
 
   /**
+   * Return if the delivery address is selected
+   * @param page {Page} Browser tab
+   * @param row {number} The row of the address
+   * @returns {Promise<boolean>}
+   */
+  async isDeliveryAdressSelected(page: Page, row: number): Promise<boolean> {
+    const addressID = await this.getDeliveryAddressID(page, row);
+
+    return this.isChecked(page, this.deliveryAddressRadioButton(addressID));
+  }
+
+  /**
    * Select invoice address
    * @param page {Page} Browser tab
    * @param row {number} The row of the address
@@ -695,6 +707,18 @@ class CheckoutPage extends FOBasePage {
   async selectInvoiceAddress(page: Page, row: number = 1): Promise<void> {
     const addressID = await this.getInvoiceAddressID(page, row);
     await this.setChecked(page, this.invoiceAddressRadioButton(addressID), true);
+  }
+
+  /**
+   * Return if the invoice address is selected
+   * @param page {Page} Browser tab
+   * @param row {number} The row of the address
+   * @returns {Promise<boolean>}
+   */
+  async isInvoiceAdressSelected(page: Page, row: number): Promise<boolean> {
+    const addressID = await this.getInvoiceAddressID(page, row);
+
+    return this.isChecked(page, this.invoiceAddressRadioButton(addressID));
   }
 
   /**
@@ -711,14 +735,14 @@ class CheckoutPage extends FOBasePage {
    * Is address form visible
    * @param page {Page} Browser tab
    */
-  isAddressFormVisible(page: Page): Promise<boolean> {
+  async isAddressFormVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.addressStepCreateAddressForm, 2000);
   }
 
   /**
    * Fill address form, used for delivery and invoice addresses
    * @param page {Page} Browser tab
-   * @param address {AddressData} Address's information to fill form with
+   * @param address {FakerAddress} Address's information to fill form with
    * @returns {Promise<void>}
    */
   async fillAddressForm(page: Page, address: FakerAddress): Promise<void> {
@@ -743,7 +767,7 @@ class CheckoutPage extends FOBasePage {
   /**
    * Set invoice address
    * @param page {Page} Browser tab
-   * @param invoiceAddress {AddressData} Address's information to fill form with
+   * @param invoiceAddress {FakerAddress} Address's information to fill form with
    */
   async setInvoiceAddress(page: Page, invoiceAddress: FakerAddress): Promise<boolean> {
     await this.fillAddressForm(page, invoiceAddress);
@@ -760,8 +784,8 @@ class CheckoutPage extends FOBasePage {
   /**
    * Set address step
    * @param page {Page} Browser tab
-   * @param deliveryAddress {AddressData|null} Address's information to add (for delivery)
-   * @param invoiceAddress {AddressData|null} Address's information to add (for invoice)
+   * @param deliveryAddress {FakerAddress} Address's information to add (for delivery)
+   * @param invoiceAddress {FakerAddress|null} Address's information to add (for invoice)
    * @returns {Promise<boolean>}
    */
   async setAddress(page: Page, deliveryAddress: FakerAddress, invoiceAddress: FakerAddress | null = null): Promise<boolean> {
@@ -864,11 +888,11 @@ class CheckoutPage extends FOBasePage {
   }
 
   /**
-   * Check if the Delivery Step is displayed
+   * Check if the Adresses Step is displayed
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isDeliveryStep(page: Page): Promise<boolean> {
+  async isAdressesStep(page: Page): Promise<boolean> {
     await this.waitForVisibleSelector(page, this.addressStepContent);
 
     return this.elementVisible(page, this.addressStepContent, 1000);
