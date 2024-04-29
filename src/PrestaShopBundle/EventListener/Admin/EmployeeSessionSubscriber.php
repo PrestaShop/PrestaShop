@@ -37,6 +37,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -71,7 +72,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
             AuthenticationTokenCreatedEvent::class => 'createEmployeeSession',
             LoginSuccessEvent::class => 'onLoginSuccess',
             // Must be executed after the firewall listener
-            KernelEvents::REQUEST => [['checkEmployeeSession', 7]],
+            KernelEvents::REQUEST => [['onKernelRequest', 7]],
             LogoutEvent::class => 'onLogout',
             TokenDeauthenticatedEvent::class => 'cleanEmployeeSessions',
         ];
@@ -105,28 +106,11 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
             $event->setResponse($eventResponse);
         }
 
-        // Update legacy cookie for backward compatibility, simply set the values and let the cookie write itself
-        $legacyCookie = $this->legacyContext->getContext()->cookie;
-
-        // Mimic AdminLogin login action
-        $legacyCookie->remote_addr = (int) ip2long($event->getRequest()->getClientIp());
-        $employee = $this->security->getUser();
-        if ($employee instanceof Employee) {
-            $legacyCookie->id_employee = $employee->getId();
-            $legacyCookie->email = $employee->getEmail();
-            $legacyCookie->profile = $employee->getProfile()->getId();
-            $legacyCookie->passwd = $employee->getPassword();
-        }
-
-        // Mimic Cookie::registerSession behaviour
-        $employeeSession = $this->getEmployeeSessionFromToken();
-        if ($employeeSession instanceof EmployeeSession) {
-            $legacyCookie->session_id = $employeeSession->getId();
-            $legacyCookie->session_token = $employeeSession->getToken();
-        }
+        // Update the cookie after successful login
+        $this->updateLegacyCookie($event->getRequest());
     }
 
-    public function checkEmployeeSession(KernelEvent $event): void
+    public function onKernelRequest(KernelEvent $event): void
     {
         if (!$this->security->getUser() instanceof Employee) {
             return;
@@ -146,7 +130,13 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         if (!$employee->hasSession($employeeSession->getId(), $employeeSession->getToken())) {
             $this->logger->debug(sprintf('Employee lo longer has this session token: %d:%s', $employeeSession->getId(), $employeeSession->getToken()));
             $this->security->logout(false);
+
+            return;
         }
+
+        // Update the legacy cookie on each request in case it has been modified, this way we make sure the legacy modules and
+        // legacy controllers that rely on it always have up-to-date info
+        $this->updateLegacyCookie($event->getRequest());
     }
 
     public function cleanEmployeeSessions(TokenDeauthenticatedEvent $event): void
@@ -185,5 +175,30 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         }
 
         return $this->security->getToken()->getAttribute(self::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE);
+    }
+
+    /**
+     * Update legacy cookie for backward compatibility, simply set the values and let the cookie write itself
+     */
+    protected function updateLegacyCookie(Request $request): void
+    {
+        $legacyCookie = $this->legacyContext->getContext()->cookie;
+
+        // Mimic AdminLogin login action
+        $legacyCookie->remote_addr = (int) ip2long($request->getClientIp());
+        $employee = $this->security->getUser();
+        if ($employee instanceof Employee) {
+            $legacyCookie->id_employee = $employee->getId();
+            $legacyCookie->email = $employee->getEmail();
+            $legacyCookie->profile = $employee->getProfile()->getId();
+            $legacyCookie->passwd = $employee->getPassword();
+        }
+
+        // Mimic Cookie::registerSession behaviour
+        $employeeSession = $this->getEmployeeSessionFromToken();
+        if ($employeeSession instanceof EmployeeSession) {
+            $legacyCookie->session_id = $employeeSession->getId();
+            $legacyCookie->session_token = $employeeSession->getToken();
+        }
     }
 }
