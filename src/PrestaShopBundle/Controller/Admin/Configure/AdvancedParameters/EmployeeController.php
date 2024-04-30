@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use Exception;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
@@ -52,30 +53,20 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintE
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface;
-use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\Employee\Employee;
-use PrestaShopBundle\Entity\Repository\EmployeeRepository;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
-use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Class EmployeeController handles pages under "Configure > Advanced Parameters > Team > Employees".
  */
 class EmployeeController extends FrameworkBundleAdminController
 {
-    public function __construct(
-        private readonly CsrfTokenManagerInterface $csrfTokenManager,
-    ) {
-    }
-
     /**
      * Show employees list & options page.
      *
@@ -324,12 +315,10 @@ class EmployeeController extends FrameworkBundleAdminController
      * @return Response
      */
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
-    public function editAction($employeeId, Request $request, TokenStorageInterface $tokenStorage, EmployeeRepository $employeeRepository)
+    public function editAction(int $employeeId, Request $request, EmployeeContext $employeeContext)
     {
-        $contextEmployeeProvider = $this->get('prestashop.adapter.data_provider.employee');
-
         // If employee is editing his own profile - he doesn't need to have access to the edit form.
-        if ($contextEmployeeProvider->getId() != $employeeId) {
+        if ($employeeContext->getEmployee()->getId() != $employeeId) {
             if (!$this->isGranted(Permission::UPDATE, $request->get('_legacy_controller'))) {
                 $this->addFlash(
                     'error',
@@ -374,30 +363,7 @@ class EmployeeController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
-                // If we are editing our own profile, we must set a new token before redirect to avoid compromised page
-                $redirectParameters = ['employeeId' => $result->getIdentifiableObjectId()];
-                if ($contextEmployeeProvider->getId() === $result->getIdentifiableObjectId()) {
-                    // Get the ne update employee data
-                    $employeeEmail = $employeeForm->get('email')->getData();
-                    $freshEmployee = $employeeRepository->loadEmployeeByIdentifier($employeeEmail, true);
-
-                    // Update the token user so that it is serialized and its data match the updated DB employee
-                    $token = $tokenStorage->getToken();
-                    $token->setUser($freshEmployee);
-                    $tokenStorage->setToken($token);
-
-                    // Generate an url with a new token to avoid a compromised url
-                    $redirectUrl = $this->generateUrl('admin_employees_edit', $redirectParameters);
-                    $redirectUrl = UrlCleaner::cleanUrl($redirectUrl, ['_token']);
-                    $newToken = $this->csrfTokenManager
-                        ->refreshToken($employeeEmail)
-                        ->getValue();
-                    $securedNewUrl = Router::generateTokenizedUrl($redirectUrl, $newToken);
-
-                    return $this->redirect($securedNewUrl);
-                }
-
-                return $this->redirectToRoute('admin_employees_edit', $redirectParameters);
+                return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));

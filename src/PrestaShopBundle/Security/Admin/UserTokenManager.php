@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Security\Admin;
 
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -38,7 +39,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  * on a single homogeneous implementation in the whole back office. It can generate symfony CSRF tokens (not legacy
  * ones so far because not needed but it could) and validate both legacy and CSRF tokens.
  */
-class UserTokenManager
+class UserTokenManager implements CacheClearerInterface
 {
     /**
      * @var array
@@ -91,6 +92,11 @@ class UserTokenManager
         }
 
         return false;
+    }
+
+    public function clear()
+    {
+        $this->tokens = [];
     }
 
     private function isCsrfTokenValid(string $tokenValue): bool
