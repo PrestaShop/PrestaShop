@@ -28,9 +28,11 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Manages Error pages (e.g. 500)
@@ -54,8 +56,14 @@ class ErrorController extends PrestaShopAdminController
         );
     }
 
-    public function showAction(): Response
+    public function showAction(Throwable $exception): Response
     {
-        return $this->render('@PrestaShop/Admin/Exception/error.html.twig');
+        $flattenException = FlattenException::createFromThrowable($exception);
+        $errorTemplate = match ($flattenException->getStatusCode()) {
+            404 => '@PrestaShop/Admin/Error/error404.html.twig',
+            default => '@PrestaShop/Admin/Error/error.html.twig',
+        };
+
+        return $this->render($errorTemplate);
     }
 }
