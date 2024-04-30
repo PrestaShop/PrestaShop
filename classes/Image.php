@@ -54,9 +54,6 @@ class ImageCore extends ObjectModel
     /** @var string image extension */
     public $image_format = 'jpg';
 
-    /** @var string path to index.php file to be copied to new image folders */
-    public $source_index;
-
     /** @var string image folder */
     protected $folder;
 
@@ -101,7 +98,6 @@ class ImageCore extends ObjectModel
     {
         parent::__construct($id, $idLang, $id_shop, $translator);
         $this->image_dir = _PS_PRODUCT_IMG_DIR_;
-        $this->source_index = _PS_PRODUCT_IMG_DIR_ . 'index.php';
     }
 
     /**
@@ -782,13 +778,6 @@ class ImageCore extends ObjectModel
             // Apparently sometimes mkdir cannot set the rights, and sometimes chmod can't. Trying both.
             $success = @mkdir(_PS_PRODUCT_IMG_DIR_ . $this->getImgFolder(), self::$access_rights, true);
             $chmod = @chmod(_PS_PRODUCT_IMG_DIR_ . $this->getImgFolder(), self::$access_rights);
-
-            // Create an index.php file in the new folder
-            if (($success || $chmod)
-                && !file_exists(_PS_PRODUCT_IMG_DIR_ . $this->getImgFolder() . 'index.php')
-                && file_exists($this->source_index)) {
-                return @copy($this->source_index, _PS_PRODUCT_IMG_DIR_ . $this->getImgFolder() . 'index.php');
-            }
         }
 
         return true;
