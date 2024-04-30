@@ -304,7 +304,7 @@ class CartRuleCalculator
     }
 
     /**
-     * @param \PrestaShop\PrestaShop\Core\Cart\Calculator $calculator
+     * @param Calculator $calculator
      *
      * @return CartRuleCalculator
      */
