@@ -24,6 +24,17 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.1.4 - (2024-02-12)
+####################################
+
+- Front Office:
+  - Improvement:
+    - GHSA-7pjr-2rgh-fc5g Fix invoice access vulnerability in FO (by @matthieu-rolland & @m0rgan01)
+- Core
+  - Imrovement:
+    - GHSA-45vm-3j38-7p78 Fix XSS vulnerability from FO contact form to BO (by @m0rgan01 & @matthieu-rolland)
+
+####################################
 #   v8.1.5 - (2024-03-07)
 ####################################
 - Back Office:
