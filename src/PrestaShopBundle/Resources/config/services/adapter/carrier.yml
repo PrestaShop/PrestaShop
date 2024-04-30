@@ -2,6 +2,8 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository:
+
   prestashop.adapter.carrier.carrier_thumbnail_logo_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierThumbnailLogoProvider'
     arguments:
