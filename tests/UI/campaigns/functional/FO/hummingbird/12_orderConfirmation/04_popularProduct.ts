@@ -131,16 +131,14 @@ describe('FO - Order confirmation : Popular product', async () => {
     it('should check popular product title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProducts', baseContext);
 
-      await homePage.changeLanguage(page, 'en');
-
-      const popularProductTitle = await orderConfirmationPage.getBlockTitle(page, 'popularproducts');
+      const popularProductTitle = await orderConfirmationPage.getBlockTitle(page);
       expect(popularProductTitle).to.equal('Popular Products');
     });
 
     it('should check the number of popular products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProductsNumber', baseContext);
 
-      const productsNumber = await orderConfirmationPage.getProductsBlockNumber(page, 'popularproducts');
+      const productsNumber = await orderConfirmationPage.getProductsBlockNumber(page);
       expect(productsNumber).to.equal(8);
     });
 

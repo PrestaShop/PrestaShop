@@ -1,9 +1,9 @@
 // Import pages
 import FOBasePage from '@pages/FO/FObasePage';
+import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import type {Page} from 'playwright';
 import type {ProductOrderConfirmation} from '@data/types/product';
-import {quickViewModal} from "@pages/FO/classic/modal/quickView";
 
 /**
  * Order confirmation page, contains functions that can be used on the page
@@ -63,21 +63,21 @@ class OrderConfirmationPage extends FOBasePage {
 
   protected shippingMethodRow: string;
 
-  private readonly productsBlock: (blockId: string) => string;
+  protected productsBlock: string;
 
-  private readonly productsBlockTitle: (blockId: string) => string;
+  protected productsBlockTitle: string;
 
-  private readonly productsBlockDiv: (blockId: string) => string;
+  protected productsBlockDiv: string;
 
-  private readonly allProductsLink: string;
+  protected allProductsLink: string;
 
-  private readonly productArticle: (row: number) => string;
+  protected productArticle: (row: number) => string;
 
-  private readonly productImg: (row: number) => string;
+  protected productImg: (row: number) => string;
 
-  private readonly productDescriptionDiv: (row: number) => string;
+  protected productDescriptionDiv: (row: number) => string;
 
-  private readonly productQuickViewLink: (row: number) => string;
+  protected productQuickViewLink: (row: number) => string;
 
   /**
    * @constructs
@@ -116,11 +116,11 @@ class OrderConfirmationPage extends FOBasePage {
     this.productRowPrices = (row: number) => `${this.productRowNth(row)} div.qty div`;
 
     // Selectors for popular products block
-    this.productsBlock = (blockName: string) => `#content-hook-order-confirmation-footer section[data-type="${blockName}"]`;
-    this.productsBlockTitle = (blockName: string) => `${this.productsBlock(blockName)} h2`;
-    this.productsBlockDiv = (blockName: string) => `${this.productsBlock(blockName)} div.products div.js-product`;
+    this.productsBlock = '#content-hook-order-confirmation-footer section[data-type="popularproducts"]';
+    this.productsBlockTitle = `${this.productsBlock} h2`;
+    this.productsBlockDiv = `${this.productsBlock} div.products div.js-product`;
     this.allProductsLink = '#content-hook-order-confirmation-footer a.all-product-link';
-    this.productArticle = (row: number) => `${this.productsBlock('popularproducts')} .products `
+    this.productArticle = (row: number) => `${this.productsBlock} .products `
       + `div:nth-child(${row}) article`;
     this.productImg = (row: number) => `${this.productArticle(row)} img`;
     this.productDescriptionDiv = (row: number) => `${this.productArticle(row)} div.product-description`;
@@ -301,21 +301,19 @@ class OrderConfirmationPage extends FOBasePage {
   /**
    * Get products block title
    * @param page {Page} Browser tab
-   * @param blockName {string} The block name in the page
    * @returns {Promise<string>}
    */
-  async getBlockTitle(page: Page, blockName: string): Promise<string> {
-    return this.getTextContent(page, this.productsBlockTitle(blockName));
+  async getBlockTitle(page: Page): Promise<string> {
+    return this.getTextContent(page, this.productsBlockTitle);
   }
 
   /**
    * Get products block number
-   * @param blockName {string} The block name in the page
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  async getProductsBlockNumber(page: Page, blockName: string): Promise<number> {
-    return page.locator(this.productsBlockDiv(blockName)).count();
+  async getProductsBlockNumber(page: Page): Promise<number> {
+    return page.locator(this.productsBlockDiv).count();
   }
 
   /**
