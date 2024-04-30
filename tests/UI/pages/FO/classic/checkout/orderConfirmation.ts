@@ -3,6 +3,7 @@ import FOBasePage from '@pages/FO/FObasePage';
 
 import type {Page} from 'playwright';
 import type {ProductOrderConfirmation} from '@data/types/product';
+import {quickViewModal} from "@pages/FO/classic/modal/quickView";
 
 /**
  * Order confirmation page, contains functions that can be used on the page
@@ -62,6 +63,22 @@ class OrderConfirmationPage extends FOBasePage {
 
   protected shippingMethodRow: string;
 
+  private readonly productsBlock: (blockId: string) => string;
+
+  private readonly productsBlockTitle: (blockId: string) => string;
+
+  private readonly productsBlockDiv: (blockId: string) => string;
+
+  private readonly allProductsLink: string;
+
+  private readonly productArticle: (row: number) => string;
+
+  private readonly productImg: (row: number) => string;
+
+  private readonly productDescriptionDiv: (row: number) => string;
+
+  private readonly productQuickViewLink: (row: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on order confirmation page
@@ -97,6 +114,17 @@ class OrderConfirmationPage extends FOBasePage {
     this.productRowImage = (row: number) => `${this.productRowNth(row)} span.image img`;
     this.productRowDetails = (row: number) => `${this.productRowNth(row)} div.details`;
     this.productRowPrices = (row: number) => `${this.productRowNth(row)} div.qty div`;
+
+    // Selectors for popular products block
+    this.productsBlock = (blockName: string) => `#content-hook-order-confirmation-footer section[data-type="${blockName}"]`;
+    this.productsBlockTitle = (blockName: string) => `${this.productsBlock(blockName)} h2`;
+    this.productsBlockDiv = (blockName: string) => `${this.productsBlock(blockName)} div.products div.js-product`;
+    this.allProductsLink = '#content-hook-order-confirmation-footer a.all-product-link';
+    this.productArticle = (row: number) => `${this.productsBlock('popularproducts')} .products `
+      + `div:nth-child(${row}) article`;
+    this.productImg = (row: number) => `${this.productArticle(row)} img`;
+    this.productDescriptionDiv = (row: number) => `${this.productArticle(row)} div.product-description`;
+    this.productQuickViewLink = (row: number) => `${this.productArticle(row)} a.quick-view`;
   }
 
   /*
@@ -268,6 +296,70 @@ class OrderConfirmationPage extends FOBasePage {
    */
   async getOrderTotal(page: Page): Promise<string> {
     return this.getTextContent(page, this.totalRow);
+  }
+
+  /**
+   * Get products block title
+   * @param page {Page} Browser tab
+   * @param blockName {string} The block name in the page
+   * @returns {Promise<string>}
+   */
+  async getBlockTitle(page: Page, blockName: string): Promise<string> {
+    return this.getTextContent(page, this.productsBlockTitle(blockName));
+  }
+
+  /**
+   * Get products block number
+   * @param blockName {string} The block name in the page
+   * @param page {Page} Browser tab
+   * @return {Promise<number>}
+   */
+  async getProductsBlockNumber(page: Page, blockName: string): Promise<number> {
+    return page.locator(this.productsBlockDiv(blockName)).count();
+  }
+
+  /**
+   * Go to all products page
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToAllProductsPage(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, this.allProductsLink);
+  }
+
+  /**
+   * Quick view product
+   * @param page {Page} Browser tab
+   * @param row {number} Row of product to quick view
+   * @return {Promise<void>}
+   */
+  async quickViewProduct(page: Page, row: number): Promise<void> {
+    await page.locator(this.productImg(row)).hover();
+    let displayed: boolean = false;
+
+    /* eslint-disable no-await-in-loop */
+    // Only way to detect if element is displayed is to get value of computed style 'product description' after hover
+    // and compare it with value 'block'
+    for (let i = 0; i < 10 && !displayed; i++) {
+      /* eslint-env browser */
+      displayed = await page.evaluate(
+        (selector: string): boolean => {
+          const element = document.querySelector(selector);
+
+          if (!element) {
+            return false;
+          }
+          return window.getComputedStyle(element, ':after').getPropertyValue('display') === 'block';
+        },
+        this.productDescriptionDiv(row),
+      );
+      await page.waitForTimeout(100);
+    }
+    /* eslint-enable no-await-in-loop */
+    await Promise.all([
+      this.waitForVisibleSelector(page, quickViewModal.quickViewModalDiv),
+      page.locator(this.productQuickViewLink(row)).evaluate((el: HTMLElement) => el.click()),
+    ]);
   }
 }
 
