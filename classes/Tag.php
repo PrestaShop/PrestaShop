@@ -56,7 +56,6 @@ class TagCore extends ObjectModel
     public function __construct($id = null, $name = null, $idLang = null)
     {
         $this->def = Tag::getDefinition($this);
-        $this->setDefinitionRetrocompatibility();
 
         if ($id) {
             parent::__construct($id);
