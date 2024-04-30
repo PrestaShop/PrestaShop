@@ -364,12 +364,8 @@ class CustomerType extends TranslatorAwareType
                         new Range([
                             'min' => 0,
                             'max' => Validate::MYSQL_UNSIGNED_INT_MAX,
-                            'minMessage' => $this->trans(
-                                '%s is invalid. Please enter an integer greater than or equal to 0.',
-                                'Admin.Notifications.Error'
-                            ),
-                            'maxMessage' => $this->trans(
-                                '%s is invalid. Please enter an integer lower than or equal to %s.',
+                            'notInRangeMessage' => $this->trans(
+                                '%s is invalid. Please enter an integer between 0 and %s.',
                                 'Admin.Notifications.Error',
                                 [
                                     '{{ value }}',
