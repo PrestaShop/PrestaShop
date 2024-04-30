@@ -43,3 +43,11 @@ services:
   PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\EditCarrierHandler:
     autoconfigure: true
     autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\UploadCarrierLogoHandler:
+    autoconfigure: true
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\DeleteCarrierLogoHandler:
+    autoconfigure: true
+    autowire: true
