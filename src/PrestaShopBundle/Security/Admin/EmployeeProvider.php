@@ -112,7 +112,7 @@ class EmployeeProvider implements UserProviderInterface
     {
         /** @var DoctrineEmployee|null $doctrineEmployee */
         $doctrineEmployee = $this->employeeRepository->loadEmployeeByIdentifier($email, $refresh);
-        if (empty($doctrineEmployee)) {
+        if (empty($doctrineEmployee) || !$doctrineEmployee->isActive()) {
             throw new UserNotFoundException(sprintf('Identifier "%s" does not exist.', $email));
         }
 
