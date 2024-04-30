@@ -84,16 +84,28 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
 
         // Then create a new carrier with a new id reference
         /* @var Carrier $newCarrier */
-        $newCarrier->name = $carrier->name;
-        $newCarrier->grade = $carrier->grade;
-        $newCarrier->url = $carrier->url;
-        $newCarrier->position = $carrier->position;
-        $newCarrier->active = $carrier->active;
-        $newCarrier->delay = $carrier->delay;
+        if ($carrier->name) {
+            $newCarrier->name = $carrier->name;
+        }
+        if ($carrier->grade) {
+            $newCarrier->grade = $carrier->grade;
+        }
+        if ($carrier->url) {
+            $newCarrier->url = $carrier->url;
+        }
+        if ($carrier->position) {
+            $newCarrier->position = $carrier->position;
+        }
+        if ($carrier->active) {
+            $newCarrier->active = $carrier->active;
+        }
+        if ($carrier->delay) {
+            $newCarrier->delay = $carrier->delay;
+        }
         $newCarrier->deleted = false; // just to be sure...
 
-        // @phpstan-ignore-next-line
-        $newCarrier->copyCarrierData($carrierId->getValue());
+        // Copy all others information like ranges, shops associated, ...
+        $newCarrier->copyCarrierData($carrierId->getValue()); // @phpstan-ignore-line
         $this->updateObjectModel($newCarrier, CannotUpdateCarrierException::class);
 
         return new CarrierId($newCarrier->id);
