@@ -207,6 +207,7 @@ class DescriptionTab extends BOBasePage {
 
     if (filteredImagePaths !== null && filteredImagePaths.length !== 0) {
       const numberOfImages = await this.getNumberOfImages(page);
+      await this.waitForVisibleSelector(page, numberOfImages === 0 ? this.productImageDropZoneDiv : this.imagePreviewBlock);
       await this.uploadOnFileChooser(
         page,
         numberOfImages === 0 ? this.productImageDropZoneDiv : this.imagePreviewBlock,
@@ -265,6 +266,7 @@ class DescriptionTab extends BOBasePage {
    * @param captionFr {string|undefined} Caption in French
    * @param selectAll {boolean|undefined} Select all
    * @param toSave {boolean} True if we need to save
+   * @param toClose {boolean} True if we need to close
    * @returns {Promise<string|null>}
    */
   async setProductImageInformation(
@@ -275,7 +277,9 @@ class DescriptionTab extends BOBasePage {
     captionFr: string | undefined,
     selectAll: boolean | undefined = undefined,
     toSave: boolean = true,
+    toClose: boolean = false,
   ): Promise<string | null> {
+    let returnValue: string|null = null;
     // Select the image
     await page.locator(this.productImage).nth(numImage - 1).click();
 
@@ -304,10 +308,12 @@ class DescriptionTab extends BOBasePage {
     if (toSave) {
       await page.locator(this.productImageDropZoneBtnSubmit).click();
 
-      return this.getGrowlMessageContent(page);
+      returnValue = await this.getGrowlMessageContent(page);
     }
-    await page.locator(this.productImageDropZoneCloseButton).click();
-    return null;
+    if (toClose) {
+      await page.locator(this.productImageDropZoneCloseButton).click();
+    }
+    return returnValue;
   }
 
   /**
