@@ -35,3 +35,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Carrier\QueryHandler\GetCarrierForEditingHandler:
     autoconfigure: true
     autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\AddCarrierHandler:
+    autoconfigure: true
+    autowire: true
