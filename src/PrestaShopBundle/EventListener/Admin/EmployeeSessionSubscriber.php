@@ -112,7 +112,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         }
 
         // Update the cookie after successful login
-        $this->updateLegacyCookie($event->getRequest());
+        $this->updateLegacyCookie($event->getRequest(), true);
     }
 
     public function onKernelRequest(RequestEvent $event): void
@@ -199,9 +199,10 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Update legacy cookie for backward compatibility, simply set the values and let the cookie write itself
+     * Update legacy cookie for backward compatibility, values are always set but we only
+     * write it on login success.
      */
-    protected function updateLegacyCookie(Request $request): void
+    protected function updateLegacyCookie(Request $request, bool $write = false): void
     {
         $legacyCookie = $this->legacyContext->getContext()->cookie;
 
@@ -213,6 +214,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
             $legacyCookie->email = $employee->getEmail();
             $legacyCookie->profile = $employee->getProfile()->getId();
             $legacyCookie->passwd = $employee->getPassword();
+            $legacyCookie->id_lang = $employee->getDefaultLanguage()->getId();
         }
 
         // Mimic Cookie::registerSession behaviour
@@ -220,6 +222,10 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         if ($employeeSession instanceof EmployeeSession) {
             $legacyCookie->session_id = $employeeSession->getId();
             $legacyCookie->session_token = $employeeSession->getToken();
+        }
+
+        if ($write) {
+            $legacyCookie->write();
         }
     }
 }
