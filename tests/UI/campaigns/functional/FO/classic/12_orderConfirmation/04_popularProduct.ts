@@ -28,11 +28,6 @@ import type {BrowserContext, Page} from 'playwright';
 // context
 const baseContext: string = 'functional_FO_classic_orderConfirmation_popularProduct';
 
-/*
-Scenario:
-- Create new order in FO
-
-*/
 describe('FO - Order confirmation : Popular product', async () => {
   let browserContext: BrowserContext;
   let page: Page;
