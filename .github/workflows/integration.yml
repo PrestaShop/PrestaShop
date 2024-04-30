@@ -74,8 +74,8 @@ jobs:
       - name: Build all assets
         run: make assets
 
-      - name: Change MariaDB authentication method
-        run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password USING PASSWORD('password'); FLUSH PRIVILEGES;"
+#      - name: Change MariaDB authentication method
+#        run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password USING PASSWORD('password'); FLUSH PRIVILEGES;"
 
       - name: Run integration-tests
         run: composer run-script integration-tests --timeout=0
