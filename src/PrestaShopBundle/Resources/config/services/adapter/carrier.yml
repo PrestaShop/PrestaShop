@@ -31,3 +31,7 @@ services:
 
   prestashop.adapter.carrier.carrier_module_advice_alert_checker:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierModuleAdviceAlertChecker'
+
+  PrestaShop\PrestaShop\Adapter\Carrier\QueryHandler\GetCarrierForEditingHandler:
+    autoconfigure: true
+    autowire: true
