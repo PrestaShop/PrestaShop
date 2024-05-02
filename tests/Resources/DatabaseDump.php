@@ -270,6 +270,9 @@ class DatabaseDump
             throw new Exception(sprintf('Unable to exec command: `%s`, output : %s', $command, implode($output)));
         }
 
+        echo $output;
+        echo $ret;
+
         return $output;
     }
 
@@ -280,6 +283,7 @@ class DatabaseDump
     {
         $dumpCommand = $this->buildMySQLCommandDumpFile($this->dumpFile, [$this->databaseName, '--complete-insert']);
         $dumpCommand .= ' 2>&1';
+        echo $dumpCommand;
         $this->exec($dumpCommand);
     }
 
