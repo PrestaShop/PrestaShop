@@ -39,14 +39,14 @@ class SaveSqlRequestSettingsHandlerTest extends TestCase
     /**
      * @dataProvider getSettings
      */
-    public function testItSavesSettingsInCorrectFormat(string $configuredValue, int $expectedValueFormat)
+    public function testItSavesSettingsInCorrectFormat(string $configuredValue, string $separator, int $expectedValueFormat)
     {
         $configuration = $this->createMock(ConfigurationInterface::class);
-        $configuration->method('set')
-            ->with('PS_ENCODING_FILE_MANAGER_SQL', $expectedValueFormat);
+        $configuration->set('PS_ENCODING_FILE_MANAGER_SQL', $configuredValue);
+        $configuration->set('PS_SEPARATOR_FILE_MANAGER_SQL', $separator);
 
         $handler = new SaveSqlRequestSettingsHandler($configuration);
-        $this->assertNull($handler->handle(new SaveSqlRequestSettingsCommand($configuredValue)));
+        $this->assertNull($handler->handle(new SaveSqlRequestSettingsCommand($configuredValue, $separator)));
     }
 
     public function getSettings()
@@ -54,10 +54,12 @@ class SaveSqlRequestSettingsHandlerTest extends TestCase
         return [
             [
                 CharsetEncoding::UTF_8,
+                ';',
                 1,
             ],
             [
                 CharsetEncoding::ISO_8859_1,
+                ';',
                 2,
             ],
         ];
