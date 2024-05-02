@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator;
+use PrestaShop\PrestaShop\Adapter\File\Uploader\AttributeFileUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler\AddAttributeHandlerInterface;
@@ -45,6 +46,7 @@ class AddAttributeHandler implements AddAttributeHandlerInterface
     public function __construct(
         private readonly AttributeRepository $attributeRepository,
         private readonly AttributeValidator $attributeValidator,
+        private readonly AttributeFileUploader $attributeFileUploader
     ) {
     }
 
@@ -67,6 +69,13 @@ class AddAttributeHandler implements AddAttributeHandlerInterface
         $this->attributeValidator->validate($attribute);
 
         $id = $this->attributeRepository->add($attribute);
+
+        if (null !== $command->getTextureFilePath()) {
+            $this->attributeFileUploader->upload(
+                $command->getTextureFilePath(),
+                $id->getValue()
+            );
+        }
 
         return $id;
     }

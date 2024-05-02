@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Url\ImageFolderProvider;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Decorates database records for grid presentation
@@ -37,20 +37,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 final class AttributeGridDataFactory implements GridDataFactoryInterface
 {
     /**
-     * @var GridDataFactoryInterface
-     */
-    private $attributeDataFactory;
-
-
-    private UrlGeneratorInterface $urlGenerator;
-
-    /**
      * @param GridDataFactoryInterface $attributeDataFactory
      */
-    public function __construct(GridDataFactoryInterface $attributeDataFactory, UrlGeneratorInterface $urlGenerator)
-    {
-        $this->attributeDataFactory = $attributeDataFactory;
-        $this->urlGenerator = $urlGenerator;
+    public function __construct(
+        private readonly GridDataFactoryInterface $attributeDataFactory,
+        private readonly ImageFolderProvider $imageFolderProvider
+    ) {
     }
 
     /**
@@ -76,8 +68,8 @@ final class AttributeGridDataFactory implements GridDataFactoryInterface
     private function modifyRecords(array $records): array
     {
         foreach ($records as &$record) {
-            if (file_exists(_PS_IMG_DIR_ . 'co' . '/' . (int) $record['id_attribute'] . '.jpg')) {
-                $record['texture'] = $this->urlGenerator->generate('assets', ['path' => _PS_IMG_DIR_ . 'co' . '/' . (int) $record['id_attribute'] . '.jpg']);
+            if (file_exists(_PS_IMG_DIR_ . 'co/' . (int) $record['id_attribute'] . '.jpg')) {
+                $record['texture'] = $this->imageFolderProvider->getUrl() . '/' . (int) $record['id_attribute'] . '.jpg';
             }
         }
 

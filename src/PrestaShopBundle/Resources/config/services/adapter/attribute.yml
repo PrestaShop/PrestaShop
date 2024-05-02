@@ -15,3 +15,5 @@ services:
   PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\EditAttributeHandler: ~
   PrestaShop\PrestaShop\Adapter\Attribute\QueryHandler\GetAttributeForEditingHandler: ~
   PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator: ~
+  PrestaShop\PrestaShop\Adapter\File\Uploader\AttributeFileUploader: ~
+  PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\AttributeFileUploaderInterface: ~

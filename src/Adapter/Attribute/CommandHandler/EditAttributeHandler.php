@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator;
 use PrestaShop\PrestaShop\Adapter\Domain\LocalizedObjectModelTrait;
+use PrestaShop\PrestaShop\Adapter\File\Uploader\AttributeFileUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler\EditAttributeHandlerInterface;
@@ -45,7 +46,8 @@ class EditAttributeHandler implements EditAttributeHandlerInterface
 
     public function __construct(
         private AttributeRepository $attributeRepository,
-        private AttributeValidator $attributeValidator
+        private AttributeValidator $attributeValidator,
+        private AttributeFileUploader $attributeFileUploader
     ) {
     }
 
@@ -74,6 +76,11 @@ class EditAttributeHandler implements EditAttributeHandlerInterface
         if (null !== $command->getAssociatedShopIds()) {
             $attribute->id_shop_list = $command->getAssociatedShopIds();
             $propertiesToUpdate[] = 'id_shop_list';
+        }
+
+        if (null !== $command->getTextureFilePath()) {
+            $this->attributeFileUploader->deleteOldFile($command->getAttributeId()->getValue());
+            $this->attributeFileUploader->upload($command->getTextureFilePath(), $command->getAttributeId()->getValue());
         }
 
         $this->attributeValidator->validate($attribute);

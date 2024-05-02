@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult\Edita
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
+use Tests\Resources\DummyFileUploader;
 
 class AttributeFeatureContext extends AbstractDomainFeatureContext
 {
@@ -57,7 +58,8 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
                 $attributeGroupId,
                 $properties['name'],
                 $properties['color'],
-                $this->referencesToIds($properties['shopIds'])
+                $this->referencesToIds($properties['shopIds']),
+                $properties['texture']
             );
 
             $this->getSharedStorage()->set($reference, $attributeId->getValue());
@@ -104,6 +106,10 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         if (isset($properties['shopIds'])) {
             $command->setAssociatedShopIds($this->referencesToIds($properties['shopIds']));
         }
+        if (isset($properties['texture']) && 'null' !== $properties['texture']) {
+            $file = DummyFileUploader::upload($properties['texture']);
+            $command->setTextureFilePath($file);
+        }
 
         try {
             $this->getCommandBus()->handle($command);
@@ -149,7 +155,8 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         int $attributeGroupId,
         array $localizedValues,
         string $color,
-        array $shopIds
+        array $shopIds,
+        string $filePath
     ): AttributeId {
         $command = new AddAttributeCommand(
             $attributeGroupId,
@@ -157,6 +164,11 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
             $color,
             $shopIds
         );
+
+        if ('null' !== $filePath) {
+            $file = DummyFileUploader::upload($filePath);
+            $command->setTextureFilePath($file);
+        }
 
         return $this->getCommandBus()->handle($command);
     }
