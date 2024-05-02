@@ -75,6 +75,8 @@ class Checkout extends CheckoutPage {
     this.checkoutPromoBlock = '.js-cart-voucher';
     this.cartSummaryLine = (line: number) => `${this.checkoutPromoBlock} li:nth-child(${line}).cart-voucher__item`;
     this.cartRuleName = (line: number) => `${this.cartSummaryLine(line)} span.cart-voucher__name`;
+    this.checkoutRemoveDiscountLink = (row: number) => `${this.cartSummaryLine(row)} `
+      + ' a[data-link-action="remove-voucher"] i';
   }
 
   /**
