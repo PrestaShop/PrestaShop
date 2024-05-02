@@ -119,7 +119,7 @@ class CheckoutPage extends FOBasePage {
 
   private readonly checkoutHavePromoCodeButton: string;
 
-  private readonly checkoutRemoveDiscountLink: string;
+  protected checkoutRemoveDiscountLink: (row: number) => string;
 
   protected checkoutLoginForm: string;
 
@@ -354,7 +354,8 @@ class CheckoutPage extends FOBasePage {
     this.checkoutSummary = '#js-checkout-summary';
     this.checkoutPromoBlock = `${this.checkoutSummary} div.block-promo`;
     this.checkoutHavePromoCodeButton = `${this.checkoutPromoBlock} p.promo-code-button a`;
-    this.checkoutRemoveDiscountLink = 'a[data-link-action="remove-voucher"] i';
+    this.checkoutRemoveDiscountLink = (row: number) => `li.cart-summary-line:nth-child(${row})`
+      + ' a[data-link-action="remove-voucher"] i';
     this.cartTotalATI = '.cart-summary-totals span.value';
     this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
     this.promoCodeArea = '#promo-code';
@@ -561,7 +562,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getActiveLinkFromPersonalInformationBlock(page: Page): Promise<string> {
+  async getActiveLinkFromPersonalInformationBlock(page: Page): Promise<string> {
     return this.getTextContent(page, this.activeLink);
   }
 
@@ -1058,7 +1059,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getNoPaymentNeededBlockContent(page: Page): Promise<string> {
+  async getNoPaymentNeededBlockContent(page: Page): Promise<string> {
     return this.getTextContent(page, this.noPaymentNeededElement);
   }
 
@@ -1101,7 +1102,7 @@ class CheckoutPage extends FOBasePage {
    * @param line {number} Cart rule line
    * @return {string}
    */
-  getCartRuleName(page: Page, line: number = 1): Promise<string> {
+  async getCartRuleName(page: Page, line: number = 1): Promise<string> {
     return this.getTextContent(page, this.cartRuleName(line));
   }
 
@@ -1127,19 +1128,20 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getATIPrice(page: Page): Promise<number> {
+  async getATIPrice(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.cartTotalATI, 2000);
   }
 
   /**
    * Delete the discount
    * @param page {Page} Browser tab
+   * @param row {number} Row of the delete icon
    * @returns {Promise<boolean>}
    */
-  async removePromoCode(page: Page): Promise<boolean> {
-    await page.locator(this.checkoutRemoveDiscountLink).click();
+  async removePromoCode(page: Page, row: number = 1): Promise<boolean> {
+    await page.locator(this.checkoutRemoveDiscountLink(row)).click();
 
-    return this.elementNotVisible(page, this.checkoutRemoveDiscountLink, 1000);
+    return this.elementNotVisible(page, this.checkoutRemoveDiscountLink(row), 1000);
   }
 
   /**
@@ -1184,7 +1186,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isConditionToApproveCheckboxVisible(page: Page): Promise<boolean> {
+  async isConditionToApproveCheckboxVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.conditionToApproveCheckbox, 1000);
   }
 
@@ -1204,7 +1206,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isGiftCheckboxVisible(page: Page): Promise<boolean> {
+  async isGiftCheckboxVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.giftCheckbox, 1000);
   }
 
@@ -1222,7 +1224,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isGiftMessageTextareaVisible(page: Page): Promise<boolean> {
+  async isGiftMessageTextareaVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.giftMessageTextarea, 2000);
   }
 
@@ -1241,7 +1243,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isRecycledPackagingCheckboxVisible(page: Page): Promise<boolean> {
+  async isRecycledPackagingCheckboxVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.recyclableGiftCheckbox, 1000);
   }
 
