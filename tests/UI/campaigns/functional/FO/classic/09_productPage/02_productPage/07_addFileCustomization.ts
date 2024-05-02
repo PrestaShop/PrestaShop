@@ -1,6 +1,7 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import files from '@utils/files';
 
 // Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
@@ -21,9 +22,9 @@ import ProductData from '@data/faker/product';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_productPage_productPage_addCustomization';
+const baseContext: string = 'functional_FO_classic_productPage_productPage_addFileCustomization';
 
-describe('FO - Product page - Product page : Add customization', async () => {
+describe('FO - Product page - Product page : Add a file customization', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   // Data to create standard product with 2 customizations
@@ -35,12 +36,12 @@ describe('FO - Product page - Product page : Add customization', async () => {
     customizations: [
       {
         label: 'Lorem ipsum',
-        type: 'Text',
+        type: 'File',
         required: false,
       },
       {
         label: 'Lorem ipsumm',
-        type: 'Text',
+        type: 'File',
         required: true,
       }],
   });
@@ -50,10 +51,14 @@ describe('FO - Product page - Product page : Add customization', async () => {
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
       page = await helper.newTab(browserContext);
+      await files.generateImage('file_1.jpg');
+      await files.generateImage('file_2.jpg');
     });
 
     after(async () => {
       await helper.closeBrowserContext(browserContext);
+      await files.deleteFile('file_1.jpg');
+      await files.deleteFile('file_2.jpg');
     });
 
     it('should login in BO', async function () {
@@ -137,13 +142,13 @@ describe('FO - Product page - Product page : Add customization', async () => {
     it('should set the 2 customizations and save', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setCustomizations', baseContext);
 
-      await foProductPage.setProductCustomizations(page, ['prestashop', 'prestashop2']);
+      await foProductPage.setProductFileCustomizations(page, ['file_1.jpg', 'file_2.jpg']);
 
-      const firstCustomMessage = await foProductPage.getCustomizationsMessages(page, 1);
-      expect(firstCustomMessage).to.equal('Your customization: prestashop');
+      const firstCustomImage = await foProductPage.getCustomizationImage(page, 1);
+      expect(firstCustomImage).to.contains('deletePicture');
 
-      const secondCustomMessage = await foProductPage.getCustomizationsMessages(page, 2);
-      expect(secondCustomMessage).to.equal('Your customization: prestashop2');
+      const secondCustomImage = await foProductPage.getCustomizationImage(page, 2);
+      expect(secondCustomImage).to.contains('deletePicture');
     });
 
     it('should check that add to card button is enabled', async function () {

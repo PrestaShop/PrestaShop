@@ -55,7 +55,11 @@ class Product extends FOBasePage {
 
   protected customizedTextarea: (row: number) => string;
 
+  private readonly customizedFile: (row: number) => string;
+
   protected customizationsMessage: (row: number) => string;
+
+  private readonly customizationImg: (row: number) => string;
 
   private readonly saveCustomizationButton: string;
 
@@ -219,8 +223,10 @@ class Product extends FOBasePage {
     this.productDescription = '#description';
     this.customizationBlock = 'div.product-container div.product-information section.product-customization';
     this.customizedTextarea = (row: number) => `.product-customization-item:nth-child(${row}) .product-message`;
+    this.customizedFile = (row: number) => `li:nth-child(${row}) .js-file-input`;
     this.saveCustomizationButton = 'button[name=\'submitCustomizedData\']';
     this.customizationsMessage = (row: number) => `div.product-information li:nth-child(${row}) h6`;
+    this.customizationImg = (row: number) => `div.product-information li:nth-child(${row}) a.remove-image`;
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.blockCartModal = '#blockcart-modal';
     this.proceedToCheckoutButton = `${this.blockCartModal} div.cart-content-btn a`;
@@ -694,7 +700,7 @@ class Product extends FOBasePage {
    * @param attributes {ProductAttribute[]}  Product's attributes data to select
    * @returns {Promise<void>}
    */
-  async selectAttributes(page: Page, quantity: number|string, attributes: ProductAttribute[]): Promise<void> {
+  async selectAttributes(page: Page, quantity: number | string, attributes: ProductAttribute[]): Promise<void> {
     if (attributes.length === 0) {
       return;
     }
@@ -722,13 +728,37 @@ class Product extends FOBasePage {
    * Set product customizations
    * @param page {Page} Browser tab
    * @param customizedTexts {string[]} Texts to set in customizations input
+   * @param save {boolean} True if we need to save
    * @returns {Promise<void>}
    */
-  async setProductCustomizations(page: Page, customizedTexts: string[]): Promise<void> {
+  async setProductCustomizations(page: Page, customizedTexts: string[], save: boolean = true): Promise<void> {
     for (let i = 1; i <= customizedTexts.length; i++) {
       await this.setValue(page, this.customizedTextarea(i), customizedTexts[i - 1]);
     }
-    await this.waitForSelectorAndClick(page, this.saveCustomizationButton);
+    if (save) {
+      await this.waitForSelectorAndClick(page, this.saveCustomizationButton);
+    }
+  }
+
+  /**
+   * Set product file customizations
+   * @param page {Page} Browser tab
+   * @param customizedFiles {string[]} Files to set in customizations input
+   * @param row {number} Row to start
+   * @param save {boolean} True if we need to save
+   * @returns {Promise<void>}
+   */
+  async setProductFileCustomizations(page: Page, customizedFiles: string[], row: number = 1, save: boolean = true):
+    Promise<void> {
+    let j = row;
+
+    for (let i = 1; i <= customizedFiles.length; i++) {
+      await this.uploadFile(page, this.customizedFile(j), customizedFiles[i - 1]);
+      j += 1;
+    }
+    if (save) {
+      await this.waitForSelectorAndClick(page, this.saveCustomizationButton);
+    }
   }
 
   /**
@@ -742,6 +772,36 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Is customization message visible
+   * @param page {Page} Browser tab
+   * @param customizationRow {number} Number of customizations to display
+   * @returns {Promise<string>}
+   */
+  async isCustomizationMessageVisible(page: Page, customizationRow: number): Promise<boolean> {
+    return this.elementVisible(page, this.customizationsMessage(customizationRow));
+  }
+
+  /**
+   * Get customization image
+   * @param page {Page} Browser tab
+   * @param customizationRow {number} Number of customizations to display
+   * @returns {Promise<string>}
+   */
+  async getCustomizationImage(page: Page, customizationRow: number): Promise<string> {
+    return this.getAttributeContent(page, this.customizationImg(customizationRow), 'href');
+  }
+
+  /**
+   * Is customization image visible
+   * @param page {Page} Browser tab
+   * @param customizationRow {number} Number of customizations to display
+   * @returns {Promise<string>}
+   */
+  async isCustomizationImageVisible(page: Page, customizationRow: number): Promise<boolean> {
+    return this.elementVisible(page, this.customizationImg(customizationRow));
+  }
+
+  /**
    * Click on Add to cart button then on Proceed to checkout button in the modal
    * @param page {Page} Browser tab
    * @param quantity {number|string} Quantity of the product that customer wants
@@ -752,7 +812,7 @@ class Product extends FOBasePage {
    */
   async addProductToTheCart(
     page: Page,
-    quantity: number |string = 1,
+    quantity: number | string = 1,
     combination: ProductAttribute[] = [],
     proceedToCheckout: boolean | null = true,
     customizedText: string = 'text',
