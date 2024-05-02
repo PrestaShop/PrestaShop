@@ -1,0 +1,43 @@
+name: Check the label 'Need autoupgrade PR'
+
+on: pull_request_target
+
+jobs:
+  install_prestashop_and_dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker build
+        run: docker compose build prestashop-git
+
+      - name: Build dependency
+        run: docker compose run --rm prestashop-git composer install --no-interaction
+
+      - name: Build dependency
+        run: make assets
+
+      - name: Install shop
+        run: docker compose run --rm prestashop-git php install/index_cli.php \
+          --step=database --db_server=mysql:3306 --db_name=prestashop --db_user=root --db_password=prestashop --prefix=ps_ --db_clear=1 \
+          --domain=localhost:8001 --firstname="Marc" --lastname="Beier" \
+          --password=Toto123! --email=demo@prestashop.com --language=fr --country=fr \
+          --newsletter=0 --send_email=0 --ssl=0
+
+      - name: Export dump
+        run: docker compose run --rm mysql sh -c "exec mysqldump -hmysql -uroot --no-data --compact -pprestashop prestashop" > dump.sql
+
+      - name: Cat dump
+        run: cat dump.sql
+
+  add_label:
+    name: Verify Need autoupgrade PR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: gh pr edit "$NUMBER" --add-label "$LABELS"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.number }}
+          LABELS: Needs autoupgrade PR
