@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Handles data of submitted Attribute Group form.
@@ -61,8 +63,9 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
             $data['attribute_group'],
             $data['name'],
             $data['color'] ?? '',
-            $data['shop_association']
+            $data['shop_association'],
         ));
+        $this->handleUploadedFile($data['texture'], $attributeId->getValue());
 
         return $attributeId->getValue();
     }
@@ -79,5 +82,17 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
             ->setAssociatedShopIds($data['shop_association']);
 
         $this->commandBus->handle($updateCommand);
+
+        // delete previous img if exist
+        if (file_exists(_PS_IMG_DIR_ . 'co' . '/' . $id . '.jpg')) {
+            unlink(_PS_IMG_DIR_ . 'co' . '/' . $id . '.jpg');
+        }
+        $this->handleUploadedFile($data['texture'], $id);
+    }
+
+    protected function handleUploadedFile(UploadedFile $file, int $id): void
+    {
+        $path = _PS_IMG_DIR_ . 'co' . '/' . $id . '.jpg';
+        $file->move($path);
     }
 }

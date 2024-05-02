@@ -22,5 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
-<div style="background-color:{{ record[column.options.field] }};" class="attributes-color-container"></div>
+{% if record['texture'] is defined %}
+  <img src="{{ record['texture'] }}" />
+{% else %}
+  <div style="background-color:{{ record[column.options.field] }};" class="attributes-color-container"></div>
+{% endif %}
