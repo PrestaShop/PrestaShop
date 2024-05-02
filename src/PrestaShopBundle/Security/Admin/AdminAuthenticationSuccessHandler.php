@@ -39,6 +39,10 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
+/**
+ * This handle is called when the employee successfully logs in to the back office, its purpose is
+ * to dynamically set the route to redirect to based on the Employee's configured homepage.
+ */
 class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     use TargetPathTrait;

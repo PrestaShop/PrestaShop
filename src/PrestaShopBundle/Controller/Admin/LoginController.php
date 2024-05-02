@@ -181,7 +181,7 @@ class LoginController extends PrestaShopAdminController
 
     public function resetPasswordAction(EmployeePasswordResetter $employeePasswordResetter, Request $request, string $resetToken): Response
     {
-        if (!($employee = $employeePasswordResetter->getEmployeeByValidaResetPasswordToken($resetToken))) {
+        if (!($employee = $employeePasswordResetter->getEmployeeByValidResetPasswordToken($resetToken))) {
             // Display generic error message with no details why it failed
             $this->addFlash('error', $this->trans('Your password reset request expired. Please start again.', [], 'Admin.Login.Notification'));
 

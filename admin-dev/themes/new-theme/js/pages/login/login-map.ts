@@ -24,7 +24,7 @@
  */
 
 /**
- * Defines all selectors that are used in employee add/edit form.
+ * Defines all selectors that are used in login/reset password form.
  */
 export default {
   loginForm: '#login_form',

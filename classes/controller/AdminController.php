@@ -2790,17 +2790,6 @@ class AdminControllerCore extends Controller
             $this->context->link = new Link($protocol_link, $protocol_content);
         }
 
-        if (isset($_GET['logout'])) {
-            $this->context->employee->logout();
-        }
-        if (isset(Context::getContext()->cookie->last_activity)) {
-            if (((int) $this->context->cookie->last_activity) + self::AUTH_COOKIE_LIFETIME < time()) {
-                $this->context->employee->logout();
-            } else {
-                $this->context->cookie->last_activity = time();
-            }
-        }
-
         // Set current index
         $current_index = 'index.php' . (($controller = Tools::getValue('controller')) ? '?controller=' . $controller : '');
         if ($back = Tools::getValue('back')) {

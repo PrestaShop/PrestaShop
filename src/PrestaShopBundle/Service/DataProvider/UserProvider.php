@@ -65,4 +65,9 @@ class UserProvider
 
         return self::ANONYMOUS_USER;
     }
+
+    public function logout(): void
+    {
+        $this->security->logout(false);
+    }
 }

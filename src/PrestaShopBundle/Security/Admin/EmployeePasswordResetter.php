@@ -72,7 +72,7 @@ class EmployeePasswordResetter
         $this->doSendResetEmail($employee);
     }
 
-    public function getEmployeeByValidaResetPasswordToken(string $resetPasswordToken): ?Employee
+    public function getEmployeeByValidResetPasswordToken(string $resetPasswordToken): ?Employee
     {
         try {
             /** @var Employee|null $employee */

@@ -131,7 +131,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
 
         /** @var Employee $employee */
         $employee = $this->security->getUser();
-        // Check that session is still persisted nad matches the initial saved token
+        // Check that session is still persisted and matches the initial saved token
         if (!$employee->hasSession($employeeSession->getId(), $employeeSession->getToken())) {
             $this->logger->debug(sprintf('Employee lo longer has this session token: %d:%s', $employeeSession->getId(), $employeeSession->getToken()));
             $this->logoutAndStopEvent($event);
@@ -181,7 +181,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         // Set the redirection so the process stops right away
         $event->setResponse(new RedirectResponse($this->router->generate('admin_login')));
 
-        // Sve the target path so the next login will redirect to the url request at the moment of the logout
+        // Save the target path so the next login will redirect to the url requested at the moment of the logout
         $this->saveTargetPath($event->getRequest()->getSession(), 'main', $event->getRequest()->getUri());
 
         // Stop the event propagation, nothing more needs to happen except for redirection, and it prevents the event to
