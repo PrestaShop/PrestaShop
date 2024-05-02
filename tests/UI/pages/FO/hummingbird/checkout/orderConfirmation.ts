@@ -36,6 +36,16 @@ class OrderConfirmation extends OrderConfirmationPage {
     this.productRowImage = (row: number) => `${this.productRowNth(row)} div.item__image img`;
     this.productRowDetails = (row: number) => `${this.productRowNth(row)} div.item__details`;
     this.productRowPrices = (row: number) => `${this.productRowNth(row)} div.item__prices`;
+
+    // Popular products section
+    this.productsBlock = '#content-wrapper section.featured-products';
+    this.productsBlockTitle = `${this.productsBlock} h2`;
+    this.productsBlockDiv = `${this.productsBlock} div.products div.card`;
+    this.allProductsLink = `${this.productsBlock} div.featured-products-footer a`;
+    this.productArticle = (number: number) => `${this.productsBlock} article:nth-child(${number})`;
+    this.productImg = (number: number) => `${this.productArticle(number)} img`;
+    this.productQuickViewLink = (number: number) => `${this.productArticle(number)} .product-miniature__quickview `
+      + 'button';
   }
 
   /**
@@ -50,6 +60,18 @@ class OrderConfirmation extends OrderConfirmationPage {
       details: await this.getTextContent(page, this.productRowDetails(row)),
       prices: await this.getTextContent(page, this.productRowPrices(row)),
     };
+  }
+
+  /**
+   * Quick view product
+   * @param page {Page} Browser tab
+   * @param id {number} Product row in the list
+   * @return {Promise<void>}
+   */
+  async quickViewProduct(page: Page, id: number): Promise<void> {
+    await page.locator(this.productImg(id)).hover();
+    await this.waitForVisibleSelector(page, this.productQuickViewLink(id));
+    await page.locator(this.productQuickViewLink(id)).click();
   }
 }
 
