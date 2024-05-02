@@ -60,6 +60,14 @@ class CartPage extends FOBasePage {
 
   protected noItemsInYourCartSpan: string;
 
+  protected customizationLink: (row: number) => string;
+
+  protected customizationModal: (row: number) => string;
+
+  protected readonly customizationModalBody: (row: number) => string;
+
+  protected customizationModalCloseButton: (row: number) => string;
+
   protected alertMessage: string;
 
   private readonly subtotalDiscountValueSpan: string;
@@ -148,6 +156,11 @@ class CartPage extends FOBasePage {
     this.productImage = (number: number) => `${this.productItem(number)} span.product-image img`;
     this.deleteIcon = (number: number) => `${this.productItem(number)} .remove-from-cart`;
     this.noItemsInYourCartSpan = 'div.cart-grid-body div.cart-overview.js-cart span.no-items';
+    this.customizationLink = (row: number) => `${this.productItem(row)} div.product-line-grid-body`
+      + " a[data-target*='#product-customizations-modal']";
+    this.customizationModal = (row: number) => `${this.productItem(row)} [id*="product-customizations-modal"]`;
+    this.customizationModalBody = (row: number) => `${this.customizationModal(row)} .modal-body`;
+    this.customizationModalCloseButton = (row: number) => `${this.customizationModal(row)} .modal-header button.close`;
 
     // Notifications
     this.alertMessage = '#notifications div.notifications-container';
@@ -255,6 +268,40 @@ class CartPage extends FOBasePage {
   }
 
   /**
+   * Click on product customization
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in the table
+   * @returns {Promise<boolean>}
+   */
+  async clickOnProductCustomization(page: Page, row: number = 1): Promise<boolean> {
+    await page.locator(this.customizationLink(row)).click();
+
+    return this.elementVisible(page, this.customizationModal(row), 1000);
+  }
+
+  /**
+   * Get product customization modal
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in the table
+   * @returns {Promise<string>}
+   */
+  async getProductCustomizationModal(page: Page, row: number = 1): Promise<string> {
+    return this.getTextContent(page, this.customizationModalBody(row));
+  }
+
+  /**
+   * Close product customization modal
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in the table
+   * @returns {Promise<string>}
+   */
+  async closeProductCustomizationModal(page: Page, row: number = 1): Promise<boolean> {
+    await page.locator(this.customizationModalCloseButton(row)).click();
+
+    return this.elementNotVisible(page, this.customizationModal(row), 1000);
+  }
+
+  /**
    * Click on Proceed to checkout button
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
@@ -336,7 +383,7 @@ class CartPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {boolean}
    */
-  isProceedToCheckoutButtonDisabled(page: Page): Promise<boolean> {
+  async isProceedToCheckoutButtonDisabled(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.disabledProceedToCheckoutButton, 1000);
   }
 
@@ -345,7 +392,7 @@ class CartPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {boolean}
    */
-  isAlertWarningForMinimumPurchaseVisible(page: Page): Promise<boolean> {
+  async isAlertWarningForMinimumPurchaseVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.alertWarning, 1000);
   }
 
@@ -354,7 +401,7 @@ class CartPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getAlertWarning(page: Page): Promise<string> {
+  async getAlertWarning(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertWarning);
   }
 
@@ -363,7 +410,7 @@ class CartPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getAlertWarningForPromoCode(page: Page): Promise<string> {
+  async getAlertWarningForPromoCode(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertPromoCode);
   }
 
@@ -373,7 +420,7 @@ class CartPage extends FOBasePage {
    * @param line {number} Cart summary line
    * @returns {Promise<boolean>}
    */
-  isCartRuleNameVisible(page: Page, line: number = 1): Promise<boolean> {
+  async isCartRuleNameVisible(page: Page, line: number = 1): Promise<boolean> {
     return this.elementVisible(page, this.cartRuleName(line), 1000);
   }
 
@@ -421,7 +468,7 @@ class CartPage extends FOBasePage {
    * @param line {number} Cart summary line
    * @returns {Promise<number>}
    */
-  getCartRuleName(page: Page, line: number = 1): Promise<string> {
+  async getCartRuleName(page: Page, line: number = 1): Promise<string> {
     return this.getTextContent(page, this.cartRuleName(line));
   }
 
@@ -440,7 +487,7 @@ class CartPage extends FOBasePage {
    * @param line {number} Cart summary line
    * @returns {Promise<number>}
    */
-  getDiscountValue(page: Page, line: number = 1): Promise<number> {
+  async getDiscountValue(page: Page, line: number = 1): Promise<number> {
     return this.getPriceFromText(page, this.discountValue(line), 2000);
   }
 
