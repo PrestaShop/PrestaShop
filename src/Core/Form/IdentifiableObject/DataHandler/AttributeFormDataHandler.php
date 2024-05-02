@@ -92,7 +92,6 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
 
     protected function handleUploadedFile(UploadedFile $file, int $id): void
     {
-        $path = _PS_IMG_DIR_ . 'co' . '/' . $id . '.jpg';
-        $file->move($path);
+        $file->move(_PS_IMG_DIR_ . 'co', $id . '.jpg');
     }
 }
