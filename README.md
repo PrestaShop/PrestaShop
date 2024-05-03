@@ -115,6 +115,18 @@ Don't know where to start? Check the [good first issue](https://github.com/Prest
 If you want to help translate PrestaShop in your language, [join us on Crowdin][crowdin]!
 
 
+PrestaShop project versus PrestaShop.com
+--------
+
+This repository is the open source PrestaShop project, [our releases](https://github.com/PrestaShop/PrestaShop/releases) are [licensed under OSL-3.0](https://github.com/PrestaShop/PrestaShop?tab=License-1-ov-file) and branded as "PrestaShop". Our website is [PrestaShop-Project.org](https://PrestaShop-Project.org). This project is managed and released through our community as detailed in our [CONTRIBUTING file](./CONTRIBUTING.md).
+
+Separately, the PrestaShop SA company also publishes [its own releases](https://prestashop.com/versions/) which are [licensed under OSL-3.0](https://help-center.prestashop.com/en/articles/17131330778258-all-prestashop-versions) and also branded as "PrestaShop". Their website is [PrestaShop.com](https://PrestaShop.com). That project is managed and released through the PrestaShop SA company and they provide support for their product through [commercial plans](https://prestashop.com/support/). <!-- TODO: create a page comparing the differences and their build process -->
+
+This explains why the releases of software in this repostiory and on the PrestaShop.com website are not byte-by-byte equivalent.
+
+If you will use PrestaShop in a production eCommerce shop, you can choose between either option based on your needs. But if you are in the community and developing/testing/updating the core software, then this repo here with the community project is what you want to use.
+
+
 Reporting Issues
 --------
 
