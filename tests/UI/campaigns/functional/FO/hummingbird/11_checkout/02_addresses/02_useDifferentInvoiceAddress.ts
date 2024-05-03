@@ -2,21 +2,14 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
+// Import common tests
 import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
-
 // Import FO pages
-import foHomePage from '@pages/FO/hummingbird/home';
-import foProductPage from '@pages/FO/hummingbird/product';
+import homePage from '@pages/FO/hummingbird/home';
+import productPage from '@pages/FO/hummingbird/product';
 import cartPage from '@pages/FO/hummingbird/cart';
-import foCheckoutPage from '@pages/FO/hummingbird/checkout';
+import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 
 // Import data
@@ -32,25 +25,25 @@ import {
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_hummingbird_checkout_addresses_useDifferentAddressForInvoice';
+const baseContext: string = 'functional_FO_hummingbird_checkout_addresses_useDifferentInvoiceAddress';
 
 /*
-Go to FO
-Add product to cart
-Go to checkout page
-Choose to order as guest
-Add guest information
-Add delivery address
-Click on Use another address for invoice
-Fill a second form address
-Finish the order
-
-Go to BO > orders page
-Go to order view page
-Check that the 2 addresses are different
+Pre-condition:
+- Install the theme hummingbird
+Scenario:
+- Go to FO
+- Add product to cart
+- Go to checkout page
+- Choose to order as guest
+- Add guest information
+- Add delivery address
+- Click on Use another address for invoice
+- Fill a second form address
+- Finish the order
+Post-condition:
+- Uninstall the theme hummingbird
 */
-
-describe('FO - Guest checkout: Use different invoice address', async () => {
+describe('FO - Checkout - Addresses: Use different invoice address', async () => {
   // Create faker data
   const guestData: FakerCustomer = new FakerCustomer({password: ''});
   const deliveryAddress: FakerAddress = new FakerAddress({country: 'France'});
@@ -60,154 +53,92 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_0`);
+  installHummingbird(`${baseContext}_preTest`);
 
-  describe('Guest checkout: Use different invoice address', async () => {
-    // before and after functions
-    before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+  // before and after functions
+  before(async function () {
+    browserContext = await helper.createBrowserContext(this.browser);
+    page = await helper.newTab(browserContext);
+  });
+
+  after(async () => {
+    await helper.closeBrowserContext(browserContext);
+  });
+
+  describe('Create new order with different invoice address', async () => {
+    it('should go to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
+
+      await homePage.goToFo(page);
+      await homePage.changeLanguage(page, 'en');
+
+      const isHomePage = await homePage.isHomePage(page);
+      expect(isHomePage, 'Fail to open FO home page').to.equal(true);
     });
 
-    after(async () => {
-      await helper.closeBrowserContext(browserContext);
+    it('should go to fourth product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
+
+      await homePage.goToProductPage(page, 4);
+
+      const pageTitle = await productPage.getPageTitle(page);
+      expect(pageTitle).to.contains(Products.demo_5.name);
     });
 
-    describe('Make an order with 2 different addresses for delivery and invoice', async () => {
-      it('should go to FO', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
+    it('should add product to cart and go to cart page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-        // Go to FO
-        await foHomePage.goToFo(page);
+      await productPage.addProductToTheCart(page, 1);
 
-        // Change FO language
-        await foHomePage.changeLanguage(page, 'en');
-
-        const isHomePage = await foHomePage.isHomePage(page);
-        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
-      });
-
-      it('should go to fourth product page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
-
-        await foHomePage.goToProductPage(page, 4);
-
-        const pageTitle = await foProductPage.getPageTitle(page);
-        expect(pageTitle).to.contains(Products.demo_5.name);
-      });
-
-      it('should add product to cart and go to cart page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
-
-        await foProductPage.addProductToTheCart(page, 1);
-
-        const pageTitle = await cartPage.getPageTitle(page);
-        expect(pageTitle).to.equal(cartPage.pageTitle);
-      });
-
-      it('should validate shopping cart and go to checkout page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
-
-        // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
-
-        const isCheckoutPage = await foCheckoutPage.isCheckoutPage(page);
-        expect(isCheckoutPage).to.eq(true);
-      });
-
-      it('should fill customer information', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'fillCustomerInformation', baseContext);
-
-        const isStepCompleted = await foCheckoutPage.setGuestPersonalInformation(page, guestData);
-        expect(isStepCompleted).to.eq(true);
-      });
-
-      // @todo : https://github.com/PrestaShop/hummingbird/issues/614
-      it('should fill different delivery and invoice addresses', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'fillCustomerAddresses', baseContext);
-
-        this.skip();
-
-        const isStepCompleted = await foCheckoutPage.setAddress(page, deliveryAddress, invoiceAddress);
-        expect(isStepCompleted).to.eq(true);
-      });
-
-      it.skip('should complete the order', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'completeTheOrder', baseContext);
-
-        // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await foCheckoutPage.goToPaymentStep(page);
-        expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
-
-        // Payment step - Choose payment step
-        await foCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-
-        // Check the confirmation message
-        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-      });
+      const pageTitle = await cartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
-    describe.skip('Go to BO and check that invoice address is different from delivery address', async () => {
-      it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
-      });
+    it('should validate shopping cart and go to checkout page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
-      it('should go to the orders page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+      // Proceed to checkout the shopping cart
+      await cartPage.clickOnProceedToCheckout(page);
 
-        await dashboardPage.goToSubMenu(
-          page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
-        );
-        await ordersPage.closeSfToolBar(page);
+      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      expect(isCheckoutPage).to.equal(true);
+    });
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
-      });
+    it('should fill customer information', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'fillCustomerInformation', baseContext);
 
-      it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+      const isStepCompleted = await checkoutPage.setGuestPersonalInformation(page, guestData);
+      expect(isStepCompleted).to.equal(true);
+    });
 
-        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-        expect(numberOfOrders).to.be.above(0);
-      });
+    // @todo : https://github.com/PrestaShop/hummingbird/issues/614
+    it('should fill different delivery and invoice addresses', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'fillCustomerAddresses', baseContext);
 
-      it(`should filter the Orders table by 'Customer: ${guestData.lastName}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
+      this.skip();
 
-        await ordersPage.resetFilter(page);
-        await ordersPage.filterOrders(page, 'input', 'customer', guestData.lastName);
+      const isStepCompleted = await checkoutPage.setAddress(page, deliveryAddress, invoiceAddress);
+      expect(isStepCompleted).to.equal(true);
+    });
 
-        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-        expect(textColumn).to.contains(guestData.lastName);
-      });
+    it('should complete the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'completeTheOrder', baseContext);
 
-      it('should view the order', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'orderPageCustomerBlock', baseContext);
+      this.skip();
 
-        await ordersPage.goToOrder(page, 1);
+      // Delivery step - Go to payment step
+      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.equal(true);
 
-        const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
-        expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
-      });
+      // Payment step - Choose payment step
+      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
-      it('should check that invoice and delivery addresses are different', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesInViewOrder', baseContext);
-
-        const finalDeliveryAddress = await orderPageCustomerBlock.getShippingAddress(page);
-        const finalInvoiceAddress = await orderPageCustomerBlock.getInvoiceAddress(page);
-
-        expect(
-          finalDeliveryAddress.replace('Shipping', ''),
-          'Invoice and delivery addresses shouldn\'t be the same',
-        )
-          .to.not.equal(finalInvoiceAddress.replace('Invoice', ''));
-      });
+      // Check the confirmation message
+      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_0`);
+  uninstallHummingbird(`${baseContext}_postTest`);
 });
