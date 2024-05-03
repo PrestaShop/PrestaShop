@@ -15,7 +15,7 @@ https://devdocs.prestashop-project.org/8/contribute/contribution-guidelines/pull
 | Branch?           | develop / 8.1.x
 | Description?      | Please be specific when describing the PR. <br> Every detail helps: versions, browser/server configuration, specific module/theme, etc. Feel free to add more information below this table.
 | Type?             | bug fix / improvement / new feature / refacto
-| Category?         | FO / BO / CO / IN / WS / TE / LO / ME / PM
+| Category?         | FO / BO / CO / IN / WS / TE / LO / ME / PM / see explanations at https://devdocs.prestashop-project.org/8/contribute/contribution-guidelines/pull-requests/#type--category
 | BC breaks?        | yes / no
 | Deprecations?     | yes / no
 | How to test?      | Indicate how to verify that this change works as expected.
