@@ -32,7 +32,7 @@ import {ProductAttribute} from '@data/types/product';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_productPage_productPage_changeCombination';
+const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_changeCombination';
 
 describe('FO - Product page - Product page : Change combination', async () => {
   let browserContext: BrowserContext;
