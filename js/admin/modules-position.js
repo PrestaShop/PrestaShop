@@ -179,7 +179,7 @@ $(function(){
 				dataType: 'json',
 				data: {
 					action: 'getPossibleHookingListForModule',
-					tab: 'AdminModulesPositions',
+					controller: 'AdminModulesPositions',
 					ajax: 1,
 					module_id: $this.val(),
 					token: token
