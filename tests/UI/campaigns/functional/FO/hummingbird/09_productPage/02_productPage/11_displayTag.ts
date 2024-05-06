@@ -172,7 +172,7 @@ describe('FO - Product page - Product page : Display tag products', async () => 
     });
 
     it('should check the tag \'New, pack, out-of-stock and Online only\' for the created product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkTagsInALlProductPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTagsInAllProductPage', baseContext);
 
       const flagText = await categoryPage.getProductTag(page, productsNumber - 12);
       expect(flagText).to.contains('Online only')
@@ -182,7 +182,7 @@ describe('FO - Product page - Product page : Display tag products', async () => 
     });
 
     it('should go to the created product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkTagsInALlProductPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedProductPage', baseContext);
 
       await categoryPage.goToProductPage(page, productsNumber - 12);
 
