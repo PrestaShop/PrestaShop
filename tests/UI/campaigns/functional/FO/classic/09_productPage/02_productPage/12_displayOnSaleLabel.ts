@@ -23,7 +23,7 @@ import ProductData from '@data/faker/product';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_productPage_productPage_displayOnSaleTag';
+const baseContext: string = 'functional_FO_classic_productPage_productPage_displayOnSaleLabel';
 
 describe('FO - Product page - Product page : Display on sale label', async () => {
   let browserContext: BrowserContext;
