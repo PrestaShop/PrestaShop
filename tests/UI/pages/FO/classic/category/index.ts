@@ -56,6 +56,8 @@ class CategoryPage extends FOBasePage {
 
   protected productArticle: (number: number) => string;
 
+  private readonly productFlags: (number: number) => string;
+
   private readonly productTitle: (number: number) => string;
 
   protected productPrice: (number: number) => string;
@@ -133,6 +135,7 @@ class CategoryPage extends FOBasePage {
     // Products list
     this.productList = '#js-product-list';
     this.productArticle = (number: number) => `${this.productList} .products div:nth-child(${number}) article`;
+    this.productFlags = (row: number) => `${this.productArticle(row)} ul.product-flags`;
 
     this.productTitle = (number: number) => `${this.productArticle(number)} .product-title`;
     this.productPrice = (number: number) => `${this.productArticle(number)} span.price`;
@@ -323,6 +326,16 @@ class CategoryPage extends FOBasePage {
    */
   async goToProductPage(page: Page, id: number): Promise<void> {
     await this.clickAndWaitForURL(page, this.productAttribute(id, 'thumbnail'));
+  }
+
+  /**
+   * Get product tags
+   * @param page {Page} Browser tab
+   * @param id {number} Row of the product
+   * @return {Promise<string>}
+   */
+  async getProductTag(page: Page, id: number): Promise<string> {
+    return this.getTextContent(page, this.productFlags(id));
   }
 
   /**
