@@ -62,7 +62,7 @@ class SecuredFileReaderController extends AbstractController
         'webp' => 'image/webp',
     ];
 
-    /** @var String $uploadDir */
+    /** @var string $uploadDir */
     private $uploadDir;
 
     /**
