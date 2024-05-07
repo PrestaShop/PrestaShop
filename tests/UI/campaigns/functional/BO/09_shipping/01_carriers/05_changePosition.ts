@@ -201,7 +201,7 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
     });
 
     it('should set sort by \'Price\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setSortByPosition', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'setSortByPrice', baseContext);
 
       const textResult = await preferencesPage.setCarrierSortOrderBy(page, 'Price', 'Ascending');
       expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
