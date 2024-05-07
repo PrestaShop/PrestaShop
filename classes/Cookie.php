@@ -380,22 +380,6 @@ class CookieCore
             throw new PrestaShopException('Error during setting a cookie. Combined size of name and value cannot exceed 4096 characters. Larger cookie is not compliant with RFC 2965 and will not be accepted by the browser.');
         }
 
-        /*
-         * The alternative signature supporting an options array is only available since
-         * PHP 7.3.0, before there is no support for SameSite attribute.
-         */
-        if (PHP_VERSION_ID < 70300) {
-            return setcookie(
-                $this->_name,
-                $content,
-                $time,
-                $this->_path,
-                $this->_domain . '; SameSite=' . $this->_sameSite,
-                $this->_secure,
-                true
-            );
-        }
-
         return setcookie(
             $this->_name,
             $content,

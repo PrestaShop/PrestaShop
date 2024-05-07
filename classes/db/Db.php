@@ -297,7 +297,7 @@ abstract class DbCore
     {
         $class = '';
         /* @phpstan-ignore-next-line */
-        if (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql')) {
+        if (extension_loaded('pdo_mysql')) {
             $class = 'DbPDO';
         } elseif (extension_loaded('mysqli')) {
             $class = 'DbMySQLi';
