@@ -164,12 +164,6 @@ function updateCurrentText()
   $('#current_product').html($('#name_' + id_language).val());
 }
 
-function updateFriendlyURLByName()
-{
-  $('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val(), 'UTF-8'));
-  $('#friendly-url_' + id_language).html($('#link_rewrite_' + id_language).val());
-}
-
 function updateFriendlyURL()
 {
   var link = $('#link_rewrite_' + id_language);
@@ -177,55 +171,6 @@ function updateFriendlyURL()
   {
     $('#friendly-url_' + id_language).text(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
   }
-}
-
-function updateLinkRewrite()
-{
-  $('#name_' + id_language).val($.trim($('#name_' + id_language).val()));
-  $('#link_rewrite_' + id_language).val($.trim($('#link_rewrite_' + id_language).val()));
-  var link = $('#link_rewrite_' + id_language);
-  if (link[0])
-  {
-    link.val(str2url(link.val(), 'UTF-8'));
-    $('#friendly-url_' + id_language).text(link.val());
-  }
-}
-
-function toggleLanguageFlags(elt)
-{
-  $(elt).parents('.displayed_flag').siblings('.language_flags').toggle();
-}
-
-// Kept for retrocompatibility only (out of AdminProducts & AdminCategories)
-function changeLanguage(field, fieldsString, id_language_new, iso_code)
-{
-    $('div[id^='+field+'_]').hide();
-  var fields = fieldsString.split('¤');
-  for (var i = 0; i < fields.length; ++i)
-  {
-    $('div[id^='+fields[i]+'_]').hide();
-    $('#'+fields[i]+'_'+id_language_new).show();
-    $('#'+'language_current_'+fields[i]).attr('src', '../img/l/' + id_language_new + '.jpg');
-  }
-  $('#languages_' + field).hide();
-  id_language = id_language_new;
-}
-
-// kept for retrocompatibility - you should use hideOtherLanguage(id) since 1.6
-function changeFormLanguage(id_language_new, iso_code, employee_cookie)
-{
-  $('.translatable').each(function() {
-    $(this).find('.lang_' + id_language_new)
-      .show()
-      .siblings('div:not(.displayed_flag):not(.clear)').hide();
-    $(this).find('.language_current').attr('src', '../img/l/' + id_language_new + '.jpg');
-  });
-
-  // For multishop checkboxes
-  $('.multishop_lang_'+id_language_new).show().siblings('div[class^=\'multishop_lang_\']').hide();
-  id_language = id_language_new;
-  changeEmployeeLanguage();
-  updateCurrentText();
 }
 
 function checkAll(pForm)
@@ -247,38 +192,6 @@ function checkDelBoxes(pForm, boxName, parent)
   for (i = 0; i < pForm.elements.length; i++)
     if (pForm.elements[i].name == boxName)
       pForm.elements[i].checked = parent;
-}
-
-function checkPaymentBoxes(name, module)
-{
-  setPaymentBoxes(name, module);
-  current = $('input#checkedBox_'+ name +'_'+ module + '[type=hidden]');
-  $('form#form_'+ name +' input[type=checkbox]').each(
-    function()
-    {
-      if ($(this).attr('name') == module + '_' + name + '[]')
-        $(this).attr("checked", ((current.val() == 'checked') ? true : false));
-    }
-  );
-  current.val() == 'checked' ? current.val('unchecked') : current.val('checked');
-}
-
-function setPaymentBoxes(name, module)
-{
-  current = $('input#checkedBox_'+ name +'_'+ module + '[type=hidden]');
-  total = 0;
-  checked = 0;
-  $('form#form_'+ name +' input[type=checkbox]').each(
-    function()
-    {
-      if ($(this).attr('name') == module + '_' + name + '[]')
-      {
-        ($(this).attr("checked") ? checked++ : '');
-        total++;
-      }
-    }
-  );
-  (checked == total) ? current.val('unchecked') : current.val('checked');
 }
 
 function getE(name)
@@ -335,83 +248,9 @@ function viewTemplates(id_select, lang, ext)
   }
 }
 
-function orderDeleteProduct(txtConfirm, txtExplain)
-{
-  ret = true;
-  $('table#cancelProducts input[type=checkbox]:checked').each(
-    function()
-    {
-      totalCancel = parseInt($(this).parent().parent().find('td.cancelQuantity input[type=text]').val());
-      totalQty = parseInt($(this).parent().find('input#totalQty[type=hidden]').val());
-      totalQtyReturn = parseInt($(this).parent().find('input#totalQtyReturn[type=hidden]').val());
-      productName = $(this).parent().find('input#productName[type=hidden]').val();
-      totalAvailable = totalQty - totalQtyReturn;
-      if (totalCancel > totalAvailable)
-      {
-        jAlert(txtConfirm + ' : \'' + ' ' + productName + '\' ! \n\n' + txtExplain + ' ('+ totalCancel + ' > ' + totalAvailable +')' + '\n ');
-        ret = false;
-      }
-    }
-  );
-  return ret;
-}
-
 function selectCheckbox(obj)
 {
   $(obj).parent().parent().find('td.cancelCheck input[type=checkbox]').attr("checked", true);
-}
-
-function toggleShippingCost()
-{
-  generateDiscount = $('#generateDiscount').attr("checked");
-  generateCreditSlip = $('#generateCreditSlip').attr("checked");
-  if (generateDiscount != 'checked' && generateCreditSlip != 'checked')
-  {
-    $('#spanShippingBack input[type=checkbox]').attr("checked", false);
-    $('#spanShippingBack').css('display', 'none');
-  }
-  else
-    $('#spanShippingBack').css('display', 'block');
-}
-
-function orderOverwriteMessage(sl, text)
-{
-  var $zone = $('#txt_msg');
-  var sl_value = sl.options[sl.selectedIndex].value;
-
-  if (sl_value != '0')
-  {
-    if ($zone.val().length > 0 && !confirm(text))
-      return ;
-    $zone.val(sl_value);
-  }
-
-  $zone.trigger('autosize.resize');
-}
-
-function setCancelQuantity(itself, id_order_detail, quantity)
-{
-  $('#cancelQuantity_' + id_order_detail).val($(itself).prop('checked') ? quantity : '');
-}
-
-function stockManagementActivationAuthorization()
-{
-  if (getE('PS_STOCK_MANAGEMENT_on').checked)
-  {
-    getE('PS_ORDER_OUT_OF_STOCK_on').disabled = false;
-    getE('PS_ORDER_OUT_OF_STOCK_off').disabled = false;
-    getE('PS_DISPLAY_QTIES_on').disabled = false;
-    getE('PS_DISPLAY_QTIES_off').disabled = false;
-  }
-  else
-  {
-    getE('PS_DISPLAY_QTIES_off').checked = true;
-    getE('PS_DISPLAY_QTIES_on').disabled = 'disabled';
-    getE('PS_DISPLAY_QTIES_off').disabled = 'disabled';
-    getE('PS_ORDER_OUT_OF_STOCK_on').checked = true;
-    getE('PS_ORDER_OUT_OF_STOCK_on').disabled = 'disabled';
-    getE('PS_ORDER_OUT_OF_STOCK_off').disabled = 'disabled';
-  }
 }
 
 function hookCheckboxes(id, opt, champ)
@@ -425,14 +264,6 @@ function hookCheckboxes(id, opt, champ)
     else
       $('.hook'+id).attr('checked', false);
   }
-}
-
-function changeCMSActivationAuthorization()
-{
-  if (getE('PS_CONDITIONS_on').checked)
-    getE('PS_CONDITIONS_CMS_ID').disabled = false;
-  else
-    getE('PS_CONDITIONS_CMS_ID').disabled = 'disabled';
 }
 
 function disableZipFormat()
@@ -452,99 +283,6 @@ function disableTAASC()
     $('#TAASC').show();
   else
     $('#TAASC').hide();
-}
-
-function spreadFees(id_range)
-{
-  newVal = $('#fees_all_'+id_range).val().replace(/,/g, '.');
-  $('.fees_'+id_range).val(newVal);
-}
-
-function clearAllFees(id_range)
-{
-  $('#fees_all_'+id_range).val('');
-}
-
-function toggleDraftWarning(show)
-{
-  if (show)
-    $('.draft').hide();
-  else
-    $('.draft').show();
-}
-
-function showRedirectProductOptions(show)
-{
-  if (show)
-    $('.redirect_product_options').fadeIn();
-  else
-    $('.redirect_product_options').fadeOut();
-
-  redirectSelectChange();
-}
-
-function redirectSelectChange()
-{
-  redirectTypeValue = $('#redirect_type :selected').val();
-  if (redirectTypeValue == '404' ||
-      redirectTypeValue == '410' ||
-      redirectTypeValue == 'default' ||
-      redirectTypeValue == '200-displayed' ||
-      redirectTypeValue == '404-displayed' ||
-      redirectTypeValue == '410-displayed')
-    showRedirectProductSelectOptions(false);
-  else
-    showRedirectProductSelectOptions(true);
-}
-
-function addRelatedProduct(id_product_to_add, product_name)
-{
-  if (!id_product_to_add || id_product == id_product_to_add)
-    return;
-  $('#related_product_name').html(product_name);
-  $('input[name=id_type_redirected]').val(id_product_to_add);
-  $('#related_product_autocomplete_input').parent().hide();
-  $('#related_product_remove').show();
-}
-
-function removeRelatedProduct()
-{
-  $('#related_product_name').html(no_related_product);
-  $('input[name=id_type_redirected]').val(0);
-  $('#related_product_remove').hide();
-  $('#related_product_autocomplete_input').parent().fadeIn();
-}
-
-function showRedirectProductSelectOptions(show)
-{
-  if (show)
-    $('.redirect_product_options_product_choise').show();
-  else
-  {
-    $('.redirect_product_options_product_choise').hide();
-    removeRelatedProduct();
-  }
-
-}
-
-function showOptions(show)
-{
-  if (show)
-    $('tr#product_options').show();
-  else
-    $('tr#product_options').hide();
-}
-
-function submitAddProductAndPreview()
-{
-  $('#fakeSubmitAddProductAndPreview').attr('name','submitAddProductAndPreview');
-  $('#product_form').submit();
-}
-
-function submitAddcmsAndPreview()
-{
-  $('#previewSubmitAddcmsAndPreview').attr('name','submitAddcmsAndPreview');
-  $('#cms').submit();
 }
 
 function checkAllMultishopDefaultValue(item)
@@ -831,7 +569,6 @@ function bindSwapButton(prefix_button, prefix_select_remove, prefix_select_add, 
   });
 }
 
-
 // Delete all tags HTML
 function stripHTML(oldString)
 {
@@ -865,126 +602,6 @@ function showAjaxOverlay()
 {
   $('#ajax_running').show('fast');
   clearTimeout(ajax_running_timeout);
-}
-
-function display_action_details(row_id, controller, token, action, params)
-{
-  var id = action+'_'+row_id;
-  var current_element = $('#details_'+id);
-  if (!current_element.data('dataMaped')) {
-    var ajax_params = {
-      'id': row_id,
-      'controller': controller,
-      'token': token,
-      'action': action,
-      'ajax': true
-    };
-
-    $.each(params, function(k, v) {
-      ajax_params[k] = v;
-    });
-
-    $.ajax({
-      url: 'index.php',
-      data: ajax_params,
-      dataType: 'json',
-      cache: false,
-      context: current_element,
-      async: false,
-      success: function(data) {
-        if (typeof(data.use_parent_structure) == 'undefined' || (data.use_parent_structure == true))
-        {
-          if (current_element.parent().parent().hasClass('alt_row'))
-            var alt_row = true;
-          else
-            var alt_row = false;
-          current_element.parent().parent().after($('<tr class="details_'+id+' small '+(alt_row ? 'alt_row' : '')+'"></tr>')
-            .append($('<td style="border:none!important;" class="empty"></td>')
-            .attr('colspan', current_element.parent().parent().find('td').length)));
-          $.each(data.data, function(it, row)
-          {
-            var bg_color = ''; // Color
-            if (row.color)
-              bg_color = 'style="background:' + row.color +';"';
-
-            var content = $('<tr class="action_details details_'+id+' '+(alt_row ? 'alt_row' : '')+'"></tr>');
-            content.append($('<td class="empty"></td>'));
-            var first = true;
-            var count = 0; // Number of non-empty collum
-            $.each(row, function(it)
-            {
-              if(typeof(data.fields_display[it]) != 'undefined')
-                count++;
-            });
-            $.each(data.fields_display, function(it, line)
-            {
-              if (typeof(row[it]) == 'undefined')
-              {
-                if (first || count == 0)
-                  content.append($('<td class="'+current_element.align+' empty"' + bg_color + '></td>'));
-                else
-                  content.append($('<td class="'+current_element.align+'"' + bg_color + '></td>'));
-              }
-              else
-              {
-                count--;
-                if (first)
-                {
-                  first = false;
-                  content.append($('<td class="'+current_element.align+' first"' + bg_color + '>'+row[it]+'</td>'));
-                }
-                else if (count == 0)
-                  content.append($('<td class="'+current_element.align+' last"' + bg_color + '>'+row[it]+'</td>'));
-                else
-                  content.append($('<td class="'+current_element.align+' '+count+'"' + bg_color + '>'+row[it]+'</td>'));
-              }
-            });
-            content.append($('<td class="empty"></td>'));
-            current_element.parent().parent().after(content.show('slow'));
-          });
-        }
-        else
-        {
-          if (current_element.parent().parent().hasClass('alt_row'))
-            var content = $('<tr class="details_'+id+' alt_row"></tr>');
-          else
-            var content = $('<tr class="details_'+id+'"></tr>');
-          content.append($('<td style="border:none!important;">'+data.data+'</td>').attr('colspan', current_element.parent().parent().find('td').length));
-          current_element.parent().parent().after(content);
-          current_element.parent().parent().parent().find('.details_'+id).hide();
-        }
-        current_element.data('dataMaped', true);
-        current_element.data('opened', false);
-
-        if (typeof(initTableDnD) != 'undefined')
-          initTableDnD('.details_'+id+' table.tableDnD');
-      }
-    });
-  }
-
-  if (current_element.data('opened'))
-  {
-    current_element.find('i.icon-collapse-top').attr('class', 'icon-collapse');
-    current_element.parent().parent().parent().find('.details_'+id).hide('fast');
-    current_element.data('opened', false);
-  }
-  else
-  {
-    current_element.find('i.icon-collapse').attr('class', 'icon-collapse-top');
-    current_element.parent().parent().parent().find('.details_'+id).show('fast');
-    current_element.data('opened', true);
-  }
-}
-
-function quickSelect(elt)
-{
-  var eltVal = $(elt).val();
-  if (eltVal == "0")
-    return false;
-  else if (eltVal.substr(eltVal.length - 6) == '_blank')
-    window.open(eltVal.substr(0, eltVal.length - 6), '_blank');
-  else
-    location.href = eltVal;
 }
 
 function changeEmployeeLanguage()
@@ -1032,47 +649,6 @@ function sendBulkAction(form, action)
     $(form).attr('action', form_action.splice(form_action.lastIndexOf('&'), 0, '&' + action));
 
   $(form).submit();
-}
-
-/**
- * Searches for current controller and current CRUD action. This data can be used to know from where an ajax call is done (source tracking for example).
- * Action is 'index' by default.
- * For instance, only used for back-office.
- * @param force_action optional string to override action part of the result.
- */
-function getControllerActionMap(force_action) {
-  query = window.location.search.substring(1);
-  vars = query.split("&");
-  controller = "Admin";
-  action = "index";
-
-  for (i = 0 ; i < vars.length; i++) {
-    pair = vars[i].split("=");
-
-    if (pair[0] == "token")
-      continue;
-    if (pair[0] == "controller")
-      controller = pair[1];
-
-    if (pair.length == 1) {
-      if (pair[0].indexOf("add") != -1)
-        action = "new";
-      else if (pair[0].indexOf("view") != -1)
-        action = "view";
-      else if (pair[0].indexOf("edit") != -1 || pair[0].indexOf("modify") != -1 || pair[0].indexOf("update") != -1)
-        action = "edit";
-      else if (pair[0].indexOf("delete") != -1)
-        action = "delete";
-    }
-  }
-
-  if (force_action !== undefined)
-    action = force_action;
-
-  if (typeof help_class_name != 'undefined')
-    controller = help_class_name;
-
-  return new Array('back-office',controller, action);
 }
 
 function ajaxStates(id_state_selected)
@@ -1169,100 +745,6 @@ function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, tabl
   check_for_all_accesses(tabsize, tabnumber);
 }
 
-verifMailREGEX = /^([\w+-]+(?:\.[\w+-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$/;
-function verifyMail(testMsg, testSubject)
-{
-  $("#mailResultCheck").removeClass("alert-danger").removeClass('alert-success').html('<img src="../img/admin/ajax-loader.gif" alt="" />');
-  $("#mailResultCheck").slideDown("slow");
-
-  //local verifications
-  if (!($("#testEmail").val().length > 0))
-  {
-    $("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(errorMail);
-    return false;
-  }
-  else if (!verifMailREGEX.test( $("#testEmail").val() ))
-  {
-    $("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(errorMail);
-    return false;
-  }
-  else
-  {
-    //external verifications and sets
-    $.ajax(
-    {
-       url: "index.php",
-       cache: false,
-       type : "POST",
-       data:
-      {
-        "mailMethod"  : (($("input[name=PS_MAIL_METHOD]:checked").val() == 2) ? "smtp" : "native"),
-        "smtpSrv"   : $("input[name=PS_MAIL_SERVER]").val(),
-        "testEmail"   : $("#testEmail").val(),
-        "smtpLogin"   : $("input[name=PS_MAIL_USER]").val(),
-        "smtpPassword"  : $("input[name=PS_MAIL_PASSWD]").val(),
-        "smtpPort"    : $("input[name=PS_MAIL_SMTP_PORT]").val(),
-        "smtpEnc"   : $("select[name=PS_MAIL_SMTP_ENCRYPTION]").val(),
-        "testMsg"   : textMsg,
-        "testSubject" : textSubject,
-        "token"     : token_mail,
-        "ajax"      : 1,
-        "controller"       : 'AdminEmails',
-        "action"      : 'sendMailTest'
-      },
-       success: function(ret)
-       {
-        if (ret == "ok")
-        {
-          $("#mailResultCheck").addClass("alert-success").removeClass("alert-danger").removeClass('userInfos').html(textSendOk);
-          mailIsOk = true;
-        }
-        else
-        {
-          mailIsOk = false;
-          $("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(textSendError + '<br />' + ret);
-        }
-       }
-     }
-     );
-  }
-}
-
-function checkLangPack(token){
-  if ($('#iso_code').val().length == 2)
-  {
-    $('#lang_pack_loading').show();
-    $('#lang_pack_msg').hide();
-    doAdminAjax(
-      {
-        controller:'AdminLanguages',
-        action:'checkLangPack',
-        token:token,
-        ajax:1,
-        iso_lang:($('#iso_code').val()).toLowerCase(),
-        ps_version:$('#ps_version').val()
-      },
-      function(ret)
-      {
-        $('#lang_pack_loading').hide();
-        ret = $.parseJSON(ret);
-        if( ret.status == 'ok')
-        {
-          content = $.parseJSON(ret.content);
-          message = langPackOk + ' <b>'+content['name'] + '</b>) :'
-            +'<br />' + langPackVersion + ' ' + content['version']
-            + ' <a href="https://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
-            + ($('#iso_code').val()).toLowerCase()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
-          $('#lang_pack_msg').html(message);
-          $('#lang_pack_msg').show();
-        }
-        else
-          showErrorMessage(ret.error);
-      }
-     );
-   }
-}
-
 function redirect(new_page) { window.location = new_page; }
 
 function isCleanHtml(content)
@@ -1357,11 +839,6 @@ function confirm_link(head_text, display_text, confirm_text, cancel_text, confir
 
 }
 
-function TogglePackage(detail)
-{
-    var pack = $('#pack_items_' + detail);
-    pack.css('display', (pack.css('display') == 'block') ? "none" : "block");
-}
 function countDown($source, $target) {
   var max = $source.attr("data-maxchar");
   $target.html(max-$source.val().length);
