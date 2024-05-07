@@ -8,20 +8,22 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
   // Import data
   dataCustomers,
+  dataZones,
   FakerCarrier,
+  boDashboardPage,
+  foClassicCartPage,
+  foClassicCheckoutPage,
+  foClassicHomePage,
+  foClassicLoginPage,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -42,11 +44,78 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
   let numberOfCarriers: number = 0;
   let carrierID: number = 0;
 
-  const createCarrierData: FakerCarrier = new FakerCarrier({freeShipping: false, zoneID: 4, allZones: false});
-  const editCarrierData: FakerCarrier = new FakerCarrier({
+  const createCarrierData: FakerCarrier = new FakerCarrier({
+    // General settings
+    name: 'Carrier Created',
+    speedGrade: 7,
+    trackingURL: 'https://example.com/track.php?num=@',
+    // Shipping locations and cost
+    handlingCosts: false,
     freeShipping: false,
-    rangeSup: 50,
-    allZones: true,
+    billing: 'According to total weight',
+    taxRule: 'No tax',
+    outOfRangeBehavior: 'Apply the cost of the highest defined range',
+    ranges: [
+      {
+        weightMin: 0,
+        weightMax: 5,
+        zones: [
+          {
+            zone: dataZones.europe,
+            price: 5,
+          },
+          {
+            zone: dataZones.northAmerica,
+            price: 2,
+          },
+        ],
+      },
+      {
+        weightMin: 5,
+        weightMax: 10,
+        zones: [
+          {
+            zone: dataZones.europe,
+            price: 10,
+          },
+          {
+            zone: dataZones.northAmerica,
+            price: 4,
+          },
+        ],
+      },
+      {
+        weightMin: 10,
+        weightMax: 20,
+        zones: [
+          {
+            zone: dataZones.europe,
+            price: 20,
+          },
+          {
+            zone: dataZones.northAmerica,
+            price: 8,
+          },
+        ],
+      },
+    ],
+    // Size weight and group access
+    maxWidth: 200,
+    maxHeight: 200,
+    maxDepth: 200,
+    maxWeight: 500,
+    enable: true,
+  });
+  const editCarrierData: FakerCarrier = new FakerCarrier({
+    // General settings
+    name: 'Carrier Updated',
+    // Shipping locations and cost
+    handlingCosts: false,
+    freeShipping: false,
+    billing: 'According to total weight',
+    // Size weight and group access
+    maxWidth: 700,
+    maxHeight: 500,
     enable: true,
   });
 
@@ -79,10 +148,10 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
   it('should go to \'Shipping > Carriers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shippingLink,
-      dashboardPage.carriersLink,
+      boDashboardPage.shippingLink,
+      boDashboardPage.carriersLink,
     );
 
     const pageTitle = await carriersPage.getPageTitle(page);
@@ -143,27 +212,27 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       // Click on view my shop
       page = await carriersPage.viewMyShop(page);
       // Change language
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstGoToLoginPageFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -171,33 +240,36 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'firstCreateOrder', baseContext);
 
       // Go to home page
-      await foLoginPage.goToHomePage(page);
+      await foClassicLoginPage.goToHomePage(page);
       // Go to the first product page
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
       await productPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should check that the new carrier is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewCarrier', baseContext);
 
+      const shippingMethodName = await checkoutPage.getShippingMethodName(page, carrierID);
+      expect(shippingMethodName).to.eq(createCarrierData.name);
+
       const isShippingMethodVisible = await checkoutPage.isShippingMethodVisible(page, carrierID);
-      expect(isShippingMethodVisible, 'The carrier is visible').to.eq(false);
+      expect(isShippingMethodVisible).to.eq(true);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighOutFO', baseContext);
 
-      await checkoutPage.goToHomePage(page);
-      await checkoutPage.logout(page);
+      await foClassicCheckoutPage.goToHomePage(page);
+      await foClassicCheckoutPage.logout(page);
 
-      const isCustomerConnected = await checkoutPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicCheckoutPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
@@ -207,7 +279,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstGoBackToBO', baseContext);
 
-      page = await checkoutPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await carriersPage.getPageTitle(page);
       expect(pageTitle).to.contains(carriersPage.pageTitle);
@@ -273,27 +345,27 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       // Click on view my shop
       page = await carriersPage.viewMyShop(page);
       // Change language
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'secondGoToLoginPageFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'secondSighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -301,21 +373,24 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'secondCreateOrder', baseContext);
 
       // Go to home page
-      await foLoginPage.goToHomePage(page);
+      await foClassicLoginPage.goToHomePage(page);
       // Go to the first product page
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
       await productPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should check that the updated carrier is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedCarrier', baseContext);
+
+      const shippingMethodName = await checkoutPage.getShippingMethodName(page, carrierID);
+      expect(shippingMethodName).to.eq(editCarrierData.name);
 
       const isShippingMethodVisible = await checkoutPage.isShippingMethodVisible(page, carrierID);
       expect(isShippingMethodVisible, 'The carrier is not visible').to.eq(true);
@@ -324,10 +399,10 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'secondSighOutFO', baseContext);
 
-      await checkoutPage.goToHomePage(page);
-      await checkoutPage.logout(page);
+      await foClassicCheckoutPage.goToHomePage(page);
+      await foClassicCheckoutPage.logout(page);
 
-      const isCustomerConnected = await checkoutPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicCheckoutPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
@@ -337,7 +412,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'secondGoBackToBO', baseContext);
 
-      page = await checkoutPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await carriersPage.getPageTitle(page);
       expect(pageTitle).to.contains(carriersPage.pageTitle);

@@ -51,10 +51,24 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
 
   const createCarrierData: FakerCarrier = new FakerCarrier({
     freeShipping: false,
-    allZones: true,
     handlingCosts: true,
-    allZonesValue: 5.00,
-    rangeSup: 50,
+    ranges: [
+      {
+        weightMin: 0,
+        weightMax: 50,
+        zones: [
+          {
+            zone: 'all',
+            price: 5,
+          },
+        ],
+      },
+    ],
+    // Size weight and group access
+    maxWidth: 200,
+    maxHeight: 200,
+    maxDepth: 200,
+    maxWeight: 500,
   });
   const priceDisplayMethod: string[] = ['Tax excluded', 'Tax included'];
   const defaultHandlingChargesValue: number = 2.00;
@@ -231,7 +245,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await checkoutPage.chooseShippingMethodAndAddComment(page, newCarrierID);
 
       const shippingCost = await checkoutPage.getShippingCost(page);
-      expect(shippingCost).to.contains(defaultHandlingChargesValue + createCarrierData.allZonesValue);
+      expect(shippingCost).to.contains(defaultHandlingChargesValue + createCarrierData.ranges[0].zones[0].price);
     });
 
     it('should sign out from FO', async function () {
@@ -328,7 +342,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await checkoutPage.chooseShippingMethodAndAddComment(page, newCarrierID);
 
       const shippingCost = await checkoutPage.getShippingCost(page);
-      expect(shippingCost).to.contains(updateHandlingChargesValue + createCarrierData.allZonesValue);
+      expect(shippingCost).to.contains(updateHandlingChargesValue + createCarrierData.ranges[0].zones[0].price);
     });
 
     it('should sign out from FO', async function () {
