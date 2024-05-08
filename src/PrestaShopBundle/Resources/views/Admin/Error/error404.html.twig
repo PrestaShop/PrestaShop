@@ -30,7 +30,7 @@
 {% endblock %}
 
 {% block title %}
-  {{ 'The object cannot be loaded (or found).'|trans({},'Admin.Notifications.Error' ) }}
+  {{ 'Page not found'|trans({},'Admin.Notifications.Error' ) }}
 {% endblock %}
 
 {% block body %}
@@ -38,20 +38,16 @@
     <div class="mt-5">
       <div class="card">
         <div class="card-body text-center">
-          <img class="img-responsive" src="{{ asset('themes/new-theme/img/error/500.svg') }}" alt="{{ 'The object cannot be loaded (or found).'|trans({}, 'Admin.Notifications.Error') }}">
+          <img class="img-responsive" src="{{ asset('themes/new-theme/img/error/500.svg') }}" alt="{{ 'Page not found'|trans({}, 'Admin.Notifications.Error') }}">
 
           <div class="mt-3">
             <p class="error-header">
-              {{ 'The object cannot be loaded (or found).'|trans({}, 'Admin.Notifications.Error') }}
+              {{ 'Page not found'|trans({}, 'Admin.Notifications.Error') }}
             </p>
 
             {% if exception is defined and exception %}
               <div class="mx-auto">
                 <p class="mb-0">{{ exception.message }}</p>
-                {% if exception.class is defined or exception.code is defined %}
-                  <p class="mb-0">[{{ exception.class|default('Exception') }}
-                    {{ exception.code|default(0) }}]</p>
-                {% endif %}
               </div>
             {% endif %}
 

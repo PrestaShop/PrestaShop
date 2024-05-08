@@ -51,7 +51,6 @@ class StoreControllerTest extends GridControllerTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::mockContext();
         StoreResetter::resetStores();
     }
 

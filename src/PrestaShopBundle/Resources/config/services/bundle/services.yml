@@ -36,7 +36,9 @@ services:
 
   prestashop.database.naming_strategy:
     class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
-    arguments: [ "%database_prefix%" ]
+    autowire: true
+    arguments:
+      $prefix: "%database_prefix%"
 
   prestashop.service.translation:
     class: PrestaShopBundle\Service\TranslationService
@@ -69,9 +71,8 @@ services:
   PrestaShopBundle\Service\DataProvider\UserProvider:
     autowire: true
     public: false
-    arguments:
-      $userProvider: '@prestashop.security.admin.provider'
 
+  # Only used in legacy code, otherwise prefer using the Security service
   prestashop.user_provider:
     alias: PrestaShopBundle\Service\DataProvider\UserProvider
     deprecated:
@@ -103,8 +104,6 @@ services:
 
   PrestaShopBundle\Security\Admin\UserTokenManager:
     autowire: true
-    arguments:
-      $cookieKey: '%cookie_key%'
 
   PrestaShopBundle\Service\Database\TransactionManager:
     public: false

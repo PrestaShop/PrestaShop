@@ -1,0 +1,100 @@
+body {
+  font-size: 12px;
+}
+
+label {
+  font-size: 14px;
+}
+
+#login-panel {
+  position: relative;
+  width: 500px;
+  margin: 0 auto;
+
+  #login-header {
+    padding-top: 40px;
+    margin-bottom: 30px;
+    color: #6d6d6d;
+  }
+
+  #shop-img {
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    width: 69.5px;
+    margin: 0 auto;
+  }
+
+  #login-content-card {
+    padding: 40px;
+    margin-top: 115px;
+
+    .submit-widget button {
+      width: 100%;
+      text-transform: uppercase;
+    }
+
+    #login_form {
+      .checkbox-widget {
+        position: relative;
+
+        .form-external-link {
+          position: absolute;
+          top: 0;
+          right: 0;
+
+          a.btn {
+            padding: 0;
+            font-size: 12px;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+
+    h4 {
+      text-align: center;
+    }
+
+    // Hide required asterisks
+    .required {
+      span.text-danger {
+        display: none;
+      }
+    }
+  }
+
+  #login-footer {
+    a {
+      color: #a0aab5;
+    }
+  }
+
+  a.login-back {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 400;
+    color: inherit;
+    text-decoration: none;
+
+    i {
+      margin-right: 0.5rem;
+    }
+
+    .login-back-shop {
+      margin-left: 0.25rem;
+      color: #25b9d7;
+    }
+
+    &:hover {
+      .login-back-shop {
+        text-decoration: underline;
+      }
+    }
+  }
+}

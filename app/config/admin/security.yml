@@ -23,3 +23,27 @@ security:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
+
+    main:
+      lazy: true
+      provider: admin
+      form_login:
+        login_path: admin_login
+        check_path: admin_login
+        username_parameter: email
+        password_parameter: passwd
+        success_handler: PrestaShopBundle\Security\Admin\AdminAuthenticationSuccessHandler
+      remember_me:
+        secret: "%kernel.secret%"
+        lifetime: 3600
+        remember_me_parameter: stay_logged_in
+        signature_properties: [ 'password' ]
+      logout:
+        path: /logout
+        target: admin_login
+
+  access_control:
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/request-password-reset, roles: PUBLIC_ACCESS }
+    - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+    - { path: ^/, roles: IS_AUTHENTICATED }

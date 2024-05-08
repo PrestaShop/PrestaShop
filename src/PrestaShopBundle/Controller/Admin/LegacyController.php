@@ -51,8 +51,8 @@ use function Symfony\Component\String\u;
  * it twice.
  *
  * So this controller gets back the central content of an AdminController after it's been run and displayed and integrate it
- * in the legacy layout that is based on the same Symfony layout as migrated page, but it still uses the templates JS and CSS
- * from the default theme.
+ * in the "twig legacy layout" that is based on the same Symfony layout components as migrated page, but it still uses the
+ * templates JS and CSS from the default theme.
  *
  * There are cases where this approach may not work, mostly when the legacy controllers relies on die or exit methods (which is a
  * bad practice). So far the use cases tested work fine, even the use of the header function in legacy code still works correctly.

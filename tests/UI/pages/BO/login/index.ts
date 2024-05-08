@@ -39,20 +39,20 @@ class Login extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'PrestaShop';
+    this.pageTitle = global.INSTALL.SHOP_NAME;
     this.loginErrorText = 'The employee does not exist, or the password provided is incorrect.';
     this.resetPasswordSuccessText = 'Please, check your mailbox.';
 
     this.emailInput = '#email';
     this.passwordInput = '#passwd';
     this.submitLoginButton = '#submit_login';
-    this.alertDangerDiv = '#error';
+    this.alertDangerDiv = '.alert-danger .alert-text';
     this.alertDangerTextBlock = `${this.alertDangerDiv} p`;
     // reset password selectors
     this.forgotPasswordLink = '#forgot-password-link';
-    this.resetPasswordEmailFormField = '#email_forgot';
-    this.resetPasswordButton = '#reset-password-button';
-    this.resetPasswordSuccessConfirmationText = '#forgot_confirm_name';
+    this.resetPasswordEmailFormField = '#request_password_reset_email_forgot';
+    this.resetPasswordButton = '#request_password_reset_buttons_submit_login';
+    this.resetPasswordSuccessConfirmationText = '.alert-info .alert-text p';
   }
 
   /*

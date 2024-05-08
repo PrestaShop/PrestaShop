@@ -34,7 +34,6 @@ namespace PrestaShopBundle\Twig\Layout;
 class TemplateVariables
 {
     private string $isoUser;
-    private bool $isSymfonyLayoutEnabled;
     private bool $isRtlLanguage;
     private string $controllerName;
     private bool $isMultiShop;
@@ -51,7 +50,6 @@ class TemplateVariables
 
     public function __construct(
         string $isoUser,
-        bool $isSymfonyLayoutEnabled,
         bool $isRtlLanguage,
         string $controllerName,
         bool $isMultiShop,
@@ -67,7 +65,6 @@ class TemplateVariables
         string $baseUrl,
     ) {
         $this->isoUser = $isoUser;
-        $this->isSymfonyLayoutEnabled = $isSymfonyLayoutEnabled;
         $this->isRtlLanguage = $isRtlLanguage;
         $this->controllerName = $controllerName;
         $this->isMultiShop = $isMultiShop;
@@ -86,11 +83,6 @@ class TemplateVariables
     public function getIsoUser(): string
     {
         return $this->isoUser;
-    }
-
-    public function isSymfonyLayoutEnabled(): bool
-    {
-        return $this->isSymfonyLayoutEnabled;
     }
 
     public function isRtlLanguage(): bool

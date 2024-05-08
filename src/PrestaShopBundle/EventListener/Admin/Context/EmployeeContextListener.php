@@ -30,9 +30,8 @@ namespace PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
-use PrestaShopBundle\Security\Admin\Employee;
+use PrestaShopBundle\Entity\Employee\Employee;
+use PrestaShopBundle\Security\Admin\SessionEmployeeProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
@@ -45,8 +44,7 @@ class EmployeeContextListener
         private readonly EmployeeContextBuilder $employeeContextBuilder,
         private readonly LegacyContext $legacyContext,
         private readonly Security $security,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
-        private readonly bool $isSymfonyLayout,
+        private readonly SessionEmployeeProvider $sessionEmployeeProvider,
     ) {
     }
 
@@ -56,14 +54,22 @@ class EmployeeContextListener
             return;
         }
 
-        if ($this->isSymfonyLayout !== $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)) {
-            return;
+        $employeeId = null;
+        // First see if an employee is logged in
+        if ($this->security->getUser() instanceof Employee) {
+            $employeeId = $this->security->getUser()->getId();
+        }
+        // Then fetch the employee ID from the session
+        if (empty($employeeId)) {
+            $employeeId = $this->sessionEmployeeProvider->getEmployeeFromSession($event->getRequest())?->getId();
+        }
+        // Last chance use the legacy employee
+        if (empty($employeeId) && !empty($this->legacyContext->getContext()->cookie->id_employee)) {
+            $employeeId = (int) $this->legacyContext->getContext()->cookie->id_employee;
         }
 
-        if (!empty($this->legacyContext->getContext()->cookie->id_employee)) {
-            $this->employeeContextBuilder->setEmployeeId((int) $this->legacyContext->getContext()->cookie->id_employee);
-        } elseif ($this->security->getUser() instanceof Employee) {
-            $this->employeeContextBuilder->setEmployeeId($this->security->getUser()->getId());
+        if (!empty($employeeId)) {
+            $this->employeeContextBuilder->setEmployeeId($employeeId);
         }
     }
 }

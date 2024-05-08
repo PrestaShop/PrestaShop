@@ -12,12 +12,15 @@ services:
     _defaults:
         public: true
 
+    PrestaShop\PrestaShop\Core\Crypto\Hashing: ~
     hashing:
-        class: PrestaShop\PrestaShop\Core\Crypto\Hashing
+        alias: PrestaShop\PrestaShop\Core\Crypto\Hashing
 
     prestashop.database.naming_strategy:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
-        arguments: ['%database_prefix%']
+        arguments:
+            $reader: '@annotation_reader'
+            $prefix: "%database_prefix%"
 
     annotation_reader:
         class: Doctrine\Common\Annotations\AnnotationReader

@@ -7,6 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
+import errorPage from '@pages/BO/error';
 import moduleCatalogPage from '@pages/BO/modules/moduleCatalog';
 
 import {expect} from 'chai';
@@ -60,7 +61,7 @@ describe('Regression : Access to Module catalog is denied with neither left menu
 
     await dashboardPage.navigateToPageWithInvalidToken(page, pageSymfonyUrl);
 
-    const pageTitle = await dashboardPage.getPageTitle(page);
-    expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    const pageTitle = await errorPage.getPageTitle(page);
+    expect(pageTitle).to.contains(errorPage.notFoundTitle);
   });
 });

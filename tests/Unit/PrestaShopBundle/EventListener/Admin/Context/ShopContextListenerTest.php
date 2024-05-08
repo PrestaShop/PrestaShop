@@ -62,8 +62,6 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             $this->mockLegacyContext(['shopContext' => '']),
             $this->mockMultistoreFeature(false),
             $this->mockRouter(),
-            $this->mockFeatureFlagStateChecker(),
-            true,
         );
         $listener->onKernelRequest($event);
 
@@ -97,8 +95,6 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             $this->mockLegacyContext(['shopContext' => $cookieValue]),
             $this->mockMultistoreFeature(true),
             $this->mockRouter(),
-            $this->mockFeatureFlagStateChecker(),
-            true,
         );
         $listener->onKernelRequest($event);
 
@@ -174,8 +170,6 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             $mockContext,
             $this->mockMultistoreFeature(true),
             $this->mockRouter(),
-            $this->mockFeatureFlagStateChecker(),
-            true,
         );
 
         // Check that initially the cookie has a null value

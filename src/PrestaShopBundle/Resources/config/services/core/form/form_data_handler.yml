@@ -77,6 +77,7 @@ services:
 
   prestashop.core.form.identifiable_object.data_handler.employee_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\EmployeeFormDataHandler'
+    autowire: true
     arguments:
       - '@prestashop.core.command_bus'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'

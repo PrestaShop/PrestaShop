@@ -26,12 +26,17 @@
 
 namespace PrestaShopBundle\DependencyInjection;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Throwable;
 
 /**
  * Adds main PrestaShop core services to the Symfony container.
@@ -72,9 +77,39 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
     public function prepend(ContainerBuilder $container)
     {
         $this->preprendApiConfig($container);
+        $this->preprendSessionConfig($container);
     }
 
-    public function preprendApiConfig(ContainerBuilder $container)
+    protected function preprendSessionConfig(ContainerBuilder $container)
+    {
+        try {
+            /** @var ConfigurationInterface $configuration */
+            $configuration = new Configuration();
+            $cookieLifetimeBo = (int) $configuration->get('PS_COOKIE_LIFETIME_BO');
+            $cookieSamesite = $configuration->get('PS_COOKIE_SAMESITE');
+            if (empty($cookieLifetimeBo) || $cookieLifetimeBo <= 0) {
+                $cookieLifetimeBo = CookieOptions::MAX_COOKIE_VALUE;
+            }
+
+            $cookieSamesite = match ($cookieSamesite) {
+                CookieOptions::SAMESITE_NONE => Cookie::SAMESITE_NONE,
+                CookieOptions::SAMESITE_STRICT => Cookie::SAMESITE_STRICT,
+                default => Cookie::SAMESITE_LAX,
+            };
+        } catch (Throwable $e) {
+            $cookieLifetimeBo = CookieOptions::MAX_COOKIE_VALUE;
+            $cookieSamesite = 'lax';
+        }
+
+        $container->prependExtensionConfig('framework', [
+            'session' => [
+                'cookie_lifetime' => $cookieLifetimeBo * 3600,
+                'cookie_samesite' => $cookieSamesite,
+            ],
+        ]);
+    }
+
+    protected function preprendApiConfig(ContainerBuilder $container)
     {
         $paths = [];
         $activeModules = $container->getParameter('prestashop.active_modules');

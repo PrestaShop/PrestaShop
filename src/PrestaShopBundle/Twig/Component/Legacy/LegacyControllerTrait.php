@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Twig\Component\Legacy;
 use AdminController;
 
 /**
- * For legacy pages rendered with the symfony layout we don't use the LegacyControllerContext which purpose is to replace
+ * For legacy pages based on legacy admin controller we don't use the LegacyControllerContext which purpose is to replace
  * the legacy controller for backward compatibility. In this case a real legacy controller is already accessible via the
  * legacy context and should be preferred.
  *

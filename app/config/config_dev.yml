@@ -1,6 +1,5 @@
 imports:
   - { resource: config.yml }
-  - { resource: security_dev.yml }
 
 web_profiler:
   toolbar: '%use_debug_toolbar%'

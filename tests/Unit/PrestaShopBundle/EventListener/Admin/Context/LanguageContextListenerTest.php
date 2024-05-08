@@ -57,8 +57,6 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         $listener = new LanguageContextListener(
             $languageContextBuilder,
             $this->mockEmployeeContext(self::EMPLOYEE_CONTEXT_LANGUAGE_ID),
-            $this->mockFeatureFlagStateChecker(),
-            true,
         );
 
         $event = $this->createRequestEvent(new Request());

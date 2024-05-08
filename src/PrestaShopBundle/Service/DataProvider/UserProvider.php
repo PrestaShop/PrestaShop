@@ -26,23 +26,20 @@
 
 namespace PrestaShopBundle\Service\DataProvider;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use PrestaShopBundle\Entity\Employee\Employee;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * Convenient way to access User, if exists.
+ * Old convenient way to access User, if exists. Prefer using the Security service to get the connected user.
  */
 class UserProvider
 {
     public const ANONYMOUS_USER = 'ANONYMOUS_USER';
 
     public function __construct(
-        private readonly TokenStorageInterface $tokenStorage,
-        private readonly UserProviderInterface $userProvider,
-        private readonly LegacyContext $legacyContext
+        private readonly Security $security,
     ) {
     }
 
@@ -51,15 +48,9 @@ class UserProvider
      */
     public function getUser(): ?UserInterface
     {
-        if ($this->tokenStorage->getToken()) {
-            $user = $this->tokenStorage->getToken()->getUser();
-            if ($user instanceof UserInterface) {
-                return $user;
-            }
-        }
-
-        if ($this->legacyContext->getContext()->employee && !empty($this->legacyContext->getContext()->employee->email)) {
-            return $this->userProvider->loadUserByIdentifier($this->legacyContext->getContext()->employee->email);
+        $user = $this->security->getUser();
+        if ($user instanceof Employee) {
+            return $user;
         }
 
         return null;
@@ -73,5 +64,10 @@ class UserProvider
         }
 
         return self::ANONYMOUS_USER;
+    }
+
+    public function logout(): void
+    {
+        $this->security->logout(false);
     }
 }

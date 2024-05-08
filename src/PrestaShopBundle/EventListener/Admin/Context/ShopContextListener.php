@@ -35,8 +35,6 @@ use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Routing\LegacyControllerConstants;
@@ -60,8 +58,6 @@ class ShopContextListener
         private readonly LegacyContext $legacyContext,
         private readonly MultistoreFeature $multistoreFeature,
         private readonly RouterInterface $router,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
-        private readonly bool $isSymfonyLayout,
     ) {
     }
 
@@ -72,10 +68,6 @@ class ShopContextListener
     public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
-            return;
-        }
-
-        if ($this->isSymfonyLayout !== $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)) {
             return;
         }
 

@@ -76,30 +76,6 @@ Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();
 Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO);
 
-try {
-    $response = $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, false);
-    $response->send();
-    $kernel->terminate($request, $response);
-    /*
-     * @todo during the refacto for getLegacyLayout, this behaviour should be changed, when no route is found`
-     *       we should fallback to a common LegacyFallbackController symfony controller, that doesn't end the request
-     *       it is responsible for calling the dispatcher and display the legacy controller content inside the new
-     *       Symfony layout
-     */
-} catch (NotFoundHttpException $exception) {
-    /** @var RequestStack $requestStack */
-    $requestStack = $kernel->getContainer()->get('request_stack');
-    // We force pushing the request in the stack again because when kernel detected the exception it popped it out,
-    // but we need the request to be accessible, especially to access the session that stores CSRF value for the user
-    $requestStack->push($request);
-
-    define('ADMIN_LEGACY_CONTEXT', true);
-    // correct Apache charset (except if it's too late)
-    if (!headers_sent()) {
-        header('Content-Type: text/html; charset=utf-8');
-    }
-
-    // Prepare and trigger LEGACY admin dispatcher
-    Dispatcher::getInstance()->dispatch();
-    $requestStack->pop();
-}
+$response = $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, true);
+$response->send();
+$kernel->terminate($request, $response);

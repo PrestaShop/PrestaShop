@@ -139,7 +139,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         // We are in a preview mode only if proper admin token was also provided in the URL
         if ('1' === Tools::getValue('preview')) {
             $adminTokenValidator = $this->getContainer()->get(LegacyAdminTokenValidator::class);
-            $isAdminTokenValid = $adminTokenValidator->isTokenValid('AdminProducts', (int) Tools::getValue('id_employee'), Tools::getValue('adtoken'));
+            $isAdminTokenValid = $adminTokenValidator->isTokenValid((int) Tools::getValue('id_employee'), Tools::getValue('adtoken'));
             if ($isAdminTokenValid) {
                 $this->setPreviewMode();
             }

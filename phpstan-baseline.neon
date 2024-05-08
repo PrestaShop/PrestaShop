@@ -1291,21 +1291,6 @@ parameters:
 			path: src/PrestaShopBundle/EventListener/Admin/LegacyParametersListener.php
 
 		-
-			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
-			count: 1
-			path: src/PrestaShopBundle/EventListener/Admin/UserLocaleListener.php
-
-		-
-			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
-			count: 1
-			path: src/PrestaShopBundle/EventListener/Admin/UserLocaleListener.php
-
-		-
-			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
-			count: 1
-			path: src/PrestaShopBundle/EventListener/Admin/UserLocaleListener.php
-
-		-
 			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 1
 			path: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/MetaSettingsShopUrlsFormDataProvider.php
@@ -1404,6 +1389,11 @@ parameters:
 			message: "#^Namespace Dispatcher is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 3
 			path: src/PrestaShopBundle/Routing/LegacyRouterChecker.php
+
+		-
+			message: "#^Namespace Mail is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/PrestaShopBundle/Security/Admin/EmployeePasswordResetter.php
 
 		-
 			message: "#^Namespace Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"

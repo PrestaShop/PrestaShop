@@ -28,28 +28,35 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Utility;
 
-use PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface;
-use PrestaShopBundle\Security\Admin\Employee;
+use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShopBundle\Entity\Employee\Employee;
+use PrestaShopBundle\Entity\Employee\EmployeeSession;
+use PrestaShopBundle\EventListener\Admin\EmployeeSessionSubscriber;
+use PrestaShopBundle\Security\Admin\EmployeeProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 trait LoginTrait
 {
+    abstract protected function createMock(string $originalClassName): MockObject;
+
     protected function loginUser(KernelBrowser $kernelBrowser): void
     {
-        $employeePermissionProvider = $kernelBrowser->getContainer()->get(EmployeePermissionProviderInterface::class);
-        $employeeId = 1;
+        /** @var EmployeeProvider $employeeProvider */
+        $employeeProvider = $kernelBrowser->getContainer()->get(EmployeeProvider::class);
+        /** @var Employee $employee */
+        $employee = $employeeProvider->loadUserByIdentifier('test@prestashop.com');
 
-        $employee = new Employee(
-            (object) [
-                'email' => 'test@prestashop.com',
-                'id' => $employeeId,
-                'passwd' => '',
-            ]
-        );
-        $employee->setRoles(
-            array_merge(['ROLE_EMPLOYEE'], $employeePermissionProvider->getRoles($employeeId))
-        );
-
-        $kernelBrowser->loginUser($employee);
+        if ($employee->getSessions()->isEmpty()) {
+            $employeeSession = new EmployeeSession();
+            $employeeSession->setToken('fake_token');
+            $employee->addSession($employeeSession);
+            $entityManager = $kernelBrowser->getContainer()->get(EntityManagerInterface::class);
+            $entityManager->persist($employeeSession);
+            $entityManager->flush();
+        } else {
+            $employeeSession = $employee->getSessions()->first();
+        }
+        $kernelBrowser->loginUser($employee, 'main', [EmployeeSessionSubscriber::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE => $employeeSession]);
     }
 }

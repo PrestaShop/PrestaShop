@@ -30,10 +30,6 @@ namespace PrestaShopBundle\Security\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
-use PrestaShop\PrestaShop\Core\Security\Hashing;
-use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionFactory;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorageFactory;
@@ -43,7 +39,7 @@ use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 
 /**
  * This service is used to validate the query token in legacy context, especially for Frontend.
- * It's called legacy because it's used in legacy context but ti can validate both Symfony and legacy tokens.
+ * It's called legacy because it's used in legacy context, but it can validate both Symfony and legacy tokens.
  * As such it's a common service for front and admin which is why some of its dependencies are built manually
  * and why we partially rely on legacy classes and tools.
  */
@@ -51,15 +47,11 @@ class LegacyAdminTokenValidator
 {
     public function __construct(
         private readonly EmployeeRepository $employeeRepository,
-        private readonly TabRepository $tabRepository,
-        private readonly Hashing $hashing,
-        private readonly string $cookieKey,
         private readonly RequestStack $requestStack,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
     ) {
     }
 
-    public function isTokenValid(?string $controllerName = null, ?int $employeeId = null, ?string $adminToken = null): bool
+    public function isTokenValid(?int $employeeId = null, ?string $adminToken = null): bool
     {
         $adminToken = $this->getAdminToken($adminToken);
         if (empty($adminToken)) {
@@ -68,17 +60,6 @@ class LegacyAdminTokenValidator
 
         $employeeId = $this->getEmployeeId($employeeId);
         if (empty($employeeId)) {
-            return false;
-        }
-
-        $controllerName = $this->getControllerName($controllerName);
-        if (!empty($controllerName) && $this->isLegacyTokenValid($adminToken, $controllerName, $employeeId)) {
-            return true;
-        }
-
-        // CSRF token is only check when Symfony layout is enabled
-        $symfonyLayoutEnabled = $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT);
-        if (!$symfonyLayoutEnabled) {
             return false;
         }
 
@@ -116,15 +97,6 @@ class LegacyAdminTokenValidator
         return new CsrfTokenManager(null, $sessionTokenStorage);
     }
 
-    private function isLegacyTokenValid(string $tokenValue, string $controllerName, int $employeeId): bool
-    {
-        $tab = $this->tabRepository->findOneByClassName($controllerName);
-        $controllerTabId = $tab ? $tab->getId() : '';
-        $expectedLegacyTokenValue = $this->hashing->hash($controllerName . $controllerTabId . $employeeId, $this->cookieKey);
-
-        return $expectedLegacyTokenValue === $tokenValue;
-    }
-
     private function getEmployeeId(?int $employeeId): ?int
     {
         if (!empty($employeeId)) {
@@ -132,15 +104,6 @@ class LegacyAdminTokenValidator
         }
 
         return $this->requestStack->getMainRequest()->get('id_employee', null);
-    }
-
-    private function getControllerName(?string $controllerName): ?string
-    {
-        if (!empty($controllerName)) {
-            return $controllerName;
-        }
-
-        return $this->requestStack->getMainRequest()->get('controller', null);
     }
 
     private function getAdminToken(?string $adminToken): ?string

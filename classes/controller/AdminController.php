@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class AdminControllerCore extends Controller
 {
@@ -2713,15 +2712,10 @@ class AdminControllerCore extends Controller
                 $this->addJS(_PS_JS_DIR_ . 'admin/notifications.js?v=' . _PS_VERSION_);
             }
 
-            $username = $this->get('prestashop.user_provider')->getUsername();
-            $token = $this->get(CsrfTokenManagerInterface::class)
-                ->getToken($username)
-                ->getValue();
-
             $this->context->smarty->assign([
                 'js_router_metadata' => [
                     'base_url' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_),
-                    'token' => $token,
+                    'token' => $this->get(UserTokenManager::class)->getSymfonyToken(),
                 ],
             ]);
         }
@@ -2794,37 +2788,6 @@ class AdminControllerCore extends Controller
             $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
             $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
             $this->context->link = new Link($protocol_link, $protocol_content);
-        }
-
-        if (isset($_GET['logout'])) {
-            $this->context->employee->logout();
-        }
-        if (isset(Context::getContext()->cookie->last_activity)) {
-            if (((int) $this->context->cookie->last_activity) + self::AUTH_COOKIE_LIFETIME < time()) {
-                $this->context->employee->logout();
-            } else {
-                $this->context->cookie->last_activity = time();
-            }
-        }
-
-        if (
-            !$this->isAnonymousAllowed()
-            && (
-                $this->controller_name != 'AdminLogin'
-                && (
-                    !isset($this->context->employee)
-                    || !$this->context->employee->isLoggedBack()
-                )
-            )
-        ) {
-            if (isset($this->context->employee)) {
-                $this->context->employee->logout();
-            }
-            $email = false;
-            if (Tools::getValue('email') && Validate::isEmail(Tools::getValue('email'))) {
-                $email = Tools::getValue('email');
-            }
-            Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin') . ((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect=' . $this->controller_name : '') . ($email ? '&email=' . $email : ''));
         }
 
         // Set current index

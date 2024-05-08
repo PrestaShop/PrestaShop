@@ -77,7 +77,7 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $customerThreadStatusesChoiceProvider;
 
     public function __construct(
-        ?HookDispatcherInterface $hookDispatcher = null,
+        HookDispatcherInterface $hookDispatcher,
         FormChoiceProviderInterface $contactTypeProvider,
         FormChoiceProviderInterface $shopNameByIdChoiceProvider,
         ConfigurableFormChoiceProviderInterface $customerThreadStatusesChoiceProvider

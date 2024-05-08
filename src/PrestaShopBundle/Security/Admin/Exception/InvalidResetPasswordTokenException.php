@@ -24,30 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShopBundle\Security\Admin\Exception;
 
-namespace Tests\Integration\Utility;
+use RuntimeException;
 
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-
-/**
- * Admin Middleware security
- *
- * The listener behavior was removed in the tests in favor of the LoginTrait trait,
- * to avoid necessarily having to have an employee in the context,
- * which could have side effects on some test scenarios and also follow the
- * official symfony method for authentication in a test environment.
- */
-class AdapterSecurityAdmin
+class InvalidResetPaswordTokenException extends RuntimeException
 {
-    /**
-     * Aims to authenticate the employee present in the context, only on routes not concerning the API
-     *
-     * @param RequestEvent $event
-     *
-     * @return void
-     */
-    public function onKernelRequest(RequestEvent $event): void
-    {
-    }
 }
