@@ -452,6 +452,9 @@ class ProductLazyArray extends AbstractLazyArray
         // Availability for displaying discontinued products, if enabled
         if ($this->product['active'] != 1) {
             return 'https://schema.org/Discontinued';
+        // if it's not avaiblable for order
+        } elseif (!$this->product['available_for_order']) {
+            return 'https://schema.org/OutOfStock';                       
         // If product is in stock or stock management is disabled (= we have everything in stock)
         } elseif ($this->product['quantity'] > 0 || !$this->configuration->get('PS_STOCK_MANAGEMENT')) {
             return 'https://schema.org/InStock';
