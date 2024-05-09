@@ -104,7 +104,7 @@ class StockMvt
             $this->getSign() >= 1 ?
             $configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') :
             $configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')
-        );    
+        );
     }
 
     public function getIdStockMvt(): int
