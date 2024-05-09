@@ -239,8 +239,14 @@ class OrderHistoryCore extends ObjectModel
                         && in_array($new_os->id, $error_or_canceled_statuses)
                         && !in_array($old_os->id, $error_or_canceled_statuses)
                     ) {
-                        // if waiting for payment => payment error/canceled
+                        // Status is changed from not loggable status as Processing in progress etc. to Payment error/Canceled
                         StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
+                    } elseif (!$new_os->logable && !$old_os->logable
+                        && !in_array($new_os->id, $error_or_canceled_statuses)
+                        && in_array($old_os->id, $error_or_canceled_statuses)
+                    ) {
+                        // Status is changed from Payment error/Canceled to not loggable status as Processing in progress etc.
+                        StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
                     }
                 }
                 // From here, there is 2 cases : $old_os exists, and we can test shipped state evolution,
