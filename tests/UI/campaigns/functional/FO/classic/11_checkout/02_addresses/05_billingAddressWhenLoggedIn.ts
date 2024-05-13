@@ -17,7 +17,7 @@ import {
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_checkout_addresses_billingAdressWhenLoggedIn';
+const baseContext: string = 'functional_FO_classic_checkout_addresses_billingAddressWhenLoggedIn';
 
 describe('FO - Guest checkout: Billing address when logged in', async () => {
   let browserContext: BrowserContext;
@@ -75,11 +75,11 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
       const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
       expect(isCustomerConnected).to.eq(true);
 
-      const isAdressesStep = await checkoutPage.isAdressesStep(page);
-      expect(isAdressesStep).to.eq(true);
+      const isAddressesStep = await checkoutPage.isAddressesStep(page);
+      expect(isAddressesStep).to.eq(true);
 
-      const isDeliveryAdressSelected = await checkoutPage.isDeliveryAdressSelected(page, 1);
-      expect(isDeliveryAdressSelected).to.equal(true);
+      const isDeliveryAddressSelected = await checkoutPage.isDeliveryAddressSelected(page, 1);
+      expect(isDeliveryAddressSelected).to.equal(true);
 
       const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
       expect(addressesNumber).to.equal(2);
@@ -99,11 +99,11 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
       const invoiceAddressesNumber = await checkoutPage.getNumberOfInvoiceAddresses(page);
       expect(invoiceAddressesNumber).to.equal(2);
 
-      const isInvoiceAdress1Selected = await checkoutPage.isInvoiceAdressSelected(page, 1);
-      expect(isInvoiceAdress1Selected).to.equal(true);
+      const isInvoiceAddress1Selected = await checkoutPage.isInvoiceAddressSelected(page, 1);
+      expect(isInvoiceAddress1Selected).to.equal(true);
 
-      const isInvoiceAdress2Selected = await checkoutPage.isInvoiceAdressSelected(page, 2);
-      expect(isInvoiceAdress2Selected).to.equal(false);
+      const isInvoiceAddress2Selected = await checkoutPage.isInvoiceAddressSelected(page, 2);
+      expect(isInvoiceAddress2Selected).to.equal(false);
     });
 
     it('should choose the invoice address different than shipping address', async function () {
@@ -111,11 +111,11 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
 
       await checkoutPage.selectInvoiceAddress(page, 2);
 
-      const isInvoiceAdress1Selected = await checkoutPage.isInvoiceAdressSelected(page, 1);
-      expect(isInvoiceAdress1Selected).to.equal(false);
+      const isInvoiceAddress1Selected = await checkoutPage.isInvoiceAddressSelected(page, 1);
+      expect(isInvoiceAddress1Selected).to.equal(false);
 
-      const isInvoiceAdress2Selected = await checkoutPage.isInvoiceAdressSelected(page, 2);
-      expect(isInvoiceAdress2Selected).to.equal(true);
+      const isInvoiceAddress2Selected = await checkoutPage.isInvoiceAddressSelected(page, 2);
+      expect(isInvoiceAddress2Selected).to.equal(true);
     });
   });
 });

@@ -33,6 +33,8 @@ class CheckoutPage extends FOBasePage {
 
   private readonly paymentOptionInput: (name: string) => string;
 
+  protected paymentOptionAlertDanger: string;
+
   private readonly conditionToApproveLabel: string;
 
   private readonly conditionToApproveCheckbox: string;
@@ -293,7 +295,7 @@ class CheckoutPage extends FOBasePage {
     this.addressStepContent = `${this.addressStepSection} div.content`;
     this.addressStepCreateAddressForm = `${this.addressStepSection} .js-address-form`;
     this.addressStepAliasInput = '#field-alias';
-    this.addressStepCompanyInput = '#field-company';
+    this.addressStepCompanyInput = `${this.addressStepSection} #field-company`;
     this.addressStepAddress1Input = '#field-address1';
     this.addressStepPostCodeInput = '#field-postcode';
     this.addressStepCityInput = '#field-city';
@@ -343,6 +345,7 @@ class CheckoutPage extends FOBasePage {
     this.paymentStepSection = '#checkout-payment-step';
     this.paymentOptionInput = (name: string) => `${this.paymentStepSection} input[name='payment-option']`
       + `[data-module-name='${name}']`;
+    this.paymentOptionAlertDanger = '.payment-options p.alert-danger';
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
     this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
     this.termsOfServiceLink = '#cta-terms-and-conditions-0';
@@ -694,7 +697,7 @@ class CheckoutPage extends FOBasePage {
    * @param row {number} The row of the address
    * @returns {Promise<boolean>}
    */
-  async isDeliveryAdressSelected(page: Page, row: number): Promise<boolean> {
+  async isDeliveryAddressSelected(page: Page, row: number): Promise<boolean> {
     const addressID = await this.getDeliveryAddressID(page, row);
 
     return this.isChecked(page, this.deliveryAddressRadioButton(addressID));
@@ -716,7 +719,7 @@ class CheckoutPage extends FOBasePage {
    * @param row {number} The row of the address
    * @returns {Promise<boolean>}
    */
-  async isInvoiceAdressSelected(page: Page, row: number): Promise<boolean> {
+  async isInvoiceAddressSelected(page: Page, row: number): Promise<boolean> {
     const addressID = await this.getInvoiceAddressID(page, row);
 
     return this.isChecked(page, this.invoiceAddressRadioButton(addressID));
@@ -889,11 +892,11 @@ class CheckoutPage extends FOBasePage {
   }
 
   /**
-   * Check if the Adresses Step is displayed
+   * Check if the Addresses Step is displayed
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isAdressesStep(page: Page): Promise<boolean> {
+  async isAddressesStep(page: Page): Promise<boolean> {
     await this.waitForVisibleSelector(page, this.addressStepContent);
 
     return this.elementVisible(page, this.addressStepContent, 1000);
@@ -969,7 +972,7 @@ class CheckoutPage extends FOBasePage {
    * @param shippingMethodID {number} Position of the shipping method
    * @returns {Promise<boolean>}
    */
-  isShippingMethodVisible(page: Page, shippingMethodID: number): Promise<boolean> {
+  async isShippingMethodVisible(page: Page, shippingMethodID: number): Promise<boolean> {
     return this.elementVisible(page, this.deliveryOptionLabel(shippingMethodID), 2000);
   }
 
@@ -1179,6 +1182,15 @@ class CheckoutPage extends FOBasePage {
    */
   async isPaymentMethodExist(page: Page, paymentModuleName: string): Promise<boolean> {
     return this.elementVisible(page, this.paymentOptionInput(paymentModuleName), 2000);
+  }
+
+  /**
+   * get no payment available message
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getNoPaymentAvailableMessage(page: Page): Promise<string> {
+    return this.getTextContent(page, this.paymentOptionAlertDanger);
   }
 
   /**

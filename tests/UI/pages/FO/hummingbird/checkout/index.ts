@@ -57,7 +57,9 @@ class Checkout extends CheckoutPage {
       + ' > span.delivery-option__center';
     this.deliveryStepCarrierPrice = (carrierID: number) => `${this.deliveryOption(carrierID)} div.row`
       + ' > span.delivery-option__right';
+
     // Payment methods selectors
+    this.paymentOptionAlertDanger = '.payment__list p.alert-danger';
 
     // Checkout summary selectors
     this.shippingValueSpan = '#cart-subtotal-shipping span.cart-summary__value';
@@ -95,11 +97,11 @@ class Checkout extends CheckoutPage {
   }
 
   /**
-   * Check if the Adresses Step is displayed
+   * Check if the Addresses Step is displayed
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isAdressesStep(page: Page): Promise<boolean> {
+  async isAddressesStep(page: Page): Promise<boolean> {
     return this.elementVisible(page, `${this.addressStepSection}.checkout__steps--current`, 1000);
   }
 }
