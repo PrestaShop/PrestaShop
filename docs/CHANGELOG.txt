@@ -24,7 +24,7 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
-#   v8.1.6 - (2024-02-12)
+#   v8.1.6 - (2024-05-13)
 ####################################
 
 - Front Office:
