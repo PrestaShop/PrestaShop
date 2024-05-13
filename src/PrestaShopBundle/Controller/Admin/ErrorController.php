@@ -61,6 +61,7 @@ class ErrorController extends PrestaShopAdminController
         $flattenException = FlattenException::createFromThrowable($exception);
         $errorTemplate = match ($flattenException->getStatusCode()) {
             404 => '@PrestaShop/Admin/Error/error404.html.twig',
+            403 => '@PrestaShop/Admin/Error/error403.html.twig',
             default => '@PrestaShop/Admin/Error/error.html.twig',
         };
 
