@@ -33,19 +33,35 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Security\Admin\SessionEmployeeProvider;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Listener dedicated to set up Employee context for the Back-Office/Admin application.
  */
-class EmployeeContextListener
+class EmployeeContextListener implements EventSubscriberInterface
 {
+    /**
+     * Priority a bit lower than the FirewallListener
+     */
+    public const KERNEL_REQUEST_PRIORITY = 7;
+
     public function __construct(
         private readonly EmployeeContextBuilder $employeeContextBuilder,
         private readonly LegacyContext $legacyContext,
         private readonly Security $security,
         private readonly SessionEmployeeProvider $sessionEmployeeProvider,
     ) {
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::REQUEST => [
+                ['onKernelRequest', self::KERNEL_REQUEST_PRIORITY],
+            ],
+        ];
     }
 
     public function onKernelRequest(RequestEvent $event): void

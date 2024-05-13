@@ -40,17 +40,24 @@ use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Routing\LegacyControllerConstants;
 use ReflectionClass;
 use ReflectionException;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\NoConfigurationException;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Listener dedicated to set up Shop context for the Back-Office/Admin application.
  */
-class ShopContextListener
+class ShopContextListener implements EventSubscriberInterface
 {
+    /**
+     * Priority lower than EmployeeContextListener so that EmployeeContext is correctly initialized
+     */
+    public const KERNEL_REQUEST_PRIORITY = EmployeeContextListener::KERNEL_REQUEST_PRIORITY - 1;
+
     public function __construct(
         private readonly ShopContextBuilder $shopContextBuilder,
         private readonly EmployeeContext $employeeContext,
@@ -61,11 +68,32 @@ class ShopContextListener
     ) {
     }
 
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::REQUEST => [
+                // Before RouterListener
+                ['initDefaultShopContext', 33],
+                ['initShopContext', self::KERNEL_REQUEST_PRIORITY],
+            ],
+        ];
+    }
+
+    public function initDefaultShopContext(RequestEvent $event): void
+    {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+        $shopConstraint = ShopConstraint::shop((int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops()));
+        $this->shopContextBuilder->setShopId($shopConstraint->getShopId()->getValue());
+        $this->shopContextBuilder->setShopConstraint($shopConstraint);
+    }
+
     /**
      * @throws ReflectionException
      * @throws ShopException
      */
-    public function onKernelRequest(RequestEvent $event): void
+    public function initShopContext(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
@@ -234,7 +262,7 @@ class ShopContextListener
             } else {
                 return null;
             }
-        } catch (NoConfigurationException) {
+        } catch (NoConfigurationException|ReflectionException) {
             return null;
         }
     }

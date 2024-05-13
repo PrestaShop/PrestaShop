@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
-use PrestaShopBundle\EventListener\Admin\Context\DefaultLanguageContextListener;
 use PrestaShopBundle\EventListener\Admin\Context\LanguageContextListener;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
@@ -57,10 +56,11 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         $listener = new LanguageContextListener(
             $languageContextBuilder,
             $this->mockEmployeeContext(self::EMPLOYEE_CONTEXT_LANGUAGE_ID),
+            $this->mockConfiguration(),
         );
 
         $event = $this->createRequestEvent(new Request());
-        $listener->onKernelRequest($event);
+        $listener->initLanguageContext($event);
         $this->assertEquals(self::EMPLOYEE_CONTEXT_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'languageId'));
     }
 
@@ -72,13 +72,14 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
             $this->createMock(ContextStateManager::class),
             $this->createMock(ObjectModelLanguageRepository::class)
         );
-        $listener = new DefaultLanguageContextListener(
+        $listener = new LanguageContextListener(
             $languageContextBuilder,
+            $this->createMock(EmployeeContext::class),
             $this->mockConfiguration(['PS_LANG_DEFAULT' => self::DEFAULT_CONFIGURATION_LANGUAGE_ID]),
         );
 
         $event = $this->createRequestEvent(new Request());
-        $listener->onKernelRequest($event);
+        $listener->initDefaultLanguageContext($event);
         $this->assertEquals(self::DEFAULT_CONFIGURATION_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'languageId'));
     }
 

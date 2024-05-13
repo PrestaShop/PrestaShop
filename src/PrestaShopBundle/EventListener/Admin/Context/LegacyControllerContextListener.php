@@ -29,8 +29,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Listener dedicated to set up LegacyController context for the Back-Office/Admin application.
@@ -39,11 +41,18 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  * of the legacy Context singleton dependency, but many hooks and code still depend on it, so we propose
  * this alternative dedicated context that is mostly useful for legacy pages.
  */
-class LegacyControllerContextListener
+class LegacyControllerContextListener implements EventSubscriberInterface
 {
     public function __construct(
         private readonly LegacyControllerContextBuilder $legacyControllerContextBuilder,
     ) {
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::REQUEST => ['onKernelRequest'],
+        ];
     }
 
     public function onKernelRequest(RequestEvent $event): void

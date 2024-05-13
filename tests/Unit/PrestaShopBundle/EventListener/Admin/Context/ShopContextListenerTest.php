@@ -63,7 +63,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             $this->mockMultistoreFeature(false),
             $this->mockRouter(),
         );
-        $listener->onKernelRequest($event);
+        $listener->initShopContext($event);
 
         $expectedShopConstraint = ShopConstraint::shop(self::DEFAULT_SHOP_ID);
         $this->assertEquals(self::DEFAULT_SHOP_ID, $this->getPrivateField($shopContextBuilder, 'shopId'));
@@ -96,7 +96,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
             $this->mockMultistoreFeature(true),
             $this->mockRouter(),
         );
-        $listener->onKernelRequest($event);
+        $listener->initShopContext($event);
 
         $this->assertEquals($expectedShopId, $this->getPrivateField($shopContextBuilder, 'shopId'));
         $this->assertEquals($expectedShopConstraint, $this->getPrivateField($shopContextBuilder, 'shopConstraint'));
@@ -174,7 +174,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
 
         // Check that initially the cookie has a null value
         $this->assertEquals($originalCookieValue, $mockContext->getContext()->cookie->shopContext);
-        $listener->onKernelRequest($event);
+        $listener->initShopContext($event);
 
         $this->assertEquals($redirectionExpected, $event->getResponse() instanceof RedirectResponse);
         $this->assertEquals($expectedCookieValue, $mockContext->getContext()->cookie->shopContext);

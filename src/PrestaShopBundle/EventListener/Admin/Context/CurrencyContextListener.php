@@ -30,17 +30,26 @@ namespace PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Listener dedicated to set up Currency context for the Back-Office/Admin application.
  */
-class CurrencyContextListener
+class CurrencyContextListener implements EventSubscriberInterface
 {
     public function __construct(
         private readonly CurrencyContextBuilder $currencyContextBuilder,
         private readonly ConfigurationInterface $configuration,
     ) {
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::REQUEST => ['onKernelRequest'],
+        ];
     }
 
     public function onKernelRequest(RequestEvent $event): void
