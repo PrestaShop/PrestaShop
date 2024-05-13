@@ -114,7 +114,7 @@ describe('FO - Product page - Product page : Display specific delivery time', as
     });
 
     it('should choose the option \'Specific delivery time\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setDeliveryTime', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseSpecificDeliveryTime', baseContext);
 
       await createProductPage.goToTab(page, 'shipping');
       await shippingTab.setDeliveryTime(page, 'Specific delivery time');
@@ -124,7 +124,7 @@ describe('FO - Product page - Product page : Display specific delivery time', as
     });
 
     it('should set delivery time out-of-stock products', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setDeliveryTime', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'setDeliveryTimeOutOfStock', baseContext);
 
       await shippingTab.setDeliveryTimeOutOfStockProducts(page, 'Hello');
 
