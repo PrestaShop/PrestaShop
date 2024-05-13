@@ -178,7 +178,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
         expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
       }
 
-      const carrierStatus = await carriersPage.getFreeShippingStatus(page, 2);
+      const carrierStatus = await carriersPage.isFreeShipping(page, 2);
       expect(carrierStatus).to.equal(true);
     });
 
@@ -230,7 +230,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
         expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
       }
 
-      const carrierStatus = await carriersPage.getFreeShippingStatus(page, 2);
+      const carrierStatus = await carriersPage.isFreeShipping(page, 2);
       expect(carrierStatus).to.equal(false);
     });
 

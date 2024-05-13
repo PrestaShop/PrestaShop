@@ -499,12 +499,12 @@ class Carriers extends BOBasePage {
   }
 
   /**
-   * Get free shipping status
+   * Is free shipping
    * @param page {Page} Browser tab
    * @param row {number} Row index in the table
    * @returns {Promise<boolean>}
    */
-  async getFreeShippingStatus(page: Page, row: number = 1): Promise<boolean> {
+  async isFreeShipping(page: Page, row: number = 1): Promise<boolean> {
     return this.elementVisible(page, this.tableColumnIsFreeIcon(row), 100);
   }
 
@@ -534,7 +534,7 @@ class Carriers extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async setFreeShippingStatus(page: Page, row: number = 1, valueWanted: boolean = true): Promise<boolean> {
-    if (await this.getFreeShippingStatus(page, row) !== valueWanted) {
+    if (await this.isFreeShipping(page, row) !== valueWanted) {
       await page.locator(this.tableColumnIsFree(row)).click();
       return true;
     }
