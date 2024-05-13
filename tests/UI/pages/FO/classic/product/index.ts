@@ -117,7 +117,7 @@ class Product extends FOBasePage {
 
   private readonly taxShippingDeliveryBlock: string;
 
-  private readonly deliveryInformationSpan: string;
+  protected deliveryInformationSpan: string;
 
   private readonly productInformationBlock: string;
 
