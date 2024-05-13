@@ -30,6 +30,8 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
+use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
@@ -51,7 +53,9 @@ use Throwable;
 class LoginController extends PrestaShopAdminController
 {
     public function __construct(
-        private readonly ShopContext $shopContext
+        private readonly ShopContext $shopContext,
+        private readonly string $projectDir,
+        private readonly string $adminFolderName,
     ) {
     }
 
@@ -68,6 +72,11 @@ class LoginController extends PrestaShopAdminController
      */
     public function loginAction(Security $security, AuthenticationUtils $authenticationUtils): Response
     {
+        $securityResponse = $this->checkRequiredActions();
+        if ($securityResponse) {
+            return $securityResponse;
+        }
+
         if ($security->getUser()) {
             return $this->redirectToRoute('admin_homepage');
         }
@@ -219,5 +228,35 @@ class LoginController extends PrestaShopAdminController
             'imgDir' => $this->shopContext->getBaseURI() . 'img/',
             'shopName' => $this->getConfiguration()->get('PS_SHOP_NAME'),
         ]);
+    }
+
+    private function checkRequiredActions(): ?Response
+    {
+        $requiredActions = [];
+
+        // If install folder is still present display a warning to remove it
+        if (is_dir($this->projectDir . '/install')) {
+            $requiredActions[] = $this->trans('deleted the /install folder', [], 'Admin.Login.Notification');
+        }
+
+        // If admin folder is still named admin
+        if ($this->adminFolderName === 'admin') {
+            $randomName = sprintf(
+                'admin%03d%s/',
+                mt_rand(0, 999),
+                mb_strtolower((new PasswordGenerator(new OpenSSL()))->generatePassword(16)),
+            );
+            $requiredActions[] = $this->trans('renamed the /admin folder (e.g. %s)', [$randomName], 'Admin.Login.Notification');
+        }
+
+        if (!empty($requiredActions)) {
+            return $this->render('@PrestaShop/Admin/Login/required_actions.html.twig', [
+                'requiredActions' => $requiredActions,
+                'imgDir' => $this->shopContext->getBaseURI() . 'img/',
+                'shopName' => $this->getConfiguration()->get('PS_SHOP_NAME'),
+            ]);
+        }
+
+        return null;
     }
 }
