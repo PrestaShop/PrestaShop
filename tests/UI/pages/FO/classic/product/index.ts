@@ -81,6 +81,8 @@ class Product extends FOBasePage {
 
   private readonly productAvailabilityIcon: string;
 
+  protected productAttributeVariantSpan: (itemNumber: number) => string;
+
   protected productAttributeSelect: (itemNumber: number) => string;
 
   protected productAttributeButton: (itemNumber: number) => string;
@@ -240,6 +242,7 @@ class Product extends FOBasePage {
     this.continueShoppingButton = `${this.blockCartModal} div.cart-content-btn button`;
     this.productAvailability = '#product-availability';
     this.productAvailabilityIcon = `${this.productAvailability} i`;
+    this.productAttributeVariantSpan = (itemNumber: number) => `div.product-variants-item:nth-child(${itemNumber}) span`;
     this.productAttributeSelect = (itemNumber: number) => `div.product-variants-item:nth-child(${itemNumber}) select`;
     this.productAttributeButton = (itemNumber: number) => `div.product-variants-item:nth-child(${itemNumber}) ul input`;
     this.productSizeSelect = '#group_1';
@@ -763,6 +766,16 @@ class Product extends FOBasePage {
       return this.getTextContent(page, `${this.productAttributeSelect(variantItem)} option[selected]`, false);
     }
     return this.getTextContent(page, `${this.productAttributeButton(variantItem)}[checked] +span`, false);
+  }
+
+  /**
+   * Get selected attribute text
+   * @param page {Page} Browser tab
+   * @param variantItem {number} Variant row
+   * @returns {Promise<string>}
+   */
+  async getSelectedAttributeText(page: Page, variantItem: number): Promise<string> {
+    return this.getTextContent(page, this.productAttributeVariantSpan(variantItem));
   }
 
   /**
