@@ -81,6 +81,10 @@ class Product extends FOBasePage {
 
   private readonly productAvailabilityIcon: string;
 
+  protected productAttributeSelect: (itemNumber: number) => string;
+
+  protected productAttributeButton: (itemNumber: number) => string;
+
   private readonly productSizeSelect: string;
 
   private readonly productSizeOption: (size: string) => string;
@@ -236,6 +240,8 @@ class Product extends FOBasePage {
     this.continueShoppingButton = `${this.blockCartModal} div.cart-content-btn button`;
     this.productAvailability = '#product-availability';
     this.productAvailabilityIcon = `${this.productAvailability} i`;
+    this.productAttributeSelect = (itemNumber: number) => `div.product-variants-item:nth-child(${itemNumber}) select`;
+    this.productAttributeButton = (itemNumber: number) => `div.product-variants-item:nth-child(${itemNumber}) ul input`;
     this.productSizeSelect = '#group_1';
     this.productSizeOption = (size: string) => `${this.productSizeSelect} option[title=${size}]`;
     this.productColorUl = '#group_2';
@@ -520,24 +526,6 @@ class Product extends FOBasePage {
   }
 
   /**
-   * Get selected product attributes
-   * @param page {Page} Browser tab
-   * @returns {Promise<ProductAttribute[]>}
-   */
-  async getSelectedProductAttributes(page: Page): Promise<ProductAttribute[]> {
-    return [
-      {
-        name: 'size',
-        value: await this.getTextContent(page, `${this.productSizeSelect} option[selected]`, false),
-      },
-      {
-        name: 'color',
-        value: await this.getAttributeContent(page, `${this.productColors} input[checked]`, 'title') ?? '',
-      },
-    ];
-  }
-
-  /**
    * Get product image urls
    * @param page {Page} Browser tab
    * @returns {Promise<ProductImageUrls>}
@@ -707,13 +695,12 @@ class Product extends FOBasePage {
   }
 
   /**
-   * Select product attributes
+   * Select default product attributes
    * @param page {Page} Browser tab
-   * @param quantity {number|string} Quantity of the product that customer wants
    * @param attributes {ProductAttribute[]}  Product's attributes data to select
    * @returns {Promise<void>}
    */
-  async selectAttributes(page: Page, quantity: number | string, attributes: ProductAttribute[]): Promise<void> {
+  async selectDefaultAttributes(page: Page, attributes: ProductAttribute[]): Promise<void> {
     if (attributes.length === 0) {
       return;
     }
@@ -735,6 +722,47 @@ class Product extends FOBasePage {
           throw new Error(`${attributes[i].name} is not defined`);
       }
     }
+  }
+
+  /**
+   * Select product attributes
+   * @param page {Page} Browser tab
+   * @param type {string} Type of block (Select or radio)
+   * @param attributes {ProductAttribute[]}  Product's attributes data to select
+   * @param itemNumber {number} The row of attribute block
+   * @returns {Promise<void>}
+   */
+  async selectAttributes(page: Page, type: string, attributes: ProductAttribute[], itemNumber: number = 1): Promise<void> {
+    if (attributes.length === 0) {
+      return;
+    }
+    for (let i: number = 0; i < attributes.length; i++) {
+      if (type === 'select') {
+        await Promise.all([
+          this.waitForAttachedSelector(page, `${this.productAttributeSelect(itemNumber)} option[selected]`),
+          this.selectByVisibleText(page, this.productAttributeSelect(itemNumber), attributes[i].value),
+        ]);
+      } else {
+        await Promise.all([
+          this.waitForVisibleSelector(page, `${this.productAttributeButton(itemNumber)}[title=${attributes[i].value}][checked]`),
+          page.locator(`${this.productAttributeButton(itemNumber)}[title=${attributes[i].value}]`).click(),
+        ]);
+      }
+    }
+  }
+
+  /**
+   * Get selected attribute
+   * @param page {Page} Browser tab
+   * @param variantItem {string} Variant row
+   * @param type {string} Type of attribute
+   * @returns {Promise<string>}
+   */
+  async getSelectedAttribute(page: Page, variantItem: number, type: string = 'select'): Promise<string> {
+    if (type === 'select') {
+      return this.getTextContent(page, `${this.productAttributeSelect(variantItem)} option[selected]`, false);
+    }
+    return this.getTextContent(page, `${this.productAttributeButton(variantItem)}[checked] +span`, false);
   }
 
   /**
@@ -830,7 +858,7 @@ class Product extends FOBasePage {
     proceedToCheckout: boolean | null = true,
     customizedText: string = 'text',
   ): Promise<void> {
-    await this.selectAttributes(page, quantity, combination);
+    await this.selectDefaultAttributes(page, combination);
     if (quantity !== 1) {
       await this.setValue(page, this.productQuantity, quantity);
     }

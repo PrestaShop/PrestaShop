@@ -34,6 +34,8 @@ class ProductPage extends Product {
     this.customizedTextarea = (row: number) => `.product-customization__item:nth-child(${row}) .product-message`;
     this.customizationBlock = 'div.product__col section.product-customization';
     this.customizationsMessage = (row: number) => `.product-customization__item:nth-child(${row}) div.card-body div:nth-child(2)`;
+    this.productAttributeSelect = (itemNumber: number) => `div.product__variants div.variant:nth-child(${itemNumber}) select`;
+    this.productAttributeButton = (itemNumber: number) => `div.product__variants div.variant:nth-child(${itemNumber}) ul input`;
 
     // Product prices block
     this.productPricesBlock = 'div.product__prices';
