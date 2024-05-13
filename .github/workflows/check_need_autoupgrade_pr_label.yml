@@ -1,0 +1,81 @@
+# This workflow allows you to check potential changes to the structure of the database,
+# and to apply the “Needs autoupgrade PR” label if this is the case
+name: Check the label 'Needs autoupgrade PR'
+
+on: pull_request_target
+
+jobs:
+  install_prestashop_and_dump:
+    name: Install Prestashop and create database dump
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        branch: [ base, head ]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch == 'base' && github.event.pull_request.base.ref || github.event.pull_request.head.ref }}
+
+      - name: Docker build
+        run: docker compose build prestashop-git
+
+      - name: Build dependency
+        run: docker compose run --rm prestashop-git composer install --ansi --prefer-dist --no-interaction --no-progress
+
+      - name: Create base database
+        run: docker compose run --rm mysql mysql -hmysql -uroot -pprestashop -e "CREATE DATABASE presta_${{ matrix.branch }};"
+
+      - name: Install shop
+        run: docker compose run --rm prestashop-git php install-dev/index_cli.php \
+          --step=database --db_server=mysql:3306 --db_name=presta_${{ matrix.branch }} \
+          --db_user=root --db_password=prestashop --prefix=ps_ --db_clear=1 \
+          --domain=localhost:8001 --firstname="Marc" --lastname="Beier" \
+          --password=Toto123! --email=demo@prestashop.com --language=fr --country=fr \
+          --newsletter=0 --send_email=0 --ssl=0
+
+      - name: Export dump
+        run: docker compose run --rm mysql sh -c "exec mysqldump -hmysql -uroot --no-data --compact -pprestashop presta_${{ matrix.branch }}" > dump_${{ matrix.branch }}.sql
+
+      - name: Upload dump
+        uses: actions/upload-artifact@v4
+        with:
+          name: dump_${{ matrix.branch }}
+          path: |
+            dump_${{ matrix.branch }}.sql
+
+  create_diff:
+    name: Create database dumps diff
+    needs: [ install_prestashop_and_dump ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+
+      - name: Create diff
+        run: git diff ./dump_head/dump_head.sql ./dump_base/dump_base.sql > sql-diff.txt | true
+
+      - name: Upload diff
+        uses: actions/upload-artifact@v4
+        with:
+          name: sql_diff
+          path: |
+            sql-diff.txt
+
+  update_label:
+    name: Update Needs autoupgrade PR label
+    needs: [ create_diff ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+
+      - run: |
+          if [ -s sql_diff/sql-diff.txt ]; then
+            gh pr edit "$NUMBER" --add-label "$LABELS"
+          else
+            gh pr edit "$NUMBER" --remove-label "$LABELS"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.number }}
+          LABELS: Needs autoupgrade PR
