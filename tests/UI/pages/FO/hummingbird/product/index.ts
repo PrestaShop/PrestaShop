@@ -36,6 +36,7 @@ class ProductPage extends Product {
     this.customizationsMessage = (row: number) => `.product-customization__item:nth-child(${row}) div.card-body div:nth-child(2)`;
     this.productAttributeSelect = (itemNumber: number) => `div.product__variants div.variant:nth-child(${itemNumber}) select`;
     this.productAttributeButton = (itemNumber: number) => `div.product__variants div.variant:nth-child(${itemNumber}) ul input`;
+    this.deliveryInformationSpan = 'span.product__delivery__information';
 
     // Product prices block
     this.productPricesBlock = 'div.product__prices';
