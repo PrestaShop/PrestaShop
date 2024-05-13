@@ -141,6 +141,8 @@ class Product extends FOBasePage {
 
   private readonly unitDiscountValue: string;
 
+  private readonly savedValue: string;
+
   private readonly productUnitPrice: string;
 
   private readonly commentCount: string;
@@ -280,6 +282,7 @@ class Product extends FOBasePage {
     this.quantityDiscountValue = `${this.discountTable} td:nth-child(1)`;
     this.unitDiscountColumn = `${this.discountTable} th:nth-child(2)`;
     this.unitDiscountValue = `${this.discountTable} td:nth-child(2)`;
+    this.savedValue = `${this.discountTable} td:nth-child(3)`;
     // Consult review selectors
     this.commentCount = '.comments-nb';
     this.emptyReviewBlock = '#empty-product-comment';
@@ -485,10 +488,10 @@ class Product extends FOBasePage {
   /**
    * get regular price
    * @param page {Page} Browser tab
-   * @returns {Promise<number>}
+   * @returns {Promise<string>}
    */
-  async getRegularPrice(page: Page): Promise<number> {
-    return this.getPriceFromText(page, this.regularPrice);
+  async getRegularPrice(page: Page): Promise<string> {
+    return this.getTextContent(page, this.regularPrice);
   }
 
   /**
@@ -574,6 +577,15 @@ class Product extends FOBasePage {
    */
   async getDiscountValue(page: Page): Promise<string> {
     return this.getTextContent(page, this.unitDiscountValue);
+  }
+
+  /**
+   * Get volume discount saved value
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getSavedValue(page: Page): Promise<string> {
+    return this.getTextContent(page, this.savedValue);
   }
 
   /**
@@ -961,6 +973,7 @@ class Product extends FOBasePage {
    */
   async setQuantity(page: Page, quantity: number | string): Promise<void> {
     await this.setValue(page, this.productQuantity, quantity);
+    await page.waitForResponse((response) => response.url().includes('product&token='));
   }
 
   /**
