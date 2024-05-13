@@ -103,7 +103,6 @@ admin_attributes_create:
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
     _legacy_link: AdminAttributesGroups:addattribute_group
-    _legacy_feature_flag: attribute_group
 
 admin_attribute_groups_index:
   path: /
