@@ -68,7 +68,7 @@ CREATE TABLE `PREFIX_attachment` (
 CREATE TABLE `PREFIX_attachment_lang` (
   `id_attachment` int(10) unsigned NOT NULL auto_increment,
   `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(32) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
   `description` MEDIUMTEXT,
   PRIMARY KEY (`id_attachment`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;

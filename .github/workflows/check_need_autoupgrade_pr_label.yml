@@ -1,6 +1,6 @@
 # This workflow allows you to check potential changes to the structure of the database,
 # and to apply the “Needs autoupgrade PR” label if this is the case
-name: Check the label 'Needs autoupgrade   PR'
+name: Check the label 'Needs autoupgrade PR'
 
 on: pull_request_target
 
