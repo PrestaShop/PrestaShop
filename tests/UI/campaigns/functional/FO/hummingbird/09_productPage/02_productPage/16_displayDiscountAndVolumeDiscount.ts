@@ -25,7 +25,7 @@ import ProductData from '@data/faker/product';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_displayDiscount';
+const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_displayDiscountAndVolumeDiscount';
 
 describe('FO - Product page - Product page : Display discount', async () => {
   let browserContext: BrowserContext;
