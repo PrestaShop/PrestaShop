@@ -307,3 +307,6 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\AdminAPI\FormDataProvider'
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\AdminAPI\AdminAPIConfiguration'
+
+  PrestaShopBundle\Form\Admin\Login\LoginFormDataProvider:
+    autowire: true

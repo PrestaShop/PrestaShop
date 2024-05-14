@@ -29,16 +29,19 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use PrestaShopBundle\Entity\Employee\Employee;
-use PrestaShopBundle\Form\Admin\Login\LoginType;
+use PrestaShopBundle\Entity\Repository\TabRepository;
+use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Form\Admin\Login\RequestPasswordResetType;
 use PrestaShopBundle\Form\Admin\Login\ResetPasswordType;
 use PrestaShopBundle\Security\Admin\EmployeeHomepageProvider;
 use PrestaShopBundle\Security\Admin\EmployeePasswordResetter;
 use PrestaShopBundle\Security\Admin\Exception\PendingPasswordResetExistingException;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,8 +71,12 @@ class LoginController extends PrestaShopAdminController
      *
      * @return Response
      */
-    public function loginAction(Security $security, AuthenticationUtils $authenticationUtils): Response
-    {
+    public function loginAction(
+        Security $security,
+        AuthenticationUtils $authenticationUtils,
+        #[Autowire(service: 'prestashop.admin.login.form_handler')]
+        FormHandlerInterface $loginFormHandler,
+    ): Response {
         $securityResponse = $this->checkRequiredActions();
         if ($securityResponse) {
             return $securityResponse;
@@ -79,7 +86,7 @@ class LoginController extends PrestaShopAdminController
             return $this->redirectToRoute('admin_homepage');
         }
 
-        $loginForm = $this->createForm(LoginType::class);
+        $loginForm = $loginFormHandler->getForm();
         $requestPasswordResetForm = $this->createForm(RequestPasswordResetType::class);
 
         if ($authenticationUtils->getLastAuthenticationError() instanceof AuthenticationException) {
@@ -124,9 +131,13 @@ class LoginController extends PrestaShopAdminController
         return $this->redirectToRoute('admin_login');
     }
 
-    public function requestPasswordResetAction(Request $request, EmployeePasswordResetter $employeePasswordResetter): Response
-    {
-        $loginForm = $this->createForm(LoginType::class);
+    public function requestPasswordResetAction(
+        Request $request,
+        EmployeePasswordResetter $employeePasswordResetter,
+        #[Autowire(service: 'prestashop.admin.login.form_handler')]
+        FormHandlerInterface $loginFormHandler,
+    ): Response {
+        $loginForm = $loginFormHandler->getForm();
         $requestPasswordResetForm = $this->createForm(RequestPasswordResetType::class);
         $requestPasswordResetForm->handleRequest($request);
 
@@ -194,7 +205,7 @@ class LoginController extends PrestaShopAdminController
         ]);
     }
 
-    private function renderLoginPage(FormInterface $loginForm, FormInterface $requestPasswordResetForm, bool $showRequestPasswordResetForm): Response
+    protected function renderLoginPage(FormInterface $loginForm, FormInterface $requestPasswordResetForm, bool $showRequestPasswordResetForm): Response
     {
         return $this->render('@PrestaShop/Admin/Login/login.html.twig', [
             'loginForm' => $loginForm->createView(),
@@ -205,7 +216,7 @@ class LoginController extends PrestaShopAdminController
         ]);
     }
 
-    private function checkRequiredActions(): ?Response
+    protected function checkRequiredActions(): ?Response
     {
         $requiredActions = [];
 

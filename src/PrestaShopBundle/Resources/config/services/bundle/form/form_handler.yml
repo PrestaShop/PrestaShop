@@ -589,3 +589,13 @@ services:
       - '@prestashop.adapter.admin_api.form_provider'
       - 'PrestaShopBundle\Form\Admin\AdvancedParameters\AdminAPI\ConfigurationType'
       - 'AdminAPI'
+
+  prestashop.admin.login.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@PrestaShopBundle\Form\Admin\Login\LoginFormDataProvider'
+      - 'PrestaShopBundle\Form\Admin\Login\LoginType'
+      - 'BackOfficeLogin'
+      - ''
