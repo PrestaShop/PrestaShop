@@ -977,6 +977,16 @@ class CheckoutPage extends FOBasePage {
   }
 
   /**
+   * Return shipping method label
+   * @param page {Page} Browser tab
+   * @param shippingMethodID {number} Position of the shipping method
+   * @returns {Promise<string>}
+   */
+  async getShippingMethodName(page: Page, shippingMethodID: number): Promise<string> {
+    return this.getTextContent(page, this.deliveryOptionNameSpan(shippingMethodID));
+  }
+
+  /**
    * Get all carriers prices
    * @param page {Page} Browser tab
    * @returns {Promise<Array<string>>}

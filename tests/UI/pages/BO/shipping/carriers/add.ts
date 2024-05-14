@@ -2,7 +2,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 import {
-  // Import data
+  CarrierRange,
   FakerCarrier,
 } from '@prestashop-core/ui-testing';
 
@@ -44,13 +44,19 @@ class AddCarrier extends BOBasePage {
 
   private readonly zonesTable: string;
 
-  private readonly rangeSupInput: string;
+  private readonly rangeInfInput: (numColumn: number) => string;
+
+  private readonly rangeSupInput: (numColumn: number) => string;
 
   private readonly allZonesRadioButton: string;
 
-  private readonly allZonesValueInput: string;
+  private readonly allZonesValueInput: (numColumn: number) => string;
 
-  private readonly zoneRadioButton: (zoneID: string) => string;
+  private readonly rangeZoneCheckbox: (zoneID: string) => string;
+
+  private readonly rangePriceInput: (numColumn: number, zoneID: string) => string;
+
+  private readonly addNewRangeButton: string;
 
   private readonly maxWidthInput: string;
 
@@ -94,10 +100,17 @@ class AddCarrier extends BOBasePage {
     this.taxRuleSelect = '#id_tax_rules_group';
     this.rangeBehaviorSelect = '#range_behavior';
     this.zonesTable = '#zones_table';
-    this.rangeSupInput = `${this.zonesTable} tr.range_sup td.range_data input[name*='range_sup']`;
+    this.rangeInfInput = (numColumn: number) => `${this.zonesTable} tr.range_inf td:nth-child(${numColumn + 3}) `
+      + 'input[name^=\'range_inf\']';
+    this.rangeSupInput = (numColumn: number) => `${this.zonesTable} tr.range_sup td:nth-child(${numColumn + 3}) `
+      + 'input[name^=\'range_sup\']';
     this.allZonesRadioButton = `${this.zonesTable} tr.fees_all input[onclick*='checkAllZones']`;
-    this.allZonesValueInput = `${this.zonesTable} tr.fees_all .input-group input`;
-    this.zoneRadioButton = (zoneID: string) => `${this.zonesTable} #zone_${zoneID}`;
+    this.allZonesValueInput = (numColumn: number) => `${this.zonesTable} tr.fees_all td:nth-child(${numColumn + 3})`
+      + ' .input-group input';
+    this.rangeZoneCheckbox = (zoneID: string) => `${this.zonesTable} #zone_${zoneID}`;
+    this.rangePriceInput = (numColumn: number, zoneID: string) => `${this.zonesTable} td:nth-child(${numColumn + 3})`
+      + ` input[name^="fees[${zoneID}]"]`;
+    this.addNewRangeButton = '#add_new_range';
 
     // Size, weight and group access
     this.maxWidthInput = '#max_width';
@@ -126,7 +139,7 @@ class AddCarrier extends BOBasePage {
     await this.setValue(page, this.transitTimeInput, carrierData.transitName);
     await this.setValue(page, this.speedGradeInput, carrierData.speedGrade);
     await this.uploadFile(page, this.logoInput, `${carrierData.name}.jpg`);
-    await this.setValue(page, this.trackingURLInput, carrierData.trakingURL);
+    await this.setValue(page, this.trackingURLInput, carrierData.trackingURL);
     await page.locator(this.nextButton).click();
 
     // Set shipping locations and costs
@@ -143,13 +156,36 @@ class AddCarrier extends BOBasePage {
 
     // Set range sup only if free shipping is disabled
     if (!carrierData.freeShipping) {
-      await this.setValue(page, this.rangeSupInput, carrierData.rangeSup);
+      for (let idxRange: number = 0; idxRange < carrierData.ranges.length; idxRange++) {
+        const carrierRange: CarrierRange = carrierData.ranges[idxRange];
 
-      if (carrierData.allZones) {
-        await page.locator(this.allZonesRadioButton).click();
-        await this.setValue(page, this.allZonesValueInput, carrierData.allZonesValue);
-      } else {
-        await page.locator(this.zoneRadioButton(carrierData.zoneID.toString())).click();
+        await this.setValue(page, this.rangeInfInput(idxRange), carrierRange.weightMin);
+        await this.setValue(page, this.rangeSupInput(idxRange), carrierRange.weightMax);
+
+        for (let idxZone: number = 0; idxZone < carrierRange.zones.length; idxZone++) {
+          const carrierRangeZone = carrierRange.zones[idxZone].zone;
+          const carrierRangePrice = carrierRange.zones[idxZone].price;
+
+          if (typeof carrierRangeZone === 'string') {
+            await page.locator(this.allZonesRadioButton).setChecked(true);
+            await page.locator(this.allZonesValueInput(idxRange)).fill(carrierRangePrice.toString());
+            await page.waitForTimeout(1000);
+            await page.locator(this.allZonesValueInput(idxRange)).dispatchEvent('change');
+            await page.waitForTimeout(2000);
+          } else {
+            await page.locator(
+              this.rangeZoneCheckbox(carrierRangeZone.id!.toString()),
+            ).setChecked(true);
+            await page.locator(
+              this.rangePriceInput(idxRange, carrierRangeZone.id!.toString()),
+            ).fill(carrierRangePrice.toString());
+          }
+        }
+
+        // Click on the "Add new range" button
+        if (idxRange < (carrierData.ranges.length - 1)) {
+          await page.locator(this.addNewRangeButton).click();
+        }
       }
     }
     await page.locator(this.nextButton).click();
