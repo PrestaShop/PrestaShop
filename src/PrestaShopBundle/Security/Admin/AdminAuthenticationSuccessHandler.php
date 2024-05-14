@@ -26,11 +26,7 @@
 
 namespace PrestaShopBundle\Security\Admin;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Entity\Employee\Employee;
-use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Entity\Tab;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,10 +44,8 @@ class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerI
     use TargetPathTrait;
 
     public function __construct(
+        private readonly EmployeeHomepageProvider $employeeHomepageProvider,
         private readonly RouterInterface $router,
-        private readonly Security $security,
-        private readonly TabRepository $tabRepository,
-        private readonly LegacyContext $legacyContext,
     ) {
     }
 
@@ -61,39 +55,12 @@ class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerI
             $redirectUrl = $this->getTargetPath($request->getSession(), 'main');
         }
         if (empty($redirectUrl)) {
-            $redirectUrl = $this->getHomepageUrl();
+            $redirectUrl = $this->employeeHomepageProvider->getHomepageUrl();
         }
         if (empty($redirectUrl)) {
             $redirectUrl = $this->router->generate('admin_homepage');
         }
 
         return new RedirectResponse($redirectUrl);
-    }
-
-    private function getHomepageUrl(): ?string
-    {
-        $loggedUser = $this->security->getUser();
-        if ($loggedUser instanceof Employee) {
-            $homeUrl = null;
-            if (!empty($loggedUser->getDefaultTabId())) {
-                /** @var Tab|null $defaultTab */
-                $defaultTab = $this->tabRepository->findOneBy(['id' => $loggedUser->getDefaultTabId()]);
-                if (!empty($defaultTab)) {
-                    if (!empty($defaultTab->getRouteName())) {
-                        $homeUrl = $this->router->generate($defaultTab->getRouteName());
-                    } elseif (!empty($defaultTab->getClassName())) {
-                        $homeUrl = $this->legacyContext->getAdminLink($defaultTab->getClassName());
-                    }
-                }
-            }
-
-            if (null === $homeUrl) {
-                $homeUrl = $this->legacyContext->getAdminLink('AdminDashboard');
-            }
-
-            return $homeUrl;
-        }
-
-        return null;
     }
 }

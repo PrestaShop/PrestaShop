@@ -28,14 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShopBundle\Entity\Employee\Employee;
-use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Form\Admin\Login\LoginType;
 use PrestaShopBundle\Form\Admin\Login\RequestPasswordResetType;
 use PrestaShopBundle\Form\Admin\Login\ResetPasswordType;
+use PrestaShopBundle\Security\Admin\EmployeeHomepageProvider;
 use PrestaShopBundle\Security\Admin\EmployeePasswordResetter;
 use PrestaShopBundle\Security\Admin\Exception\PendingPasswordResetExistingException;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -106,35 +104,12 @@ class LoginController extends PrestaShopAdminController
     /**
      * Automatically redirects to the Employee configured homepage, or AdminDashboard
      * as a fallback, or to the login in case the employee is not logged in.
-     *
-     * @param Security $security
-     * @param TabRepository $tabRepository
-     * @param LegacyContext $legacyContext
-     *
-     * @return RedirectResponse
      */
-    public function homepageAction(Security $security, TabRepository $tabRepository, LegacyContext $legacyContext): RedirectResponse
+    public function homepageAction(Security $security, EmployeeHomepageProvider $employeeHomepageProvider): RedirectResponse
     {
         $loggedUser = $security->getUser();
         if ($loggedUser instanceof Employee) {
-            $homeUrl = null;
-            if (!empty($loggedUser->getDefaultTabId())) {
-                /** @var Tab|null $defaultTab */
-                $defaultTab = $tabRepository->findOneBy(['id' => $loggedUser->getDefaultTabId()]);
-                if (!empty($defaultTab)) {
-                    if (!empty($defaultTab->getRouteName())) {
-                        $homeUrl = $this->generateUrl($defaultTab->getRouteName());
-                    } elseif (!empty($defaultTab->getClassName())) {
-                        $homeUrl = $legacyContext->getAdminLink($defaultTab->getClassName());
-                    }
-                }
-            }
-
-            if (null === $homeUrl) {
-                $homeUrl = $legacyContext->getAdminLink('AdminDashboard');
-            }
-
-            return $this->redirect($homeUrl);
+            return $this->redirect($employeeHomepageProvider->getHomepageUrl());
         }
 
         return $this->redirectToRoute('admin_login');
