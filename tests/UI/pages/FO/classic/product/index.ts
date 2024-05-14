@@ -107,11 +107,11 @@ class Product extends FOBasePage {
 
   protected productPricesBlock: string;
 
-  private readonly discountAmountSpan: string;
+  protected discountAmountSpan: string;
 
-  private readonly discountPercentageSpan: string;
+  protected discountPercentageSpan: string;
 
-  private readonly regularPrice: string;
+  protected regularPrice: string;
 
   private readonly packProductsPrice: string;
 
@@ -133,15 +133,15 @@ class Product extends FOBasePage {
 
   private readonly productMailAlertsNotification: string;
 
-  private readonly discountTable: string;
+  protected discountTable: string;
 
-  private readonly quantityDiscountValue: string;
+  protected quantityDiscountValue: string;
 
-  private readonly unitDiscountColumn: string;
+  protected unitDiscountColumn: string;
 
-  private readonly unitDiscountValue: string;
+  protected unitDiscountValue: string;
 
-  private readonly savedValue: string;
+  protected savedValue: string;
 
   private readonly productUnitPrice: string;
 

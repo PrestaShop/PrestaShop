@@ -41,6 +41,16 @@ class ProductPage extends Product {
     // Product prices block
     this.productPricesBlock = 'div.product__prices';
     this.productPrice = `${this.productPricesBlock} .product__current-price`;
+    this.discountAmountSpan = `${this.productPricesBlock} .product__discount-amount`;
+    this.discountPercentageSpan = `${this.productPricesBlock} .product__discount-percentage`;
+    this.regularPrice = `${this.productPricesBlock} .product__price-regular`;
+
+    // Product discount table
+    this.discountTable = '.product__discounts__table';
+    this.quantityDiscountValue = `${this.discountTable} td:nth-child(1)`;
+    this.unitDiscountColumn = `${this.discountTable} th:nth-child(2)`;
+    this.unitDiscountValue = `${this.discountTable} td:nth-child(2)`;
+    this.savedValue = `${this.discountTable} td:nth-child(3)`;
 
     // Products in pack selectors
     this.productInPackImage = (productInList: number) => `${this.productInPackList(productInList)} div.product-pack__image img`;
