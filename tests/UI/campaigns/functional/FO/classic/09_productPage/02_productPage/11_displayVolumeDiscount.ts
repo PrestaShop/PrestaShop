@@ -179,7 +179,7 @@ describe('FO - Product page - Product page : Display volume discount', async () 
     });
 
     it('should check the product price', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice1', baseContext);
 
       const regularPrice = await foProductPage.getProductPrice(page);
       expect(regularPrice).to.equal('€20.00');
@@ -204,7 +204,7 @@ describe('FO - Product page - Product page : Display volume discount', async () 
     });
 
     it('should check the product price before and after the discount', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice2', baseContext);
 
       const discountValue = await foProductPage.getDiscountAmount(page);
       expect(discountValue).to.equal('Save €2.00');
@@ -293,7 +293,7 @@ describe('FO - Product page - Product page : Display volume discount', async () 
     });
 
     it('should check the product price before and after the discount', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice3', baseContext);
 
       const finalPrice = await foProductPage.getProductPrice(page);
       expect(finalPrice).to.equal('€17.00');
