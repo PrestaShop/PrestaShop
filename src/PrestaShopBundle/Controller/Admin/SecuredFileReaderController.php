@@ -62,11 +62,11 @@ class SecuredFileReaderController extends AbstractController
         'webp' => 'image/webp',
     ];
 
-    /** @var string $uploadDir */
+    /** @var string */
     private $uploadDir;
 
     /**
-     * @param String $uploadDir
+     * @param string $uploadDir
      */
     public function __construct(string $uploadDir)
     {
