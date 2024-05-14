@@ -29,18 +29,17 @@ declare(strict_types=1);
 namespace Tests\Integration\Utility;
 
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Employee\EmployeeSession;
+use PrestaShopBundle\EventListener\Admin\Context\ShopContextListener;
 use PrestaShopBundle\EventListener\Admin\EmployeeSessionSubscriber;
 use PrestaShopBundle\Security\Admin\EmployeeProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 trait LoginTrait
 {
-    abstract protected function createMock(string $originalClassName): MockObject;
-
-    protected function loginUser(KernelBrowser $kernelBrowser): void
+    protected static function loginUser(KernelBrowser $kernelBrowser, ?ShopConstraint $shopConstraint = null): void
     {
         /** @var EmployeeProvider $employeeProvider */
         $employeeProvider = $kernelBrowser->getContainer()->get(EmployeeProvider::class);
@@ -57,6 +56,11 @@ trait LoginTrait
         } else {
             $employeeSession = $employee->getSessions()->first();
         }
-        $kernelBrowser->loginUser($employee, 'main', [EmployeeSessionSubscriber::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE => $employeeSession]);
+
+        // The employee session and the shop constraint are stored as token attributes
+        $kernelBrowser->loginUser($employee, 'main', [
+            EmployeeSessionSubscriber::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE => $employeeSession,
+            ShopContextListener::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE => $shopConstraint,
+        ]);
     }
 }

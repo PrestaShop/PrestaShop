@@ -143,4 +143,25 @@ class ShopConstraint
     {
         return $this->strict;
     }
+
+    public function isEqual(self $constraint): bool
+    {
+        if ($this->isStrict() !== $constraint->isStrict()) {
+            return false;
+        }
+
+        if ($this->getShopId() !== null && $constraint->getShopId() !== null && $this->getShopId()->getValue() === $constraint->getShopId()->getValue()) {
+            return true;
+        }
+
+        if ($this->getShopGroupId() !== null && $constraint->getShopGroupId() !== null && $this->getShopGroupId()->getValue() === $constraint->getShopGroupId()->getValue()) {
+            return true;
+        }
+
+        if ($this->forAllShops() && $constraint->forAllShops()) {
+            return true;
+        }
+
+        return false;
+    }
 }
