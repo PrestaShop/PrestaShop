@@ -81,6 +81,8 @@ class Product extends FOBasePage {
 
   private readonly productAvailabilityIcon: string;
 
+  private readonly productMinimalQuantity: string;
+
   protected productAttributeVariantSpan: (itemNumber: number) => string;
 
   protected productAttributeSelect: (itemNumber: number) => string;
@@ -242,6 +244,7 @@ class Product extends FOBasePage {
     this.continueShoppingButton = `${this.blockCartModal} div.cart-content-btn button`;
     this.productAvailability = '#product-availability';
     this.productAvailabilityIcon = `${this.productAvailability} i`;
+    this.productMinimalQuantity = 'div.product__add-to-cart .product__minimal-quantity';
     this.productAttributeVariantSpan = (itemNumber: number) => `div.product-variants-item:nth-child(${itemNumber}) span`;
     this.productAttributeSelect = (itemNumber: number) => `div.product-variants-item:nth-child(${itemNumber}) select`;
     this.productAttributeButton = (itemNumber: number) => `div.product-variants-item:nth-child(${itemNumber}) ul input`;
@@ -601,6 +604,15 @@ class Product extends FOBasePage {
    */
   async getProductAvailabilityLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.productAvailability, false);
+  }
+
+  /**
+   * Get minimal product quantity label
+   * @param page {Page} Browser tab
+   * @return {promise<string>}
+   */
+  async getMinimalProductQuantityLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.productMinimalQuantity);
   }
 
   /**
