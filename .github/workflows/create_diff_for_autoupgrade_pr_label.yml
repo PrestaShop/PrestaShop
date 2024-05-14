@@ -1,8 +1,8 @@
 # This workflow allows you to check potential changes to the structure of the database,
 # and to apply the “Needs autoupgrade PR” label if this is the case
-name: Check the label 'Needs autoupgrade PR'
+name: Create diff for 'Needs autoupgrade PR' label
 
-on: pull_request_target
+on: pull_request
 
 jobs:
   install_prestashop_and_dump:
@@ -15,14 +15,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          fetch-depth: ${{ matrix.branch == 'head' && '0' || '1' }}
           ref: ${{ matrix.branch == 'base' && github.event.pull_request.base.ref || github.event.pull_request.head.ref }}
           repository: ${{ matrix.branch == 'base' && github.event.pull_request.base.repo.full_name || github.event.pull_request.head.repo.full_name }}
+
+      - name: Rebase head
+        if: ${{ matrix.branch == 'head' }}
+        run: |
+          git config --global user.email "prestashop@prestashop.com"
+          git config --global user.name "Bot"
+          git pull --rebase ${{ github.event.pull_request.base.repo.clone_url }} ${{ github.event.pull_request.base.ref }}
 
       - name: Docker build
         run: docker compose build prestashop-git
 
-      - name: Build dependency
+      - name: Fetch dependencies
         run: docker compose run --rm prestashop-git composer install --ansi --prefer-dist --no-interaction --no-progress
+
+      - name: Waiting for database
+        run: ./.docker/wait-for-it.sh --timeout=60 --strict localhost:3306
 
       - name: Create base database
         run: docker compose run --rm mysql mysql -hmysql -uroot -pprestashop -e "CREATE DATABASE presta_${{ matrix.branch }};"
@@ -55,28 +66,15 @@ jobs:
       - name: Create diff
         run: git diff ./dump_head/dump_head.sql ./dump_base/dump_base.sql > sql-diff.txt | true
 
+      - name: Save PR number
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr_number
+
       - name: Upload diff
         uses: actions/upload-artifact@v4
         with:
           name: sql_diff
           path: |
             sql-diff.txt
-
-  update_label:
-    name: Update Needs autoupgrade PR label
-    needs: [ create_diff ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-
-      - run: |
-          if [ -s sql_diff/sql-diff.txt ]; then
-            gh pr edit "$NUMBER" --add-label "$LABELS"
-          else
-            gh pr edit "$NUMBER" --remove-label "$LABELS"
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          NUMBER: ${{ github.event.number }}
-          LABELS: Needs autoupgrade PR
+            pr_number
