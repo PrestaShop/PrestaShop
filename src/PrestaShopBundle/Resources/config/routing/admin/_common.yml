@@ -50,3 +50,9 @@ admin_common_reset_search_by_filter_id:
     _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'
     controller: ''
     action: ''
+
+admin_common_secured_file_image_reader:
+  path: /secured/upload/document
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\SecuredFileReaderController::readUploadDocument'
