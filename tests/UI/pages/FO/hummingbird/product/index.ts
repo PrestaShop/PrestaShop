@@ -85,6 +85,16 @@ class ProductPage extends Product {
 
     return this.getAttributeContent(page, this.productCoverImgProductModal, 'src');
   }
+
+  /**
+   * Set quantity
+   * @param page {Page} Browser tab
+   * @param quantity {number|string} Quantity to set
+   * @returns {Promise<void>}
+   */
+  async setQuantity(page: Page, quantity: number | string): Promise<void> {
+    await this.setValue(page, this.productQuantity, quantity);
+  }
 }
 
 export default new ProductPage();

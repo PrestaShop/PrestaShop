@@ -43,7 +43,7 @@ class Product extends FOBasePage {
 
   protected productCoverImgProductModal: string;
 
-  private readonly productQuantity: string;
+  protected productQuantity: string;
 
   protected productRowQuantityUpDownButton: (direction: string) => string;
 
