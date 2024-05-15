@@ -21,13 +21,15 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 @copyright Since 2007 PrestaShop SA and Contributors
 @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 
-Changelog for PrestaShop 8
+Changelog for PrestaShop 9
 
 ####################################
-#   v9.0.0 Alpha 1 - (2024-04-11)
+#   v9.0.0 Alpha 1 - (2024-05-15)
 ####################################
+
 - Back Office:
   - New feature:
+    - #35983: [BC Break] Migrate login and authentication in Back Office to Symfony (by @jolelievre)
     - #35907: Handle API upload file (by @jolelievre)
     - #35270: [BC Break] Enable attribute migrated page (by @jolelievre)
     - #35750: Filter experimental apis (by @jolelievre)
@@ -61,19 +63,24 @@ Changelog for PrestaShop 8
     - #30938: APIS08c - Add and edit authorized application (by @mflasquin)
     - #31109: Change limit of filed value on ps_customized_data so that it can accepts more than 255 characters (by @lartist)
   - Improvement:
+    - #36136: Remove attribute feature flag (by @jolelievre)
     - #35996: [BC Break] Update redirect_type enum values (by @M0rgan01)
     - #36021: [BC Break] Integrate phpstan extension for Doctrine (by @jolelievre)
     - #35848: Introduce AllShopContext Attribute for Symfony layout (by @M0rgan01)
     - #35832: Chore(api): make api based on grid instead of query builder (by @tleon)
     - #35815: TokenAuthenticator can handle multiple authorization servers (by @jolelievre)
     - #35773: Core(api) allow customer group endpoint to be created without shopid… (by @tleon)
+    - #35434: Improve wording of pack quantities (by @Hlavtox)
     - #35697: [BC Break] Create gtin and replace ean13 usages (by @tleon)
     - #35761: [BC Break] Introduce PS_TRUSTED_PROXIES env, and delete the obsolete PS_SSL_ENABLED_EVERYWHERE config (by @M0rgan01)
     - #35772: [BC Break] Admin API page stabilization and renaming (by @jolelievre)
     - #35608: [BC Break] Add a redirection function 301 or 302 on Category page (by @M0rgan01)
     - #35716: [BC Break] Add scope hard coded checks in places employee permissions were hard coded (by @jolelievre)
+    - #35699: Correction of patch requests in PPV2 (by @M0rgan01)
     - #35515: [BC Break] Create dedicated Admin API endpoint outside of the back office space (by @jolelievre)
     - #35662: Update ps_linklist module (by @jolelievre)
+    - #35564: Update product SEO metadata length (by @M0rgan01)
+    - #35518: BO login screen - don't show PrestaShop version before Employee successful login (by @ShaiMagal)
     - #35568: Make products and specific combination products searchable by all kind of references in stock management page (by @matthieu-rolland)
     - #35501: Add new feature flag "Authorization server - Multistore" (by @M0rgan01)
     - #35505: Add ean13 field to api stock management search engine for product and combinations (by @matthieu-rolland)
@@ -154,11 +161,14 @@ Changelog for PrestaShop 8
     - #31104: Improve customer view totals (by @Hlavtox)
     - #31105: Improve buttons in customer detail (by @Hlavtox)
   - Bug fix:
+    - #36101: Fix display of available hooks for a module (by @nicosomb)
     - #36052: Removed useless aliases which cause issue with MariaDB (by @nicosomb)
     - #34917: Groups list : display new group buttons even after saving options (by @HiCharly)
+    - #34823: Sets the current date on the duplicate product (by @webeshop)
     - #35810: [BC Break] Taking into account legacy public actions in Symfony layout (by @M0rgan01)
     - #35865: Changed attribute value creation route (by @nicosomb)
     - #35863: Fixed title in attribute value form (by @nicosomb)
+    - #35861: Update HTMLTemplateOrderSlip.php to fix #35802 (by @rudolfkastl)
     - #35771: Updated query to remove subquery (by @nicosomb)
     - #34891: Fix issues on some catalog pages (by @Hlavtox)
     - #35439: Fixed sort error after generation of credit slip just for delivery fees; refs #33890 (by @denys202)
@@ -210,6 +220,11 @@ Changelog for PrestaShop 8
     - #31223: Don't catch exception that implements ModuleErrorInterface (by @bibips)
     - #31153: Always set HelperKpi source and use conditional refresh (by @atomiix)
   - Refactoring:
+    - #36109: Fix forgotten tab (by @Hlavtox)
+    - #35824: Prevent errors on different address formats (by @Hlavtox)
+    - #35830: Fix notice on nulls (by @Hlavtox)
+    - #35827: Fix uasort in dead code (by @Hlavtox)
+    - #35698: Make changing order status more resilient to failed data (by @Hlavtox)
     - #35414: Rebind composer on the API module dev branch and update composer.lock (by @jolelievre)
     - #35402: Rename ApiAccess into ApiClient (by @jolelievre)
     - #35172: Delete endpoints that have been moved to the module (by @tleon)
@@ -298,7 +313,10 @@ Changelog for PrestaShop 8
     - #32634: [BC Break] Introduce supplier presenter & simplify manufacturer presenter (by @Hlavtox)
     - #32652: Introduce store presenter (by @Hlavtox)
   - Improvement:
+    - #35705: Fix strstr modifier (by @Hlavtox)
+    - #35735: Fix array_slice modifier (by @Hlavtox)
     - #30546: Generate product categories breadcrumb accordingly to accessed category (by @Dreimus)
+    - #35571: Stop requesting core.js source map in production (by @SharakPL)
     - #35075: Add avif support to theme files (by @buggyzap)
     - #34122: Protect .git folder with htaccess (by @jf-viguier)
     - #34121: Change prestashop.com to prestashop-project.org in .htaccess (by @jf-viguier)
@@ -308,6 +326,9 @@ Changelog for PrestaShop 8
     - #33335: [BC Break] Lazyload product features (by @Hlavtox)
     - #31825: Improve smartyClassname() (by @justeen35)
   - Bug fix:
+    - #35812: Fix unit price everywhere (by @Hlavtox)
+    - #35729: Remove deprecated jquery method (by @Hlavtox)
+    - #35584: Fix(merchandise-return): deprecation alert is displayed on the return form (by @TheoAlloin)
     - #34975: Getjqueryuipath correct return value (by @web-cooking-factory)
     - #34948: Correct warning with substr if $component is an array (by @web-cooking-factory)
     - #34834: Unreleased version of Classic is required for v9 (by @kpodemski)
@@ -335,6 +356,7 @@ Changelog for PrestaShop 8
     - #31092: Fix widget call for nonexistent modules (by @Hlavtox)
     - #26764: Avoid including negative stock quantity values in attribute selector total quantity sum (by @prestaalba)
   - Refactoring:
+    - #35822: Fix strpos modifier (by @Hlavtox)
     - #35167: Change old links to newer method (by @Hlavtox)
     - #34499: [BC Break] Migrate more properties to lazy array (by @Hlavtox)
     - #34498: [BC Break] Remove calls to get products properties (by @Hlavtox)
@@ -357,6 +379,8 @@ Changelog for PrestaShop 8
     - #31683: Set possibility to ignore warnings and notices in dev mode (by @web-cooking-factory)
     - #31294: New hook for performing actions when address change on cart (by @Prestaworks)
   - Improvement:
+    - #36073: Improved Github Actions when updating php modules (by @nicosomb)
+    - #36081: Update changelog for alpha v9 (by @matthieu-rolland)
     - #34908: Don't create useless file "index.php" in every image folder (by @ShaiMagal)
     - #36050: Update Symfony components after 6.4.7 release (by @nicosomb)
     - #36043: Bump eslint-plugin-html from 8.1.0 to 8.1.1 in /tests/UI (by @dependabot[bot])
@@ -701,6 +725,8 @@ Changelog for PrestaShop 8
     - #28550: [BC Break] Removed deprecated methods in Order class (by @Progi1984)
   - Bug fix:
     - #34875: Add cart rule module validation (by @Hlavtox)
+    - #35621: Fix: Clear cache module multishop (by @pvujic)
+    - #35587: Fix $action variable in postProcess method (by @SharakPL)
     - #35544: Update hook.xml (by @manudas)
     - #33624: [BC Break] Fix untranslated field names on Attribute Group error messages (by @eternoendless)
     - #35281: Fix diacritics pdf invoice support for ro-RO (by @gabrielroman13)
@@ -717,8 +743,15 @@ Changelog for PrestaShop 8
     - #31456: Fixed indentation in yaml file (by @nicosomb)
     - #31154: Revert "Removed deprecated methods & properties in Product class" (by @jolelievre)
   - Refactoring:
+    - #35644: Fix order and remove duplicates from smarty.config.inc.php (by @SharakPL)
+    - #35283: [BC Break] Remove deprecated ajaxDie method and deprecated hooks (by @Hlavtox)
+    - #36108: Remove outdated PHP conditions (by @Hlavtox)
     - #36029: [BC Break] Remove deprecated object model validation and other dead code (by @Hlavtox)
     - #35998: Moves the random admin folder name generation at the end of the install process (by @matthieu-rolland)
+    - #35953: Fix cart calculator tax rounding issues (by @Hlavtox)
+    - #35834: Stabilize search indexation and check referrer (by @Hlavtox)
+    - #35826: Better inform about faulty hooks (by @Hlavtox)
+    - #35749: Unify text field database limits (by @Hlavtox)
     - #35231: Fix index.php links in admin zone (by @Hlavtox)
     - #35259: Remove dataviz related (by @PrestaEdit)
     - #34927: [BC Break] Add comments, remove unused constants (by @Hlavtox)
@@ -808,6 +841,7 @@ Changelog for PrestaShop 8
   - New feature:
     - #31363: Add registered customer edit test (by @Hlavtox)
   - Improvement:
+    - #36112: Functional Tests : BO - Shipping - Carriers : CRUD carrier in BO (by @Progi1984)
     - #36048: Functional Tests : FO - Product Page : Display pack content and link to product (Classic & Hummingbird) (by @Progi1984)
     - #36045: Functional Tests : FO - Guest checkout: Billing address when logged in (Classic & Hummingbird) (by @Progi1984)
     - #36023: Functional tests - Add new tests to add file customization and required customization in FO > Product page (Classic theme) (by @nesrineabdmouleh)
@@ -827,6 +861,7 @@ Changelog for PrestaShop 8
     - #35905: Nightly : Fixed error install libnss3-tools (by @Progi1984)
     - #35835: Functional Tests: FO - Order confirmation : Display of product customization (by @Progi1984)
     - #35831: Functional Tests : BO - Catalog - Categories : CRUD Category in BO (by @Progi1984)
+    - #35818: Functional Tests : Migration from Docker Compose v1 to v2 (8.1.x) (by @Progi1984)
     - #35797: New products block module - Configure settings of "Number of days for which the product is considered 'new'" field (by @Progi1984)
     - #35793: Functional Tests : BO - Design - Positions - Unhook module in list by Bulk actions (by @Progi1984)
     - #35798: Functional Tests : FO - Order confirmation - List of ordered products (by @Progi1984)
@@ -840,6 +875,7 @@ Changelog for PrestaShop 8
     - #35658: Functional Tests: Category products module - Disable/Enable module (by @Progi1984)
     - #35661: Functional Tests : API : GET /api/products (by @Progi1984)
     - #35657: Functional Tests: Hummingbird > FO - User account - Order history - Order details - Request a merchandise return from order details (by @Progi1984)
+    - #35646: UI Tests : Allow to enable/disable make (by @Progi1984)
     - #35629: Functional Tests : API : PATCH /api/product/{productId} (by @Progi1984)
     - #35462: Functional Tests : Hummingbird > FO - Product page - Product page : Add to cart (by @Progi1984)
     - #35620: Functional Tests : API : POST /api/product (by @Progi1984)
@@ -942,9 +978,11 @@ Changelog for PrestaShop 8
     - #31592: Functional Tests : Splits Tests in small packages (by @Progi1984)
     - #31165: Running nightly on branch 8.1.x (by @boubkerbribri)
   - Bug fix:
+    - #36098: Functional Tests : Fixed `check:data:modules` (by @Progi1984)
     - #35944: Nightly : Fixed cron_nightly_tests_reusable.yml (by @Progi1984)
     - #35941: Nightly : Fixed API : GET /languages (by @Progi1984)
     - #35940: Nightly : Need Keycloak for execution (by @Progi1984)
+    - #35906: Fix error install libnss3-tools (by @jolelievre)
     - #35780: Fix module test folder in test environment (by @jolelievre)
     - #35550: Nightly : Fixed `campaigns/functional/FO/hummingbird/09*/01*/*` (by @Progi1984)
     - #35482: Revert MacOs runner because of its instability (by @jolelievre)
@@ -992,6 +1030,13 @@ Changelog for PrestaShop 8
     - #31632: Functional Tests : Add the script `test:functional:productV2` (by @Progi1984)
     - #31628: Fix Sanity Product V2 tests blocking CI (by @0x346e3730)
   - Refactoring:
+    - #36141: Functional tests - Add new test to change color in FO > Product page (by @nesrineabdmouleh)
+    - #36111: Functional tests - Refacto 'BO > Shipping > Carriers > Quick edit and change position' tests (by @nesrineabdmouleh)
+    - #36137: Functional tests - Add new test to display specific delivery time in FO (Classix & Hummingbird) Theme (by @nesrineabdmouleh)
+    - #36103: Functional tests - Add new tests to dispaly tags in 'FO>Product' page in (Classic & Hummingbird) theme (by @nesrineabdmouleh)
+    - #36087: Functional tests - Add some test in 'FO > Shipping > Addresses' in (Classic & Hummingbird) theme (by @nesrineabdmouleh)
+    - #36085: Functional tests - Add new test to Edit combination in FO > Product page in (Classic & Hummingbird) theme (by @nesrineabdmouleh)
+    - #36072: Functional tests - Add new test to display discount in the cart page in (Classic & Hummingbird) theme (by @nesrineabdmouleh)
     - #36060: Functional tests - Add new test to check popular products in payment confirmation page (Classic & Hummingbird) (by @nesrineabdmouleh)
     - #36030: Functional tests - Add new test 'FO > Modal > Continue shopping / Proceed to checkout / Close' in (Classic & Hummingbird) theme (by @nesrineabdmouleh)
     - #36034: Functional tests - Add new test to dispay modal of prduct with customization in FO > Cart page in (Classic & Hummingbird) theme (by @nesrineabdmouleh)
