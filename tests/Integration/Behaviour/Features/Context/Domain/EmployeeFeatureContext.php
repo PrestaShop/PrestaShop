@@ -27,15 +27,24 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EditableEmployee;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class EmployeeFeatureContext extends AbstractDomainFeatureContext
 {
+    private const MIN_PASSWORD_LENGTH = 1;
+    private const MAX_PASSWORD_LENGTH = 72;
+    private const MIN_PASSWORD_SCORE = 1;
+
     /**
      * @Given I Add new employee :employeeReference to shop :shopReference with the following details:
      *
@@ -50,7 +59,7 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
     ) {
         $testCaseData = $table->getRowsHash();
 
-        $data = $this->mapDataForAddEmployeeHandler($testCaseData, $shopReference);
+        $data = $this->mapDataWithSelectedValues($testCaseData, $shopReference);
 
         /** @var EmployeeId $employeeIdObject */
         $employeeIdObject = $this->getCommandBus()->handle(new AddEmployeeCommand(
@@ -64,52 +73,150 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
             $data['profileId'],
             $data['shopAssociation'],
             false, // has enable gravatar
-            1, // Minimum password length, dummy data
-            72, // Maximum password length, dummy data
-            1 // Minimum password score, dummy data
+            self::MIN_PASSWORD_LENGTH,
+            self::MAX_PASSWORD_LENGTH,
+            self::MIN_PASSWORD_SCORE
         ));
 
         SharedStorage::getStorage()->set($employeeReference, $employeeIdObject->getValue());
     }
 
     /**
+     * @Given I edit employee :employeeReference with the following details:
+     *
+     * @param string $employeeReference
+     * @param TableNode $table
+     */
+    public function editEmployeeToShopWithTheFollowingDetails(string $employeeReference, TableNode $table): void
+    {
+        $tableData = $table->getRowsHash();
+
+        $data = $this->mapDataWithSelectedValues($tableData, $tableData['Associated shops'] ?? null);
+
+        $command = new EditEmployeeCommand($this->referenceToId($employeeReference));
+
+        if (isset($data['firstName'])) {
+            $command->setFirstName($data['firstName']);
+        }
+        if (isset($data['lastName'])) {
+            $command->setLastName($data['lastName']);
+        }
+        if (isset($data['email'])) {
+            $command->setEmail($data['email']);
+        }
+        if (isset($data['plainPassword'])) {
+            $command->setPlainPassword($data['plainPassword'], self::MIN_PASSWORD_LENGTH, self::MAX_PASSWORD_LENGTH, self::MIN_PASSWORD_SCORE);
+        }
+        if (isset($data['defaultPageId'])) {
+            $command->setDefaultPageId($data['defaultPageId']);
+        }
+        if (isset($data['languageId'])) {
+            $command->setLanguageId($data['languageId']);
+        }
+        if (isset($data['profileId'])) {
+            $command->setProfileId($data['profileId']);
+        }
+        if (isset($data['shopAssociation'])) {
+            $command->setShopAssociation($data['shopAssociation']);
+        }
+        if (isset($data['active'])) {
+            $command->setActive($data['active']);
+        }
+
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @Then employee :employeeReference should have the following details:
+     */
+    public function assertEmployeeDetails(string $employeeReference, TableNode $table): void
+    {
+        $tableData = $table->getRowsHash();
+        $data = $this->mapDataWithSelectedValues($tableData, $tableData['Associated shops']);
+
+        /** @var EditableEmployee $employeeDetails */
+        $employeeDetails = $this->getCommandBus()->handle(new GetEmployeeForEditing($this->referenceToId($employeeReference)));
+        Assert::assertEquals($data['firstName'], $employeeDetails->getFirstName()->getValue());
+        Assert::assertEquals($data['lastName'], $employeeDetails->getLastName()->getValue());
+        Assert::assertEquals($data['email'], $employeeDetails->getEmail()->getValue());
+        Assert::assertEquals($data['defaultPageId'], $employeeDetails->getDefaultPageId());
+        Assert::assertEquals($data['languageId'], $employeeDetails->getLanguageId());
+        Assert::assertEquals($data['profileId'], $employeeDetails->getProfileId());
+        Assert::assertEquals($data['active'], $employeeDetails->isActive());
+        Assert::assertEquals($data['shopAssociation'], $employeeDetails->getShopAssociation());
+    }
+
+    /**
      * @param array $testCaseData
-     * @param string $shopReference
+     * @param ?string $shopReference
      *
      * @return array
      */
-    private function mapDataForAddEmployeeHandler(array $testCaseData, string $shopReference): array
+    private function mapDataWithSelectedValues(array $testCaseData, ?string $shopReference = null): array
     {
         $data = [];
 
-        $data['firstName'] = $testCaseData['First name'];
-        $data['lastName'] = $testCaseData['Last name'];
-        $data['email'] = $testCaseData['Email address'];
-        $data['plainPassword'] = $testCaseData['Password'];
+        if (isset($testCaseData['First name'])) {
+            $data['firstName'] = $testCaseData['First name'];
+        }
+        if (isset($testCaseData['Last name'])) {
+            $data['lastName'] = $testCaseData['Last name'];
+        }
+        if (isset($testCaseData['Email address'])) {
+            $data['email'] = $testCaseData['Email address'];
+        }
+        if (isset($testCaseData['Password'])) {
+            $data['plainPassword'] = $testCaseData['Password'];
+        }
 
-        /** @var TabChoiceProvider $tabChoiseProvider */
-        $tabChoiseProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.accessible_tab');
-        $AvailableDefaultPageChoices = $tabChoiseProvider->getChoices();
-        $data['defaultPageId'] = $AvailableDefaultPageChoices[$testCaseData['Default page']];
+        if (isset($testCaseData['Default page'])) {
+            /** @var TabChoiceProvider $tabChoiceProvider */
+            $tabChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.accessible_tab');
+            $availableDefaultPageChoices = $tabChoiceProvider->getChoices();
+            $pageId = null;
+            foreach ($availableDefaultPageChoices as $pageName => $page) {
+                if (is_array($page)) {
+                    foreach ($page as $subPageName => $subPageId) {
+                        if ($subPageName === $testCaseData['Default page']) {
+                            $pageId = $subPageId;
+                            break 2;
+                        }
+                    }
+                } elseif ($pageName === $testCaseData['Default page']) {
+                    $pageId = $page;
+                    break;
+                }
+            }
+            $data['defaultPageId'] = $pageId;
+        }
 
-        /** @var LanguageChoiceProvider $languageChoiceProvider */
-        $languageChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.all_languages');
-        $availableLanguages = $languageChoiceProvider->getChoices();
-        $data['languageId'] = $availableLanguages[$testCaseData['Language']];
+        if (isset($testCaseData['Language'])) {
+            /** @var LanguageChoiceProvider $languageChoiceProvider */
+            $languageChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.all_languages');
+            $availableLanguages = $languageChoiceProvider->getChoices();
+            $data['languageId'] = $availableLanguages[$testCaseData['Language']];
+        }
 
-        /** @var ProfileChoiceProvider $profileChoiceProvider */
-        $profileChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.profile');
-        $availablePermissionProfiles = $profileChoiceProvider->getChoices();
-        $data['profileId'] = $availablePermissionProfiles[$testCaseData['Permission profile']];
+        if (isset($testCaseData['Permission profile'])) {
+            /** @var ProfileChoiceProvider $profileChoiceProvider */
+            $profileChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.profile');
+            $availablePermissionProfiles = $profileChoiceProvider->getChoices();
+            $data['profileId'] = $availablePermissionProfiles[$testCaseData['Permission profile']];
+        }
 
-        // todo: use transformer
-        $data['active'] = (bool) $testCaseData['Active'];
+        if (isset($testCaseData['Shop association'])) {
+            $data['shopAssociation'] = $this->referencesToIds($testCaseData['Shop association']);
+        } elseif (!empty($shopReference)) {
+            /** @var array $shopAssociation */
+            $shopAssociation = [
+                SharedStorage::getStorage()->get($shopReference),
+            ];
+            $data['shopAssociation'] = $shopAssociation;
+        }
 
-        /** @var array $shopAssociation */
-        $shopAssociation = [
-            SharedStorage::getStorage()->get($shopReference),
-        ];
-        $data['shopAssociation'] = $shopAssociation;
+        if (isset($testCaseData['Active'])) {
+            $data['active'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['Active']);
+        }
 
         return $data;
     }
