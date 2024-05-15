@@ -72,7 +72,7 @@
 						</li>
 						{/foreach}
 					</ul>
-					<button type="button" class="btn btn-default" onclick="viewTemplates('#template_select_{$language.id_lang}', '{$language.iso_code}/', '.html');">
+					<button style="display:none;" type="button" class="btn btn-default" onclick="viewTemplates('#template_select_{$language.id_lang}', '{$language.iso_code}/', '.html');">
 						<i class="icon-eye-open"></i>
 						{l s='Preview' d='Admin.Actions'}
 					</button>
