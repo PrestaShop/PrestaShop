@@ -62,6 +62,9 @@ services:
         $mailDevHost: 'localhost'
         $mailDevPort: 1080
 
+    test_password_hasher_factory:
+      alias: Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface
+
     # Decorate contexts to make them mutable for test purpose only
     # It is very important to have these decorators lazy, or it would force the early creation of the decorated service that would be
     # built before the listeners get the chance to setup the builders

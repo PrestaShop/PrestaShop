@@ -117,7 +117,7 @@ Feature: Employee management
     Then employee first_employee does not exist
     And employee future_employee does not exist
 
-  Scenario: I can send a password reset email to an employee
+  Scenario: I can send a password reset email to an employee and reset their password
     Given I Add new employee "sleepy_head" to shop "shop1" with the following details:
       | First name         | Alois                          |
       | Last name          | Alzheimer                      |
@@ -131,3 +131,7 @@ Feature: Employee management
       | Email address | alois.alzheimer@prestashop.com |
     Given I set up shop context to single shop shop1
     When I send password reset email to "alois.alzheimer@prestashop.com" and reference the token as reset_token
+    Then I can use token reset_token to set new password as newsecretpassword
+    And employee sleepy_head should have the following details:
+      | Email address | alois.alzheimer@prestashop.com |
+      | Password      | newsecretpassword              |

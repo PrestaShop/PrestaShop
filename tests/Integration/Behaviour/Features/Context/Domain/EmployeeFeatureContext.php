@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetEmployeePasswordCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendEmployeePasswordResetEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
@@ -42,6 +43,8 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider;
+use PrestaShopBundle\Entity\Repository\EmployeeRepository;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -198,6 +201,9 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['defaultPageId'])) {
             Assert::assertEquals($data['defaultPageId'], $employeeDetails->getDefaultPageId());
         }
+        if (isset($data['password'])) {
+            $this->checkPassword($data['password'], $employeeReference);
+        }
     }
 
     /**
@@ -242,6 +248,17 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         Assert::assertEquals($employeeEmail, $resetEmail['to'][0]['address']);
 
         $this->getSharedStorage()->set($tokenReference, $matchedRoute['resetToken']);
+    }
+
+    /**
+     * @Then I can use token :tokenReference to set new password as :newPassword
+     */
+    public function resetEmployeePasswordByToken(string $tokenReference, string $newPassword): void
+    {
+        $this->getCommandBus()->handle(new ResetEmployeePasswordCommand(
+            $this->getSharedStorage()->get($tokenReference),
+            $newPassword,
+        ));
     }
 
     /**
@@ -317,5 +334,16 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $data;
+    }
+
+    private function checkPassword(string $password, string $employeeReference): void
+    {
+        $employeeRepository = $this->getContainer()->get(EmployeeRepository::class);
+        $employee = $employeeRepository->find($this->referenceToId($employeeReference));
+
+        // Similar validation as in CheckCredentialsListener
+        /** @var PasswordHasherFactoryInterface $passwordFactory */
+        $passwordFactory = $this->getContainer()->get('test_password_hasher_factory');
+        Assert::assertTrue($passwordFactory->getPasswordHasher($employee)->verify($employee->getPassword(), $password));
     }
 }

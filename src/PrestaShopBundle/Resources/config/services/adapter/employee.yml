@@ -72,3 +72,7 @@ services:
   PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\SendEmployeePasswordResetEmailHandler:
     autoconfigure: true
     autowire: true
+
+  PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\ResetEmployeePasswordHandler:
+    autoconfigure: true
+    autowire: true
