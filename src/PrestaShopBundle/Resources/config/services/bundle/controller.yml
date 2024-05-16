@@ -1,6 +1,9 @@
 services:
   _defaults:
     public: true
+    bind:
+      $projectDir: '%kernel.project_dir%'
+      $adminFolderName: '%prestashop.admin_folder_name%'
 
   # Legacy controllers don't extend the base controller, so we need to inject the container manually.
   PrestaShopBundle\Controller\Api\ApiController:
