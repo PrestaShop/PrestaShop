@@ -29,13 +29,21 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendEmployeePasswordResetEmailCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EditableEmployee;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -127,23 +135,100 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I delete the employee :employeeReference
+     */
+    public function deleteEmployee(string $employeeReference): void
+    {
+        $this->getCommandBus()->handle(new DeleteEmployeeCommand($this->referenceToId($employeeReference)));
+    }
+
+    /**
+     * @When I bulk delete the employees :employeeReferences
+     */
+    public function bulkDeleteEmployee(string $employeeReferences): void
+    {
+        $this->getCommandBus()->handle(new BulkDeleteEmployeeCommand($this->referencesToIds($employeeReferences)));
+    }
+
+    /**
+     * @Then employee :employeeReference does not exist
+     */
+    public function assertEmployeeNotFound(string $employeeReference): void
+    {
+        $caughtException = null;
+        try {
+            $this->getCommandBus()->handle(new GetEmployeeForEditing($this->referenceToId($employeeReference)));
+        } catch (EmployeeNotFoundException $e) {
+            $caughtException = $e;
+        }
+        Assert::assertNotNull($caughtException);
+    }
+
+    /**
      * @Then employee :employeeReference should have the following details:
      */
     public function assertEmployeeDetails(string $employeeReference, TableNode $table): void
     {
         $tableData = $table->getRowsHash();
-        $data = $this->mapDataWithSelectedValues($tableData, $tableData['Associated shops']);
+        $data = $this->mapDataWithSelectedValues($tableData, $tableData['Associated shops'] ?? null);
 
         /** @var EditableEmployee $employeeDetails */
         $employeeDetails = $this->getCommandBus()->handle(new GetEmployeeForEditing($this->referenceToId($employeeReference)));
-        Assert::assertEquals($data['firstName'], $employeeDetails->getFirstName()->getValue());
-        Assert::assertEquals($data['lastName'], $employeeDetails->getLastName()->getValue());
-        Assert::assertEquals($data['email'], $employeeDetails->getEmail()->getValue());
-        Assert::assertEquals($data['defaultPageId'], $employeeDetails->getDefaultPageId());
-        Assert::assertEquals($data['languageId'], $employeeDetails->getLanguageId());
-        Assert::assertEquals($data['profileId'], $employeeDetails->getProfileId());
-        Assert::assertEquals($data['active'], $employeeDetails->isActive());
-        Assert::assertEquals($data['shopAssociation'], $employeeDetails->getShopAssociation());
+        if (isset($data['firstName'])) {
+            Assert::assertEquals($data['firstName'], $employeeDetails->getFirstName()->getValue());
+        }
+        if (isset($data['lastName'])) {
+            Assert::assertEquals($data['lastName'], $employeeDetails->getLastName()->getValue());
+        }
+        if (isset($data['email'])) {
+            Assert::assertEquals($data['email'], $employeeDetails->getEmail()->getValue());
+        }
+        if (isset($data['profileId'])) {
+            Assert::assertEquals($data['profileId'], $employeeDetails->getProfileId());
+        }
+        if (isset($data['shopAssociation'])) {
+            Assert::assertEquals($data['shopAssociation'], $employeeDetails->getShopAssociation());
+        }
+        if (isset($data['active'])) {
+            Assert::assertEquals($data['active'], $employeeDetails->isActive());
+        }
+        if (isset($data['languageId'])) {
+            Assert::assertEquals($data['languageId'], $employeeDetails->getLanguageId());
+        }
+        if (isset($data['defaultPageId'])) {
+            Assert::assertEquals($data['defaultPageId'], $employeeDetails->getDefaultPageId());
+        }
+    }
+
+    /**
+     * @When I toggle employee status for :employeeReference
+     */
+    public function toggleEmployeeStatus(string $employeeReference): void
+    {
+        $this->getCommandBus()->handle(new ToggleEmployeeStatusCommand($this->referenceToId($employeeReference)));
+    }
+
+    /**
+     * @When /^I bulk (enable|disable) employees "(.+)"$/
+     */
+    public function bulkToggleEmployeeStatus(bool $enable, string $employeeReferences): void
+    {
+        $this->getCommandBus()->handle(new BulkUpdateEmployeeStatusCommand($this->referencesToIds($employeeReferences), $enable));
+    }
+
+    /**
+     * @When I send password reset email to :employeeEmail and reference the token as :tokenReference
+     */
+    public function sendPasswordReset(string $employeeEmail, string $tokenReference): void
+    {
+        $resetUrl = $this->getCommandBus()->handle(new SendEmployeePasswordResetEmailCommand($employeeEmail));
+        $resetUrl = str_replace('http://localhost', '', $resetUrl);
+        /** @var UrlMatcherInterface $router */
+        $router = CommonFeatureContext::getContainer()->get('router');
+        $matchedRoute = $router->match($resetUrl);
+        Assert::assertEquals('admin_reset_password', $matchedRoute['_route']);
+        Assert::assertNotEmpty($matchedRoute['resetToken']);
+        $this->getSharedStorage()->set($tokenReference, $matchedRoute['resetToken']);
     }
 
     /**
