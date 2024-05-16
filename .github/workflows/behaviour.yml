@@ -76,5 +76,13 @@ jobs:
         env:
           SYMFONY_DEPRECATIONS_HELPER: disabled
 
+      - name: Upload logs
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: behaviour-${{ matrix.php }}
+          path: |
+            ./var/logs
+
       - name: Test git versionned files unchanged
         run: git diff --exit-code
