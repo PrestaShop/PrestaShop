@@ -58,6 +58,11 @@ class ShopContextListener implements EventSubscriberInterface
      */
     public const KERNEL_REQUEST_PRIORITY = EmployeeContextListener::KERNEL_REQUEST_PRIORITY - 1;
 
+    /**
+     * Priority higher than Symfony router listener (which is 32)
+     */
+    public const BEFORE_ROUTER_PRIORITY = 33;
+
     public const SHOP_CONSTRAINT_TOKEN_ATTRIBUTE = '_shop_constraint';
 
     public function __construct(
@@ -74,8 +79,7 @@ class ShopContextListener implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => [
-                // Before RouterListener
-                ['initDefaultShopContext', 33],
+                ['initDefaultShopContext', self::BEFORE_ROUTER_PRIORITY],
                 ['initShopContext', self::KERNEL_REQUEST_PRIORITY],
             ],
         ];

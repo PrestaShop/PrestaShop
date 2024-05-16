@@ -45,6 +45,11 @@ class LanguageContextListener implements EventSubscriberInterface
      */
     public const KERNEL_REQUEST_PRIORITY = EmployeeContextListener::KERNEL_REQUEST_PRIORITY - 1;
 
+    /**
+     * Priority higher than Symfony router listener (which is 32)
+     */
+    public const BEFORE_ROUTER_PRIORITY = 33;
+
     public function __construct(
         private readonly LanguageContextBuilder $languageContextBuilder,
         private readonly EmployeeContext $employeeContext,
@@ -56,8 +61,7 @@ class LanguageContextListener implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => [
-                // Before RouterListener
-                ['initDefaultLanguageContext', 33],
+                ['initDefaultLanguageContext', self::BEFORE_ROUTER_PRIORITY],
                 ['initLanguageContext', self::KERNEL_REQUEST_PRIORITY],
             ],
         ];
