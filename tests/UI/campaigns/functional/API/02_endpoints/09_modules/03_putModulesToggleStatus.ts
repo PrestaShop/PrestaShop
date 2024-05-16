@@ -201,7 +201,7 @@ describe('API : PUT /modules/toggle-status', async () => {
         ];
 
         for (let idxModule = 0; idxModule < modules.length; idxModule++) {
-          const isModuleEnabled = await moduleManagerPage.isModuleStatus(page, modules[idxModule].technicalName, 'enable');
+          const isModuleEnabled = await moduleManagerPage.isModuleStatus(page, modules[idxModule].technicalName, arg.verb);
           expect(isModuleEnabled).to.eq(arg.status);
         }
       });
