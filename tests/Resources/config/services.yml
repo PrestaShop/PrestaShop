@@ -68,3 +68,14 @@ services:
       lazy: true
       decorates: PrestaShop\PrestaShop\Core\Context\EmployeeContext
       arguments: ['@.inner']
+
+    # The builder is made public to dynamically change its settings for test purposes
+    PrestaShop\PrestaShop\Core\Context\ShopContextBuilder:
+      autowire: true
+
+    # Shop context is not shared, meaning a new instance is created everytime it is accessed
+    # This allow changing it dynamically during the test process
+    PrestaShop\PrestaShop\Core\Context\ShopContext:
+      shared: false
+      lazy: true
+      factory: [ '@PrestaShop\PrestaShop\Core\Context\ShopContextBuilder', 'build' ]

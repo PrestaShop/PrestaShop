@@ -46,11 +46,15 @@ function tempnam($directory, $prefix)
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Configuration;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
 class ShopFeatureContext extends AbstractDomainFeatureContext
 {
@@ -118,5 +122,18 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsShopAssociationNotFound(): void
     {
         $this->assertLastErrorIs(ShopAssociationNotFound::class);
+    }
+
+    /**
+     * @Given I set up shop context to single shop :shopReference
+     */
+    public function setupShopContext(string $shopReference)
+    {
+        // We only need to update the builder settings, ShopContext service was defined as NOT shared
+        // so each time it is accessed a new instance is created and the builder is called again
+        /** @var ShopContextBuilder $shopContextBuilder */
+        $shopContextBuilder = CommonFeatureContext::getContainer()->get(ShopContextBuilder::class);
+        $shopContextBuilder->setShopConstraint(ShopConstraint::shop($this->referenceToId($shopReference)));
+        $shopContextBuilder->setShopId($this->referenceToId($shopReference));
     }
 }
