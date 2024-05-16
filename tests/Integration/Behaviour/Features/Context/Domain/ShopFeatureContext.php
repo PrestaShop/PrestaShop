@@ -132,7 +132,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         // We only need to update the builder settings, ShopContext service was defined as NOT shared
         // so each time it is accessed a new instance is created and the builder is called again
         /** @var ShopContextBuilder $shopContextBuilder */
-        $shopContextBuilder = CommonFeatureContext::getContainer()->get(ShopContextBuilder::class);
+        $shopContextBuilder = CommonFeatureContext::getContainer()->get('test_shop_context_builder');
         $shopContextBuilder->setShopConstraint(ShopConstraint::shop($this->referenceToId($shopReference)));
         $shopContextBuilder->setShopId($this->referenceToId($shopReference));
     }

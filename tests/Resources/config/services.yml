@@ -56,6 +56,12 @@ services:
     Symfony\Component\Serializer\SerializerInterface:
       alias: serializer
 
+    Tests\Resources\MailDevClient:
+      autowire: true
+      arguments:
+        $mailDevHost: 'localhost'
+        $mailDevPort: 1080
+
     # Decorate contexts to make them mutable for test purpose only
     # It is very important to have these decorators lazy, or it would force the early creation of the decorated service that would be
     # built before the listeners get the chance to setup the builders
@@ -70,8 +76,8 @@ services:
       arguments: ['@.inner']
 
     # The builder is made public to dynamically change its settings for test purposes
-    PrestaShop\PrestaShop\Core\Context\ShopContextBuilder:
-      autowire: true
+    test_shop_context_builder:
+      alias: PrestaShop\PrestaShop\Core\Context\ShopContextBuilder
 
     # Shop context is not shared, meaning a new instance is created everytime it is accessed
     # This allow changing it dynamically during the test process

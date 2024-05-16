@@ -221,6 +221,10 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
      */
     public function sendPasswordReset(string $employeeEmail, string $tokenReference): void
     {
+        // Clean emails stored by maildev before running the command
+        $mailDevClient = $this->getMailDevClient();
+        $mailDevClient->deleteAllEmails();
+
         $resetUrl = $this->getCommandBus()->handle(new SendEmployeePasswordResetEmailCommand($employeeEmail));
         $resetUrl = str_replace('http://localhost', '', $resetUrl);
         /** @var UrlMatcherInterface $router */
@@ -228,6 +232,15 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         $matchedRoute = $router->match($resetUrl);
         Assert::assertEquals('admin_reset_password', $matchedRoute['_route']);
         Assert::assertNotEmpty($matchedRoute['resetToken']);
+
+        $emails = $mailDevClient->getAllEmails();
+        Assert::assertCount(1, $emails);
+        $resetEmail = $emails[0];
+        Assert::assertStringContainsString('Your new password', $resetEmail['subject']);
+        Assert::assertStringContainsString($resetUrl, $resetEmail['text']);
+        Assert::assertStringContainsString($resetUrl, $resetEmail['html']);
+        Assert::assertEquals($employeeEmail, $resetEmail['to'][0]['address']);
+
         $this->getSharedStorage()->set($tokenReference, $matchedRoute['resetToken']);
     }
 
