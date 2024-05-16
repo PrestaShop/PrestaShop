@@ -55,10 +55,22 @@ onReady(() => {
   [resetPasswordInput, resetPasswordConfirmationInput].forEach((input: HTMLInputElement|null) => {
     if (input) {
       input.addEventListener('keyup', () => {
-        const isValid = passwordHandler.isPasswordValid() && resetPasswordInput?.value === resetPasswordConfirmationInput?.value;
+        const isValid = passwordHandler.isPasswordValid();
+        const passwordsMatch = resetPasswordInput?.value === resetPasswordConfirmationInput?.value;
+        const confirmFormText = resetPasswordConfirmationInput?.parentNode?.querySelector('.form-text');
+
+        if (confirmFormText) {
+          if (!passwordsMatch && resetPasswordInput?.value.length && resetPasswordConfirmationInput?.value.length) {
+            confirmFormText.textContent = resetPasswordConfirmationInput?.dataset.invalidPassword ?? '';
+            confirmFormText.classList.toggle('text-danger', !passwordsMatch);
+            confirmFormText.classList.remove('d-none');
+          } else {
+            confirmFormText.classList.add('d-none');
+          }
+        }
 
         if (submitButton) {
-          submitButton.disabled = !isValid;
+          submitButton.disabled = !isValid || !passwordsMatch;
         }
       });
     }

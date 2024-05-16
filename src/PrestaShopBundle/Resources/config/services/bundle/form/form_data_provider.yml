@@ -310,3 +310,9 @@ services:
 
   PrestaShopBundle\Form\Admin\Login\LoginFormDataProvider:
     autowire: true
+
+  PrestaShopBundle\Form\Admin\Login\RequestPasswordResetFormDataProvider:
+    autowire: true
+
+  PrestaShopBundle\Form\Admin\Login\ResetPasswordFormDataProvider:
+    autowire: true
