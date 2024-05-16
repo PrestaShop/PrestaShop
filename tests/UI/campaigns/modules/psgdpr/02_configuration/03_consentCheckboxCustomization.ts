@@ -20,7 +20,6 @@ import {searchResultsPage} from '@pages/FO/classic/searchResults';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import boDesignPositionsPage from '@pages/BO/design/positions';
-import boDesignPositionsHookModulePage from '@pages/BO/design/positions/hookModule';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psGdpr from '@pages/BO/modules/psGdpr';
 import psGdprTabDataConsent from '@pages/BO/modules/psGdpr/tabDataConsent';
@@ -35,6 +34,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {faker, fakerFR} from '@faker-js/faker';
 import {
+  boDesignPositionsHookModulePage,
   FakerCustomer,
   foClassicHomePage,
   foClassicLoginPage,
