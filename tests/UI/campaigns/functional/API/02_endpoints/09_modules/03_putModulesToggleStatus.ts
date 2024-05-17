@@ -20,6 +20,7 @@ import {ModuleInfo} from '@data/types/module';
 
 import {
   boModuleManagerPage,
+  FakerModule,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -146,8 +147,13 @@ describe('API : PUT /modules/toggle-status', async () => {
     it('should fetch modules', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fetchModules', baseContext);
 
+      const isModule1Visible = await moduleManager.searchModule(page, {tag: 'statscarrier'} as FakerModule);
+      expect(isModule1Visible).to.be.equal(true);
       moduleInfo1 = await moduleManager.getModuleInformationNth(page, 1);
-      moduleInfo2 = await moduleManager.getModuleInformationNth(page, 2);
+
+      const isModule2Visible = await moduleManager.searchModule(page, {tag: 'pagesnotfound'} as FakerModule);
+      expect(isModule2Visible).to.be.equal(true);
+      moduleInfo2 = await moduleManager.getModuleInformationNth(page, 1);
     });
   });
 
@@ -186,7 +192,7 @@ describe('API : PUT /modules/toggle-status', async () => {
     });
 
     describe(`BackOffice : Check modules are ${arg.verb}d`, async () => {
-      it('should filter list by technical name', async function () {
+      it('should check module status by technical name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkModules${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(page, dashboardPage.modulesParentLink, dashboardPage.modulesParentLink);
