@@ -10,7 +10,6 @@ import bulkDeleteProductsTest from '@commonTests/BO/catalog/monitoring';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import addProductPage from '@pages/BO/catalog/products/add';
 import monitoringPage from '@pages/BO/catalog/monitoring';
 
@@ -19,6 +18,7 @@ import ImportProductsWithoutQuantities from '@data/import/productsWithoutQuantit
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_monitoring_sortPaginationAndBulkDelete_productsWithoutImage';
 
@@ -68,8 +68,8 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
 
       await addProductPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.monitoringLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.monitoringLink,
       );
 
       const pageTitle = await monitoringPage.getPageTitle(page);

@@ -15,12 +15,12 @@ import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -85,10 +85,10 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
       it('should go to \'Orders > Delivery slips\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToDeliverySlipsPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.deliverySlipslink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.deliverySlipslink,
         );
         await deliverySlipsPage.closeSfToolBar(page);
 

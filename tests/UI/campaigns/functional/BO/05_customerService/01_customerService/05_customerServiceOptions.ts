@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import customerServicePage from '@pages/BO/customerService/customerService';
 
 // Import data
@@ -14,6 +13,7 @@ import CustomerServiceOptionsData from '@data/faker/customerServiceOptions';
 
 import {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customerService_customerService_customerServiceOptions';
 
@@ -48,10 +48,10 @@ describe('BO - Customer Service : Customer service options', async () => {
   it('should go to \'Customer Service > Customer Service\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerServicePage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customerServiceParentLink,
-      dashboardPage.customerServiceLink,
+      boDashboardPage.customerServiceParentLink,
+      boDashboardPage.customerServiceLink,
     );
 
     const pageTitle = await customerServicePage.getPageTitle(page);

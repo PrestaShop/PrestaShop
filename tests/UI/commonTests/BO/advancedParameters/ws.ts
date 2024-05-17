@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
-import dashboardPage from '@pages/BO/dashboard';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 import WebserviceData from '@data/faker/webservice';
 import {WebservicePermission} from '@data/types/webservice';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -42,10 +42,10 @@ function setWebserviceStatus(status: boolean, baseContext: string = 'commonTests
     it('should go to \'Advanced Parameters > Webservice\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdvParametersWebservice', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.webserviceLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.webserviceLink,
       );
       await webservicePage.closeSfToolBar(page);
 
@@ -92,10 +92,10 @@ function addWebserviceKey(
     it('should go to \'Advanced Parameters > Webservice\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToWebservicePage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.webserviceLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.webserviceLink,
       );
       await webservicePage.closeSfToolBar(page);
 
@@ -151,10 +151,10 @@ function removeWebserviceKey(keyDescription: string, baseContext: string = 'comm
     it('should go to \'Advanced Parameters > Webservice\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToWebservicePage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.webserviceLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.webserviceLink,
       );
       await webservicePage.closeSfToolBar(page);
 

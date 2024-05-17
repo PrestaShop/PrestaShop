@@ -7,7 +7,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import administrationPage from '@pages/BO/advancedParameters/administration';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab';
@@ -22,6 +21,7 @@ import FileData from '@data/faker/file';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_administration_uploadQuota';
 
@@ -88,10 +88,10 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
     it('should go to \'Advanced Parameters > Administration\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdministrationPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.administrationLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.administrationLink,
       );
 
       const pageTitle = await administrationPage.getPageTitle(page);
@@ -108,10 +108,10 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
     it('should go to \'Catalog > Files\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFilesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.filesLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.filesLink,
       );
       await filesPage.closeSfToolBar(page);
 
@@ -156,10 +156,10 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
     it('should go to \'Advanced Parameters > Administration\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdministrationPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.administrationLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.administrationLink,
       );
 
       const pageTitle = await administrationPage.getPageTitle(page);
@@ -176,10 +176,10 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       await productsPage.closeSfToolBar(page);
@@ -246,10 +246,10 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
     it('should go to \'Advanced Parameters > Administration\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdministrationPage3', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.administrationLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.administrationLink,
       );
 
       const pageTitle = await administrationPage.getPageTitle(page);
@@ -266,10 +266,10 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       await productsPage.closeSfToolBar(page);

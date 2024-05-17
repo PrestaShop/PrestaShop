@@ -8,9 +8,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
-import dashboardPage from '@pages/BO/dashboard';
 
 import {
+  boDashboardPage,
   // Import data
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
@@ -46,7 +46,7 @@ function createCustomerTest(customerData: FakerCustomer, baseContext: string = '
     it('should go \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.customersParentLink, boDashboardPage.customersLink);
 
       await customersPage.closeSfToolBar(page);
 
@@ -96,7 +96,7 @@ function createCustomerB2BTest(customerData: FakerCustomer, baseContext: string 
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.customersParentLink, boDashboardPage.customersLink);
 
       await customersPage.closeSfToolBar(page);
 
@@ -146,7 +146,7 @@ function deleteCustomerTest(customerData: FakerCustomer, baseContext: string = '
     it('should go \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.customersParentLink, boDashboardPage.customersLink);
 
       await customersPage.closeSfToolBar(page);
 
@@ -215,7 +215,7 @@ function bulkDeleteCustomersTest(
     it('should go \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.customersParentLink, boDashboardPage.customersLink);
 
       await customersPage.closeSfToolBar(page);
 

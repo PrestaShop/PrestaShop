@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
-import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
@@ -18,6 +17,7 @@ import ProductData from '@data/faker/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_productsBO_CRUDStandardProduct';
 
@@ -61,10 +61,10 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       await productsPage.closeSfToolBar(page);

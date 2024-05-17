@@ -9,7 +9,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import importPage from '@pages/BO/advancedParameters/import';
 
 // Import data
@@ -18,6 +17,7 @@ import type MailDevEmail from '@data/types/maildevEmail';
 import {expect} from 'chai';
 import type MailDev from 'maildev';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_import_importFile';
 
@@ -67,10 +67,10 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
     it('should go to \'Advanced Parameters > Import\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToImportPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.importLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.importLink,
       );
       await importPage.closeSfToolBar(page);
 

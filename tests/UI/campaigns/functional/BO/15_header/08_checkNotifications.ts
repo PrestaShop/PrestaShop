@@ -7,7 +7,6 @@ import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
@@ -24,6 +23,7 @@ import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataPaymentMethods,
@@ -106,26 +106,26 @@ describe('BO - Header : Check notifications', async () => {
     it('should check notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber', baseContext);
 
-      const number = await dashboardPage.getAllNotificationsNumber(page);
+      const number = await boDashboardPage.getAllNotificationsNumber(page);
       expect(number).to.be.at.least(0);
     });
 
     it('should click on notifications icon', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNotificationsLink', baseContext);
 
-      const isNotificationsVisible = await dashboardPage.clickOnNotificationsLink(page);
+      const isNotificationsVisible = await boDashboardPage.clickOnNotificationsLink(page);
       expect(isNotificationsVisible).to.eq(true);
 
-      await dashboardPage.clickOnNotificationsTab(page, 'customers');
-      await dashboardPage.clickOnNotificationsTab(page, 'messages');
+      await boDashboardPage.clickOnNotificationsTab(page, 'customers');
+      await boDashboardPage.clickOnNotificationsTab(page, 'messages');
     });
 
     it('should refresh the page and check the notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'refreshPageAndCheckNotifNumber', baseContext);
 
-      await dashboardPage.reloadPage(page);
+      await boDashboardPage.reloadPage(page);
 
-      const number = await dashboardPage.getAllNotificationsNumber(page);
+      const number = await boDashboardPage.getAllNotificationsNumber(page);
       expect(number).to.equal(0);
     });
 
@@ -182,39 +182,39 @@ describe('BO - Header : Check notifications', async () => {
       // Close tab and init other page objects with new current tab
       page = await homePage.closePage(browserContext, page, 0);
 
-      await dashboardPage.reloadPage(page);
+      await boDashboardPage.reloadPage(page);
 
-      const pageTitle = await dashboardPage.getPageTitle(page);
-      expect(pageTitle).to.contains(dashboardPage.pageTitle);
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should check notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber2', baseContext);
 
-      const number = await dashboardPage.getAllNotificationsNumber(page);
+      const number = await boDashboardPage.getAllNotificationsNumber(page);
       expect(number).to.equal(1);
     });
 
     it('should click on notifications icon', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNotificationsLink2', baseContext);
 
-      const isNotificationsVisible = await dashboardPage.clickOnNotificationsLink(page);
+      const isNotificationsVisible = await boDashboardPage.clickOnNotificationsLink(page);
       expect(isNotificationsVisible).to.eq(true);
     });
 
     it('should click on Messages tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickMessagesTab', baseContext);
 
-      await dashboardPage.clickOnNotificationsTab(page, 'messages');
+      await boDashboardPage.clickOnNotificationsTab(page, 'messages');
 
-      const notificationsNumber = await dashboardPage.getNotificationsNumberInTab(page, 'customer_messages');
+      const notificationsNumber = await boDashboardPage.getNotificationsNumberInTab(page, 'customer_messages');
       expect(notificationsNumber).to.equal(1);
     });
 
     it('should click on the first notification and check that the messages table is opened', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnFirstMessageNotification', baseContext);
 
-      await dashboardPage.clickOnNotification(page, 'messages');
+      await boDashboardPage.clickOnNotification(page, 'messages');
 
       const pageTitle = await customerServicePage.getPageTitle(page);
       expect(pageTitle).to.contains(customerServicePage.pageTitle);
@@ -230,21 +230,21 @@ describe('BO - Header : Check notifications', async () => {
 
       await viewOrderMessagePage.goToDashboardPage(page);
 
-      const isNotificationsVisible = await dashboardPage.clickOnNotificationsLink(page);
+      const isNotificationsVisible = await boDashboardPage.clickOnNotificationsLink(page);
       expect(isNotificationsVisible).to.eq(true);
     });
 
     it('should check notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber3', baseContext);
 
-      const number = await dashboardPage.getAllNotificationsNumber(page);
+      const number = await boDashboardPage.getAllNotificationsNumber(page);
       expect(number).to.equal(2);
     });
 
     it('should click on the first notification in orders tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersNotification', baseContext);
 
-      await dashboardPage.clickOnNotification(page, 'orders');
+      await boDashboardPage.clickOnNotification(page, 'orders');
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
       expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
@@ -254,17 +254,17 @@ describe('BO - Header : Check notifications', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnCustomersTab', baseContext);
 
       await viewOrderMessagePage.goToDashboardPage(page);
-      await dashboardPage.clickOnNotificationsLink(page);
-      await dashboardPage.clickOnNotificationsTab(page, 'customers');
+      await boDashboardPage.clickOnNotificationsLink(page);
+      await boDashboardPage.clickOnNotificationsTab(page, 'customers');
 
-      const notificationsNumber = await dashboardPage.getNotificationsNumberInTab(page, 'customers');
+      const notificationsNumber = await boDashboardPage.getNotificationsNumberInTab(page, 'customers');
       expect(notificationsNumber).to.equal(1);
     });
 
     it('should click on the first notification and check that the customers table is opened', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnFirstNotificationCustomers', baseContext);
 
-      await dashboardPage.clickOnNotification(page, 'customers');
+      await boDashboardPage.clickOnNotification(page, 'customers');
 
       const customerName: string = `${customerData.firstName[0]}. ${customerData.lastName}`;
 

@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import importPage from '@pages/BO/advancedParameters/import';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -44,10 +44,10 @@ function importFileTest(
     it('should go to \'Advanced Parameters > Import\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToImportPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.importLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.importLink,
       );
       await importPage.closeSfToolBar(page);
 

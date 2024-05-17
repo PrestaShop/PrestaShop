@@ -3,7 +3,6 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import statsPage from '@pages/BO/stats';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import ordersPage from '@pages/BO/orders';
@@ -43,6 +42,7 @@ import ProductData from '@data/faker/product';
 import MessageData from '@data/faker/message';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -102,7 +102,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should click on Active shopping carts link and check shopping carts page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickActiveShoppingCarts', baseContext);
 
-        await dashboardPage.clickOnActiveShoppingCartsLink(page);
+        await boDashboardPage.clickOnActiveShoppingCartsLink(page);
 
         const pageTitle = await shoppingCartsPage.getPageTitle(page);
         expect(pageTitle).to.eq(shoppingCartsPage.pageTitle);
@@ -113,20 +113,20 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await shoppingCartsPage.goToDashboardPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boDashboardPage.pageTitle);
       });
 
       it('should get the number of active shopping carts', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfActiveShoppingCarts', baseContext);
 
-        activeShoppingCarts = await dashboardPage.getNumberOfActiveShoppingCarts(page);
+        activeShoppingCarts = await boDashboardPage.getNumberOfActiveShoppingCarts(page);
       });
 
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
-        page = await dashboardPage.viewMyShop(page);
+        page = await boDashboardPage.viewMyShop(page);
         await homePage.changeLanguage(page, 'en');
 
         const isHomePage = await homePage.isHomePage(page);
@@ -202,14 +202,14 @@ describe('BO - Dashboard : Activity overview', async () => {
         page = await orderConfirmationPage.closePage(browserContext, page, 0);
         await shoppingCartsPage.reloadPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should check the number of active shopping carts', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfShoppingCarts', baseContext);
 
-        const newActiveShoppingCarts = await dashboardPage.getNumberOfActiveShoppingCarts(page);
+        const newActiveShoppingCarts = await boDashboardPage.getNumberOfActiveShoppingCarts(page);
         expect(newActiveShoppingCarts).to.eq(activeShoppingCarts + 1);
       });
     });
@@ -220,13 +220,13 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should get Orders number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrdersNumber', baseContext);
 
-        ordersNumber = await dashboardPage.getNumberOfOrders(page);
+        ordersNumber = await boDashboardPage.getNumberOfOrders(page);
       });
 
       it('should click on Orders link and check Orders page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnOrdersLink', baseContext);
 
-        await dashboardPage.clickOnOrdersLink(page);
+        await boDashboardPage.clickOnOrdersLink(page);
 
         const pageTitle = await ordersPage.getPageTitle(page);
         expect(pageTitle).to.contains(ordersPage.pageTitle);
@@ -244,14 +244,14 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await shoppingCartsPage.goToDashboardPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boDashboardPage.pageTitle);
       });
 
       it('should check Orders number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersNumber', baseContext);
 
-        const newOrdersNumber = await dashboardPage.getNumberOfOrders(page);
+        const newOrdersNumber = await boDashboardPage.getNumberOfOrders(page);
         expect(newOrdersNumber).to.eq(ordersNumber + 1);
       });
     });
@@ -260,13 +260,13 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should get Return/Exchange number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getReturnExchangeNumber', baseContext);
 
-        numberOfReturnExchanges = await dashboardPage.getNumberOfReturnExchange(page);
+        numberOfReturnExchanges = await boDashboardPage.getNumberOfReturnExchange(page);
       });
 
       it('should click on Return/Exchange link and check merchandise returns page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnReturnExchangeLink', baseContext);
 
-        await dashboardPage.clickOnReturnExchangeLink(page);
+        await boDashboardPage.clickOnReturnExchangeLink(page);
 
         const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
         expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
@@ -275,10 +275,10 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should go to orders page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);
@@ -297,8 +297,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await shoppingCartsPage.goToDashboardPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boDashboardPage.pageTitle);
       });
 
       it('should view my shop', async function () {
@@ -351,10 +351,10 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'closeFoAndGoBackToBO', baseContext);
 
         page = await orderDetailsPage.closePage(browserContext, page, 0);
-        await dashboardPage.reloadPage(page);
+        await boDashboardPage.reloadPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       // @todo https://github.com/PrestaShop/PrestaShop/issues/34321
@@ -363,7 +363,7 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         this.skip();
 
-        const newNumberOfReturnExchanges = await dashboardPage.getNumberOfReturnExchange(page);
+        const newNumberOfReturnExchanges = await boDashboardPage.getNumberOfReturnExchange(page);
         expect(newNumberOfReturnExchanges).to.eq(numberOfReturnExchanges + 1);
       });
     });
@@ -372,14 +372,14 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should check Abandoned carts number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getAbandonedCartsNumber', baseContext);
 
-        const abandonedCartsNumber = await dashboardPage.getNumberOfAbandonedCarts(page);
+        const abandonedCartsNumber = await boDashboardPage.getNumberOfAbandonedCarts(page);
         expect(abandonedCartsNumber).to.eq(0);
       });
 
       it('should click on Abandoned carts link and check Shopping carts page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickAbandonedCartsLink', baseContext);
 
-        await dashboardPage.clickOnAbandonedCartsLink(page);
+        await boDashboardPage.clickOnAbandonedCartsLink(page);
 
         const pageTitle = await shoppingCartsPage.getPageTitle(page);
         expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
@@ -392,20 +392,20 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await shoppingCartsPage.goToDashboardPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boDashboardPage.pageTitle);
       });
 
       it('should get out of stock products number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOutOfStockProducts', baseContext);
 
-        outOfStockProductNumber = await dashboardPage.getOutOfStockProducts(page);
+        outOfStockProductNumber = await boDashboardPage.getOutOfStockProducts(page);
       });
 
       it('should click on Out of stock products link and check Monitoring page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOutOfStockLink', baseContext);
 
-        await dashboardPage.clickOnOutOfStockProductsLink(page);
+        await boDashboardPage.clickOnOutOfStockProductsLink(page);
 
         const pageTitle = await monitoringPage.getPageTitle(page);
         expect(pageTitle).to.contains(monitoringPage.pageTitle);
@@ -414,10 +414,10 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.productsLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.productsLink,
         );
         await productsPage.closeSfToolBar(page);
 
@@ -454,14 +454,14 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await shoppingCartsPage.goToDashboardPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boDashboardPage.pageTitle);
       });
 
       it('should check out of stock products number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOutOfStockProductsNumber', baseContext);
 
-        const newOutOfStockProductNumber = await dashboardPage.getOutOfStockProducts(page);
+        const newOutOfStockProductNumber = await boDashboardPage.getOutOfStockProducts(page);
         expect(newOutOfStockProductNumber).to.eq(outOfStockProductNumber + 1);
       });
     });
@@ -472,13 +472,13 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should get new message number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNewMessagesNumber', baseContext);
 
-        messagesNumber = await dashboardPage.getNumberOfNewMessages(page);
+        messagesNumber = await boDashboardPage.getNumberOfNewMessages(page);
       });
 
       it('should click on New messages link and check Customer service page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewMessagesLink', baseContext);
 
-        await dashboardPage.clickOnNewMessagesLink(page);
+        await boDashboardPage.clickOnNewMessagesLink(page);
 
         const pageTitle = await customerServicePage.getPageTitle(page);
         expect(pageTitle).to.contains(customerServicePage.pageTitle);
@@ -487,7 +487,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should view my store', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-        page = await dashboardPage.viewMyShop(page);
+        page = await boDashboardPage.viewMyShop(page);
         await homePage.changeLanguage(page, 'en');
 
         const isHomePage = await homePage.isHomePage(page);
@@ -526,14 +526,14 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await shoppingCartsPage.goToDashboardPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boDashboardPage.pageTitle);
       });
 
       it('should check the number of new messages', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfNewMessages', baseContext);
 
-        const newMessagesNumber = await dashboardPage.getNumberOfNewMessages(page);
+        const newMessagesNumber = await boDashboardPage.getNumberOfNewMessages(page);
         expect(newMessagesNumber).to.eq(messagesNumber + 1);
       });
     });
@@ -542,14 +542,14 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should get the number of product reviews', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProductReviews', baseContext);
 
-        const productReviewsNumber = await dashboardPage.getNumberOfProductReviews(page);
+        const productReviewsNumber = await boDashboardPage.getNumberOfProductReviews(page);
         expect(productReviewsNumber).to.eq(0);
       });
 
       it('should click on Products reviews link and check Product comments page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnProductReviewLink', baseContext);
 
-        await dashboardPage.clickOnProductReviewsLink(page);
+        await boDashboardPage.clickOnProductReviewsLink(page);
 
         const pageTitle = await productCommentsPage.getPageSubTitle(page);
         expect(pageTitle).to.eq(productCommentsPage.pageTitle);
@@ -563,33 +563,33 @@ describe('BO - Dashboard : Activity overview', async () => {
 
       await shoppingCartsPage.goToDashboardPage(page);
 
-      const pageTitle = await dashboardPage.getPageTitle(page);
-      expect(pageTitle).to.eq(dashboardPage.pageTitle);
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.eq(boDashboardPage.pageTitle);
     });
 
     it('should get the number of customers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfCustomers', baseContext);
 
-      newCustomersNumber = await dashboardPage.getNumberOfNewCustomers(page);
+      newCustomersNumber = await boDashboardPage.getNumberOfNewCustomers(page);
     });
 
     it('should get the number of new subscriptions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfNewSubscriptions', baseContext);
 
-      newSubscriptionsNumber = await dashboardPage.getNumberOfNewSubscriptions(page);
+      newSubscriptionsNumber = await boDashboardPage.getNumberOfNewSubscriptions(page);
     });
 
     it('should get the number of total subscribers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfTotalSubscribers', baseContext);
 
-      totalSubscribersNumber = await dashboardPage.getNumberOfTotalSubscribers(page);
+      totalSubscribersNumber = await boDashboardPage.getNumberOfTotalSubscribers(page);
     });
 
     describe('Check Customers', async () => {
       it('should click on New customers link and check Customers page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewCustomersLink', baseContext);
 
-        await dashboardPage.clickOnNewCustomersLink(page);
+        await boDashboardPage.clickOnNewCustomersLink(page);
 
         const pageTitle = await customersPage.getPageTitle(page);
         expect(pageTitle).to.eq(customersPage.pageTitle);
@@ -611,14 +611,14 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await shoppingCartsPage.goToDashboardPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boDashboardPage.pageTitle);
       });
 
       it('should check the number of new customers', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfNewCustomer', baseContext);
 
-        const newCustomers = await dashboardPage.getNumberOfNewCustomers(page);
+        const newCustomers = await boDashboardPage.getNumberOfNewCustomers(page);
         expect(newCustomers).to.eq(newCustomersNumber + 1);
       });
     });
@@ -627,14 +627,14 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should check the number of new subscriptions', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfNewSubscriptions', baseContext);
 
-        const newSubscriptions = await dashboardPage.getNumberOfNewSubscriptions(page);
+        const newSubscriptions = await boDashboardPage.getNumberOfNewSubscriptions(page);
         expect(newSubscriptions).to.eq(newSubscriptionsNumber + 1);
       });
 
       it('should click on new subscriptions link and check Stats page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewSubscriptionsLink', baseContext);
 
-        await dashboardPage.clickOnNewSubscriptionsLink(page);
+        await boDashboardPage.clickOnNewSubscriptionsLink(page);
 
         const pageTitle = await statsPage.getPageTitle(page);
         expect(pageTitle).to.eq(statsPage.pageTitle);
@@ -645,8 +645,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await shoppingCartsPage.goToDashboardPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boDashboardPage.pageTitle);
       });
     });
 
@@ -654,14 +654,14 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should check the number of total subscribers', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfTotalSubscribers', baseContext);
 
-        const newTotalSubscribers = await dashboardPage.getNumberOfTotalSubscribers(page);
+        const newTotalSubscribers = await boDashboardPage.getNumberOfTotalSubscribers(page);
         expect(newTotalSubscribers).to.eq(totalSubscribersNumber + 1);
       });
 
       it('should click on Total subscribers link and check Newsletter subscription page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnTotalSubscribersLink', baseContext);
 
-        await dashboardPage.clickOnTotalSubscribersLink(page);
+        await boDashboardPage.clickOnTotalSubscribersLink(page);
 
         const pageTitle = await newsletterSubscriptionPage.getPageSubTitle(page);
         expect(pageTitle).to.eq(newsletterSubscriptionPage.pageTitle);
@@ -672,8 +672,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await shoppingCartsPage.goToDashboardPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boDashboardPage.pageTitle);
       });
     });
   });
@@ -683,13 +683,13 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should get the number of visits', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfVisits', baseContext);
 
-        newCustomersNumber = await dashboardPage.getNumberOfVisits(page);
+        newCustomersNumber = await boDashboardPage.getNumberOfVisits(page);
       });
 
       it('should click on Visits link and check Stats page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnVisitsLink', baseContext);
 
-        await dashboardPage.clickOnVisitsLink(page);
+        await boDashboardPage.clickOnVisitsLink(page);
 
         const pageTitle = await statsPage.getPageTitle(page);
         expect(pageTitle).to.eq(statsPage.pageTitle);
@@ -700,8 +700,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await shoppingCartsPage.goToDashboardPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boDashboardPage.pageTitle);
       });
     });
   });
@@ -710,7 +710,7 @@ describe('BO - Dashboard : Activity overview', async () => {
     it('should click on configure link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnConfigureLink', baseContext);
 
-      const isConfigureFormVisible = await dashboardPage.clickOnConfigureLink(page);
+      const isConfigureFormVisible = await boDashboardPage.clickOnConfigureLink(page);
       expect(isConfigureFormVisible).to.eq(true);
     });
 

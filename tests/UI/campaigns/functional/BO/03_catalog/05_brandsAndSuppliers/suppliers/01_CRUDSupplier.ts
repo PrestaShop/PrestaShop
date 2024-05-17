@@ -11,13 +11,13 @@ import brandsPage from '@pages/BO/catalog/brands';
 import suppliersPage from '@pages/BO/catalog/suppliers';
 import addSupplierPage from '@pages/BO/catalog/suppliers/add';
 import viewSupplierPage from '@pages/BO/catalog/suppliers/view';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import SupplierData from '@data/faker/supplier';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_suppliers_CRUDSupplier';
 
@@ -58,10 +58,10 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
   it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.brandsAndSuppliersLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.brandsAndSuppliersLink,
     );
     await brandsPage.closeSfToolBar(page);
 

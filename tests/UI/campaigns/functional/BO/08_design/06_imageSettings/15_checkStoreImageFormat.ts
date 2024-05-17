@@ -7,7 +7,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 import contactPage from '@pages/BO/shopParameters/contact';
 import storesPage from '@pages/BO/shopParameters/stores';
@@ -21,6 +20,7 @@ import StoreData from '@data/faker/store';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_checkStoreImageFormat';
 
@@ -72,10 +72,10 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
     it('should go to \'Design > Image Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToImageSettingsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.designParentLink,
-        dashboardPage.imageSettingsLink,
+        boDashboardPage.designParentLink,
+        boDashboardPage.imageSettingsLink,
       );
       await imageSettingsPage.closeSfToolBar(page);
 
@@ -128,18 +128,18 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
 
           await storePage.goToBO(page);
 
-          const pageTitle = await dashboardPage.getPageTitle(page);
-          expect(pageTitle).to.contains(dashboardPage.pageTitle);
+          const pageTitle = await boDashboardPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boDashboardPage.pageTitle);
         });
       }
 
       it('should go to \'Shop Parameters > Contact\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToContactPage${arg.extOriginal}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.shopParametersParentLink,
-          dashboardPage.contactLink,
+          boDashboardPage.shopParametersParentLink,
+          boDashboardPage.contactLink,
         );
         await contactPage.closeSfToolBar(page);
 
@@ -283,17 +283,17 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
 
           await storePage.goToBO(page);
 
-          const pageTitle = await dashboardPage.getPageTitle(page);
-          expect(pageTitle).to.contains(dashboardPage.pageTitle);
+          const pageTitle = await boDashboardPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boDashboardPage.pageTitle);
         });
 
         it('should go to \'Shop Parameters > Contact\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToContactPage${arg.extension}ForRemoval`, baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.shopParametersParentLink,
-            dashboardPage.contactLink,
+            boDashboardPage.shopParametersParentLink,
+            boDashboardPage.contactLink,
           );
           await contactPage.closeSfToolBar(page);
 

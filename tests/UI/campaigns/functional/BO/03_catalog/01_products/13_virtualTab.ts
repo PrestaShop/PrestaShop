@@ -8,7 +8,6 @@ import date from '@utils/date';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import productsPage from '@pages/BO/catalog/products';
 import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab';
@@ -28,6 +27,7 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import ProductData from '@data/faker/product';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataPaymentMethods,
@@ -80,10 +80,10 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       await productsPage.closeSfToolBar(page);

@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import carriersPage from '@pages/BO/shipping/carriers';
 import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
@@ -21,6 +20,7 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import Carriers from '@data/demo/carriers';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -63,10 +63,10 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
   it('should go to \'Shipping > Carriers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPageToEnable', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shippingLink,
-      dashboardPage.carriersLink,
+      boDashboardPage.shippingLink,
+      boDashboardPage.carriersLink,
     );
 
     const pageTitle = await carriersPage.getPageTitle(page);
@@ -123,10 +123,10 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
     it('should go to \'Shipping > Preferences\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPreferencesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shippingLink,
-        dashboardPage.shippingPreferencesLink,
+        boDashboardPage.shippingLink,
+        boDashboardPage.shippingPreferencesLink,
       );
       await preferencesPage.closeSfToolBar(page);
 
@@ -224,10 +224,10 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
     it('should go to \'Shipping > Carriers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPageToDisable', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shippingLink,
-        dashboardPage.carriersLink,
+        boDashboardPage.shippingLink,
+        boDashboardPage.carriersLink,
       );
 
       const pageTitle = await carriersPage.getPageTitle(page);

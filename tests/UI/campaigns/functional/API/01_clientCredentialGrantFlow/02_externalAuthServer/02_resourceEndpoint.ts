@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 import {installModule, uninstallModule} from '@commonTests/BO/modules/moduleManager';
 
-import dashboardPage from '@pages/BO/dashboard';
 import keycloakConnectorDemo from '@pages/BO/modules/keycloakConnectorDemo';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
@@ -16,6 +15,7 @@ import {expect} from 'chai';
 import {
   APIRequestContext, APIResponse, BrowserContext, Page,
 } from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_externalAuthServer_resourceEndpoint';
 
@@ -75,10 +75,10 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
 
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManagerPage.closeSfToolBar(page);
 

@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import generalPage from '@pages/BO/shopParameters/general';
 import maintenancePage from '@pages/BO/shopParameters/general/maintenance';
 // Import FO pages
@@ -15,6 +14,7 @@ import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_general_maintenance_enableDisableShop';
 
@@ -47,10 +47,10 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
   it('should go to \'Shop parameters > General\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopParamsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.shopParametersGeneralLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.shopParametersGeneralLink,
     );
     await generalPage.closeSfToolBar(page);
 

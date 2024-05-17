@@ -8,12 +8,12 @@ import files from '@utils/files';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
 import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
 
 import {
+  boDashboardPage,
   // Import data
   dataTitles,
   FakerTitle,
@@ -50,10 +50,10 @@ describe('BO _ Shop Parameters - Customer Settings : Filter, sort and pagination
   it('should go to \'Shop Parameters > Customer Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.customerSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.customerSettingsLink,
     );
     await customerSettingsPage.closeSfToolBar(page);
 

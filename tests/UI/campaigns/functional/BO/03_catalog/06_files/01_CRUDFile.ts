@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import filesPage from '@pages/BO/catalog/files';
 import addFilePage from '@pages/BO/catalog/files/add';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import FileData from '@data/faker/file';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_files_CRUDFile';
 
@@ -60,10 +60,10 @@ describe('BO - Catalog - Files : CRUD file', async () => {
   it('should go to \'Catalog > Files\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFilesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.filesLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.filesLink,
     );
     await filesPage.closeSfToolBar(page);
 

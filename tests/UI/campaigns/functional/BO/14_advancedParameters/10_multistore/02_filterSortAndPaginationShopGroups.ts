@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopGroupPage from '@pages/BO/advancedParameters/multistore/add';
 
@@ -17,6 +16,7 @@ import ShopGroupData from '@data/faker/shopGroup';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_multistore_filterSortAndPaginationShopGroups';
 
@@ -57,10 +57,10 @@ describe('BO - Advanced Parameters - MultiStore : Filter, sort and pagination sh
     it('should go to \'Advanced Parameters > Multistore\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.multistoreLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.multistoreLink,
       );
       await multiStorePage.closeSfToolBar(page);
 

@@ -7,10 +7,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import monitoringPage from '@pages/BO/catalog/monitoring';
-import dashboardPage from '@pages/BO/dashboard';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -39,10 +39,10 @@ function bulkDeleteProductsTest(tableID: string, baseContext: string = `commonTe
     it('should go to \'Catalog > Monitoring\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.monitoringLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.monitoringLink,
       );
 
       const pageTitle = await monitoringPage.getPageTitle(page);

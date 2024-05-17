@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import performancePage from '@pages/BO/advancedParameters/performance';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -38,10 +38,10 @@ function deleteCacheTest(baseContext: string = 'commonTests-deleteCache'): void 
     it('should go to \'Advanced Parameters > Performance\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPerformancePage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.performanceLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.performanceLink,
       );
       await performancePage.closeSfToolBar(page);
 

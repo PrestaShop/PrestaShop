@@ -12,10 +12,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 import Employees from '@data/demo/employees';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import logsPage from '@pages/BO/advancedParameters/logs';
 
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
 
@@ -51,7 +51,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
   it('should go to \'Advanced Parameters > Logs\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPageToEraseLogs', baseContext);
 
-    await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
+    await boDashboardPage.goToSubMenu(page, boDashboardPage.advancedParametersLink, boDashboardPage.logsLink);
     await logsPage.closeSfToolBar(page);
 
     const pageTitle = await logsPage.getPageTitle(page);
@@ -85,7 +85,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     it('should go to \'Advanced parameters > Logs\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.advancedParametersLink, boDashboardPage.logsLink);
 
       const pageTitle = await logsPage.getPageTitle(page);
       expect(pageTitle).to.contains(logsPage.pageTitle);

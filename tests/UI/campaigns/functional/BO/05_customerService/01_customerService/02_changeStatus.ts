@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
-import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage} from '@pages/FO/classic/home';
@@ -21,6 +20,7 @@ import MessageData from '@data/faker/message';
 import Employees from '@data/demo/employees';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -115,10 +115,10 @@ describe('BO - Customer Service : Change status', async () => {
     it('should go to \'Customer Service > Customer Service\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.customerServiceLink,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.customerServiceLink,
       );
 
       const pageTitle = await customerServicePage.getPageTitle(page);
@@ -149,10 +149,10 @@ describe('BO - Customer Service : Change status', async () => {
       it('should go to \'Customer Service > Customer Service\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrderMessagesPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.customerServiceParentLink,
-          dashboardPage.customerServiceLink,
+          boDashboardPage.customerServiceParentLink,
+          boDashboardPage.customerServiceLink,
         );
 
         const pageTitle = await customerServicePage.getPageTitle(page);
@@ -212,10 +212,10 @@ describe('BO - Customer Service : Change status', async () => {
     it('should go to \'Customer Service > Customer Service\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPageToDelete', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.customerServiceLink,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.customerServiceLink,
       );
 
       const pageTitle = await customerServicePage.getPageTitle(page);

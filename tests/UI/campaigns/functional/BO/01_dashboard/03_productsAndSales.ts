@@ -3,7 +3,6 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 // Import common tests
@@ -11,6 +10,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_dashboard_productsAndSales';
 
@@ -37,14 +37,14 @@ describe('BO - Dashboard : Products and sales', async () => {
       it('should check the title of Recent orders tab', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkRecentOrdersTitle', baseContext);
 
-        const tableTitle = await dashboardPage.getRecentOrdersTitle(page);
+        const tableTitle = await boDashboardPage.getRecentOrdersTitle(page);
         expect(tableTitle).to.eq('Last 10 orders');
       });
 
       it('should click on details icon of the first row and check Order details page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnDetailsButton', baseContext);
 
-        await dashboardPage.clickOnDetailsButtonOfRecentOrdersTable(page, 1);
+        await boDashboardPage.clickOnDetailsButtonOfRecentOrdersTable(page, 1);
 
         const pageTitle = await viewOrderBasePage.getPageTitle(page);
         expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
@@ -55,8 +55,8 @@ describe('BO - Dashboard : Products and sales', async () => {
 
         await viewOrderBasePage.goToDashboardPage(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.eq(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boDashboardPage.pageTitle);
       });
     });
 
@@ -64,16 +64,16 @@ describe('BO - Dashboard : Products and sales', async () => {
       it('should click on best sellers tab and check the title', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnBestSellersTab', baseContext);
 
-        await dashboardPage.goToBestSellersTab(page);
+        await boDashboardPage.goToBestSellersTab(page);
 
-        const tabTitle = await dashboardPage.getBestSellersTabTitle(page);
+        const tabTitle = await boDashboardPage.getBestSellersTabTitle(page);
         expect(tabTitle).to.contains('Top 10 products');
       });
 
       it('should check that the best sellers table is visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'isBestSellersTableVisible', baseContext);
 
-        const isVisible = await dashboardPage.isBestSellersTableVisible(page);
+        const isVisible = await boDashboardPage.isBestSellersTableVisible(page);
         expect(isVisible).to.equal(true);
       });
     });
@@ -82,16 +82,16 @@ describe('BO - Dashboard : Products and sales', async () => {
       it('should click on most viewed tab and check the title', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnMostViewedTab', baseContext);
 
-        await dashboardPage.goToMostViewedTab(page);
+        await boDashboardPage.goToMostViewedTab(page);
 
-        const tabTitle = await dashboardPage.getMostViewedTabTitle(page);
+        const tabTitle = await boDashboardPage.getMostViewedTabTitle(page);
         expect(tabTitle).to.contains('Most Viewed');
       });
 
       it('should check that the most viewed table is visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'isMostViewedTableVisible', baseContext);
 
-        const isVisible = await dashboardPage.isMostViewedTableVisible(page);
+        const isVisible = await boDashboardPage.isMostViewedTableVisible(page);
         expect(isVisible).to.equal(true);
       });
     });
@@ -100,16 +100,16 @@ describe('BO - Dashboard : Products and sales', async () => {
       it('should check top searchers tab and check the title', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkTopSearchersTab', baseContext);
 
-        await dashboardPage.goToTopSearchersTab(page);
+        await boDashboardPage.goToTopSearchersTab(page);
 
-        const tabTitle = await dashboardPage.getTopSearchersTabTitle(page);
+        const tabTitle = await boDashboardPage.getTopSearchersTabTitle(page);
         expect(tabTitle).to.contains('Top 10 most search terms');
       });
 
       it('should check that the top searchers table is visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'isTopSearchersTableVisible', baseContext);
 
-        const isVisible = await dashboardPage.isTopSearchersTableVisible(page);
+        const isVisible = await boDashboardPage.isTopSearchersTableVisible(page);
         expect(isVisible).to.equal(true);
       });
     });
@@ -118,7 +118,7 @@ describe('BO - Dashboard : Products and sales', async () => {
       it('should click on configure link', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnConfigureLink', baseContext);
 
-        const isConfigureFormVisible = await dashboardPage.clickOnConfigureProductsAndSalesLink(page);
+        const isConfigureFormVisible = await boDashboardPage.clickOnConfigureProductsAndSalesLink(page);
         expect(isConfigureFormVisible).to.eq(true);
       });
 

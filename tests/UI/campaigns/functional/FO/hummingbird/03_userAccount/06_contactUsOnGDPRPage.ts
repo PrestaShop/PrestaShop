@@ -9,7 +9,6 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
-import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import homePage from '@pages/FO/hummingbird/home';
@@ -22,6 +21,7 @@ import Orders from '@data/demo/orders';
 import MessageData from '@data/faker/message';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -132,10 +132,10 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     it.skip('should go to customer service page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.customerServiceLink,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.customerServiceLink,
       );
 
       const pageTitle = await customerServicePage.getPageTitle(page);

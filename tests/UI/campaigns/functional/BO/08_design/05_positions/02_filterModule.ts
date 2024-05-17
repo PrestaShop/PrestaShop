@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import positionsPage from '@pages/BO/design/positions';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_positions_filterModule';
 
@@ -36,10 +36,10 @@ describe('BO - Design - Positions : Filter module', async () => {
   it('should go to \'Design > Positions\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToPositionsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.positionsLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.positionsLink,
     );
     await positionsPage.closeSfToolBar(page);
 

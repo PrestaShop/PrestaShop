@@ -12,13 +12,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import monitoringPage from '@pages/BO/catalog/monitoring';
 import addProductPage from '@pages/BO/catalog/products/add';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import ImportDisabledProducts from '@data/import/disabledProducts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_monitoring_sortPaginationAndBulkDelete_productsWithoutPrice';
 
@@ -68,8 +68,8 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
 
       await addProductPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.monitoringLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.monitoringLink,
       );
 
       const pageTitle = await monitoringPage.getPageTitle(page);

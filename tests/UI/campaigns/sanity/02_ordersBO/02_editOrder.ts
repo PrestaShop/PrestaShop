@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
+  boDashboardPage,
   // Import data
   dataOrderStatuses,
 } from '@prestashop-core/ui-testing';
@@ -47,10 +47,10 @@ describe('BO - Orders - Orders : Edit Order BO', async () => {
   it('should go to the \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.ordersParentLink,
-      dashboardPage.ordersLink,
+      boDashboardPage.ordersParentLink,
+      boDashboardPage.ordersLink,
     );
     await ordersPage.closeSfToolBar(page);
 

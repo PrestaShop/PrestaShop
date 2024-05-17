@@ -16,7 +16,6 @@ import {contactUsPage} from '@pages/FO/classic/contactUs';
 import customersPage from '@pages/BO/customers';
 import viewCustomerPage from '@pages/BO/customers/view';
 import customerServicePage from '@pages/BO/customerService/customerService';
-import dashboardPage from '@pages/BO/dashboard';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
@@ -31,6 +30,7 @@ import Products from '@data/demo/products';
 import MessageData from '@data/faker/message';
 
 import {
+  boDashboardPage,
   // Import data
   dataPaymentMethods,
   FakerAddress,
@@ -174,10 +174,10 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should go to \'Customers > Customers\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage1', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.customersParentLink,
-          dashboardPage.customersLink,
+          boDashboardPage.customersParentLink,
+          boDashboardPage.customersLink,
         );
         await customersPage.closeSfToolBar(page);
 
@@ -413,17 +413,17 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await loginPage.goTo(page, global.BO.URL);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Orders > Shopping carts\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.shoppingCartsLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.shoppingCartsLink,
         );
 
         const pageTitle = await shoppingCartsPage.getPageTitle(page);
@@ -562,17 +562,17 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await loginPage.goTo(page, global.BO.URL);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);
@@ -719,17 +719,17 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await loginPage.goTo(page, global.BO.URL);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to customer service page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.customerServiceParentLink,
-          dashboardPage.customerServiceLink,
+          boDashboardPage.customerServiceParentLink,
+          boDashboardPage.customerServiceLink,
         );
 
         const pageTitle = await customerServicePage.getPageTitle(page);
@@ -873,17 +873,17 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await loginPage.goTo(page, global.BO.URL);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Customers > Customers\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage2', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.customersParentLink,
-          dashboardPage.customersLink,
+          boDashboardPage.customersParentLink,
+          boDashboardPage.customersLink,
         );
 
         await customersPage.closeSfToolBar(page);

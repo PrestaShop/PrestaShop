@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
 import {homePage as homePageFO} from '@pages/FO/classic/home';
@@ -15,6 +14,7 @@ import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_pagination_updateNumberOfProductsPerPage';
 
@@ -56,10 +56,10 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
         it('should go to \'Shop parameters > Product Settings\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index + 1}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.shopParametersParentLink,
-            dashboardPage.productSettingsLink,
+            boDashboardPage.shopParametersParentLink,
+            boDashboardPage.productSettingsLink,
           );
           await productSettingsPage.closeSfToolBar(page);
 

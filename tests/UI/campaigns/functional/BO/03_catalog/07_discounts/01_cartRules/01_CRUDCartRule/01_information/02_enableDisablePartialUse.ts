@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import dashboardPage from '@pages/BO/dashboard';
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -23,6 +22,7 @@ import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataPaymentMethods,
@@ -82,10 +82,10 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       it('should go to \'Catalog > Discounts\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.discountsLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.discountsLink,
         );
 
         const pageTitle = await cartRulesPage.getPageTitle(page);

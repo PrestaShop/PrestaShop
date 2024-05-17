@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import dashboardPage from '@pages/BO/dashboard';
 import positionsPage from '@pages/BO/design/positions';
 
 // Import data
@@ -18,6 +17,7 @@ import APIClientData from '@data/faker/APIClient';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_hookStatus_getHookStatusId';
 
@@ -58,10 +58,10 @@ describe('API : GET /hook-status/{id}', async () => {
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.adminAPILink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -130,10 +130,10 @@ describe('API : GET /hook-status/{id}', async () => {
     it('should go to \'Design > Positions\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPositionsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.designParentLink,
-        dashboardPage.positionsLink,
+        boDashboardPage.designParentLink,
+        boDashboardPage.positionsLink,
       );
       await positionsPage.closeSfToolBar(page);
 

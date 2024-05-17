@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import generalPage from '@pages/BO/shopParameters/general';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_general_general_enableDisableMultistore';
 
@@ -39,10 +39,10 @@ describe('BO - Shop Parameters - General : Enable/Disable multi store', async ()
   it('should go to \'Shop parameters > General\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.shopParametersGeneralLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.shopParametersGeneralLink,
     );
     await generalPage.closeSfToolBar(page);
 

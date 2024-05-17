@@ -8,9 +8,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import addressesPage from '@pages/BO/customers/addresses';
 import addAddressPage from '@pages/BO/customers/addresses/add';
-import dashboardPage from '@pages/BO/dashboard';
 
 import {
+  boDashboardPage,
   // Import data
   FakerAddress,
 } from '@prestashop-core/ui-testing';
@@ -46,10 +46,10 @@ function createAddressTest(addressData: FakerAddress, baseContext: string = 'com
     it('should go to \'Customers > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.addressesLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.addressesLink,
       );
 
       await addressesPage.closeSfToolBar(page);
@@ -115,10 +115,10 @@ function bulkDeleteAddressesTest(
     it('should go to \'Customers > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.addressesLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.addressesLink,
       );
 
       await addressesPage.closeSfToolBar(page);

@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
 import pagesConfigurationPage from '@pages/BO/design/themeAndLogo/pagesConfiguration';
 
@@ -15,6 +14,7 @@ import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_themeAndLogo_pagesConfiguration_enableDisableModule';
 
@@ -39,10 +39,10 @@ describe('BO - Design - Theme & Logo : Enable/disable module', async () => {
   it('should go to \'Design > Theme & Logo\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.themeAndLogoParentLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.themeAndLogoParentLink,
     );
     await themeAndLogoPage.closeSfToolBar(page);
 

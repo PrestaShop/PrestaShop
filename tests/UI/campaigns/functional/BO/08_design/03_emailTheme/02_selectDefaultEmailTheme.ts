@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import emailThemesPage from '@pages/BO/design/emailThemes';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_emailTheme_selectDefaultEmailTheme';
 
@@ -35,10 +35,10 @@ describe('BO - Design - Email Theme : Select default email theme', async () => {
   it('should go to \'Design > Email Theme\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemePage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.emailThemeLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.emailThemeLink,
     );
     await emailThemesPage.closeSfToolBar(page);
 

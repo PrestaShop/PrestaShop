@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
@@ -21,6 +20,7 @@ import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataPaymentMethods,
@@ -116,10 +116,10 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
         it('should go to \'Shop Parameters > Order Settings\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrderSettingsPage${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.shopParametersParentLink,
-            dashboardPage.orderSettingsLink,
+            boDashboardPage.shopParametersParentLink,
+            boDashboardPage.orderSettingsLink,
           );
           await orderSettingsPage.closeSfToolBar(page);
 
@@ -306,7 +306,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
         it('should go to \'Orders > Orders\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(page, dashboardPage.ordersParentLink, dashboardPage.ordersLink);
+          await boDashboardPage.goToSubMenu(page, boDashboardPage.ordersParentLink, boDashboardPage.ordersLink);
           await ordersPage.closeSfToolBar(page);
 
           const pageTitle = await ordersPage.getPageTitle(page);
@@ -415,7 +415,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
     it('should go to \'Shop Parameters > Order Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPagePostCondition', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.shopParametersParentLink, dashboardPage.orderSettingsLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.shopParametersParentLink, boDashboardPage.orderSettingsLink);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(orderSettingsPage.pageTitle);

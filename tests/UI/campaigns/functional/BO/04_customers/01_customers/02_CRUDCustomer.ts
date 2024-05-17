@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
 import viewCustomerPage from '@pages/BO/customers/view';
-import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
 import {
+  boDashboardPage,
   // Import data
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
@@ -54,10 +54,10 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
   it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customersParentLink,
-      dashboardPage.customersLink,
+      boDashboardPage.customersParentLink,
+      boDashboardPage.customersLink,
     );
     await customersPage.closeSfToolBar(page);
 

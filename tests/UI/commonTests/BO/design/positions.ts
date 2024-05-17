@@ -1,13 +1,12 @@
 import loginCommon from '@commonTests/BO/loginBO';
 
-import dashboardPage from '@pages/BO/dashboard';
-
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  boDashboardPage,
   boDesignPositionsHookModulePage,
   boDesignPositionsPage,
   type FakerModule,
@@ -39,10 +38,10 @@ function hookModule(
     it('should go to \'Design > Positions\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDesignPositionsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.designParentLink,
-        dashboardPage.positionsLink,
+        boDashboardPage.designParentLink,
+        boDashboardPage.positionsLink,
       );
       await boDesignPositionsPage.closeSfToolBar(page);
 

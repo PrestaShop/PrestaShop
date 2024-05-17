@@ -11,7 +11,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
 import boProductsPage from '@pages/BO/catalog/products';
-import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 import taxRulesPage from '@pages/BO/international/taxes/taxRules';
@@ -29,6 +28,7 @@ import ProductData from '@data/faker/product';
 import TaxRulesGroupData from '@data/faker/taxRulesGroup';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -95,10 +95,10 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
       it('should go to \'Orders > Invoices\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToEnableTaxBreakDown', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.invoicesLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.invoicesLink,
         );
         await invoicesPage.closeSfToolBar(page);
 
@@ -303,10 +303,10 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageTaxBreakdown', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);

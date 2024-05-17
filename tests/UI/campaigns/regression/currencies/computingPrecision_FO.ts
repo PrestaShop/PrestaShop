@@ -12,7 +12,6 @@ import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/ad
 import viewSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/view';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import dashboardPage from '@pages/BO/dashboard';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 import localizationPage from '@pages/BO/international/localization';
@@ -32,6 +31,7 @@ import CartRuleData from '@data/faker/cartRule';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataCurrencies,
   dataCustomers,
@@ -167,10 +167,10 @@ describe(
       it('should go to localization page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPageToChangePrecision', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.internationalParentLink,
-          dashboardPage.localizationLink,
+          boDashboardPage.internationalParentLink,
+          boDashboardPage.localizationLink,
         );
         await localizationPage.closeSfToolBar(page);
 

@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import carriersPage from '@pages/BO/shipping/carriers';
 import preferencesPage from '@pages/BO/shipping/preferences';
 
@@ -20,7 +19,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 // Import data
-import {dataCustomers} from '@prestashop-core/ui-testing';
+import {boDashboardPage, dataCustomers} from '@prestashop-core/ui-testing';
 import Carriers from '@data/demo/carriers';
 
 const baseContext: string = 'functional_BO_shipping_carriers_changePosition';
@@ -96,17 +95,17 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
 
       await loginCommon.loginBO(this, page);
 
-      const pageTitle = await dashboardPage.getPageTitle(page);
-      expect(pageTitle).to.contains(dashboardPage.pageTitle);
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Shipping > Preferences\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPreferencesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shippingLink,
-        dashboardPage.shippingPreferencesLink,
+        boDashboardPage.shippingLink,
+        boDashboardPage.shippingPreferencesLink,
       );
       await preferencesPage.closeSfToolBar(page);
 
@@ -124,10 +123,10 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
     it('should go to \'Shipping > Carriers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shippingLink,
-        dashboardPage.carriersLink,
+        boDashboardPage.shippingLink,
+        boDashboardPage.carriersLink,
       );
 
       const pageTitle = await carriersPage.getPageTitle(page);
@@ -189,10 +188,10 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
     it('should go to \'Shipping > Preferences\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPreferencesPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shippingLink,
-        dashboardPage.shippingPreferencesLink,
+        boDashboardPage.shippingLink,
+        boDashboardPage.shippingPreferencesLink,
       );
       await preferencesPage.closeSfToolBar(page);
 

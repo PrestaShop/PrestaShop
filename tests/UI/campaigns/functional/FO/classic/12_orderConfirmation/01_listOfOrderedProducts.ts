@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import ordersPage from '@pages/BO/orders';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
@@ -25,7 +24,7 @@ import Carriers from '@data/demo/carriers';
 import {
   // Import data
   dataPaymentMethods,
-  dataCustomers,
+  dataCustomers, boDashboardPage,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -184,10 +183,10 @@ describe('FO - Order confirmation : List of ordered products', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageForUpdatedPrefix', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 

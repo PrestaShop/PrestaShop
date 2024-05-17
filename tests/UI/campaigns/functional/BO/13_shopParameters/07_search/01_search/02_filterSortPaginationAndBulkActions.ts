@@ -7,7 +7,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import searchPage from '@pages/BO/shopParameters/search';
 import addSearchPage from '@pages/BO/shopParameters/search/add';
 
@@ -16,6 +15,7 @@ import SearchAliasData from '@data/faker/search';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_search_search_filterSortPaginationAndBulkActions';
 
@@ -50,10 +50,10 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
   it('should go to \'Shop Parameters > Search\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSearchPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.searchLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.searchLink,
     );
 
     const pageTitle = await searchPage.getPageTitle(page);

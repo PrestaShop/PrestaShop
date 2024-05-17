@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import carriersPage from '@pages/BO/shipping/carriers';
 
 // Import FO pages
@@ -17,6 +16,7 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 
 // Import data
 import {
+  boDashboardPage,
   dataCustomers,
 } from '@prestashop-core/ui-testing';
 import Carriers from '@data/demo/carriers';
@@ -48,10 +48,10 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
     it('should go to \'Shipping > Carriers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shippingLink,
-        dashboardPage.carriersLink,
+        boDashboardPage.shippingLink,
+        boDashboardPage.carriersLink,
       );
 
       const pageTitle = await carriersPage.getPageTitle(page);
