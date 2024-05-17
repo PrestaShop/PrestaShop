@@ -34,6 +34,10 @@ describe('API : GET /modules', async () => {
   let accessToken: string;
   let jsonResponse: any;
   const jsonResponseItems: ModuleInfo [] = [];
+  const modulesPerPage = 10;
+  // There are 67 native modules, so the last page is the 7th
+  const lastModulePage = 7;
+  let totalModules: number;
 
   const clientScope: string = 'module_read';
   const clientData: APIClientData = new APIClientData({
@@ -133,16 +137,17 @@ describe('API : GET /modules', async () => {
   describe('API : Fetch Data', async () => {
     [
       {
-        page: 0,
+        page: 1,
       },
       {
-        page: 1,
+        page: lastModulePage,
       },
     ].forEach((arg: {page: number}, index: number) => {
       it(`should request the endpoint /modules (page ${arg.page})`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `requestEndpoint${index}`, baseContext);
 
-        const apiResponse = await apiContext.get(`modules${arg.page > 0 ? `?offset=${arg.page * 50}` : ''}`, {
+        const offset = (arg.page - 1) * modulesPerPage;
+        const apiResponse = await apiContext.get(`modules?limit=${modulesPerPage}${arg.page > 1 ? `&offset=${offset}` : ''}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -165,13 +170,13 @@ describe('API : GET /modules', async () => {
           'items',
         ];
 
-        if (arg.page > 0) {
+        if (arg.page > 1) {
           keys.push('offset');
         }
         expect(jsonResponse).to.have.all.keys(keys);
 
         expect(jsonResponse.items.length).to.be.gt(0);
-        if (arg.page === 0) {
+        if (arg.page === 1) {
           expect(jsonResponse.items.length).to.be.equal(jsonResponse.limit);
         } else {
           expect(jsonResponse.items.length).to.be.lt(jsonResponse.limit);
@@ -186,6 +191,7 @@ describe('API : GET /modules', async () => {
           );
           jsonResponseItems.push(jsonResponse.items[i]);
         }
+        totalModules = jsonResponse.totalItems;
       });
     });
   });
@@ -202,7 +208,7 @@ describe('API : GET /modules', async () => {
       expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
 
       const numModules = await moduleManager.getNumberOfModules(page);
-      expect(numModules).to.eq(jsonResponseItems.length);
+      expect(numModules).to.eq(totalModules);
     });
 
     it('should filter list by technicaleName', async function () {

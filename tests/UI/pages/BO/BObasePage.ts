@@ -712,16 +712,17 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @param parentSelector {string} Selector of the parent menu
    * @param linkSelector {string} Selector of the child menu
+   * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<void>}
    */
-  async goToSubMenu(page: Page, parentSelector: string, linkSelector: string): Promise<void> {
+  async goToSubMenu(page: Page, parentSelector: string, linkSelector: string, timeout: number = 30000): Promise<void> {
     await this.clickSubMenu(page, parentSelector);
     await this.scrollTo(page, linkSelector);
-    await this.clickAndWaitForURL(page, linkSelector);
+    await this.clickAndWaitForURL(page, linkSelector, 'networkidle', timeout);
     if (await this.isSidebarCollapsed(page)) {
-      await this.waitForHiddenSelector(page, `${linkSelector}.link-active`);
+      await this.waitForHiddenSelector(page, `${linkSelector}.link-active`, timeout);
     } else {
-      await this.waitForVisibleSelector(page, `${linkSelector}.link-active`);
+      await this.waitForVisibleSelector(page, `${linkSelector}.link-active`, timeout);
     }
   }
 

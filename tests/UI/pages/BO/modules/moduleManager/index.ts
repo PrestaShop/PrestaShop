@@ -577,7 +577,7 @@ class ModuleManager extends BOBasePage {
       moduleId: parseInt(await this.getAttributeContent(page, this.moduleItemNth(nth), 'data-id'), 10),
       technicalName,
       version: await this.getAttributeContent(page, this.moduleItemNth(nth), 'data-version'),
-      enabled: await this.elementNotVisible(page, this.actionModuleButton(technicalName, 'enabled'), 1000),
+      enabled: await this.elementNotVisible(page, this.actionModuleButton(technicalName, 'enable'), 1000),
     };
   }
 }

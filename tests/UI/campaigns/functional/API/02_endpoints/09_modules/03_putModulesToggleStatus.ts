@@ -19,7 +19,7 @@ import APIClientData from '@data/faker/APIClient';
 import {ModuleInfo} from '@data/types/module';
 
 import {
-  boModuleManagerPage,
+  boModuleManagerPage, FakerModule,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -146,8 +146,14 @@ describe('API : PUT /modules/toggle-status', async () => {
     it('should fetch modules', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fetchModules', baseContext);
 
+      // Force the modules used
+      let isModuleVisible = await moduleManager.searchModule(page, {tag: 'statscarrier'} as FakerModule);
+      expect(isModuleVisible).to.be.equal(true);
       moduleInfo1 = await moduleManager.getModuleInformationNth(page, 1);
-      moduleInfo2 = await moduleManager.getModuleInformationNth(page, 2);
+
+      isModuleVisible = await moduleManager.searchModule(page, {tag: 'pagesnotfound'} as FakerModule);
+      expect(isModuleVisible).to.be.equal(true);
+      moduleInfo2 = await moduleManager.getModuleInformationNth(page, 1);
     });
   });
 
@@ -165,17 +171,18 @@ describe('API : PUT /modules/toggle-status', async () => {
       it('should request the endpoint /modules/toggle-status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `requestEndpoint${index}`, baseContext);
 
+        const bulkData = {
+          modules: [
+            moduleInfo1.technicalName,
+            moduleInfo2.technicalName,
+          ],
+          enabled: arg.status,
+        };
         const apiResponse = await apiContext.put('modules/toggle-status', {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-          data: {
-            modules: [
-              moduleInfo1.technicalName,
-              moduleInfo2.technicalName,
-            ],
-            enabled: arg.status,
-          },
+          data: bulkData,
         });
 
         expect(apiResponse.status()).to.eq(204);
@@ -186,10 +193,11 @@ describe('API : PUT /modules/toggle-status', async () => {
     });
 
     describe(`BackOffice : Check modules are ${arg.verb}d`, async () => {
-      it('should filter list by technical name', async function () {
+      it('should check module status by technical name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkModules${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(page, dashboardPage.modulesParentLink, dashboardPage.modulesParentLink);
+        // Extra wait for this one because the cache has been cleared by the previous API call
+        await dashboardPage.goToSubMenu(page, dashboardPage.modulesParentLink, dashboardPage.modulesParentLink, 60000);
         await boModuleManagerPage.closeSfToolBar(page);
 
         const pageTitle = await boModuleManagerPage.getPageTitle(page);
