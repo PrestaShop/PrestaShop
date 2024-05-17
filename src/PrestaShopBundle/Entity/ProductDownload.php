@@ -30,9 +30,12 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table()
- *
  * @ORM\Entity
+ *
+ * @ORM\Table(
+ *     indexes={@ORM\Index(name="product_active", columns={"id_product", "active"})},
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="id_product", columns={"id_product"})}
+ * )
  */
 class ProductDownload
 {
