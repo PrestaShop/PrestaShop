@@ -34,6 +34,7 @@ use Exception;
 use PDO;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateSchemaCommand extends Command
@@ -47,6 +48,12 @@ class UpdateSchemaCommand extends Command
 
     private $dbPrefix;
 
+    private array $executedQueries = [];
+
+    private $forceSql = false;
+
+    private $dumpSql = false;
+
     public function __construct(string $databaseName, string $databasePrefix, EntityManager $manager)
     {
         parent::__construct();
@@ -59,6 +66,8 @@ class UpdateSchemaCommand extends Command
     {
         $this
             ->setName('prestashop:schema:update-without-foreign')
+            ->addOption('dump-sql', null, InputOption::VALUE_NONE, 'Dumps the generated SQL statements to the screen (does not execute them).')
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Causes the generated SQL statements to be physically executed against your database.')
             ->setDescription('Update the database');
     }
 
@@ -68,6 +77,9 @@ class UpdateSchemaCommand extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->dumpSql = $input->getOption('dump-sql') === true;
+        $this->forceSql = $input->getOption('force') === true;
+
         $connection = $this->em->getConnection();
         $connection->beginTransaction();
 
@@ -94,20 +106,37 @@ class UpdateSchemaCommand extends Command
         // Now execute the queries!
         foreach ($updateSchemaSql as $sql) {
             try {
-                $output->writeln('Executing: ' . $sql);
-                $connection->executeQuery($sql);
+                $this->executeUpdateQuery($connection, $sql);
             } catch (Exception $e) {
                 $connection->rollBack();
 
                 throw $e;
             }
         }
+
         if (!$connection->getNativeConnection() instanceof PDO || $connection->getNativeConnection()->inTransaction()) {
-            $connection->commit();
+            if ($this->forceSql) {
+                $connection->commit();
+            } else {
+                $connection->rollBack();
+                $output->writeln('Database schema not updated because force option is not set');
+            }
+        }
+        $connection->close();
+
+        if ($this->forceSql) {
+            $pluralization = (1 > $affectedRows) ? 'query was' : 'queries were';
+            $output->writeln(sprintf('Database schema updated successfully! "<info>%s</info>" %s executed', $affectedRows, $pluralization));
         }
 
-        $pluralization = (1 > $affectedRows) ? 'query was' : 'queries were';
-        $output->writeln(sprintf('Database schema updated successfully! "<info>%s</info>" %s executed', $affectedRows, $pluralization));
+        if ($this->dumpSql) {
+            $output->writeln('Showing required queries for update');
+            $output->writeln('');
+            foreach ($this->executedQueries as $executedQuery) {
+                $output->writeln($executedQuery);
+            }
+            $output->writeln('');
+        }
 
         return 0;
     }
@@ -136,9 +165,8 @@ class UpdateSchemaCommand extends Command
 
         foreach ($results as $result) {
             $drop = 'ALTER TABLE ' . $result['TABLE_NAME'] . ' DROP FOREIGN KEY ' . $result['CONSTRAINT_NAME'];
-            $output->writeln('Executing: ' . $drop);
 
-            $affectedRows += $connection->executeQuery($drop)->rowCount();
+            $affectedRows += $this->executeUpdateQuery($connection, $drop);
         }
 
         return $affectedRows;
@@ -331,5 +359,16 @@ class UpdateSchemaCommand extends Command
                 );
             }
         }
+    }
+
+    private function executeUpdateQuery(Connection $connection, string $query): int
+    {
+        $this->executedQueries[] = $query;
+
+        if ($this->forceSql) {
+            return $connection->executeQuery($query)->rowCount();
+        }
+
+        return 0;
     }
 }
