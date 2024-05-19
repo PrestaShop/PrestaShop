@@ -57,20 +57,20 @@ describe('FO - Product page - Product page : Share links', async () => {
   });
 
   [
-    {socialNetwork: 'Facebook', link: 'www.facebook.com'},
-    {socialNetwork: 'Twitter', link: 'twitter.com'},
-    {socialNetwork: 'Pinterest', link: 'www.pinterest.com'},
+    {socialNetwork: 'Facebook', link: 'www.facebook.com', url: 'www.facebook.com'},
+    {socialNetwork: 'Twitter', link: 'twitter.com', url: 'x.com'},
+    {socialNetwork: 'Pinterest', link: 'www.pinterest.com', url: 'www.pinterest.com'},
   ].forEach((args) => {
-    it('should click on the facebook link and check it', async function () {
+    it(`should click on the ${args.socialNetwork} link and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `click${args.socialNetwork}Link`, baseContext);
 
-      const facebookLink = await productPage.getSocialSharingLink(page, args.socialNetwork);
-      expect(facebookLink).to.contains(args.link);
+      const socialLink = await productPage.getSocialSharingLink(page, args.socialNetwork);
+      expect(socialLink).to.contains(args.link);
 
       page = await productPage.clickOnSocialSharingLink(page, args.socialNetwork);
 
       const link = await productPage.getCurrentURL(page);
-      expect(link).to.contains(args.link);
+      expect(link).to.contains(args.url);
     });
 
     it('should close the page', async function () {
