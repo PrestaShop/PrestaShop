@@ -8,6 +8,8 @@ services:
   # SECURITY
   PrestaShopBundle\EventListener\Admin\TokenizedUrlsListener:
     autowire: true
+    arguments:
+      $map: '@security.access_map'
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 

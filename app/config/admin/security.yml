@@ -43,8 +43,9 @@ security:
         target: admin_login
 
   access_control:
-    - { path: ^/login, roles: PUBLIC_ACCESS }
-    - { path: ^/request-password-reset, roles: PUBLIC_ACCESS }
-    - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+    - { route: 'admin_login', roles: PUBLIC_ACCESS }
+    - { route: 'admin_homepage', roles: PUBLIC_ACCESS }
+    - { route: 'admin_request_password_reset', roles: PUBLIC_ACCESS }
+    - { route: 'admin_reset_password', roles: PUBLIC_ACCESS }
     # Check it the legacy anonymous attribute has been set on the request (set by LegacyRouterChecker)
     - { path: ^/, roles: IS_AUTHENTICATED, allow_if: 'request.attributes.has("_legacy_controller_anonymous") and request.attributes.get("_legacy_controller_anonymous") == true' }
