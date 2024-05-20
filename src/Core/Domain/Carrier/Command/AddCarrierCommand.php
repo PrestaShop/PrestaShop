@@ -35,11 +35,13 @@ class AddCarrierCommand
 {
     public function __construct(
         private string $name,
+        /** @var string[] $localizedDelay */
         private array $localizedDelay,
         private int $grade,
         private string $trackingUrl,
         private int $position,
         private bool $active,
+        private ?string $logoPathName,
     ) {
     }
 
@@ -48,6 +50,7 @@ class AddCarrierCommand
         return $this->name;
     }
 
+    /** @return string[] */
     public function getLocalizedDelay(): array
     {
         return $this->localizedDelay;
@@ -71,5 +74,10 @@ class AddCarrierCommand
     public function getActive(): bool
     {
         return $this->active;
+    }
+
+    public function getLogoPathName(): ?string
+    {
+        return $this->logoPathName;
     }
 }

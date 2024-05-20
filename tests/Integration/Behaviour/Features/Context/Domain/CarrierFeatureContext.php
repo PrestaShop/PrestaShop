@@ -41,9 +41,19 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShopException;
+use Tests\Resources\DummyFileUploader;
+use Tests\Resources\Resetter\CarrierResetter;
 
 class CarrierFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @AfterSuite
+     */
+    public static function restoreCarrierTablesAfterSuite(): void
+    {
+        CarrierResetter::resetCarrier();
+    }
+
     /**
      * @todo: It is a temporary method to use sharedStorage and should be improved once Carrier creation is migrated.
      *
@@ -85,14 +95,24 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     {
         $properties = $this->localizeByRows($node);
         try {
+            if (isset($properties['logoPathName']) && 'null' !== $properties['logoPathName']) {
+                $tmpLogo = DummyFileUploader::upload($properties['logoPathName']);
+                $properties['logoPathName'] = DummyFileUploader::upload($properties['logoPathName']);
+            }
+
             $carrierId = $this->createCarrierUsingCommand(
                 $properties['name'],
                 $properties['delay'],
                 (int) $properties['grade'],
                 $properties['trackingUrl'],
                 (int) $properties['position'],
-                (bool) $properties['active']
+                (bool) $properties['active'],
+                $properties['logoPathName'] ?? null
             );
+
+            if (isset($tmpLogo)) {
+                $this->fakeUploadLogo($tmpLogo, $carrierId->getValue());
+            }
 
             $this->getSharedStorage()->set($reference, $carrierId->getValue());
         } catch (Exception $e) {
@@ -101,9 +121,9 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit carrier :reference with specified properties:
+     * @When I edit carrier :reference called :newReference with specified properties:
      */
-    public function editCarrier(string $reference, TableNode $node): void
+    public function editCarrier(string $reference, string $newReference, TableNode $node): void
     {
         $properties = $this->localizeByRows($node);
         $carrierId = $this->referenceToId($reference);
@@ -130,9 +150,19 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $command->setActive((bool) $properties['active']);
             }
 
+            if (isset($properties['logoPathName']) && 'null' !== $properties['logoPathName']) {
+                if ('' !== $properties['logoPathName']) {
+                    $tmpLogo = DummyFileUploader::upload($properties['logoPathName']);
+                }
+                $command->setLogoPathName($tmpLogo ?? '');
+            }
+
             $newCarrierId = $this->getCommandBus()->handle($command);
 
-            $this->getSharedStorage()->set($reference . '-edited', $newCarrierId->getValue());
+            if (isset($tmpLogo)) {
+                $this->fakeUploadLogo($tmpLogo, $newCarrierId->getValue());
+            }
+            $this->getSharedStorage()->set($newReference, $newCarrierId->getValue());
         } catch (Exception $e) {
             $this->setLastException($e);
         }
@@ -168,13 +198,32 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         }
     }
 
+    /**
+     * @Then carrier :reference should have a logo
+     */
+    public function carrierShouldHaveALogo(string $reference)
+    {
+        $carrier = $this->getCarrier($reference);
+        Assert::assertNotNull($carrier->getLogoPath());
+    }
+
+    /**
+     * @Then carrier :reference shouldn't have a logo
+     */
+    public function carrierShouldntHaveALogo(string $reference)
+    {
+        $carrier = $this->getCarrier($reference);
+        Assert::assertNull($carrier->getLogoPath());
+    }
+
     private function createCarrierUsingCommand(
         string $name,
         array $delay,
         int $grade,
         string $trackingUrl,
         int $position,
-        bool $active
+        bool $active,
+        ?string $logoPathName
     ): CarrierId {
         $command = new AddCarrierCommand(
             $name,
@@ -183,6 +232,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             $trackingUrl,
             $position,
             $active,
+            $logoPathName
         );
 
         return $this->getCommandBus()->handle($command);
@@ -193,5 +243,12 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $id = $this->referenceToId($reference);
 
         return $this->getCommandBus()->handle(new GetCarrierForEditing($id));
+    }
+
+    private function fakeUploadLogo(string $filename, int $carrierId): void
+    {
+        if ('' !== $filename) {
+            copy($filename, _PS_SHIP_IMG_DIR_ . $carrierId . '.jpg');
+        }
     }
 }

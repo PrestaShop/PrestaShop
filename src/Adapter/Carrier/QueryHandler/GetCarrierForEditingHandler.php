@@ -58,7 +58,7 @@ final class GetCarrierForEditingHandler implements GetCarrierForEditingHandlerIn
             $carrier->url,
             $carrier->position,
             $carrier->active,
-            $carrier->delay, // @phpstan-ignore-line
+            $carrier->delay,
         );
     }
 }

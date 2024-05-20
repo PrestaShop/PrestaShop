@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 
 /**
  * Defines contract for AddCarrierHandler
@@ -38,5 +39,5 @@ interface AddCarrierHandlerInterface
     /**
      * @param AddCarrierCommand $command
      */
-    public function handle(AddCarrierCommand $command);
+    public function handle(AddCarrierCommand $command): CarrierId;
 }

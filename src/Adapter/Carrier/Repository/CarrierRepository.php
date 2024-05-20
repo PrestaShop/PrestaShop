@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Provides access to carrier data source
@@ -73,11 +72,12 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         return new CarrierId($carrierId);
     }
 
-    public function addNewVersion(CarrierId $carrierId, Carrier $carrier): CarrierId
+    public function updateInNewVersion(CarrierId $carrierId, Carrier $carrier): CarrierId
     {
         // Get old carrier to softly delete it
         /** @var Carrier $oldCarrier */
         $oldCarrier = $this->get($carrierId);
+        /** @var Carrier $newCarrier */
         $newCarrier = $oldCarrier->duplicateObject();
         $oldCarrier->deleted = true;
         $this->partiallyUpdateObjectModel($oldCarrier, ['deleted'], CannotUpdateCarrierException::class);
@@ -105,28 +105,9 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         $newCarrier->deleted = false; // just to be sure...
 
         // Copy all others information like ranges, shops associated, ...
-        $newCarrier->copyCarrierData($carrierId->getValue()); // @phpstan-ignore-line
+        $newCarrier->copyCarrierData($carrierId->getValue());
         $this->updateObjectModel($newCarrier, CannotUpdateCarrierException::class);
 
         return new CarrierId($newCarrier->id);
-    }
-
-    public function deleteLogo(CarrierId $carrierId): void
-    {
-        $oldLogo = _PS_SHIP_IMG_DIR_ . '/' . $carrierId->getValue() . '.jpg';
-        if (file_exists($oldLogo)) {
-            unlink($oldLogo);
-        }
-
-        $oldTmpLogo = _PS_TMP_IMG_DIR_ . '/carrier_mini_' . $carrierId->getValue() . '.jpg';
-        if (file_exists($oldTmpLogo)) {
-            unlink($oldTmpLogo);
-        }
-    }
-
-    public function uploadLogo(CarrierId $carrierId, UploadedFile $uploadedFile): void
-    {
-        $this->deleteLogo($carrierId);
-        $uploadedFile->move(_PS_SHIP_IMG_DIR_, $carrierId->getValue() . '.jpg');
     }
 }

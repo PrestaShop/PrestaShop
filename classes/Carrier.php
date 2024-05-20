@@ -60,7 +60,7 @@ class CarrierCore extends ObjectModel
     /** @var string URL with a '@' for */
     public $url;
 
-    /** @var string Delay needed to deliver customer */
+    /** @var string[]|string Delay needed to deliver customer */
     public $delay;
 
     /** @var bool Carrier statuts */

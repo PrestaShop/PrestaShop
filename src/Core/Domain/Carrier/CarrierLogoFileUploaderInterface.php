@@ -24,19 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\DeleteCarrierLogoCommand;
-
-/**
- * Defines contract for DeleteCarrierLogoHandler
- */
-interface DeleteCarrierLogoHandlerInterface
+interface CarrierLogoFileUploaderInterface
 {
     /**
-     * @param DeleteCarrierLogoCommand $command
+     * @param string $filePath
+     * @param int $id
      */
-    public function handle(DeleteCarrierLogoCommand $command);
+    public function upload(string $filePath, int $id): void;
+
+    public function deleteOldFile(int $id): void;
 }

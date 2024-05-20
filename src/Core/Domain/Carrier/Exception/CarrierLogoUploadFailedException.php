@@ -24,19 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\UploadCarrierLogoCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Exception;
 
 /**
- * Defines contract for UploadCarrierLogoHandler
+ * Thrown when upload error occurs
  */
-interface UploadCarrierLogoHandlerInterface
+class CarrierLogoUploadFailedException extends CarrierException
 {
-    /**
-     * @param UploadCarrierLogoCommand $command
-     */
-    public function handle(UploadCarrierLogoCommand $command);
 }

@@ -31,6 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 use Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
+use PrestaShop\PrestaShop\Adapter\Carrier\Validate\CarrierValidator;
+use PrestaShop\PrestaShop\Adapter\File\Uploader\CarrierLogoFileUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\EditCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\EditCarrierHandlerInterface;
@@ -43,7 +45,9 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHandlerInterface
 {
     public function __construct(
-        private readonly CarrierRepository $carrierRepository
+        private readonly CarrierRepository $carrierRepository,
+        private readonly CarrierLogoFileUploader $carrierLogoFileUploader,
+        private readonly CarrierValidator $carrierValidator,
     ) {
     }
 
@@ -52,7 +56,7 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
      */
     public function handle(EditCarrierCommand $command): CarrierId
     {
-        $carrier = new Carrier();
+        $carrier = $this->carrierRepository->get($command->getCarrierId());
         if ($command->getName()) {
             $carrier->name = $command->getName();
         }
@@ -69,12 +73,22 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
             $carrier->active = $command->getActive();
         }
         if ($command->getLocalizedDelay()) {
-            // @phpstan-ignore-next-line
             $carrier->delay = $command->getLocalizedDelay();
         }
 
-        $id = $this->carrierRepository->addNewVersion($command->getCarrierId(), $carrier);
+        $this->carrierValidator->validate($carrier);
 
-        return $id;
+        $carrierId = $this->carrierRepository->updateInNewVersion($command->getCarrierId(), $carrier);
+
+        if ($command->getLogoPathName() !== null) {
+            $this->carrierLogoFileUploader->deleteOldFile($carrierId->getValue());
+
+            if ($command->getLogoPathName() !== '') {
+                $this->carrierValidator->validateLogoUpload($command->getLogoPathName());
+                $this->carrierLogoFileUploader->upload($command->getLogoPathName(), $carrierId->getValue());
+            }
+        }
+
+        return $carrierId;
     }
 }
