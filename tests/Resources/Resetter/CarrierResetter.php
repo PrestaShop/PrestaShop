@@ -24,27 +24,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+namespace Tests\Resources\Resetter;
 
-class UploadCarrierLogoCommand
+use Tests\Resources\DatabaseDump;
+
+class CarrierResetter
 {
-    private CarrierId $carrierId;
-
-    public function __construct(int $carrierId, private UploadedFile $uploadedFile)
+    public static function resetCarrier(): void
     {
-        $this->carrierId = new CarrierId($carrierId);
-    }
-
-    public function getCarrierId(): CarrierId
-    {
-        return $this->carrierId;
-    }
-
-    public function getUploadedFile(): UploadedFile
-    {
-        return $this->uploadedFile;
+        DatabaseDump::restoreTables([
+            'carrier',
+            'carrier_group',
+            'carrier_lang',
+            'carrier_shop',
+            'carrier_tax_rules_group_shop',
+            'carrier_zone',
+        ]);
     }
 }

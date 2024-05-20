@@ -31,6 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 use Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
+use PrestaShop\PrestaShop\Adapter\Carrier\Validate\CarrierValidator;
+use PrestaShop\PrestaShop\Adapter\File\Uploader\CarrierLogoFileUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\AddCarrierHandlerInterface;
@@ -43,7 +45,9 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHandlerInterface
 {
     public function __construct(
-        private readonly CarrierRepository $carrierRepository
+        private readonly CarrierRepository $carrierRepository,
+        private readonly CarrierLogoFileUploader $carrierLogoFileUploader,
+        private readonly CarrierValidator $carrierValidator,
     ) {
     }
 
@@ -58,11 +62,17 @@ class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHand
         $carrier->url = $command->getTrackingUrl();
         $carrier->position = $command->getPosition();
         $carrier->active = $command->getActive();
-        // @phpstan-ignore-next-line
         $carrier->delay = $command->getLocalizedDelay();
 
-        $id = $this->carrierRepository->add($carrier);
+        $this->carrierValidator->validate($carrier);
 
-        return $id;
+        $carrierId = $this->carrierRepository->add($carrier);
+
+        if ($command->getLogoPathName() !== null) {
+            $this->carrierValidator->validateLogoUpload($command->getLogoPathName());
+            $this->carrierLogoFileUploader->upload($command->getLogoPathName(), $carrierId->getValue());
+        }
+
+        return $carrierId;
     }
 }

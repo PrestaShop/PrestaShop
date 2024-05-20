@@ -28,29 +28,25 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
-
 /**
  * Stores carrier data that's needed for editing.
  */
 class EditableCarrier
 {
-    private CarrierId $carrierId;
-
     public function __construct(
-        int $carrierId,
+        private int $carrierId,
         private string $name,
         private int $grade,
         private string $trackingUrl,
         private int $position,
         private bool $active,
         /** @var string[] $delay */
-        private array $delay
+        private array $delay,
+        private ?string $logoPath = null
     ) {
-        $this->carrierId = new CarrierId($carrierId);
     }
 
-    public function getCarrierId(): CarrierId
+    public function getCarrierId(): int
     {
         return $this->carrierId;
     }
@@ -86,5 +82,10 @@ class EditableCarrier
     public function getLocalizedDelay(): array
     {
         return $this->delay;
+    }
+
+    public function getLogoPath(): ?string
+    {
+        return $this->logoPath;
     }
 }

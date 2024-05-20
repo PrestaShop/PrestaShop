@@ -51,6 +51,11 @@ final class GetCarrierForEditingHandler implements GetCarrierForEditingHandlerIn
     {
         $carrier = $this->carrierRepository->get($query->getCarrierId());
 
+        $logoPath = null;
+        if (file_exists(_PS_SHIP_IMG_DIR_ . $query->getCarrierId()->getValue() . '.jpg')) {
+            $logoPath = _THEME_SHIP_DIR_ . $query->getCarrierId()->getValue() . '.jpg';
+        }
+
         return new EditableCarrier(
             $query->getCarrierId()->getValue(),
             $carrier->name,
@@ -58,7 +63,8 @@ final class GetCarrierForEditingHandler implements GetCarrierForEditingHandlerIn
             $carrier->url,
             $carrier->position,
             $carrier->active,
-            $carrier->delay, // @phpstan-ignore-line
+            $carrier->delay,
+            $logoPath,
         );
     }
 }

@@ -24,19 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
+namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\CarrierLogoFileUploaderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierLogoUploadFailedException;
+use PrestaShop\PrestaShop\Core\File\Exception\FileException;
 
-class DeleteCarrierLogoCommand
+/**
+ * Uploads carrier logo file
+ */
+class CarrierLogoFileUploader implements CarrierLogoFileUploaderInterface
 {
-    public function __construct(
-        private readonly CarrierId $carrierId,
-    ) {
+    public function upload(string $filePath, int $id): void
+    {
+        try {
+            move_uploaded_file($filePath, _PS_SHIP_IMG_DIR_ . $id . '.jpg');
+        } catch (FileException $e) {
+            throw new CarrierLogoUploadFailedException(sprintf('Failed to copy the file %s.', $filePath));
+        }
     }
 
-    public function getCarrierId(): CarrierId
+    public function deleteOldFile(int $id): void
     {
-        return $this->carrierId;
+        if (file_exists(_PS_SHIP_IMG_DIR_ . $id . '.jpg')) {
+            unlink(_PS_SHIP_IMG_DIR_ . $id . '.jpg');
+        }
+
+        if (file_exists(_PS_TMP_IMG_DIR_ . '/carrier_mini_' . $id . '.jpg')) {
+            unlink(_PS_TMP_IMG_DIR_ . '/carrier_mini_' . $id . '.jpg');
+        }
     }
 }

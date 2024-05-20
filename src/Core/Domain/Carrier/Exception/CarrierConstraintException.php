@@ -42,4 +42,29 @@ class CarrierConstraintException extends CarrierException
      * Thrown when carrier reference id is not valid
      */
     public const INVALID_REFERENCE_ID = 20;
+
+    /**
+     * Thrown when carrier name is not valid
+     */
+    public const INVALID_NAME = 30;
+
+    /**
+     * Thrown when carrier grade is not valid
+     */
+    public const INVALID_GRADE = 40;
+
+    /**
+     * Thrown when carrier tracking url is not valid
+     */
+    public const INVALID_TRACKING_URL = 50;
+
+    /**
+     * Thrown when carrier position is not valid
+     */
+    public const INVALID_POSITION = 60;
+
+    /**
+     * Thrown when carrier delay is not valid
+     */
+    public const INVALID_DELAY = 70;
 }

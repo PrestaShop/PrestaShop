@@ -42,6 +42,7 @@ class EditCarrierCommand
     private ?string $trackingUrl;
     private ?int $position;
     private ?bool $active;
+    private ?string $logoPathName;
 
     public function __construct(int $carrierId)
     {
@@ -51,13 +52,6 @@ class EditCarrierCommand
     public function getCarrierId(): CarrierId
     {
         return $this->carrierId;
-    }
-
-    public function setCarrierId(CarrierId $carrierId): self
-    {
-        $this->carrierId = $carrierId;
-
-        return $this;
     }
 
     public function getName(): ?string
@@ -134,6 +128,18 @@ class EditCarrierCommand
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function getLogoPathName(): ?string
+    {
+        return $this->logoPathName ?? null;
+    }
+
+    public function setLogoPathName(?string $logoPathName): self
+    {
+        $this->logoPathName = $logoPathName;
 
         return $this;
     }
