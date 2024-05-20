@@ -221,6 +221,28 @@ class LegacyController extends PrestaShopAdminController
         // Retrieving the controller instantiated in LegacyRouterChecker
         /** @var AdminController $adminController */
         $adminController = $request->attributes->get(LegacyControllerConstants::INSTANCE_ATTRIBUTE);
+        $this->checkIsRequestAllowed($request, $adminController);
+
+        // Fill default smarty variables as they can be used in partial templates rendered in init methods
+        $this->assignSmartyVariables->fillDefault();
+
+        // Execute hook dispatcher
+        $this->dispatchHookWithParameters('actionDispatcher', $dispatcherHookParameters);
+
+        // This part comes from AdminController::run method, it has been stripped from permission checks since the permission is already
+        // handled by this Symfony controller
+        $adminController->setMedia(false);
+        $adminController->postProcess();
+
+        return $adminController;
+    }
+
+    private function checkIsRequestAllowed(Request $request, AdminController $adminController): void
+    {
+        // If LegacyRouterChecker has already set the request as anonymous no need for further check
+        if ($request->attributes->get(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE) === true) {
+            return;
+        }
 
         $action = $request->attributes->get(LegacyControllerConstants::CONTROLLER_ACTION_ATTRIBUTE);
         $controllerName = $request->attributes->get(LegacyControllerConstants::CONTROLLER_NAME_ATTRIBUTE);
@@ -252,19 +274,6 @@ class LegacyController extends PrestaShopAdminController
                 $controllerName,
             ));
         }
-
-        // Fill default smarty variables as they can be used in partial templates rendered in init methods
-        $this->assignSmartyVariables->fillDefault();
-
-        // Execute hook dispatcher
-        $this->dispatchHookWithParameters('actionDispatcher', $dispatcherHookParameters);
-
-        // This part comes from AdminController::run method, it has been stripped from permission checks since the permission is already
-        // handled by this Symfony controller
-        $adminController->setMedia(false);
-        $adminController->postProcess();
-
-        return $adminController;
     }
 
     private function isMethodOverridden(AdminController $adminController, string $methodName): bool
