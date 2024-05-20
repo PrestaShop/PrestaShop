@@ -172,7 +172,7 @@ class ModuleCommand extends Command
         // Actual configuration
         $this->moduleSelfConfigurator->configure();
         $this->displayMessage(
-            $this->translator->trans('Configuration successfully applied.', [], 'Admin.Modules.Notification'),
+            $this->translator->trans('Test successfully applied.', [], 'Admin.Modules.Notification'),
             'info'
         );
     }

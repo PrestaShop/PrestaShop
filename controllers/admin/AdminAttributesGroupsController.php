@@ -50,7 +50,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
         $this->fields_list = [
             'id_attribute_group' => [
-                'title' => $this->trans('ID', [], 'Admin.Global'),
+                'title' => $this->trans('Test A', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
             ],

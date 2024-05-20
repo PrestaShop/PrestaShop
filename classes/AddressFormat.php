@@ -149,9 +149,17 @@ class AddressFormatCore extends ObjectModel
             }
 
             if (!$isValid) {
-                $this->_errorFormatList[] = $this->trans('This property does not exist in the class or is forbidden.', [], 'Admin.Notifications.Error') .
+                $this->_errorFormatList[] = $this->trans('Test property does not exist in the class or is forbidden.', [], 'Admin.Notifications.Error') .
                 ': ' . $className . ': ' . $fieldName;
             }
+
+            $this->_errorFormatList[] = $this->trans('Blabla', [], 'Admin.Notifications.Error');
+            $this->_errorFormatList[] = $this->trans('FooBar', [], 'New.Domain.Test');
+
+            $this->_errorFormatList[] = $this->trans('Blabla 2', [], 'Admin.Notifications.Error');
+            $this->_errorFormatList[] = $this->trans('Blabla 3', [], 'Admin.Notifications.Error');
+
+
 
             unset(
                 $obj,
