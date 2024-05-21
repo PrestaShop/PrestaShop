@@ -1,0 +1,35 @@
+name: Export logs from the setup env action
+description: Export logs from the setup env action, usually on failure
+
+inputs:
+  DOCKER_PREFIX:
+    required: true
+    description: Docker prefix for prestashop containers
+  ARTIFACT_NAME:
+    required: false
+    description: Artifact exported name
+    default: setup-logs
+
+runs:
+  using: 'composite'
+  steps:
+    - name: List dockers
+      run: |
+        docker ps
+      shell: bash
+
+    - name: Export docker logs
+      run: |
+        ls -l ./var/logs
+        mkdir -p ./var/docker-logs
+        docker logs ${{ inputs.DOCKER_PREFIX }}-mysql-1 > ./var/docker-logs/mysql.log
+        docker logs ${{ inputs.DOCKER_PREFIX }}-prestashop-git-1 > ./var/docker-logs/prestashop.log
+      shell: bash
+
+    - name: Save logs in case of error
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.ARTIFACT_NAME }}
+        path: |
+          ./var/logs
+          ./var/docker-logs
