@@ -12,7 +12,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
-import loginPage from '@pages/BO/login';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
@@ -25,6 +24,7 @@ import type MailDevEmail from '@data/types/maildevEmail';
 
 import {
   boDashboardPage,
+  boLoginPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -263,8 +263,8 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
     it('should login by new employee account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginWithNewEmployee', baseContext);
 
-      await loginPage.goTo(page, global.BO.URL);
-      await loginPage.successLogin(page, createEmployeeData.email, createEmployeeData.password);
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, createEmployeeData.email, createEmployeeData.password);
 
       const pageTitle = await boDashboardPage.getPageTitle(page);
       expect(pageTitle).to.contains(boDashboardPage.pageTitle);
