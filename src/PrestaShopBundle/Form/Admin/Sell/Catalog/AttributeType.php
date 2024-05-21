@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -35,7 +36,6 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -106,17 +106,21 @@ class AttributeType extends TranslatorAwareType
                 'help' => $this->trans('Your internal name for this attribute.', 'Admin.Catalog.Help')
                     . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
                     . ' ' . TypedRegexValidator::CATALOG_CHARS,
-            ]);
-
-        if ($hasAttributeGroupId === true && $attributeGroup->group_type === AttributeGroupType::ATTRIBUTE_GROUP_TYPE_COLOR) {
-            $builder->add('color', ColorType::class, [
+            ])
+            ->add('color', ColorType::class, [
                 'label' => $this->trans('Color', 'Admin.Global'),
+                'row_attr' => [
+                    'class' => 'js-attribute-type-color-form-row',
+                ],
                 'required' => false,
-            ])->add('texture', FileType::class, [
+            ])
+            ->add('texture', FileType::class, [
                 'label' => $this->trans('Texture', 'Admin.Global'),
+                'row_attr' => [
+                    'class' => 'js-attribute-type-texture-form-row',
+                ],
                 'required' => false,
             ]);
-        }
 
         if ($this->multistoreFeature->isUsed()) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
@@ -125,7 +129,8 @@ class AttributeType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty.', 'Admin.Notifications.Error'
+                            'This field cannot be empty.',
+                            'Admin.Notifications.Error'
                         ),
                     ]),
                 ],
