@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
 import advancedCustomizationPage from '@pages/BO/design/themeAndLogo/advancedCustomization';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_themecusto_configuration_advancedCustomizationTab';
 
@@ -39,10 +39,10 @@ describe('Theme Customization module - Advanced Customization tab ', async () =>
     it('should go to \'Design > Theme & Logo\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.designParentLink,
-        dashboardPage.themeAndLogoParentLink,
+        boDashboardPage.designParentLink,
+        boDashboardPage.themeAndLogoParentLink,
       );
       await themeAndLogoPage.closeSfToolBar(page);
 

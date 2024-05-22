@@ -6,12 +6,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 
 import {
+  boDashboardPage,
   dataCurrencies,
 } from '@prestashop-core/ui-testing';
 
@@ -46,10 +46,10 @@ describe('CLDR : Edit symbol / format currency', async () => {
   it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.localizationLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.localizationLink,
     );
     await localizationPage.closeSfToolBar(page);
 

@@ -8,7 +8,6 @@ import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
@@ -20,6 +19,7 @@ import Carriers from '@data/demo/carriers';
 import Products from '@data/demo/products';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -87,10 +87,10 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should go to \'Shop Parameters > Order Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.orderSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.orderSettingsLink,
       );
       await orderSettingsPage.closeSfToolBar(page);
 
@@ -117,10 +117,10 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 
@@ -274,10 +274,10 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should go to \'Shop Parameters > Order Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.orderSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.orderSettingsLink,
       );
       await orderSettingsPage.closeSfToolBar(page);
 

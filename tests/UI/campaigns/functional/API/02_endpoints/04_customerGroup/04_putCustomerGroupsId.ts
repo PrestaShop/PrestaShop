@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
@@ -20,6 +19,7 @@ import Languages from '@data/demo/languages';
 import APIClientData from '@data/faker/APIClient';
 
 import {
+  boDashboardPage,
   FakerGroup,
 } from '@prestashop-core/ui-testing';
 
@@ -75,10 +75,10 @@ describe('API : PUT /customers/group/{customerGroupId}', async () => {
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.adminAPILink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -147,10 +147,10 @@ describe('API : PUT /customers/group/{customerGroupId}', async () => {
     it('should go to \'Shop Parameters > Customer Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.customerSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.customerSettingsLink,
       );
       await customerSettingsPage.closeSfToolBar(page);
 

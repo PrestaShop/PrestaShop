@@ -7,7 +7,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 import addOrderReturnStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/returnStatus/add';
@@ -18,6 +17,7 @@ import OrderReturnStatusData from '@data/faker/orderReturnStatus';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_orderSettings_statuses_returnStatuses_filterSortAndPagination';
 
@@ -53,10 +53,10 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
   it('should go to \'Shop Parameters > Order Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.orderSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.orderSettingsLink,
     );
 
     const pageTitle = await orderSettingsPage.getPageTitle(page);

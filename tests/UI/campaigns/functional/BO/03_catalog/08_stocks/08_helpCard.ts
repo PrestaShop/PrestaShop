@@ -7,10 +7,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import stocksPage from '@pages/BO/catalog/stocks';
-import dashboardPage from '@pages/BO/dashboard';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_stocks_helpCard';
 
@@ -36,10 +36,10 @@ describe('BO - Catalog - Stocks : Help card in stocks page', async () => {
   it('should go to \'Catalog > Stocks\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.stocksLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.stocksLink,
     );
 
     const pageTitle = await stocksPage.getPageTitle(page);

@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
@@ -21,6 +20,7 @@ import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -70,10 +70,10 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
         it('should go to \'Orders > Invoices\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToInvoicesPage${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.ordersParentLink,
-            dashboardPage.invoicesLink,
+            boDashboardPage.ordersParentLink,
+            boDashboardPage.invoicesLink,
           );
           await invoicesPage.closeSfToolBar(page);
 

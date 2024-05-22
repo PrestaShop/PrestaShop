@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import loginPage from '@pages/BO/login';
-import dashboardPage from '@pages/BO/dashboard';
 import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import productsPage from '@pages/BO/catalog/products';
@@ -18,6 +17,7 @@ import EmployeeData from '@data/faker/employee';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_employees_CRUDEmployee';
 
@@ -61,10 +61,10 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
   it('should go to \'Advanced Parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.advancedParametersLink,
-      dashboardPage.teamLink,
+      boDashboardPage.advancedParametersLink,
+      boDashboardPage.teamLink,
     );
     await employeesPage.closeSfToolBar(page);
 
@@ -128,10 +128,10 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       it('should go to \'Advanced Parameters > Team\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeePageForUpdate', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.advancedParametersLink,
-          dashboardPage.teamLink,
+          boDashboardPage.advancedParametersLink,
+          boDashboardPage.teamLink,
         );
 
         const pageTitle = await employeesPage.getPageTitle(page);
@@ -199,10 +199,10 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       it('should go to \'Advanced Parameters > Team\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDisable', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.advancedParametersLink,
-          dashboardPage.teamLink,
+          boDashboardPage.advancedParametersLink,
+          boDashboardPage.teamLink,
         );
 
         const pageTitle = await employeesPage.getPageTitle(page);
@@ -259,10 +259,10 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDelete', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.teamLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.teamLink,
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);

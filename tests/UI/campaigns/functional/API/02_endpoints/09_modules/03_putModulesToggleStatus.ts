@@ -11,7 +11,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage, moduleManager} from '@pages/BO/modules/moduleManager';
 
 // Import data
@@ -19,6 +18,7 @@ import APIClientData from '@data/faker/APIClient';
 import {ModuleInfo} from '@data/types/module';
 
 import {
+  boDashboardPage,
   boModuleManagerPage,
   FakerModule,
 } from '@prestashop-core/ui-testing';
@@ -64,10 +64,10 @@ describe('API : PUT /modules/toggle-status', async () => {
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.adminAPILink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -136,7 +136,7 @@ describe('API : PUT /modules/toggle-status', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModulesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.modulesParentLink, dashboardPage.modulesParentLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.modulesParentLink, boDashboardPage.modulesParentLink);
       await boModuleManagerPage.closeSfToolBar(page);
       await moduleManager.filterByStatus(page, 'installed');
 
@@ -195,7 +195,7 @@ describe('API : PUT /modules/toggle-status', async () => {
       it('should check module status by technical name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkModules${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(page, dashboardPage.modulesParentLink, dashboardPage.modulesParentLink);
+        await boDashboardPage.goToSubMenu(page, boDashboardPage.modulesParentLink, boDashboardPage.modulesParentLink);
         await boModuleManagerPage.closeSfToolBar(page);
 
         const pageTitle = await boModuleManagerPage.getPageTitle(page);

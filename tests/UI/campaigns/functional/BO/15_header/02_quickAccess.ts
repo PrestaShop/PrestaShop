@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import statsPage from '@pages/BO/stats';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import newCategoryPage from '@pages/BO/catalog/categories/add';
@@ -22,6 +21,7 @@ import QuickAccessData from '@data/faker/quickAccess';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_header_quickAccess';
 
@@ -62,7 +62,7 @@ describe('BO - Header : Quick access links', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkLink${index}`, baseContext);
 
         if (test.args.pageName === 'New product') {
-          await dashboardPage.quickAccessToPageWithFrame(page, test.args.pageName);
+          await boDashboardPage.quickAccessToPageWithFrame(page, test.args.pageName);
 
           const isModalVisible = await productsPage.isNewProductModalVisibleInFrame(page);
           expect(isModalVisible).to.be.equal(true);
@@ -70,9 +70,9 @@ describe('BO - Header : Quick access links', async () => {
           const isModalNotVisible = await productsPage.closeNewProductModal(page);
           expect(isModalNotVisible).to.be.equal(true);
         } else {
-          await dashboardPage.quickAccessToPage(page, test.args.pageName);
+          await boDashboardPage.quickAccessToPage(page, test.args.pageName);
 
-          const pageTitle = await dashboardPage.getPageTitle(page);
+          const pageTitle = await boDashboardPage.getPageTitle(page);
           expect(pageTitle).to.contains(test.args.pageTitle);
         }
       });
@@ -123,7 +123,7 @@ describe('BO - Header : Quick access links', async () => {
     it('should check the new link from Quick access', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewLink', baseContext);
 
-      page = await dashboardPage.quickAccessToPageNewWindow(page, quickAccessLinkData.name);
+      page = await boDashboardPage.quickAccessToPageNewWindow(page, quickAccessLinkData.name);
 
       const pageTitle = await newCustomerPage.getPageTitle(page);
       expect(pageTitle).to.contains(newCustomerPage.pageTitleCreate);

@@ -15,7 +15,6 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
@@ -33,6 +32,7 @@ import OrderData from '@data/faker/order';
 import type MailDevEmail from '@data/types/maildevEmail';
 
 import {
+  boDashboardPage,
   // Import data
   dataOrderStatuses,
   dataPaymentMethods,
@@ -181,10 +181,10 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);

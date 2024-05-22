@@ -12,7 +12,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import loginPage from '@pages/BO/login';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
@@ -25,6 +24,7 @@ import OrderData from '@data/faker/order';
 import type MailDevEmail from '@data/types/maildevEmail';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -145,10 +145,10 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 
@@ -266,17 +266,17 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await loginPage.goTo(page, global.BO.URL);
       await loginPage.successLogin(page, createEmployeeData.email, createEmployeeData.password);
 
-      const pageTitle = await dashboardPage.getPageTitle(page);
-      expect(pageTitle).to.contains(dashboardPage.pageTitle);
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 
@@ -375,10 +375,10 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage3', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 
@@ -428,10 +428,10 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage4', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 
@@ -485,10 +485,10 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage5', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 

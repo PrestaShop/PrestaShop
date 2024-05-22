@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 
 // Import pages
 import loginPage from '@pages/BO/login';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import Employees from '@data/demo/employees';
@@ -12,6 +11,7 @@ import EmployeeData from '@data/faker/employee';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_login_login';
 
@@ -72,7 +72,7 @@ describe('BO - Login : Login in BO', async () => {
 
     await loginPage.successLogin(page, Employees.DefaultEmployee.email, Employees.DefaultEmployee.password);
 
-    const pageTitle = await dashboardPage.getPageTitle(page);
-    expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 });

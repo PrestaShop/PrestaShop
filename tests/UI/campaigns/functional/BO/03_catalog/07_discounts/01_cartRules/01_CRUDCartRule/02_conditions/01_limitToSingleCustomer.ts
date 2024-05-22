@@ -8,7 +8,6 @@ import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 // Import BO pages
 import loginCommon from '@commonTests/BO/loginBO';
-import dashboardPage from '@pages/BO/dashboard';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
@@ -25,6 +24,7 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -80,10 +80,10 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.discountsLink,
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);

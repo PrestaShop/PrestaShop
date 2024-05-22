@@ -8,7 +8,6 @@ import {createCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 // Import pages
 import customersPage from '@pages/BO/customers';
-import dashboardPage from '@pages/BO/dashboard';
 import viewCustomerPage from '@pages/BO/customers/view';
 import editRulesPage from '@pages/BO/catalog/discounts/add';
 
@@ -16,6 +15,7 @@ import editRulesPage from '@pages/BO/catalog/discounts/add';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -73,10 +73,10 @@ describe('BO - Customers - Customers : View/edit voucher', async () => {
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.customersLink,
       );
       await customersPage.closeSfToolBar(page);
 
@@ -147,10 +147,10 @@ describe('BO - Customers - Customers : View/edit voucher', async () => {
     it('should go to Customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.customersLink,
       );
 
       const pageTitle = await customersPage.getPageTitle(page);

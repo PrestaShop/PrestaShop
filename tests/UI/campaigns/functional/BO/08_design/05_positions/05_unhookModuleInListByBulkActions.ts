@@ -7,10 +7,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 import hookModule from '@commonTests/BO/design/positions';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import positionsPage from '@pages/BO/design/positions';
 
-import {dataModules} from '@prestashop-core/ui-testing';
+import {boDashboardPage, dataModules} from '@prestashop-core/ui-testing';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
@@ -41,10 +40,10 @@ describe('BO - Design - Positions : Unhook module in list by Bulk actions', asyn
     it('should go to \'Design > Positions\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPositionsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.designParentLink,
-        dashboardPage.positionsLink,
+        boDashboardPage.designParentLink,
+        boDashboardPage.positionsLink,
       );
       await positionsPage.closeSfToolBar(page);
 

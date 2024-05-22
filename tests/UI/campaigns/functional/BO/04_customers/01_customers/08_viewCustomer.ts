@@ -12,7 +12,6 @@ import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
 import viewCustomerPage from '@pages/BO/customers/view';
 import addAddressPage from '@pages/BO/customers/addresses/add';
-import dashboardPage from '@pages/BO/dashboard';
 import viewCartPage from '@pages/BO/orders/shoppingCarts/view';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import FO pages
@@ -27,6 +26,7 @@ import Languages from '@data/demo/languages';
 import Products from '@data/demo/products';
 
 import {
+  boDashboardPage,
   // Import data
   dataOrderStatuses,
   dataPaymentMethods,
@@ -93,10 +93,10 @@ describe('BO - Customers - Customers : View information about customer', async (
   it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customersParentLink,
-      dashboardPage.customersLink,
+      boDashboardPage.customersParentLink,
+      boDashboardPage.customersLink,
     );
     await customersPage.closeSfToolBar(page);
 

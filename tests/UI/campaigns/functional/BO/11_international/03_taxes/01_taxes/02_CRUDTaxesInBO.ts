@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
 import addTaxPage from '@pages/BO/international/taxes/add';
 
 import {
+  boDashboardPage,
   FakerTax,
 } from '@prestashop-core/ui-testing';
 
@@ -45,10 +45,10 @@ describe('BO - International - Taxes : Create, Update and Delete Tax', async () 
   it('should go to \'International > Taxes\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.taxesLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.taxesLink,
     );
 
     const pageTitle = await taxesPage.getPageTitle(page);

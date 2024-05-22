@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import generalPage from '@pages/BO/shopParameters/general';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import productsPage from '@pages/BO/catalog/products';
@@ -23,6 +22,7 @@ import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_general_general_roundMode';
 
@@ -75,10 +75,10 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
         it('should go to \'Shop parameters > General\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToGeneralPage${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.shopParametersParentLink,
-            dashboardPage.shopParametersGeneralLink,
+            boDashboardPage.shopParametersParentLink,
+            boDashboardPage.shopParametersGeneralLink,
           );
           await generalPage.closeSfToolBar(page);
 
@@ -159,10 +159,10 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
       it('should go to products page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage1', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.productsLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.productsLink,
         );
         await productsPage.closeSfToolBar(page);
 
@@ -194,10 +194,10 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
         it('should go to \'Shop parameters > General\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToGeneralPage2${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.shopParametersParentLink,
-            dashboardPage.shopParametersGeneralLink,
+            boDashboardPage.shopParametersParentLink,
+            boDashboardPage.shopParametersGeneralLink,
           );
           await generalPage.closeSfToolBar(page);
 
@@ -278,10 +278,10 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
       it('should go to products page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.productsLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.productsLink,
         );
         await productsPage.closeSfToolBar(page);
 
@@ -313,10 +313,10 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
         it('should go to \'Shop parameters > General\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToGeneralPage3${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.shopParametersParentLink,
-            dashboardPage.shopParametersGeneralLink,
+            boDashboardPage.shopParametersParentLink,
+            boDashboardPage.shopParametersGeneralLink,
           );
           await generalPage.closeSfToolBar(page);
 

@@ -6,12 +6,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import errorPage from '@pages/BO/error';
 import moduleCatalogPage from '@pages/BO/modules/moduleCatalog';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'regression_menu_deniedAccessToModuleCatalogPage';
 
@@ -39,10 +39,10 @@ describe('Regression : Access to Module catalog is denied with neither left menu
   it('should go check that `Module Catalog` on left menu is not visible', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'menuTabNotVisible', baseContext);
 
-    const isMenuTabVisible = await dashboardPage.isSubmenuVisible(
+    const isMenuTabVisible = await boDashboardPage.isSubmenuVisible(
       page,
-      dashboardPage.modulesParentLink,
-      dashboardPage.moduleCatalogueLink,
+      boDashboardPage.modulesParentLink,
+      boDashboardPage.moduleCatalogueLink,
     );
     expect(isMenuTabVisible, 'The Menu tab is still visible').to.eq(false);
   });
@@ -50,7 +50,7 @@ describe('Regression : Access to Module catalog is denied with neither left menu
   it('should trigger a not found alert when accessing by legacy url', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkUrlAccessibility', baseContext);
 
-    await dashboardPage.navigateToPageWithInvalidToken(page, pageLegacyUrl);
+    await boDashboardPage.navigateToPageWithInvalidToken(page, pageLegacyUrl);
 
     const alertText = await moduleCatalogPage.getAlertDangerBlockParagraphContent(page);
     expect(alertText).to.contain(moduleCatalogPage.pageNotFoundMessage);
@@ -59,7 +59,7 @@ describe('Regression : Access to Module catalog is denied with neither left menu
   it('should redirect to dashboard when accessing by symfony url', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkUrlAccessibility2', baseContext);
 
-    await dashboardPage.navigateToPageWithInvalidToken(page, pageSymfonyUrl);
+    await boDashboardPage.navigateToPageWithInvalidToken(page, pageSymfonyUrl);
 
     const pageTitle = await errorPage.getPageTitle(page);
     expect(pageTitle).to.contains(errorPage.notFoundTitle);

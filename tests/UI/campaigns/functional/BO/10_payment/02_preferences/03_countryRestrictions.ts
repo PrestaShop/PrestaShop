@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import preferencesPage from '@pages/BO/payment/preferences';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
@@ -16,6 +15,7 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -48,10 +48,10 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
   it('should go to \'Payment > Preferences\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToPreferencesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.paymentParentLink,
-      dashboardPage.preferencesLink,
+      boDashboardPage.paymentParentLink,
+      boDashboardPage.preferencesLink,
     );
     await preferencesPage.closeSfToolBar(page);
 

@@ -10,13 +10,13 @@ import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer
 // Import BO pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import APIClientData from '@data/faker/APIClient';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_internalAuthServer_authorizationEndpoint';
 
@@ -51,10 +51,10 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.adminAPILink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);

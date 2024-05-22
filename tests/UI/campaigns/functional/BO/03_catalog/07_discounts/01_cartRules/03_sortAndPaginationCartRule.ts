@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_sortAndPaginationCartRule';
 
@@ -47,10 +47,10 @@ describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () =
   it('should go to \'Catalog > Discounts\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.discountsLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.discountsLink,
     );
 
     const pageTitle = await cartRulesPage.getPageTitle(page);

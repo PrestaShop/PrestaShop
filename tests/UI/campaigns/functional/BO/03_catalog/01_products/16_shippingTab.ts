@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import createProductPage from '@pages/BO/catalog/products/add';
 import shippingTab from '@pages/BO/catalog/products/add/shippingTab';
 import productsPage from '@pages/BO/catalog/products';
@@ -23,6 +22,7 @@ import ProductData from '@data/faker/product';
 import Carriers from '@data/demo/carriers';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -71,16 +71,16 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {

@@ -11,7 +11,6 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 // Import BO pages
 import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
@@ -28,6 +27,7 @@ import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -99,10 +99,10 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
@@ -231,10 +231,10 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.merchandiseReturnsLink,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.merchandiseReturnsLink,
       );
       await ordersPage.closeSfToolBar(page);
 
@@ -263,10 +263,10 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
@@ -328,10 +328,10 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToMerchandiseReturnsPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.customerServiceParentLink,
-          dashboardPage.merchandiseReturnsLink,
+          boDashboardPage.customerServiceParentLink,
+          boDashboardPage.merchandiseReturnsLink,
         );
         await boMerchandiseReturnsPage.closeSfToolBar(page);
 
@@ -369,10 +369,10 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage0${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);

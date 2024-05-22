@@ -7,10 +7,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
-import dashboardPage from '@pages/BO/dashboard';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -44,10 +44,10 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
     it('should go to \'Advanced Parameters > New & Experimental Features\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFeatureFlagPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.featureFlagLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.featureFlagLink,
       );
       await featureFlagPage.closeSfToolBar(page);
 

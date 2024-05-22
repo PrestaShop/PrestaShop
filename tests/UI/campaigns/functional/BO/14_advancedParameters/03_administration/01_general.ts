@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import administrationPage from '@pages/BO/advancedParameters/administration';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_administration_general';
 
@@ -35,10 +35,10 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
   it('should go to \'Advanced Parameters > Administration\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdministrationPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.advancedParametersLink,
-      dashboardPage.administrationLink,
+      boDashboardPage.advancedParametersLink,
+      boDashboardPage.administrationLink,
     );
 
     const pageTitle = await administrationPage.getPageTitle(page);

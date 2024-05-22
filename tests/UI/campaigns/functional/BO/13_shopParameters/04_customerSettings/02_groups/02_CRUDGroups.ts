@@ -6,12 +6,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
 import {
+  boDashboardPage,
   FakerGroup,
 } from '@prestashop-core/ui-testing';
 
@@ -45,10 +45,10 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete g
   it('should go to \'Shop Parameters > Customer Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.customerSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.customerSettingsLink,
     );
     await customerSettingsPage.closeSfToolBar(page);
 

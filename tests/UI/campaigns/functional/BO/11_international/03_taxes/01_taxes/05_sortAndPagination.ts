@@ -7,11 +7,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_taxes_taxes_sortAndPagination';
 
@@ -37,10 +37,10 @@ describe('BO - International - Taxes : Sort and pagination', async () => {
   it('should go to \'International > Taxes\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.taxesLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.taxesLink,
     );
 
     const pageTitle = await taxesPage.getPageTitle(page);

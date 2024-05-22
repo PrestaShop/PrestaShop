@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
@@ -23,6 +22,7 @@ import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import ProductData from '@data/faker/product';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataPaymentMethods,
@@ -78,10 +78,10 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.productsLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.productsLink,
         );
         await productsPage.closeSfToolBar(page);
 
@@ -272,10 +272,10 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
         it('should go to \'Catalog > Products\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToProductsPageToCheck${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.catalogParentLink,
-            dashboardPage.productsLink,
+            boDashboardPage.catalogParentLink,
+            boDashboardPage.productsLink,
           );
 
           const pageTitle = await productsPage.getPageTitle(page);

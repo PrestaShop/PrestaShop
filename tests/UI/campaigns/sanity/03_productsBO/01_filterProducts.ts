@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 
 // Import data
@@ -15,6 +14,7 @@ import Categories from '@data/demo/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_productsBO_filterProducts';
 
@@ -41,10 +41,10 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       const pageTitle = await productsPage.getPageTitle(page);

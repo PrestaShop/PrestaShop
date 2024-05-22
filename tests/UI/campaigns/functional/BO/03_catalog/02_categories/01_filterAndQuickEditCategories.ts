@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import categoriesPage from '@pages/BO/catalog/categories';
 
 // Import data
@@ -14,6 +13,7 @@ import Categories from '@data/demo/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_categories_filterAndQuickEditCategories';
 
@@ -40,10 +40,10 @@ describe('BO - Catalog - Categories : Filter and quick edit Categories table', a
   it('should go to \'Catalog > Categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.categoriesLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.categoriesLink,
     );
     await categoriesPage.closeSfToolBar(page);
 

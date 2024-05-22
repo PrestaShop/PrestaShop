@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import generalPage from '@pages/BO/shopParameters/general';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -39,10 +39,10 @@ function setMultiStoreStatus(status: boolean, baseContext: string = 'commonTests
     it('should go to \'Shop Parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.shopParametersGeneralLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.shopParametersGeneralLink,
       );
       await generalPage.closeSfToolBar(page);
 

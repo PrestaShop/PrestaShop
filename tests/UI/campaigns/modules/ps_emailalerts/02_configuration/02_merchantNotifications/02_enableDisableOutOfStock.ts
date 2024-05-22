@@ -10,7 +10,6 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import stocksPage from '@pages/BO/catalog/stocks';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
@@ -23,6 +22,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import MailDevEmail from '@data/types/maildevEmail';
 import MailDev from 'maildev';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_emailalerts_configuration_merchantNotifications_enableDisableOutOfStock';
 
@@ -107,10 +107,10 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManager.closeSfToolBar(page);
 
@@ -146,10 +146,10 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
     it('should go to \'Catalog > Stocks\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.stocksLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.stocksLink,
       );
       await stocksPage.closeSfToolBar(page);
 
@@ -186,10 +186,10 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManager.closeSfToolBar(page);
 
@@ -225,10 +225,10 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
     it('should go to \'Catalog > Stocks\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.stocksLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.stocksLink,
       );
       await stocksPage.closeSfToolBar(page);
 

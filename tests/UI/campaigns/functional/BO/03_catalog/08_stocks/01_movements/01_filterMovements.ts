@@ -10,7 +10,6 @@ import cleanTableStockMovements from '@commonTests/BO/catalog/stock';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
@@ -33,6 +32,7 @@ import EmployeeData from '@data/faker/employee';
 import {ProductCombinationBulk} from '@data/types/product';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -97,10 +97,10 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it('should go to \'Catalog > Stocks\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.stocksLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.stocksLink,
         );
         await stocksPage.closeSfToolBar(page);
 
@@ -225,10 +225,10 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);
@@ -257,10 +257,10 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it('should go to \'Catalog > Stocks\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPageAfterFOOrder', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.stocksLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.stocksLink,
         );
         await stocksPage.closeSfToolBar(page);
 
@@ -357,17 +357,17 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
         await loginCommon.loginBO(this, page, employeeData.email, employeeData.password);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.productsLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.productsLink,
         );
         await productsPage.closeSfToolBar(page);
 
@@ -429,8 +429,8 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
         await loginCommon.loginBO(this, page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
     });
 
@@ -438,10 +438,10 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it('should go to \'Catalog > Stocks\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPageAfterEmployeeEdition', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.stocksLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.stocksLink,
         );
         await stocksPage.closeSfToolBar(page);
 
@@ -563,10 +563,10 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageForDisabling', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.productsLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.productsLink,
         );
         await productsPage.closeSfToolBar(page);
 
@@ -610,10 +610,10 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
         this.skip();
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.stocksLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.stocksLink,
         );
         await stocksPage.closeSfToolBar(page);
 
@@ -660,10 +660,10 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageForEnabling', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.productsLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.productsLink,
         );
         await productsPage.closeSfToolBar(page);
 

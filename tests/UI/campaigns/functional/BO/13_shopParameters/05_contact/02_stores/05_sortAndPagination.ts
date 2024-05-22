@@ -7,7 +7,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import contactPage from '@pages/BO/shopParameters/contact';
 import storesPage from '@pages/BO/shopParameters/stores';
 import addStorePage from '@pages/BO/shopParameters/stores/add';
@@ -17,6 +16,7 @@ import StoreData from '@data/faker/store';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_contact_stores_sortAndPagination';
 
@@ -49,10 +49,10 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
   it('should go to \'Contact\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.contactLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.contactLink,
     );
     await contactPage.closeSfToolBar(page);
 

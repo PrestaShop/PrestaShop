@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import attributesPage from '@pages/BO/catalog/attributes';
 import addAttributePage from '@pages/BO/catalog/attributes/addAttribute';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import AttributeData from '@data/faker/attribute';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_attributes_attributes_sortPaginationAndBulkDelete';
 
@@ -48,10 +48,10 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
   it('should go to \'Catalog > Attributes & Features\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.attributesAndFeaturesLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.attributesAndFeaturesLink,
     );
     await attributesPage.closeSfToolBar(page);
 

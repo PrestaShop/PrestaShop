@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import employeesPage from '@pages/BO/advancedParameters/team';
-import dashboardPage from '@pages/BO/dashboard';
 import loginPage from '@pages/BO/login';
 
 // Import data
@@ -20,6 +19,7 @@ import type MailDevEmail from '@data/types/maildevEmail';
 import {expect} from 'chai';
 import type MailDev from 'maildev';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_login_passwordReminder';
 
@@ -81,10 +81,10 @@ describe('BO - Login : Password reminder', async () => {
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTeamPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.teamLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.teamLink,
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);
@@ -153,10 +153,10 @@ describe('BO - Login : Password reminder', async () => {
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDelete', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.teamLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.teamLink,
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);

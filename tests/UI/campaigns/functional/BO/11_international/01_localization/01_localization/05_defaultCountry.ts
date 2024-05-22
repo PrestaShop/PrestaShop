@@ -6,12 +6,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import localizationPage from '@pages/BO/international/localization';
 import addressesPage from '@pages/BO/customers/addresses';
 import addAddressPage from '@pages/BO/customers/addresses/add';
 
 import {
+  boDashboardPage,
   // Import data
   dataCountries,
 } from '@prestashop-core/ui-testing';
@@ -56,10 +56,10 @@ describe('BO - International - Localization : Update default country', async () 
       it('should go to \'International > Localization\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToLocalizationPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.internationalParentLink,
-          dashboardPage.localizationLink,
+          boDashboardPage.internationalParentLink,
+          boDashboardPage.localizationLink,
         );
 
         const pageTitle = await localizationPage.getPageTitle(page);

@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import CategoryData from '@data/faker/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext = 'functional_BO_catalog_categories_categoriesBulkActions';
 
@@ -57,10 +57,10 @@ describe('BO - Catalog - Categories : Enable/Disable/Delete categories by Bulk A
   it('should go to \'Catalog > Categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.categoriesLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.categoriesLink,
     );
     await categoriesPage.closeSfToolBar(page);
 

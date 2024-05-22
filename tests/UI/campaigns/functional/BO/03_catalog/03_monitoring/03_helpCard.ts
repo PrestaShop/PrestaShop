@@ -7,10 +7,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import monitoringPage from '@pages/BO/catalog/monitoring';
-import dashboardPage from '@pages/BO/dashboard';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_monitoring_helpCard';
 
@@ -36,10 +36,10 @@ describe('BO - Catalog - Monitoring : Help card in monitoring page', async () =>
   it('should go to \'Catalog > Monitoring\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.monitoringLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.monitoringLink,
     );
     await monitoringPage.closeSfToolBar(page);
 

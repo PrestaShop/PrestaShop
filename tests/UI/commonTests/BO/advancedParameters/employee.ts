@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import
 import type EmployeeData from '@data/faker/employee';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -44,10 +44,10 @@ function createEmployeeTest(employeeData: EmployeeData, baseContext: string = 'c
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTeamPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.teamLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.teamLink,
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);
@@ -103,10 +103,10 @@ function deleteEmployeeTest(employeeData: EmployeeData, baseContext: string = 'c
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDelete', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.teamLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.teamLink,
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);

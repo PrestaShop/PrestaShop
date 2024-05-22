@@ -11,7 +11,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 
@@ -21,6 +20,7 @@ import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -117,10 +117,10 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 
@@ -212,10 +212,10 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.discountsLink,
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
@@ -249,10 +249,10 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 

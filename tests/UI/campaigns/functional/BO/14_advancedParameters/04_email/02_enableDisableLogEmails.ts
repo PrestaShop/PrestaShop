@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import emailPage from '@pages/BO/advancedParameters/email';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_email_enableDisableLogEmails';
 
@@ -39,10 +39,10 @@ describe('BO - Advanced Parameters - E-mail : Enable/Disable log emails', async 
   it('should go to \'Advanced Parameters > E-mail\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.advancedParametersLink,
-      dashboardPage.emailLink,
+      boDashboardPage.advancedParametersLink,
+      boDashboardPage.emailLink,
     );
 
     const pageTitle = await emailPage.getPageTitle(page);

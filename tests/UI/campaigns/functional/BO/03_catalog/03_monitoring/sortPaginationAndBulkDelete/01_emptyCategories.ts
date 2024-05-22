@@ -12,7 +12,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import categoriesPage from '@pages/BO/catalog/categories';
 import monitoringPage from '@pages/BO/catalog/monitoring';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import ImportCategories from '@data/import/categories';
@@ -20,6 +19,7 @@ import type {CategoryFilter} from '@data/types/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_monitoring_sortPaginationAndBulkDelete_emptyCategories';
 
@@ -71,8 +71,8 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
 
       await categoriesPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.monitoringLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.monitoringLink,
       );
 
       const pageTitle = await monitoringPage.getPageTitle(page);

@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import advancedCustomizationPage from '@pages/BO/design/themeAndLogo/advancedCustomization';
 import pagesConfigurationPage from '@pages/BO/design/themeAndLogo/pagesConfiguration';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
@@ -18,6 +17,7 @@ import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_themecusto_installation_resetModule';
 
@@ -42,10 +42,10 @@ describe('Theme Customization module - Reset module', async () => {
   it('should go to \'Modules > Module Manager\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.modulesParentLink,
-      dashboardPage.moduleManagerLink,
+      boDashboardPage.modulesParentLink,
+      boDashboardPage.moduleManagerLink,
     );
     await moduleManagerPage.closeSfToolBar(page);
 
@@ -83,10 +83,10 @@ describe('Theme Customization module - Reset module', async () => {
   it('should go to \'Design > Theme & Logo\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.themeAndLogoParentLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.themeAndLogoParentLink,
     );
     await themeAndLogoPage.closeSfToolBar(page);
 

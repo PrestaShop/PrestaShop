@@ -13,7 +13,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
-import dashboardPage from '@pages/BO/dashboard';
 import contactPage from '@pages/BO/shopParameters/contact';
 import storesPage from '@pages/BO/shopParameters/stores';
 import addStorePage from '@pages/BO/shopParameters/stores/add';
@@ -26,6 +25,7 @@ import {expect} from 'chai';
 import type {
   APIResponse, APIRequestContext, BrowserContext, Page,
 } from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_WS_storesCRUD';
 
@@ -79,10 +79,10 @@ describe('WS - Stores : CRUD', async () => {
       it('should go to \'Advanced Parameters > Webservice\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToWebservicePage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.advancedParametersLink,
-          dashboardPage.webserviceLink,
+          boDashboardPage.advancedParametersLink,
+          boDashboardPage.webserviceLink,
         );
         await webservicePage.closeSfToolBar(page);
 
@@ -422,10 +422,10 @@ describe('WS - Stores : CRUD', async () => {
         it('should go to \'Shop Parameters > Contact\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.shopParametersParentLink,
-            dashboardPage.contactLink,
+            boDashboardPage.shopParametersParentLink,
+            boDashboardPage.contactLink,
           );
           await contactPage.closeSfToolBar(page);
 

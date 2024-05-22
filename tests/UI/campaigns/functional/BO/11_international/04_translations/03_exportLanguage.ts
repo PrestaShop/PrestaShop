@@ -7,7 +7,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import translationsPage from '@pages/BO/international/translations';
 
 // Import data
@@ -16,6 +15,7 @@ import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_translations_exportLanguage';
 
@@ -40,10 +40,10 @@ describe('BO - International - Translation : Export languages', async () => {
   it('should go to \'International > Translations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.translationsLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.translationsLink,
     );
 
     const pageTitle = await translationsPage.getPageTitle(page);

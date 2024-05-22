@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import addressesPage from '@pages/BO/customers/addresses';
-import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
@@ -17,6 +16,7 @@ import {addressesPage as foAddressesPage} from '@pages/FO/classic/myAccount/addr
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   FakerAddress,
@@ -57,10 +57,10 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
   it('should go to \'Customers > Addresses\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customersParentLink,
-      dashboardPage.addressesLink,
+      boDashboardPage.customersParentLink,
+      boDashboardPage.addressesLink,
     );
     await addressesPage.closeSfToolBar(page);
 

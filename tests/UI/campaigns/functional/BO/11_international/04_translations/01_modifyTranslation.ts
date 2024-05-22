@@ -10,7 +10,6 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import translationsPage from '@pages/BO/international/translations';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
@@ -31,6 +30,7 @@ import Languages from '@data/demo/languages';
 import Modules from '@data/demo/modules';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   FakerCustomer,
@@ -83,10 +83,10 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should go to \'International > Translations\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.internationalParentLink,
-        dashboardPage.translationsLink,
+        boDashboardPage.internationalParentLink,
+        boDashboardPage.translationsLink,
       );
 
       const pageTitle = await translationsPage.getPageTitle(page);
@@ -114,10 +114,10 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.discountsLink,
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
@@ -145,10 +145,10 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should go to \'International > Translations\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.internationalParentLink,
-        dashboardPage.translationsLink,
+        boDashboardPage.internationalParentLink,
+        boDashboardPage.translationsLink,
       );
 
       const pageTitle = await translationsPage.getPageTitle(page);
@@ -208,10 +208,10 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should go to \'International > Translations\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage3', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.internationalParentLink,
-        dashboardPage.translationsLink,
+        boDashboardPage.internationalParentLink,
+        boDashboardPage.translationsLink,
       );
 
       const pageTitle = await translationsPage.getPageTitle(page);
@@ -290,10 +290,10 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should go to \'International > Translations\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage4', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.internationalParentLink,
-        dashboardPage.translationsLink,
+        boDashboardPage.internationalParentLink,
+        boDashboardPage.translationsLink,
       );
 
       const pageTitle = await translationsPage.getPageTitle(page);
@@ -327,10 +327,10 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManagerPage.closeSfToolBar(page);
 
@@ -357,10 +357,10 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should go to \'International > Translations\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage5', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.internationalParentLink,
-        dashboardPage.translationsLink,
+        boDashboardPage.internationalParentLink,
+        boDashboardPage.translationsLink,
       );
 
       const pageTitle = await translationsPage.getPageTitle(page);
@@ -464,10 +464,10 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should go to \'International > Translations\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage6', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.internationalParentLink,
-        dashboardPage.translationsLink,
+        boDashboardPage.internationalParentLink,
+        boDashboardPage.translationsLink,
       );
 
       const pageTitle = await translationsPage.getPageTitle(page);
@@ -496,7 +496,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.discountsLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.discountsLink);
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
       expect(pageTitle).to.contains(cartRulesPage.pageTitle);

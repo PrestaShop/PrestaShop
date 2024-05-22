@@ -11,7 +11,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
@@ -30,6 +29,7 @@ import OrderData from '@data/faker/order';
 import Modules from '@data/demo/modules';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -120,10 +120,10 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManager.closeSfToolBar(page);
 
@@ -159,10 +159,10 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
@@ -291,10 +291,10 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManager.closeSfToolBar(page);
 

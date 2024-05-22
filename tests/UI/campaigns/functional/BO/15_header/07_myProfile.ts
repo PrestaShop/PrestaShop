@@ -14,7 +14,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import loginPage from '@pages/BO/login';
-import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
 import employeesPage from '@pages/BO/advancedParameters/team';
@@ -23,6 +22,7 @@ import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
 // Import data
 import EmployeeData from '@data/faker/employee';
 import type {EmployeePermission} from '@data/types/employee';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_header_myProfile';
 
@@ -80,7 +80,7 @@ describe('BO - Header : My profile', async () => {
     it('should go to \'Your profile\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage', baseContext);
 
-      await dashboardPage.goToMyProfile(page);
+      await boDashboardPage.goToMyProfile(page);
       await myProfilePage.closeSfToolBar(page);
 
       const pageTitle = await myProfilePage.getPageTitle(page);
@@ -226,7 +226,7 @@ describe('BO - Header : My profile', async () => {
     it('should reset the language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetLanguage', baseContext);
 
-      await dashboardPage.goToMyProfile(page);
+      await boDashboardPage.goToMyProfile(page);
 
       employeeData.language = 'English (English)';
 
@@ -241,10 +241,10 @@ describe('BO - Header : My profile', async () => {
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTeamPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.teamLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.teamLink,
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);

@@ -11,7 +11,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -25,6 +24,7 @@ import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataPaymentMethods,
@@ -77,10 +77,10 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.discountsLink,
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);

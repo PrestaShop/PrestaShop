@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
@@ -17,6 +16,7 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -51,10 +51,10 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
   it('should go to \'Shop Parameters > Order Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.orderSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.orderSettingsLink,
     );
     await orderSettingsPage.closeSfToolBar(page);
 

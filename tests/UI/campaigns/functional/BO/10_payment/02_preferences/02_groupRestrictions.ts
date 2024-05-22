@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
 import preferencesPage from '@pages/BO/payment/preferences';
@@ -18,6 +17,7 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   FakerAddress,
@@ -57,10 +57,10 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToCreate', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.customersLink,
       );
       await customersPage.closeSfToolBar(page);
 

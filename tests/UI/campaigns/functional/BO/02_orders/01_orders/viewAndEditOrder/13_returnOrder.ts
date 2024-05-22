@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
@@ -20,6 +19,7 @@ import OrderData from '@data/faker/order';
 import MailDevEmail from '@data/types/maildevEmail';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -107,10 +107,10 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);

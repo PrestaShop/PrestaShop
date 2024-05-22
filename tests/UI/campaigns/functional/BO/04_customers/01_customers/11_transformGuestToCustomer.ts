@@ -10,7 +10,6 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import customersPage from '@pages/BO/customers';
 import viewCustomerPage from '@pages/BO/customers/view';
 
@@ -19,6 +18,7 @@ import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataPaymentMethods,
   FakerAddress,
@@ -90,10 +90,10 @@ describe('BO - Customers _ Customers : Transform guest to customer account', asy
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.customersLink,
       );
       await customersPage.closeSfToolBar(page);
 
@@ -150,7 +150,7 @@ describe('BO - Customers _ Customers : Transform guest to customer account', asy
     it('should go back to Customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.customersParentLink, boDashboardPage.customersLink);
 
       const pageTitle = await customersPage.getPageTitle(page);
       expect(pageTitle).to.contains(customersPage.pageTitle);

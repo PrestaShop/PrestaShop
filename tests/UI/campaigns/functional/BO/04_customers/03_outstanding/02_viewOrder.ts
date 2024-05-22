@@ -9,7 +9,6 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import pages
 import outstandingPage from '@pages/BO/customers/outstanding';
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
@@ -18,6 +17,7 @@ import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -85,10 +85,10 @@ describe('BO - Customers - Outstanding : View order', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
@@ -130,10 +130,10 @@ describe('BO - Customers - Outstanding : View order', async () => {
     it('should go to \'Customers > Outstanding\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.outstandingLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.outstandingLink,
       );
       await outstandingPage.closeSfToolBar(page);
 

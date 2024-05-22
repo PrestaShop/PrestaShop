@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import stocksPage from '@pages/BO/catalog/stocks';
-import dashboardPage from '@pages/BO/dashboard';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 
 // Import data
@@ -16,6 +15,7 @@ import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_stocks_movements_sortAndPagination';
 
@@ -41,10 +41,10 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
     it('should go to \'Catalog > Stocks\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.stocksLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.stocksLink,
       );
       await stocksPage.closeSfToolBar(page);
 
@@ -136,10 +136,10 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
     it('should go to \'Catalog > Stocks\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.stocksLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.stocksLink,
       );
 
       const pageTitle = await stocksPage.getPageTitle(page);

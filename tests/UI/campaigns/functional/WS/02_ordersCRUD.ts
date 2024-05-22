@@ -15,7 +15,6 @@ import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
@@ -32,6 +31,7 @@ import {WebservicePermission} from '@data/types/webservice';
 import getOrderXml from '@data/xml/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -110,10 +110,10 @@ describe('WS - Orders : CRUD', async () => {
         it('should go to \'Advanced Parameters > Webservice\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToWebservicePage', baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.advancedParametersLink,
-            dashboardPage.webserviceLink,
+            boDashboardPage.advancedParametersLink,
+            boDashboardPage.webserviceLink,
           );
           await webservicePage.closeSfToolBar(page);
 
@@ -145,10 +145,10 @@ describe('WS - Orders : CRUD', async () => {
         it('should go to \'Orders > Shopping carts\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage', baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.ordersParentLink,
-            dashboardPage.shoppingCartsLink,
+            boDashboardPage.ordersParentLink,
+            boDashboardPage.shoppingCartsLink,
           );
 
           const pageTitle = await shoppingCartsPage.getPageTitle(page);
@@ -479,10 +479,10 @@ describe('WS - Orders : CRUD', async () => {
         it('should go to \'Orders > Orders\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.ordersParentLink,
-            dashboardPage.ordersLink,
+            boDashboardPage.ordersParentLink,
+            boDashboardPage.ordersLink,
           );
           await ordersPage.closeSfToolBar(page);
 
@@ -695,10 +695,10 @@ describe('WS - Orders : CRUD', async () => {
           it('should go to \'Orders > Orders\' page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPagePostReset', baseContext);
 
-            await dashboardPage.goToSubMenu(
+            await boDashboardPage.goToSubMenu(
               page,
-              dashboardPage.ordersParentLink,
-              dashboardPage.ordersLink,
+              boDashboardPage.ordersParentLink,
+              boDashboardPage.ordersLink,
             );
             await ordersPage.closeSfToolBar(page);
 
@@ -1038,10 +1038,10 @@ describe('WS - Orders : CRUD', async () => {
           it('should go to \'Orders > Orders\' page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPagePutReset', baseContext);
 
-            await dashboardPage.goToSubMenu(
+            await boDashboardPage.goToSubMenu(
               page,
-              dashboardPage.ordersParentLink,
-              dashboardPage.ordersLink,
+              boDashboardPage.ordersParentLink,
+              boDashboardPage.ordersLink,
             );
             await ordersPage.closeSfToolBar(page);
 

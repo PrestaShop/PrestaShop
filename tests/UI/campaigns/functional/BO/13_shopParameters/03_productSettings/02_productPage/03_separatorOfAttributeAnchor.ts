@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
@@ -19,6 +18,7 @@ import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productPage_separatorOfAttributeAnchor';
 
@@ -46,10 +46,10 @@ describe('BO - Shop Parameters - Product Settings : Update separator of attribut
   it('should go to \'Shop parameters > Product Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.productSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.productSettingsLink,
     );
 
     const pageTitle = await productSettingsPage.getPageTitle(page);

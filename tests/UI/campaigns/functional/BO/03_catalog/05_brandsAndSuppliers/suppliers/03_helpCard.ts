@@ -8,10 +8,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import brandsPage from '@pages/BO/catalog/brands';
 import suppliersPage from '@pages/BO/catalog/suppliers';
-import dashboardPage from '@pages/BO/dashboard';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_suppliers_helpCard';
 
@@ -36,10 +36,10 @@ describe('BO - Catalog - Brands & Suppliers : Help card on Suppliers page', asyn
   it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.brandsAndSuppliersLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.brandsAndSuppliersLink,
     );
     await brandsPage.closeSfToolBar(page);
 

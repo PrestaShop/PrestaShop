@@ -14,7 +14,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
-import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
@@ -33,6 +32,7 @@ import {expect} from 'chai';
 import type {
   APIResponse, APIRequestContext, BrowserContext, Page,
 } from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_WS_productsCRUD';
 
@@ -84,10 +84,10 @@ describe('WS - Products : CRUD', async () => {
       it('should go to \'Advanced Parameters > Webservice\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToWebservicePage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.advancedParametersLink,
-          dashboardPage.webserviceLink,
+          boDashboardPage.advancedParametersLink,
+          boDashboardPage.webserviceLink,
         );
         await webservicePage.closeSfToolBar(page);
 
@@ -461,10 +461,10 @@ describe('WS - Products : CRUD', async () => {
           it('should go to \'Catalog > Products\' page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageAfterPost', baseContext);
 
-            await dashboardPage.goToSubMenu(
+            await boDashboardPage.goToSubMenu(
               page,
-              dashboardPage.catalogParentLink,
-              dashboardPage.productsLink,
+              boDashboardPage.catalogParentLink,
+              boDashboardPage.productsLink,
             );
             await productsPage.closeSfToolBar(page);
 
@@ -975,10 +975,10 @@ describe('WS - Products : CRUD', async () => {
           it('should go to \'Catalog > Products\' page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageBeforePut', baseContext);
 
-            await dashboardPage.goToSubMenu(
+            await boDashboardPage.goToSubMenu(
               page,
-              dashboardPage.catalogParentLink,
-              dashboardPage.productsLink,
+              boDashboardPage.catalogParentLink,
+              boDashboardPage.productsLink,
             );
             await productsPage.closeSfToolBar(page);
 
@@ -1649,10 +1649,10 @@ describe('WS - Products : CRUD', async () => {
           it('should go to \'Catalog > Products\' page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageAfterPut', baseContext);
 
-            await dashboardPage.goToSubMenu(
+            await boDashboardPage.goToSubMenu(
               page,
-              dashboardPage.catalogParentLink,
-              dashboardPage.productsLink,
+              boDashboardPage.catalogParentLink,
+              boDashboardPage.productsLink,
             );
             await productsPage.closeSfToolBar(page);
 

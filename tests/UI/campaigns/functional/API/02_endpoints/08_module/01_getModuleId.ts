@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 // Import data
@@ -20,6 +19,7 @@ import {ModuleInfo} from '@data/types/module';
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
+  boDashboardPage,
   boModuleManagerPage,
   dataModules,
 } from '@prestashop-core/ui-testing';
@@ -62,10 +62,10 @@ describe('API : GET /module/{moduleId}', async () => {
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.adminAPILink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -134,7 +134,7 @@ describe('API : GET /module/{moduleId}', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModulesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.modulesParentLink, dashboardPage.modulesParentLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.modulesParentLink, boDashboardPage.modulesParentLink);
       await boModuleManagerPage.closeSfToolBar(page);
 
       const pageTitle = await boModuleManagerPage.getPageTitle(page);

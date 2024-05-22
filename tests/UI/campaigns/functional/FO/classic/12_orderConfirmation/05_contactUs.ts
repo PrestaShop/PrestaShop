@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import customerServiceMainPage from '@pages/BO/customerService/customerService';
 import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
 // FO pages
@@ -27,6 +26,7 @@ import Products from '@data/demo/products';
 import MessageData from '@data/faker/message';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataPaymentMethods,
@@ -222,10 +222,10 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should go to customer service page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerServicePage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.customerServiceLink,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.customerServiceLink,
       );
 
       const pageTitle = await customerServiceMainPage.getPageTitle(page);
@@ -252,10 +252,10 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should go back to customer service page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToCustomerServicePage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.customerServiceLink,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.customerServiceLink,
       );
 
       const pageTitle = await customerServiceMainPage.getPageTitle(page);

@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import dashboardPage from '@pages/BO/dashboard';
 import localizationPage from '@pages/BO/international/localization';
 import languagesPage from '@pages/BO/international/languages';
 import addLanguagePage from '@pages/BO/international/languages/add';
@@ -20,6 +19,7 @@ import APIClientData from '@data/faker/APIClient';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_language_getLanguages';
 
@@ -55,10 +55,10 @@ describe('API : GET /languages', async () => {
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.adminAPILink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -171,10 +171,10 @@ describe('API : GET /languages', async () => {
     it('should go to \'International > Localization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.internationalParentLink,
-        dashboardPage.localizationLink,
+        boDashboardPage.internationalParentLink,
+        boDashboardPage.localizationLink,
       );
       await localizationPage.closeSfToolBar(page);
 

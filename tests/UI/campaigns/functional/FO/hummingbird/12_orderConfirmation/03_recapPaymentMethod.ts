@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 
 // Import FO pages
@@ -26,7 +25,7 @@ import Carriers from '@data/demo/carriers';
 import {
   // Import data
   dataPaymentMethods,
-  dataCustomers,
+  dataCustomers, boDashboardPage,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -153,10 +152,10 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageForUpdatedPrefix', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 

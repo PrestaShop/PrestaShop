@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
@@ -15,6 +14,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import DeliverySlipOptionsData from '@data/faker/deliverySlipOptions';
 
 import {
+  boDashboardPage,
   // Import data
   dataOrderStatuses,
 } from '@prestashop-core/ui-testing';
@@ -56,10 +56,10 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
     it('should go to \'Orders > Delivery slip\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.deliverySlipslink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.deliverySlipslink,
       );
       await deliverySlipsPage.closeSfToolBar(page);
 

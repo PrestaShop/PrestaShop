@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
@@ -15,6 +14,7 @@ import addCurrencyPage from '@pages/BO/international/currencies/add';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {
+  boDashboardPage,
   dataCurrencies,
 } from '@prestashop-core/ui-testing';
 
@@ -51,10 +51,10 @@ describe('BO - International - Currencies : Create official currency and check i
   it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.localizationLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.localizationLink,
     );
     await localizationPage.closeSfToolBar(page);
 

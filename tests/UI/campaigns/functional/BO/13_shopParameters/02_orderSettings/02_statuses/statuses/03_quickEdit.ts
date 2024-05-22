@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 
 import {
+  boDashboardPage,
   // Import data
   dataOrderStatuses,
 } from '@prestashop-core/ui-testing';
@@ -49,10 +49,10 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Quick edit order st
   it('should go to \'Shop Parameters > Order Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.orderSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.orderSettingsLink,
     );
 
     const pageTitle = await orderSettingsPage.getPageTitle(page);

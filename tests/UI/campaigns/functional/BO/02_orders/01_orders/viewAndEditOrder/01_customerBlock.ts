@@ -7,7 +7,6 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createAccountTest, createAddressTest} from '@commonTests/FO/classic/account';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
@@ -21,6 +20,7 @@ import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataPaymentMethods,
@@ -110,10 +110,10 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     it('should go \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.customersLink,
       );
       await customersPage.closeSfToolBar(page);
 
@@ -140,10 +140,10 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     it('should go to \'Customers > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.addressesLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.addressesLink,
       );
 
       const pageTitle = await addressesPage.getPageTitle(page);
@@ -167,10 +167,10 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 
@@ -276,10 +276,10 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     it('should go back to Orders page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
@@ -380,10 +380,10 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     it('should go back to \'Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
@@ -420,10 +420,10 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     it('should go back to \'Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage3', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
@@ -467,10 +467,10 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     it('should go back to \'Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage4', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);

@@ -9,7 +9,6 @@ import basicHelper from '@utils/basicHelper';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import productsPage from '@pages/BO/catalog/products';
 import packTab from '@pages/BO/catalog/products/add/packTab';
@@ -24,6 +23,7 @@ import {ProductPackOptions} from '@data/types/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_CRUDPackOfProducts';
 
@@ -110,10 +110,10 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.productsLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.productsLink,
         );
 
         await productsPage.closeSfToolBar(page);

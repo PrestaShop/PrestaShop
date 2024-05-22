@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import searchEnginesPage from '@pages/BO/shopParameters/trafficAndSeo/searchEngines';
 import addSearchEnginePage from '@pages/BO/shopParameters/trafficAndSeo/searchEngines/add';
@@ -16,6 +15,7 @@ import SearchEngineDate from '@data/faker/searchEngine';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_trafficAndSeo_searchEngines_CRUDSearchEngines';
 
@@ -49,10 +49,10 @@ describe('BO - Shop Parameters - Traffic & SEO : Create, update and delete searc
   it('should go to \'Shop Parameters > Traffic & SEO\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSeoAndUrlsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.trafficAndSeoLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.trafficAndSeoLink,
     );
 
     await seoAndUrlsPage.closeSfToolBar(page);

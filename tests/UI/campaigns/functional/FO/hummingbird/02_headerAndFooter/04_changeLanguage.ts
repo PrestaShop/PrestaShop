@@ -8,7 +8,6 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import languagesPage from '@pages/BO/international/languages';
 import localizationPage from '@pages/BO/international/localization';
 // Import FO pages
@@ -19,6 +18,7 @@ import Languages from '@data/demo/languages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_headerAndFooter_changeLanguage';
 
@@ -56,10 +56,10 @@ describe('FO - Header and Footer : Change language', async () => {
       it('should go to \'International > Localization\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage1', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.internationalParentLink,
-          dashboardPage.localizationLink,
+          boDashboardPage.internationalParentLink,
+          boDashboardPage.localizationLink,
         );
         await localizationPage.closeSfToolBar(page);
 
@@ -151,17 +151,17 @@ describe('FO - Header and Footer : Change language', async () => {
 
         await homePage.goToBO(page);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'International > Localization\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage2', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.internationalParentLink,
-          dashboardPage.localizationLink,
+          boDashboardPage.internationalParentLink,
+          boDashboardPage.localizationLink,
         );
         await localizationPage.closeSfToolBar(page);
 

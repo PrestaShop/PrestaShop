@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 
@@ -18,6 +17,7 @@ import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_customerSettings_customers_enableB2BMode';
 
@@ -48,10 +48,10 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable B2B mode', a
   it('should go to \'Shop parameters > Customer Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.customerSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.customerSettingsLink,
     );
 
     await customerSettingsPage.closeSfToolBar(page);

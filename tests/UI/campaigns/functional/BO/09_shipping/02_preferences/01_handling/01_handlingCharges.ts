@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
 import preferencesPage from '@pages/BO/shipping/preferences';
@@ -23,6 +22,7 @@ import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataGroups,
@@ -99,10 +99,10 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
     it('should go to \'Shop parameters > Customer Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.customerSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.customerSettingsLink,
       );
       await customerSettingsPage.closeSfToolBar(page);
 
@@ -150,10 +150,10 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
     it('should go to \'Shipping > Carriers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shippingLink,
-        dashboardPage.carriersLink,
+        boDashboardPage.shippingLink,
+        boDashboardPage.carriersLink,
       );
 
       const pageTitle = await carriersPage.getPageTitle(page);
@@ -273,7 +273,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
     it('should go to \'Shipping > Preferences\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPreferencesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.shippingLink, dashboardPage.shippingPreferencesLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.shippingLink, boDashboardPage.shippingPreferencesLink);
 
       const pageTitle = await preferencesPage.getPageTitle(page);
       expect(pageTitle).to.contains(preferencesPage.pageTitle);
@@ -380,10 +380,10 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
     it('should go to \'Shipping > Carriers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shippingLink,
-        dashboardPage.carriersLink,
+        boDashboardPage.shippingLink,
+        boDashboardPage.carriersLink,
       );
 
       const pageTitle = await carriersPage.getPageTitle(page);
@@ -415,10 +415,10 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
     it('should go to \'Shop parameters > Customer Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.customerSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.customerSettingsLink,
       );
       await customerSettingsPage.closeSfToolBar(page);
 

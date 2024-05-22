@@ -8,9 +8,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import addressesPage from '@pages/BO/customers/addresses';
 import addAddressPage from '@pages/BO/customers/addresses/add';
-import dashboardPage from '@pages/BO/dashboard';
 
 import {
+  boDashboardPage,
   FakerAddress,
 } from '@prestashop-core/ui-testing';
 
@@ -45,10 +45,10 @@ describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
   it('should go to \'Customers > Addresses\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customersParentLink,
-      dashboardPage.addressesLink,
+      boDashboardPage.customersParentLink,
+      boDashboardPage.addressesLink,
     );
     await addressesPage.closeSfToolBar(page);
 

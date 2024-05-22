@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import administrationPage from '@pages/BO/advancedParameters/administration';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import customersPage from '@pages/BO/customers';
@@ -28,6 +27,7 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import Products from '@data/demo/products';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataPaymentMethods,
@@ -66,29 +66,29 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
     it('should click on notifications icon', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNotificationsLink', baseContext);
 
-      const isNotificationsVisible = await dashboardPage.clickOnNotificationsLink(page);
+      const isNotificationsVisible = await boDashboardPage.clickOnNotificationsLink(page);
       expect(isNotificationsVisible).to.eq(true);
 
-      await dashboardPage.clickOnNotificationsTab(page, 'customers');
-      await dashboardPage.clickOnNotificationsTab(page, 'messages');
+      await boDashboardPage.clickOnNotificationsTab(page, 'customers');
+      await boDashboardPage.clickOnNotificationsTab(page, 'messages');
     });
 
     it('should refresh the page and check that the notifications number is equal to 0', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'refreshPageAndCheckNotificationsNumber', baseContext);
 
-      await dashboardPage.reloadPage(page);
+      await boDashboardPage.reloadPage(page);
 
-      const number = await dashboardPage.getAllNotificationsNumber(page);
+      const number = await boDashboardPage.getAllNotificationsNumber(page);
       expect(number).to.equal(0);
     });
 
     it('should go to \'Advanced Parameters > Administration\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdministrationPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.administrationLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.administrationLink,
       );
 
       const pageTitle = await administrationPage.getPageTitle(page);
@@ -127,7 +127,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
-      page = await dashboardPage.viewMyShop(page);
+      page = await boDashboardPage.viewMyShop(page);
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
@@ -251,10 +251,10 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.customersLink,
       );
       await customersPage.closeSfToolBar(page);
 
@@ -295,7 +295,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
     it('should check notifications number in customers tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsInCustomersTab', baseContext);
 
-      await dashboardPage.clickOnNotificationsTab(page, 'customers');
+      await boDashboardPage.clickOnNotificationsTab(page, 'customers');
 
       const notificationsNumber = await customersPage.getNotificationsNumberInTab(page, 'customers');
       expect(notificationsNumber).to.equal(1);
@@ -304,9 +304,9 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
     it('should refresh the page and check the notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'refreshPageAndCheckNotificationsNumber2', baseContext);
 
-      await dashboardPage.reloadPage(page);
+      await boDashboardPage.reloadPage(page);
 
-      const number = await dashboardPage.getAllNotificationsNumber(page);
+      const number = await boDashboardPage.getAllNotificationsNumber(page);
       expect(number).to.equal(0);
     });
 
@@ -322,10 +322,10 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
     it('should go to \'Advanced Parameters > Administration\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdministrationPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.administrationLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.administrationLink,
       );
 
       const pageTitle = await administrationPage.getPageTitle(page);
@@ -342,7 +342,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
-      page = await dashboardPage.viewMyShop(page);
+      page = await boDashboardPage.viewMyShop(page);
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
@@ -374,7 +374,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
       // Close tab and init other page objects with new current tab
       page = await homePage.closePage(browserContext, page, 0);
 
-      await dashboardPage.reloadPage(page);
+      await boDashboardPage.reloadPage(page);
 
       const pageTitle = await administrationPage.getPageTitle(page);
       expect(pageTitle).to.contains(administrationPage.pageTitle);

@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import customersPage from '@pages/BO/customers';
-import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 
@@ -15,6 +14,7 @@ import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 import Modules from '@data/demo/modules';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -46,10 +46,10 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
   it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customersParentLink,
-      dashboardPage.customersLink,
+      boDashboardPage.customersParentLink,
+      boDashboardPage.customersLink,
     );
     await customersPage.closeSfToolBar(page);
 

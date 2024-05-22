@@ -13,7 +13,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
-import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import countriesPage from '@pages/BO/international/locations/countries';
 import addCountryPage from '@pages/BO/international/locations/countries/add';
@@ -26,6 +25,7 @@ import {expect} from 'chai';
 import type {
   APIResponse, APIRequestContext, BrowserContext, Page,
 } from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_WS_countriesCRUD';
 
@@ -74,10 +74,10 @@ describe('WS - Countries : CRUD', async () => {
       it('should go to \'Advanced Parameters > Webservice\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToWebservicePage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.advancedParametersLink,
-          dashboardPage.webserviceLink,
+          boDashboardPage.advancedParametersLink,
+          boDashboardPage.webserviceLink,
         );
         await webservicePage.closeSfToolBar(page);
 
@@ -413,10 +413,10 @@ describe('WS - Countries : CRUD', async () => {
         it('should go to \'International > Locations\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.internationalParentLink,
-            dashboardPage.locationsLink,
+            boDashboardPage.internationalParentLink,
+            boDashboardPage.locationsLink,
           );
           await zonesPage.closeSfToolBar(page);
 

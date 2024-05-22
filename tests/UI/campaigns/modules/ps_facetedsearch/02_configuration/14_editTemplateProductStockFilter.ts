@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psFacetedSearch from '@pages/BO/modules/psFacetedSearch';
 import psFacetedSearchFilterTemplate from '@pages/BO/modules/psFacetedSearch/filterTemplate';
@@ -21,6 +20,7 @@ import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_facetedsearch_configuration_editTemplateProductStockFilter';
 
@@ -46,10 +46,10 @@ describe('Faceted search module - Edit template - Product stock filter', async (
   it('should go to \'Modules > Module Manager\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.modulesParentLink,
-      dashboardPage.moduleManagerLink,
+      boDashboardPage.modulesParentLink,
+      boDashboardPage.moduleManagerLink,
     );
     await moduleManagerPage.closeSfToolBar(page);
 

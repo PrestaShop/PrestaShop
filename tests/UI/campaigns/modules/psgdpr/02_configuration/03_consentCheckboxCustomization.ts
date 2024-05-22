@@ -18,7 +18,6 @@ import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import boDesignPositionsPage from '@pages/BO/design/positions';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psGdpr from '@pages/BO/modules/psGdpr';
@@ -34,6 +33,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {faker, fakerFR} from '@faker-js/faker';
 import {
+  boDashboardPage,
   boDesignPositionsHookModulePage,
   FakerCustomer,
   foClassicHomePage,
@@ -77,10 +77,10 @@ describe('GDPR : Consent checkbox customization', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManagerPage.closeSfToolBar(page);
 
@@ -304,10 +304,10 @@ describe('GDPR : Consent checkbox customization', async () => {
 
       page = await foHomePage.changePage(browserContext, 0);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManagerPage.closeSfToolBar(page);
 

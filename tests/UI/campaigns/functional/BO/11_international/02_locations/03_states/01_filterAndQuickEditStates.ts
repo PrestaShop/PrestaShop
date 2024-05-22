@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import statesPage from '@pages/BO/international/locations/states';
 
 import {
+  boDashboardPage,
   // Import data
   dataStates,
 } from '@prestashop-core/ui-testing';
@@ -46,10 +46,10 @@ describe('BO - International - States : Filter and quick edit', async () => {
   it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.locationsLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.locationsLink,
     );
     await zonesPage.closeSfToolBar(page);
 

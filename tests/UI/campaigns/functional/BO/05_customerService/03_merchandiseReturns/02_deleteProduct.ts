@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import merchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
@@ -26,6 +25,7 @@ import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -152,10 +152,10 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.merchandiseReturnsLink,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.merchandiseReturnsLink,
       );
       await merchandiseReturnsPage.closeSfToolBar(page);
 
@@ -175,10 +175,10 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
@@ -274,10 +274,10 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
       it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToMerchandiseReturnsPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.customerServiceParentLink,
-          dashboardPage.merchandiseReturnsLink,
+          boDashboardPage.customerServiceParentLink,
+          boDashboardPage.merchandiseReturnsLink,
         );
 
         const pageTitle = await merchandiseReturnsPage.getPageTitle(page);

@@ -8,7 +8,6 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 
 // Import pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import {productPage} from '@pages/FO/classic/product';
 
@@ -17,6 +16,7 @@ import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_menuAndNavigation_navigationAndDisplay_displayOnSaleFlag';
 
@@ -58,7 +58,7 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage3', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);

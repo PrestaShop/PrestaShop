@@ -17,7 +17,6 @@ import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
@@ -32,6 +31,7 @@ import ProductData from '@data/faker/product';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -186,7 +186,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+    await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
     await productsPage.closeSfToolBar(page);
 
     const pageTitle = await productsPage.getPageTitle(page);
@@ -287,10 +287,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
         await ordersPage.closeSfToolBar(page);
 
@@ -563,10 +563,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
         await ordersPage.closeSfToolBar(page);
 

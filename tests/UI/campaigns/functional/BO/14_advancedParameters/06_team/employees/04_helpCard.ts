@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import employeesPage from '@pages/BO/advancedParameters/team';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_employees_helpCard';
 
@@ -36,10 +36,10 @@ describe('BO - Advanced Parameters - Team : Help card in Employee page', async (
   it('should go to \'Advanced Parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.advancedParametersLink,
-      dashboardPage.teamLink,
+      boDashboardPage.advancedParametersLink,
+      boDashboardPage.teamLink,
     );
     await employeesPage.closeSfToolBar(page);
 

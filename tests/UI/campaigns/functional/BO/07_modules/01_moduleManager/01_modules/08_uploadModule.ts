@@ -7,7 +7,6 @@ import files from '@utils/files';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 // Import data
@@ -15,6 +14,7 @@ import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_modules_uploadModule';
 
@@ -49,10 +49,10 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
   it('should go to \'Modules > Module Manager\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.modulesParentLink,
-      dashboardPage.moduleManagerLink,
+      boDashboardPage.modulesParentLink,
+      boDashboardPage.moduleManagerLink,
     );
     await moduleManagerPage.closeSfToolBar(page);
 

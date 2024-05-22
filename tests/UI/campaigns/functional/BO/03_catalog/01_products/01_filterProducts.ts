@@ -9,13 +9,13 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 
 // Import data
 import Products from '@data/demo/products';
 import Categories from '@data/demo/categories';
 import {ProductFilterMinMax} from '@data/types/product';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_filterProducts';
 
@@ -42,10 +42,10 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       const pageTitle = await productsPage.getPageTitle(page);

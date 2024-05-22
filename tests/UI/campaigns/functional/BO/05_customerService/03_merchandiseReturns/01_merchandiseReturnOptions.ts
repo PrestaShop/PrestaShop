@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
@@ -24,6 +23,7 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -157,10 +157,10 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToMerchandiseReturnsPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.customerServiceParentLink,
-          dashboardPage.merchandiseReturnsLink,
+          boDashboardPage.customerServiceParentLink,
+          boDashboardPage.merchandiseReturnsLink,
         );
         await boMerchandiseReturnsPage.closeSfToolBar(page);
 
@@ -185,10 +185,10 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);

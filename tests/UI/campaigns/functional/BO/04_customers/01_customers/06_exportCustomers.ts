@@ -8,10 +8,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import customersPage from '@pages/BO/customers';
-import dashboardPage from '@pages/BO/dashboard';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customers_customers_exportCustomers';
 
@@ -43,10 +43,10 @@ describe('BO - Customers - Customers : Export customers', async () => {
   it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customersParentLink,
-      dashboardPage.customersLink,
+      boDashboardPage.customersParentLink,
+      boDashboardPage.customersLink,
     );
 
     const pageTitle = await customersPage.getPageTitle(page);

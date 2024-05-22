@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
 // Import data
@@ -17,6 +16,7 @@ import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataPaymentMethods,
   FakerAddress,
@@ -83,10 +83,10 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
     it('should go to \'Orders > Shopping carts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.shoppingCartsLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.shoppingCartsLink,
       );
 
       const pageTitle = await shoppingCartsPage.getPageTitle(page);

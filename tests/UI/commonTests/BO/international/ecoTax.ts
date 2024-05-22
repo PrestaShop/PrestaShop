@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -38,7 +38,7 @@ function enableEcoTaxTest(baseContext: string = 'commonTests-enableEcoTaxTest'):
     it('should go to \'International > Taxes\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.internationalParentLink, dashboardPage.taxesLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.internationalParentLink, boDashboardPage.taxesLink);
       await taxesPage.closeSfToolBar(page);
 
       const pageTitle = await taxesPage.getPageTitle(page);
@@ -77,7 +77,7 @@ function disableEcoTaxTest(baseContext: string = 'commonTests-disableEcoTaxTest'
     it('should go to \'International > Taxes\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.internationalParentLink, dashboardPage.taxesLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.internationalParentLink, boDashboardPage.taxesLink);
       await taxesPage.closeSfToolBar(page);
 
       const pageTitle = await taxesPage.getPageTitle(page);

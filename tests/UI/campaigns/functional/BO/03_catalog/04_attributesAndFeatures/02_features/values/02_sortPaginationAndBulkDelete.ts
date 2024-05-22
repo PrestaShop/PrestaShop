@@ -11,7 +11,6 @@ import attributesPage from '@pages/BO/catalog/attributes';
 import featuresPage from '@pages/BO/catalog/features';
 import addValuePage from '@pages/BO/catalog/features/addValue';
 import viewFeaturePage from '@pages/BO/catalog/features/view';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import Features from '@data/demo/features';
@@ -19,6 +18,7 @@ import FeatureValueData from '@data/faker/featureValue';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_features_values_sortPaginationAndBulkDelete';
 
@@ -54,10 +54,10 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
   it('should go to \'Catalog > Attributes & Features\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.attributesAndFeaturesLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.attributesAndFeaturesLink,
     );
     await attributesPage.closeSfToolBar(page);
 

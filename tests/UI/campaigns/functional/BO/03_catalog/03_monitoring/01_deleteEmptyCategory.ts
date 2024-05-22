@@ -10,13 +10,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
 import monitoringPage from '@pages/BO/catalog/monitoring';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import CategoryData from '@data/faker/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_monitoring_deleteEmptyCategory';
 
@@ -56,10 +56,10 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
   it('should go to \'Catalog > Categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.categoriesLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.categoriesLink,
     );
     await categoriesPage.closeSfToolBar(page);
 

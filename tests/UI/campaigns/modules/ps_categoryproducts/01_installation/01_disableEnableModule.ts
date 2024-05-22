@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 // Import data
@@ -19,6 +18,7 @@ import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_categoryproducts_installation_disableEnableModule';
 
@@ -44,10 +44,10 @@ describe('Category products module - Disable/Enable module', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPageForEnable', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManagerPage.closeSfToolBar(page);
 

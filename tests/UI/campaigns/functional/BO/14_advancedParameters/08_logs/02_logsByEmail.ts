@@ -9,7 +9,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {createProductTest} from '@commonTests/BO/catalog/product';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import logsPage from '@pages/BO/advancedParameters/logs';
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
@@ -23,6 +22,7 @@ import type {BrowserContext, Page} from 'playwright';
 import MailDev from 'maildev';
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_logs_logsByEmail';
 
@@ -76,7 +76,7 @@ describe('BO - Advanced Parameters - Logs : Logs by email', async () => {
     it('should go to \'Advanced Parameters > Logs\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPageToEraseLogs', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.advancedParametersLink, boDashboardPage.logsLink);
       await logsPage.closeSfToolBar(page);
 
       const pageTitle = await logsPage.getPageTitle(page);
@@ -107,10 +107,10 @@ describe('BO - Advanced Parameters - Logs : Logs by email', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       const pageTitle = await productsPage.getPageTitle(page);

@@ -11,13 +11,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
 import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_catalogPriceRules_filterSortAndPagination';
 
@@ -56,10 +56,10 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
   it('should go to \'Catalog > Discounts\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.discountsLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.discountsLink,
     );
 
     const pageTitle = await cartRulesPage.getPageTitle(page);

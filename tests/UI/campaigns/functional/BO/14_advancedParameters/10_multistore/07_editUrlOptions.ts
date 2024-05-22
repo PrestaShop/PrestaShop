@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';
 import shopPage from '@pages/BO/advancedParameters/multistore/shop';
@@ -18,6 +17,7 @@ import ShopData from '@data/faker/shop';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_multistore_editUrlOptions';
 
@@ -58,10 +58,10 @@ describe('BO - Advanced Parameters - Multistore : Edit URL options', async () =>
     it('should go to \'Advanced Parameters > Multistore\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.multistoreLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.multistoreLink,
       );
 
       const pageTitle = await multiStorePage.getPageTitle(page);

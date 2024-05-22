@@ -6,12 +6,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
+  boDashboardPage,
   // Import data
   dataOrderStatuses,
 } from '@prestashop-core/ui-testing';
@@ -60,10 +60,10 @@ describe('BO - Orders - Invoices : Enable/Disable current year', async () => {
     it('should go to \'Orders > Invoices\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToEnableCurrentYear', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.invoicesLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.invoicesLink,
       );
       await invoicesPage.closeSfToolBar(page);
 

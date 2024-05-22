@@ -10,7 +10,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import productsPage from '@pages/BO/catalog/products';
 import ordersPage from '@pages/BO/orders';
@@ -28,6 +27,7 @@ import ProductData from '@data/faker/product';
 import type MailDevEmail from '@data/types/maildevEmail';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -118,10 +118,10 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       await productsPage.closeSfToolBar(page);
@@ -276,10 +276,10 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);
@@ -370,10 +370,10 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       await productsPage.closeSfToolBar(page);

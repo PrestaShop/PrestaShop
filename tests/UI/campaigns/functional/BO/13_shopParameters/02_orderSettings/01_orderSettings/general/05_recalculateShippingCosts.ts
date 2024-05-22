@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
@@ -19,6 +18,7 @@ import OrderShippingData from '@data/faker/orderShipping';
 import Carriers from '@data/demo/carriers';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataPaymentMethods,
@@ -97,10 +97,10 @@ describe('BO - Shop Parameters - Order Settings : Recalculate shipping costs aft
       it('should go to \'Shop Parameters > Order Settings\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrderSettingsPage_${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.shopParametersParentLink,
-          dashboardPage.orderSettingsLink,
+          boDashboardPage.shopParametersParentLink,
+          boDashboardPage.orderSettingsLink,
         );
         await orderSettingsPage.closeSfToolBar(page);
 
@@ -118,10 +118,10 @@ describe('BO - Shop Parameters - Order Settings : Recalculate shipping costs aft
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage_${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);

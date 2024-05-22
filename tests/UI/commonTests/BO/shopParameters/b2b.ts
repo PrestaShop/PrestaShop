@@ -6,12 +6,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -39,10 +39,10 @@ function enableB2BTest(baseContext: string = 'commonTests-enableB2BTest'): void 
     it('should go to \'Shop parameters > Customer Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.customerSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.customerSettingsLink,
       );
       await customerSettingsPage.closeSfToolBar(page);
 
@@ -86,10 +86,10 @@ function disableB2BTest(baseContext: string = 'commonTests-disableB2BTest'): voi
     it('should go to \'Shop parameters > Customer Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.customerSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.customerSettingsLink,
       );
       await customerSettingsPage.closeSfToolBar(page);
 
