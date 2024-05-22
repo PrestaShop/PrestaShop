@@ -20,6 +20,9 @@ services:
     arguments:
       $cookieKey: '%cookie_key%'
 
+  PrestaShopBundle\Security\Admin\EmployeeHomepageProvider:
+    autowire: true
+
   PrestaShopBundle\Security\Admin\AdminAuthenticationSuccessHandler:
     autowire: true
 
