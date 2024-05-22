@@ -2,16 +2,16 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import pages
-import loginPage from '@pages/BO/login';
-
 // Import data
 import Employees from '@data/demo/employees';
 import EmployeeData from '@data/faker/employee';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  boLoginPage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_login_login';
 
@@ -34,43 +34,43 @@ describe('BO - Login : Login in BO', async () => {
   it('should open the BO authentication page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openAuthenticationPage', baseContext);
 
-    await loginPage.goTo(page, global.BO.URL);
+    await boLoginPage.goTo(page, global.BO.URL);
 
-    const pageTitle = await loginPage.getPageTitle(page);
-    expect(pageTitle).to.contains(loginPage.pageTitle);
+    const pageTitle = await boLoginPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLoginPage.pageTitle);
   });
 
   it('should enter an invalid credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidCredentials', baseContext);
 
-    await loginPage.failedLogin(page, employeeData.email, employeeData.password);
+    await boLoginPage.failedLogin(page, employeeData.email, employeeData.password);
 
-    const loginError = await loginPage.getLoginError(page);
-    expect(loginError).to.contains(loginPage.loginErrorText);
+    const loginError = await boLoginPage.getLoginError(page);
+    expect(loginError).to.contains(boLoginPage.loginErrorText);
   });
 
   it('should enter an invalid email', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidEmail', baseContext);
 
-    await loginPage.failedLogin(page, employeeData.email, Employees.DefaultEmployee.password);
+    await boLoginPage.failedLogin(page, employeeData.email, Employees.DefaultEmployee.password);
 
-    const loginError = await loginPage.getLoginError(page);
-    expect(loginError).to.contains(loginPage.loginErrorText);
+    const loginError = await boLoginPage.getLoginError(page);
+    expect(loginError).to.contains(boLoginPage.loginErrorText);
   });
 
   it('should enter an invalid password', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidPassword', baseContext);
 
-    await loginPage.failedLogin(page, Employees.DefaultEmployee.email, employeeData.password);
+    await boLoginPage.failedLogin(page, Employees.DefaultEmployee.email, employeeData.password);
 
-    const loginError = await loginPage.getLoginError(page);
-    expect(loginError).to.contains(loginPage.loginErrorText);
+    const loginError = await boLoginPage.getLoginError(page);
+    expect(loginError).to.contains(boLoginPage.loginErrorText);
   });
 
   it('should enter a valid credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
-    await loginPage.successLogin(page, Employees.DefaultEmployee.email, Employees.DefaultEmployee.password);
+    await boLoginPage.successLogin(page, Employees.DefaultEmployee.email, Employees.DefaultEmployee.password);
 
     const pageTitle = await boDashboardPage.getPageTitle(page);
     expect(pageTitle).to.contains(boDashboardPage.pageTitle);

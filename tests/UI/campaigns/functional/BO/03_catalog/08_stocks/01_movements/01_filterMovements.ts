@@ -13,7 +13,6 @@ import cleanTableStockMovements from '@commonTests/BO/catalog/stock';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
-import loginPage from '@pages/BO/login';
 import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import stocksPage from '@pages/BO/catalog/stocks';
@@ -33,6 +32,7 @@ import {ProductCombinationBulk} from '@data/types/product';
 
 import {
   boDashboardPage,
+  boLoginPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -348,8 +348,8 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
         await loginCommon.logoutBO(this, page);
 
-        const pageTitle = await loginPage.getPageTitle(page);
-        expect(pageTitle).to.contains(loginPage.pageTitle);
+        const pageTitle = await boLoginPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLoginPage.pageTitle);
       });
 
       it(`should login from the employee "${employeeData.email}`, async function () {
@@ -420,8 +420,8 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
         await loginCommon.logoutBO(this, page);
 
-        const pageTitle = await loginPage.getPageTitle(page);
-        expect(pageTitle).to.contains(loginPage.pageTitle);
+        const pageTitle = await boLoginPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLoginPage.pageTitle);
       });
 
       it(`should login from the employee "${global.BO.EMAIL}"`, async function () {
