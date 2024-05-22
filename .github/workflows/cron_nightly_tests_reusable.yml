@@ -9,13 +9,13 @@ on:
         required: true
         type: string
       PHP_VERSION:
+        description: 'PHP Version'
         required: true
         type: string
       NODE_VERSION:
         description: 'Node Version'
-        required: false
+        required: true
         type: string
-        default: '16'
       TESTS_DIR:
         description: 'Where UI tests are'
         required: false
