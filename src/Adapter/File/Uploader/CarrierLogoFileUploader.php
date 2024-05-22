@@ -24,47 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Exception;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\CarrierLogoFileUploaderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierLogoUploadFailedException;
+use PrestaShop\PrestaShop\Core\File\Exception\FileException;
 
 /**
- * Is thrown when carrier is invalid
+ * Uploads carrier logo file
  */
-class CarrierConstraintException extends CarrierException
+class CarrierLogoFileUploader implements CarrierLogoFileUploaderInterface
 {
-    /**
-     * Thrown when provided carrier id is not valid
-     */
-    public const INVALID_ID = 10;
+    public function upload(string $filePath, int $id): void
+    {
+        try {
+            move_uploaded_file($filePath, _PS_SHIP_IMG_DIR_ . $id . '.jpg');
+        } catch (FileException $e) {
+            throw new CarrierLogoUploadFailedException(sprintf('Failed to copy the file %s.', $filePath));
+        }
+    }
 
-    /**
-     * Thrown when carrier reference id is not valid
-     */
-    public const INVALID_REFERENCE_ID = 20;
+    public function deleteOldFile(int $id): void
+    {
+        if (file_exists(_PS_SHIP_IMG_DIR_ . $id . '.jpg')) {
+            unlink(_PS_SHIP_IMG_DIR_ . $id . '.jpg');
+        }
 
-    /**
-     * Thrown when carrier name is not valid
-     */
-    public const INVALID_NAME = 30;
-
-    /**
-     * Thrown when carrier grade is not valid
-     */
-    public const INVALID_GRADE = 40;
-
-    /**
-     * Thrown when carrier tracking url is not valid
-     */
-    public const INVALID_TRACKING_URL = 50;
-
-    /**
-     * Thrown when carrier position is not valid
-     */
-    public const INVALID_POSITION = 60;
-
-    /**
-     * Thrown when carrier delay is not valid
-     */
-    public const INVALID_DELAY = 70;
+        if (file_exists(_PS_TMP_IMG_DIR_ . '/carrier_mini_' . $id . '.jpg')) {
+            unlink(_PS_TMP_IMG_DIR_ . '/carrier_mini_' . $id . '.jpg');
+        }
+    }
 }

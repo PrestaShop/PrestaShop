@@ -609,3 +609,9 @@ default:
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\ImageSettings\ImageTypeContext
             - Tests\Integration\Behaviour\Features\Context\Domain\ImageSettings\ImageSettingsContext
+        carrier:
+          paths:
+            - "%paths.base%/Features/Scenario/Carrier"
+          contexts:
+            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\CarrierFeatureContext

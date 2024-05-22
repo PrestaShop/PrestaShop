@@ -24,47 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Exception;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 
 /**
- * Is thrown when carrier is invalid
+ * Describes get carrier handler.
  */
-class CarrierConstraintException extends CarrierException
+interface GetCarrierForEditingHandlerInterface
 {
     /**
-     * Thrown when provided carrier id is not valid
+     * @param GetCarrierForEditing $query
+     *
+     * @return EditableCarrier
      */
-    public const INVALID_ID = 10;
-
-    /**
-     * Thrown when carrier reference id is not valid
-     */
-    public const INVALID_REFERENCE_ID = 20;
-
-    /**
-     * Thrown when carrier name is not valid
-     */
-    public const INVALID_NAME = 30;
-
-    /**
-     * Thrown when carrier grade is not valid
-     */
-    public const INVALID_GRADE = 40;
-
-    /**
-     * Thrown when carrier tracking url is not valid
-     */
-    public const INVALID_TRACKING_URL = 50;
-
-    /**
-     * Thrown when carrier position is not valid
-     */
-    public const INVALID_POSITION = 60;
-
-    /**
-     * Thrown when carrier delay is not valid
-     */
-    public const INVALID_DELAY = 70;
+    public function handle(GetCarrierForEditing $query): EditableCarrier;
 }

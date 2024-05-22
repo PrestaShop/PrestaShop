@@ -26,45 +26,58 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 
 /**
- * Is thrown when carrier is invalid
+ * Command aim to add carrier
  */
-class CarrierConstraintException extends CarrierException
+class AddCarrierCommand
 {
-    /**
-     * Thrown when provided carrier id is not valid
-     */
-    public const INVALID_ID = 10;
+    public function __construct(
+        private string $name,
+        /** @var string[] $localizedDelay */
+        private array $localizedDelay,
+        private int $grade,
+        private string $trackingUrl,
+        private int $position,
+        private bool $active,
+        private ?string $logoPathName,
+    ) {
+    }
 
-    /**
-     * Thrown when carrier reference id is not valid
-     */
-    public const INVALID_REFERENCE_ID = 20;
+    public function getName(): string
+    {
+        return $this->name;
+    }
 
-    /**
-     * Thrown when carrier name is not valid
-     */
-    public const INVALID_NAME = 30;
+    /** @return string[] */
+    public function getLocalizedDelay(): array
+    {
+        return $this->localizedDelay;
+    }
 
-    /**
-     * Thrown when carrier grade is not valid
-     */
-    public const INVALID_GRADE = 40;
+    public function getGrade(): int
+    {
+        return $this->grade;
+    }
 
-    /**
-     * Thrown when carrier tracking url is not valid
-     */
-    public const INVALID_TRACKING_URL = 50;
+    public function getTrackingUrl(): string
+    {
+        return $this->trackingUrl;
+    }
 
-    /**
-     * Thrown when carrier position is not valid
-     */
-    public const INVALID_POSITION = 60;
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
 
-    /**
-     * Thrown when carrier delay is not valid
-     */
-    public const INVALID_DELAY = 70;
+    public function getActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function getLogoPathName(): ?string
+    {
+        return $this->logoPathName;
+    }
 }

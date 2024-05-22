@@ -26,45 +26,30 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 
 /**
- * Is thrown when carrier is invalid
+ * Retrieves carrier data
  */
-class CarrierConstraintException extends CarrierException
+class GetCarrierForEditing
 {
-    /**
-     * Thrown when provided carrier id is not valid
-     */
-    public const INVALID_ID = 10;
+    private CarrierId $carrierId;
 
     /**
-     * Thrown when carrier reference id is not valid
+     * @param int $carrierId
      */
-    public const INVALID_REFERENCE_ID = 20;
+    public function __construct(int $carrierId)
+    {
+        $this->carrierId = new CarrierId($carrierId);
+    }
 
     /**
-     * Thrown when carrier name is not valid
+     * @return CarrierId
      */
-    public const INVALID_NAME = 30;
-
-    /**
-     * Thrown when carrier grade is not valid
-     */
-    public const INVALID_GRADE = 40;
-
-    /**
-     * Thrown when carrier tracking url is not valid
-     */
-    public const INVALID_TRACKING_URL = 50;
-
-    /**
-     * Thrown when carrier position is not valid
-     */
-    public const INVALID_POSITION = 60;
-
-    /**
-     * Thrown when carrier delay is not valid
-     */
-    public const INVALID_DELAY = 70;
+    public function getCarrierId(): CarrierId
+    {
+        return $this->carrierId;
+    }
 }
