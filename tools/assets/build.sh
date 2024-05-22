@@ -25,8 +25,10 @@ function build {
     rm -rf node_modules
   fi
 
+  touch buildLock
   npm ci
   npm run build
+  rm buildLock
   popd
 }
 

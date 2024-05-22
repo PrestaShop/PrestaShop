@@ -10,6 +10,9 @@ composer: ## Install PHP dependencies
 assets:  ## Rebuilds all the static assets, running npm install-clean as needed
 	./tools/assets/build.sh
 
+wait-assets:
+	./tools/assets/wait-build.sh
+
 front-core: ## Building core theme assets
 	./tools/assets/build.sh front-core
 
