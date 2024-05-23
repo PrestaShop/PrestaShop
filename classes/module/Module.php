@@ -328,41 +328,57 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // If the module has the name we load the corresponding data from the cache
+        // Also we can assign some properties like path
         if ($this->name != null) {
-            // If cache is not generated, we generate it
-            if (static::$modules_cache == null && !is_array(static::$modules_cache)) {
-                $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : Configuration::get('PS_SHOP_DEFAULT'));
 
+            // Assign paths and uris
+            $this->_path = __PS_BASE_URI__ . 'modules/' . $this->name . '/';
+            $this->local_path = _PS_MODULE_DIR_ . $this->name . '/';
+
+            // If cache is not generated, we generate it
+            if (static::$modules_cache === null) {
                 static::$modules_cache = [];
-                // Join clause is done to check if the module is activated in current shop context
+
+                /* 
+                 * We select all activation statuses and data from module table and store it for future use.
+                 * In case of multiple shops, we will always use the cached data.
+                 */
                 $result = Db::getInstance()->executeS('
-                SELECT m.`id_module`, m.`name`, ms.`id_module`as `mshop`
-                FROM `' . _DB_PREFIX_ . 'module` m
-                LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms
-                ON m.`id_module` = ms.`id_module`
-                AND ms.`id_shop` = ' . (int) $id_shop);
+                    SELECT m.`id_module`, m.`name`, ms.`id_shop` as `id_shop`
+                    FROM `' . _DB_PREFIX_ . 'module` m
+                    LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
+                ');
                 foreach ($result as $row) {
-                    static::$modules_cache[$row['name']] = $row;
-                    static::$modules_cache[$row['name']]['active'] = ($row['mshop'] > 0) ? 1 : 0;
+                    // If this is our first entry, store it
+                    if (!isset(static::$modules_cache[$row['name']])) {
+                        static::$modules_cache[$row['name']] = [
+                            'id_module' => $row['id_module'],
+                            'name' => $row['name'],
+                        ];
+                    }
+                    
+                    // And store activation status
+                    static::$modules_cache[$row['name']]['active'][] = $row['id_shop'];
                 }
             }
 
-            // We load configuration from the cache
+            /*
+             * Now, we assign some properties from module cache to the module object, if we have it.
+             * We will assign id_module, name and active property.
+             * No need to assign the module name, if it's different, it's a database incosinstency.
+             */
             if (isset(static::$modules_cache[$this->name])) {
+                // Assign active property
+                $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : Configuration::get('PS_SHOP_DEFAULT'));
+                if (!empty(static::$modules_cache[$this->name]['active']) && in_array($id_shop, static::$modules_cache[$this->name]['active'])) {
+                    $this->active = true;
+                }
+
+                // Assign module ID
                 if (isset(static::$modules_cache[$this->name]['id_module'])) {
                     $this->id = static::$modules_cache[$this->name]['id_module'];
                 }
-                foreach (static::$modules_cache[$this->name] as $key => $value) {
-                    if (array_key_exists($key, get_object_vars($this))) {
-                        $this->{$key} = $value;
-                    }
-                }
-                $this->_path = __PS_BASE_URI__ . 'modules/' . $this->name . '/';
             }
-            if (!$this->context->controller instanceof Controller) {
-                static::$modules_cache = null;
-            }
-            $this->local_path = _PS_MODULE_DIR_ . $this->name . '/';
         }
     }
 
