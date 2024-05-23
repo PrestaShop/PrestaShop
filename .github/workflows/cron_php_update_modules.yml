@@ -46,7 +46,7 @@ jobs:
       - name: Install Composer dependencies
         run: |
           composer self-update --stable
-          composer install --prefer-dist
+          COMPOSER_PROCESS_TIMEOUT=600 composer install --prefer-dist
 
       - name: Install NPM dependencies
         working-directory: ./tests/UI

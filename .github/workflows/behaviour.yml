@@ -63,7 +63,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Composer Install
-        run: composer install --ansi --prefer-dist --no-interaction --no-progress
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
       - name: Build theme assets
         run: make front-classic
