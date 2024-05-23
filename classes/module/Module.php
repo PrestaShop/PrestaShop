@@ -330,7 +330,6 @@ abstract class ModuleCore implements ModuleInterface
         // If the module has the name we load the corresponding data from the cache
         // Also we can assign some properties like path
         if ($this->name != null) {
-
             // Assign paths and uris
             $this->_path = __PS_BASE_URI__ . 'modules/' . $this->name . '/';
             $this->local_path = _PS_MODULE_DIR_ . $this->name . '/';
@@ -339,7 +338,7 @@ abstract class ModuleCore implements ModuleInterface
             if (static::$modules_cache === null) {
                 static::$modules_cache = [];
 
-                /* 
+                /*
                  * We select all activation statuses and data from module table and store it for future use.
                  * In case of multiple shops, we will always use the cached data.
                  */
@@ -356,7 +355,7 @@ abstract class ModuleCore implements ModuleInterface
                             'name' => $row['name'],
                         ];
                     }
-                    
+
                     // And store activation status
                     static::$modules_cache[$row['name']]['active'][] = $row['id_shop'];
                 }
