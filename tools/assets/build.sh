@@ -19,6 +19,10 @@ function build {
     echo "Parameter is empty"
     exit 1
   fi
+  if [[ ! -d $1 ]]; then
+     echo $1 folder not found
+     exit 1
+  fi
 
   pushd $1
   if [[ -d "node_modules" ]]; then

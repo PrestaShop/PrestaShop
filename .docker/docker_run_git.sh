@@ -57,6 +57,10 @@ if [ "${DISABLE_MAKE}" != "1" ]; then
 
   echo "\n* Running composer ...";
   runuser -g www-data -u www-data -- /usr/local/bin/composer install --no-interaction
+  if [ $? -ne 0]; then
+    echo Composer install failed
+    exit 1
+  fi
 
   echo "\n* Build assets ...";
   runuser -g www-data -u www-data -- /usr/bin/make assets

@@ -20,7 +20,6 @@ runs:
 
     - name: Export docker logs
       run: |
-        ls -l ./var/logs
         mkdir -p ./var/docker-logs
         docker logs ${{ inputs.DOCKER_PREFIX }}-mysql-1 > ./var/docker-logs/mysql.log
         docker logs ${{ inputs.DOCKER_PREFIX }}-prestashop-git-1 > ./var/docker-logs/prestashop.log
