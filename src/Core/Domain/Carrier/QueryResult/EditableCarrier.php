@@ -41,7 +41,12 @@ class EditableCarrier
         private int $position,
         private bool $active,
         /** @var string[] $delay */
-        private array $delay
+        private array $delay,
+        private int $max_width,
+        private int $max_height,
+        private int $max_depth,
+        private int $max_weight,
+        private array $group_access
     ) {
     }
 
@@ -90,5 +95,35 @@ class EditableCarrier
         }
 
         return null;
+    }
+
+    public function getDelay(): array
+    {
+        return $this->delay;
+    }
+
+    public function getMaxWidth(): int
+    {
+        return $this->max_width;
+    }
+
+    public function getMaxHeight(): int
+    {
+        return $this->max_height;
+    }
+
+    public function getMaxDepth(): int
+    {
+        return $this->max_depth;
+    }
+
+    public function getMaxWeight(): int
+    {
+        return $this->max_weight;
+    }
+
+    public function getGroupAccess(): array
+    {
+        return $this->group_access;
     }
 }

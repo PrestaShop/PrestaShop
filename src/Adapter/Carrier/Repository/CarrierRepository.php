@@ -102,6 +102,18 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         if ($carrier->delay) {
             $newCarrier->delay = $carrier->delay;
         }
+        if($carrier->max_width) {
+            $newCarrier->max_width = $carrier->max_width;
+        }
+        if($carrier->max_height) {
+            $newCarrier->max_height = $carrier->max_height;
+        }
+        if($carrier->max_depth) {
+            $newCarrier->max_depth = $carrier->max_depth;
+        }
+        if($carrier->max_weight) {
+            $newCarrier->max_weight = $carrier->max_weight;
+        }
         $newCarrier->deleted = false; // just to be sure...
 
         // Copy all others information like ranges, shops associated, ...
@@ -109,5 +121,18 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         $this->updateObjectModel($newCarrier, CannotUpdateCarrierException::class);
 
         return new CarrierId($newCarrier->id);
+    }
+
+    public function getGroupAccess(CarrierId $carrierId): array
+    {
+        $carrier = $this->get($carrierId);
+
+        return $carrier->getGroups();
+    }
+
+    public function setGroupsAccess(CarrierId $carrierId, array $groups): void
+    {
+        $carrier = $this->get($carrierId);
+        $carrier->setGroups($groups);
     }
 }

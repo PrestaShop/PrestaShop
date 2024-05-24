@@ -41,6 +41,11 @@ class AddCarrierCommand
         private string $trackingUrl,
         private int $position,
         private bool $active,
+        private int $max_width,
+        private int $max_height,
+        private int $max_depth,
+        private int $max_weight,
+        private array $group_access,
         private ?string $logoPathName,
     ) {
     }
@@ -74,6 +79,31 @@ class AddCarrierCommand
     public function getActive(): bool
     {
         return $this->active;
+    }
+
+    public function getMaxWidth(): int
+    {
+        return $this->max_width;
+    }
+
+    public function getMaxHeight(): int
+    {
+        return $this->max_height;
+    }
+
+    public function getMaxDepth(): int
+    {
+        return $this->max_depth;
+    }
+
+    public function getMaxWeight(): int
+    {
+        return $this->max_weight;
+    }
+
+    public function getGroupAccess(): array
+    {
+        return $this->group_access;
     }
 
     public function getLogoPathName(): ?string

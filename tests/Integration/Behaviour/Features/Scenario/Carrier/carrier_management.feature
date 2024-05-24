@@ -15,6 +15,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     Then carrier "carrier1" should have the following properties:
       | name         | Carrier 1                          |
@@ -22,6 +27,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     Then carrier "carrier1" shouldn't have a logo
 
@@ -32,6 +42,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | name | Carrier 1 new |
@@ -41,6 +56,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     Then carrier "newCarrier1" should have the following properties:
       | name         | Carrier 1 new                      |
@@ -48,6 +68,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
 
   Scenario: Partially editing carrier with grade
@@ -57,6 +82,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | grade | 2 |
@@ -66,6 +96,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     Then carrier "newCarrier1" should have the following properties:
       | name         | Carrier 1                          |
@@ -73,6 +108,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
 
   Scenario: Partially editing carrier with tracking url
@@ -82,6 +122,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | trackingUrl | http://prestashop-project.org/track.php?num=@ |
@@ -91,6 +136,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     Then carrier "newCarrier1" should have the following properties:
       | name         | Carrier 1                                     |
@@ -98,6 +148,11 @@ Feature: Carrier management
       | trackingUrl  | http://prestashop-project.org/track.php?num=@ |
       | position     | 2                                             |
       | active       | 1                                             |
+      | max_width    | 1234                                          |
+      | max_height   | 1234                                          |
+      | max_depth    | 1234                                          |
+      | max_weight   | 1234                                          |
+      | group_access | [1, 2]                                        |
       | delay[en-US] | Shipping delay                                |
 
   Scenario: Partially editing carrier with position
@@ -107,6 +162,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | position | 4 |
@@ -116,6 +176,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     Then carrier "newCarrier1" should have the following properties:
       | name         | Carrier 1                          |
@@ -123,6 +188,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 4                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
 
   Scenario: Partially editing carrier with active
@@ -132,6 +202,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | active | false |
@@ -141,6 +216,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     Then carrier "newCarrier1" should have the following properties:
       | name         | Carrier 1                          |
@@ -148,6 +228,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | false                              |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
 
   Scenario: Partially editing carrier with delay
@@ -157,6 +242,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | delay[en-US] | Shipping delay new |
@@ -166,6 +256,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
     Then carrier "newCarrier1" should have the following properties:
       | name         | Carrier 1                          |
@@ -173,6 +268,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay new                 |
 
   Scenario: Upload logo for carrier
@@ -182,6 +282,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
       | logoPathName | logo.jpg                           |
     Then carrier "carrier1" should have a logo
@@ -193,6 +298,11 @@ Feature: Carrier management
       | trackingUrl  | http://example.com/track.php?num=@ |
       | position     | 2                                  |
       | active       | true                               |
+      | max_width    | 1234                               |
+      | max_height   | 1234                               |
+      | max_depth    | 1234                               |
+      | max_weight   | 1234                               |
+      | group_access | [1, 2]                             |
       | delay[en-US] | Shipping delay                     |
       | logoPathName | logo.jpg                           |
     Then carrier "carrier1" should have a logo

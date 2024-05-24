@@ -31,7 +31,9 @@ namespace PrestaShop\PrestaShop\Adapter\Carrier\Validate;
 use Carrier;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageFileNotFoundException;
@@ -47,6 +49,11 @@ class CarrierValidator extends AbstractObjectModelValidator
 
     protected const MAX_IMAGE_SIZE_IN_BYTES = 8 * 1000000;
 
+    public function __construct(
+        private readonly GroupRepository $groupRepository
+    ) {
+    }
+
     /**
      * @param Carrier $carrier
      *
@@ -58,6 +65,10 @@ class CarrierValidator extends AbstractObjectModelValidator
         $this->validateObjectModelProperty($carrier, 'grade', CarrierConstraintException::class, CarrierConstraintException::INVALID_GRADE);
         $this->validateObjectModelProperty($carrier, 'url', CarrierConstraintException::class, CarrierConstraintException::INVALID_TRACKING_URL);
         $this->validateObjectModelProperty($carrier, 'position', CarrierConstraintException::class, CarrierConstraintException::INVALID_POSITION);
+        $this->validateObjectModelProperty($carrier, 'max_width', CarrierConstraintException::class, CarrierConstraintException::INVALID_MAX_WIDTH);
+        $this->validateObjectModelProperty($carrier, 'max_height', CarrierConstraintException::class, CarrierConstraintException::INVALID_MAX_HEIGHT);
+        $this->validateObjectModelProperty($carrier, 'max_depth', CarrierConstraintException::class, CarrierConstraintException::INVALID_MAX_DEPTH);
+        $this->validateObjectModelProperty($carrier, 'max_weight', CarrierConstraintException::class, CarrierConstraintException::INVALID_MAX_WEIGHT);
         $this->validateObjectModelLocalizedProperty($carrier, 'delay', CarrierConstraintException::class, CarrierConstraintException::INVALID_DELAY);
     }
 
@@ -82,6 +93,13 @@ class CarrierValidator extends AbstractObjectModelValidator
 
         if (!ImageManager::checkImageMemoryLimit($filePath)) {
             throw new MemoryLimitException('Cannot upload image due to memory restrictions');
+        }
+    }
+
+    public function validateGroupsExist(array $groupIds): void
+    {
+        foreach ($groupIds as $groupId) {
+            $this->groupRepository->assertGroupExists(new GroupId((int) $groupId));
         }
     }
 }

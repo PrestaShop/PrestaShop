@@ -75,11 +75,27 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         if ($command->getLocalizedDelay()) {
             $carrier->delay = $command->getLocalizedDelay();
         }
+        if ($command->getMaxWidth()) {
+            $carrier->width = $command->getMaxWidth();
+        }
+        if ($command->getMaxHeight()) {
+            $carrier->height = $command->getMaxHeight();
+        }
+        if ($command->getMaxDepth()) {
+            $carrier->depth = $command->getMaxDepth();
+        }
+        if ($command->getMaxWeight()) {
+            $carrier->weight = $command->getMaxWeight();
+        }
+
 
         $this->carrierValidator->validate($carrier);
 
         $carrierId = $this->carrierRepository->updateInNewVersion($command->getCarrierId(), $carrier);
-
+        if ($command->getGroupAccess()) {
+            $this->carrierValidator->validateGroupsExist($command->getGroupAccess());
+            $this->carrierRepository->setGroupsAccess($command->getCarrierId(), $command->getGroupAccess());
+        }
         if ($command->getLogoPathName() !== null) {
             $this->carrierLogoFileUploader->deleteOldFile($carrierId->getValue());
 
