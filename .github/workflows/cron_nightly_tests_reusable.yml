@@ -192,6 +192,12 @@ jobs:
           ENABLE_SSL: ${{ env.ENABLE_SSL }}
           INSTALL_AUTO: ${{ env.INSTALL_AUTO }}
           CP_API_CONFIG: ${{ (env.GH_BRANCH == '8.1.x') && 'true' || 'false' }}
+      - name: Setup Environment failure
+        uses: ./.github/actions/setup-env-export-logs
+        with:
+          DOCKER_PREFIX: prestashop
+          ARTIFACT_NAME: setup-nightly-${{ matrix.BRANCH }}-${{ matrix.CAMPAIGN }}
+        if: failure()
 
       # Keycloak is only needed for API campaign
       - name: Setup Keycloak

@@ -4,11 +4,14 @@ help: ## Display this help menu
 install: composer assets  ## Install PHP dependencies and build the static assets
 
 composer: ## Install PHP dependencies
-	composer install
+	COMPOSER_PROCESS_TIMEOUT=600 composer install --no-interaction
 	./bin/console cache:clear --no-warmup
 
 assets:  ## Rebuilds all the static assets, running npm install-clean as needed
 	./tools/assets/build.sh
+
+wait-assets:
+	./tools/assets/wait-build.sh
 
 front-core: ## Building core theme assets
 	./tools/assets/build.sh front-core
