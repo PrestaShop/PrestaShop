@@ -125,8 +125,8 @@ class LegacyRouterChecker
         $request->attributes->set(LegacyControllerConstants::IS_MODULE_ATTRIBUTE, $isModule);
 
         // Strip the ending Controller part
-        if (str_ends_with('Controller', $controllerName)) {
-            $controllerName = substr($controllerName, strrpos($controllerName, 'Controller'));
+        if (str_ends_with($controllerName, 'Controller')) {
+            $controllerName = substr($controllerName, 0, -strlen('Controller'));
         }
         $request->attributes->set(LegacyControllerConstants::CONTROLLER_NAME_ATTRIBUTE, $controllerName);
         $request->attributes->set(LegacyControllerConstants::CONTROLLER_ACTION_ATTRIBUTE, $this->getPermission($request, $controller->table ?? ''));
