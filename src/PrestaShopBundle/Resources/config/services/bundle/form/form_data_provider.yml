@@ -307,3 +307,12 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\AdminAPI\FormDataProvider'
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\AdminAPI\AdminAPIConfiguration'
+
+  PrestaShopBundle\Form\Admin\Login\LoginFormDataProvider:
+    autowire: true
+
+  PrestaShopBundle\Form\Admin\Login\RequestPasswordResetFormDataProvider:
+    autowire: true
+
+  PrestaShopBundle\Form\Admin\Login\ResetPasswordFormDataProvider:
+    autowire: true

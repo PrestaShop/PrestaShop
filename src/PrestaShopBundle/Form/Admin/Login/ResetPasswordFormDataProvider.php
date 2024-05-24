@@ -24,10 +24,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Security\Admin\Exception;
+namespace PrestaShopBundle\Form\Admin\Login;
 
-use RuntimeException;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetEmployeePasswordCommand;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
-class InvalidResetPasswordTokenException extends RuntimeException
+class ResetPasswordFormDataProvider implements FormDataProviderInterface
 {
+    public function __construct(
+        private readonly CommandBusInterface $commandBus,
+    ) {
+    }
+
+    public function getData()
+    {
+        return [];
+    }
+
+    public function setData(array $data)
+    {
+        $this->commandBus->handle(new ResetEmployeePasswordCommand(
+            $data['resetToken'],
+            $data['new_password'],
+        ));
+
+        return [];
+    }
 }

@@ -24,10 +24,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Security\Admin\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 
-use RuntimeException;
-
-class InvalidResetPasswordTokenException extends RuntimeException
+class ResetEmployeePasswordCommand
 {
+    public function __construct(
+        private readonly string $resetToken,
+        private readonly string $password
+    ) {
+    }
+
+    public function getResetToken(): string
+    {
+        return $this->resetToken;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
 }

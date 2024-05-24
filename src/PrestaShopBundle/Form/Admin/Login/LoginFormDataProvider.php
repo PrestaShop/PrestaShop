@@ -24,10 +24,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Security\Admin\Exception;
+namespace PrestaShopBundle\Form\Admin\Login;
 
-use RuntimeException;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class InvalidResetPasswordTokenException extends RuntimeException
+class LoginFormDataProvider implements FormDataProviderInterface
 {
+    public function __construct(
+        private readonly AuthenticationUtils $authenticationUtils,
+    ) {
+    }
+
+    public function getData()
+    {
+        return [
+            'email' => $this->authenticationUtils->getLastUsername(),
+        ];
+    }
+
+    public function setData(array $data)
+    {
+        // Nothing to do the login mechanism is handled by the Symfony framework
+        return [];
+    }
 }

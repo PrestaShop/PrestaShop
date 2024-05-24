@@ -58,7 +58,16 @@ class EmployeePasswordResetter
     ) {
     }
 
-    public function sendResetEmail(string $email): void
+    /**
+     * @param string $email
+     *
+     * @return string
+     *
+     * @throws PendingPasswordResetExistingException
+     * @throws UserNotFoundException
+     * @throws RuntimeException
+     */
+    public function sendResetEmail(string $email): string
     {
         try {
             /** @var Employee|null $employee */
@@ -69,7 +78,8 @@ class EmployeePasswordResetter
 
         $this->checkLastSentMail($employee, $email);
         $this->updateEmployeeResetData($employee);
-        $this->doSendResetEmail($employee);
+
+        return $this->doSendResetEmail($employee);
     }
 
     public function getEmployeeByValidResetPasswordToken(string $resetPasswordToken): ?Employee
@@ -145,7 +155,7 @@ class EmployeePasswordResetter
         }
     }
 
-    private function doSendResetEmail(Employee $employee): void
+    private function doSendResetEmail(Employee $employee): string
     {
         $resetUrl = $this->router->generate('admin_reset_password', ['resetToken' => $employee->getResetPasswordToken()]);
         // We remove thr CSRF token that is automatically added by the router and is useless for this url, and we need an absolute url
@@ -174,6 +184,8 @@ class EmployeePasswordResetter
         if (!$mailSent) {
             throw new RuntimeException('Unable to send reset email.');
         }
+
+        return $resetUrl;
     }
 
     private function fakeSendEmail(array $unknownResetEmails, string $email): void

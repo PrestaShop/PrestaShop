@@ -82,6 +82,11 @@ Tab::resetStaticCache();
 $install->installTheme();
 $install->installModules(array_keys($install->getModulesOnDisk()));
 
+$logger->log('Configure SMTP server for maildev');
+Configuration::updateGlobalValue('PS_MAIL_METHOD', Mail::METHOD_SMTP);
+Configuration::updateGlobalValue('PS_MAIL_SERVER', 'localhost');
+Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT', '1025');
+
 $logger->log('Creating database dump');
 DatabaseDump::create();
 

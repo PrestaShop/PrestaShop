@@ -24,10 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Security\Admin\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 
-use RuntimeException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
-class InvalidResetPasswordTokenException extends RuntimeException
+class SendEmployeePasswordResetEmailCommand
 {
+    private Email $email;
+
+    public function __construct(
+        string $email
+    ) {
+        $this->email = new Email($email);
+    }
+
+    public function getEmail(): Email
+    {
+        return $this->email;
+    }
 }

@@ -24,10 +24,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Security\Admin\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler;
 
-use RuntimeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendEmployeePasswordResetEmailCommand;
 
-class InvalidResetPasswordTokenException extends RuntimeException
+interface SendEmployeePasswordResetEmailHandlerInterface
 {
+    /**
+     * @param SendEmployeePasswordResetEmailCommand $command
+     *
+     * @return string The url to reset the password
+     */
+    public function handle(SendEmployeePasswordResetEmailCommand $command): string;
 }

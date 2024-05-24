@@ -37,6 +37,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\LastExceptionTrait;
 use Tests\Integration\Behaviour\Features\Context\SharedStorageTrait;
+use Tests\Resources\MailDevClient;
 
 abstract class AbstractDomainFeatureContext implements Context
 {
@@ -68,6 +69,11 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function getContainer(): ContainerInterface
     {
         return CommonFeatureContext::getContainer();
+    }
+
+    protected function getMailDevClient(): MailDevClient
+    {
+        return $this->getContainer()->get(MailDevClient::class);
     }
 
     /**

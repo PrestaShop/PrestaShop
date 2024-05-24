@@ -71,10 +71,23 @@ jobs:
       - name: Change MySQL authentication method
         run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
 
+      - name: Install maildev
+        run: |
+          docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
+          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} http://localhost:1080)" != "200" ]]; do echo "Wait for maildev"; sleep 5; done'
+
       - name: Run integration-behaviour-tests
         run: composer run-script integration-behaviour-tests --timeout=0
         env:
           SYMFONY_DEPRECATIONS_HELPER: disabled
+
+      - name: Upload logs
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: behaviour-${{ matrix.php }}
+          path: |
+            ./var/logs
 
       - name: Test git versionned files unchanged
         run: git diff --exit-code
