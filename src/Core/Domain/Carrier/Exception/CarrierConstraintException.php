@@ -67,4 +67,29 @@ class CarrierConstraintException extends CarrierException
      * Thrown when carrier delay is not valid
      */
     public const INVALID_DELAY = 70;
+
+    /**
+     * Thrown when carrier max_width is not valid
+     */
+    public const INVALID_MAX_WIDTH = 80;
+
+    /**
+     * Thrown when carrier max_height is not valid
+     */
+    public const INVALID_MAX_HEIGHT = 80;
+
+    /**
+     * Thrown when carrier max_depth is not valid
+     */
+    public const INVALID_MAX_DEPTH = 90;
+
+    /**
+     * Thrown when carrier max_weight is not valid
+     */
+    public const INVALID_MAX_WEIGHT = 100;
+
+    /**
+     * Thrown when carrier group_access is not valid
+     */
+    public const INVALID_GROUP_ACCESS = 110;
 }

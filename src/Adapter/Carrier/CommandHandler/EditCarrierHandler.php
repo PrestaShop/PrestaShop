@@ -75,20 +75,40 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         if ($command->getLocalizedDelay()) {
             $carrier->delay = $command->getLocalizedDelay();
         }
+        if ($command->getMaxWidth()) {
+            $carrier->width = $command->getMaxWidth();
+        }
+        if ($command->getMaxHeight()) {
+            $carrier->height = $command->getMaxHeight();
+        }
+        if ($command->getMaxDepth()) {
+            $carrier->depth = $command->getMaxDepth();
+        }
+        if ($command->getMaxWeight()) {
+            $carrier->weight = $command->getMaxWeight();
+        }
 
         $this->carrierValidator->validate($carrier);
+        if ($command->getAssociatedGroupIds()) {
+            $this->carrierValidator->validateGroupsExist($command->getAssociatedGroupIds());
+        }
+        if ($command->getLogoPathName() !== null && $command->getLogoPathName() !== '') {
+            $this->carrierValidator->validateLogoUpload($command->getLogoPathName());
+        }
 
-        $carrierId = $this->carrierRepository->updateInNewVersion($command->getCarrierId(), $carrier);
 
+        $newCarrier = $this->carrierRepository->updateInNewVersion($command->getCarrierId(), $carrier);
+        if ($command->getAssociatedGroupIds()) {
+            $newCarrier->setGroups($command->getAssociatedGroupIds());
+        }
         if ($command->getLogoPathName() !== null) {
-            $this->carrierLogoFileUploader->deleteOldFile($carrierId->getValue());
+            $this->carrierLogoFileUploader->deleteOldFile($newCarrier->id);
 
             if ($command->getLogoPathName() !== '') {
-                $this->carrierValidator->validateLogoUpload($command->getLogoPathName());
-                $this->carrierLogoFileUploader->upload($command->getLogoPathName(), $carrierId->getValue());
+                $this->carrierLogoFileUploader->upload($command->getLogoPathName(), $newCarrier->id);
             }
         }
 
-        return $carrierId;
+        return new CarrierId($newCarrier->id);
     }
 }

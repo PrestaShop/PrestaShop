@@ -36,12 +36,17 @@ class EditableCarrier
     public function __construct(
         private int $carrierId,
         private string $name,
-        private int $grade,
-        private string $trackingUrl,
-        private int $position,
-        private bool $active,
+        private int     $grade,
+        private string  $trackingUrl,
+        private int     $position,
+        private bool    $active,
         /** @var string[] $delay */
-        private array $delay,
+        private array   $delay,
+        private int     $max_width,
+        private int     $max_height,
+        private int     $max_depth,
+        private int     $max_weight,
+        private array   $associatedGroupIds,
         private ?string $logoPath = null
     ) {
     }
@@ -87,5 +92,35 @@ class EditableCarrier
     public function getLogoPath(): ?string
     {
         return $this->logoPath;
+    }
+
+    public function getDelay(): array
+    {
+        return $this->delay;
+    }
+
+    public function getMaxWidth(): int
+    {
+        return $this->max_width;
+    }
+
+    public function getMaxHeight(): int
+    {
+        return $this->max_height;
+    }
+
+    public function getMaxDepth(): int
+    {
+        return $this->max_depth;
+    }
+
+    public function getMaxWeight(): int
+    {
+        return $this->max_weight;
+    }
+
+    public function getAssociatedGroupIds(): array
+    {
+        return $this->associatedGroupIds;
     }
 }

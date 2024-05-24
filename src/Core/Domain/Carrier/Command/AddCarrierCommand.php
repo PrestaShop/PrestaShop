@@ -36,11 +36,16 @@ class AddCarrierCommand
     public function __construct(
         private string $name,
         /** @var string[] $localizedDelay */
-        private array $localizedDelay,
-        private int $grade,
-        private string $trackingUrl,
-        private int $position,
-        private bool $active,
+        private array   $localizedDelay,
+        private int     $grade,
+        private string  $trackingUrl,
+        private int     $position,
+        private bool    $active,
+        private int     $max_width = 0,
+        private int     $max_height = 0,
+        private int     $max_depth = 0,
+        private int     $max_weight = 0,
+        private array   $associatedGroupIds,
         private ?string $logoPathName,
     ) {
     }
@@ -74,6 +79,31 @@ class AddCarrierCommand
     public function getActive(): bool
     {
         return $this->active;
+    }
+
+    public function getMaxWidth(): int
+    {
+        return $this->max_width;
+    }
+
+    public function getMaxHeight(): int
+    {
+        return $this->max_height;
+    }
+
+    public function getMaxDepth(): int
+    {
+        return $this->max_depth;
+    }
+
+    public function getMaxWeight(): int
+    {
+        return $this->max_weight;
+    }
+
+    public function getAssociatedGroupIds(): array
+    {
+        return $this->associatedGroupIds;
     }
 
     public function getLogoPathName(): ?string

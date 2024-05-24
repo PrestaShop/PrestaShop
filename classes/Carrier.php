@@ -895,6 +895,11 @@ class CarrierCore extends ObjectModel
             WHERE id_carrier=' . (int) $this->id);
     }
 
+    public function getAssociatedGroupIds(): array
+    {
+        return array_map(fn ($group) => (int) $group['id_group'], $this->getGroups());
+    }
+
     /**
      * Clean delivery prices (weight/price).
      *
