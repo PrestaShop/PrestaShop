@@ -82,7 +82,7 @@ jobs:
           SYMFONY_DEPRECATIONS_HELPER: disabled
 
       - name: Upload logs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: behaviour-${{ matrix.php }}

@@ -222,7 +222,7 @@ jobs:
           FILENAME="$( echo -e '${{ env.TEST_CAMPAIGN }}' | tr  ':' '-'  )"
           mv ./mochawesome-report/mochawesome.json ${{ env.REPORTS_DIR_PATH }}/${FILENAME}.json
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         name: Upload report
         with:
           name: reports_${{ env.GH_BRANCH }}
