@@ -237,7 +237,7 @@ export class IframeModal extends Modal implements IframeModalType {
   }
 
   render(content: string, hideIframe: boolean = true): this {
-    this.modal.message.innerHTML = content;
+    this.modal.message.innerText = content;
     this.modal.message.classList.remove('d-none');
 
     if (hideIframe) {
