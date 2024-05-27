@@ -1090,7 +1090,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 
                 $image = new Image($id_image);
                 $image->id_product = $id_product;
-                $image->cover = $id_image == Image::getCover($id_product)['id_image'] ? true : false;
+                $cover = Image::getCover($id_product);
+
+                if (is_array($cover) && array_key_exists('id_image', $cover))
+                    $image->cover = $id_image == $cover['id_image'] ? true : false;
+                
                 $image->update();
 
                 return true;
