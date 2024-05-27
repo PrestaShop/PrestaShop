@@ -32,21 +32,21 @@
 
 {%- block feature_value_row -%}
   <div class="form-group row product-feature">
-    <div class="col-xl-3">
+    <div class="col-12 col-lg-3">
       <fieldset class="form-group mb-0">
         <label class="form-control-label">{{ form.feature_id.vars.label }}</label>
         {{ form_widget(form.feature_id) }}
         {{ form_errors(form.feature_id) }}
       </fieldset>
     </div>
-    <div class="col-xl-4">
+    <div class="col-12 col-lg-3">
       <fieldset class="form-group mb-0">
         <label class="form-control-label">{{ form.feature_value_id.vars.label }}</label>
         {{ form_widget(form.feature_value_id) }}
         {{ form_errors(form.feature_value_id) }}
       </fieldset>
     </div>
-    <div class="col-lg-11 col-xl-4">
+    <div class="col-12 col-lg-3">
       <fieldset class="form-group mb-0">
         <label class="form-control-label">{{ form.custom_value.vars.label }}</label>
         {{ form_widget(form.custom_value_id) }}
@@ -54,7 +54,7 @@
         {{ form_errors(form.custom_value) }}
       </fieldset>
     </div>
-    <div class="col-lg-1 col-xl-1">
+    <div class="col-12 col-lg-1">
       {{ form_widget(form.delete) }}
     </div>
   </div>
