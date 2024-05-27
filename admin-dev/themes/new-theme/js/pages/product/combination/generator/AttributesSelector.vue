@@ -322,6 +322,12 @@
       }
     }
 
+    .tags-wrapper {
+      width: 100%;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
     #attributes-list-selector {
       max-height: 50vh;
 
