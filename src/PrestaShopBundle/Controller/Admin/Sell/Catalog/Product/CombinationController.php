@@ -603,6 +603,9 @@ class CombinationController extends FrameworkBundleAdminController
                 if (null !== $attribute->getColor()) {
                     $attributeData['color'] = $attribute->getColor();
                 }
+                if (null !== $attribute->getTextureFilePath()) {
+                    $attributeData['texture'] = $attribute->getTextureFilePath();
+                }
                 $attributes[] = $attributeData;
             }
 

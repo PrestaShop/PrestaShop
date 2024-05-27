@@ -53,6 +53,9 @@ export default class FeatureValuesManager {
     this.watchCustomInputs();
     this.watchDeleteButtons();
     this.watchAddButton();
+
+    // Init select2
+    $('select[data-toggle="select2"]', this.$collectionRowsContainer).select2();
   }
 
   private watchAddButton(): void {

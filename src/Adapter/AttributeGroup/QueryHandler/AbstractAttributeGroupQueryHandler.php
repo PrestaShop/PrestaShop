@@ -77,7 +77,8 @@ abstract class AbstractAttributeGroupQueryHandler
                         $attributeId,
                         $attribute->position,
                         $attribute->color,
-                        $attribute->name
+                        $attribute->name,
+                        file_exists(_PS_COL_IMG_DIR_ . $attributeId . '.jpg') ? _THEME_COL_DIR_ . $attributeId . '.jpg' : null
                     );
                 }
             }

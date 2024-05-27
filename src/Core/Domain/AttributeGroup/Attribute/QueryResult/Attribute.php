@@ -51,6 +51,11 @@ class Attribute
     private $localizedNames;
 
     /**
+     * @var string|null
+     */
+    private $textureFilePath;
+
+    /**
      * @param int $attributeId
      * @param int $position
      * @param string $color
@@ -60,12 +65,14 @@ class Attribute
         int $attributeId,
         int $position,
         string $color,
-        array $localizedNames
+        array $localizedNames,
+        string $textureFilePath = null
     ) {
         $this->attributeId = $attributeId;
         $this->position = $position;
         $this->color = $color;
         $this->localizedNames = $localizedNames;
+        $this->textureFilePath = $textureFilePath;
     }
 
     /**
@@ -98,5 +105,10 @@ class Attribute
     public function getLocalizedNames(): array
     {
         return $this->localizedNames;
+    }
+
+    public function getTextureFilePath(): ?string
+    {
+        return $this->textureFilePath;
     }
 }

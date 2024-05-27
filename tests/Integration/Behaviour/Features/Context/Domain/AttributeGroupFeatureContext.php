@@ -410,6 +410,9 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
             $attribute = $attributes[$index];
             Assert::assertEquals($attributesDatum['color'], $attribute->getColor(), 'Unexpected color');
             Assert::assertEquals($attributesDatum['position'], $attribute->getPosition(), 'Unexpected position');
+            if ($attribute->getTextureFilePath()) {
+                Assert::assertEquals(_THEME_COL_DIR_ . $attribute->getAttributeId() . '.jpg', $attribute->getTextureFilePath());
+            }
 
             $attributeNames = $attribute->getLocalizedNames();
             foreach ($attributesDatum['name'] as $langId => $name) {
