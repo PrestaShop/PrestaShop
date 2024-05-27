@@ -57,7 +57,9 @@ class Checkout extends CheckoutPage {
       + ' > span.delivery-option__center';
     this.deliveryStepCarrierPrice = (carrierID: number) => `${this.deliveryOption(carrierID)} div.row`
       + ' > span.delivery-option__right';
+
     // Payment methods selectors
+    this.paymentOptionAlertDanger = '.payment__list p.alert-danger';
 
     // Checkout summary selectors
     this.shippingValueSpan = '#cart-subtotal-shipping span.cart-summary__value';
@@ -75,13 +77,15 @@ class Checkout extends CheckoutPage {
     this.checkoutPromoBlock = '.js-cart-voucher';
     this.cartSummaryLine = (line: number) => `${this.checkoutPromoBlock} li:nth-child(${line}).cart-voucher__item`;
     this.cartRuleName = (line: number) => `${this.cartSummaryLine(line)} span.cart-voucher__name`;
+    this.checkoutRemoveDiscountLink = (row: number) => `${this.cartSummaryLine(row)} `
+      + ' a[data-link-action="remove-voucher"] i';
   }
 
   /**
    * Get product details
    * @param page {Page} Browser tab
    * @param productRow {number} Product row in details block
-   * @returns {Promise<ProductDetailsBasic>
+   * @returns {Promise<ProductDetailsBasic>}
    */
   async getProductDetails(page: Page, productRow: number): Promise<ProductDetailsBasic> {
     return {
@@ -90,6 +94,15 @@ class Checkout extends CheckoutPage {
       quantity: parseInt((await this.getTextContent(page, this.productDetailsBody(productRow))).split('Quantity x')[1], 10),
       price: await this.getPriceFromText(page, this.productDetailsPrice(productRow)),
     };
+  }
+
+  /**
+   * Check if the Addresses Step is displayed
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isAddressesStep(page: Page): Promise<boolean> {
+    return this.elementVisible(page, `${this.addressStepSection}.checkout__steps--current`, 1000);
   }
 }
 

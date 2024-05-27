@@ -88,10 +88,10 @@ class CronJobs extends Module
         if (parent::install()) {
             $this->updateWebservice(true);
 
-            return $this->installDb() && $this->installTab() &&
-                $this->registerHook('actionModuleRegisterHookAfter') &&
-                $this->registerHook('actionModuleUnRegisterHookAfter') &&
-                $this->registerHook('backOfficeHeader');
+            return $this->installDb() && $this->installTab()
+                && $this->registerHook('actionModuleRegisterHookAfter')
+                && $this->registerHook('actionModuleUnRegisterHookAfter')
+                && $this->registerHook('backOfficeHeader');
         }
 
         return false;
@@ -127,9 +127,9 @@ class CronJobs extends Module
 
         $this->disableWebservice();
 
-        return $this->uninstallDb() &&
-            $this->uninstallTab() &&
-            parent::uninstall();
+        return $this->uninstallDb()
+            && $this->uninstallTab()
+            && parent::uninstall();
     }
 
     public function installDb()
@@ -247,8 +247,8 @@ class CronJobs extends Module
         $this->context->smarty->assign('form_infos', $this->_warnings);
         $this->context->smarty->assign('form_successes', $this->_successes);
 
-        if ((Tools::isSubmit('submitNewCronJob') || Tools::isSubmit('newcronjobs') || Tools::isSubmit('updatecronjobs')) &&
-            ((isset($submit_cron) == false) || ($submit_cron === false))) {
+        if ((Tools::isSubmit('submitNewCronJob') || Tools::isSubmit('newcronjobs') || Tools::isSubmit('updatecronjobs'))
+            && ((isset($submit_cron) == false) || ($submit_cron === false))) {
             $back_url = $this->context->link->getAdminLink('AdminModules', false)
                 . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name
                 . '&token=' . Tools::getAdminTokenLite('AdminModules');
@@ -512,7 +512,7 @@ class CronJobs extends Module
                 `day_of_week` = \'' . $day_of_week . '\'
             WHERE `id_cronjob` = \'' . (int) $id_cronjob . '\'';
 
-        if ((Db::getInstance()->execute($query)) != false) {
+        if (Db::getInstance()->execute($query) != false) {
             return $this->setSuccessMessage('The task has been updated.');
         }
 
@@ -587,12 +587,12 @@ class CronJobs extends Module
 
     protected function isNewJobValid()
     {
-        if ((Tools::isSubmit('description') == true) &&
-            (Tools::isSubmit('task') == true) &&
-            (Tools::isSubmit('hour') == true) &&
-            (Tools::isSubmit('day') == true) &&
-            (Tools::isSubmit('month') == true) &&
-            (Tools::isSubmit('day_of_week') == true)) {
+        if ((Tools::isSubmit('description') == true)
+            && (Tools::isSubmit('task') == true)
+            && (Tools::isSubmit('hour') == true)
+            && (Tools::isSubmit('day') == true)
+            && (Tools::isSubmit('month') == true)
+            && (Tools::isSubmit('day_of_week') == true)) {
             if (self::isTaskURLValid(Tools::getValue('task')) == false) {
                 return $this->setErrorMessage('The target link you entered is not valid. It should be an absolute URL, on the same domain as your shop.');
             }

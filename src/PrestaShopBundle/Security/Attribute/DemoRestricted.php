@@ -26,10 +26,12 @@
 
 namespace PrestaShopBundle\Security\Attribute;
 
+use Attribute;
+
 /**
  * Forbid access to the page if Demonstration mode is enabled.
  */
-#[\Attribute(\Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_METHOD)]
 class DemoRestricted
 {
     public function __construct(

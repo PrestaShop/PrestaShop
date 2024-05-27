@@ -256,7 +256,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteAttributeGroupCommand(
-                    $this->getAttributeGroupIdsFromRequest($request))
+                $this->getAttributeGroupIdsFromRequest($request))
             );
             $this->addFlash(
                 'success',
@@ -307,6 +307,16 @@ class AttributeGroupController extends FrameworkBundleAdminController
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
+                ),
+                AttributeGroupConstraintException::EMPTY_PUBLIC_NAME => $this->trans(
+                    'The field %field_name% is required at least in your default language.',
+                    'Admin.Notifications.Error',
+                    ['%field_name%' => $this->trans('Public name', 'Admin.Global')]
+                ),
+                AttributeGroupConstraintException::INVALID_PUBLIC_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Public name', 'Admin.Global'))]
                 ),
             ],
 

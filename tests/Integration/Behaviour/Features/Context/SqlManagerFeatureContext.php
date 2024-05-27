@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Gherkin\Node\TableNode;
+use Db;
 use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
@@ -86,7 +87,7 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
      */
     public function resetStoredSqlRequest($count)
     {
-        $legacyDatabaseSingleton = \Db::getInstance(_PS_USE_SQL_SLAVE_);
+        $legacyDatabaseSingleton = Db::getInstance(_PS_USE_SQL_SLAVE_);
         $legacyDatabaseSingleton->delete('request_sql');
     }
 
@@ -95,7 +96,7 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertStoredSqlRequestCount($count)
     {
-        $legacyDatabaseSingleton = \Db::getInstance(_PS_USE_SQL_SLAVE_);
+        $legacyDatabaseSingleton = Db::getInstance(_PS_USE_SQL_SLAVE_);
         $realCountResults = $legacyDatabaseSingleton->executeS('SELECT COUNT(*) AS result FROM ' . _DB_PREFIX_ . 'request_sql');
 
         $realCount = current($realCountResults)['result'];

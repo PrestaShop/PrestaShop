@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import brandsPage from '@pages/BO/catalog/brands';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import BrandsAddresses from '@data/demo/brandsAddresses';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_brands_addresses_filterAddresses';
 
@@ -43,10 +43,10 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
   it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.brandsAndSuppliersLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.brandsAndSuppliersLink,
     );
     await brandsPage.closeSfToolBar(page);
 

@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import emailPage from '@pages/BO/advancedParameters/email';
 
 // Import FO pages
@@ -20,6 +19,7 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataPaymentMethods,
@@ -59,13 +59,12 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
     it('should go to \'Advanced Parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPageToEraseEmails', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.emailLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.emailLink,
       );
-
-      await dashboardPage.closeSfToolBar(page);
+      await boDashboardPage.closeSfToolBar(page);
 
       const pageTitle = await emailPage.getPageTitle(page);
       expect(pageTitle).to.contains(emailPage.pageTitle);
@@ -88,7 +87,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
       // Click on view my shop
-      page = await dashboardPage.viewMyShop(page);
+      page = await boDashboardPage.viewMyShop(page);
 
       // Change language on FO
       await homePage.changeLanguage(page, 'en');

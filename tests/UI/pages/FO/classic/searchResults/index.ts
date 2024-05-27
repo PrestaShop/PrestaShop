@@ -31,7 +31,7 @@ class SearchResultsPage extends FOBasePage {
 
   private readonly sortButton: string;
 
-  private readonly sortDropDownMenu: string;
+  protected sortDropDownMenu: string;
 
   private readonly sortOption: (sortBy: string) => string;
 
@@ -56,7 +56,7 @@ class SearchResultsPage extends FOBasePage {
     this.productNoMatches = '#product-search-no-matches';
     // Selectors for sort button
     this.sortButton = '#js-product-list-top  button.select-title';
-    this.sortDropDownMenu = '.dropdown-menu.dropdown-menu-start.show';
+    this.sortDropDownMenu = 'div.dropdown-menu';
     this.sortOption = (sortBy: string) => `#js-product-list-top a[href*='${sortBy}']`;
   }
 

@@ -9,13 +9,13 @@ import {createAPIClientTest} from '@commonTests/BO/advancedParameters/authServer
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import APIClientData from '@data/faker/APIClient';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_adminAPI_editAPIClient';
 
@@ -60,10 +60,10 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Client', asy
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdminAPIPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.adminAPILink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.adminAPILink,
       );
 
       const pageTitle = await apiClientPage.getPageTitle(page);
@@ -119,10 +119,10 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Client', asy
       await testContext.addContextItem(this, 'testIdentifier', 'returnToListAfterDisable', baseContext);
 
       // Go back to list to get number of elements because edition form redirects to itself
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.adminAPILink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.adminAPILink,
       );
       const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);
@@ -164,10 +164,10 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Client', asy
       await testContext.addContextItem(this, 'testIdentifier', 'returnToListAfterEnable', baseContext);
 
       // Go back to list to get number of elements because edition form redirects to itself
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.adminAPILink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.adminAPILink,
       );
       const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);
@@ -224,10 +224,10 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Client', asy
       await testContext.addContextItem(this, 'testIdentifier', 'returnToList', baseContext);
 
       // Go back to list to get number of elements because edition form redirects to itself
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.adminAPILink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.adminAPILink,
       );
       const numElements = await apiClientPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);

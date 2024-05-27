@@ -170,36 +170,36 @@ class FeatureValueGridFactory extends GridFactory
     {
         $definition->getGridActions()
             ->add((new LinkGridAction('import'))
-            ->setName($this->translator->trans('Import', [], 'Admin.Actions'))
-            ->setIcon('cloud_upload')
-            ->setOptions([
-                'route' => 'admin_import',
-                'route_params' => [
-                    'import_type' => 'features',
-                ],
-            ])
+                ->setName($this->translator->trans('Import', [], 'Admin.Actions'))
+                ->setIcon('cloud_upload')
+                ->setOptions([
+                    'route' => 'admin_import',
+                    'route_params' => [
+                        'import_type' => 'features',
+                    ],
+                ])
             )
             ->add((new LinkGridAction('export'))
-            ->setName($this->translator->trans('Export', [], 'Admin.Actions'))
-            ->setIcon('cloud_download')
-            ->setOptions([
-                'route' => 'admin_feature_values_export',
-                'route_params' => [
-                    'featureId' => $featureValueFilters->getFeatureId(),
-                ],
-            ])
+                ->setName($this->translator->trans('Export', [], 'Admin.Actions'))
+                ->setIcon('cloud_download')
+                ->setOptions([
+                    'route' => 'admin_feature_values_export',
+                    'route_params' => [
+                        'featureId' => $featureValueFilters->getFeatureId(),
+                    ],
+                ])
             )
             ->add((new SimpleGridAction('common_refresh_list'))
-            ->setName($this->translator->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
-            ->setIcon('refresh')
+                ->setName($this->translator->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                ->setIcon('refresh')
             )
             ->add((new SimpleGridAction('common_show_query'))
-            ->setName($this->translator->trans('Show SQL query', [], 'Admin.Actions'))
-            ->setIcon('code')
+                ->setName($this->translator->trans('Show SQL query', [], 'Admin.Actions'))
+                ->setIcon('code')
             )
             ->add((new SimpleGridAction('common_export_sql_manager'))
-            ->setName($this->translator->trans('Export to SQL Manager', [], 'Admin.Actions'))
-            ->setIcon('storage')
+                ->setName($this->translator->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                ->setIcon('storage')
             );
     }
 

@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 // Import FO pages
@@ -21,6 +20,7 @@ import Orders from '@data/demo/orders';
 import MessageData from '@data/faker/message';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -129,10 +129,10 @@ describe('FO - Contact us : Add attachment', async () => {
   it('should go to customer service page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customerServiceParentLink,
-      dashboardPage.customerServiceLink,
+      boDashboardPage.customerServiceParentLink,
+      boDashboardPage.customerServiceLink,
     );
 
     const pageTitle = await customerServicePage.getPageTitle(page);
@@ -193,10 +193,10 @@ describe('FO - Contact us : Add attachment', async () => {
   it('should go back to customer service page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrderMessagesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customerServiceParentLink,
-      dashboardPage.customerServiceLink,
+      boDashboardPage.customerServiceParentLink,
+      boDashboardPage.customerServiceLink,
     );
 
     const pageTitle = await customerServicePage.getPageTitle(page);

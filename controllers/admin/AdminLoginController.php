@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use PrestaShopBundle\Security\Admin\SessionRenewer;
 use Symfony\Component\HttpFoundation\IpUtils;
@@ -110,31 +111,27 @@ class AdminLoginControllerCore extends AdminController
             $this->context->smarty->assign('wrong_install_name', true);
         }
 
+        $randomizedAdminFolderName = '';
         if (
             // The install is well finished
             !file_exists(_PS_ROOT_DIR_ . '/var/.install.prestashop')
             && basename(_PS_ADMIN_DIR_) == 'admin'
-            && file_exists(_PS_ADMIN_DIR_ . '/../admin/')
         ) {
-            $rand = sprintf(
+            $this->context->smarty->assign([
+                'wrong_folder_name' => true,
+            ]);
+            $randomizedAdminFolderName = sprintf(
                 'admin%03d%s/',
                 mt_rand(0, 999),
                 Tools::strtolower(Tools::passwdGen(16))
             );
-            if (@rename(_PS_ADMIN_DIR_ . '/../admin/', _PS_ADMIN_DIR_ . '/../' . $rand)) {
-                Tools::redirectAdmin('../' . $rand);
-            } else {
-                $this->context->smarty->assign([
-                    'wrong_folder_name' => true,
-                ]);
-            }
         } else {
-            $rand = basename(_PS_ADMIN_DIR_) . '/';
+            $randomizedAdminFolderName = basename(_PS_ADMIN_DIR_) . '/';
         }
 
         $this->context->smarty->assign([
-            'randomNb' => $rand,
-            'adminUrl' => Tools::getCurrentUrlProtocolPrefix() . Tools::getShopDomain() . __PS_BASE_URI__ . $rand,
+            'randomNb' => $randomizedAdminFolderName,
+            'adminUrl' => Tools::getCurrentUrlProtocolPrefix() . Tools::getShopDomain() . __PS_BASE_URI__ . $randomizedAdminFolderName,
             'homeUrl' => Tools::getCurrentUrlProtocolPrefix() . Tools::getShopDomain() . __PS_BASE_URI__,
         ]);
 
@@ -179,7 +176,7 @@ class AdminLoginControllerCore extends AdminController
         parent::initContent();
         $this->initFooter();
 
-        //force to disable modals
+        // force to disable modals
         $this->context->smarty->assign('modals', null);
     }
 

@@ -7,38 +7,65 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
+import {productPage} from '@pages/FO/classic/product';
 
-import {
-  // Import data
-  FakerCarrier,
-} from '@prestashop-core/ui-testing';
+// Import data
+import Carriers from '@data/demo/carriers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  dataCustomers,
+  FakerCarrier,
+  foClassicCartPage,
+  foClassicCheckoutPage,
+  foClassicHomePage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shipping_carriers_quickEditAndBulkActions';
 
-/*
-Create 2 new carriers
-Quick edit (Enable/Disable)
-Bulk actions (Enable/Disable/Delete)
- */
-describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', async () => {
+describe('BO - Shipping - Carriers : Bulk actions', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCarriers: number = 0;
+
+  const carrierData: FakerCarrier = new FakerCarrier({
+    name: 'test',
+    transitName: 'test',
+    freeShipping: false,
+    ranges: [
+      {
+        weightMin: 0,
+        weightMax: 10,
+        zones: [
+          {
+            zone: 'all',
+            price: 1,
+          },
+        ],
+      },
+    ],
+    // Size weight and group access
+    maxWidth: 200,
+    maxHeight: 200,
+    maxDepth: 200,
+    maxWeight: 500,
+  });
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    await files.generateImage(`${carrierData.name}.jpg`);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    await files.deleteFile(`${carrierData.name}.jpg`);
   });
 
   it('should login in BO', async function () {
@@ -48,10 +75,10 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
   it('should go to \'Shipping> Carriers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shippingLink,
-      dashboardPage.carriersLink,
+      boDashboardPage.shippingLink,
+      boDashboardPage.carriersLink,
     );
 
     const pageTitle = await carriersPage.getPageTitle(page);
@@ -65,160 +92,187 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
     expect(numberOfCarriers).to.be.above(0);
   });
 
-  // 1 - Create 2 carriers
-  describe('Create 2 carriers in BO', async () => {
-    const creationTests: number[] = new Array(2).fill(0, 0, 2);
-    creationTests.forEach((test: number, index: number) => {
-      before(() => files.generateImage(`todelete${index}.jpg`));
+  it('should select all and disable them', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'selectAllAndDisable', baseContext);
 
-      const carrierData: FakerCarrier = new FakerCarrier({name: `todelete${index}`});
+    const message = await carriersPage.bulkSetStatus(page, 'Disable');
+    expect(message).to.be.contains(carriersPage.successfulUpdateStatusMessage);
 
-      it('should go to add new carrier page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToAddCarrierPage${index}`, baseContext);
-
-        await carriersPage.goToAddNewCarrierPage(page);
-        const pageTitle = await addCarrierPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
-      });
-
-      it(`should create carrier n°${index + 1} and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createCarrier${index}`, baseContext);
-
-        const textResult = await addCarrierPage.createEditCarrier(page, carrierData);
-        expect(textResult).to.contains(carriersPage.successfulCreationMessage);
-
-        const numberOfCarriersAfterCreation = await carriersPage.getNumberOfElementInGrid(page);
-        expect(numberOfCarriersAfterCreation).to.be.equal(numberOfCarriers + 1 + index);
-      });
-
-      after(() => files.deleteFile(`todelete${index}.jpg`));
-    });
+    for (let i = 1; i <= numberOfCarriers; i++) {
+      const textColumn = await carriersPage.getTextColumn(
+        page,
+        i,
+        'active',
+      );
+      expect(textColumn).to.equals('Disabled');
+    }
   });
 
-  // 2 - Quick edit carriers
-  describe('Quick edit first carrier', async () => {
-    it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterForEnableDisable', baseContext);
+  it('should open the shop page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'openTheShopPage', baseContext);
 
+    page = await carriersPage.viewMyShop(page);
+    await foClassicHomePage.changeLanguage(page, 'en');
+
+    const isHomePage = await foClassicHomePage.isHomePage(page);
+    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+  });
+
+  it('should add the first product to the cart and checkout', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
+
+    // Go to the first product page
+    await foClassicHomePage.goToProductPage(page, 1);
+    // Add the product to the cart
+    await productPage.addProductToTheCart(page);
+    // Proceed to checkout the shopping cart
+    await foClassicCartPage.clickOnProceedToCheckout(page);
+
+    const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+    expect(isCheckoutPage).to.equal(true);
+  });
+
+  it('should login and go to address step', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'loginToFO', baseContext);
+
+    await foClassicCheckoutPage.clickOnSignIn(page);
+
+    const isStepLoginComplete = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+    expect(isStepLoginComplete, 'Step Personal information is not complete').to.equal(true);
+  });
+
+  it('should continue to delivery step', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
+
+    // Address step - Go to delivery step
+    const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+    expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
+  });
+
+  it('should check there are no carriers', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkNoCarriers', baseContext);
+
+    const message = await foClassicCheckoutPage.getCarrierErrorMessage(page);
+    expect(message).to.equals(foClassicCheckoutPage.noCarriersMessage);
+  });
+
+  it('should select all and enable them', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'selectAllEnable', baseContext);
+
+    page = await foClassicCheckoutPage.changePage(browserContext, 0);
+
+    const message = await carriersPage.bulkSetStatus(page, 'Enable');
+    expect(message).to.be.contains(carriersPage.successfulUpdateStatusMessage);
+
+    for (let i = 1; i <= numberOfCarriers; i++) {
+      const textColumn = await carriersPage.getTextColumn(
+        page,
+        i,
+        'active',
+      );
+      expect(textColumn).to.equals('Enabled');
+    }
+  });
+
+  it('should check there are carriers', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriers', baseContext);
+
+    page = await carriersPage.changePage(browserContext, 1);
+    await page.reload();
+
+    const carrierNames = await foClassicCheckoutPage.getAllCarriersNames(page);
+    expect(carrierNames.length).to.equals(numberOfCarriers);
+  });
+
+  it('should go to add new carrier page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToAddCarrierPage', baseContext);
+
+    page = await foClassicCheckoutPage.changePage(browserContext, 0);
+
+    await carriersPage.goToAddNewCarrierPage(page);
+
+    const pageTitle = await addCarrierPage.getPageTitle(page);
+    expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
+  });
+
+  it('should create carrier and check result', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'createCarrier', baseContext);
+
+    const textResult = await addCarrierPage.createEditCarrier(page, carrierData);
+    expect(textResult).to.contains(carriersPage.successfulCreationMessage);
+
+    const numberOfCarriersAfterCreation = await carriersPage.getNumberOfElementInGrid(page);
+    expect(numberOfCarriersAfterCreation).to.be.equal(numberOfCarriers + 1);
+  });
+
+  it('should check there are carriers (after creation)', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersAfterCreate', baseContext);
+
+    page = await carriersPage.changePage(browserContext, 1);
+    await page.reload();
+
+    const carrierNames = await foClassicCheckoutPage.getAllCarriersNames(page);
+    expect(carrierNames.length).to.equals(numberOfCarriers + 1);
+  });
+
+  it('should filter list by name', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
+
+    page = await foClassicCheckoutPage.changePage(browserContext, 0);
+    await carriersPage.filterTable(
+      page,
+      'input',
+      'name',
+      carrierData.name,
+    );
+
+    const numberOfCarriersAfterFilter = await carriersPage.getNumberOfElementInGrid(page);
+    expect(numberOfCarriersAfterFilter).to.equals(1);
+
+    const textColumn = await carriersPage.getTextColumn(page, 1, 'name');
+    expect(textColumn).to.equals(carrierData.name);
+  });
+
+  it('should delete carriers with Bulk Actions and check result', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCarriers', baseContext);
+
+    const deleteTextResult = await carriersPage.bulkDeleteCarriers(page);
+    expect(deleteTextResult).to.be.contains(carriersPage.successfulMultiDeleteMessage);
+  });
+
+  [
+    Carriers.cheapCarrier,
+    Carriers.lightCarrier,
+  ].forEach((carrier: FakerCarrier, index: number) => {
+    it(`should reset in disabled mode the carrier "${carrier.name}"`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `resetCarrier${index}`, baseContext);
+
+      page = await foClassicCheckoutPage.changePage(browserContext, 0);
       await carriersPage.filterTable(
         page,
         'input',
         'name',
-        'todelete',
+        carrier.name,
       );
 
       const numberOfCarriersAfterFilter = await carriersPage.getNumberOfElementInGrid(page);
+      expect(numberOfCarriersAfterFilter).to.equals(1);
 
-      for (let i = 1; i <= numberOfCarriersAfterFilter; i++) {
-        const textColumn = await carriersPage.getTextColumn(
-          page,
-          i,
-          'name',
-        );
-        expect(textColumn).to.contains('todelete');
-      }
-    });
+      const textColumnName = await carriersPage.getTextColumn(page, 1, 'name');
+      expect(textColumnName).to.equals(carrier.name);
 
-    [
-      {args: {action: 'disable', enabledValue: false}},
-      {args: {action: 'enable', enabledValue: true}},
-    ].forEach((test) => {
-      it(`should ${test.args.action} first carrier`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Carrier`, baseContext);
+      const message = await carriersPage.bulkSetStatus(page, 'Disable');
+      expect(message).to.be.contains(carriersPage.successfulUpdateStatusMessage);
 
-        const isActionPerformed = await carriersPage.setStatus(page, 1, test.args.enabledValue);
-
-        if (isActionPerformed) {
-          const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
-          expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
-        }
-
-        const carrierStatus = await carriersPage.getStatus(page, 1);
-        expect(carrierStatus).to.be.equal(test.args.enabledValue);
-      });
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterEnableDisable', baseContext);
-
-      const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
-      expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers + 2);
+      const textColumnActive = await carriersPage.getTextColumn(page, 1, 'active');
+      expect(textColumnActive).to.equals('Disabled');
     });
   });
 
-  // 3 - Enable/Disable carriers with bulk actions
-  describe('Enable/Disable carriers with bulk actions', async () => {
-    it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkEnableDisable', baseContext);
+  it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      await carriersPage.filterTable(
-        page,
-        'input',
-        'name',
-        'todelete',
-      );
-
-      const numberOfCarriersAfterFilter = await carriersPage.getNumberOfElementInGrid(page);
-
-      for (let i = 1; i <= numberOfCarriersAfterFilter; i++) {
-        const textColumn = await carriersPage.getTextColumn(
-          page,
-          i,
-          'name',
-        );
-        expect(textColumn).to.contains('todelete');
-      }
-    });
-
-    [
-      {args: {action: 'Disable', enabledValue: false}},
-      {args: {action: 'Enable', enabledValue: true}},
-    ].forEach((test) => {
-      it(`should ${test.args.action} carriers with Bulk Actions and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}ByBulkActions`, baseContext);
-
-        const deleteTextResult = await carriersPage.bulkSetStatus(page, test.args.action);
-        expect(deleteTextResult).to.be.contains(carriersPage.successfulUpdateStatusMessage);
-      });
-    });
-  });
-
-  // 4 - Delete the created carriers with bulk actions
-  describe('Delete the created carriers with bulk actions', async () => {
-    it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
-
-      await carriersPage.filterTable(
-        page,
-        'input',
-        'name',
-        'todelete',
-      );
-
-      const numberOfCarriersAfterFilter = await carriersPage.getNumberOfElementInGrid(page);
-
-      for (let i = 1; i <= numberOfCarriersAfterFilter; i++) {
-        const textColumn = await carriersPage.getTextColumn(
-          page,
-          i,
-          'name',
-        );
-        expect(textColumn).to.contains('todelete');
-      }
-    });
-
-    it('should delete carriers with Bulk Actions and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCarriers', baseContext);
-
-      const deleteTextResult = await carriersPage.bulkDeleteCarriers(page);
-      expect(deleteTextResult).to.be.contains(carriersPage.successfulMultiDeleteMessage);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
-
-      const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
-      expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
-    });
+    const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
+    expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
   });
 });

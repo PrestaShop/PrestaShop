@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -41,10 +42,16 @@ class PrestaShopAdminController extends AbstractController
     public static function getSubscribedServices(): array
     {
         return parent::getSubscribedServices() + [
-            TranslatorInterface::class => TranslatorInterface::class,
+            ConfigurationInterface::class => ConfigurationInterface::class,
             CommandBusInterface::class => CommandBusInterface::class,
             HookDispatcherInterface::class => HookDispatcherInterface::class,
+            TranslatorInterface::class => TranslatorInterface::class,
         ];
+    }
+
+    protected function getConfiguration(): ConfigurationInterface
+    {
+        return $this->container->get(ConfigurationInterface::class);
     }
 
     /**
@@ -60,7 +67,7 @@ class PrestaShopAdminController extends AbstractController
         $this->container->get(HookDispatcherInterface::class)->dispatchWithParameters($hookName, $parameters);
     }
 
-    protected function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
+    protected function trans(string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
     {
         return $this->container->get(TranslatorInterface::class)->trans($id, $parameters, $domain, $locale);
     }

@@ -10,7 +10,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 import emailPage from '@pages/BO/advancedParameters/email';
@@ -22,6 +21,7 @@ import {loginPage as loginFOPage} from '@pages/FO/classic/login';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {
+  boDashboardPage,
   // Import data
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
@@ -97,10 +97,10 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
       it('should go to \'Shop parameters > Customer Settings\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToCustomerSettingsPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.shopParametersParentLink,
-          dashboardPage.customerSettingsLink,
+          boDashboardPage.shopParametersParentLink,
+          boDashboardPage.customerSettingsLink,
         );
         await customerSettingsPage.closeSfToolBar(page);
 

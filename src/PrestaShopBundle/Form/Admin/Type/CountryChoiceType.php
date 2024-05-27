@@ -45,7 +45,7 @@ class CountryChoiceType extends AbstractType
     private bool $needPostcode = false;
 
     public function __construct(
-        private readonly FormChoiceProviderInterface & FormChoiceAttributeProviderInterface $countriesChoiceProvider,
+        private readonly FormChoiceProviderInterface&FormChoiceAttributeProviderInterface $countriesChoiceProvider,
         private readonly TranslatorInterface $translator,
     ) {
     }

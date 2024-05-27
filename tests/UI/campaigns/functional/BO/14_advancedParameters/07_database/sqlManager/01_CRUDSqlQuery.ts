@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
 import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/add';
 import viewQueryManagerPage from '@pages/BO/advancedParameters/database/sqlManager/view';
@@ -17,6 +16,7 @@ import SqlQueryData from '@data/faker/sqlQuery';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_database_sqlManager_CRUDSqlQuery';
 
@@ -47,10 +47,10 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
   it('should go to \'Advanced Parameters > Database\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDatabasePageToCreateNewSQLQuery', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.advancedParametersLink,
-      dashboardPage.databaseLink,
+      boDashboardPage.advancedParametersLink,
+      boDashboardPage.databaseLink,
     );
 
     await sqlManagerPage.closeSfToolBar(page);

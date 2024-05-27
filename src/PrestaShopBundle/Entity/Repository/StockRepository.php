@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
+use PDO;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
@@ -367,7 +368,7 @@ class StockRepository extends StockManagementRepository
                         FROM ' . $this->tablePrefix . 'product_attribute pa
                         WHERE id_product=:id_product';
             $statement = $this->connection->prepare($query);
-            $statement->bindValue('id_product', (int) $row['product_id'], \PDO::PARAM_INT);
+            $statement->bindValue('id_product', (int) $row['product_id'], PDO::PARAM_INT);
             $result = $statement->executeQuery();
             $this->totalCombinations[$row['product_id']] = $result->fetchOne();
             $result->free();

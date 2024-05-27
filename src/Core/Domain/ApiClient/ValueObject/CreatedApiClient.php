@@ -36,7 +36,7 @@ class CreatedApiClient
     private ApiClientId $apiClientId;
     private string $secret;
 
-    public function __construct(int $apiClientId, string $secret = null)
+    public function __construct(int $apiClientId, ?string $secret = null)
     {
         $this->apiClientId = new ApiClientId($apiClientId);
         if (empty($secret)) {

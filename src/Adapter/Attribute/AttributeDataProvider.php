@@ -93,7 +93,7 @@ class AttributeDataProvider
     {
         $context = Context::getContext();
 
-        //get product
+        // get product
         $product = new Product((int) $idProduct, false);
         if (!is_object($product) || empty($product->id)) {
             return false;

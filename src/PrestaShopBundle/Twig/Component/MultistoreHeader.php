@@ -50,7 +50,7 @@ class MultistoreHeader
     protected Link $link;
 
     public function __construct(
-        protected readonly MultistoreFeature $multistoreFeature, //todo removed internal using ?
+        protected readonly MultistoreFeature $multistoreFeature, // todo removed internal using ?
         protected readonly ColorBrightnessCalculator $colorBrightnessCalculator,
         protected readonly EntityManagerInterface $entityManager,
         protected readonly LegacyContext $legacyContext,

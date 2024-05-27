@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Exception;
+use LogicException;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Tab\Command\UpdateTabStatusByClassNameCommand;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -48,10 +50,10 @@ class PreferencesController extends FrameworkBundleAdminController
      *
      * @return Response
      *
-     * @throws \Exception
+     * @throws Exception
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, FormInterface $form = null)
+    public function indexAction(Request $request, ?FormInterface $form = null)
     {
         $form = $this->get('prestashop.adapter.preferences.form_handler')->getForm();
 
@@ -63,7 +65,7 @@ class PreferencesController extends FrameworkBundleAdminController
      *
      * @return Response
      *
-     * @throws \LogicException
+     * @throws LogicException
      */
     #[DemoRestricted(redirectRoute: 'admin_preferences')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_preferences')]

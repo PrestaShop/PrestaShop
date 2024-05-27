@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import addOrderPage from '@pages/BO/orders/add';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import shoppingCartViewPage from '@pages/BO/orders/shoppingCarts/view';
@@ -21,6 +20,7 @@ import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataOrderStatuses,
   dataPaymentMethods,
@@ -94,10 +94,10 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should go to \'Orders > Shopping carts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.shoppingCartsLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.shoppingCartsLink,
       );
 
       const pageTitle = await shoppingCartsPage.getPageTitle(page);
@@ -221,10 +221,10 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should go to \'Orders > Shopping carts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.shoppingCartsLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.shoppingCartsLink,
       );
 
       const pageTitle = await shoppingCartsPage.getPageTitle(page);
@@ -320,10 +320,10 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should go to \'Orders > Shopping carts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage3', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.shoppingCartsLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.shoppingCartsLink,
       );
 
       const pageTitle = await shoppingCartsPage.getPageTitle(page);

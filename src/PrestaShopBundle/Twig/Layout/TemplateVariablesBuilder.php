@@ -35,12 +35,10 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
-use PrestaShopBundle\Service\DataProvider\UserProvider;
+use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Allows you to construct variables used in rendering
@@ -50,13 +48,11 @@ class TemplateVariablesBuilder
     public function __construct(
         private readonly LegacyContext $context,
         private readonly bool $debugMode,
-        private readonly CsrfTokenManagerInterface $tokenManager,
-        private readonly UserProvider $userProvider,
+        private readonly UserTokenManager $userTokenManager,
         private readonly string $psVersion,
         private readonly ConfigurationInterface $configuration,
         private readonly MenuBuilder $menuBuilder,
         private readonly TabRepository $tabRepository,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
         private readonly EmployeeContext $employeeContext,
         private readonly LanguageContext $languageContext,
         private readonly ShopContext $shopContext,
@@ -70,7 +66,6 @@ class TemplateVariablesBuilder
     {
         return new TemplateVariables(
             $this->languageContext->getIsoCode(),
-            $this->featureFlagStateChecker->isEnabled('symfony_layout'),
             $this->languageContext->isRTL(),
             $this->legacyControllerContext->controller_name,
             $this->multistoreFeature->isActive(),
@@ -103,8 +98,8 @@ class TemplateVariablesBuilder
         return [
             // base url for javascript router
             'base_url' => $this->requestStack->getCurrentRequest()->getBaseUrl(),
-            //security token for javascript router
-            'token' => $this->tokenManager->getToken($this->userProvider->getUsername())->getValue(),
+            // security token for javascript router
+            'token' => $this->userTokenManager->getSymfonyToken(),
         ];
     }
 
@@ -115,11 +110,11 @@ class TemplateVariablesBuilder
 
     private function getDefaultTabLink(): ?string
     {
-        if ($this->employeeContext->getEmployee()) {
-            /** @var Tab $tab */
+        if ($this->employeeContext->getEmployee() && !empty($this->employeeContext->getEmployee()->getDefaultTabId())) {
+            /** @var Tab|null $tab */
             $tab = $this->tabRepository->findOneBy(['id' => $this->employeeContext->getEmployee()->getDefaultTabId()]);
 
-            return $this->context->getLegacyAdminLink($tab->getClassName());
+            return $this->context->getAdminLink($tab->getClassName());
         }
 
         return null;

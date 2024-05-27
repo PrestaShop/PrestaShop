@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShopBundle\ApiPlatform\ContextParametersTrait;
-use PrestaShopBundle\ApiPlatform\DomainSerializer;
 use PrestaShopBundle\ApiPlatform\Exception\CQRSQueryNotFoundException;
 use PrestaShopBundle\ApiPlatform\QueryResultSerializerTrait;
+use PrestaShopBundle\ApiPlatform\Serializer\DomainSerializer;
 use ReflectionException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
@@ -66,7 +66,7 @@ class QueryProvider implements ProviderInterface
      * @throws CQRSQueryNotFoundException
      * @throws ReflectionException
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|null|object
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|object|null
     {
         $CQRSQueryClass = $this->getCQRSQueryClass($operation);
         if (null === $CQRSQueryClass) {

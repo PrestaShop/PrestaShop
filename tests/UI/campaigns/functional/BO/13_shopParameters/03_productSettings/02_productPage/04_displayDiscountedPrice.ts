@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
@@ -22,6 +21,7 @@ import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productPage_displayDiscountedPrice';
 
@@ -60,10 +60,10 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
   it('should go to \'Catalog > Discounts\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.discountsLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.discountsLink,
     );
 
     const pageTitle = await cartRulesPage.getPageTitle(page);

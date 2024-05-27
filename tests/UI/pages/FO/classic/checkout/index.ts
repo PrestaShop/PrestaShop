@@ -33,6 +33,8 @@ class CheckoutPage extends FOBasePage {
 
   private readonly paymentOptionInput: (name: string) => string;
 
+  protected paymentOptionAlertDanger: string;
+
   private readonly conditionToApproveLabel: string;
 
   private readonly conditionToApproveCheckbox: string;
@@ -119,7 +121,7 @@ class CheckoutPage extends FOBasePage {
 
   private readonly checkoutHavePromoCodeButton: string;
 
-  private readonly checkoutRemoveDiscountLink: string;
+  protected checkoutRemoveDiscountLink: (row: number) => string;
 
   protected checkoutLoginForm: string;
 
@@ -293,7 +295,7 @@ class CheckoutPage extends FOBasePage {
     this.addressStepContent = `${this.addressStepSection} div.content`;
     this.addressStepCreateAddressForm = `${this.addressStepSection} .js-address-form`;
     this.addressStepAliasInput = '#field-alias';
-    this.addressStepCompanyInput = '#field-company';
+    this.addressStepCompanyInput = `${this.addressStepSection} #field-company`;
     this.addressStepAddress1Input = '#field-address1';
     this.addressStepPostCodeInput = '#field-postcode';
     this.addressStepCityInput = '#field-city';
@@ -343,6 +345,7 @@ class CheckoutPage extends FOBasePage {
     this.paymentStepSection = '#checkout-payment-step';
     this.paymentOptionInput = (name: string) => `${this.paymentStepSection} input[name='payment-option']`
       + `[data-module-name='${name}']`;
+    this.paymentOptionAlertDanger = '.payment-options p.alert-danger';
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
     this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
     this.termsOfServiceLink = '#cta-terms-and-conditions-0';
@@ -354,7 +357,8 @@ class CheckoutPage extends FOBasePage {
     this.checkoutSummary = '#js-checkout-summary';
     this.checkoutPromoBlock = `${this.checkoutSummary} div.block-promo`;
     this.checkoutHavePromoCodeButton = `${this.checkoutPromoBlock} p.promo-code-button a`;
-    this.checkoutRemoveDiscountLink = 'a[data-link-action="remove-voucher"] i';
+    this.checkoutRemoveDiscountLink = (row: number) => `li.cart-summary-line:nth-child(${row})`
+      + ' a[data-link-action="remove-voucher"] i';
     this.cartTotalATI = '.cart-summary-totals span.value';
     this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
     this.promoCodeArea = '#promo-code';
@@ -425,7 +429,7 @@ class CheckoutPage extends FOBasePage {
    * Get product details
    * @param page {Page} Browser tab
    * @param productRow {number} Product row in details block
-   * @returns {Promise<ProductDetailsBasic>
+   * @returns {Promise<ProductDetailsBasic>}
    */
   async getProductDetails(page: Page, productRow: number): Promise<ProductDetailsBasic> {
     return {
@@ -561,7 +565,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getActiveLinkFromPersonalInformationBlock(page: Page): Promise<string> {
+  async getActiveLinkFromPersonalInformationBlock(page: Page): Promise<string> {
     return this.getTextContent(page, this.activeLink);
   }
 
@@ -688,6 +692,18 @@ class CheckoutPage extends FOBasePage {
   }
 
   /**
+   * Return if the delivery address is selected
+   * @param page {Page} Browser tab
+   * @param row {number} The row of the address
+   * @returns {Promise<boolean>}
+   */
+  async isDeliveryAddressSelected(page: Page, row: number): Promise<boolean> {
+    const addressID = await this.getDeliveryAddressID(page, row);
+
+    return this.isChecked(page, this.deliveryAddressRadioButton(addressID));
+  }
+
+  /**
    * Select invoice address
    * @param page {Page} Browser tab
    * @param row {number} The row of the address
@@ -695,6 +711,18 @@ class CheckoutPage extends FOBasePage {
   async selectInvoiceAddress(page: Page, row: number = 1): Promise<void> {
     const addressID = await this.getInvoiceAddressID(page, row);
     await this.setChecked(page, this.invoiceAddressRadioButton(addressID), true);
+  }
+
+  /**
+   * Return if the invoice address is selected
+   * @param page {Page} Browser tab
+   * @param row {number} The row of the address
+   * @returns {Promise<boolean>}
+   */
+  async isInvoiceAddressSelected(page: Page, row: number): Promise<boolean> {
+    const addressID = await this.getInvoiceAddressID(page, row);
+
+    return this.isChecked(page, this.invoiceAddressRadioButton(addressID));
   }
 
   /**
@@ -711,14 +739,14 @@ class CheckoutPage extends FOBasePage {
    * Is address form visible
    * @param page {Page} Browser tab
    */
-  isAddressFormVisible(page: Page): Promise<boolean> {
+  async isAddressFormVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.addressStepCreateAddressForm, 2000);
   }
 
   /**
    * Fill address form, used for delivery and invoice addresses
    * @param page {Page} Browser tab
-   * @param address {AddressData} Address's information to fill form with
+   * @param address {FakerAddress} Address's information to fill form with
    * @returns {Promise<void>}
    */
   async fillAddressForm(page: Page, address: FakerAddress): Promise<void> {
@@ -743,7 +771,7 @@ class CheckoutPage extends FOBasePage {
   /**
    * Set invoice address
    * @param page {Page} Browser tab
-   * @param invoiceAddress {AddressData} Address's information to fill form with
+   * @param invoiceAddress {FakerAddress} Address's information to fill form with
    */
   async setInvoiceAddress(page: Page, invoiceAddress: FakerAddress): Promise<boolean> {
     await this.fillAddressForm(page, invoiceAddress);
@@ -760,8 +788,8 @@ class CheckoutPage extends FOBasePage {
   /**
    * Set address step
    * @param page {Page} Browser tab
-   * @param deliveryAddress {AddressData|null} Address's information to add (for delivery)
-   * @param invoiceAddress {AddressData|null} Address's information to add (for invoice)
+   * @param deliveryAddress {FakerAddress} Address's information to add (for delivery)
+   * @param invoiceAddress {FakerAddress|null} Address's information to add (for invoice)
    * @returns {Promise<boolean>}
    */
   async setAddress(page: Page, deliveryAddress: FakerAddress, invoiceAddress: FakerAddress | null = null): Promise<boolean> {
@@ -864,11 +892,11 @@ class CheckoutPage extends FOBasePage {
   }
 
   /**
-   * Check if the Delivery Step is displayed
+   * Check if the Addresses Step is displayed
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isDeliveryStep(page: Page): Promise<boolean> {
+  async isAddressesStep(page: Page): Promise<boolean> {
     await this.waitForVisibleSelector(page, this.addressStepContent);
 
     return this.elementVisible(page, this.addressStepContent, 1000);
@@ -944,8 +972,18 @@ class CheckoutPage extends FOBasePage {
    * @param shippingMethodID {number} Position of the shipping method
    * @returns {Promise<boolean>}
    */
-  isShippingMethodVisible(page: Page, shippingMethodID: number): Promise<boolean> {
+  async isShippingMethodVisible(page: Page, shippingMethodID: number): Promise<boolean> {
     return this.elementVisible(page, this.deliveryOptionLabel(shippingMethodID), 2000);
+  }
+
+  /**
+   * Return shipping method label
+   * @param page {Page} Browser tab
+   * @param shippingMethodID {number} Position of the shipping method
+   * @returns {Promise<string>}
+   */
+  async getShippingMethodName(page: Page, shippingMethodID: number): Promise<string> {
+    return this.getTextContent(page, this.deliveryOptionNameSpan(shippingMethodID));
   }
 
   /**
@@ -1034,7 +1072,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getNoPaymentNeededBlockContent(page: Page): Promise<string> {
+  async getNoPaymentNeededBlockContent(page: Page): Promise<string> {
     return this.getTextContent(page, this.noPaymentNeededElement);
   }
 
@@ -1077,7 +1115,7 @@ class CheckoutPage extends FOBasePage {
    * @param line {number} Cart rule line
    * @return {string}
    */
-  getCartRuleName(page: Page, line: number = 1): Promise<string> {
+  async getCartRuleName(page: Page, line: number = 1): Promise<string> {
     return this.getTextContent(page, this.cartRuleName(line));
   }
 
@@ -1103,19 +1141,20 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getATIPrice(page: Page): Promise<number> {
+  async getATIPrice(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.cartTotalATI, 2000);
   }
 
   /**
    * Delete the discount
    * @param page {Page} Browser tab
+   * @param row {number} Row of the delete icon
    * @returns {Promise<boolean>}
    */
-  async removePromoCode(page: Page): Promise<boolean> {
-    await page.locator(this.checkoutRemoveDiscountLink).click();
+  async removePromoCode(page: Page, row: number = 1): Promise<boolean> {
+    await page.locator(this.checkoutRemoveDiscountLink(row)).click();
 
-    return this.elementNotVisible(page, this.checkoutRemoveDiscountLink, 1000);
+    return this.elementNotVisible(page, this.checkoutRemoveDiscountLink(row), 1000);
   }
 
   /**
@@ -1156,11 +1195,20 @@ class CheckoutPage extends FOBasePage {
   }
 
   /**
+   * get no payment available message
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getNoPaymentAvailableMessage(page: Page): Promise<string> {
+    return this.getTextContent(page, this.paymentOptionAlertDanger);
+  }
+
+  /**
    * Check if checkbox of condition to approve is visible
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isConditionToApproveCheckboxVisible(page: Page): Promise<boolean> {
+  async isConditionToApproveCheckboxVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.conditionToApproveCheckbox, 1000);
   }
 
@@ -1180,7 +1228,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isGiftCheckboxVisible(page: Page): Promise<boolean> {
+  async isGiftCheckboxVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.giftCheckbox, 1000);
   }
 
@@ -1198,7 +1246,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isGiftMessageTextareaVisible(page: Page): Promise<boolean> {
+  async isGiftMessageTextareaVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.giftMessageTextarea, 2000);
   }
 
@@ -1217,7 +1265,7 @@ class CheckoutPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isRecycledPackagingCheckboxVisible(page: Page): Promise<boolean> {
+  async isRecycledPackagingCheckboxVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.recyclableGiftCheckbox, 1000);
   }
 

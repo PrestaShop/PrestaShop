@@ -81,12 +81,12 @@ class QuickAccessCore extends ObjectModel
             return false;
         }
 
-        $container = \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance();
+        $container = PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance();
         if (!$container) {
             return false;
         }
 
-        $quickAccessGenerator = $container->get(\PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessGenerator::class);
+        $quickAccessGenerator = $container->get(PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessGenerator::class);
 
         return $quickAccessGenerator->getTokenizedQuickAccesses();
     }

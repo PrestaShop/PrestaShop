@@ -27,7 +27,6 @@ use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
-use PrestaShopBundle\Security\Admin\SessionRenewer;
 
 /**
  * Class EmployeeCore.
@@ -435,7 +434,7 @@ class EmployeeCore extends ObjectModel
     public function setWsPasswd($passwd)
     {
         try {
-            /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+            /** @var Hashing $crypto */
             $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
         } catch (CoreException $e) {
             return false;
@@ -459,26 +458,13 @@ class EmployeeCore extends ObjectModel
      */
     public function isLoggedBack()
     {
-        if (!Cache::isStored('isLoggedBack' . $this->id)) {
-            /* Employee is valid only if it can be load and if cookie password is the same as database one */
-            $result = (
-                $this->id
-                && Validate::isUnsignedId($this->id)
-                && Context::getContext()->cookie
-                && Context::getContext()->cookie->isSessionAlive()
-                && Employee::checkPassword($this->id, Context::getContext()->cookie->passwd)
-                && (
-                    !isset(Context::getContext()->cookie->remote_addr)
-                    || Context::getContext()->cookie->remote_addr == ip2long(Tools::getRemoteAddr())
-                    || !Configuration::get('PS_COOKIE_CHECKIP')
-                )
-            );
-            Cache::store('isLoggedBack' . $this->id, $result);
-
-            return $result;
+        $container = SymfonyContainer::getInstance();
+        if (!$container) {
+            return false;
         }
+        $userProvider = $container->get('prestashop.user_provider');
 
-        return Cache::retrieve('isLoggedBack' . $this->id);
+        return $userProvider->getUser() !== null;
     }
 
     /**
@@ -493,7 +479,7 @@ class EmployeeCore extends ObjectModel
 
         $sfContainer = SymfonyContainer::getInstance();
         if ($sfContainer !== null) {
-            $sfContainer->get(SessionRenewer::class)->renew();
+            $sfContainer->get('prestashop.user_provider')->logout();
         }
 
         $this->id = null;

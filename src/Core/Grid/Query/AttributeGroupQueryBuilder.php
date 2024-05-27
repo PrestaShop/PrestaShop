@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 
 /**
  * Provides sql for attributes group list
@@ -46,6 +47,11 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
+     * @var MultistoreContextCheckerInterface
+     */
+    private $multistoreContextChecker;
+
+    /**
      * @var int[]
      */
     private $contextShopIds;
@@ -55,6 +61,7 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param int $contextLangId
+     * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param int[] $contextShopIds
      */
     public function __construct(
@@ -62,11 +69,13 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         $contextLangId,
+        MultistoreContextCheckerInterface $multistoreContextChecker,
         array $contextShopIds
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->contextLangId = $contextLangId;
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
+        $this->multistoreContextChecker = $multistoreContextChecker;
         $this->contextShopIds = $contextShopIds;
     }
 
@@ -80,7 +89,7 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('DISTINCT ag.id_attribute_group, agl.*, ag.*, COUNT(a.id_attribute) as `values`');
+            ->select('DISTINCT ag.id_attribute_group, agl.name, ag.position, acount.values');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -111,17 +120,32 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
-        $qb = $this->connection->createQueryBuilder()
+        $subQuery = $this->connection->createQueryBuilder()
+            ->select('COUNT(DISTINCT a.id_attribute) AS `values`, a.id_attribute_group')
             ->from($this->dbPrefix . 'attribute', 'a')
+            ->groupBy('a.id_attribute_group');
+
+        if (!$this->multistoreContextChecker->isAllShopContext()) {
+            $subQuery->andWhere('attrShop.id_shop IN (:contextShopIds)');
+        }
+
+        $subQuery->leftJoin(
+            'a',
+            $this->dbPrefix . 'attribute_shop',
+            'attrShop',
+            'a.id_attribute = attrShop.id_attribute'
+        );
+
+        $qb = $this->connection->createQueryBuilder()
+            ->from($this->dbPrefix . 'attribute_group', 'ag')
+            ->leftJoin(
+                'ag',
+                '(' . $subQuery->getSQL() . ')',
+                'acount',
+                'acount.id_attribute_group = ag.id_attribute_group'
+            )
             ->setParameter('contextLangId', $this->contextLangId)
             ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
-
-        $qb->leftJoin(
-            'a',
-            $this->dbPrefix . 'attribute_group',
-            'ag',
-            'a.id_attribute_group = ag.id_attribute_group'
-        );
 
         $qb->leftJoin(
             'ag',
@@ -131,13 +155,12 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
         );
 
         $qb->leftJoin(
-            'a',
-            $this->dbPrefix . 'attribute_shop',
-            'ash',
-            'ash.id_attribute = a.id_attribute'
+            'ag',
+            $this->dbPrefix . 'attribute_group_shop',
+            'ags',
+            'ag.id_attribute_group = ags.id_attribute_group'
         );
-        $qb->andWhere('ash.id_shop IN (:contextShopIds)');
-        $qb->groupBy('ag.id_attribute_group');
+        $qb->andWhere('ags.id_shop IN (:contextShopIds)');
 
         $this->applyFilters($filters, $qb);
 

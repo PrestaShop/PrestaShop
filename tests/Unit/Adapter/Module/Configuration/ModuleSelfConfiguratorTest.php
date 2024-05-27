@@ -74,10 +74,10 @@ class ModuleSelfConfiguratorTest extends TestCase
     }
 
     private function getModuleSelfConfigurator(
-        ModuleRepository $moduleRepository = null,
-        Configuration $configuration = null,
-        Connection $connection = null,
-        Filesystem $filesystem = null
+        ?ModuleRepository $moduleRepository = null,
+        ?Configuration $configuration = null,
+        ?Connection $connection = null,
+        ?Filesystem $filesystem = null
     ): ModuleSelfConfigurator {
         return new ModuleSelfConfigurator(
             $moduleRepository ?: $this->moduleRepository,
@@ -312,14 +312,14 @@ class ConfigurationMock extends Configuration
 {
     private $configurationData = [];
 
-    public function set($key, $value, ShopConstraint $shopConstraint = null, array $options = [])
+    public function set($key, $value, ?ShopConstraint $shopConstraint = null, array $options = [])
     {
         $this->configurationData[$key] = $value;
 
         return $this;
     }
 
-    public function get($key, $default = null, ShopConstraint $shopConstraint = null): mixed
+    public function get($key, $default = null, ?ShopConstraint $shopConstraint = null): mixed
     {
         return isset($this->configurationData[$key]) ? $this->configurationData[$key] : $default;
     }

@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
 import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
-import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
@@ -21,6 +20,7 @@ import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_catalogPriceRules_CRUDCatalogPriceRule';
 
@@ -79,10 +79,10 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.discountsLink,
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);

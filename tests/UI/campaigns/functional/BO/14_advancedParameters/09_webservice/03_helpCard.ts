@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import webservicePage from '@pages/BO/advancedParameters/webservice';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_webservice_helpCard';
 
@@ -36,10 +36,10 @@ describe('BO - Advanced Parameters - Webservice : Help card in webservice page',
   it('should go to \'Advanced Parameters > Webservice\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToWebservicePage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.advancedParametersLink,
-      dashboardPage.webserviceLink,
+      boDashboardPage.advancedParametersLink,
+      boDashboardPage.webserviceLink,
     );
     await webservicePage.closeSfToolBar(page);
 

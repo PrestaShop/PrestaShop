@@ -265,7 +265,7 @@ class ProductStockUpdater
         $this->stockAvailableRepository->update($stockAvailable, $fallbackShopId);
 
         if ($properties->getStockModification()) {
-            //Save movement only after stock has been updated
+            // Save movement only after stock has been updated
             $this->saveMovement($stockAvailable, $properties->getStockModification(), $previousQuantity, $fallbackShopId->getValue());
 
             // Update reserved and physical quantity for this stock

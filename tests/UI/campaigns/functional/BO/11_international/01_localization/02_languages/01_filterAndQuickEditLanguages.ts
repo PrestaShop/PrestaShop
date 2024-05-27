@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import localizationPage from '@pages/BO/international/localization';
 import languagesPage from '@pages/BO/international/languages';
 
@@ -15,6 +14,7 @@ import Languages from '@data/demo/languages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_languages_filterAndQuickEditLanguages';
 
@@ -45,10 +45,10 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
   it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.localizationLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.localizationLink,
     );
     await localizationPage.closeSfToolBar(page);
 

@@ -78,7 +78,7 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
             if (!$shopGroup->getShops()->isEmpty()) {
                 $result[] = new FoundShopGroup(
                     $shopGroup->getId(),
-                    $shopGroup->getColor() ?? '',
+                    $shopGroup->getColor(),
                     $shopGroup->getName()
                 );
             }

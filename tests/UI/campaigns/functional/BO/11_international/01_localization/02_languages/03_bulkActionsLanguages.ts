@@ -7,7 +7,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import localizationPage from '@pages/BO/international/localization';
 import languagesPage from '@pages/BO/international/languages';
 import addLanguagePage from '@pages/BO/international/languages/add';
@@ -17,6 +16,7 @@ import LanguageData from '@data/faker/language';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_languages_bulkActionsLanguages';
 
@@ -65,10 +65,10 @@ describe('BO - International - Languages : Bulk disable, enable and delete langu
   it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.localizationLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.localizationLink,
     );
     await localizationPage.closeSfToolBar(page);
 

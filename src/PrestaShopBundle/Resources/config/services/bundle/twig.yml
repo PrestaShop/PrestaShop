@@ -29,8 +29,6 @@ services:
   # Extensions
 
   PrestaShopBundle\Twig\LayoutExtension:
-    arguments:
-      $environment: "%kernel.environment%"
 
   PrestaShopBundle\Twig\TranslationsExtension:
     properties:

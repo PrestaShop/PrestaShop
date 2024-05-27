@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Security\OAuth2\Repository;
 
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
+use LogicException;
 use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Security\OAuth2\Entity\Client;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -80,7 +81,7 @@ class ClientRepository implements ClientRepositoryInterface
         }
 
         if (!$client instanceof PasswordAuthenticatedUserInterface) {
-            throw new \LogicException(sprintf('The class %s should implement %s.', $client::class, PasswordAuthenticatedUserInterface::class));
+            throw new LogicException(sprintf('The class %s should implement %s.', $client::class, PasswordAuthenticatedUserInterface::class));
         }
 
         return $this->passwordEncoder->isPasswordValid($client, $clientSecret);

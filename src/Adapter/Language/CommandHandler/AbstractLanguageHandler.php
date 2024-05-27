@@ -166,7 +166,7 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
      * @param Language $language
      * @param ToggleLanguageStatusCommandInterface $command
      */
-    protected function assertLanguageIsNotDefault(Language $language, ToggleLanguageStatusCommandInterface $command = null)
+    protected function assertLanguageIsNotDefault(Language $language, ?ToggleLanguageStatusCommandInterface $command = null)
     {
         if ($command != null && true === $command->getStatus()) {
             return;

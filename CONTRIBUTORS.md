@@ -153,6 +153,7 @@ GitHub contributors:
 - cgordenne
 - cgordenne_wepika
 - Chafik
+- Charly Caillon
 - Chedly Farhani
 - Chen.Zhidong
 - Chris
@@ -224,7 +225,7 @@ GitHub contributors:
 - Denis Yurevich
 - Dennis
 - Denver Prophit Jr.
-- Denys
+- Denys Bezuhlyi
 - Desbouche Christophe
 - DevNet
 - devyk
@@ -320,7 +321,6 @@ GitHub contributors:
 - Fransuisse
 - Frédéric Benoist
 - Gabriel Arama
-- Gabriel Roman
 - Gabriel Schwardy
 - Gabriel Tenita
 - Gabriele Manganello
@@ -575,6 +575,7 @@ GitHub contributors:
 - Mats Rynge
 - Matteo
 - Matteo Spreafico
+- Matthias Goudjil
 - Matthias Raigne
 - Matthieu Deroubaix
 - Matthieu Mota
@@ -703,6 +704,7 @@ GitHub contributors:
 - Petrov Sergey
 - Petyuska
 - Philip Iezzi
+- Philipp Vujic
 - PhpMadman
 - PICHAT Morgan
 - Pierre
@@ -793,10 +795,12 @@ GitHub contributors:
 - Romain Couderc
 - Romain Soulard
 - romainberger
+- Roman Daniel Gabriel
 - Roman Gusev
 - Roman Kotyra
 - Roman Ondráček
 - Rúben Martins
+- Rudolf Kastl
 - Rudra Sarkar
 - runningz
 - s-duval
@@ -903,7 +907,7 @@ GitHub contributors:
 - Thomas
 - Thomas Baccelli
 - Thomas Blanc
-- Thomas DL
+- Thomas Delorenzi
 - Thomas Ferney
 - Thomas L'huillier
 - Thomas Leguillant
@@ -969,6 +973,7 @@ GitHub contributors:
 - webbax
 - webmak
 - webmake
+- William Entriken
 - Wojciech Grzebieniowski
 - Wouter Verweirder
 - Xavier

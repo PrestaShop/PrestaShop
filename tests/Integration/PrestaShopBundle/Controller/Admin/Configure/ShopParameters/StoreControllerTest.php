@@ -35,7 +35,7 @@ use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 use Tests\Resources\Resetter\StoreResetter;
 
-//@todo: when form actions are ready, this class should extend FormGridControllerTestCase and add additional tests for forms
+// @todo: when form actions are ready, this class should extend FormGridControllerTestCase and add additional tests for forms
 class StoreControllerTest extends GridControllerTestCase
 {
     /**
@@ -51,7 +51,6 @@ class StoreControllerTest extends GridControllerTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::mockContext();
         StoreResetter::resetStores();
     }
 
@@ -175,7 +174,7 @@ class StoreControllerTest extends GridControllerTestCase
             $allStoreIds[] = $store->getId();
         }
 
-        //first disable all of them
+        // first disable all of them
         $this->client->request(
             'POST',
             $this->router->generate('admin_stores_bulk_disable'),

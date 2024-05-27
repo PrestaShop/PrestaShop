@@ -30,20 +30,38 @@ namespace PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
-use PrestaShopBundle\Security\Admin\Employee;
+use PrestaShopBundle\Entity\Employee\Employee;
+use PrestaShopBundle\Security\Admin\SessionEmployeeProvider;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Listener dedicated to set up Employee context for the Back-Office/Admin application.
  */
-class EmployeeContextListener
+class EmployeeContextListener implements EventSubscriberInterface
 {
+    /**
+     * Priority a bit lower than the FirewallListener
+     */
+    public const KERNEL_REQUEST_PRIORITY = 7;
+
     public function __construct(
         private readonly EmployeeContextBuilder $employeeContextBuilder,
         private readonly LegacyContext $legacyContext,
         private readonly Security $security,
+        private readonly SessionEmployeeProvider $sessionEmployeeProvider,
     ) {
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::REQUEST => [
+                ['onKernelRequest', self::KERNEL_REQUEST_PRIORITY],
+            ],
+        ];
     }
 
     public function onKernelRequest(RequestEvent $event): void
@@ -52,10 +70,22 @@ class EmployeeContextListener
             return;
         }
 
-        if (!empty($this->legacyContext->getContext()->cookie->id_employee)) {
-            $this->employeeContextBuilder->setEmployeeId((int) $this->legacyContext->getContext()->cookie->id_employee);
-        } elseif ($this->security->getUser() instanceof Employee) {
-            $this->employeeContextBuilder->setEmployeeId($this->security->getUser()->getId());
+        $employeeId = null;
+        // First see if an employee is logged in
+        if ($this->security->getUser() instanceof Employee) {
+            $employeeId = $this->security->getUser()->getId();
+        }
+        // Then fetch the employee ID from the session
+        if (empty($employeeId)) {
+            $employeeId = $this->sessionEmployeeProvider->getEmployeeFromSession($event->getRequest())?->getId();
+        }
+        // Last chance use the legacy employee
+        if (empty($employeeId) && !empty($this->legacyContext->getContext()->cookie->id_employee)) {
+            $employeeId = (int) $this->legacyContext->getContext()->cookie->id_employee;
+        }
+
+        if (!empty($employeeId)) {
+            $this->employeeContextBuilder->setEmployeeId($employeeId);
         }
     }
 }

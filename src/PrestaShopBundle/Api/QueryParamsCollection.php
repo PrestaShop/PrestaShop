@@ -228,8 +228,8 @@ abstract class QueryParamsCollection
         $queryParams['page_index'] = (int) $queryParams['page_index'];
 
         if (
-            $queryParams['page_size'] > $this->getDefaultPageSize() ||
-            $queryParams['page_size'] < 1
+            $queryParams['page_size'] > $this->getDefaultPageSize()
+            || $queryParams['page_size'] < 1
         ) {
             throw new InvalidPaginationParamsException(sprintf('A page size should be an integer greater than 1 and fewer than %s', $this->getDefaultPageSize()));
         }
@@ -658,7 +658,7 @@ abstract class QueryParamsCollection
 
     /**
      * @param array $filters
-     * @param int|array<int>$attributes
+     * @param int|array<int> $attributes
      *
      * @return array
      */
@@ -713,7 +713,7 @@ abstract class QueryParamsCollection
     }
 
     /**
-     * @param array$filters
+     * @param array $filters
      *
      * @return mixed
      */

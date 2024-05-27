@@ -1003,7 +1003,7 @@ class CurrencyCore extends ObjectModel
                 $rate = 1;
             } else {
                 foreach ($data->currency as $obj) {
-                    if ($this->iso_code == (string) ($obj['iso_code'])) {
+                    if ($this->iso_code == (string) $obj['iso_code']) {
                         $rate = (float) $obj['rate'];
 
                         break;
@@ -1059,7 +1059,7 @@ class CurrencyCore extends ObjectModel
         }
 
         // Default feed currency (EUR)
-        $isoCodeSource = (string) ($feed->source['iso_code']);
+        $isoCodeSource = (string) $feed->source['iso_code'];
 
         if (!$defaultCurrency = Currency::getDefaultCurrency()) {
             return Context::getContext()->getTranslator()->trans('No default currency', [], 'Admin.Notifications.Error');
@@ -1086,10 +1086,10 @@ class CurrencyCore extends ObjectModel
     public static function getCurrencyInstance($id)
     {
         if (!isset(self::$currencies[$id])) {
-            self::$currencies[(int) ($id)] = new Currency($id);
+            self::$currencies[(int) $id] = new Currency($id);
         }
 
-        return self::$currencies[(int) ($id)];
+        return self::$currencies[(int) $id];
     }
 
     /**
@@ -1147,7 +1147,7 @@ class CurrencyCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function refreshLocalizedCurrencyData(array $languages, LocaleRepository $localeRepoCLDR)
     {

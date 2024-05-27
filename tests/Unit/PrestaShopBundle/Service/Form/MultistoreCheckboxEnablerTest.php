@@ -82,7 +82,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
     }
 
     /**
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
+     * @throws PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
      */
     public function testAddMultistoreElements(): void
     {

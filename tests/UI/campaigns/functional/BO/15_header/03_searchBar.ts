@@ -8,8 +8,8 @@ import {expect} from 'chai';
 import testContext from '@utils/testContext';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import searchResultsPage from '@pages/BO/searchResults';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_header_searchBar';
 
@@ -34,7 +34,7 @@ describe('BO - Header : Search bar', async () => {
   it('should search for "orders"', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchForOrders', baseContext);
 
-    await dashboardPage.search(page, 'orders');
+    await boDashboardPage.search(page, 'orders');
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
     expect(pageTitle).to.contains(searchResultsPage.pageTitle);

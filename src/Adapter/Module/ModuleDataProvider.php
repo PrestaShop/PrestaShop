@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Db;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Module as LegacyModule;
 use PhpParser;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
@@ -67,7 +68,7 @@ class ModuleDataProvider
      */
     private $employeeID;
 
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator, EntityManager $entityManager = null)
+    public function __construct(LoggerInterface $logger, TranslatorInterface $translator, ?EntityManager $entityManager = null)
     {
         $this->logger = $logger;
         $this->translator = $translator;
@@ -304,7 +305,7 @@ class ModuleDataProvider
         $require_correct = function ($name) use ($file_path, $logger, $log_context_data) {
             try {
                 require_once $file_path;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $logger->error(
                     $this->translator->trans(
                         'Error while loading file of module %module%. %error_message%',

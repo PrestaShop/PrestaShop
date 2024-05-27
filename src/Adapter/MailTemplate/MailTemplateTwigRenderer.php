@@ -85,10 +85,9 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
-     * @throws TypeException
-     *
      * @return string
      *
+     * @throws TypeException
      * @throws FileNotFoundException
      * @throws TypeException
      */
@@ -101,10 +100,10 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
+     * @return string
+     *
      * @throws FileNotFoundException
      * @throws TypeException
-     *
-     * @return string
      */
     public function renderTxt(LayoutInterface $layout, LanguageInterface $language)
     {
@@ -181,7 +180,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
             $templateTransformations->add($transformation);
         }
 
-        //This hook allows to add/remove transformations during a layout rendering
+        // This hook allows to add/remove transformations during a layout rendering
         $this->hookDispatcher->dispatchWithParameters(
             MailTemplateRendererInterface::GET_MAIL_LAYOUT_TRANSFORMATIONS,
             [

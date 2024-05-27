@@ -47,14 +47,13 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
-use PrestaShopBundle\Service\DataProvider\UserProvider;
+use PrestaShopBundle\Security\Admin\UserTokenManager;
+use ReflectionMethod;
+use ReflectionObject;
 use Shop;
 use Smarty;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Tests\Integration\Utility\ContextMockerTrait;
 use Tools;
 
@@ -106,7 +105,7 @@ class AdminControllerTest extends TestCase
     public function testTrans(string $controllerClass): void
     {
         $testedController = new $controllerClass();
-        $transMethod = new \ReflectionMethod($testedController, 'trans');
+        $transMethod = new ReflectionMethod($testedController, 'trans');
         $transMethod->setAccessible(true);
         $trans = $transMethod->invoke($testedController, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
         $this->assertEquals('<a href="test">10 Succesful deletion "<b>stringTest</b>"</a>', $trans);
@@ -128,7 +127,7 @@ class AdminControllerTest extends TestCase
          * @var Controller $testedController
          */
         $testedController = new $controllerClass();
-        $refController = new \ReflectionObject($testedController);
+        $refController = new ReflectionObject($testedController);
         $refProperty = $refController->getProperty('container');
         $refProperty->setAccessible(true);
         $refProperty->setValue($testedController, $this->getMockContainerBuilder());
@@ -159,8 +158,6 @@ class AdminControllerTest extends TestCase
             ['AdminCustomerThreadsController'],
             ['AdminReturnController'],
             ['AdminStoresController'],
-            ['AdminSuppliersController'],
-            ['AdminAttributesGroupsController'],
             ['AdminNotFoundController'],
             ['AdminTagsController'],
             ['AdminShopController'],
@@ -170,7 +167,6 @@ class AdminControllerTest extends TestCase
             ['AdminTaxRulesGroupController'],
             ['AdminShopUrlController'],
             ['AdminStatsController'],
-            ['AdminLegacyLayoutController'],
         ];
     }
 
@@ -281,11 +277,8 @@ class AdminControllerTest extends TestCase
                 if ($param === 'prestashop.adapter.multistore_feature') {
                     return $this->getMockFeatureInterface();
                 }
-                if ($param === 'prestashop.user_provider') {
-                    return $this->getMockedUserProvider();
-                }
-                if ($param === CsrfTokenManagerInterface::class) {
-                    return $this->getMockedCsrfTokenManager();
+                if ($param === UserTokenManager::class) {
+                    return $this->getMockedUserTokenManager();
                 }
                 if ($param === 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker') {
                     return $this->getMockedAvifExtensionChecker();
@@ -441,22 +434,11 @@ class AdminControllerTest extends TestCase
         return $mockMockFeatureInterface;
     }
 
-    private function getMockedUserProvider(): UserProvider
+    private function getMockedUserTokenManager(): UserTokenManager
     {
-        $userProvider = $this->createMock(UserProvider::class);
-        $userProvider->method('getUsername')->willReturn('testUser');
+        $userTokenManager = $this->createMock(UserTokenManager::class);
+        $userTokenManager->method('getSymfonyToken')->willReturn('mockedToken');
 
-        return $userProvider;
-    }
-
-    private function getMockedCsrfTokenManager(): CsrfTokenManager
-    {
-        $mockedCrfToken = $this->createMock(CsrfToken::class);
-        $mockedCrfToken->method('getValue')->willReturn('mockedToken');
-
-        $tokenManager = $this->createMock(CsrfTokenManager::class);
-        $tokenManager->method('getToken')->withAnyParameters()->willReturn($mockedCrfToken);
-
-        return $tokenManager;
+        return $userTokenManager;
     }
 }

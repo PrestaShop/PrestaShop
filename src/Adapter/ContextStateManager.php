@@ -34,9 +34,11 @@ use Controller;
 use Country;
 use Currency;
 use Customer;
+use Employee;
 use Language;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
+use PrestaShopException;
 use Shop;
 
 /**
@@ -54,6 +56,7 @@ class ContextStateManager
         'controller',
         'country',
         'currency',
+        'employee',
         'language',
         'currentLocale',
         'customer',
@@ -194,13 +197,28 @@ class ContextStateManager
     }
 
     /**
+     * Sets context employee and saves previous value
+     *
+     * @param Employee|null $employee
+     *
+     * @return $this
+     */
+    public function setEmployee(?Employee $employee): self
+    {
+        $this->saveContextField('employee');
+        $this->getContext()->employee = $employee;
+
+        return $this;
+    }
+
+    /**
      * Sets context shop and saves previous value
      *
      * @param Shop $shop
      *
      * @return $this
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function setShop(Shop $shop): self
     {
@@ -219,7 +237,7 @@ class ContextStateManager
      *
      * @return $this
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function setShopContext(int $shopContext, ?int $shopContextId = null): self
     {

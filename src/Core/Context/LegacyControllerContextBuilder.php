@@ -88,6 +88,12 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
 
     public function buildLegacyContext(): void
     {
+        // In legacy pages the AdminController class already sets the context's controller, which is a more accurate
+        // candidate than our facade meant for backward compatibility, so we leave it untouched
+        if ($this->contextStateManager->getContext()->controller) {
+            return;
+        }
+
         $this->assertArguments();
 
         if (null === $this->_legacyControllerContext) {

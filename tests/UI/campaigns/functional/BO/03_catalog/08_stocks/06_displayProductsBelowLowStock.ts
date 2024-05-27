@@ -7,11 +7,11 @@ import basicHelper from '@utils/basicHelper';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import stocksPage from '@pages/BO/catalog/stocks';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_stocks_displayProductsBelowLowStock';
 
@@ -39,10 +39,10 @@ describe('BO - Catalog - Stocks : Display products below low stock level first',
   it('should go to \'Catalog > Stocks\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.stocksLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.stocksLink,
     );
     await stocksPage.closeSfToolBar(page);
 

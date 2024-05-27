@@ -35,160 +35,108 @@ use PrestaShopBundle\Translation\Constraints\PassVsprintf;
  * @ORM\Table(
  *     indexes={@ORM\Index(name="key", columns={"domain"})},
  * )
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TranslationRepository")
+ *
  * @PassVsprintf
  */
 class Translation
 {
     /**
-     * @var int
-     *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_translation", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var Lang
-     *
      * @ORM\ManyToOne(targetEntity="Lang", inversedBy="translations")
+     *
      * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false)
      */
-    private $lang;
+    private Lang $lang;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="`key`", type="text", length=8000, options={"collation":"utf8_bin"})
      */
-    private $key;
+    private string $key;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="translation", type="text", length=65500)
      */
-    private $translation;
+    private string $translation;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="domain", type="string", length=80)
      */
-    private $domain;
+    private string $domain;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="theme", type="string", length=32, nullable=true)
      */
-    private $theme = null;
+    private ?string $theme = null;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
 
-    /**
-     * @return string
-     */
-    public function getTranslation()
+    public function getTranslation(): string
     {
         return $this->translation;
     }
 
-    /**
-     * @return Lang
-     */
-    public function getLang()
+    public function getLang(): Lang
     {
         return $this->lang;
     }
 
-    /**
-     * @return string
-     */
-    public function getDomain()
+    public function getDomain(): string
     {
         return $this->domain;
     }
 
-    /**
-     * @param string $key
-     *
-     * @return \PrestaShopBundle\Entity\Translation
-     */
-    public function setKey($key)
+    public function setKey(string $key): static
     {
         $this->key = $key;
 
         return $this;
     }
 
-    /**
-     * @param string $translation
-     *
-     * @return \PrestaShopBundle\Entity\Translation
-     */
-    public function setTranslation($translation)
+    public function setTranslation(string $translation): static
     {
         $this->translation = $translation;
 
         return $this;
     }
 
-    /**
-     * @param Lang $lang
-     *
-     * @return \PrestaShopBundle\Entity\Translation
-     */
-    public function setLang(Lang $lang)
+    public function setLang(Lang $lang): static
     {
         $this->lang = $lang;
 
         return $this;
     }
 
-    /**
-     * @param string $domain
-     *
-     * @return \PrestaShopBundle\Entity\Translation
-     */
-    public function setDomain($domain)
+    public function setDomain(string $domain): static
     {
         $this->domain = $domain;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTheme()
+    public function getTheme(): ?string
     {
         return $this->theme;
     }
 
-    /**
-     * @param string $theme
-     *
-     * @return \PrestaShopBundle\Entity\Translation
-     */
-    public function setTheme($theme)
+    public function setTheme(?string $theme): static
     {
         $this->theme = $theme;
 

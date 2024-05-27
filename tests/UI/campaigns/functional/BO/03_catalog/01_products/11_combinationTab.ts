@@ -7,7 +7,6 @@ import files from '@utils/files';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
@@ -24,6 +23,7 @@ import type {
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_combinationTab';
 
@@ -79,10 +79,10 @@ describe('BO - Catalog - Products : Combination tab', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       await productsPage.closeSfToolBar(page);
@@ -264,7 +264,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
             value: 'White',
           },
         ];
-        await foProductPage.selectAttributes(page, 1, firstCombination);
+        await foProductPage.selectDefaultAttributes(page, firstCombination);
 
         const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
         expect(isVisible).to.eq(test.args.isAddToCartButtonVisible);
@@ -330,7 +330,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
           value: 'Taupe',
         },
       ];
-      await foProductPage.selectAttributes(page, 1, firstCombination);
+      await foProductPage.selectDefaultAttributes(page, firstCombination);
 
       const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
       expect(isVisible).eq(false);
@@ -385,7 +385,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
           value: 'Taupe',
         },
       ];
-      await foProductPage.selectAttributes(page, 1, firstCombination);
+      await foProductPage.selectDefaultAttributes(page, firstCombination);
 
       const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
       expect(isVisible).eq(true);

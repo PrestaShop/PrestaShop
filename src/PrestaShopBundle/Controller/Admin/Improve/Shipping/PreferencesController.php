@@ -65,7 +65,7 @@ class PreferencesController extends FrameworkBundleAdminController
         $formHandler = $this->getCarrierOptionsFormHandler();
         $this->dispatchHook(
             'actionAdminShippingPreferencesControllerPostProcessCarrierOptionsBefore',
-                ['controller' => $this]
+            ['controller' => $this]
         );
 
         $this->dispatchHook('actionAdminShippingPreferencesControllerPostProcessBefore', ['controller' => $this]);

@@ -20,7 +20,11 @@ class OrderConfirmation extends OrderConfirmationPage {
     this.orderDetailsTable = 'div.order-confirmation__details ul.order-details';
     this.orderReferenceValue = `${this.orderDetailsTable} li:nth-child(1)`;
     this.customerSupportLink = 'div.card .card-footer a.alert-link';
+    this.subTotalRow = 'div.order-confirmation__subtotals div:nth-child(1) div.text-end';
+    this.shippingRow = 'div.order-confirmation__subtotals div:nth-child(2) div.text-end';
+    this.totalRow = 'div.order-confirmation__totals div:nth-child(1) div.text-end';
     this.paymentMethodRow = `${this.orderDetailsTable} li:nth-child(2)`;
+    this.shippingMethodRow = `${this.orderDetailsTable} li:nth-child(3)`;
     this.paymentInformationBody = '#content-wrapper div:nth-child(2) div.card-body';
     this.orderDetails = 'div.order-confirmation__details ul.order-details';
     this.productRow = 'div.order-confirmation__items div.item';
@@ -32,6 +36,16 @@ class OrderConfirmation extends OrderConfirmationPage {
     this.productRowImage = (row: number) => `${this.productRowNth(row)} div.item__image img`;
     this.productRowDetails = (row: number) => `${this.productRowNth(row)} div.item__details`;
     this.productRowPrices = (row: number) => `${this.productRowNth(row)} div.item__prices`;
+
+    // Popular products section
+    this.productsBlock = '#content-wrapper section.featured-products';
+    this.productsBlockTitle = `${this.productsBlock} h2`;
+    this.productsBlockDiv = `${this.productsBlock} div.products div.card`;
+    this.allProductsLink = `${this.productsBlock} div.featured-products-footer a`;
+    this.productArticle = (number: number) => `${this.productsBlock} article:nth-child(${number})`;
+    this.productImg = (number: number) => `${this.productArticle(number)} img`;
+    this.productQuickViewLink = (number: number) => `${this.productArticle(number)} .product-miniature__quickview `
+      + 'button';
   }
 
   /**
@@ -46,6 +60,18 @@ class OrderConfirmation extends OrderConfirmationPage {
       details: await this.getTextContent(page, this.productRowDetails(row)),
       prices: await this.getTextContent(page, this.productRowPrices(row)),
     };
+  }
+
+  /**
+   * Quick view product
+   * @param page {Page} Browser tab
+   * @param id {number} Product row in the list
+   * @return {Promise<void>}
+   */
+  async quickViewProduct(page: Page, id: number): Promise<void> {
+    await page.locator(this.productImg(id)).hover();
+    await this.waitForVisibleSelector(page, this.productQuickViewLink(id));
+    await page.locator(this.productQuickViewLink(id)).click();
   }
 }
 

@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
@@ -18,6 +17,7 @@ import DeliverySlipOptionsData from '@data/faker/deliverySlipOptions';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -76,10 +76,10 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
     it('should go to \'Orders > Delivery slips\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPageToUpdateNumber', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.deliverySlipslink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.deliverySlipslink,
       );
       await deliverySlipsPage.closeSfToolBar(page);
 

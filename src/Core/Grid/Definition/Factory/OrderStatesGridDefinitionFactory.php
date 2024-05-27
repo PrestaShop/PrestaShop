@@ -182,7 +182,7 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                                 )
                             ),
                     ])
-        );
+            );
     }
 
     /**

@@ -9,7 +9,6 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
@@ -27,6 +26,7 @@ import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigationAndDisplay_displayTags';
 
@@ -155,10 +155,10 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.productSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.productSettingsLink,
       );
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
@@ -215,17 +215,17 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       await productPage.goTo(page, global.BO.URL);
 
-      const pageTitle = await dashboardPage.getPageTitle(page);
-      expect(pageTitle).to.contains(dashboardPage.pageTitle);
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
       await productsPage.closeSfToolBar(page);
 
@@ -294,7 +294,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage3', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
@@ -405,10 +405,10 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.productSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.productSettingsLink,
       );
 
       const pageTitle = await productSettingsPage.getPageTitle(page);

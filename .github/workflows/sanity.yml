@@ -34,6 +34,12 @@ jobs:
           PHP_VERSION: ${{ matrix.php }}
           ENABLE_SSL: 'true'
           INSTALL_AUTO: 'false'
+      - name: Setup Environment failure
+        uses: ./.github/actions/setup-env-export-logs
+        with:
+          DOCKER_PREFIX: prestashop
+          ARTIFACT_NAME: setup-sanity-${{ matrix.php }}-${{ matrix.browser }}
+        if: failure()
 
       - name: Run Tests
         uses: ./.github/actions/ui-test
@@ -49,10 +55,10 @@ jobs:
           docker logs prestashop-prestashop-git-1 > ./var/docker-logs/prestashop.log
 
       - name: Upload Screenshots and logs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: sanity-${{ matrix.php }}
+          name: sanity-${{ matrix.php }}-${{ matrix.browser }}
           path: |
             ./tests/UI/screenshots/
             ./var/logs

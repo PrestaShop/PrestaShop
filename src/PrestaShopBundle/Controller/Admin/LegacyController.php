@@ -27,16 +27,23 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use AdminController;
+use AdminControllerCore;
 use Dispatcher;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Routing\LegacyRouterChecker;
+use PrestaShopBundle\Routing\LegacyControllerConstants;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use PrestaShopBundle\Twig\Layout\SmartyVariablesFiller;
+use ReflectionException;
+use ReflectionMethod;
+use SmartyException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
 use function Symfony\Component\String\u;
 
 /**
@@ -49,8 +56,8 @@ use function Symfony\Component\String\u;
  * it twice.
  *
  * So this controller gets back the central content of an AdminController after it's been run and displayed and integrate it
- * in the legacy layout that is based on the same Symfony layout as migrated page, but it still uses the templates JS and CSS
- * from the default theme.
+ * in the "twig legacy layout" that is based on the same Symfony layout components as migrated page, but it still uses the
+ * templates JS and CSS from the default theme.
  *
  * There are cases where this approach may not work, mostly when the legacy controllers relies on die or exit methods (which is a
  * bad practice). So far the use cases tested work fine, even the use of the header function in legacy code still works correctly.
@@ -82,11 +89,11 @@ class LegacyController extends PrestaShopAdminController
         // These parameters have already been set as request attributes by LegacyRouterChecker
         $dispatcherHookParameters = [
             'controller_type' => Dispatcher::FC_ADMIN,
-            'controller_class' => $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_CLASS_ATTRIBUTE),
-            'is_module' => $request->attributes->get(LegacyRouterChecker::LEGACY_CONTROLLER_IS_MODULE_ATTRIBUTE),
+            'controller_class' => $request->attributes->get(LegacyControllerConstants::CONTROLLER_CLASS_ATTRIBUTE),
+            'is_module' => $request->attributes->get(LegacyControllerConstants::IS_MODULE_ATTRIBUTE),
         ];
 
-        $adminController = $this->initController($dispatcherHookParameters);
+        $adminController = $this->initController($request, $dispatcherHookParameters);
         // Redirect if necessary after post process
         if (!empty($adminController->getRedirectAfter())) {
             // After each request the cookie must be written to save its modified state during AdminController workflow
@@ -131,7 +138,7 @@ class LegacyController extends PrestaShopAdminController
      *
      * @return Response
      *
-     * @throws \SmartyException
+     * @throws SmartyException
      */
     protected function renderPageContent(AdminController $adminController): Response
     {
@@ -194,30 +201,8 @@ class LegacyController extends PrestaShopAdminController
         } elseif (method_exists($adminController, 'displayAjax')) {
             $adminController->displayAjax();
         }
-        $outputContent = ob_get_clean();
 
-        // The output of the controller is either directly echoed or it can be properly appended in AdminController::content
-        // it depends on the implementation of the controllers.
-        if (!empty($outputContent) && !empty($adminController->content)) {
-            // Sometimes they are both done and are equal, in which case we only return one content to avoid duplicates.
-            if ($outputContent === $adminController->content) {
-                $responseContent = $outputContent;
-            } else {
-                // In case both contents are present and are different we concatenate them, first the echoed output and then the controller
-                // one since it is displayed last by smarty in the original workflow
-                // This concatenation approach is theoretical and naive and was not tested because of the lack of use cases, so it may need
-                // to be improved in the future
-                $responseContent = $outputContent . $adminController->content;
-            }
-        } elseif (!empty($outputContent)) {
-            $responseContent = $outputContent;
-        } elseif (!empty($adminController->content)) {
-            $responseContent = $adminController->content;
-        } else {
-            $responseContent = '';
-        }
-
-        return new Response($responseContent);
+        return new Response(ob_get_clean());
     }
 
     /**
@@ -226,17 +211,17 @@ class LegacyController extends PrestaShopAdminController
      *
      * Note: some legacy controllers may already use die at this point (to echo content and finish the process) when postProcess is called.
      *
+     * @param Request $request
      * @param array $dispatcherHookParameters
      *
      * @return AdminController
      */
-    protected function initController(array $dispatcherHookParameters): AdminController
+    protected function initController(Request $request, array $dispatcherHookParameters): AdminController
     {
-        $controllerClass = $dispatcherHookParameters['controller_class'];
-
-        // Loading controller
+        // Retrieving the controller instantiated in LegacyRouterChecker
         /** @var AdminController $adminController */
-        $adminController = new $controllerClass();
+        $adminController = $request->attributes->get(LegacyControllerConstants::INSTANCE_ATTRIBUTE);
+        $this->checkIsRequestAllowed($request, $adminController);
 
         // Fill default smarty variables as they can be used in partial templates rendered in init methods
         $this->assignSmartyVariables->fillDefault();
@@ -246,10 +231,60 @@ class LegacyController extends PrestaShopAdminController
 
         // This part comes from AdminController::run method, it has been stripped from permission checks since the permission is already
         // handled by this Symfony controller
-        $adminController->init();
         $adminController->setMedia(false);
         $adminController->postProcess();
 
         return $adminController;
+    }
+
+    private function checkIsRequestAllowed(Request $request, AdminController $adminController): void
+    {
+        // If LegacyRouterChecker has already set the request as anonymous no need for further check
+        if ($request->attributes->get(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE) === true) {
+            return;
+        }
+
+        $action = $request->attributes->get(LegacyControllerConstants::CONTROLLER_ACTION_ATTRIBUTE);
+        $controllerName = $request->attributes->get(LegacyControllerConstants::CONTROLLER_NAME_ATTRIBUTE);
+        $tabId = !empty($adminController->id) && $adminController->id > 0 ? $adminController->id : null;
+
+        // When the action is read/view and the controller has overridden the viewAccess method we should rely on the custom implementation
+        if ($action === Permission::READ && $this->isMethodOverridden($adminController, 'viewAccess')) {
+            $isAllowed = $adminController->viewAccess();
+        } elseif (!empty($tabId) && !empty($controllerName) && !empty($action)) { // Permission can only be checked when the controller is associated to a tab (therefore a permission)
+            // Some legacy controller override the getTabSlug method thus the subject does not follow the usual convention based on class name
+            if ($this->isMethodOverridden($adminController, 'getTabSlug')) {
+                $tabSlug = $adminController->getTabSlug();
+                // Remove the prefix tab to be compliant with isGranted expected subject format
+                $grantSubject = str_replace(Permission::PREFIX_TAB, '', $tabSlug);
+            } else {
+                $grantSubject = $controllerName;
+            }
+
+            $isAllowed = $this->isGranted($action, $grantSubject);
+        } else {
+            // Other cases are likely public controllers with no permission management like AdminPdf
+            $isAllowed = true;
+        }
+
+        if (!$isAllowed) {
+            throw new AccessDeniedHttpException(sprintf(
+                'Employee is not granted %s on controller %s',
+                $action,
+                $controllerName,
+            ));
+        }
+    }
+
+    private function isMethodOverridden(AdminController $adminController, string $methodName): bool
+    {
+        try {
+            $reflector = new ReflectionMethod($adminController, 'getTabSlug');
+
+            return $reflector->getDeclaringClass()->getName() !== AdminControllerCore::class;
+        } catch (ReflectionException) {
+        }
+
+        return false;
     }
 }

@@ -122,7 +122,7 @@ class ProductSupplierUpdater
         }
 
         // We get useless IDs and perform a bulk delete, we don't clean via a direct query even if it would be faster
-        //because we need hook executed on each deleted ProductSupplier instance
+        // because we need hook executed on each deleted ProductSupplier instance
         $uselessProductSupplierIds = $this->productSupplierRepository->getUselessProductSupplierIds($productId, $supplierIds);
         $this->productSupplierRepository->bulkDelete($uselessProductSupplierIds);
 

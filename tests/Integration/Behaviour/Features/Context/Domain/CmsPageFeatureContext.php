@@ -355,7 +355,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         /** @var CmsPageId $cmsPageId */
         $cmsPageId = $this->getCommandBus()->handle($command);
 
-        SharedStorage::getStorage()->set($cmsPageReference, new \CMS($cmsPageId->getValue()));
+        SharedStorage::getStorage()->set($cmsPageReference, new CMS($cmsPageId->getValue()));
     }
 
     /**

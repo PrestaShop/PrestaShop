@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import featuresPage from '@pages/BO/catalog/features';
 import addFeaturePage from '@pages/BO/catalog/features/addFeature';
 import attributesPage from '@pages/BO/catalog/attributes';
@@ -16,6 +15,7 @@ import FeatureData from '@data/faker/feature';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -46,10 +46,10 @@ function createFeatureTest(createFeatureData: FeatureData, baseContext: string =
     it('should go to \'Catalog > Attributes & Features\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.attributesAndFeaturesLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.attributesAndFeaturesLink,
       );
       await attributesPage.closeSfToolBar(page);
 
@@ -111,10 +111,10 @@ function bulkDeleteFeaturesTest(featureName: string, baseContext: string = 'comm
     it('should go to \'Catalog > Attributes & Features\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.attributesAndFeaturesLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.attributesAndFeaturesLink,
       );
       await attributesPage.closeSfToolBar(page);
 

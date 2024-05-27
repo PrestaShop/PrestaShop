@@ -44,7 +44,7 @@ class BulkFeatureValueException extends FeatureValueException implements BulkCom
         private readonly array $exceptions,
         string $message = 'Errors occurred during Feature value bulk action',
         int $code = 0,
-        Throwable $previous = null
+        ?Throwable $previous = null
     ) {
         parent::__construct($message, $code, $previous);
     }

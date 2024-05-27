@@ -54,7 +54,7 @@ class LegacyControllerContextBuilderTest extends TestCase
      * @param string $expectedCurrentIndex
      * @param ?string $redirectionUrl
      */
-    public function testBuild(string $controllerName, string $expectedControllerName, ?string $className, int $multishopContext, string $expectedCurrentIndex, string $expectedTable, string $redirectionUrl = null): void
+    public function testBuild(string $controllerName, string $expectedControllerName, ?string $className, int $multishopContext, string $expectedCurrentIndex, string $expectedTable, ?string $redirectionUrl = null): void
     {
         $builder = new LegacyControllerContextBuilder(
             $this->mockEmployeeContext(),

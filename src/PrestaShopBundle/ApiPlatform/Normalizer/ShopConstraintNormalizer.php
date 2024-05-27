@@ -40,7 +40,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 #[AutoconfigureTag('prestashop.api.normalizers')]
 class ShopConstraintNormalizer implements DenormalizerInterface, NormalizerInterface
 {
-    public function denormalize($data, string $type, string $format = null, array $context = [])
+    public function denormalize($data, string $type, ?string $format = null, array $context = [])
     {
         if (!empty($data['shopId'])) {
             return ShopConstraint::shop($data['shopId'], $data['isStrict'] ?? false);
@@ -52,12 +52,12 @@ class ShopConstraintNormalizer implements DenormalizerInterface, NormalizerInter
         return ShopConstraint::allShops($data['isStrict'] ?? false);
     }
 
-    public function supportsDenormalization($data, string $type, string $format = null)
+    public function supportsDenormalization($data, string $type, ?string $format = null)
     {
         return ShopConstraint::class === $type;
     }
 
-    public function normalize($object, string $format = null, array $context = [])
+    public function normalize($object, ?string $format = null, array $context = [])
     {
         if (!($object instanceof ShopConstraint)) {
             throw new InvalidArgumentException('Expected object to be a ' . ShopConstraint::class);
@@ -70,7 +70,7 @@ class ShopConstraintNormalizer implements DenormalizerInterface, NormalizerInter
         ];
     }
 
-    public function supportsNormalization($data, string $format = null)
+    public function supportsNormalization($data, ?string $format = null)
     {
         return $data instanceof ShopConstraint;
     }

@@ -142,7 +142,7 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertGotErrorMessage()
     {
-        if (!$this->latestResult instanceof \Exception) {
+        if (!$this->latestResult instanceof Exception) {
             throw new Exception('Latest action did not return an error');
         }
 

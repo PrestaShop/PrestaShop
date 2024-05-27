@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import attributesPage from '@pages/BO/catalog/attributes';
 import featuresPage from '@pages/BO/catalog/features';
-import dashboardPage from '@pages/BO/dashboard';
 import addFeaturePage from '@pages/BO/catalog/features/addFeature';
 
 // Import data
@@ -17,6 +16,7 @@ import FeatureData from '@data/faker/feature';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_features_features_changePosition';
 
@@ -49,10 +49,10 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
     it('should go to \'Catalog > Attributes & Features\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.attributesAndFeaturesLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.attributesAndFeaturesLink,
       );
       await attributesPage.closeSfToolBar(page);
 

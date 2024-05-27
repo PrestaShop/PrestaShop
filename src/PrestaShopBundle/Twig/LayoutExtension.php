@@ -48,13 +48,11 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
      * Keeps the Context to look inside language settings.
      *
      * @param LegacyContext $context
-     * @param string $environment
      * @param ShopConfigurationInterface $configuration
      * @param CurrencyDataProvider $currencyDataProvider
      */
     public function __construct(
         private readonly LegacyContext $context,
-        private readonly string $environment,
         private readonly ShopConfigurationInterface $configuration,
         private readonly CurrencyDataProvider $currencyDataProvider
     ) {
@@ -74,12 +72,12 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
 
         try {
             $defaultCurrency = $this->context->getEmployeeCurrency() ?: $this->currencyDataProvider->getDefaultCurrency();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $defaultCurrency = null;
         }
         try {
             $rootUrl = $this->context->getRootUrl();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $rootUrl = null;
         }
 
@@ -113,7 +111,6 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
     public function getFunctions()
     {
         return [
-            new TwigFunction('getLegacyLayout', [$this, 'getLegacyLayout']),
             new TwigFunction('getAdminLink', [$this, 'getAdminLink']),
             new TwigFunction('youtube_link', [$this, 'getYoutubeLink']),
             new TwigFunction('configuration', [$this, 'getConfiguration']),
@@ -129,118 +126,9 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
      *
      * @return mixed
      */
-    public function getConfiguration($key, $default = null, ShopConstraint $shopConstraint = null)
+    public function getConfiguration($key, $default = null, ?ShopConstraint $shopConstraint = null)
     {
         return $this->configuration->get($key, $default, $shopConstraint);
-    }
-
-    /**
-     * Get admin legacy layout into old controller context.
-     *
-     * Parameters can be set manually into twig template or sent from controller
-     * For details : check Resources/views/Admin/Layout.html.twig
-     *
-     * @param string $controllerName The legacy controller name
-     * @param string $title The page title to override default one
-     * @param array $headerToolbarBtn The header toolbar to override
-     * @param string $displayType The legacy display type variable
-     * @param bool $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value
-     * @param array|string $headerTabContent Tabs labels
-     * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
-     * @param string $helpLink If specified, will be used instead of legacy one
-     * @param string[] $jsRouterMetadata JS Router needed configuration settings: base_url and security token
-     * @param string $metaTitle
-     * @param bool $useRegularH1Structure allows complex <h1> structure if set to false
-     *
-     * @throws Exception if legacy layout has no $content var replacement
-     *
-     * @return string The html layout
-     */
-    public function getLegacyLayout(
-        $controllerName = '',
-        $title = '',
-        $headerToolbarBtn = [],
-        $displayType = '',
-        $showContentHeader = true,
-        $headerTabContent = '',
-        $enableSidebar = false,
-        $helpLink = '',
-        $jsRouterMetadata = [],
-        $metaTitle = '',
-        $useRegularH1Structure = true,
-        $baseLayout = 'layout.tpl'
-    ) {
-        if ($this->environment == 'test') {
-            return <<<'EOF'
-<html>
-  <head>
-    <title>Test layout</title>
-    {% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}
-  </head>
-  <body>
-    {% block content_header %}{% endblock %}
-    {% block content %}{% endblock %}
-    {% block content_footer %}{% endblock %}
-    {% block javascripts %}{% endblock %}
-    {% block extra_javascripts %}{% endblock %}
-    {% block translate_javascripts %}{% endblock %}
-  </body>
-</html>
-EOF;
-        }
-
-        $layout = $this->context->getLegacyLayout(
-            $controllerName,
-            $title,
-            $headerToolbarBtn,
-            $displayType,
-            $showContentHeader,
-            $headerTabContent,
-            $enableSidebar,
-            $helpLink,
-            $jsRouterMetadata,
-            $metaTitle,
-            $useRegularH1Structure,
-            $baseLayout
-        );
-
-        // There is nothing to display no legacy layout are generated
-        if ($layout === '') {
-            return '';
-        }
-
-        // Test if legacy template from "content.tpl" has '{$content}'
-        if (!str_contains($layout, '{$content}')) {
-            throw new Exception('PrestaShopBundle\Twig\LayoutExtension cannot find the {$content} string in legacy layout template', 1);
-        }
-
-        $explodedLayout = explode('{$content}', $layout);
-        $header = explode('</head>', $explodedLayout[0]);
-        $footer = explode('</body>', $explodedLayout[1]);
-
-        return $this->escapeSmarty(str_replace('var currentIndex = \'index.php\';', 'var currentIndex = \'' . $this->context->getAdminLink($controllerName) . '\';', $header[0]))
-            . '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>'
-            . $this->escapeSmarty($header[1])
-            . '{% block content_header %}{% endblock %}'
-            . '{% block content %}{% endblock %}'
-            . '{% block content_footer %}{% endblock %}'
-            . '{% block sidebar_right %}{% endblock %}'
-            . $this->escapeSmarty($footer[0])
-            . '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>'
-            . $this->escapeSmarty($footer[1]);
-    }
-
-    private function escapeSmarty(string $template): string
-    {
-        // Hard limit of twig filter at 8191 characters (2^13 - 1)
-        // Split the string in multiple chunks
-        $strings = str_split($template, 2000);
-        $return = '';
-        foreach ($strings as $string) {
-            $return .= '{{ \'' . addcslashes($string, "\\'\0") . '\' | raw }}';
-        }
-
-        return $return;
     }
 
     /**

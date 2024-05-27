@@ -384,7 +384,7 @@ class CartRuleCore extends ObjectModel
         $active = false,
         $includeGeneric = true,
         $inStock = false,
-        CartCore $cart = null,
+        ?CartCore $cart = null,
         $free_shipping_only = false,
         $highlight_only = false
     ) {
@@ -395,7 +395,7 @@ class CartRuleCore extends ObjectModel
         // Basic part of the query, we are selecting all cart rules
         $sql = '
             SELECT SQL_NO_CACHE * FROM `' . _DB_PREFIX_ . 'cart_rule` cr
-            LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl 
+            LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl
             ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
 
         // We will definitely include vouchers for this specific customer
@@ -561,14 +561,14 @@ class CartRuleCore extends ObjectModel
         CartCore $cart
     ) {
         return static::getCustomerCartRules(
-           $languageId,
-           $customerId,
-           $active = true,
-           $includeGeneric = true,
-           $inStock = true,
-           $cart,
-           $freeShippingOnly = false,
-           $highlightOnly = true
+            $languageId,
+            $customerId,
+            $active = true,
+            $includeGeneric = true,
+            $inStock = true,
+            $cart,
+            $freeShippingOnly = false,
+            $highlightOnly = true
         );
     }
 
@@ -1241,7 +1241,7 @@ class CartRuleCore extends ObjectModel
      *
      * @return float|int|string
      */
-    public function getContextualValue($use_tax, Context $context = null, $filter = null, $package = null, $use_cache = true)
+    public function getContextualValue($use_tax, ?Context $context = null, $filter = null, $package = null, $use_cache = true)
     {
         if (!CartRule::isFeatureActive()) {
             return 0;
@@ -1733,7 +1733,7 @@ class CartRuleCore extends ObjectModel
      * @param Context|null $context Context instance
      * @param bool $useOrderPrices
      */
-    public static function autoAddToCart(Context $context = null, bool $useOrderPrices = false)
+    public static function autoAddToCart(?Context $context = null, bool $useOrderPrices = false)
     {
         if ($context === null) {
             $context = Context::getContext();
@@ -1810,7 +1810,7 @@ class CartRuleCore extends ObjectModel
      *
      * @return array Error messages
      */
-    public static function autoRemoveFromCart(Context $context = null, bool $useOrderPrice = false)
+    public static function autoRemoveFromCart(?Context $context = null, bool $useOrderPrice = false)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1936,7 +1936,7 @@ class CartRuleCore extends ObjectModel
      */
     protected function filterProducts($products, $eligibleProducts, $ruleType)
     {
-        //If the two same array, no verification todo.
+        // If the two same array, no verification todo.
         if ($products === $eligibleProducts) {
             return $products;
         }

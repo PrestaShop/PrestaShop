@@ -33,150 +33,91 @@ use Doctrine\ORM\Mapping as ORM;
  * ModuleHistory.
  *
  * @ORM\Table
+ *
  * @ORM\Entity
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class ModuleHistory
 {
     /**
-     * @var int
-     *
      * @ORM\Id
+     *
      * @ORM\Column(name="id", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="id_employee", type="integer")
      */
-    private $idEmployee;
+    private int $idEmployee;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="id_module", type="integer")
      */
-    private $idModule;
+    private int $idModule;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_add", type="datetime")
      */
-    private $dateAdd;
+    private DateTime $dateAdd;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_upd", type="datetime")
      */
-    private $dateUpd;
+    private DateTime $dateUpd;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set idEmployee.
-     *
-     * @param int $idEmployee
-     *
-     * @return ModuleHistory
-     */
-    public function setIdEmployee($idEmployee)
+    public function setIdEmployee(int $idEmployee): static
     {
         $this->idEmployee = $idEmployee;
 
         return $this;
     }
 
-    /**
-     * Get idEmployee.
-     *
-     * @return int
-     */
-    public function getIdEmployee()
+    public function getIdEmployee(): int
     {
         return $this->idEmployee;
     }
 
-    /**
-     * Set idModule.
-     *
-     * @param int $idModule
-     *
-     * @return ModuleHistory
-     */
-    public function setIdModule($idModule)
+    public function setIdModule($idModule): static
     {
         $this->idModule = $idModule;
 
         return $this;
     }
 
-    /**
-     * Get idModule.
-     *
-     * @return int
-     */
-    public function getIdModule()
+    public function getIdModule(): int
     {
         return $this->idModule;
     }
 
-    /**
-     * Set dateAdd.
-     *
-     * @param \DateTime $dateAdd
-     *
-     * @return ModuleHistory
-     */
-    public function setDateAdd($dateAdd)
+    public function setDateAdd(DateTime $dateAdd): static
     {
         $this->dateAdd = $dateAdd;
 
         return $this;
     }
 
-    /**
-     * Get dateAdd.
-     *
-     * @return \DateTime
-     */
-    public function getDateAdd()
+    public function getDateAdd(): DateTime
     {
         return $this->dateAdd;
     }
 
-    /**
-     * Set dateUpd.
-     *
-     * @param \DateTime $dateUpd
-     *
-     * @return ModuleHistory
-     */
-    public function setDateUpd($dateUpd)
+    public function setDateUpd(DateTime $dateUpd): static
     {
         $this->dateUpd = $dateUpd;
 
         return $this;
     }
 
-    /**
-     * Get dateUpd.
-     *
-     * @return \DateTime
-     */
-    public function getDateUpd()
+    public function getDateUpd(): DateTime
     {
         return $this->dateUpd;
     }
@@ -185,14 +126,14 @@ class ModuleHistory
      * Now we tell doctrine that before we persist or update we call the updatedTimestamps() function.
      *
      * @ORM\PrePersist
+     *
      * @ORM\PreUpdate
      */
-    public function updatedTimestamps()
+    public function updatedTimestamps(): void
     {
-        $this->setDateUpd(new DateTime());
-
-        if ($this->getDateAdd() == null) {
-            $this->setDateAdd(new DateTime());
+        $this->dateUpd = new DateTime();
+        if (!isset($this->dateAdd)) {
+            $this->dateAdd = new DateTime();
         }
     }
 }

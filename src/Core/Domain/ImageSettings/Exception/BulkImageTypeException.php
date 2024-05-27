@@ -47,7 +47,7 @@ class BulkImageTypeException extends ImageTypeException implements BulkCommandEx
         private readonly array $exceptions,
         string $message = 'Errors occurred during image type bulk action',
         int $code = 0,
-        Throwable $previous = null
+        ?Throwable $previous = null
     ) {
         parent::__construct($message, $code, $previous);
     }

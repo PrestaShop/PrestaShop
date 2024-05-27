@@ -195,6 +195,11 @@ class AdminGroupsControllerCore extends AdminController
         }
 
         parent::initProcess();
+
+        // This is a composite page, we don't want the "options" display mode
+        if ($this->display == 'options') {
+            $this->display = '';
+        }
     }
 
     public function postProcess(): void
@@ -269,7 +274,7 @@ class AdminGroupsControllerCore extends AdminController
         $this->explicitSelect = true;
         $this->list_skip_actions = [];
 
-        $this->fields_list = ([
+        $this->fields_list = [
             'id_customer' => [
                 'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
@@ -317,7 +322,7 @@ class AdminGroupsControllerCore extends AdminController
                 'filter_key' => 'c!active',
                 'callback' => 'printOptinIcon',
             ],
-        ]);
+        ];
         $this->_select = 'c.*, a.id_group';
         $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (a.`id_customer` = c.`id_customer`)';
         $this->_where = 'AND a.`id_group` = ' . (int) $group->id . ' AND c.`deleted` != 1';
@@ -526,7 +531,7 @@ class AdminGroupsControllerCore extends AdminController
 
         $unauth_modules_tmp = [];
         foreach ($unauth_modules as $key => $val) {
-            if (($tmp_obj = Module::getInstanceById($val['id_module']))) {
+            if ($tmp_obj = Module::getInstanceById($val['id_module'])) {
                 $unauth_modules_tmp[] = $tmp_obj;
             }
         }
@@ -561,7 +566,7 @@ class AdminGroupsControllerCore extends AdminController
     public function ajaxProcessAddCategoryReduction()
     {
         $category_reduction = Tools::getValue('category_reduction');
-        $id_category = Tools::getValue('id_category'); //no cast validation is done with Validate::isUnsignedId($id_category)
+        $id_category = Tools::getValue('id_category'); // no cast validation is done with Validate::isUnsignedId($id_category)
 
         $result = [];
         if (!Validate::isUnsignedId($id_category)) {

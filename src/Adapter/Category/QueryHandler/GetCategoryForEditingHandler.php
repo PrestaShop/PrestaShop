@@ -127,7 +127,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
 
         $imageTag = ImageManager::thumbnail(
             $image,
-            'category' . '_' . $categoryId->getValue() . '.' . $imageType,
+            'category_' . $categoryId->getValue() . '.' . $imageType,
             350,
             $imageType,
             true,

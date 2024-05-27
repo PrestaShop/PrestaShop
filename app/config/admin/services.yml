@@ -1,11 +1,4 @@
 # Dedicated services for Admin app
-parameters:
-  # All admin context listeners should be executed before the router listener, this way even if no symfony route is found they context are initialized
-  # and can be used in admin legacy pages as well (router listener priority is 32)
-  employee_listener_priority: 35
-  language_listener_priority: 34
-  default_listener_priority: 33
-
 services:
   _defaults:
     public: false
@@ -13,20 +6,18 @@ services:
     autoconfigure: true
 
   # SECURITY
-  prestashop.adapter.security.admin:
-    class: "%AdapterSecurityAdminClass%"
+  PrestaShopBundle\EventListener\Admin\TokenizedUrlsListener:
+    autowire: true
     arguments:
-      - "@prestashop.adapter.legacy.context"
-      - "@security.token_storage"
-      - "@prestashop.security.admin.provider"
-      - "@security.helper"
+      $map: '@security.access_map'
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-  PrestaShopBundle\EventListener\Admin\TokenizedUrlsListener:
+  PrestaShopBundle\EventListener\Admin\EmployeeSessionSubscriber:
     autowire: true
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    autoconfigure: true
+    arguments:
+      $entityManager: '@doctrine.orm.default_entity_manager'
 
   # Priority 40 to be called before the RouterListener (which has priority 32)
   PrestaShopBundle\EventListener\Admin\LegacyUrlListener:
@@ -59,9 +50,10 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
+  # Priority is set after Symfony LocaleListener but before LocaleAwareListener
   PrestaShopBundle\EventListener\Admin\UserLocaleListener:
+    autowire: true
     arguments:
-      - "@prestashop.adapter.legacy.context"
       - "@prestashop.adapter.legacy.configuration"
       - "@prestashop.core.admin.lang.repository"
     tags:
@@ -71,34 +63,13 @@ services:
     autowire: true
     autoconfigure: true
 
-  # Context listeners
-
-  # Employee context must have a higher priority because Shop and Language depend on it
-  PrestaShopBundle\EventListener\Admin\Context\EmployeeContextListener:
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%employee_listener_priority%' }
-
-  # Language depends on Employee so its priority is lower, however it has higher priority than Currency and Country because they depend on Language
-  PrestaShopBundle\EventListener\Admin\Context\LanguageContextListener:
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%language_listener_priority%' }
-
-  PrestaShopBundle\EventListener\Admin\Context\ShopContextListener:
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%default_listener_priority%' }
-
-  PrestaShopBundle\EventListener\Admin\Context\CurrencyContextListener:
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%default_listener_priority%' }
-
-  PrestaShopBundle\EventListener\Admin\Context\CountryContextListener:
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: '%default_listener_priority%' }
-
-  # This listener must run after the router listener since it's based on the request attributes that are defined by the router
-  PrestaShopBundle\EventListener\Admin\Context\LegacyControllerContextListener:
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+  # Context listeners, these are event subscribers, so they define their priority themselves
+  PrestaShopBundle\EventListener\Admin\Context\EmployeeContextListener: ~
+  PrestaShopBundle\EventListener\Admin\Context\LanguageContextListener: ~
+  PrestaShopBundle\EventListener\Admin\Context\ShopContextListener: ~
+  PrestaShopBundle\EventListener\Admin\Context\CurrencyContextListener: ~
+  PrestaShopBundle\EventListener\Admin\Context\CountryContextListener: ~
+  PrestaShopBundle\EventListener\Admin\Context\LegacyControllerContextListener: ~
 
   PrestaShopBundle\EventListener\Admin\Context\LegacyContextListener:
     arguments:

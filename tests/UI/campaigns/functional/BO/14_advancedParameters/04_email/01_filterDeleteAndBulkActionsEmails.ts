@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import emailPage from '@pages/BO/advancedParameters/email';
 
 // Import FO pages
@@ -22,6 +21,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import Languages from '@data/demo/languages';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataPaymentMethods,
@@ -64,7 +64,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       // Click on view my shop
-      page = await dashboardPage.viewMyShop(page);
+      page = await boDashboardPage.viewMyShop(page);
 
       // Change language in FO
       await homePage.changeLanguage(page, 'en');
@@ -140,8 +140,8 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       // Go Back to BO
       page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await dashboardPage.getPageTitle(page);
-      expect(pageTitle).to.contains(dashboardPage.pageTitle);
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
   });
 
@@ -149,10 +149,10 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     it('should go to \'Advanced Parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.emailLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.emailLink,
       );
 
       const pageTitle = await emailPage.getPageTitle(page);

@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Metadata\CollectionOperationInterface;
+use Attribute;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
 
@@ -39,16 +40,16 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
  * it is custom tailed for read operations and forces using the GET method.
  * It gathers its data from the associated GridData using the GridDataFactoryInterface.
  */
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class PaginatedList extends AbstractCQRSOperation implements CollectionOperationInterface
 {
     public function __construct(
         ?string $uriTemplate = null,
         ?array $types = null,
-                $formats = null,
-                $inputFormats = null,
-                $outputFormats = null,
-                $uriVariables = null,
+        $formats = null,
+        $inputFormats = null,
+        $outputFormats = null,
+        $uriVariables = null,
         ?string $routePrefix = null,
         ?string $routeName = null,
         ?array $defaults = null,
@@ -57,7 +58,7 @@ class PaginatedList extends AbstractCQRSOperation implements CollectionOperation
         ?bool $stateless = null,
         ?string $sunset = null,
         ?string $acceptPatch = null,
-                $status = null,
+        $status = null,
         ?string $host = null,
         ?array $schemes = null,
         ?string $condition = null,
@@ -94,10 +95,10 @@ class PaginatedList extends AbstractCQRSOperation implements CollectionOperation
         ?string $deprecationReason = null,
         ?array $filters = null,
         ?array $validationContext = null,
-                $input = null,
-                $output = null,
-                $mercure = null,
-                $messenger = null,
+        $input = null,
+        $output = null,
+        $mercure = null,
+        $messenger = null,
         ?bool $elasticsearch = null,
         ?int $urlGenerationStrategy = null,
         ?bool $read = null,
@@ -109,8 +110,8 @@ class PaginatedList extends AbstractCQRSOperation implements CollectionOperation
         ?bool $forceEager = null,
         ?int $priority = null,
         ?string $name = null,
-                $provider = null,
-                $processor = null,
+        $provider = null,
+        $processor = null,
         array $extraProperties = [],
         array $scopes = [],
         ?array $ApiResourceMapping = null,

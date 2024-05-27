@@ -547,8 +547,8 @@ class ProductCore extends ObjectModel
                 ],
             ],
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => false, 'size' => ProductSettings::MAX_NAME_LENGTH],
-            'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
-            'description_short' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 4194303],
+            'description_short' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 4194303],
             'available_now' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => ProductSettings::MAX_AVAILABLE_NOW_LABEL_LENGTH],
             'available_later' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => ProductSettings::MAX_AVAILABLE_LATER_LABEL_LENGTH],
         ],
@@ -712,7 +712,7 @@ class ProductCore extends ObjectModel
      * @param int|null $id_shop Shop identifier
      * @param Context|null $context Context to use for retrieve cart
      */
-    public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
+    public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, ?Context $context = null)
     {
         parent::__construct($id_product, $id_lang, $id_shop);
 
@@ -1290,26 +1290,26 @@ class ProductCore extends ObjectModel
 
         Hook::exec('actionProductDelete', ['id_product' => (int) $this->id, 'product' => $this]);
         if (
-            !$result ||
-            !$this->deleteProductAttributes() ||
-            !$this->deleteImages() ||
-            !GroupReduction::deleteProductReduction($this->id) ||
-            !$this->deleteCategories(false) ||
-            !$this->deleteProductFeatures() ||
-            !$this->deleteTags() ||
-            !$this->deleteCartProducts() ||
-            !$this->deleteAttachments(false) ||
-            !$this->deleteCustomization() ||
-            !SpecificPrice::deleteByProductId((int) $this->id) ||
-            !$this->deletePack() ||
-            !$this->deleteProductSale() ||
-            !$this->deleteSearchIndexes() ||
-            !$this->deleteAccessories() ||
-            !$this->deleteCarrierRestrictions() ||
-            !$this->deleteFromAccessories() ||
-            !$this->deleteFromSupplier() ||
-            !$this->deleteDownload() ||
-            !$this->deleteFromCartRules()
+            !$result
+            || !$this->deleteProductAttributes()
+            || !$this->deleteImages()
+            || !GroupReduction::deleteProductReduction($this->id)
+            || !$this->deleteCategories(false)
+            || !$this->deleteProductFeatures()
+            || !$this->deleteTags()
+            || !$this->deleteCartProducts()
+            || !$this->deleteAttachments(false)
+            || !$this->deleteCustomization()
+            || !SpecificPrice::deleteByProductId((int) $this->id)
+            || !$this->deletePack()
+            || !$this->deleteProductSale()
+            || !$this->deleteSearchIndexes()
+            || !$this->deleteAccessories()
+            || !$this->deleteCarrierRestrictions()
+            || !$this->deleteFromAccessories()
+            || !$this->deleteFromSupplier()
+            || !$this->deleteDownload()
+            || !$this->deleteFromCartRules()
         ) {
             return false;
         }
@@ -1328,7 +1328,7 @@ class ProductCore extends ObjectModel
 
         // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
         $count = count($products);
-        if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
+        if ((int) ini_get('max_execution_time') < round($count * 1.5)) {
             ini_set('max_execution_time', (string) round($count * 1.5));
         }
 
@@ -1586,7 +1586,7 @@ class ProductCore extends ObjectModel
         $order_way,
         $id_category = false,
         $only_active = false,
-        Context $context = null
+        ?Context $context = null
     ) {
         if (!$context) {
             $context = Context::getContext();
@@ -1644,7 +1644,7 @@ class ProductCore extends ObjectModel
      *
      * @return array
      */
-    public static function getSimpleProducts($id_lang, Context $context = null)
+    public static function getSimpleProducts($id_lang, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1704,7 +1704,7 @@ class ProductCore extends ObjectModel
      *
      * @return bool|int|string Attribute exist or Attribute identifier if return_id = true
      */
-    public function productAttributeExists($attributes_list, $current_product_attribute = false, Context $context = null, $all_shops = false, $return_id = false)
+    public function productAttributeExists($attributes_list, $current_product_attribute = false, ?Context $context = null, $all_shops = false, $return_id = false)
     {
         if (!Combination::isFeatureActive()) {
             return false;
@@ -1982,12 +1982,12 @@ class ProductCore extends ObjectModel
      */
     public function addSupplierReference($id_supplier, $id_product_attribute, $supplier_reference = null, $price = null, $id_currency = null)
     {
-        //in some case we need to add price without supplier reference
+        // in some case we need to add price without supplier reference
         if ($supplier_reference === null) {
             $supplier_reference = '';
         }
 
-        //Try to set the default supplier reference
+        // Try to set the default supplier reference
         if (($id_supplier > 0) && ($this->id > 0)) {
             $id_product_supplier = (int) ProductSupplier::getIdByProductAndSupplier($this->id, $id_product_attribute, $id_supplier);
 
@@ -2338,8 +2338,7 @@ class ProductCore extends ObjectModel
                 'DELETE FROM `' . _DB_PREFIX_ . 'customization_field`
                 WHERE `id_product` = ' . (int) $this->id
             )
-            &&
-            Db::getInstance()->execute(
+            && Db::getInstance()->execute(
                 'DELETE `' . _DB_PREFIX_ . 'customization_field_lang` FROM `' . _DB_PREFIX_ . 'customization_field_lang` LEFT JOIN `' . _DB_PREFIX_ . 'customization_field`
                 ON (' . _DB_PREFIX_ . 'customization_field.id_customization_field = ' . _DB_PREFIX_ . 'customization_field_lang.id_customization_field)
                 WHERE ' . _DB_PREFIX_ . 'customization_field.id_customization_field IS NULL'
@@ -2384,8 +2383,8 @@ class ProductCore extends ObjectModel
             Db::getInstance()->execute(
                 'DELETE FROM `' . _DB_PREFIX_ . 'search_index`
                 WHERE `id_product` = ' . (int) $this->id
-            ) &&
-            Db::getInstance()->execute(
+            )
+            && Db::getInstance()->execute(
                 'DELETE sw FROM `' . _DB_PREFIX_ . 'search_word` sw
                 LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.id_word=si.id_word)
                 WHERE si.id_word IS NULL;'
@@ -2508,7 +2507,7 @@ class ProductCore extends ObjectModel
         }
 
         $computingPrecision = Context::getContext()->getComputingPrecision();
-        //Get quantity of each variations
+        // Get quantity of each variations
         foreach ($combinations as $key => $row) {
             $cache_key = $row['id_product'] . '_' . $row['id_product_attribute'] . '_quantity';
 
@@ -2564,7 +2563,7 @@ class ProductCore extends ObjectModel
 
         $res = Db::getInstance()->executeS($sql);
 
-        //Get quantity of each variations
+        // Get quantity of each variations
         foreach ($res as $key => $row) {
             $cache_key = $row['id_product'] . '_' . $row['id_product_attribute'] . '_quantity';
 
@@ -2612,7 +2611,7 @@ class ProductCore extends ObjectModel
         $res = Db::getInstance()->executeS($sql);
 
         $computingPrecision = Context::getContext()->getComputingPrecision();
-        //Get quantity of each variations
+        // Get quantity of each variations
         foreach ($res as $key => $row) {
             $cache_key = $row['id_product'] . '_' . $row['id_product_attribute'] . '_quantity';
 
@@ -2744,7 +2743,7 @@ class ProductCore extends ObjectModel
      *
      * @return array|int|false New products, total of product if $count is true, false if it fail
      */
-    public static function getNewProducts($id_lang, $page_number = 0, $nb_products = 10, $count = false, $order_by = null, $order_way = null, Context $context = null)
+    public static function getNewProducts($id_lang, $page_number = 0, $nb_products = 10, $count = false, $order_by = null, $order_way = null, ?Context $context = null)
     {
         $now = date('Y-m-d') . ' 00:00:00';
         if (!$context) {
@@ -2883,7 +2882,7 @@ class ProductCore extends ObjectModel
      *
      * @return array
      */
-    protected static function _getProductIdByDate($beginning, $ending, Context $context = null, $with_combination = false)
+    protected static function _getProductIdByDate($beginning, $ending, ?Context $context = null, $with_combination = false)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -2915,7 +2914,7 @@ class ProductCore extends ObjectModel
      *
      * @return array|false Special
      */
-    public static function getRandomSpecial($id_lang, $beginning = false, $ending = false, Context $context = null)
+    public static function getRandomSpecial($id_lang, $beginning = false, $ending = false, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -2927,7 +2926,7 @@ class ProductCore extends ObjectModel
         }
 
         $current_date = date('Y-m-d H:i:00');
-        $product_reductions = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context, true);
+        $product_reductions = Product::_getProductIdByDate(!$beginning ? $current_date : $beginning, !$ending ? $current_date : $ending, $context, true);
 
         if ($product_reductions) {
             $ids_products = '';
@@ -3023,7 +3022,7 @@ class ProductCore extends ObjectModel
         $order_way = null,
         $beginning = false,
         $ending = false,
-        Context $context = null
+        ?Context $context = null
     ) {
         if (!$context) {
             $context = Context::getContext();
@@ -3049,7 +3048,7 @@ class ProductCore extends ObjectModel
             die(Tools::displayError('Invalid sorting parameters provided.'));
         }
         $current_date = date('Y-m-d H:i:00');
-        $ids_product = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context);
+        $ids_product = Product::_getProductIdByDate(!$beginning ? $current_date : $beginning, !$ending ? $current_date : $ending, $context);
 
         $tab_id_product = [];
 
@@ -3278,7 +3277,7 @@ class ProductCore extends ObjectModel
      *
      * @return array Product images and legends
      */
-    public function getImages($id_lang, Context $context = null)
+    public function getImages($id_lang, ?Context $context = null)
     {
         return Db::getInstance()->executeS(
             '
@@ -3299,7 +3298,7 @@ class ProductCore extends ObjectModel
      *
      * @return array Product cover image
      */
-    public static function getCover($id_product, Context $context = null)
+    public static function getCover($id_product, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -3366,7 +3365,7 @@ class ProductCore extends ObjectModel
         &$specific_price_output = null,
         $with_ecotax = true,
         $use_group_reduction = true,
-        Context $context = null,
+        ?Context $context = null,
         $use_customer_price = true,
         $id_customization = null
     ) {
@@ -3630,11 +3629,11 @@ class ProductCore extends ObjectModel
         }
         // convert only if the specific price currency is different from the default currency
         if (
-            !$specific_price ||
-            !(
-                $specific_price['price'] >= 0 &&
-                $specific_price['id_currency'] &&
-                $id_currency === $specific_price['id_currency']
+            !$specific_price
+            || !(
+                $specific_price['price'] >= 0
+                && $specific_price['id_currency']
+                && $id_currency === $specific_price['id_currency']
             )
         ) {
             $price = Tools::convertPrice($price, $id_currency);
@@ -3839,7 +3838,7 @@ class ProductCore extends ObjectModel
      *
      * @return string
      */
-    public static function convertAndFormatPrice($price, $currency = false, Context $context = null)
+    public static function convertAndFormatPrice($price, $currency = false, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -3858,7 +3857,7 @@ class ProductCore extends ObjectModel
      *
      * @return bool
      */
-    public static function isDiscounted($id_product, $quantity = 1, Context $context = null)
+    public static function isDiscounted($id_product, $quantity = 1, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -4073,7 +4072,7 @@ class ProductCore extends ObjectModel
         $idProduct,
         $idProductAttribute = null,
         $cacheIsPack = null,
-        CartCore $cart = null,
+        ?CartCore $cart = null,
         $idCustomization = null
     ) {
         // If the product is pack, we will handle the logic in another method, because pack stocks can be calculated
@@ -4114,7 +4113,7 @@ class ProductCore extends ObjectModel
      *
      * @return string
      */
-    public static function sqlStock($product_alias, $product_attribute = null, $inner_join = false, Shop $shop = null)
+    public static function sqlStock($product_alias, $product_attribute = null, $inner_join = false, ?Shop $shop = null)
     {
         $id_shop = ($shop !== null ? (int) $shop->id : null);
         $sql = (($inner_join) ? ' INNER ' : ' LEFT ')
@@ -4661,7 +4660,7 @@ class ProductCore extends ObjectModel
      *
      * @return array|false Matching products
      */
-    public static function searchByName($id_lang, $query, Context $context = null, $limit = null)
+    public static function searchByName($id_lang, $query, ?Context $context = null, $limit = null)
     {
         if ($context !== null) {
             Tools::displayParameterAsDeprecated('context');
@@ -4793,7 +4792,7 @@ class ProductCore extends ObjectModel
                 }
             }
 
-            //Copy suppliers
+            // Copy suppliers
             $result3 = Db::getInstance()->executeS('
             SELECT *
             FROM `' . _DB_PREFIX_ . 'product_supplier`
@@ -5229,7 +5228,7 @@ class ProductCore extends ObjectModel
      */
     public static function duplicateCarriers(int $oldProductId, int $newProductId): bool
     {
-        //@todo: this will copy carriers from all shops. todo - Handle multishop according context & specifications.
+        // @todo: this will copy carriers from all shops. todo - Handle multishop according context & specifications.
         $oldProductCarriers = Db::getInstance()->executeS(
             'SELECT *
             FROM `' . _DB_PREFIX_ . 'product_carrier`
@@ -5279,7 +5278,7 @@ class ProductCore extends ObjectModel
      *
      * @return string
      */
-    public function getLink(Context $context = null)
+    public function getLink(?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -5333,7 +5332,7 @@ class ProductCore extends ObjectModel
      *
      * @return array|false
      */
-    public static function getProductProperties($id_lang, $row, Context $context = null)
+    public static function getProductProperties($id_lang, $row, ?Context $context = null)
     {
         Hook::exec('actionGetProductPropertiesBefore', [
             'id_lang' => $id_lang,
@@ -5374,9 +5373,9 @@ class ProductCore extends ObjectModel
         // consider adding it in order to avoid unnecessary queries
         $row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
         if (
-            Combination::isFeatureActive() &&
-            $id_product_attribute === null &&
-            (
+            Combination::isFeatureActive()
+            && $id_product_attribute === null
+            && (
                 (isset($row['cache_default_attribute']) && ($ipa_default = $row['cache_default_attribute']) !== null)
                 || ($ipa_default = Product::getDefaultAttribute($row['id_product'], (int) !$row['allow_oosp']))
             )
@@ -5413,7 +5412,7 @@ class ProductCore extends ObjectModel
             (int) $row['id_product'],
             false,
             $id_product_attribute,
-            (self::$_taxCalculationMethod == PS_TAX_EXC ? Context::getContext()->getComputingPrecision() : 6),
+            self::$_taxCalculationMethod == PS_TAX_EXC ? Context::getContext()->getComputingPrecision() : 6,
             null,
             false,
             true,
@@ -5657,7 +5656,7 @@ class ProductCore extends ObjectModel
      *
      * @return array
      */
-    public static function getTaxesInformations($row, Context $context = null)
+    public static function getTaxesInformations($row, ?Context $context = null)
     {
         static $address = null;
 
@@ -6032,9 +6031,9 @@ class ProductCore extends ObjectModel
 
         /* If too much inside the database, deletion */
         if (
-            $extra_file > 0 &&
-            count($customization_fields[Product::CUSTOMIZE_FILE]) - $extra_file >= 0 &&
-            (!Db::getInstance()->execute(
+            $extra_file > 0
+            && count($customization_fields[Product::CUSTOMIZE_FILE]) - $extra_file >= 0
+            && (!Db::getInstance()->execute(
                 'DELETE `' . _DB_PREFIX_ . 'customization_field`,`' . _DB_PREFIX_ . 'customization_field_lang`
                 FROM `' . _DB_PREFIX_ . 'customization_field` JOIN `' . _DB_PREFIX_ . 'customization_field_lang`
                 WHERE `' . _DB_PREFIX_ . 'customization_field`.`id_product` = ' . (int) $this->id . '
@@ -6047,9 +6046,9 @@ class ProductCore extends ObjectModel
         }
 
         if (
-            $extra_text > 0 &&
-            count($customization_fields[Product::CUSTOMIZE_TEXTFIELD]) - $extra_text >= 0 &&
-            (!Db::getInstance()->execute(
+            $extra_text > 0
+            && count($customization_fields[Product::CUSTOMIZE_TEXTFIELD]) - $extra_text >= 0
+            && (!Db::getInstance()->execute(
                 'DELETE `' . _DB_PREFIX_ . 'customization_field`,`' . _DB_PREFIX_ . 'customization_field_lang`
                 FROM `' . _DB_PREFIX_ . 'customization_field` JOIN `' . _DB_PREFIX_ . 'customization_field_lang`
                 WHERE `' . _DB_PREFIX_ . 'customization_field`.`id_product` = ' . (int) $this->id . '
@@ -6356,7 +6355,7 @@ class ProductCore extends ObjectModel
      *
      * @return bool
      */
-    public function hasAllRequiredCustomizableFields(Context $context = null)
+    public function hasAllRequiredCustomizableFields(?Context $context = null)
     {
         if (!Customization::isFeatureActive()) {
             return true;
@@ -6496,7 +6495,7 @@ class ProductCore extends ObjectModel
      *
      * @return int TaxRulesGroup identifier
      */
-    public static function getIdTaxRulesGroupByIdProduct($id_product, Context $context = null)
+    public static function getIdTaxRulesGroupByIdProduct($id_product, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -6522,7 +6521,7 @@ class ProductCore extends ObjectModel
      *
      * @return float The total taxes rate applied to the product
      */
-    public function getTaxesRate(Address $address = null)
+    public function getTaxesRate(?Address $address = null)
     {
         if (!$address || !$address->id_country) {
             $address = Address::initialize();
@@ -7251,8 +7250,8 @@ class ProductCore extends ObjectModel
         );
 
         if ($idProductAttribute === false && $findBest) {
-            //find the best possible combination
-            //first we order $idAttributes by the group position
+            // find the best possible combination
+            // first we order $idAttributes by the group position
             $orderred = [];
             $result = Db::getInstance()->executeS(
                 'SELECT a.`id_attribute`

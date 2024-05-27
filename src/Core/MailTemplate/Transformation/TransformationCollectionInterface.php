@@ -26,11 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
+use IteratorAggregate;
+
 /**
  * TransformationCollectionInterface contains a list of transformations applied
  * on mail templates when they are generated.
  */
-interface TransformationCollectionInterface extends \IteratorAggregate, \Countable
+interface TransformationCollectionInterface extends IteratorAggregate, \Countable
 {
     /**
      * @param TransformationInterface $transformation

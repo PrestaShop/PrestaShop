@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import generalPage from '@pages/BO/shopParameters/general';
 import brandsPage from '@pages/BO/catalog/brands';
 import {homePage} from '@pages/FO/classic/home';
@@ -14,6 +13,7 @@ import {siteMapPage} from '@pages/FO/classic/siteMap';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_general_general_enableDisableBrands';
 
@@ -50,10 +50,10 @@ describe('BO - Shop Parameters - General : Enable/Disable display brands', async
       it('should go to \'Shop parameters > General\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToGeneralPage_${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.shopParametersParentLink,
-          dashboardPage.shopParametersGeneralLink,
+          boDashboardPage.shopParametersParentLink,
+          boDashboardPage.shopParametersGeneralLink,
         );
         await generalPage.closeSfToolBar(page);
 

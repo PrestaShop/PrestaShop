@@ -45,10 +45,10 @@ class GroupRepository extends AbstractMultiShopObjectModelRepository
     /**
      * @param GroupId $customerGroupId
      *
+     * @return CustomerGroup
+     *
      * @throws CoreException
      * @throws GroupNotFoundException
-     *
-     * @return CustomerGroup
      */
     public function get(GroupId $customerGroupId): CustomerGroup
     {
@@ -79,9 +79,9 @@ class GroupRepository extends AbstractMultiShopObjectModelRepository
     /**
      * @param CustomerGroup $customerGroup
      *
-     * @throws CoreException
-     *
      * @return GroupId
+     *
+     * @throws CoreException
      */
     public function create(CustomerGroup $customerGroup): GroupId
     {

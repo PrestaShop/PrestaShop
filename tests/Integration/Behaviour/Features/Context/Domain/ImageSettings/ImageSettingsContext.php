@@ -30,6 +30,7 @@ use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Command\EditImageSettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Query\GetImageSettingsForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\QueryResult\EditableImageSettings;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 
 class ImageSettingsContext extends AbstractDomainFeatureContext
@@ -128,7 +129,7 @@ class ImageSettingsContext extends AbstractDomainFeatureContext
         }
 
         if (count($errors) > 0) {
-            throw new \RuntimeException(sprintf('Fields %s are not identical', implode(', ', $errors)));
+            throw new RuntimeException(sprintf('Fields %s are not identical', implode(', ', $errors)));
         }
     }
 

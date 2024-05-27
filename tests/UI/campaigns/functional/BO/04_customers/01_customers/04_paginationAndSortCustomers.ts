@@ -11,13 +11,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import customersPage from '@pages/BO/customers';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import ImportCustomers from '@data/import/customers';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customers_customers_paginationAndSortCustomers';
 
@@ -64,12 +64,12 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.customersLink,
       );
-      await dashboardPage.closeSfToolBar(page);
+      await boDashboardPage.closeSfToolBar(page);
 
       const pageTitle = await customersPage.getPageTitle(page);
       expect(pageTitle).to.contains(customersPage.pageTitle);

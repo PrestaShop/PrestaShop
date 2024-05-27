@@ -35,14 +35,6 @@ $timerStart = microtime(true);
 
 try {
     $context = Context::getContext();
-    if (isset($_GET['logout'])) {
-        $context->employee->logout();
-    }
-
-    if (!isset($context->employee) || !$context->employee->isLoggedBack()) {
-        Tools::redirectAdmin($context->link->getAdminLink('AdminLogin', false, [], ['redirect' => $_SERVER['REQUEST_URI']]));
-    }
-
     $iso = $context->language->iso_code;
 
     /* Server Params */

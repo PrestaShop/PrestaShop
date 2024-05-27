@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Cart;
 
+use CartRule;
+
 class CartRuleData
 {
     protected $ruleData = [];
@@ -62,7 +64,7 @@ class CartRuleData
     }
 
     /**
-     * @return \CartRule
+     * @return CartRule
      */
     public function getCartRule()
     {

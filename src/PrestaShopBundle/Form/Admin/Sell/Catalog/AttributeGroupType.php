@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType as GroupType;
@@ -64,6 +65,9 @@ class AttributeGroupType extends TranslatorAwareType
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
                 'label' => $this->trans('Name', 'Admin.Global'),
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
@@ -78,6 +82,9 @@ class AttributeGroupType extends TranslatorAwareType
             ->add('public_name', TranslatableType::class, [
                 'type' => TextType::class,
                 'label' => $this->trans('Public name', 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
@@ -85,7 +92,7 @@ class AttributeGroupType extends TranslatorAwareType
                         ]),
                     ],
                 ],
-                'help' => $this->trans('Your internal name for this attribute.', 'Admin.Catalog.Help')
+                'help' => $this->trans('The public name for this attribute, displayed to the customers.', 'Admin.Catalog.Help')
                     . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
                     . ' ' . TypedRegexValidator::CATALOG_CHARS,
             ])

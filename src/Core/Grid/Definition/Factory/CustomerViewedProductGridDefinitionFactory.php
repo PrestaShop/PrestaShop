@@ -83,12 +83,12 @@ final class CustomerViewedProductGridDefinitionFactory extends AbstractGridDefin
     {
         return (new ColumnCollection())
             ->add((new DateTimeColumn('date_add'))
-            ->setName($this->trans('Date', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'date_add',
-                'format' => $this->contextDateFormat,
-                'clickable' => true,
-            ])
+                ->setName($this->trans('Date', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'date_add',
+                    'format' => $this->contextDateFormat,
+                    'clickable' => true,
+                ])
             )
             ->add(
                 (new LinkColumn('product_name'))

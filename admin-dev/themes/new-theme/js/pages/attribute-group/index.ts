@@ -35,6 +35,7 @@ import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filt
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import PositionExtension from '@components/grid/extension/position-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 
 const {$} = window;
 
@@ -50,6 +51,7 @@ $(() => {
   grid.addExtension(new BulkActionCheckboxExtension());
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new PositionExtension(grid));
+  grid.addExtension(new LinkRowActionExtension());
 
   const showcaseCard = new ShowcaseCard('attributesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());

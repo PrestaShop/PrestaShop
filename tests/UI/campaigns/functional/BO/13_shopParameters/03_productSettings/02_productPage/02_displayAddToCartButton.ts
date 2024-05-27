@@ -8,13 +8,13 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productPage_displayAddToCartButton';
 
@@ -43,10 +43,10 @@ describe('BO - Shop Parameters - Product Settings : Display add to cart button w
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.productSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.productSettingsLink,
       );
       await productSettingsPage.closeSfToolBar(page);
 

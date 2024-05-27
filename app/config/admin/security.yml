@@ -23,3 +23,29 @@ security:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
+
+    main:
+      lazy: true
+      provider: admin
+      form_login:
+        login_path: admin_login
+        check_path: admin_login
+        username_parameter: email
+        password_parameter: passwd
+        success_handler: PrestaShopBundle\Security\Admin\AdminAuthenticationSuccessHandler
+      remember_me:
+        secret: "%kernel.secret%"
+        lifetime: 3600
+        remember_me_parameter: stay_logged_in
+        signature_properties: [ 'password' ]
+      logout:
+        path: /logout
+        target: admin_login
+
+  access_control:
+    - { route: 'admin_login', roles: PUBLIC_ACCESS }
+    - { route: 'admin_homepage', roles: PUBLIC_ACCESS }
+    - { route: 'admin_request_password_reset', roles: PUBLIC_ACCESS }
+    - { route: 'admin_reset_password', roles: PUBLIC_ACCESS }
+    # Check it the legacy anonymous attribute has been set on the request (set by LegacyRouterChecker)
+    - { path: ^/, roles: IS_AUTHENTICATED, allow_if: 'request.attributes.has("_legacy_controller_anonymous") and request.attributes.get("_legacy_controller_anonymous") == true' }

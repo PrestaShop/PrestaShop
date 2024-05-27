@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import stocksPage from '@pages/BO/catalog/stocks';
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
@@ -26,6 +25,7 @@ import Carriers from '@data/demo/carriers';
 import Products from '@data/demo/products';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -88,10 +88,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should go to \'Orders > Shopping carts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.shoppingCartsLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.shoppingCartsLink,
       );
 
       const pageTitle = await shoppingCartsPage.getPageTitle(page);
@@ -153,10 +153,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testidentifier', 'goToOrdersPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 
@@ -205,10 +205,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should go to \'Orders > Shopping carts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.shoppingCartsLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.shoppingCartsLink,
       );
 
       const pageTitle = await shoppingCartsPage.getPageTitle(page);
@@ -345,10 +345,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should go to \'Catalog > Stocks\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.stocksLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.stocksLink,
       );
 
       const pageTitle = await stocksPage.getPageTitle(page);
@@ -377,10 +377,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);

@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import countriesPage from '@pages/BO/international/locations/countries';
 // Import FO pages
@@ -18,6 +17,7 @@ import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
 import {
+  boDashboardPage,
   // Import data
   dataCountries,
   dataCustomers,
@@ -58,10 +58,10 @@ describe('BO - International - Countries : Restrict country selections in front 
   it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.locationsLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.locationsLink,
     );
     await zonesPage.closeSfToolBar(page);
 

@@ -7,12 +7,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
 import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
 
 import {
+  boDashboardPage,
   FakerTitle,
 } from '@prestashop-core/ui-testing';
 
@@ -53,10 +53,10 @@ describe('BO - Shop Parameters - Customer Settings : Bulk actions', async () => 
   it('should go to \'Shop Parameters > Customer Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.customerSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.customerSettingsLink,
     );
     await customerSettingsPage.closeSfToolBar(page);
 

@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import searchPage from '@pages/BO/shopParameters/search';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
@@ -15,6 +14,7 @@ import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_search_search_editSearchSettings_fuzzySearch';
 
@@ -39,10 +39,10 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
   it('should go to \'Shop Parameters > Search\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSearchPageWoFuzzy', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.searchLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.searchLink,
     );
 
     const pageTitle = await searchPage.getPageTitle(page);
@@ -95,17 +95,17 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
 
     await searchResultsPage.goToBO(page);
 
-    const pageTitle = await dashboardPage.getPageTitle(page);
-    expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Shop Parameters > Search\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSearchPageWFuzzy', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.searchLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.searchLink,
     );
 
     const pageTitle = await searchPage.getPageTitle(page);

@@ -4,12 +4,27 @@ parameters:
 services:
   _defaults:
     public: true
+
+  PrestaShopBundle\Security\Admin\EmployeeProvider:
+    autowire: true
+
   prestashop.security.admin.provider:
-    class: PrestaShopBundle\Security\Admin\EmployeeProvider
+    alias: PrestaShopBundle\Security\Admin\EmployeeProvider
+
+  PrestaShopBundle\Security\Admin\SessionEmployeeProvider:
+    autowire: true
+
+  PrestaShopBundle\Security\Admin\EmployeePasswordResetter:
+    autowire: true
+    lazy: true
     arguments:
-      - "@prestashop.adapter.legacy.context"
-      - "@prestashop.static_cache.adapter"
-      - '@PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface'
+      $cookieKey: '%cookie_key%'
+
+  PrestaShopBundle\Security\Admin\EmployeeHomepageProvider:
+    autowire: true
+
+  PrestaShopBundle\Security\Admin\AdminAuthenticationSuccessHandler:
+    autowire: true
 
   PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider:
     arguments:

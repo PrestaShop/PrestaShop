@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\FeatureFlag\Layer;
 
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\TypeLayerInterface;
 
@@ -72,8 +73,8 @@ class EnvLayer implements TypeLayerInterface
      */
     public function isEnabled(string $featureFlagName): bool
     {
-        return $this->canBeUsed($featureFlagName) &&
-            filter_var(getenv($this->getConstName($featureFlagName)), \FILTER_VALIDATE_BOOLEAN);
+        return $this->canBeUsed($featureFlagName)
+            && filter_var(getenv($this->getConstName($featureFlagName)), \FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -81,7 +82,7 @@ class EnvLayer implements TypeLayerInterface
      */
     public function enable(string $featureFlagName): void
     {
-        throw new \InvalidArgumentException(sprintf('We cannot change status of the env feature flag %s.', $featureFlagName));
+        throw new InvalidArgumentException(sprintf('We cannot change status of the env feature flag %s.', $featureFlagName));
     }
 
     /**
@@ -89,6 +90,6 @@ class EnvLayer implements TypeLayerInterface
      */
     public function disable(string $featureFlagName): void
     {
-        throw new \InvalidArgumentException(sprintf('We cannot change status of the env feature flag %s.', $featureFlagName));
+        throw new InvalidArgumentException(sprintf('We cannot change status of the env feature flag %s.', $featureFlagName));
     }
 }

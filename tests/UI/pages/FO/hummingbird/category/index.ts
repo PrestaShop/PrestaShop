@@ -59,6 +59,16 @@ class Category extends CategoryPage {
   }
 
   /**
+   * Go to product page
+   * @param page {Page} Browser tab
+   * @param id {number} Index of product in list of products
+   * @returns {Promise<void>}
+   */
+  async goToProductPage(page: Page, id: number): Promise<void> {
+    await this.clickAndWaitForURL(page, this.productImg(id));
+  }
+
+  /**
    * Filter by checkbox
    * @param page {Page} Browser tab
    * @param facetType {string} Type of filter

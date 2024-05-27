@@ -13,7 +13,6 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import pages
 import outstandingPage from '@pages/BO/customers/outstanding';
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 
 // Import data
@@ -21,6 +20,7 @@ import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   //Import data
   dataOrderStatuses,
   dataPaymentMethods,
@@ -113,10 +113,10 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
           await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage_${index}`, baseContext);
 
           if (index === 0) {
-            await dashboardPage.goToSubMenu(
+            await boDashboardPage.goToSubMenu(
               page,
-              dashboardPage.ordersParentLink,
-              dashboardPage.ordersLink,
+              boDashboardPage.ordersParentLink,
+              boDashboardPage.ordersLink,
             );
           } else {
             await ordersPage.reloadPage(page);
@@ -148,10 +148,10 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
     it('should go to \'Customers > Outstanding\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.outstandingLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.outstandingLink,
       );
 
       const pageTitle = await outstandingPage.getPageTitle(page);

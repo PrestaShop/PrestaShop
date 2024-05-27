@@ -54,7 +54,7 @@ class AttachmentCore extends ObjectModel
 
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
-            'description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 4194303],
         ],
         'associations' => [
             'products' => ['type' => self::HAS_MANY, 'field' => 'id_product', 'object' => 'Product', 'association' => 'product_attachment'],
@@ -138,6 +138,7 @@ class AttachmentCore extends ObjectModel
      * @param array $attachments Attachments
      *
      * @return bool|int Whether the selection has been successfully deleted
+     *
      * @todo: Find out if $return can be initialized with true. (breaking change)
      */
     public function deleteSelection(array $attachments)

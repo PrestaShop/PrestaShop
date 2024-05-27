@@ -56,7 +56,7 @@ final class InvoiceOptionsConfiguration extends AbstractMultistoreConfiguration
         Context $shopContext,
         FeatureInterface $multistoreFeature,
         FormChoiceProviderInterface $invoiceModelByNameChoiceProvider
-        ) {
+    ) {
         parent::__construct($configuration, $shopContext, $multistoreFeature);
         $this->invoiceModelByNameChoiceProvider = $invoiceModelByNameChoiceProvider;
     }

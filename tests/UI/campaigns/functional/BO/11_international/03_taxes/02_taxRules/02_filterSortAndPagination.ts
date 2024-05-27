@@ -7,7 +7,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
 import taxRulesPage from '@pages/BO/international/taxes/taxRules';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
@@ -16,6 +15,7 @@ import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 import TaxRulesGroupData from '@data/faker/taxRulesGroup';
 
 import {
+  boDashboardPage,
   // Import data
   dataTaxRules,
 } from '@prestashop-core/ui-testing';
@@ -54,10 +54,10 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
   it('should go to \'International > Taxes\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.taxesLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.taxesLink,
     );
 
     const pageTitle = await taxesPage.getPageTitle(page);

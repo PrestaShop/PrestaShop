@@ -304,7 +304,7 @@ class EditCmsPageCommand
      *
      * @return self
      */
-    public function setShopAssociation(array $shopAssociation = null)
+    public function setShopAssociation(?array $shopAssociation = null)
     {
         $this->shopAssociation = $shopAssociation;
 

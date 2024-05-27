@@ -28,28 +28,39 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Utility;
 
-use PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface;
-use PrestaShopBundle\Security\Admin\Employee;
+use Doctrine\ORM\EntityManagerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Entity\Employee\Employee;
+use PrestaShopBundle\Entity\Employee\EmployeeSession;
+use PrestaShopBundle\EventListener\Admin\Context\ShopContextListener;
+use PrestaShopBundle\EventListener\Admin\EmployeeSessionSubscriber;
+use PrestaShopBundle\Security\Admin\EmployeeProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 trait LoginTrait
 {
-    protected function loginUser(KernelBrowser $kernelBrowser): void
+    protected static function loginUser(KernelBrowser $kernelBrowser, ?ShopConstraint $shopConstraint = null): void
     {
-        $employeePermissionProvider = $kernelBrowser->getContainer()->get(EmployeePermissionProviderInterface::class);
-        $employeeId = 1;
+        /** @var EmployeeProvider $employeeProvider */
+        $employeeProvider = $kernelBrowser->getContainer()->get(EmployeeProvider::class);
+        /** @var Employee $employee */
+        $employee = $employeeProvider->loadUserByIdentifier('test@prestashop.com');
 
-        $employee = new Employee(
-            (object) [
-                'email' => 'test@prestashop.com',
-                'id' => $employeeId,
-                'passwd' => '',
-            ]
-        );
-        $employee->setRoles(
-            array_merge(['ROLE_EMPLOYEE'], $employeePermissionProvider->getRoles($employeeId))
-        );
+        if ($employee->getSessions()->isEmpty()) {
+            $employeeSession = new EmployeeSession();
+            $employeeSession->setToken('fake_token');
+            $employee->addSession($employeeSession);
+            $entityManager = $kernelBrowser->getContainer()->get(EntityManagerInterface::class);
+            $entityManager->persist($employeeSession);
+            $entityManager->flush();
+        } else {
+            $employeeSession = $employee->getSessions()->first();
+        }
 
-        $kernelBrowser->loginUser($employee);
+        // The employee session and the shop constraint are stored as token attributes
+        $kernelBrowser->loginUser($employee, 'main', [
+            EmployeeSessionSubscriber::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE => $employeeSession,
+            ShopContextListener::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE => $shopConstraint,
+        ]);
     }
 }

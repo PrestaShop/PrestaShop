@@ -51,6 +51,12 @@ use Symfony\Component\HttpFoundation\Response;
 class AttributeController extends FrameworkBundleAdminController
 {
     /**
+     * Button name which when submitted indicates that after form submission
+     * user wants to be redirected to ADD NEW form to add additional value
+     */
+    private const SAVE_AND_ADD_BUTTON_NAME = 'save-and-add-new';
+
+    /**
      * Displays Attribute groups > attributes page
      *
      * @param Request $request
@@ -123,21 +129,28 @@ class AttributeController extends FrameworkBundleAdminController
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.')]
-    public function createAction(Request $request, int $attributeGroupId): Response
+    public function createAction(Request $request): Response
     {
         $attributeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.attribute_form_builder');
         $attributeFormHandler = $this->get('prestashop.core.form.identifiable_object.attribute_form_handler');
+        $attributeGroupId = (int) $request->query->get('attributeGroupId');
 
         $attributeForm = $attributeFormBuilder->getForm([], ['attribute_group' => $attributeGroupId]);
         $attributeForm->handleRequest($request);
 
         try {
             $handlerResult = $attributeFormHandler->handle($attributeForm);
+            $attributeFormData = $attributeForm->getData();
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_attributes_index', ['attributeGroupId' => $attributeGroupId]);
+                // Save and create a new attribute value for the same attribute group
+                if ($request->request->has(self::SAVE_AND_ADD_BUTTON_NAME)) {
+                    return $this->redirectToRoute('admin_attributes_create', ['attributeGroupId' => $attributeGroupId]);
+                }
+
+                return $this->redirectToRoute('admin_attributes_index', ['attributeGroupId' => $attributeFormData['attribute_group']]);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -170,6 +183,11 @@ class AttributeController extends FrameworkBundleAdminController
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+
+                // Save and create a new attribute value for the same attribute group
+                if ($request->request->has(self::SAVE_AND_ADD_BUTTON_NAME)) {
+                    return $this->redirectToRoute('admin_attributes_create', ['attributeGroupId' => $attributeGroupId]);
+                }
 
                 return $this->redirectToRoute('admin_attributes_index', ['attributeGroupId' => $attributeGroupId]);
             }

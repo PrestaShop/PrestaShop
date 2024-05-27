@@ -40,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -189,8 +191,8 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
      * @param Order $order
      * @param array $orderDetails
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      * @throws \PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException
      */
     private function cancelProducts(Order $order, array $orderDetails)

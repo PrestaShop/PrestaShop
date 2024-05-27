@@ -26,16 +26,17 @@
 
 namespace PrestaShopBundle\Command;
 
-\Smarty_Autoloader::register();
-
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use Smarty_Autoloader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+
+Smarty_Autoloader::register();
 
 class ExportThemeCommand extends Command
 {

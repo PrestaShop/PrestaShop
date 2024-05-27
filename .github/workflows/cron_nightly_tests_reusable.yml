@@ -9,13 +9,13 @@ on:
         required: true
         type: string
       PHP_VERSION:
+        description: 'PHP Version'
         required: true
         type: string
       NODE_VERSION:
         description: 'Node Version'
-        required: false
+        required: true
         type: string
-        default: '14'
       TESTS_DIR:
         description: 'Where UI tests are'
         required: false
@@ -192,6 +192,17 @@ jobs:
           ENABLE_SSL: ${{ env.ENABLE_SSL }}
           INSTALL_AUTO: ${{ env.INSTALL_AUTO }}
           CP_API_CONFIG: ${{ (env.GH_BRANCH == '8.1.x') && 'true' || 'false' }}
+      - name: Setup Environment failure
+        uses: ./.github/actions/setup-env-export-logs
+        with:
+          DOCKER_PREFIX: prestashop
+          ARTIFACT_NAME: setup-nightly-${{ matrix.BRANCH }}-${{ matrix.CAMPAIGN }}
+        if: failure()
+
+      # Keycloak is only needed for API campaign
+      - name: Setup Keycloak
+        uses: ./.github/actions/setup-keycloak
+        if: ${{ env.GH_BRANCH == 'develop' && env.TEST_CAMPAIGN == 'functional:API' }}
 
       - name: Run Tests
         continue-on-error: true
@@ -211,7 +222,7 @@ jobs:
           FILENAME="$( echo -e '${{ env.TEST_CAMPAIGN }}' | tr  ':' '-'  )"
           mv ./mochawesome-report/mochawesome.json ${{ env.REPORTS_DIR_PATH }}/${FILENAME}.json
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         name: Upload report
         with:
           name: reports_${{ env.GH_BRANCH }}

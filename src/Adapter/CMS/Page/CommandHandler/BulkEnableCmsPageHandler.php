@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler\BulkEnableCmsPageHa
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEnableCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
+use PrestaShopDatabaseException;
 use PrestaShopException;
 
 /**
@@ -60,7 +61,7 @@ final class BulkEnableCmsPageHandler extends AbstractCmsPageHandler implements B
      * @throws CannotEnableCmsPageException
      * @throws CmsPageException
      * @throws PrestaShopException
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      * @throws CmsPageNotFoundException
      */
     private function enableCmsPages(BulkEnableCmsPageCommand $command)

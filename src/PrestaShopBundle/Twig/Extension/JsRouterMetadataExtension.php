@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Twig\Extension;
 
-use PrestaShopBundle\Service\DataProvider\UserProvider;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Extension\AbstractExtension;
@@ -40,7 +40,7 @@ class JsRouterMetadataExtension extends AbstractExtension
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly CsrfTokenManagerInterface $tokenManager,
-        private readonly UserProvider $userProvider
+        private readonly Security $security,
     ) {
     }
 
@@ -64,8 +64,8 @@ class JsRouterMetadataExtension extends AbstractExtension
         return [
             // base url for javascript router
             'base_url' => $this->requestStack->getCurrentRequest()->getBaseUrl(),
-            //security token for javascript router
-            'token' => $this->tokenManager->getToken($this->userProvider->getUsername())->getValue(),
+            // security token for javascript router
+            'token' => $this->tokenManager->getToken($this->security->getUser()->getUserIdentifier())->getValue(),
         ];
     }
 }

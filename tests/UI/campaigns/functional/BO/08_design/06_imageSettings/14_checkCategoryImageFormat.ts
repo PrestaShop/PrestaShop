@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
-import dashboardPage from '@pages/BO/dashboard';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
@@ -21,6 +20,7 @@ import CategoryData from '@data/faker/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_checkCategoryImageFormat';
 
@@ -86,10 +86,10 @@ describe('BO - Design - Image Settings - Check category image format', async () 
     it('should go to \'Design > Image Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToImageSettingsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.designParentLink,
-        dashboardPage.imageSettingsLink,
+        boDashboardPage.designParentLink,
+        boDashboardPage.imageSettingsLink,
       );
       await imageSettingsPage.closeSfToolBar(page);
 
@@ -152,18 +152,18 @@ describe('BO - Design - Image Settings - Check category image format', async () 
             page = await categoryPage.closePage(browserContext, page, 0);
             await categoryPage.goToBO(page);
 
-            const pageTitle = await dashboardPage.getPageTitle(page);
-            expect(pageTitle).to.contains(dashboardPage.pageTitle);
+            const pageTitle = await boDashboardPage.getPageTitle(page);
+            expect(pageTitle).to.contains(boDashboardPage.pageTitle);
           });
         }
 
         it('should go to \'Catalog > Categories\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToCategoriesPage${argExtension}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.catalogParentLink,
-            dashboardPage.categoriesLink,
+            boDashboardPage.catalogParentLink,
+            boDashboardPage.categoriesLink,
           );
 
           await categoriesPage.closeSfToolBar(page);

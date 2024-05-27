@@ -534,55 +534,55 @@ class MetaController extends FrameworkBundleAdminController
         $exceptionDictionary = [
             MetaConstraintException::class => [
                 MetaConstraintException::INVALID_URL_REWRITE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Rewritten URL', 'Admin.Shopparameters.Feature')
-                            ),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Rewritten URL', 'Admin.Shopparameters.Feature')
+                        ),
+                    ]
+                ),
                 MetaConstraintException::INVALID_PAGE_NAME => $this->trans(
-                        'The %s field is required.',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Page name', 'Admin.Shopparameters.Feature')
-                            ),
-                        ]
-                    ),
+                    'The %s field is required.',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Page name', 'Admin.Shopparameters.Feature')
+                        ),
+                    ]
+                ),
                 MetaConstraintException::INVALID_PAGE_TITLE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Page title', 'Admin.Shopparameters.Feature')
-                            ),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Page title', 'Admin.Shopparameters.Feature')
+                        ),
+                    ]
+                ),
                 MetaConstraintException::INVALID_META_DESCRIPTION => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Meta description', 'Admin.Global')
-                            ),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Meta description', 'Admin.Global')
+                        ),
+                    ]
+                ),
                 MetaConstraintException::INVALID_META_KEYWORDS => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Meta keywords', 'Admin.Global')
-                            ),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Meta keywords', 'Admin.Global')
+                        ),
+                    ]
+                ),
             ],
         ];
 

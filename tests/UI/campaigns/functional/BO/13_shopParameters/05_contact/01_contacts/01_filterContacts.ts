@@ -8,13 +8,13 @@ import {expect} from 'chai';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import contactsPage from '@pages/BO/shopParameters/contact';
 
 // Import data
 import Contacts from '@data/demo/contacts';
 
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_contact_contacts_filterContacts';
 
@@ -41,10 +41,10 @@ describe('BO - Shop Parameters - Contact : Filter Contacts table', async () => {
   it('should go to \'Shop parameters > Contact\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.contactLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.contactLink,
     );
     await contactsPage.closeSfToolBar(page);
 

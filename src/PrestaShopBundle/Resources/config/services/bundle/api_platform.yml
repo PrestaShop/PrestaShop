@@ -9,8 +9,8 @@ services:
     tags: [ 'prestashop.api.normalizers' ]
 
   # This is a custom serializer used by our custom providers/processors for ApiPlatform
-  PrestaShopBundle\ApiPlatform\DomainSerializer:
-    class: PrestaShopBundle\ApiPlatform\DomainSerializer
+  PrestaShopBundle\ApiPlatform\Serializer\DomainSerializer:
+    class: PrestaShopBundle\ApiPlatform\Serializer\DomainSerializer
     arguments:
       - !tagged_iterator { tag: prestashop.api.normalizers, default_priority_method: getNormalizerPriority }
 

@@ -33,6 +33,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use TaxRulesGroup;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -83,7 +84,7 @@ class PricesAssertionFeatureContext extends AbstractProductFeatureContext
      * @param array $data
      * @param string|null $shopReference
      */
-    protected function assertPricesInfos(ProductPricesInformation $pricesInfo, array $data, string $shopReference = null): void
+    protected function assertPricesInfos(ProductPricesInformation $pricesInfo, array $data, ?string $shopReference = null): void
     {
         $shopErrorMessage = !empty($shopReference) ? sprintf(' for shop %s', $shopReference) : '';
         if (isset($data['on_sale'])) {
@@ -143,7 +144,7 @@ class PricesAssertionFeatureContext extends AbstractProductFeatureContext
                 sprintf(
                     'Expected tax rules group "%s", but got "%s"%s',
                     $expectedName,
-                    (new \TaxRulesGroup($actualId))->name,
+                    (new TaxRulesGroup($actualId))->name,
                     $shopErrorMessage
                 )
             );

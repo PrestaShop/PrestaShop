@@ -11,7 +11,6 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import customersPage from '@pages/BO/customers';
-import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
@@ -23,6 +22,7 @@ import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataOrderStatuses,
   dataPaymentMethods,
@@ -103,10 +103,10 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should go \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.customersLink,
       );
       await customersPage.closeSfToolBar(page);
 
@@ -136,10 +136,10 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
       await ordersPage.closeSfToolBar(page);
 

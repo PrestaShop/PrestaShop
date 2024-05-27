@@ -35,75 +35,61 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\FeatureFlagRepository")
+ *
  * @ORM\Table()
+ *
  * @UniqueEntity("name")
  */
 class FeatureFlag
 {
     /**
-     * @var int
-     *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_feature_flag", type="integer", options={"unsigned":true})
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="name", type="string", length=191, unique=true)
      */
-    private $name;
+    private string $name;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="type", type="string", length=64, options={"default": FeatureFlagSettings::TYPE_DEFAULT})
      */
-    private $type;
+    private string $type;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="state", type="boolean", options={"default":0, "unsigned":true})
      */
-    private $state;
+    private bool $state;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="label_wording", type="string", length=512, options={"default":""})
      */
-    private $labelWording;
+    private string $labelWording;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="label_domain", type="string", length=255, options={"default":""})
      */
-    private $labelDomain;
+    private string $labelDomain;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="description_wording", type="string", length=512, options={"default":""})
      */
-    private $descriptionWording;
+    private string $descriptionWording;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="description_domain", type="string", length=255, options={"default":""})
      */
-    private $descriptionDomain;
+    private string $descriptionDomain;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="stability", type="string", length=64, options={"default":"beta"})
      */
-    private $stability;
+    private string $stability;
 
     /**
      * @param string $name
@@ -123,174 +109,106 @@ class FeatureFlag
         $this->stability = FeatureFlagSettings::STABILITY_BETA;
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
     public function isEnabled(): bool
     {
         return $this->state;
     }
 
-    /**
-     * @return self
-     */
-    public function disable(): self
+    public function disable(): static
     {
         $this->state = false;
 
         return $this;
     }
 
-    /**
-     * @return self
-     */
-    public function enable(): self
+    public function enable(): static
     {
         $this->state = true;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLabelWording(): string
     {
         return $this->labelWording;
     }
 
-    /**
-     * @param string $labelWording
-     *
-     * @return self
-     */
-    public function setLabelWording(string $labelWording): self
+    public function setLabelWording(string $labelWording): static
     {
         $this->labelWording = $labelWording;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLabelDomain(): string
     {
         return $this->labelDomain;
     }
 
-    /**
-     * @param string $labelDomain
-     *
-     * @return self
-     */
-    public function setLabelDomain(string $labelDomain): self
+    public function setLabelDomain(string $labelDomain): static
     {
         $this->labelDomain = $labelDomain;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDescriptionWording(): string
     {
         return $this->descriptionWording;
     }
 
-    /**
-     * @param string $descriptionWording
-     *
-     * @return self
-     */
-    public function setDescriptionWording(string $descriptionWording): self
+    public function setDescriptionWording(string $descriptionWording): static
     {
         $this->descriptionWording = $descriptionWording;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDescriptionDomain(): string
     {
         return $this->descriptionDomain;
     }
 
-    /**
-     * @param string $descriptionDomain
-     *
-     * @return self
-     */
-    public function setDescriptionDomain(string $descriptionDomain): self
+    public function setDescriptionDomain(string $descriptionDomain): static
     {
         $this->descriptionDomain = $descriptionDomain;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getStability(): string
     {
         return $this->stability;
     }
 
-    /**
-     * @param string $stability
-     *
-     * @return self
-     */
-    public function setStability(string $stability): self
+    public function setStability(string $stability): static
     {
         $this->stability = $stability;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * Retrieve order of feature flags type
-     *
-     * @return array
-     */
     public function getOrderedTypes(): array
     {
         return explode(',', $this->type);
     }
 
-    /**
-     * @param string $type
-     *
-     * @return self
-     */
-    public function setType(string $type): self
+    public function setType(string $type): static
     {
         $this->type = $type;
 

@@ -4,12 +4,10 @@ import testContext from '@utils/testContext';
 
 import loginCommon from '@commonTests/BO/loginBO';
 
-import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-import Modules from '@data/demo/modules';
-
 import {
+  boDashboardPage,
   // Import data
   type FakerModule,
 } from '@prestashop-core/ui-testing';
@@ -49,10 +47,10 @@ function installModule(module: FakerModule, baseContext: string = 'commonTests-i
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManagerPage.closeSfToolBar(page);
 
@@ -83,7 +81,7 @@ function installModule(module: FakerModule, baseContext: string = 'commonTests-i
   });
 }
 
-function uninstallModule(module: FakerModule, baseContext: string = 'commonTests-uninstallHummingbird'): void {
+function uninstallModule(module: FakerModule, baseContext: string = 'commonTests-uninstallModule'): void {
   describe(`Uninstall module ${module.name}`, async () => {
     let browserContext: BrowserContext;
     let page: Page;
@@ -105,10 +103,10 @@ function uninstallModule(module: FakerModule, baseContext: string = 'commonTests
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManagerPage.closeSfToolBar(page);
 
@@ -116,10 +114,10 @@ function uninstallModule(module: FakerModule, baseContext: string = 'commonTests
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module '${Modules.keycloak.name}'`, async function () {
+    it(`should search the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.keycloak);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, module);
       expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
 
@@ -132,7 +130,57 @@ function uninstallModule(module: FakerModule, baseContext: string = 'commonTests
   });
 }
 
+function resetModule(module: FakerModule, baseContext: string = 'commonTests-resetModule'): void {
+  describe(`Reset module ${module.name}`, async () => {
+    let browserContext: BrowserContext;
+    let page: Page;
+
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
+    });
+
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
+    });
+
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to \'Modules > Module Manager\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
+      );
+      await moduleManagerPage.closeSfToolBar(page);
+
+      const pageTitle = await moduleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    });
+
+    it(`should search the module '${module.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
+
+      const isModuleVisible = await moduleManagerPage.searchModule(page, module);
+      expect(isModuleVisible, 'Module is not visible!').to.eq(true);
+    });
+
+    it(`should reset the module '${module.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
+
+      const successMessage = await moduleManagerPage.setActionInModule(page, module, 'reset');
+      expect(successMessage).to.eq(moduleManagerPage.resetModuleSuccessMessage(module.tag));
+    });
+  });
+}
+
 export {
   installModule,
   uninstallModule,
+  resetModule,
 };

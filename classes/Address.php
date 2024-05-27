@@ -138,7 +138,7 @@ class AddressCore extends ObjectModel
             'address2' => ['type' => self::TYPE_STRING, 'validate' => 'isAddress', 'size' => 128],
             'postcode' => ['type' => self::TYPE_STRING, 'validate' => 'isPostCode', 'size' => 12],
             'city' => ['type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64],
-            'other' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => 300],
+            'other' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => 4194303],
             'phone' => ['type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 32],
             'phone_mobile' => ['type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 32],
             'dni' => ['type' => self::TYPE_STRING, 'validate' => 'isDniLite', 'size' => 16],
@@ -288,21 +288,6 @@ class AddressCore extends ObjectModel
             SET c.id_address_invoice = 0
             WHERE c.id_address_invoice = ' . $this->id . ' AND o.id_order IS NULL';
         Db::getInstance()->execute($sql);
-    }
-
-    /**
-     * Returns fields required for an address in an array hash.
-     *
-     * @return array Hash values
-     */
-    public static function getFieldsValidate()
-    {
-        $tmp_addr = new Address();
-        $out = $tmp_addr->fieldsValidate;
-
-        unset($tmp_addr);
-
-        return $out;
     }
 
     /**
@@ -638,6 +623,7 @@ class AddressCore extends ObjectModel
      * @param int $id_customer Customer id
      *
      * @return false|string|null Amount of aliases found
+     *
      * @todo: Find out if we shouldn't be returning an int instead? (breaking change)
      */
     public static function aliasExist($alias, $id_address, $id_customer)

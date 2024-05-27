@@ -1,6 +1,10 @@
 services:
   _defaults:
     public: true
+    autoconfigure: true
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository:
 
   prestashop.adapter.carrier.carrier_thumbnail_logo_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierThumbnailLogoProvider'
@@ -9,23 +13,28 @@ services:
 
   prestashop.adapter.carrier.command_handler.toggle_carrier_status:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\ToggleCarrierStatusHandler'
-    autoconfigure: true
 
   prestashop.adapter.carrier.command_handler.toggle_carrier_is_free_status:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\ToggleCarrierIsFreeHandler'
-    autoconfigure: true
 
   prestashop.adapter.carrier.command_handler.delete_carrier:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\DeleteCarrierHandler'
-    autoconfigure: true
 
   prestashop.adapter.carrier.command_handler.bulk_delete_carrier:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\BulkDeleteCarrierHandler'
-    autoconfigure: true
 
   prestashop.adapter.carrier.command_handler.bulk_toggle_carrier_status:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\BulkToggleCarrierStatusHandler'
-    autoconfigure: true
 
   prestashop.adapter.carrier.carrier_module_advice_alert_checker:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierModuleAdviceAlertChecker'
+
+  PrestaShop\PrestaShop\Adapter\Carrier\QueryHandler\GetCarrierForEditingHandler:
+
+  PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\AddCarrierHandler:
+
+  PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\EditCarrierHandler:
+
+  PrestaShop\PrestaShop\Adapter\File\Uploader\CarrierLogoFileUploader:
+
+  PrestaShop\PrestaShop\Adapter\Carrier\Validate\CarrierValidator:

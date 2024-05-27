@@ -46,7 +46,7 @@ jobs:
       - name: Install Composer dependencies
         run: |
           composer self-update --stable
-          composer install --prefer-dist
+          COMPOSER_PROCESS_TIMEOUT=600 composer install --prefer-dist
 
       - name: Install NPM dependencies
         working-directory: ./tests/UI
@@ -64,9 +64,13 @@ jobs:
       - name: Update PrestaShop packages
         id: updated-packages
         run: |
-          FILE_CONTENT=$(cat cron_php_update_modules.txt)
-          echo PR_BODY=$FILE_CONTENT >> $GITHUB_OUTPUT
-          rm cron_php_update_modules.txt
+          if [[ -f cron_php_update_modules.txt ]]; then
+            FILE_CONTENT=$(cat cron_php_update_modules.txt)
+            echo PR_BODY=$FILE_CONTENT >> $GITHUB_OUTPUT
+            rm cron_php_update_modules.txt
+          else
+            echo 'Nothing to update'
+          fi
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3

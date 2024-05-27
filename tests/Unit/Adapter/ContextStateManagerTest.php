@@ -30,6 +30,7 @@ use Cart;
 use Country;
 use Currency;
 use Customer;
+use Employee;
 use Language;
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -230,6 +231,31 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertNull($contextStateManager->getContextFieldsStack());
     }
 
+    public function testEmployeeState()
+    {
+        $context = $this->createContextMock([
+            'employee' => $this->createContextFieldMock(Employee::class, 42),
+        ]);
+        $this->assertEquals(42, $context->employee->id);
+
+        $contextStateManager = new ContextStateManager($this->legacyContext);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setEmployee($this->createContextFieldMock(Employee::class, 51));
+        $this->assertEquals(51, $context->employee->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setEmployee($this->createContextFieldMock(Employee::class, 69));
+        $this->assertEquals(69, $context->employee->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals(42, $context->employee->id);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+    }
+
     public function testNullField()
     {
         $context = $this->createContextMock([
@@ -263,6 +289,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             'country' => $this->createContextFieldMock(Country::class, 42),
             'currency' => $this->createContextFieldMock(Currency::class, 42),
             'customer' => $this->createContextFieldMock(Customer::class, 42),
+            'employee' => $this->createContextFieldMock(Employee::class, 42),
             'language' => $this->createContextFieldMock(Language::class, 42),
             'currentLocale' => $this->createLocalizationLocaleMock('fr-FR'),
             'controller' => $this->createLegacyControllerContextMock('AdminProductsController'),
@@ -271,6 +298,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(42, $context->country->id);
         $this->assertEquals(42, $context->currency->id);
         $this->assertEquals(42, $context->customer->id);
+        $this->assertEquals(42, $context->employee->id);
         $this->assertEquals(42, $context->language->id);
         $this->assertEquals('fr-FR', $context->currentLocale->getCode());
         $this->assertEquals('fr-FR', $context->getCurrentLocale()->getCode());
@@ -284,6 +312,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             ->setCountry($this->createContextFieldMock(Country::class, 51))
             ->setCurrency($this->createContextFieldMock(Currency::class, 51))
             ->setCustomer($this->createContextFieldMock(Customer::class, 51))
+            ->setEmployee($this->createContextFieldMock(Employee::class, 51))
             ->setLanguage($this->createContextFieldMock(Language::class, 51))
             ->setCurrentLocale($this->createLocalizationLocaleMock('en-US'))
             ->setController($this->createLegacyControllerContextMock('AdminCartsController'));
@@ -295,6 +324,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(51, $context->country->id);
         $this->assertEquals(51, $context->currency->id);
         $this->assertEquals(51, $context->customer->id);
+        $this->assertEquals(51, $context->employee->id);
         $this->assertEquals(51, $context->language->id);
         $this->assertEquals('en-US', $context->currentLocale->getCode());
         $this->assertEquals('en-US', $context->getCurrentLocale()->getCode());
@@ -306,6 +336,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(42, $context->country->id);
         $this->assertEquals(42, $context->currency->id);
         $this->assertEquals(42, $context->customer->id);
+        $this->assertEquals(42, $context->employee->id);
         $this->assertEquals(42, $context->language->id);
         $this->assertEquals('fr-FR', $context->currentLocale->getCode());
         $this->assertEquals('fr-FR', $context->getCurrentLocale()->getCode());

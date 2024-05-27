@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
@@ -37,38 +36,75 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
+use PrestaShopBundle\Routing\LegacyControllerConstants;
 use ReflectionClass;
 use ReflectionException;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\NoConfigurationException;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Listener dedicated to set up Shop context for the Back-Office/Admin application.
  */
-class ShopContextListener
+class ShopContextListener implements EventSubscriberInterface
 {
+    /**
+     * Priority lower than EmployeeContextListener so that EmployeeContext is correctly initialized
+     */
+    public const KERNEL_REQUEST_PRIORITY = EmployeeContextListener::KERNEL_REQUEST_PRIORITY - 1;
+
+    /**
+     * Priority higher than Symfony router listener (which is 32)
+     */
+    public const BEFORE_ROUTER_PRIORITY = 33;
+
+    public const SHOP_CONSTRAINT_TOKEN_ATTRIBUTE = '_shop_constraint';
+
     public function __construct(
         private readonly ShopContextBuilder $shopContextBuilder,
         private readonly EmployeeContext $employeeContext,
         private readonly ShopConfigurationInterface $configuration,
-        private readonly LegacyContext $legacyContext,
         private readonly MultistoreFeature $multistoreFeature,
         private readonly RouterInterface $router,
+        private readonly Security $security,
     ) {
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::REQUEST => [
+                ['initDefaultShopContext', self::BEFORE_ROUTER_PRIORITY],
+                ['initShopContext', self::KERNEL_REQUEST_PRIORITY],
+            ],
+        ];
+    }
+
+    public function initDefaultShopContext(RequestEvent $event): void
+    {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+        $shopConstraint = ShopConstraint::shop((int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops()));
+        $this->shopContextBuilder->setShopId($shopConstraint->getShopId()->getValue());
+        $this->shopContextBuilder->setShopConstraint($shopConstraint);
     }
 
     /**
      * @throws ReflectionException
      * @throws ShopException
      */
-    public function onKernelRequest(RequestEvent $event): void
+    public function initShopContext(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
         }
+
         $psSslEnabled = (bool) $this->configuration->get('PS_SSL_ENABLED', null, ShopConstraint::allShops());
 
         $this->shopContextBuilder->setSecureMode($psSslEnabled && $event->getRequest()->isSecure());
@@ -109,14 +145,20 @@ class ShopContextListener
      */
     private function getMultiShopConstraint(Request $request): ShopConstraint
     {
-        $shopConstraint = $this->verifyRouteAttribute($request);
-
+        $shopConstraint = $this->getShopConstraintFromRouteAttribute($request);
         if ($shopConstraint) {
             return $shopConstraint;
         }
 
+        // Check if the displayed legacy controller forces All shops mode (check already performed by LegacyRouterChecker)
+        $isAllShopContext = $request->attributes->get(LegacyControllerConstants::IS_ALL_SHOP_CONTEXT_ATTRIBUTE);
+
+        if ($isAllShopContext) {
+            return ShopConstraint::allShops();
+        }
+
         $shopConstraint = ShopConstraint::allShops();
-        $cookieShopConstraint = $this->getShopConstraintFromCookie();
+        $cookieShopConstraint = $this->getShopConstraintFromTokenAttribute();
         if ($cookieShopConstraint) {
             if ($cookieShopConstraint->getShopGroupId()) {
                 // Check if the employee has permission on selected group if not fallback on single shop context with employee's default shop
@@ -141,33 +183,19 @@ class ShopContextListener
     }
 
     /**
-     * Get shop context from the legacy cookie, the value of Cookie::shopContext looks like this:
-     *  s-1 -> Single shop with shop ID 1
-     *  g-2 -> Shop group with shop group ID 2
-     *  empty/other values: All Shops
+     * Get shop context from the token attribute.
      *
      * @return ShopConstraint|null
      */
-    private function getShopConstraintFromCookie(): ?ShopConstraint
+    private function getShopConstraintFromTokenAttribute(): ?ShopConstraint
     {
-        $shopContext = $this->legacyContext->getContext()->cookie->shopContext;
-        if (empty($shopContext)) {
+        if (!$this->security->getToken() || !$this->security->getToken()->hasAttribute(self::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE)) {
             return null;
         }
 
-        $splitShopContext = explode('-', $shopContext);
-        if (count($splitShopContext) == 2) {
-            $splitShopType = $splitShopContext[0];
-            $splitShopValue = (int) $splitShopContext[1];
-            if (empty($splitShopValue)) {
-                return null;
-            }
-
-            if ($splitShopType == 'g') {
-                return ShopConstraint::shopGroup($splitShopValue);
-            } else {
-                return ShopConstraint::shop($splitShopValue);
-            }
+        $shopConstraint = $this->security->getToken()->getAttribute(self::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE);
+        if ($shopConstraint instanceof ShopConstraint) {
+            return $shopConstraint;
         }
 
         return null;
@@ -189,14 +217,16 @@ class ShopContextListener
             return null;
         }
 
-        $cookie = $this->legacyContext->getContext()->cookie;
-        if ($cookie->shopContext === $shopContextUrlParameter) {
+        $parameterShopConstraint = $this->getShopConstraintFromParameter($shopContextUrlParameter);
+        $tokenShopConstraint = $this->getShopConstraintFromTokenAttribute();
+
+        // If the requested shop constraint is the current one nothing to change
+        if (null !== $tokenShopConstraint && $parameterShopConstraint->isEqual($tokenShopConstraint)) {
             return null;
         }
 
-        // Apply new shop context by saving it into the cookie and refreshing the current page
-        $cookie->shopContext = $shopContextUrlParameter;
-        $cookie->write();
+        // Update the token attribute value, it will be persisted by Symfony at the end of the redirect request
+        $this->security->getToken()->setAttribute(self::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE, $parameterShopConstraint);
 
         // Redirect to same url but remove setShopContext and conf parameters
         return new RedirectResponse(UrlCleaner::cleanUrl(
@@ -206,9 +236,34 @@ class ShopContextListener
     }
 
     /**
-     * @throws ReflectionException
+     * The parameter value looks like this:
+     *   s-1 -> Single shop with shop ID 1
+     *   g-2 -> Shop group with shop group ID 2
+     *   empty/other values: All Shops
      */
-    private function verifyRouteAttribute(Request $request): ?ShopConstraint
+    private function getShopConstraintFromParameter(string $parameter): ShopConstraint
+    {
+        if (empty($parameter)) {
+            return ShopConstraint::allShops();
+        }
+
+        $splitShopContext = explode('-', $parameter);
+        if (count($splitShopContext) == 2) {
+            $splitShopType = $splitShopContext[0];
+            $splitShopValue = (int) $splitShopContext[1];
+            if (!empty($splitShopValue) && !empty($splitShopType)) {
+                if ($splitShopType == 'g') {
+                    return ShopConstraint::shopGroup($splitShopValue);
+                } elseif ($splitShopType == 's') {
+                    return ShopConstraint::shop($splitShopValue);
+                }
+            }
+        }
+
+        return ShopConstraint::allShops();
+    }
+
+    private function getShopConstraintFromRouteAttribute(Request $request): ?ShopConstraint
     {
         try {
             $routeInfo = $this->router->match($request->getPathInfo());
@@ -225,7 +280,7 @@ class ShopContextListener
             } else {
                 return null;
             }
-        } catch (NoConfigurationException) {
+        } catch (NoConfigurationException|ReflectionException) {
             return null;
         }
     }

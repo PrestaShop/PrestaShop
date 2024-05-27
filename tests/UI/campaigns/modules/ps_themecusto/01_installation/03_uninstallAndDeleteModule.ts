@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
@@ -17,6 +16,7 @@ import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_themecusto_installation_uninstallAndDeleteModule';
 
@@ -42,10 +42,10 @@ describe('Theme Customization module - Uninstall and delete module', async () =>
   it('should go to \'Modules > Module Manager\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.modulesParentLink,
-      dashboardPage.moduleManagerLink,
+      boDashboardPage.modulesParentLink,
+      boDashboardPage.moduleManagerLink,
     );
     await moduleManagerPage.closeSfToolBar(page);
 
@@ -92,10 +92,10 @@ describe('Theme Customization module - Uninstall and delete module', async () =>
 
     // Reload => The "Theme & Logo" link identifier changes
     await moduleManagerPage.reloadPage(page);
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.themeAndLogoLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.themeAndLogoLink,
     );
     await themeAndLogoPage.closeSfToolBar(page);
 
@@ -117,10 +117,10 @@ describe('Theme Customization module - Uninstall and delete module', async () =>
     it('should go back to Back Office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToModulesManager', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);

@@ -78,7 +78,7 @@ class AttachmentFileUploader implements AttachmentFileUploaderInterface
         string $filePath,
         string $uniqueFileName,
         int $fileSize,
-        int $id = null,
+        ?int $id = null,
         bool $throwExceptionOnFailure = true
     ): void {
         $this->checkFileAllowedForUpload($fileSize);
@@ -128,7 +128,7 @@ class AttachmentFileUploader implements AttachmentFileUploaderInterface
                 sprintf(
                     'Max file size allowed is "%s" bytes. Uploaded file size is "%s".',
                     (string) ($this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
-                    number_format(($fileSize / 1024), 2, '.', '')
+                    number_format($fileSize / 1024, 2, '.', '')
                 ),
                 AttachmentConstraintException::INVALID_FILE_SIZE
             );

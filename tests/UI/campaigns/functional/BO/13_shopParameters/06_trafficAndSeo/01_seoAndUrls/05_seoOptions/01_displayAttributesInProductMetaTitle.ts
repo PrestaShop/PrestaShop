@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
@@ -19,6 +18,7 @@ import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_seoOptions_'
   + 'displayAttributesInProductMetaTitle';
@@ -44,10 +44,10 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
   it('should go to \'Shop Parameters > Traffic & SEO\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSeoAndUrlsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.trafficAndSeoLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.trafficAndSeoLink,
     );
     await seoAndUrlsPage.closeSfToolBar(page);
 

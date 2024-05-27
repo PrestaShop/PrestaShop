@@ -135,7 +135,7 @@
 {% endblock %}
 
 {% block widget_type_class %}
-{% if not compound and form.vars.block_prefixes|length > 2 %}
+{% if not compound|default(false) and form.vars.block_prefixes|length > 2 %}
  {% apply spaceless %}
 
     {% set index = form.vars.block_prefixes|length - 2 %}
@@ -1179,11 +1179,16 @@
   {% if external_link is defined %}
     {%- set openingTag -%}
       <a {{ block('form_external_link_attributes') }}>
-        <i class="material-icons">open_in_new</i>
+        {% if external_link.open_in_new_tab %}<i class="material-icons">open_in_new</i>{% endif %}
     {%- endset -%}
 
-    <div class="small font-secondary{% if external_link.align is same as('right') %} text-right{% endif %}">
-      {{ external_link.text|replace({'[1]': openingTag, '[/1]': '</a>'})|raw }}
+    <div class="small font-secondary form-external-link{% if external_link.align is same as('right') %} text-right{% endif %}">
+      {# If placeholders are included in the text use it as is, else prepend and append them to the text #}
+      {% if '[1]' in external_link.text and '[/1]' in external_link.text %}
+        {{ external_link.text|replace({'[1]': openingTag, '[/1]': '</a>'})|raw }}
+      {% else %}
+        {{ ('[1]' ~ external_link.text ~ '[/1]')|replace({'[1]': openingTag, '[/1]': '</a>'})|raw }}
+      {% endif %}
     </div>
   {% endif %}
 {% endblock form_external_link %}
@@ -1197,7 +1202,7 @@
     {% endif %}
   {% endfor %}
 
-  target="_blank"
+  {% if external_link.open_in_new_tab %}target="_blank"{% endif %}
   href="{{ external_link.href }}"
   class="{{ external_link_attr.class }}"
 {%- endblock -%}

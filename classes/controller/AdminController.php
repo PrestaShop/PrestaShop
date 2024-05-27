@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class AdminControllerCore extends Controller
 {
@@ -1065,7 +1064,7 @@ class AdminControllerCore extends Controller
     public function processDeleteImage()
     {
         if (Validate::isLoadedObject($object = $this->loadObject())) {
-            if (($object->deleteImage())) {
+            if ($object->deleteImage()) {
                 $redirect = self::$currentIndex . '&update' . $this->table . '&' . $this->identifier . '=' . (int) Tools::getValue($this->identifier) . '&conf=7&token=' . $this->token;
                 if (!$this->ajax) {
                     $this->redirect_after = $redirect;
@@ -1157,7 +1156,7 @@ class AdminControllerCore extends Controller
                 $this->errors[] = $this->trans('You need at least one object.', [], 'Admin.Notifications.Error') .
                     ' <b>' . $this->table . '</b><br />' .
                     $this->trans('You cannot delete all of the items.', [], 'Admin.Notifications.Error');
-            } elseif (array_key_exists('delete', $this->list_skip_actions) && in_array($object->id, $this->list_skip_actions['delete'])) { //check if some ids are in list_skip_actions and forbid deletion
+            } elseif (array_key_exists('delete', $this->list_skip_actions) && in_array($object->id, $this->list_skip_actions['delete'])) { // check if some ids are in list_skip_actions and forbid deletion
                 $this->errors[] = $this->trans('You cannot delete this item.', [], 'Admin.Notifications.Error');
             } else {
                 if ($this->deleted) {
@@ -2120,20 +2119,20 @@ class AdminControllerCore extends Controller
             'order' => [
                 $this->trans(
                     'Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!',
-                        [
-                            '_raw' => true,
-                            '[1]' => '<strong>',
-                            '[/1]' => '</strong>',
-                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true,
-                                    [
-                                        'route' => 'admin_carts_index',
-                                        'cart[filters][status]' => CartStatus::ABANDONED_CART,
-                                    ],
-                                    ['action' => 'filterOnlyAbandonedCarts']) . '">',
-                            '[/2]' => '</a>',
-                            '[3]' => '<br>',
-                        ],
-                        'Admin.Navigation.Notification'
+                    [
+                        '_raw' => true,
+                        '[1]' => '<strong>',
+                        '[/1]' => '</strong>',
+                        '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true,
+                            [
+                                'route' => 'admin_carts_index',
+                                'cart[filters][status]' => CartStatus::ABANDONED_CART,
+                            ],
+                            ['action' => 'filterOnlyAbandonedCarts']) . '">',
+                        '[/2]' => '</a>',
+                        '[3]' => '<br>',
+                    ],
+                    'Admin.Navigation.Notification'
                 ),
             ],
             'customer' => [
@@ -2683,7 +2682,7 @@ class AdminControllerCore extends Controller
                 $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/rtl.css?v=' . _PS_VERSION_, 'all', 0);
             }
 
-            //Bootstrap
+            // Bootstrap
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/' . $this->bo_css . '?v=' . _PS_VERSION_, 'all', 0);
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/vendor/titatoggle-min.css', 'all', 0);
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/theme.css?v=' . _PS_VERSION_, 'all', 0);
@@ -2713,15 +2712,10 @@ class AdminControllerCore extends Controller
                 $this->addJS(_PS_JS_DIR_ . 'admin/notifications.js?v=' . _PS_VERSION_);
             }
 
-            $username = $this->get('prestashop.user_provider')->getUsername();
-            $token = $this->get(CsrfTokenManagerInterface::class)
-                ->getToken($username)
-                ->getValue();
-
             $this->context->smarty->assign([
                 'js_router_metadata' => [
                     'base_url' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_),
-                    'token' => $token,
+                    'token' => $this->get(UserTokenManager::class)->getSymfonyToken(),
                 ],
             ]);
         }
@@ -2794,37 +2788,6 @@ class AdminControllerCore extends Controller
             $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
             $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
             $this->context->link = new Link($protocol_link, $protocol_content);
-        }
-
-        if (isset($_GET['logout'])) {
-            $this->context->employee->logout();
-        }
-        if (isset(Context::getContext()->cookie->last_activity)) {
-            if (((int) $this->context->cookie->last_activity) + self::AUTH_COOKIE_LIFETIME < time()) {
-                $this->context->employee->logout();
-            } else {
-                $this->context->cookie->last_activity = time();
-            }
-        }
-
-        if (
-            !$this->isAnonymousAllowed()
-            && (
-                $this->controller_name != 'AdminLogin'
-                && (
-                    !isset($this->context->employee)
-                    || !$this->context->employee->isLoggedBack()
-                )
-            )
-        ) {
-            if (isset($this->context->employee)) {
-                $this->context->employee->logout();
-            }
-            $email = false;
-            if (Tools::getValue('email') && Validate::isEmail(Tools::getValue('email'))) {
-                $email = Tools::getValue('email');
-            }
-            Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin') . ((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect=' . $this->controller_name : '') . ($email ? '&email=' . $email : ''));
         }
 
         // Set current index
@@ -3500,8 +3463,8 @@ class AdminControllerCore extends Controller
     {
         if (empty($limit)) {
             if (
-                isset($this->context->cookie->{$this->list_id . '_pagination'}) &&
-                $this->context->cookie->{$this->list_id . '_pagination'}
+                isset($this->context->cookie->{$this->list_id . '_pagination'})
+                && $this->context->cookie->{$this->list_id . '_pagination'}
             ) {
                 $limit = $this->context->cookie->{$this->list_id . '_pagination'};
             } else {
@@ -3637,6 +3600,11 @@ class AdminControllerCore extends Controller
         /** @var ObjectModel $object */
         $object = new $class_name();
 
+        /*
+         * If a specific getValidationRules method is implemented on the controller,
+         * it will be used to validate the data. Otherwise, we will use the ObjectModel
+         * definition of the object.
+         */
         if (method_exists($this, 'getValidationRules')) {
             $definition = $this->getValidationRules();
         } else {
@@ -3957,7 +3925,7 @@ class AdminControllerCore extends Controller
             }
 
             // Copy new image
-            if (empty($this->errors) && !ImageManager::resize($tmp_name, _PS_IMG_DIR_ . $dir . $id . '.' . $this->imageType, (int) $width, (int) $height, ($ext ? $ext : $this->imageType))) {
+            if (empty($this->errors) && !ImageManager::resize($tmp_name, _PS_IMG_DIR_ . $dir . $id . '.' . $this->imageType, (int) $width, (int) $height, $ext ? $ext : $this->imageType)) {
                 $this->errors[] = $this->trans('An error occurred while uploading the image.', [], 'Admin.Notifications.Error');
             }
 
@@ -4395,7 +4363,7 @@ class AdminControllerCore extends Controller
      *
      * @return bool
      */
-    protected function isAnonymousAllowed()
+    public function isAnonymousAllowed()
     {
         return $this->allowAnonymous;
     }

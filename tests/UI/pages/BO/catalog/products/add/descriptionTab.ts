@@ -1,8 +1,7 @@
 import type {Page} from 'playwright';
 
 import type ProductData from '@data/faker/product';
-
-// Import pages
+import {ProductImageInformation} from '@data/types/product';
 import BOBasePage from '@pages/BO/BObasePage';
 
 /**
@@ -208,6 +207,7 @@ class DescriptionTab extends BOBasePage {
 
     if (filteredImagePaths !== null && filteredImagePaths.length !== 0) {
       const numberOfImages = await this.getNumberOfImages(page);
+      await this.waitForVisibleSelector(page, numberOfImages === 0 ? this.productImageDropZoneDiv : this.imagePreviewBlock);
       await this.uploadOnFileChooser(
         page,
         numberOfImages === 0 ? this.productImageDropZoneDiv : this.imagePreviewBlock,
@@ -220,6 +220,44 @@ class DescriptionTab extends BOBasePage {
   }
 
   /**
+   * Get Product Image Information
+   * @param page {Page} Browser tab
+   * @param numImage {number} Number of the image
+   * @returns {Promise<ProductImageInformation>}
+   */
+  async getProductImageInformation(page: Page, numImage: number): Promise<ProductImageInformation> {
+    await page.locator(this.productImage).nth(numImage - 1).click();
+
+    const isCover = await page.locator(this.productImageDropZoneCover).isChecked();
+
+    await page.locator(this.productImageDropZoneBtnLang).click();
+    await this.elementVisible(page, this.productImageDropZoneDropdown);
+    await page.locator(this.productImageDropZoneDropdownItem('en')).click();
+    const captionEN = await page
+      .locator(this.productImageDropZoneCaption)
+      .evaluate((node: HTMLTextAreaElement): string => node.value);
+
+    await page.locator(this.productImageDropZoneBtnLang).click();
+    await this.elementVisible(page, this.productImageDropZoneDropdown);
+    await page.locator(this.productImageDropZoneDropdownItem('fr')).click();
+    const captionFR = await page
+      .locator(this.productImageDropZoneCaption)
+      .evaluate((node: HTMLTextAreaElement): string => node.value);
+
+    await page.locator(this.productImageDropZoneCloseButton).click();
+
+    return {
+      id: parseInt(await page.locator(this.productImage).nth(numImage - 1).getAttribute('data-id') ?? '0', 10),
+      isCover,
+      position: numImage,
+      caption: {
+        en: captionEN,
+        fr: captionFR,
+      },
+    };
+  }
+
+  /**
    * Set Product Image Information
    * @param page {Page} Browser tab
    * @param numImage {number} Number of the image
@@ -228,6 +266,7 @@ class DescriptionTab extends BOBasePage {
    * @param captionFr {string|undefined} Caption in French
    * @param selectAll {boolean|undefined} Select all
    * @param toSave {boolean} True if we need to save
+   * @param toClose {boolean} True if we need to close
    * @returns {Promise<string|null>}
    */
   async setProductImageInformation(
@@ -238,7 +277,9 @@ class DescriptionTab extends BOBasePage {
     captionFr: string | undefined,
     selectAll: boolean | undefined = undefined,
     toSave: boolean = true,
+    toClose: boolean = false,
   ): Promise<string | null> {
+    let returnValue: string|null = null;
     // Select the image
     await page.locator(this.productImage).nth(numImage - 1).click();
 
@@ -267,10 +308,12 @@ class DescriptionTab extends BOBasePage {
     if (toSave) {
       await page.locator(this.productImageDropZoneBtnSubmit).click();
 
-      return this.getGrowlMessageContent(page);
+      returnValue = await this.getGrowlMessageContent(page);
     }
-    await page.locator(this.productImageDropZoneCloseButton).click();
-    return null;
+    if (toClose) {
+      await page.locator(this.productImageDropZoneCloseButton).click();
+    }
+    return returnValue;
   }
 
   /**
@@ -309,7 +352,7 @@ class DescriptionTab extends BOBasePage {
   }
 
   /**
-   * delete image
+   * Delete image
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */

@@ -336,7 +336,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
      */
     private function getSpecificPricesQueryBuilder(ProductId $productId, LanguageId $langId, array $filters): QueryBuilder
     {
-        //@todo: filters are not fully handled.
+        // @todo: filters are not fully handled.
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'specific_price', 'sp')
             ->leftJoin(

@@ -29,18 +29,20 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Context;
 
 use Employee as LegacyEmployee;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository;
 
 /**
  * @experimental Depends on ADR https://github.com/PrestaShop/ADR/pull/36
  */
-class EmployeeContextBuilder
+class EmployeeContextBuilder implements LegacyContextBuilderInterface
 {
     private ?int $employeeId = null;
     private ?LegacyEmployee $legacyEmployee = null;
 
     public function __construct(
-        private readonly EmployeeRepository $employeeRepository
+        private readonly EmployeeRepository $employeeRepository,
+        private readonly ContextStateManager $contextStateManager,
     ) {
     }
 
@@ -66,6 +68,17 @@ class EmployeeContextBuilder
         }
 
         return new EmployeeContext($employee);
+    }
+
+    public function buildLegacyContext(): void
+    {
+        $legacyEmployee = $this->getLegacyEmployee();
+        if (!empty($legacyEmployee)) {
+            $contextEmployee = $this->contextStateManager->getContext()->employee;
+            if (null === $contextEmployee || empty($contextEmployee->id)) {
+                $this->contextStateManager->setEmployee($legacyEmployee);
+            }
+        }
     }
 
     public function setEmployeeId(?int $employeeId): self

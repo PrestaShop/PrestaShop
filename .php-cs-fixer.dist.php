@@ -49,6 +49,12 @@ return (new PhpCsFixer\Config())
         'yoda_style' => false,
         'single_line_throw' => false,
         'no_alias_language_construct_call' => false,
+        'no_null_property_initialization' => false,
+        'global_namespace_import' => [
+            'import_classes' => true,
+            'import_constants' => false,
+            'import_functions' => false,
+        ],
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache');

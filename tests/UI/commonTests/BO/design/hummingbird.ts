@@ -1,6 +1,5 @@
 import loginCommon from '@commonTests/BO/loginBO';
 
-import dashboardPage from '@pages/BO/dashboard';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
 import themeImportPage from '@pages/BO/design/themeAndLogo/themeAndLogo/import';
 
@@ -10,6 +9,7 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import files from '@utils/files';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 function installHummingbird(baseContext: string = 'commonTests-installHummingbird'): void {
   describe('Install Hummingbird theme', async () => {
@@ -38,10 +38,10 @@ function installHummingbird(baseContext: string = 'commonTests-installHummingbir
     it('should go to \'Design > Theme & Logo\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.designParentLink,
-        dashboardPage.themeAndLogoParentLink,
+        boDashboardPage.designParentLink,
+        boDashboardPage.themeAndLogoParentLink,
       );
       await themeAndLogoPage.closeSfToolBar(page);
 
@@ -104,10 +104,10 @@ function uninstallHummingbird(baseContext: string = 'commonTests-uninstallHummin
     it('should go to \'Design > Theme & Logo\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.designParentLink,
-        dashboardPage.themeAndLogoParentLink,
+        boDashboardPage.designParentLink,
+        boDashboardPage.themeAndLogoParentLink,
       );
       await themeAndLogoPage.closeSfToolBar(page);
 

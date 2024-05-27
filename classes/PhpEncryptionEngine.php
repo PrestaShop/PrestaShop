@@ -72,7 +72,7 @@ class PhpEncryptionEngineCore
         try {
             $plaintext = Crypto::decrypt($cipherText, $this->key);
         } catch (Exception $e) {
-            if ($e instanceof \Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException) {
+            if ($e instanceof Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException) {
                 return false;
             }
 
@@ -88,7 +88,7 @@ class PhpEncryptionEngineCore
      *
      * @return string
      *
-     * @throws \Defuse\Crypto\Exception\EnvironmentIsBrokenException
+     * @throws Defuse\Crypto\Exception\EnvironmentIsBrokenException
      */
     public static function saveBytesToChecksummedAsciiSafeString($header, $bytes)
     {

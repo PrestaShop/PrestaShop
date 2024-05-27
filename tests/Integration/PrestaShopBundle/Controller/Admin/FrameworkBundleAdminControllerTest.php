@@ -26,28 +26,14 @@
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin;
 
-use Context;
-use Country;
-use Currency;
-use Employee;
-use Language;
-use Link;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
-use Psr\Log\NullLogger;
-use Shop;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\Translator;
-use Tests\Integration\Utility\ContextMockerTrait;
 use Tests\Integration\Utility\LoginTrait;
+use Tests\TestCase\SymfonyIntegrationTestCase;
 
-class FrameworkBundleAdminControllerTest extends WebTestCase
+class FrameworkBundleAdminControllerTest extends SymfonyIntegrationTestCase
 {
-    use ContextMockerTrait;
     use LoginTrait;
 
     /**
@@ -68,142 +54,9 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        self::mockContext();
-
-        $this->client = self::createClient();
         $this->loginUser($this->client);
-        $this->router = self::$kernel->getContainer()->get('router');
-        $this->translator = self::$kernel->getContainer()->get('translator');
-
-        // Currency
-        $currencyMock = $this->getMockBuilder(Currency::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        // Country
-        $countryMock = $this->getMockBuilder(Country::class)->getMock();
-        $countryMock->iso_code = 'en';
-        $countryMock->id = 1;
-        // Employee
-        $employeeMock = $this->getMockBuilder(Employee::class)->getMock();
-        $employeeMock->id_profile = 1;
-        $employeeMock->id_lang = 1;
-        // Language
-        $languageFixture = new Language(1);
-        // Link
-        $linkMock = $this
-            ->getMockBuilder(Link::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        // If getCMSLink() is not mocked,
-        // it returns null, thus breaking code that expects it to return string,
-        // as string is the only valid return type for this method.
-        $linkMock->method('getCMSLink')->willReturn('');
-        // Shop
-        $shopMock = $this->getMockBuilder(Shop::class)
-            ->setMethods(['getBaseURL'])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $shopMock->id = 1;
-        $shopMock->id_category = 1;
-        $shopMock->theme = new Theme([
-            'name' => 'classic',
-            'directory' => _PS_ROOT_DIR_ . '/themes/',
-        ]);
-        $shopMock->method('getBaseURL')->willReturn('my-awesome-url.com');
-
-        $contextMock = $this->getMockBuilder(Context::class)
-            ->setMethods(['getTranslator', 'getContext'])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $contextMock->method('getTranslator')->will($this->returnValue($this->translator));
-        $contextMock->method('getContext')->will($this->returnValue($contextMock));
-
-        $contextMock->country = $countryMock;
-        $contextMock->currency = $currencyMock;
-        $contextMock->employee = $employeeMock;
-        $contextMock->language = $languageFixture;
-        $contextMock->link = $linkMock;
-        $contextMock->shop = $shopMock;
-
-        $currencyDataProviderMock = $this->getMockBuilder(CurrencyDataProvider::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getDefaultCurrencyIsoCode', 'getDefaultCurrency'])
-            ->getMock();
-        $currencyDataProviderMock->method('getDefaultCurrencyIsoCode')->will($this->returnValue('en'));
-        $currencyDataProviderMock->method('getDefaultCurrency')->will($this->returnValue($currencyMock));
-
-        $kpiRowPresenterMock = $this->getMockBuilder(KpiRowPresenterInterface::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['present'])
-            ->getMock();
-        $kpiRowPresenterMock->method('present')->will($this->returnValue([
-            'allowRefresh' => false,
-            'kpis' => ['a', 'b', 'c'],
-        ]));
-
-        $smartyMock = $this
-            ->getMockBuilder(\Smarty::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
-            ->setMethods([
-                'getContext',
-                'getEmployeeLanguageIso',
-                'getEmployeeCurrency',
-                'getRootUrl',
-                'getLanguages',
-                'getLanguage',
-                'getAdminLink',
-                'getAvailableLanguages',
-                'getSmarty',
-            ])
-            ->disableAutoload()
-            ->disableOriginalConstructor()
-            ->getMock();
-        $legacyContextMock->method('getSmarty')->willReturn($smartyMock);
-        $legacyContextMock->method('getContext')->willReturn($contextMock);
-        $legacyContextMock->method('getLanguages')->willReturn([
-            [
-                'id_lang' => '1',
-                'name' => 'English (English)',
-                'iso_code' => 'en',
-                'language_code' => 'en-us',
-                'locale' => 'en-US',
-            ],
-            [
-                'id_lang' => '2',
-                'name' => 'Français (French)',
-                'iso_code' => 'fr',
-                'language_code' => 'fr',
-                'locale' => 'fr-FR',
-            ],
-        ]);
-        $legacyContextMock->method('getLanguage')->willReturn($languageFixture);
-        $legacyContextMock->method('getAvailableLanguages')->willReturn([
-            [
-                'id_lang' => '1',
-                'name' => 'English (English)',
-                'iso_code' => 'en',
-                'language_code' => 'en-us',
-                'locale' => 'en-US',
-                'active' => true,
-            ],
-            [
-                'id_lang' => '2',
-                'name' => 'Français (French)',
-                'iso_code' => 'fr',
-                'language_code' => 'fr',
-                'locale' => 'fr-FR',
-                'active' => false,
-            ],
-        ]);
-
-        self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
-        self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
-        self::$kernel->getContainer()->set('prestashop.core.kpi_row.presenter', $kpiRowPresenterMock);
-        self::$kernel->getContainer()->set('logger', new NullLogger());
+        $this->router = $this->client->getContainer()->get('router');
+        $this->translator = $this->client->getContainer()->get('translator');
     }
 
     /**
@@ -249,7 +102,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
     {
         return [
             // @todo: something is missing for Vuejs application in translations page.
-            //'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
+            // 'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
             'admin_administration' => ['Administration', 'admin_administration'],
             'admin_attachments_create' => ['Add new', 'admin_attachments_create'],
             'admin_attachments_index' => ['Files', 'admin_attachments_index'],

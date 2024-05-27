@@ -6,8 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import loginPage from '@pages/BO/login';
-import dashboardPage from '@pages/BO/dashboard';
 import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import productsPage from '@pages/BO/catalog/products';
@@ -18,6 +16,10 @@ import EmployeeData from '@data/faker/employee';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_employees_CRUDEmployee';
 
@@ -61,10 +63,10 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
   it('should go to \'Advanced Parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.advancedParametersLink,
-      dashboardPage.teamLink,
+      boDashboardPage.advancedParametersLink,
+      boDashboardPage.teamLink,
     );
     await employeesPage.closeSfToolBar(page);
 
@@ -107,7 +109,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
     it('should sign in with new account and verify the default page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInWithCreatedEmployee', baseContext);
 
-      await loginPage.successLogin(page, createEmployeeData.email, createEmployeeData.password);
+      await boLoginPage.successLogin(page, createEmployeeData.email, createEmployeeData.password);
 
       const pageTitle = await productsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productsPage.pageTitle);
@@ -128,10 +130,10 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       it('should go to \'Advanced Parameters > Team\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeePageForUpdate', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.advancedParametersLink,
-          dashboardPage.teamLink,
+          boDashboardPage.advancedParametersLink,
+          boDashboardPage.teamLink,
         );
 
         const pageTitle = await employeesPage.getPageTitle(page);
@@ -180,7 +182,7 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       it('should sign in with edited account and verify the default page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signInWithUpdatedEmployee', baseContext);
 
-        await loginPage.successLogin(page, firstEditEmployeeData.email, firstEditEmployeeData.password);
+        await boLoginPage.successLogin(page, firstEditEmployeeData.email, firstEditEmployeeData.password);
 
         const pageTitle = await ordersPage.getPageTitle(page);
         expect(pageTitle).to.contains(ordersPage.pageTitle);
@@ -199,10 +201,10 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       it('should go to \'Advanced Parameters > Team\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDisable', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.advancedParametersLink,
-          dashboardPage.teamLink,
+          boDashboardPage.advancedParametersLink,
+          boDashboardPage.teamLink,
         );
 
         const pageTitle = await employeesPage.getPageTitle(page);
@@ -242,10 +244,10 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       it('should test sign in with the disabled employee', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signInWithDisabledEmployee', baseContext);
 
-        await loginPage.failedLogin(page, secondEditEmployeeData.email, secondEditEmployeeData.password);
+        await boLoginPage.failedLogin(page, secondEditEmployeeData.email, secondEditEmployeeData.password);
 
-        const loginError = await loginPage.getLoginError(page);
-        expect(loginError).to.contains(loginPage.loginErrorText);
+        const loginError = await boLoginPage.getLoginError(page);
+        expect(loginError).to.contains(boLoginPage.loginErrorText);
       });
     });
   });
@@ -259,10 +261,10 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDelete', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.teamLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.teamLink,
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);

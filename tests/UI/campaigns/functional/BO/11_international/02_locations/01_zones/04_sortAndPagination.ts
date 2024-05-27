@@ -7,11 +7,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import addZonePage from '@pages/BO/international/locations/add';
 
 import {
+  boDashboardPage,
   FakerZone,
 } from '@prestashop-core/ui-testing';
 
@@ -48,10 +48,10 @@ describe('BO - International - Zones : Sort and pagination', async () => {
   it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.locationsLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.locationsLink,
     );
 
     const pageTitle = await zonesPage.getPageTitle(page);

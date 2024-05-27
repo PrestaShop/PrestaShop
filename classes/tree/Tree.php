@@ -304,13 +304,13 @@ class TreeCore
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
-                    $this->getContext()->controller->getTemplatePath()
-                ) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
+            $this->getContext()->controller->getTemplatePath()
+        ) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()) .
                 $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                    $this->getContext()->controller->getTemplatePath()
-                ) . $this->getTemplateDirectory() . $template)) {
+            $this->getContext()->controller->getTemplatePath()
+        ) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
@@ -404,7 +404,7 @@ class TreeCore
 
     public function render($data = null)
     {
-        //Adding tree.js
+        // Adding tree.js
         $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
         $admin_webpath = preg_replace('/^' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/', '', $admin_webpath);
         $bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
@@ -423,14 +423,14 @@ class TreeCore
             $this->getContext()->controller->addJs($js_path);
         }
 
-        //Create Tree Template
+        // Create Tree Template
         $template = $this->getContext()->smarty->createTemplate(
             $this->getTemplateFile($this->getTemplate()),
             $this->getContext()->smarty
         );
 
         if ($this->getTitle() !== null && trim($this->getTitle()) != '' || $this->useToolbar()) {
-            //Create Tree Header Template
+            // Create Tree Header Template
             $headerTemplate = $this->getContext()->smarty->createTemplate(
                 $this->getTemplateFile($this->getHeaderTemplate()),
                 $this->getContext()->smarty
@@ -445,7 +445,7 @@ class TreeCore
             $template->assign('header', $headerTemplate->fetch());
         }
 
-        //Assign Tree nodes
+        // Assign Tree nodes
         $template->assign($this->getAttributes())->assign([
             'id' => $this->getId(),
             'nodes' => $this->renderNodes($data),

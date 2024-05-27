@@ -1,4 +1,3 @@
-import {Page} from 'playwright';
 // Import FO Pages
 import {BlockCartModal} from '@pages/FO/classic/modal/blockCart';
 
@@ -26,17 +25,6 @@ class BlockCart extends BlockCartModal {
     this.cartModalSubtotalBlock = `${this.blockCartModalSummary} .product-subtotal .subtotals.value`;
     this.cartModalShippingBlock = `${this.blockCartModalSummary} .product-shipping .shipping.value`;
     this.cartModalProductTaxInclBlock = `${this.blockCartModalSummary} .product-total .value`;
-  }
-
-  /**
-   * Close block cart modal
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async closeBlockCartModal(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
-
-    return this.elementNotVisible(page, this.blockCartModalDiv, 1000);
   }
 }
 

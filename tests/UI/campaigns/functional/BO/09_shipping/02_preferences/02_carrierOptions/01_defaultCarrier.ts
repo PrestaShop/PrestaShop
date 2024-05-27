@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
@@ -19,6 +18,7 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 import Carriers from '@data/demo/carriers';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   FakerCarrier,
@@ -57,10 +57,10 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
   it('should go to \'Shipping > Preferences\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToPreferencesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shippingLink,
-      dashboardPage.shippingPreferencesLink,
+      boDashboardPage.shippingLink,
+      boDashboardPage.shippingPreferencesLink,
     );
     await preferencesPage.closeSfToolBar(page);
 

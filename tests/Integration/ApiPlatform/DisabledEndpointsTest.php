@@ -31,6 +31,7 @@ namespace Tests\Integration\ApiPlatform;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor;
+use RuntimeException;
 use Tests\Integration\ApiPlatform\EndPoint\ApiTestCase;
 
 /**
@@ -68,7 +69,7 @@ class DisabledEndpointsTest extends ApiTestCase
         $result = 0;
         system($commandLine, $result);
         if ($result !== 0) {
-            throw new \RuntimeException('Could not clear the cache');
+            throw new RuntimeException('Could not clear the cache');
         }
     }
 

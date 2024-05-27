@@ -1,11 +1,12 @@
 import testContext from '@utils/testContext';
 
-import loginPage from '@pages/BO/login';
-import dashboardPage from '@pages/BO/dashboard';
-
 import {expect} from 'chai';
 import {Context} from 'mocha';
 import type {Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+} from '@prestashop-core/ui-testing';
 
 export default {
   async loginBO(
@@ -16,19 +17,19 @@ export default {
   ): Promise<void> {
     await testContext.addContextItem(mochaContext, 'testIdentifier', 'loginBO');
 
-    await loginPage.goTo(page, global.BO.URL);
-    await loginPage.successLogin(page, email, password);
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, email, password);
 
-    const pageTitle = await dashboardPage.getPageTitle(page);
-    expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   },
 
   async logoutBO(mochaContext: Context, page: Page): Promise<void> {
     await testContext.addContextItem(mochaContext, 'testIdentifier', 'logoutBO');
 
-    await dashboardPage.logoutBO(page);
+    await boDashboardPage.logoutBO(page);
 
-    const pageTitle = await loginPage.getPageTitle(page);
-    expect(pageTitle).to.contains(loginPage.pageTitle);
+    const pageTitle = await boLoginPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLoginPage.pageTitle);
   },
 };

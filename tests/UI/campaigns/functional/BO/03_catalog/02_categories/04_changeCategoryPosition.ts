@@ -7,11 +7,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import categoriesPage from '@pages/BO/catalog/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_categories_changeCategoryPosition';
 
@@ -37,10 +37,10 @@ describe('BO - Catalog - Categories : Change category position', async () => {
   it('should go to \'Catalog > Categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.categoriesLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.categoriesLink,
     );
     await categoriesPage.closeSfToolBar(page);
 
@@ -64,8 +64,8 @@ describe('BO - Catalog - Categories : Change category position', async () => {
 
     const sortedTable = await categoriesPage.getAllRowsColumnContent(page, 'position');
 
-    const nonSortedTableFloat: number[] = await nonSortedTable.map((text: string): number => parseFloat(text));
-    const sortedTableFloat: number[] = await sortedTable.map((text: string): number => parseFloat(text));
+    const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+    const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
     const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
     expect(sortedTableFloat).to.deep.equal(expectedResult);

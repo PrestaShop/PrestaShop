@@ -7,7 +7,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
 // Import data
@@ -15,6 +14,7 @@ import ShoppingCarts from '@data/demo/shoppingCarts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_shoppingCarts_filterShoppingCarts';
 
@@ -47,10 +47,10 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
   it('should go to \'Orders > Shopping carts\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.ordersParentLink,
-      dashboardPage.shoppingCartsLink,
+      boDashboardPage.ordersParentLink,
+      boDashboardPage.shoppingCartsLink,
     );
 
     const pageTitle = await shoppingCartsPage.getPageTitle(page);

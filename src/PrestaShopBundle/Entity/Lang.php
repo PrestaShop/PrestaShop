@@ -33,92 +33,78 @@ use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
 /**
  * @ORM\Table()
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\LangRepository")
  */
 class Lang implements LanguageInterface
 {
     /**
-     * @var int
-     *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_lang", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="name", type="string", length=32)
      */
-    private $name;
+    private string $name;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="active", type="boolean")
      */
-    private $active;
+    private bool $active;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="iso_code", type="string", length=2)
      */
-    private $isoCode;
+    private string $isoCode;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="language_code", type="string", length=5)
      */
-    private $languageCode;
+    private string $languageCode;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="locale", type="string", length=5)
      */
-    private $locale;
+    private string $locale;
 
     /**
      * Badly named, it's not really light. It's just the format for a date only.
      *
-     * @var string
-     *
      * @ORM\Column(name="date_format_lite", type="string", length=32)
      */
-    private $dateFormatLite;
+    private string $dateFormatLite;
 
     /**
      * Badly named, it's not full. It's just the format for a date AND time.
      *
-     * @var string
-     *
      * @ORM\Column(name="date_format_full", type="string", length=32)
      */
-    private $dateFormatFull;
+    private string $dateFormatFull;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="is_rtl", type="boolean")
      */
-    private $isRtl;
+    private bool $isRtl;
 
     /**
      * @ORM\OneToMany(targetEntity="Translation", mappedBy="lang")
      */
-    private $translations;
+    private Collection $translations;
 
     /**
      * @ORM\ManyToMany(targetEntity="PrestaShopBundle\Entity\Shop", cascade={"remove", "persist"})
+     *
      * @ORM\JoinTable(
      *      joinColumns={@ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", onDelete="CASCADE")}
      * )
      */
-    private $shops;
+    private Collection $shops;
 
     /**
      * Constructor.
@@ -126,270 +112,143 @@ class Lang implements LanguageInterface
     public function __construct()
     {
         $this->shops = new ArrayCollection();
+        $this->translations = new ArrayCollection();
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Lang
-     */
-    public function setName(string $name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set active.
-     *
-     * @param bool $active
-     *
-     * @return Lang
-     */
-    public function setActive(bool $active)
+    public function setActive(bool $active): static
     {
         $this->active = $active;
 
         return $this;
     }
 
-    /**
-     * Get active.
-     *
-     * @return bool
-     */
     public function getActive(): bool
     {
         return $this->active;
     }
 
-    /**
-     * Set isoCode.
-     *
-     * @param string $isoCode
-     *
-     * @return Lang
-     */
-    public function setIsoCode(string $isoCode)
+    public function setIsoCode(string $isoCode): static
     {
         $this->isoCode = $isoCode;
 
         return $this;
     }
 
-    /**
-     * Get isoCode.
-     *
-     * @return string
-     */
     public function getIsoCode(): string
     {
         return $this->isoCode;
     }
 
-    /**
-     * Set languageCode.
-     *
-     * @param string $languageCode
-     *
-     * @return Lang
-     */
-    public function setLanguageCode(string $languageCode)
+    public function setLanguageCode(string $languageCode): static
     {
         $this->languageCode = $languageCode;
 
         return $this;
     }
 
-    /**
-     * Get languageCode.
-     *
-     * @return string
-     */
     public function getLanguageCode(): string
     {
         return $this->languageCode;
     }
 
-    /**
-     * Set dateFormatLite.
-     *
-     * @param string $dateFormatLite
-     *
-     * @return Lang
-     */
-    public function setDateFormatLite(string $dateFormatLite)
+    public function setDateFormatLite(string $dateFormatLite): static
     {
         $this->dateFormatLite = $dateFormatLite;
 
         return $this;
     }
 
-    /**
-     * Get dateFormatLite.
-     *
-     * @return string
-     */
     public function getDateFormatLite(): string
     {
         return $this->dateFormatLite;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDateFormat(): string
     {
         return $this->dateFormatLite;
     }
 
-    /**
-     * Set dateFormatFull.
-     *
-     * @param string $dateFormatFull
-     *
-     * @return Lang
-     */
-    public function setDateFormatFull(string $dateFormatFull)
+    public function setDateFormatFull(string $dateFormatFull): static
     {
         $this->dateFormatFull = $dateFormatFull;
 
         return $this;
     }
 
-    /**
-     * Get dateFormatFull.
-     *
-     * @return string
-     */
     public function getDateFormatFull(): string
     {
         return $this->dateFormatFull;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDateTimeFormat(): string
     {
         return $this->dateFormatFull;
     }
 
-    /**
-     * Set isRtl.
-     *
-     * @param bool $isRtl
-     *
-     * @return Lang
-     */
-    public function setIsRtl($isRtl)
+    public function setIsRtl(bool $isRtl): static
     {
         $this->isRtl = $isRtl;
 
         return $this;
     }
 
-    /**
-     * Get isRtl.
-     *
-     * @return bool
-     */
     public function getIsRtl(): bool
     {
         return $this->isRtl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isRTL(): bool
     {
         return $this->getIsRtl();
     }
 
-    /**
-     * @return string
-     */
     public function getLocale(): string
     {
         return !empty($this->locale) ? $this->locale : $this->getLanguageCode();
     }
 
-    /**
-     * @param string $locale
-     *
-     * @return Lang
-     */
-    public function setLocale($locale)
+    public function setLocale($locale): static
     {
         $this->locale = $locale;
 
         return $this;
     }
 
-    /**
-     * Add shop.
-     *
-     * @param Shop $shop
-     *
-     * @return Lang
-     */
-    public function addShop(Shop $shop)
+    public function addShop(Shop $shop): static
     {
         $this->shops[] = $shop;
 
         return $this;
     }
 
-    /**
-     * Remove shop.
-     *
-     * @param Shop $shop
-     */
-    public function removeShop(Shop $shop)
+    public function removeShop(Shop $shop): void
     {
         $this->shops->removeElement($shop);
     }
 
-    /**
-     * Get shops.
-     *
-     * @return Collection
-     */
-    public function getShops()
+    public function getShops(): Collection
     {
         return $this->shops;
     }
 
-    /**
-     * Get translations.
-     *
-     * @return Collection
-     */
-    public function getTranslations()
+    public function getTranslations(): Collection
     {
         return $this->translations;
     }

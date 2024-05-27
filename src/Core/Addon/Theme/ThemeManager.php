@@ -76,8 +76,8 @@ class ThemeManager implements AddonManagerInterface
         private readonly HookConfigurator $hookConfigurator,
         private readonly ThemeRepository $themeRepository,
         private readonly ImageTypeRepository $imageTypeRepository,
-        LoggerInterface $logger = null,
-        ApiClientContext $apiClientContext = null,
+        ?LoggerInterface $logger = null,
+        ?ApiClientContext $apiClientContext = null,
     ) {
         $this->translationFinder = new TranslationFinder();
         $this->logger = $logger ?? new NullLogger();
@@ -96,7 +96,7 @@ class ThemeManager implements AddonManagerInterface
      */
     public function install($source)
     {
-        if ((filter_var($source, FILTER_VALIDATE_URL))) {
+        if (filter_var($source, FILTER_VALIDATE_URL)) {
             $source = Tools::createFileFromUrl($source);
         }
         if (preg_match('/\.zip$/', $source)) {

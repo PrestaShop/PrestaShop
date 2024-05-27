@@ -30,6 +30,7 @@ use Cache;
 use Module;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use ReflectionMethod;
 use Tests\Integration\Utility\ContextMockerTrait;
 
 /**
@@ -71,7 +72,7 @@ class ModuleTest extends TestCase
     public function testTrans(string $moduleName): void
     {
         $module = Module::getInstanceByName($moduleName);
-        $transMethod = new \ReflectionMethod($module, 'trans');
+        $transMethod = new ReflectionMethod($module, 'trans');
         $transMethod->setAccessible(true);
         $trans = $transMethod->invoke($module, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
         $this->assertEquals('<a href="test">10 Succesful deletion "<b>stringTest</b>"</a>', $trans);

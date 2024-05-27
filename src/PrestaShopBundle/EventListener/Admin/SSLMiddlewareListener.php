@@ -60,7 +60,7 @@ class SSLMiddlewareListener
             return;
         }
 
-        //If It's Sf route and SSL enabled and forced, redirect to https
+        // If It's Sf route and SSL enabled and forced, redirect to https
         $enabled = (1 === (int) $this->configuration->get('PS_SSL_ENABLED'));
         $serverParams = $event->getRequest()->server;
         $refererSsl = ($serverParams->has('HTTP_REFERER') && str_starts_with($serverParams->get('HTTP_REFERER'), 'https'));

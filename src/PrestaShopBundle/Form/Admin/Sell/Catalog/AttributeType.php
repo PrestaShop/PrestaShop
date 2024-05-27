@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,13 +29,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
+use AttributeGroup;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -73,9 +74,15 @@ class AttributeType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $attributeGroupId = $options['attribute_group'];
-        $attributeGroup = $this->attributeGroupRepository->get(
-            new AttributeGroupId($attributeGroupId)
-        );
+
+        $hasAttributeGroupId = false;
+        if (0 < $attributeGroupId) {
+            $attributeGroup = $this->attributeGroupRepository->get(
+                new AttributeGroupId($attributeGroupId)
+            );
+            $hasAttributeGroupId = true;
+        }
+
         $builder
             ->add('attribute_group', ChoiceType::class, [
                 'label' => $this->trans('Attribute group', 'Admin.Catalog.Feature'),
@@ -84,7 +91,7 @@ class AttributeType extends TranslatorAwareType
                     new ShopId($this->shopContext->getId()),
                     new LanguageId($this->languageContext->getId())
                 ),
-                'data' => $attributeGroupId,
+                'data' => ($hasAttributeGroupId ? $attributeGroupId : ''),
             ])
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
@@ -99,16 +106,21 @@ class AttributeType extends TranslatorAwareType
                 'help' => $this->trans('Your internal name for this attribute.', 'Admin.Catalog.Help')
                     . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
                     . ' ' . TypedRegexValidator::CATALOG_CHARS,
-            ]);
-        if ($attributeGroup->group_type === AttributeGroupType::ATTRIBUTE_GROUP_TYPE_COLOR) {
-            $builder->add('color', ColorType::class, [
+            ])
+            ->add('color', ColorType::class, [
                 'label' => $this->trans('Color', 'Admin.Global'),
+                'row_attr' => [
+                    'class' => 'js-attribute-type-color-form-row',
+                ],
                 'required' => false,
-            ])->add('texture', FileType::class, [
+            ])
+            ->add('texture', FileType::class, [
                 'label' => $this->trans('Texture', 'Admin.Global'),
+                'row_attr' => [
+                    'class' => 'js-attribute-type-texture-form-row',
+                ],
                 'required' => false,
             ]);
-        }
 
         if ($this->multistoreFeature->isUsed()) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
@@ -117,7 +129,8 @@ class AttributeType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty.', 'Admin.Notifications.Error'
+                            'This field cannot be empty.',
+                            'Admin.Notifications.Error'
                         ),
                     ]),
                 ],
@@ -136,10 +149,19 @@ class AttributeType extends TranslatorAwareType
         $shopConstraint = ShopConstraint::shop($shopId->getValue());
 
         $groups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint);
+        usort($groups, static function (AttributeGroup $a, AttributeGroup $b) use ($languageId) {
+            $nameA = $a->name[$languageId->getValue()];
+            $nameB = $b->name[$languageId->getValue()];
+            if ($nameA === $nameB) {
+                return (int) $a->id - (int) $b->id;
+            }
+
+            return strcmp($nameA, $nameB);
+        });
         $return = [];
 
         foreach ($groups as $group) {
-            $return[sprintf('%s (%d)', $group->name[$languageId->getValue()], $group->id)] = $group->id;
+            $return[sprintf('%s (#%d)', $group->name[$languageId->getValue()], $group->id)] = $group->id;
         }
 
         return $return;

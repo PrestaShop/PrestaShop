@@ -10,13 +10,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import brandsPage from '@pages/BO/catalog/brands';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import ImportBrands from '@data/import/brands';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_brands_brands_sortPaginationAndBulkActions';
 
@@ -64,12 +64,12 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
     it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.brandsAndSuppliersLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.brandsAndSuppliersLink,
       );
-      await dashboardPage.closeSfToolBar(page);
+      await boDashboardPage.closeSfToolBar(page);
 
       const pageTitle = await brandsPage.getPageTitle(page);
       expect(pageTitle).to.contains(brandsPage.pageTitle);

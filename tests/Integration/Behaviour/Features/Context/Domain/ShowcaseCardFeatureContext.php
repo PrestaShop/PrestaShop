@@ -26,7 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;

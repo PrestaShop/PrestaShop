@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
-import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import {categoryPage} from '@pages/FO/classic/category';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
@@ -23,6 +22,7 @@ import type {CategoryRedirection} from '@data/types/category';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_categories_CRUDCategoryInBO';
 
@@ -78,10 +78,10 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
   it('should go to \'Catalog > Categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.categoriesLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.categoriesLink,
     );
     await categoriesPage.closeSfToolBar(page);
 

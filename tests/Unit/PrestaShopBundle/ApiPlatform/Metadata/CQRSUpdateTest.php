@@ -32,7 +32,6 @@ use ApiPlatform\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
-use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 class CQRSUpdateTest extends TestCase
 {
@@ -48,10 +47,10 @@ class CQRSUpdateTest extends TestCase
         $this->assertEquals(['json'], $operation->getFormats());
 
         // With positioned parameters
-        $operation = new CQRSUpdate('/uri');
+        $operation = new CQRSUpdate(CQRSUpdate::METHOD_POST, '/uri');
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
         $this->assertNull($operation->getProvider());
-        $this->assertEquals(CQRSUpdate::METHOD_PUT, $operation->getMethod());
+        $this->assertEquals(CQRSUpdate::METHOD_POST, $operation->getMethod());
         $this->assertEquals('/uri', $operation->getUriTemplate());
         $this->assertEquals([], $operation->getExtraProperties());
         $this->assertEquals(['json'], $operation->getFormats());
@@ -161,7 +160,7 @@ class CQRSUpdateTest extends TestCase
             CQRSQuery: 'My\\Namespace\\MyQuery',
         );
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
-        $this->assertEquals(QueryProvider::class, $operation->getProvider());
+        $this->assertEquals(null, $operation->getProvider());
         $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
@@ -170,7 +169,7 @@ class CQRSUpdateTest extends TestCase
             extraProperties: ['CQRSQuery' => 'My\\Namespace\\MyQuery'],
         );
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
-        $this->assertEquals(QueryProvider::class, $operation->getProvider());
+        $this->assertEquals(null, $operation->getProvider());
         $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
@@ -180,7 +179,7 @@ class CQRSUpdateTest extends TestCase
             CQRSQuery: 'My\\Namespace\\MyQuery',
         );
         $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
-        $this->assertEquals(QueryProvider::class, $operation->getProvider());
+        $this->assertEquals(null, $operation->getProvider());
         $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
 
@@ -202,7 +201,7 @@ class CQRSUpdateTest extends TestCase
 
         $operation3 = $operation->withCQRSQuery('My\\Namespace\\MyQuery');
         $this->assertEquals(CommandProcessor::class, $operation3->getProcessor());
-        $this->assertEquals(QueryProvider::class, $operation3->getProvider());
+        $this->assertEquals(null, $operation3->getProvider());
         $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery'], $operation3->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyQuery', $operation3->getCQRSQuery());
         // And initial operation as not modified of course

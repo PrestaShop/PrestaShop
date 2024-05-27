@@ -175,7 +175,7 @@ class LinkCore
             $params['id'] = $product->id;
         }
 
-        //Attribute equal to 0 or empty is useless, so we force it to null so that it won't be inserted in query parameters
+        // Attribute equal to 0 or empty is useless, so we force it to null so that it won't be inserted in query parameters
         if (empty($idProductAttribute)) {
             $idProductAttribute = null;
         }
@@ -235,7 +235,7 @@ class LinkCore
             $cats = [];
             foreach ($product->getParentCategories($idLang) as $cat) {
                 if (!in_array($cat['id_category'], Link::$category_disable_rewrite)) {
-                    //remove root and home category from the URL
+                    // remove root and home category from the URL
                     $cats[] = $cat['link_rewrite'];
                 }
             }
@@ -444,7 +444,7 @@ class LinkCore
         } elseif (is_int($category) || (is_string($category) && ctype_digit($category))) {
             $params['id'] = (int) $category;
         } else {
-            throw new \InvalidArgumentException('Invalid category parameter');
+            throw new InvalidArgumentException('Invalid category parameter');
         }
 
         if ((int) $params['id'] === 0) {
@@ -598,9 +598,9 @@ class LinkCore
 
         $dispatcher = Dispatcher::getInstance();
         if (!is_object($supplier)) {
-            if ($alias !== null &&
-                !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_keywords', $idShop) &&
-                !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_title', $idShop)
+            if ($alias !== null
+                && !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_keywords', $idShop)
+                && !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_title', $idShop)
             ) {
                 return $url . $dispatcher->createUrl(
                     'supplier_rule',
@@ -807,7 +807,7 @@ class LinkCore
 
                 return $legacyUrlConverter->convertByParameters($conversionParameters);
             } catch (CoreException $e) {
-                //The url could not be converted so we fallback on legacy url
+                // The url could not be converted so we fallback on legacy url
             }
         }
 
@@ -880,7 +880,7 @@ class LinkCore
                 $idShop = $this->getMatchingUrlShopId();
             }
 
-            //Use the matching shop if present, or fallback on the default one
+            // Use the matching shop if present, or fallback on the default one
             if (null !== $idShop) {
                 $shop = new Shop($idShop);
             } else {
@@ -1158,7 +1158,7 @@ class LinkCore
      *
      * @return string link
      */
-    public function getLanguageLink($idLang, Context $context = null)
+    public function getLanguageLink($idLang, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1321,7 +1321,7 @@ class LinkCore
      *
      * @return string
      */
-    protected function getLangLink($idLang = null, Context $context = null, $idShop = null)
+    protected function getLangLink($idLang = null, ?Context $context = null, $idShop = null)
     {
         static $psRewritingSettings = null;
         if ($psRewritingSettings === null) {
@@ -1414,7 +1414,7 @@ class LinkCore
     {
         $quickLink = $this->getQuickLink($url);
 
-        return $quickLink === ($this->getQuickLink($_SERVER['REQUEST_URI']));
+        return $quickLink === $this->getQuickLink($_SERVER['REQUEST_URI']);
     }
 
     /**
@@ -1422,7 +1422,7 @@ class LinkCore
      *
      * @return string
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function getUrlSmarty($params)
     {
@@ -1470,11 +1470,11 @@ class LinkCore
                 $link = $context->link->getProductLink(
                     $params['id'],
                     $params['alias'],
-                    (isset($params['category']) ? $params['category'] : null),
-                    (isset($params['ean13']) ? $params['ean13'] : null),
+                    isset($params['category']) ? $params['category'] : null,
+                    isset($params['ean13']) ? $params['ean13'] : null,
                     $params['id_lang'],
                     $params['id_shop'],
-                    (isset($params['ipa']) ? (int) $params['ipa'] : 0),
+                    isset($params['ipa']) ? (int) $params['ipa'] : 0,
                     false,
                     $params['relative_protocol'],
                     $params['with_id_in_anchor'],
@@ -1557,7 +1557,7 @@ class LinkCore
                 break;
             case 'sf':
                 if (!array_key_exists('route', $params)) {
-                    throw new \InvalidArgumentException('You need to setup a `route` attribute.');
+                    throw new InvalidArgumentException('You need to setup a `route` attribute.');
                 }
 
                 $sfContainer = SymfonyContainer::getInstance();
@@ -1570,7 +1570,7 @@ class LinkCore
                     }
                     $link = $sfRouter->generate($params['route'], [], UrlGeneratorInterface::ABSOLUTE_URL);
                 } else {
-                    throw new \InvalidArgumentException('You can\'t use Symfony router in legacy context.');
+                    throw new InvalidArgumentException('You can\'t use Symfony router in legacy context.');
                 }
 
                 break;

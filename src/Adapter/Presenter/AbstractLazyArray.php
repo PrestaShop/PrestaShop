@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter;
 use ArrayAccess;
 use ArrayIterator;
 use ArrayObject;
+use Closure;
 use Countable;
 use Iterator;
 use JsonSerializable;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Util\Inflector;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use ReturnTypeWillChange;
 use RuntimeException;
 
 /**
@@ -49,7 +51,7 @@ use RuntimeException;
  *
  *     @arrayAccess
  *
- *     @return array
+ * @return array
  *
  *     public function getAddresses()
  *
@@ -113,7 +115,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $arrayResult = [];
@@ -147,9 +149,9 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
 
     /**
      * @param mixed $key
-     * @param \Closure $closure
+     * @param Closure $closure
      */
-    public function appendClosure($key, \Closure $closure)
+    public function appendClosure($key, Closure $closure)
     {
         $this->arrayAccessList->offsetSet(
             $key,
@@ -247,7 +249,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($index)
     {
         if (isset($this->arrayAccessList[$index])) {
@@ -320,7 +322,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function current()
     {
         $key = $this->arrayAccessIterator->key();
@@ -341,7 +343,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @return mixed|string
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->arrayAccessIterator->key();

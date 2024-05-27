@@ -31,6 +31,7 @@ namespace Tests\Unit\Core\Context;
 use Employee;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 
@@ -40,7 +41,8 @@ class EmployeeContextBuilderTest extends TestCase
     {
         $employee = $this->mockEmployee();
         $builder = new EmployeeContextBuilder(
-            $this->mockEmployeeRepository($employee)
+            $this->mockEmployeeRepository($employee),
+            $this->createMock(ContextStateManager::class)
         );
         $builder->setEmployeeId(42);
 
@@ -63,11 +65,26 @@ class EmployeeContextBuilderTest extends TestCase
     public function testBuildNoEmployee(): void
     {
         $builder = new EmployeeContextBuilder(
-            $this->createMock(EmployeeRepository::class)
+            $this->createMock(EmployeeRepository::class),
+            $this->createMock(ContextStateManager::class)
         );
 
         $employeeContext = $builder->build();
         $this->assertNull($employeeContext->getEmployee());
+    }
+
+    public function testBuildLegacyContext(): void
+    {
+        $contextManagerMock = $this->createMock(ContextStateManager::class);
+        $employee = $this->mockEmployee();
+        $builder = new EmployeeContextBuilder(
+            $this->mockEmployeeRepository($employee),
+            $contextManagerMock
+        );
+        $builder->setEmployeeId(42);
+
+        $contextManagerMock->expects(static::once())->method('setEmployee')->with($employee);
+        $builder->buildLegacyContext();
     }
 
     private function mockEmployee(): Employee|MockObject
@@ -101,7 +118,7 @@ class EmployeeContextBuilderTest extends TestCase
         return $employee;
     }
 
-    private function mockEmployeeRepository(Employee|MockObject $employee = null): EmployeeRepository|MockObject
+    private function mockEmployeeRepository(Employee|MockObject|null $employee = null): EmployeeRepository|MockObject
     {
         $repository = $this->createMock(EmployeeRepository::class);
         $repository

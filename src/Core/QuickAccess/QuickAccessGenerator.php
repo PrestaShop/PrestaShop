@@ -33,11 +33,10 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Security\Hashing;
+use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Service\DataProvider\UserProvider;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
@@ -61,13 +60,12 @@ class QuickAccessGenerator
         protected readonly LanguageContext $languageContext,
         protected readonly ShopContext $shopContext,
         protected readonly QuickAccessRepositoryInterface $quickAccessRepository,
-        protected readonly UserProvider $userProvider,
         protected readonly TabRepository $tabRepository,
         protected readonly CsrfTokenManagerInterface $tokenManager,
         protected readonly EmployeeContext $employeeContext,
         private readonly Hashing $hashing,
         private readonly string $cookieKey,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
+        private readonly Security $security,
     ) {
     }
 
@@ -117,7 +115,8 @@ class QuickAccessGenerator
 
             // Special case for product link because it is bound to a modal, however all other links would deserve to be checked for permission
             if ($cleanLink === self::NEW_PRODUCT_LINK || $cleanLink === self::NEW_PRODUCT_V2_LINK) {
-                if (!in_array('ROLE_MOD_TAB_ADMINPRODUCTS_CREATE', $this->userProvider->getUser()->getRoles())) {
+                $connectedUser = $this->security->getUser();
+                if (!($connectedUser instanceof Employee) || !in_array('ROLE_MOD_TAB_ADMINPRODUCTS_CREATE', $connectedUser->getRoles())) {
                     // if employee has no access, we don't show product creation link,
                     // because it causes modal-related issues in product v2
                     unset($quickAccesses[$index]);
@@ -145,9 +144,9 @@ class QuickAccessGenerator
     {
         $separator = strpos($baseUrl, '?') ? '&' : '?';
 
-        $symfonyLayoutEnabled = $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT);
-        if ($symfonyLayoutEnabled && !str_contains('_token', $baseUrl)) {
-            $baseUrl .= $separator . '_token=' . $this->tokenManager->getToken($this->userProvider->getUsername())->getValue();
+        $userIdentifier = $this->security->getUser()?->getUserIdentifier();
+        if (!str_contains('_token', $baseUrl)) {
+            $baseUrl .= $separator . '_token=' . $this->tokenManager->getToken($userIdentifier)->getValue();
         } else {
             preg_match('/controller=(\w*)/', $baseUrl, $adminTab);
 
@@ -159,7 +158,7 @@ class QuickAccessGenerator
 
             // If symfony link
             if (!isset($adminTab[1]) && !str_contains('_token', $baseUrl)) {
-                $baseUrl .= $separator . '_token=' . $this->tokenManager->getToken($this->userProvider->getUsername())->getValue();
+                $baseUrl .= $separator . '_token=' . $this->tokenManager->getToken($userIdentifier)->getValue();
             }
         }
 

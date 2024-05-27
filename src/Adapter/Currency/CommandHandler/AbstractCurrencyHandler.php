@@ -114,9 +114,9 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
     /**
      * @param Currency $entity
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws LocalizationException
      */
     protected function refreshLocalizedData(Currency $entity)
     {
@@ -127,7 +127,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
             ];
         }
 
-        //This method will insert the missing localized names/symbols and detect if the currency has been modified
+        // This method will insert the missing localized names/symbols and detect if the currency has been modified
         $entity->refreshLocalizedCurrencyData($languagesData, $this->localeRepoCLDR);
     }
 
@@ -176,7 +176,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         $this->refreshLocalizedData($entity);
         $this->validateCurrency($entity);
 
-        //IMPORTANT: specify that we want to save null values
+        // IMPORTANT: specify that we want to save null values
         if (false === $entity->save(true, true)) {
             throw new CannotCreateCurrencyException('Failed to create new currency');
         }
@@ -218,7 +218,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         $this->refreshLocalizedData($entity);
         $this->validateCurrency($entity);
 
-        //IMPORTANT: specify that we want to save null values
+        // IMPORTANT: specify that we want to save null values
         if (false === $entity->update(true)) {
             throw new CannotUpdateCurrencyException(
                 sprintf(

@@ -147,7 +147,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
         UpdateProductInOrderCommand $command,
         OrderDetail $orderDetail,
         Order $order,
-        OrderInvoice $orderInvoice = null
+        ?OrderInvoice $orderInvoice = null
     ) {
         // assert product exists
         $product = new Product($orderDetail->product_id);
@@ -188,7 +188,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
             throw new OrderException('Invalid quantity');
         }
 
-        //check if product is available in stock
+        // check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
             $availableQuantity = StockAvailable::getQuantityAvailableByProduct(
                 $orderDetail->product_id,

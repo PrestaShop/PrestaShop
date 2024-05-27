@@ -50,6 +50,8 @@ class Carriers extends BOBasePage {
 
   private readonly tableColumnIsFree: (row: number) => string;
 
+  private readonly tableColumnIsFreeIcon: (row: number) => string;
+
   private readonly tableColumnPosition: (row: number) => string;
 
   private readonly tableColumnActions: (row: number) => string;
@@ -139,6 +141,7 @@ class Carriers extends BOBasePage {
     this.tableColumnActive = (row: number) => `${this.tableBodyColumn(row)}:nth-child(6) a`;
     this.enableColumnValidIcon = (row: number) => `${this.tableColumnActive(row)} i.icon-check`;
     this.tableColumnIsFree = (row: number) => `${this.tableBodyColumn(row)}:nth-child(7) a`;
+    this.tableColumnIsFreeIcon = (row: number) => `${this.tableColumnIsFree(row)} i.icon-check`;
     this.tableColumnPosition = (row: number) => `${this.tableBodyColumn(row)}:nth-child(8)`;
 
     // Row actions selectors
@@ -496,6 +499,16 @@ class Carriers extends BOBasePage {
   }
 
   /**
+   * Is free shipping
+   * @param page {Page} Browser tab
+   * @param row {number} Row index in the table
+   * @returns {Promise<boolean>}
+   */
+  async isFreeShipping(page: Page, row: number = 1): Promise<boolean> {
+    return this.elementVisible(page, this.tableColumnIsFreeIcon(row), 100);
+  }
+
+  /**
    * Set carriers status
    * @param page {Page} Browser tab
    * @param row {number} Row index in the table
@@ -507,6 +520,22 @@ class Carriers extends BOBasePage {
 
     if (await this.getStatus(page, row) !== valueWanted) {
       await page.locator(this.tableColumnActive(row)).click();
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Set free shipping status
+   * @param page {Page} Browser tab
+   * @param row {number} Row index in the table
+   * @param valueWanted {boolean} The carrier status value
+   * @return {Promise<boolean>}
+   */
+  async setFreeShippingStatus(page: Page, row: number = 1, valueWanted: boolean = true): Promise<boolean> {
+    if (await this.isFreeShipping(page, row) !== valueWanted) {
+      await page.locator(this.tableColumnIsFree(row)).click();
       return true;
     }
 

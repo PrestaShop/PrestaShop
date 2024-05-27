@@ -28,11 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
+use Attribute;
+
 /**
  * Class CQRSCreate is a custom operation that provides extra parameters to help configure an operation
  * based on a CQRS command, it is custom tailed for creation operations and forces using the POST method.
  */
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class CQRSCreate extends CQRSCommand
 {
     public function __construct(

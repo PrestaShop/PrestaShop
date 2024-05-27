@@ -8,7 +8,6 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import createProductPage from '@pages/BO/catalog/products/add';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
@@ -23,6 +22,7 @@ import ProductData from '@data/faker/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_stocksTab';
 
@@ -63,10 +63,10 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       await productsPage.closeSfToolBar(page);

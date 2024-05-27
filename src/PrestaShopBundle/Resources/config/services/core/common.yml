@@ -6,7 +6,8 @@ services:
   PrestaShop\PrestaShop\Core\EnvironmentInterface:
     alias: prestashop.adapter.environment
 
+  PrestaShop\PrestaShop\Core\Crypto\Hashing: ~
   prestashop.core.crypto.hashing:
-    class: PrestaShop\PrestaShop\Core\Crypto\Hashing
+    alias: PrestaShop\PrestaShop\Core\Crypto\Hashing
 
   PrestaShop\PrestaShop\Core\Security\Hashing: ~

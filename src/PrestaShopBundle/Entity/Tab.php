@@ -26,138 +26,171 @@
 
 namespace PrestaShopBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Selectable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Tab.
  *
  * @ORM\Table()
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TabRepository")
  */
 class Tab
 {
     /**
-     * @var int
-     *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_tab", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="id_parent", type="integer")
      */
-    private $idParent;
+    private int $idParent;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="position", type="integer")
      */
-    private $position;
+    private int $position;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="module", type="string", length=64, nullable=true)
      */
-    private $module;
+    private ?string $module;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="class_name", type="string", length=64)
      */
-    private $className;
+    private string $className;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="route_name", type="string", length=256, nullable=true)
      */
-    private $routeName;
+    private ?string $routeName;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="active", type="boolean")
      */
-    private $active;
+    private bool $active;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="enabled", type="boolean")
      */
-    private $enabled = true;
+    private bool $enabled = true;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="icon", type="string", length=32, nullable=true)
      */
-    private $icon;
+    private ?string $icon;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(name="wording", type="string", length=255, nullable=true)
      */
-    private $wording;
+    private ?string $wording;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(name="wording_domain", type="string", length=255, nullable=true)
      */
-    private $wordingDomain;
+    private ?string $wordingDomain;
 
     /**
-     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\TabLang", mappedBy="id")
+     * @var Collection<TabLang>
+     *
+     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\TabLang", mappedBy="tab")
      */
-    private $tabLangs;
+    private Collection $tabLangs;
 
-    public function getId()
+    public function __construct()
+    {
+        $this->tabLangs = new ArrayCollection();
+    }
+
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getIdParent()
+    public function getIdParent(): int
     {
         return $this->idParent;
     }
 
-    public function getPosition()
+    public function setIdParent(int $idParent): static
+    {
+        $this->idParent = $idParent;
+
+        return $this;
+    }
+
+    public function getPosition(): int
     {
         return $this->position;
     }
 
-    public function getModule()
+    public function setPosition(int $position): static
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    public function getModule(): ?string
     {
         return $this->module;
     }
 
-    public function getClassName()
+    public function setModule(?string $module): static
+    {
+        $this->module = $module;
+
+        return $this;
+    }
+
+    public function getClassName(): string
     {
         return $this->className;
     }
 
-    public function getActive()
+    public function setClassName(string $className): static
+    {
+        $this->className = $className;
+
+        return $this;
+    }
+
+    public function getActive(): bool
     {
         return $this->active;
     }
 
-    public function getIcon()
+    public function setActive(bool $active): static
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function getIcon(): ?string
     {
         return $this->icon;
     }
 
-    public function getTabLangs(): Collection & Selectable
+    public function setIcon(?string $icon): static
+    {
+        $this->icon = $icon;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<TabLang>
+     */
+    public function getTabLangs(): Collection
     {
         return $this->tabLangs;
     }
@@ -174,70 +207,62 @@ class Tab
         return null;
     }
 
-    /**
-     * @return string|null
-     */
+    public function addTabLang(TabLang $tabLang): static
+    {
+        $this->tabLangs[] = $tabLang;
+
+        $tabLang->setTab($this);
+
+        return $this;
+    }
+
+    public function removeTabLang(TabLang $tabLang): void
+    {
+        $this->tabLangs->removeElement($tabLang);
+    }
+
     public function getWording(): ?string
     {
         return $this->wording;
     }
 
-    /**
-     * @return string|null
-     */
+    public function setWording(?string $wording): static
+    {
+        $this->wording = $wording;
+
+        return $this;
+    }
+
     public function getWordingDomain(): ?string
     {
         return $this->wordingDomain;
     }
 
-    /**
-     * Set active.
-     *
-     * @param bool $active
-     *
-     * @return Tab
-     */
-    public function setActive($active)
+    public function setWordingDomain(?string $wordingDomain): static
     {
-        $this->active = $active;
+        $this->wordingDomain = $wordingDomain;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRouteName()
+    public function getRouteName(): ?string
     {
         return $this->routeName;
     }
 
-    /**
-     * @param string $routeName
-     *
-     * @return Tab
-     */
-    public function setRouteName($routeName)
+    public function setRouteName(?string $routeName): static
     {
         $this->routeName = $routeName;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
 
-    /**
-     * @param bool $enabled
-     *
-     * @return Tab
-     */
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled): static
     {
         $this->enabled = $enabled;
 

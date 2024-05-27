@@ -36,9 +36,12 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Translation\Translator;
+use Tests\Integration\Utility\LoginTrait;
 
 class ModuleControllerTest extends WebTestCase
 {
+    use LoginTrait;
+
     /**
      * @var KernelBrowser
      */
@@ -61,6 +64,7 @@ class ModuleControllerTest extends WebTestCase
         parent::setUp();
 
         $this->client = self::createClient();
+        $this->loginUser($this->client);
         $this->router = self::$kernel->getContainer()->get('router');
         $this->context = self::$kernel->getContainer()->get('prestashop.adapter.legacy.context');
 

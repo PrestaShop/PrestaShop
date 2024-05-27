@@ -144,9 +144,9 @@ class AdminCarriersControllerCore extends AdminController
 
         $this->context->smarty->assign([
             'showHeaderAlert' => (Db::getInstance()->executeS(
-                    'SELECT COUNT(1) FROM `' . _DB_PREFIX_ . 'carrier` WHERE deleted = 0 AND id_reference > 2',
-                    false
-                )->fetchColumn(0) == 0),
+                'SELECT COUNT(1) FROM `' . _DB_PREFIX_ . 'carrier` WHERE deleted = 0 AND id_reference > 2',
+                false
+            )->fetchColumn(0) == 0),
         ]);
 
         return parent::renderList();
@@ -544,7 +544,7 @@ class AdminCarriersControllerCore extends AdminController
 
         $zones = Zone::getZones(false);
         foreach ($zones as $zone) {
-            $this->fields_value['zone_' . $zone['id_zone']] = Tools::getValue('zone_' . $zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
+            $this->fields_value['zone_' . $zone['id_zone']] = Tools::getValue('zone_' . $zone['id_zone'], in_array($zone['id_zone'], $carrier_zones_ids));
         }
 
         // Added values of object Group
@@ -559,7 +559,7 @@ class AdminCarriersControllerCore extends AdminController
         $groups = Group::getGroups($this->context->language->id);
 
         foreach ($groups as $group) {
-            $this->fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$obj->id));
+            $this->fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$obj->id);
         }
 
         $this->fields_value['id_tax_rules_group'] = $this->object->getIdTaxRulesGroup($this->context);
@@ -612,8 +612,8 @@ class AdminCarriersControllerCore extends AdminController
 
     public function ajaxProcessUpdatePositions()
     {
-        $way = (bool) (Tools::getValue('way'));
-        $id_carrier = (int) (Tools::getValue('id'));
+        $way = (bool) Tools::getValue('way');
+        $id_carrier = (int) Tools::getValue('id');
         $positions = Tools::getValue($this->table);
 
         foreach ($positions as $position => $value) {

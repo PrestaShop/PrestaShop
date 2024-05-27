@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
@@ -18,6 +17,7 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   FakerModule,
@@ -120,10 +120,10 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should go to module manager page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManagerPage.closeSfToolBar(page);
 
@@ -186,10 +186,10 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should go to module manager page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBOToCheckIfSubscribed', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManagerPage.closeSfToolBar(page);
 

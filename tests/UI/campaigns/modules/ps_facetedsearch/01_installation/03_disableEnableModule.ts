@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {homePage} from '@pages/FO/classic/home';
 import {categoryPage} from '@pages/FO/classic/category';
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psFacetedSearch from '@pages/BO/modules/psFacetedSearch';
 
@@ -20,6 +19,7 @@ import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_facetedsearch_installation_disableEnableModule';
 
@@ -45,10 +45,10 @@ describe('Faceted search module - Disable/Enable module', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPageForEnable', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManagerPage.closeSfToolBar(page);
 

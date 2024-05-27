@@ -34,6 +34,7 @@ use PrestaShopBundle\Routing\Converter\LegacyRoute;
 use PrestaShopBundle\Routing\Converter\LegacyRouteProviderInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use ReflectionClass;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
@@ -149,7 +150,7 @@ class CacheProviderTest extends TestCase
         $this->assertNotEmpty($legacyRoutes['admin_categories_create']);
         $this->assertNotEmpty($legacyRoutes['admin_categories_edit']);
 
-        //Second call is used to test cache is saved through mock expectations
+        // Second call is used to test cache is saved through mock expectations
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
         $this->assertCount(4, $legacyRoutes);
     }
@@ -168,7 +169,7 @@ class CacheProviderTest extends TestCase
         $this->assertNotEmpty($legacyRoutes['admin_categories_create']);
         $this->assertNotEmpty($legacyRoutes['admin_categories_edit']);
 
-        //Second call is used to test cache is saved through mock expectations
+        // Second call is used to test cache is saved through mock expectations
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
         $this->assertCount(4, $legacyRoutes);
     }
@@ -180,7 +181,7 @@ class CacheProviderTest extends TestCase
         $cacheProvider = new CacheProvider($mockProvider, $cache, $this->buildCacheKeyGenerator());
 
         $this->assertFalse($cache->hasItem(self::CACHE_KEY));
-        //Just perform the test twice to be sure the result and the cache are correct
+        // Just perform the test twice to be sure the result and the cache are correct
         for ($i = 0; $i < 2; ++$i) {
             $legacyRoutes = $cacheProvider->getLegacyRoutes();
             $this->assertCount(4, $legacyRoutes);
@@ -193,14 +194,14 @@ class CacheProviderTest extends TestCase
             $this->assertEquals($this->expectedCacheValue, $cacheItem->get());
         }
 
-        //Now empty the private field to force CacheProvider to call the cache
-        $reflectionClass = new \ReflectionClass(CacheProvider::class);
+        // Now empty the private field to force CacheProvider to call the cache
+        $reflectionClass = new ReflectionClass(CacheProvider::class);
         $routesProperty = $reflectionClass->getProperty('legacyRoutes');
         $routesProperty->setAccessible(true);
         $routesProperty->setValue($cacheProvider, null);
         $routesProperty->setAccessible(false);
 
-        //Retry to get the value, the cache will be used hence the mockRouterProvider won't be called
+        // Retry to get the value, the cache will be used hence the mockRouterProvider won't be called
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
         $this->assertCount(4, $legacyRoutes);
         $this->assertNotEmpty($legacyRoutes['admin_products']);
@@ -216,7 +217,7 @@ class CacheProviderTest extends TestCase
         $cacheProvider = new CacheProvider($mockProvider, $cache, $this->buildCacheKeyGenerator());
 
         $this->assertFalse($cache->hasItem(self::CACHE_KEY));
-        //Just perform the test twice to be sure the result and the cache are correct
+        // Just perform the test twice to be sure the result and the cache are correct
         for ($i = 0; $i < 2; ++$i) {
             $controllerActions = $cacheProvider->getControllersActions();
             $this->assertCount(2, $controllerActions);
@@ -231,14 +232,14 @@ class CacheProviderTest extends TestCase
             $this->assertEquals($this->expectedCacheValue, $cacheItem->get());
         }
 
-        //Now empty the private field to force CacheProvider to call the cache
-        $reflectionClass = new \ReflectionClass(CacheProvider::class);
+        // Now empty the private field to force CacheProvider to call the cache
+        $reflectionClass = new ReflectionClass(CacheProvider::class);
         $routesProperty = $reflectionClass->getProperty('legacyRoutes');
         $routesProperty->setAccessible(true);
         $routesProperty->setValue($cacheProvider, null);
         $routesProperty->setAccessible(false);
 
-        //Retry to get the value, the cache will be used hence the mockRouterProvider won't be called
+        // Retry to get the value, the cache will be used hence the mockRouterProvider won't be called
         $controllerActions = $cacheProvider->getControllersActions();
         $this->assertCount(2, $controllerActions);
         $this->assertNotEmpty($controllerActions['AdminProducts']);
@@ -258,7 +259,7 @@ class CacheProviderTest extends TestCase
         $this->assertCount(3, $controllerActions);
         $this->assertSame(['index', 'create', 'new'], $controllerActions);
 
-        //Second call is used to test cache is saved through mock expectations
+        // Second call is used to test cache is saved through mock expectations
         $controllerActions = $cacheProvider->getActionsByController('AdminProducts');
         $this->assertCount(3, $controllerActions);
         $this->assertSame(['index', 'create', 'new'], $controllerActions);
@@ -273,7 +274,7 @@ class CacheProviderTest extends TestCase
         $this->assertCount(3, $controllerActions);
         $this->assertSame(['index', 'create', 'new'], $controllerActions);
 
-        //Second call is used to test cache is saved through mock expectations
+        // Second call is used to test cache is saved through mock expectations
         $controllerActions = $cacheProvider->getActionsByController('AdMinProDucts');
         $this->assertCount(3, $controllerActions);
         $this->assertSame(['index', 'create', 'new'], $controllerActions);
@@ -332,7 +333,7 @@ class CacheProviderTest extends TestCase
      */
     private function buildExistingCache()
     {
-        //CacheItem mock
+        // CacheItem mock
         $itemMock = $this
             ->getMockBuilder(CacheItemInterface::class)
             ->disableOriginalConstructor()
@@ -352,7 +353,7 @@ class CacheProviderTest extends TestCase
             ->method('get')
             ->willReturn($this->expectedCacheValue);
 
-        //AdapterInterface mock
+        // AdapterInterface mock
         $cacheMock = $this
             ->getMockBuilder(CacheItemPoolInterface::class)
             ->disableOriginalConstructor()
@@ -375,7 +376,7 @@ class CacheProviderTest extends TestCase
      */
     private function buildSavingCache()
     {
-        //CacheItem mock
+        // CacheItem mock
         $itemMock = $this
             ->getMockBuilder(CacheItemInterface::class)
             ->disableOriginalConstructor()
@@ -395,7 +396,7 @@ class CacheProviderTest extends TestCase
             ->expects($this->never())
             ->method('get');
 
-        //AdapterInterface mock
+        // AdapterInterface mock
         $cacheMock = $this
             ->getMockBuilder(CacheItemPoolInterface::class)
             ->disableOriginalConstructor()
@@ -426,7 +427,7 @@ class CacheProviderTest extends TestCase
             ->getMock();
 
         $providerMock
-            ->expects($this->once()) //Very important to assert this method is only called once to create the cache
+            ->expects($this->once()) // Very important to assert this method is only called once to create the cache
             ->method('getLegacyRoutes')
             ->willReturn($legacyRoutes);
 
@@ -444,7 +445,7 @@ class CacheProviderTest extends TestCase
             ->getMock();
 
         $providerMock
-            ->expects($this->never()) //Very important to assert this method is only called once to create the cache
+            ->expects($this->never()) // Very important to assert this method is only called once to create the cache
             ->method('getLegacyRoutes');
 
         return $providerMock;

@@ -59,11 +59,6 @@ class PrestaShopLayoutGlobalVariables
         return $this->templateVariables->getIsoUser();
     }
 
-    public function isSymfonyLayoutEnabled(): bool
-    {
-        return $this->templateVariables->isSymfonyLayoutEnabled();
-    }
-
     public function isRtlLanguage(): bool
     {
         return $this->templateVariables->isRtlLanguage();
@@ -127,5 +122,10 @@ class PrestaShopLayoutGlobalVariables
     public function getBaseUrl(): string
     {
         return $this->templateVariables->getBaseUrl();
+    }
+
+    public function getBaseImgUrl(): string
+    {
+        return $this->templateVariables->getBaseUrl() . 'img/';
     }
 }

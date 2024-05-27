@@ -147,8 +147,6 @@ class MultiShopProductControllerTest extends GridControllerTestCase
         parent::tearDownAfterClass();
         ProductResetter::resetProducts();
         ShopResetter::resetShops();
-        // Force cookie back to empty value for default all shops context to avoid messing with following tests
-        self::forceMultiShopCookie([]);
     }
 
     /**
@@ -156,7 +154,7 @@ class MultiShopProductControllerTest extends GridControllerTestCase
      */
     public function testMultiShopList(array $shopContext, array $listFilters, int $totalCount, array $productsValues): void
     {
-        self::forceMultiShopCookie($shopContext);
+        $this->updateShopConstraintTokenAttribute($shopContext);
         $products = $this->getFilteredEntitiesFromGrid($listFilters);
         $this->assertEquals($totalCount, $products->getTotalCount(), sprintf(
             'Expected %d product(s) with filters %s but got %d instead',
@@ -313,7 +311,7 @@ class MultiShopProductControllerTest extends GridControllerTestCase
      */
     public function testProductShopPreviews(array $shopContext, array $listFilters, array $shopPreviews): void
     {
-        self::forceMultiShopCookie($shopContext);
+        $this->updateShopConstraintTokenAttribute($shopContext);
         $products = $this->getFilteredEntitiesFromGrid($listFilters);
         $this->assertEquals(1, $products->count(), 'Provided filters must match one product only');
         /** @var TestEntityDTO $filteredProduct */
@@ -488,32 +486,24 @@ class MultiShopProductControllerTest extends GridControllerTestCase
     }
 
     /**
-     * This is not ideal but since we now have a request listener that forces a proper initialization of the context
-     * we cannot use Shop::setContext to force a specific shop context because it will be overridden by the listener at
-     * the beginning of the request (which ultimately proves that it is correctly in charge of this responsibility).
-     *
-     * So to vary the multi shop context for test purposes, we update the cookie value directly.
-     * At least this way the controller is really tested as it would be in a regular request based on the cookie setting.
+     * The shop context is defined via a token attribute, to dynamically change the shop context we login the
+     * user by specifying the expected shop context identified by a ShopConstraint object.
      *
      * @param array $shopContext
      */
-    protected static function forceMultiShopCookie(array $shopContext): void
+    protected function updateShopConstraintTokenAttribute(array $shopContext): void
     {
         if (!empty($shopContext['shop_name'])) {
             $shopId = Shop::getIdByName($shopContext['shop_name']);
-            $shopCookie = 's-' . $shopId;
+            $shopConstraint = ShopConstraint::shop((int) $shopId);
         } elseif (!empty($shopContext['group_shop_name'])) {
             $shopGroupId = ShopGroup::getIdByName($shopContext['group_shop_name']);
-            $shopCookie = 'g-' . $shopGroupId;
+            $shopConstraint = ShopConstraint::shopGroup((int) $shopGroupId);
         } else {
-            $shopCookie = '';
+            $shopConstraint = ShopConstraint::allShops();
         }
 
-        $cookie = self::getContext()->cookie;
-        $cookie->shopContext = $shopCookie;
-        // Use super admin employee to have authorization on all shops
-        $cookie->id_employee = 1;
-        $cookie->write();
+        $this->loginUser($this->client, $shopConstraint);
         Shop::resetStaticCache();
         Shop::resetContext();
     }

@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrdersCollection;
+use PrestaShopDatabaseException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -71,7 +72,7 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
      *
      * @return array|false|int
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     private function getProductsOrCount(
         ProductSearchContext $context,
@@ -108,7 +109,7 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
      *
      * @return ProductSearchResult
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     public function runQuery(
         ProductSearchContext $context,
@@ -127,12 +128,12 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
             // We use default set of sort orders + option to sort by position, which makes sense only here and on search page
             $result->setAvailableSortOrders(
                 array_merge(
-                [
-                    (new SortOrder('product', 'position', 'asc'))->setLabel(
-                        $this->translator->trans('Relevance', [], 'Shop.Theme.Catalog')
-                    ),
-                ],
-                $this->sortOrdersCollection->getDefaults())
+                    [
+                        (new SortOrder('product', 'position', 'asc'))->setLabel(
+                            $this->translator->trans('Relevance', [], 'Shop.Theme.Catalog')
+                        ),
+                    ],
+                    $this->sortOrdersCollection->getDefaults())
             );
         }
 

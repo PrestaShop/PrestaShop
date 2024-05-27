@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
 import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
@@ -20,6 +19,7 @@ import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -76,10 +76,10 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
     it('should go to \'Orders > Orders\' page\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);

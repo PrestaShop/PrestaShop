@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Hook;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Hook\Hook;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookInterface;
@@ -75,9 +76,9 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      * @param bool $isDebug
      */
     public function __construct(
-        RequestStack $requestStack = null,
-        iterable $hookSubscribers = null,
-        HookRegistry $hookRegistry = null,
+        ?RequestStack $requestStack = null,
+        ?iterable $hookSubscribers = null,
+        ?HookRegistry $hookRegistry = null,
         bool $isDebug = false
     ) {
         $this->requestStack = $requestStack;
@@ -97,12 +98,12 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      *
      * @return Event|HookEvent
      *
-     * @throws \Exception if the Event is not HookEvent or a subclass
+     * @throws Exception if the Event is not HookEvent or a subclass
      */
-    public function dispatch(object $event, string $eventName = null): object
+    public function dispatch(object $event, ?string $eventName = null): object
     {
         if (!$event instanceof HookEvent) {
-            throw new \Exception('HookDispatcher must dispatch a HookEvent subclass only. ' . $event::class . ' given.');
+            throw new Exception('HookDispatcher must dispatch a HookEvent subclass only. ' . $event::class . ' given.');
         }
 
         if ($listeners = $this->getListeners(strtolower($eventName ?? ''))) {
@@ -150,7 +151,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      * @param array $eventNames the hooks to dispatch to
      * @param array $eventParameters the parameters set to insert in each HookEvent instance
      *
-     * @throws \Exception if the Event is not HookEvent or a subclass
+     * @throws Exception if the Event is not HookEvent or a subclass
      */
     public function dispatchMultiple(array $eventNames, array $eventParameters)
     {
@@ -195,7 +196,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      *
      * @return Event the event that has been passed to each listener
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function dispatchForParameters($eventName, array $parameters = [])
     {
@@ -213,7 +214,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      *
      * @return RenderingHookEvent The event that has been passed to each listener. Contains the responses.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function renderForParameters($eventName, array $parameters = [])
     {

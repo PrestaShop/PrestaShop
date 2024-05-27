@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 class SessionHandler implements SessionHandlerInterface
 {
     /**
-     *  @var Session
+     * @var Session
      */
     protected $session;
 
@@ -95,27 +95,13 @@ class SessionHandler implements SessionHandlerInterface
             return;
         }
 
-        /*
-         * The alternative signature supporting an options array is only available since
-         * PHP 7.3.0, before there is no support for SameSite attribute.
-         */
-        if (PHP_VERSION_ID < 70300) {
-            session_set_cookie_params(
-                $this->lifetime,
-                $this->path . ';SameSite=' . $this->sameSite,
-                '',
-                $this->isSecure,
-                true
-            );
-        } else {
-            session_set_cookie_params([
-                'lifetime' => $this->lifetime,
-                'path' => $this->path,
-                'secure' => $this->isSecure,
-                'httponly' => true,
-                'samesite' => $this->sameSite,
-            ]);
-        }
+        session_set_cookie_params([
+            'lifetime' => $this->lifetime,
+            'path' => $this->path,
+            'secure' => $this->isSecure,
+            'httponly' => true,
+            'samesite' => $this->sameSite,
+        ]);
 
         $this->session = new Session(new PhpBridgeSessionStorage());
         $this->session->start();

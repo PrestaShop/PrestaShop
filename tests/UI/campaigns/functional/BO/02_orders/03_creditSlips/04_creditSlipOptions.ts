@@ -8,7 +8,6 @@ import {createOrderSpecificProductTest} from '@commonTests/FO/classic/order';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
 import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
@@ -19,6 +18,7 @@ import OrderData from '@data/faker/order';
 import ProductData from '@data/faker/product';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -92,10 +92,10 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
     it('should go to \'Orders > Credit slips\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.creditSlipsLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.creditSlipsLink,
       );
       await creditSlipsPage.closeSfToolBar(page);
 

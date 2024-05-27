@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShopBundle\Security\Admin\Employee;
+use PrestaShopBundle\Entity\Employee\Employee;
 use Symfony\Component\Security\Core\Security;
 
 /**
@@ -89,7 +89,7 @@ final class ProfileGridDataFactoryDecorator implements GridDataFactoryInterface
             return new RecordCollection($modifiedProfiles);
         }
 
-        $currentUserIdProfile = $user->getData()->id_profile;
+        $currentUserIdProfile = $user->getProfile()->getId();
         foreach ($profiles as $profile) {
             if ($profile['id_profile'] === $currentUserIdProfile) {
                 $profile['disableBulkCheckbox'] = true;

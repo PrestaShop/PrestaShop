@@ -9,12 +9,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
 // Import data
 import ProductData from '@data/faker/product';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_productsBO_deleteProductsWithBulkActions';
 
@@ -59,10 +59,10 @@ describe('BO - Catalog - Products : Delete products with bulk actions', async ()
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       await productsPage.closeSfToolBar(page);

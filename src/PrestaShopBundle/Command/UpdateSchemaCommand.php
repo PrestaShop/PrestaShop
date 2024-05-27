@@ -99,7 +99,7 @@ class UpdateSchemaCommand extends Command
             } catch (Exception $e) {
                 $connection->rollBack();
 
-                throw ($e);
+                throw $e;
             }
         }
         if (!$connection->getNativeConnection() instanceof PDO || $connection->getNativeConnection()->inTransaction()) {
@@ -312,7 +312,7 @@ class UpdateSchemaCommand extends Command
                     if (preg_match('/DEFAULT/', $matches[0][$matchKey])) {
                         $matches[0][$matchKey] = preg_replace(
                             '/DEFAULT (.+?)(, CHANGE |$)/',
-                            'DEFAULT ' . $oldDefaultValue . '$2' . ' ' . $extra,
+                            'DEFAULT ' . $oldDefaultValue . '$2 ' . $extra,
                             $matches[0][$matchKey]
                         );
                     } else {

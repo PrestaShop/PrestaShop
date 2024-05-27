@@ -70,7 +70,7 @@ class ModuleConfiguration extends BOBasePage {
    * @return {Promise<void>}
    */
   async clickHeaderManageHooks(page: Page): Promise<void> {
-    await page.locator(this.pageHeadButtonManageHooks).click();
+    await this.clickAndWaitForURL(page, this.pageHeadButtonManageHooks);
   }
 
   /**

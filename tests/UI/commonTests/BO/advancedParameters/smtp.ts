@@ -7,9 +7,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import emailPage from '@pages/BO/advancedParameters/email';
-import dashboardPage from '@pages/BO/dashboard';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
 } from '@prestashop-core/ui-testing';
@@ -45,10 +45,10 @@ function setupSmtpConfigTest(baseContext: string = 'commonTests-configSMTP'): vo
     it('should go to \'Advanced Parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForSetupSmtpParams', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.emailLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.emailLink,
       );
       await emailPage.closeSfToolBar(page);
 
@@ -94,10 +94,10 @@ function resetSmtpConfigTest(baseContext: string = 'commonTests-configSMTP'): vo
     it('should go to \'Advanced Parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForResetSmtpParams', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.emailLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.emailLink,
       );
       await emailPage.closeSfToolBar(page);
 

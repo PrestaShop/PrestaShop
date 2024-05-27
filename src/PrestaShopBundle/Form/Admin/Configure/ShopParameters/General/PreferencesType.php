@@ -123,9 +123,9 @@ class PreferencesType extends TranslatorAwareType
             ])
             ->add('allow_html_iframes', SwitchType::class, [
                 'label' => $this->trans(
-                        'Allow iframes on HTML fields',
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'Allow iframes on HTML fields',
+                    'Admin.Shopparameters.Feature'
+                ),
                 'help' => $this->trans(
                     'Allow iframes on text fields like product description. We recommend that you leave this option disabled.',
                     'Admin.Shopparameters.Help'
@@ -133,9 +133,9 @@ class PreferencesType extends TranslatorAwareType
             ])
             ->add('use_htmlpurifier', SwitchType::class, [
                 'label' => $this->trans(
-                        'Use HTMLPurifier Library',
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'Use HTMLPurifier Library',
+                    'Admin.Shopparameters.Feature'
+                ),
                 'help' => $this->trans(
                     'Clean the HTML content on text fields. We recommend that you leave this option enabled.',
                     'Admin.Shopparameters.Help'

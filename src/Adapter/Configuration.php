@@ -29,8 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter;
 use ArrayIterator;
 use Combination;
 use Configuration as ConfigurationLegacy;
+use Exception;
 use Feature;
 use Language;
+use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -52,7 +54,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     {
         // Do nothing
         if (!empty($parameters)) {
-            throw new \LogicException('No parameter can be handled in constructor. Use method set() instead.');
+            throw new LogicException('No parameter can be handled in constructor. Use method set() instead.');
         }
     }
 
@@ -61,7 +63,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @throws NotImplementedException
      */
-    public function all(string $key = null): array
+    public function all(?string $key = null): array
     {
         throw new NotImplementedException();
     }
@@ -103,7 +105,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @return mixed
      */
-    public function get($key, $default = null, ShopConstraint $shopConstraint = null): mixed
+    public function get($key, $default = null, ?ShopConstraint $shopConstraint = null): mixed
     {
         if (null === $shopConstraint) {
             $shopConstraint = $this->buildShopConstraintFromContext();
@@ -116,7 +118,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         $shopId = $this->getShopId($shopConstraint);
         $shopGroupId = $this->getShopGroupId($shopConstraint);
 
-        //If configuration has never been accessed it is still empty and hasKey/isLangKey will always return false
+        // If configuration has never been accessed it is still empty and hasKey/isLangKey will always return false
         if (!ConfigurationLegacy::configurationIsLoaded()) {
             ConfigurationLegacy::loadConfiguration();
         }
@@ -157,9 +159,9 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @return $this
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function set($key, $value, ShopConstraint $shopConstraint = null, array $options = [])
+    public function set($key, $value, ?ShopConstraint $shopConstraint = null, array $options = [])
     {
         if ($this->shop instanceof Shop && null === $shopConstraint) {
             $shopGroupId = $this->shop->id_shop_group;
@@ -181,7 +183,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         );
 
         if (!$success) {
-            throw new \Exception('Could not update configuration');
+            throw new Exception('Could not update configuration');
         }
 
         return $this;
@@ -194,7 +196,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @return bool
      */
-    public function has($key, ShopConstraint $shopConstraint = null): bool
+    public function has($key, ?ShopConstraint $shopConstraint = null): bool
     {
         if (null === $shopConstraint) {
             $shopConstraint = $this->buildShopConstraintFromContext();
@@ -262,12 +264,12 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      */
     public function remove($key)
     {
-        $success = \Configuration::deleteByName(
+        $success = ConfigurationLegacy::deleteByName(
             $key
         );
 
         if (!$success) {
-            throw new \Exception('Could not delete configuration');
+            throw new Exception('Could not delete configuration');
         }
 
         return $this;
@@ -280,7 +282,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @deprecated since version 1.7.4.0
      */

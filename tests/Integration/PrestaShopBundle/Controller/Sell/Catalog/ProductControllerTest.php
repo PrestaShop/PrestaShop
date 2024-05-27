@@ -50,7 +50,6 @@ class ProductControllerTest extends FormGridControllerTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::mockContext();
         ProductResetter::resetProducts();
     }
 
@@ -344,8 +343,8 @@ class ProductControllerTest extends FormGridControllerTestCase
     {
         return new TestEntityDTO(
             (int) trim($tr->filter('.column-id_product')->text()),
-           [
-           ]
+            [
+            ]
         );
     }
 

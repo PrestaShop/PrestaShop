@@ -135,13 +135,13 @@ class AdminTranslationsControllerCore extends AdminController
         // Create a title for each translation page
         $title = $this->trans(
             '%1$s (Language: %2$s, Theme: %3$s)',
-                [
-                    '%1$s' => (empty($this->translations_informations[$this->type_selected]['name']) ? false : $this->translations_informations[$this->type_selected]['name']),
-                    '%2$s' => $this->lang_selected->name,
-                    '%3$s' => $this->theme_selected ? $this->theme_selected : $this->trans('None', [], 'Admin.Global'),
-                ],
-                'Admin.International.Feature'
-            );
+            [
+                '%1$s' => (empty($this->translations_informations[$this->type_selected]['name']) ? false : $this->translations_informations[$this->type_selected]['name']),
+                '%2$s' => $this->lang_selected->name,
+                '%3$s' => $this->theme_selected ? $this->theme_selected : $this->trans('None', [], 'Admin.Global'),
+            ],
+            'Admin.International.Feature'
+        );
 
         // Set vars for all forms
         $this->tpl_view_vars = [
@@ -679,7 +679,7 @@ class AdminTranslationsControllerCore extends AdminController
                     foreach ($_TABS as $class_name => $translations) {
                         // Get instance of this tab by class name
                         $tab = Tab::getInstanceFromClassName($class_name);
-                        //Check if class name exists
+                        // Check if class name exists
                         if (!empty($tab->class_name)) {
                             $id_lang = Language::getIdByIso($iso_code, true);
                             $tab->name[(int) $id_lang] = $translations;
@@ -1014,11 +1014,6 @@ class AdminTranslationsControllerCore extends AdminController
                 // Get all files for folders classes/ and override/classes/ recursively
                 $directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_CLASS_DIR_, [], 'php'));
                 $directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_OVERRIDE_DIR_ . 'classes/', [], 'php'));
-
-                break;
-
-            case 'fields':
-                $directories['php'] = $this->listFiles(_PS_CLASS_DIR_, [], 'php');
 
                 break;
 
@@ -1427,6 +1422,7 @@ class AdminTranslationsControllerCore extends AdminController
     protected function getMailPattern()
     {
         Tools::displayAsDeprecated('Email pattern is no longer used, emails are always saved like they are.');
+
         // Let the indentation like it.
         return '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
 <html>
@@ -1651,7 +1647,7 @@ class AdminTranslationsControllerCore extends AdminController
                 $prefix = '';
 
                 foreach ($files as $file) {
-                    if (preg_match('/^(.*).(tpl|php)$/', $file) && (Tools::file_exists_cache($file_path = $dir . $file))) {
+                    if (preg_match('/^(.*).(tpl|php)$/', $file) && Tools::file_exists_cache($file_path = $dir . $file)) {
                         $prefix_key = $prefix . substr(basename($file), 0, -4);
                         $new_lang = [];
 
@@ -1723,7 +1719,7 @@ class AdminTranslationsControllerCore extends AdminController
         // Get all types of file (PHP, TPL...) and a list of files to parse by folder
         $files_per_directory = $this->getFileToParseByTypeTranslation();
 
-        //Parse SF2 php files
+        // Parse SF2 php files
         $regexSf2Php = [
             '/->trans\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?[\[|array\(](.*)[\]|\)])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
             '/->transchoice\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?(.*))(,\s*?[\[|array\(](.*)[\]|\)])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
@@ -1766,7 +1762,7 @@ class AdminTranslationsControllerCore extends AdminController
             }
         }
 
-        //Parse SF2/Twig files
+        // Parse SF2/Twig files
         $regexSf2Tpl = [
             '/trans\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?[\{\[](.*)[\}\]])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
             '/transchoice\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?(.*))(,\s*?[\{\[](.*)[\}\]])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
@@ -1806,7 +1802,7 @@ class AdminTranslationsControllerCore extends AdminController
             }
         }
 
-        //Parse ps PHP files
+        // Parse ps PHP files
         foreach ($files_per_directory['php'] as $dir => $files) {
             foreach ($files as $file) {
                 // Check if is a PHP file and if the override file exists
@@ -2073,12 +2069,12 @@ class AdminTranslationsControllerCore extends AdminController
             }
         }
 
-        //adding sf2 form translations
+        // adding sf2 form translations
         $sf2_loader = new Symfony\Component\Translation\Loader\XliffFileLoader();
 
         try {
             $sf2_trans = $sf2_loader->load(_PS_VENDOR_DIR_ . '/symfony/symfony/src/Symfony/Component/Validator/Resources/translations/validators.' . $this->lang_selected->iso_code . '.xlf', $this->lang_selected->iso_code);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $sf2_trans = $sf2_loader->load(_PS_VENDOR_DIR_ . '/symfony/symfony/src/Symfony/Component/Validator/Resources/translations/validators.en.xlf', $this->lang_selected->iso_code);
         }
 
@@ -2105,95 +2101,6 @@ class AdminTranslationsControllerCore extends AdminController
 
         $this->initToolbar();
         $this->base_tpl_view = 'translation_errors.tpl';
-
-        return parent::renderView();
-    }
-
-    /**
-     * This method generate the form for fields translations.
-     */
-    public function initFormFields()
-    {
-        $name_var = $this->translations_informations[$this->type_selected]['var'];
-        $GLOBALS[$name_var] = $this->fileExists();
-        $missing_translations_fields = [];
-        $class_array = [];
-        $tabs_array = [];
-        $count = 0;
-
-        $files_by_directory = $this->getFileToParseByTypeTranslation();
-
-        foreach ($files_by_directory['php'] as $dir => $files) {
-            foreach ($files as $file) {
-                $exclude_files = ['index.php', 'StockManagerInterface.php',
-                    'TaxManagerInterface.php', 'WebserviceOutputInterface.php', 'WebserviceSpecificManagementInterface.php',
-                ];
-
-                if (!preg_match('/\.php$/', $file) || in_array($file, $exclude_files)) {
-                    continue;
-                }
-
-                $class_name = substr($file, 0, -4);
-                if (!is_subclass_of($class_name . 'Core', 'ObjectModel')) {
-                    continue;
-                }
-                $class_array[$class_name] = call_user_func([$class_name, 'getValidationRules'], $class_name);
-            }
-        }
-        foreach ($class_array as $prefix_key => $rules) {
-            if (isset($rules['validate'])) {
-                foreach ($rules['validate'] as $key => $value) {
-                    if (isset($GLOBALS[$name_var][$prefix_key . '_' . md5($key)])) {
-                        $tabs_array[$prefix_key][$key]['trad'] = html_entity_decode($GLOBALS[$name_var][$prefix_key . '_' . md5($key)], ENT_COMPAT, 'UTF-8');
-                        ++$count;
-                    } else {
-                        if (!isset($tabs_array[$prefix_key][$key]['trad'])) {
-                            $tabs_array[$prefix_key][$key]['trad'] = '';
-                            if (!isset($missing_translations_fields[$prefix_key])) {
-                                $missing_translations_fields[$prefix_key] = 1;
-                            } else {
-                                ++$missing_translations_fields[$prefix_key];
-                            }
-                            ++$count;
-                        }
-                    }
-                }
-            }
-            if (isset($rules['validateLang'])) {
-                foreach ($rules['validateLang'] as $key => $value) {
-                    if (isset($GLOBALS[$name_var][$prefix_key . '_' . md5($key)])) {
-                        $tabs_array[$prefix_key][$key]['trad'] = '';
-                        if (array_key_exists($prefix_key . '_' . md5(addslashes($key)), $GLOBALS[$name_var])) {
-                            $tabs_array[$prefix_key][$key]['trad'] = html_entity_decode($GLOBALS[$name_var][$prefix_key . '_' . md5(addslashes($key))], ENT_COMPAT, 'UTF-8');
-                        }
-
-                        ++$count;
-                    } else {
-                        if (!isset($tabs_array[$prefix_key][$key]['trad'])) {
-                            $tabs_array[$prefix_key][$key]['trad'] = '';
-                            if (!isset($missing_translations_fields[$prefix_key])) {
-                                $missing_translations_fields[$prefix_key] = 1;
-                            } else {
-                                ++$missing_translations_fields[$prefix_key];
-                            }
-                            ++$count;
-                        }
-                    }
-                }
-            }
-        }
-
-        $this->tpl_view_vars = array_merge($this->tpl_view_vars, [
-            'count' => $count,
-            'limit_warning' => $this->displayLimitPostWarning($count),
-            'mod_security_warning' => Tools::apacheModExists('mod_security'),
-            'tabsArray' => $tabs_array,
-            'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
-            'missing_translations' => $missing_translations_fields,
-        ]);
-
-        $this->initToolbar();
-        $this->base_tpl_view = 'translation_form.tpl';
 
         return parent::renderView();
     }
@@ -2599,7 +2506,8 @@ class AdminTranslationsControllerCore extends AdminController
         // TinyMCE
         $iso_tiny_mce = (Tools::file_exists_cache(_PS_ROOT_DIR_ . '/js/tiny_mce/langs/' . $iso_lang . '.js') ? $iso_lang : 'en');
         $ad = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_);
-        //return false;
+
+        // return false;
         return '
             <script type="text/javascript">
                 var iso = \'' . $iso_tiny_mce . '\' ;
@@ -2626,13 +2534,13 @@ class AdminTranslationsControllerCore extends AdminController
 
         $modules_has_mails = $this->getModulesHasMails(true);
 
-        $files_by_directiories = $this->getFileToParseByTypeTranslation();
+        $files_by_directories = $this->getFileToParseByTypeTranslation();
 
         if (!$this->theme_selected || !@filemtime($this->translations_informations[$this->type_selected]['override']['dir'])) {
             $this->copyMailFilesForAllLanguages();
         }
 
-        foreach ($files_by_directiories['php'] as $dir => $files) {
+        foreach ($files_by_directories['php'] as $dir => $files) {
             if (!empty($files)) {
                 foreach ($files as $file) {
                     // If file exist and is not in ignore_folder, in the next step we check if a folder or mail
@@ -2875,7 +2783,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return array
      */
-    protected function getAllModuleFiles(array $modules, string|null $root_dir, string $lang, bool $is_default = false)
+    protected function getAllModuleFiles(array $modules, ?string $root_dir, string $lang, bool $is_default = false)
     {
         $array_files = [];
         $initial_root_dir = $root_dir;
@@ -3055,7 +2963,7 @@ class AdminTranslationsControllerCore extends AdminController
                                 foreach ($matches as $key) {
                                     /* @phpstan-ignore-next-line */
                                     if (isset($GLOBALS[$name_var][$prefix_key . md5($key)])) {
-                                        $tabs_array[$prefix_key][$key]['trad'] = (html_entity_decode($GLOBALS[$name_var][$prefix_key . md5($key)], ENT_COMPAT, 'UTF-8'));
+                                        $tabs_array[$prefix_key][$key]['trad'] = html_entity_decode($GLOBALS[$name_var][$prefix_key . md5($key)], ENT_COMPAT, 'UTF-8');
                                     } else {
                                         if (!isset($tabs_array[$prefix_key][$key]['trad'])) {
                                             $tabs_array[$prefix_key][$key]['trad'] = '';

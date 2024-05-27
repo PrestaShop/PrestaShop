@@ -46,7 +46,7 @@ abstract class AbstractCommand
      *
      * @param AppKernel $kernel Symfony Kernel
      */
-    public function __construct(AppKernel $kernel = null)
+    public function __construct(?AppKernel $kernel = null)
     {
         set_time_limit(0);
 

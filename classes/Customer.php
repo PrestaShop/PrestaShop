@@ -200,7 +200,7 @@ class CustomerCore extends ObjectModel
             'max_payment_days' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
-            'note' => ['type' => self::TYPE_HTML, 'size' => 65000, 'copy_post' => false],
+            'note' => ['type' => self::TYPE_HTML, 'size' => 4194303, 'copy_post' => false],
             'is_guest' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false],
             'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false],
@@ -293,7 +293,7 @@ class CustomerCore extends ObjectModel
                 500,
                 $this->trans(
                     'The email is already used, please choose another one',
-                     [],
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 140
@@ -334,7 +334,7 @@ class CustomerCore extends ObjectModel
 
         try {
             return parent::update(true);
-        } catch (\PrestaShopException $exception) {
+        } catch (PrestaShopException $exception) {
             $message = $exception->getMessage();
             error_log($message);
 
@@ -443,12 +443,12 @@ class CustomerCore extends ObjectModel
      *
      * @return bool|Customer|CustomerCore Customer instance
      *
-     * @throws \InvalidArgumentException if given input is not valid
+     * @throws InvalidArgumentException if given input is not valid
      */
     public function getByEmail($email, $plaintextPassword = null, $ignoreGuest = true)
     {
         if (!Validate::isEmail($email)) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Cannot get customer by email as %s is not a valid email',
                 $email
             ));
@@ -474,7 +474,7 @@ class CustomerCore extends ObjectModel
         $passwordHash = Db::getInstance()->getValue($sql);
 
         try {
-            /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+            /** @var PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
             $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
         } catch (CoreException $e) {
             return false;
@@ -1165,7 +1165,7 @@ class CustomerCore extends ObjectModel
      *
      * @return int Country ID
      */
-    public static function getCurrentCountry($idCustomer, Cart $cart = null)
+    public static function getCurrentCountry($idCustomer, ?Cart $cart = null)
     {
         if (!$cart) {
             $cart = Context::getContext()->cart;
@@ -1211,7 +1211,7 @@ class CustomerCore extends ObjectModel
 
         $this->is_guest = false;
 
-        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+        /** @var PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
 
         /*
@@ -1337,7 +1337,7 @@ class CustomerCore extends ObjectModel
      */
     public function setWsPasswd($passwd)
     {
-        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+        /** @var PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
         if ($this->id == 0 || $this->passwd != $passwd) {
             $this->passwd = $crypto->hash($passwd);
@@ -1427,27 +1427,6 @@ class CustomerCore extends ObjectModel
         $cart = new Cart((int) $cart['id_cart']);
 
         return $cart->nbProducts() === 0 ? (int) $cart->id : false;
-    }
-
-    /**
-     * Validate controller and check password
-     *
-     * @param bool $htmlentities
-     *
-     * @return array
-     *
-     * @deprecated 8.1.0 The password check has been moved in controllers and this method is not called anywhere since 1.7.0
-     */
-    public function validateController($htmlentities = true)
-    {
-        $errors = parent::validateController($htmlentities);
-        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-        if ($value = Tools::getValue('passwd')) {
-            $this->passwd = $crypto->hash($value);
-        }
-
-        return $errors;
     }
 
     /**

@@ -9,7 +9,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 // Import FO pages
@@ -23,6 +22,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import MailDevEmail from '@data/types/maildevEmail';
 import MailDev from 'maildev';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_emailsubscription_configuration_checkConfirmationEmail';
 
@@ -84,10 +84,10 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManager.closeSfToolBar(page);
 

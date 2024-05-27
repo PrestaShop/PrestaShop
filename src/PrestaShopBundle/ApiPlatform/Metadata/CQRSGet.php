@@ -28,13 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
+use Attribute;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 /**
  * Class CQRSQuery is a custom operation that provides extra parameters to help configure an operation
  * based on a CQRS query, it is custom tailed for read operations and forces using the GET method.
  */
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class CQRSGet extends AbstractCQRSOperation
 {
     public function __construct(

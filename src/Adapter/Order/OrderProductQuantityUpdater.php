@@ -34,6 +34,7 @@ use Currency;
 use Customer;
 use Customization;
 use Db;
+use LogicException;
 use Order;
 use OrderDetail;
 use OrderInvoice;
@@ -44,6 +45,8 @@ use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
 use PrestaShop\PrestaShop\Adapter\StockManager;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Product;
 use Shop;
 use StockAvailable;
@@ -89,8 +92,8 @@ class OrderProductQuantityUpdater
      * @return Order
      *
      * @throws OrderException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function update(
         Order $order,
@@ -133,8 +136,8 @@ class OrderProductQuantityUpdater
      *
      * @throws OrderException
      * @throws ProductOutOfStockException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function updateOrderDetail(
         Order $order,
@@ -316,9 +319,9 @@ class OrderProductQuantityUpdater
         );
 
         if (-1 === $updateQuantityResult) {
-            throw new \LogicException('Minimum quantity is not respected');
+            throw new LogicException('Minimum quantity is not respected');
         } elseif (true !== $updateQuantityResult) {
-            throw new \LogicException('Something went wrong');
+            throw new LogicException('Something went wrong');
         }
 
         return $cartComparator;
@@ -331,8 +334,8 @@ class OrderProductQuantityUpdater
      * @param int $newQuantity
      *
      * @throws OrderException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function updateStocks(Cart $cart, OrderDetail $orderDetail, int $oldQuantity, int $newQuantity): void
     {
@@ -371,8 +374,8 @@ class OrderProductQuantityUpdater
      * @param bool $delete
      *
      * @throws OrderException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     protected function reinjectQuantity(
         OrderDetail $orderDetail,
@@ -432,7 +435,7 @@ class OrderProductQuantityUpdater
      */
     private function assertValidProductQuantity(OrderDetail $orderDetail, int $newQuantity)
     {
-        //check if product is available in stock
+        // check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
             $availableQuantity = StockAvailable::getQuantityAvailableByProduct(
                 $orderDetail->product_id,

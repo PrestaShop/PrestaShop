@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import orderMessagesPage from '@pages/BO/customerService/orderMessages';
 import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import OrderMessageData from '@data/faker/orderMessage';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customerService_orderMessages_filterAndBulkDeleteOrderMessages';
 
@@ -48,10 +48,10 @@ describe('BO - Customer Service - Order Messages : Filter and bulk delete order 
   it('should go to \'Customer Message > Order Messages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customerServiceParentLink,
-      dashboardPage.orderMessagesLink,
+      boDashboardPage.customerServiceParentLink,
+      boDashboardPage.orderMessagesLink,
     );
     await orderMessagesPage.closeSfToolBar(page);
 

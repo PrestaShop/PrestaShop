@@ -37,3 +37,30 @@ $(() => {
 
   new window.prestashop.component.ChoiceTree(AttributeFormMap.attributeShopAssociationInput).enableAutoCheckChildren();
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const attributeGroupSelect = document.querySelector(AttributeFormMap.attributeGroupSelect) as HTMLInputElement | null;
+  const attributeColorRow = document.querySelector(AttributeFormMap.attributeColorFormRow) as HTMLElement | null;
+  const attributeTextureRow = document.querySelector(AttributeFormMap.attributeTextureFormRow) as HTMLElement | null;
+  const attributeGroupSelectValue = (attributeGroupSelect as HTMLInputElement | null)?.value;
+
+  const toggleDisplay = (value: string | null) => {
+    if (attributeColorRow && attributeTextureRow) {
+      const displayValue = value === '2' ? 'flex' : 'none';
+      attributeColorRow.style.display = displayValue;
+      attributeTextureRow.style.display = displayValue;
+    }
+  };
+
+  if (attributeGroupSelectValue) {
+    toggleDisplay(attributeGroupSelectValue);
+  }
+
+  attributeGroupSelect?.addEventListener('change', () => {
+    const NewattributeGroupSelectValue = (attributeGroupSelect as HTMLInputElement | null)?.value;
+
+    if (NewattributeGroupSelectValue) {
+      toggleDisplay(NewattributeGroupSelectValue);
+    }
+  });
+});

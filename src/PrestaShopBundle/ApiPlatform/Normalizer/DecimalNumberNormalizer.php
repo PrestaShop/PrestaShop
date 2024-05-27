@@ -40,17 +40,17 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 #[AutoconfigureTag('prestashop.api.normalizers')]
 class DecimalNumberNormalizer implements DenormalizerInterface, NormalizerInterface
 {
-    public function denormalize($data, string $type, string $format = null, array $context = [])
+    public function denormalize($data, string $type, ?string $format = null, array $context = [])
     {
         return new DecimalNumber((string) $data);
     }
 
-    public function supportsDenormalization($data, string $type, string $format = null)
+    public function supportsDenormalization($data, string $type, ?string $format = null)
     {
         return DecimalNumber::class === $type;
     }
 
-    public function normalize($object, string $format = null, array $context = [])
+    public function normalize($object, ?string $format = null, array $context = [])
     {
         if (!($object instanceof DecimalNumber)) {
             throw new InvalidArgumentException('Expected object to be a ' . DecimalNumber::class);
@@ -59,7 +59,7 @@ class DecimalNumberNormalizer implements DenormalizerInterface, NormalizerInterf
         return (float) (string) $object;
     }
 
-    public function supportsNormalization($data, string $format = null)
+    public function supportsNormalization($data, ?string $format = null)
     {
         return $data instanceof DecimalNumber;
     }

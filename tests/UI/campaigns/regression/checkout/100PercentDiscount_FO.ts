@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
@@ -22,6 +21,7 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
+  boDashboardPage,
   // Import data
   FakerAddress,
   FakerCustomer,
@@ -78,10 +78,10 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
     it('should go to cart rule page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCartRulesPageToCreate', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.discountsLink,
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
@@ -110,10 +110,10 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       it("should go to 'Shop Parameters > Order Settings' page", async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.shopParametersParentLink,
-          dashboardPage.orderSettingsLink,
+          boDashboardPage.shopParametersParentLink,
+          boDashboardPage.orderSettingsLink,
         );
 
         const pageTitle = await orderSettingsPage.getPageTitle(page);
@@ -271,10 +271,10 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       it("should go to 'Shop Parameters > Order Settings' page", async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPageToReset', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.shopParametersParentLink,
-          dashboardPage.orderSettingsLink,
+          boDashboardPage.shopParametersParentLink,
+          boDashboardPage.orderSettingsLink,
         );
 
         const pageTitle = await orderSettingsPage.getPageTitle(page);

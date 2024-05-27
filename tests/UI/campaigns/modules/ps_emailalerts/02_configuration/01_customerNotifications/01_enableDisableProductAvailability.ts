@@ -12,7 +12,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psEmailAlerts from '@pages/BO/modules/psEmailAlerts';
 import ordersPage from '@pages/BO/orders';
@@ -37,6 +36,7 @@ import ProductData from '@data/faker/product';
 import MailDevEmail from '@data/types/maildevEmail';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -104,10 +104,10 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
       await moduleManagerPage.closeSfToolBar(page);
 
@@ -332,10 +332,10 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       page = await foProductPage.changePage(browserContext, 0);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       const pageTitle = await productsPage.getPageTitle(page);
@@ -440,10 +440,10 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       page = await foProductPage.changePage(browserContext, 0);
       await page.reload();
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
       const pageTitle = await ordersPage.getPageTitle(page);
@@ -489,10 +489,10 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       page = await foProductPage.changePage(browserContext, 0);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       const pageTitle = await productsPage.getPageTitle(page);
@@ -536,10 +536,10 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       page = await foProductPage.changePage(browserContext, 0);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.stocksLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.stocksLink,
       );
       await stocksPage.closeSfToolBar(page);
 

@@ -67,10 +67,10 @@ use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Entity\AdminFilter;
+use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType;
 use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
-use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
@@ -1348,8 +1348,8 @@ class ProductController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             CannotBulkDeleteProductException::class => $this->trans(
-                    'An error occurred while deleting this selection.',
-                    'Admin.Notifications.Error'
+                'An error occurred while deleting this selection.',
+                'Admin.Notifications.Error'
             ),
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_PRICE => $this->trans(

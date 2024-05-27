@@ -7,7 +7,6 @@ import files from '@utils/files';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import featuresPage from '@pages/BO/catalog/features';
 import createProductPage from '@pages/BO/catalog/products/add';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
@@ -23,6 +22,7 @@ import {ProductFeatures} from '@data/types/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_detailsTab';
 
@@ -117,10 +117,10 @@ describe('BO - Catalog - Products : Details tab', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
 
       await productsPage.closeSfToolBar(page);
@@ -440,10 +440,10 @@ describe('BO - Catalog - Products : Details tab', async () => {
     it('should go to \'Catalog > Files\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFilesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.filesLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.filesLink,
       );
 
       const pageTitle = await filesPage.getPageTitle(page);

@@ -40,7 +40,6 @@ class FeatureControllerTest extends FormGridControllerTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::mockContext();
         FeatureResetter::resetFeatures();
     }
 

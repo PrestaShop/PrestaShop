@@ -30,25 +30,10 @@ inputs:
     required: false
     description: true to disable Make
     default: 'false'
-  BO_LAYOUT:
-    required: false
-    description: Choose between Legacy and Symfony layout
-    default: 'legacy'
 
 runs:
   using: 'composite'
   steps:
-    - name: PrestaShop Configuration (Copy of Config API)
-      if: inputs.CP_API_CONFIG == 'true'
-      shell: bash
-      run: cp ./app/config/security_test.yml ./app/config/security_prod.yml
-
-    - name: Adapt Back Office layout
-      if: inputs.backoffice_layout == 'symfony'
-      shell: bash
-      run: |
-        echo PS_FF_SYMFONY_LAYOUT=true >> .env
-
     # Certificate for SSL
     - name: Generate a Certificate
       if: inputs.ENABLE_SSL == 'true'

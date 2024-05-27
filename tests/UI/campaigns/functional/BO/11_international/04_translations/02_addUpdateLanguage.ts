@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import localizationPage from '@pages/BO/international/localization';
 import translationsPage from '@pages/BO/international/translations';
 import languagesPage from '@pages/BO/international/languages';
@@ -19,6 +18,7 @@ import Languages from '@data/demo/languages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_translations_addUpdateLanguage';
 
@@ -44,10 +44,10 @@ describe('BO - International - Translation : Add update a language', async () =>
   it('should go to \'International > Translations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.translationsLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.translationsLink,
     );
     await translationsPage.closeSfToolBar(page);
 
@@ -101,10 +101,10 @@ describe('BO - International - Translation : Add update a language', async () =>
     it('should go to localization page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.internationalParentLink,
-        dashboardPage.localizationLink,
+        boDashboardPage.internationalParentLink,
+        boDashboardPage.localizationLink,
       );
 
       const pageTitle = await localizationPage.getPageTitle(page);

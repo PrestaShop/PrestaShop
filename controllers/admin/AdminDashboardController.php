@@ -144,9 +144,9 @@ class AdminDashboardControllerCore extends AdminController
                         'title' => $module->displayName,
                         'desc' => $this->trans(
                             'Choose a variable fee for each order placed with a foreign currency with %module%. It will be applied on the total paid with taxes.',
-                             ['%module%' => $module->displayName],
-                             'Admin.Dashboard.Help'
-                            ),
+                            ['%module%' => $module->displayName],
+                            'Admin.Dashboard.Help'
+                        ),
                         'validation' => 'isPercentage',
                         'cast' => 'floatval',
                         'type' => 'text',

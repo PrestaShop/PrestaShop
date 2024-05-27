@@ -175,9 +175,9 @@ final class Importer implements ImporterInterface
         ImportRuntimeConfigInterface $runtimeConfig
     ) {
         return
-            $importConfig->truncate() &&
-            !$runtimeConfig->shouldValidateData() &&
-            $this->isFirstIteration($runtimeConfig)
+            $importConfig->truncate()
+            && !$runtimeConfig->shouldValidateData()
+            && $this->isFirstIteration($runtimeConfig)
         ;
     }
 

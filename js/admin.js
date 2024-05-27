@@ -1207,7 +1207,7 @@ function verifyMail(testMsg, testSubject)
         "testSubject" : textSubject,
         "token"     : token_mail,
         "ajax"      : 1,
-        "tab"       : 'AdminEmails',
+        "controller"       : 'AdminEmails',
         "action"      : 'sendMailTest'
       },
        success: function(ret)

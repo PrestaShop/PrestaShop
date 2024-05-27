@@ -44,7 +44,7 @@ class PdfOrderReturnControllerCore extends FrontController
         $adminToken = Tools::getValue('adtoken');
         if (!empty($adminToken)) {
             $adminTokenValidator = $this->getContainer()->get(LegacyAdminTokenValidator::class);
-            $from_admin = $adminTokenValidator->isTokenValid('AdminReturn', (int) Tools::getValue('id_employee'), $adminToken);
+            $from_admin = $adminTokenValidator->isTokenValid((int) Tools::getValue('id_employee'), $adminToken);
         } else {
             $from_admin = false;
         }

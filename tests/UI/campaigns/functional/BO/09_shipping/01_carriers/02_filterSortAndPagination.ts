@@ -8,7 +8,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
 
@@ -16,6 +15,7 @@ import addCarrierPage from '@pages/BO/shipping/carriers/add';
 import Carriers from '@data/demo/carriers';
 
 import {
+  boDashboardPage,
   // Import data
   FakerCarrier,
 } from '@prestashop-core/ui-testing';
@@ -49,10 +49,10 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
   it('should go to \'Shipping > Carriers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shippingLink,
-      dashboardPage.carriersLink,
+      boDashboardPage.shippingLink,
+      boDashboardPage.carriersLink,
     );
 
     const pageTitle = await carriersPage.getPageTitle(page);

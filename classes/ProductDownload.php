@@ -114,7 +114,7 @@ class ProductDownloadCore extends ObjectModel
     {
         if (parent::update($nullValues)) {
             // Refresh cache of feature detachable because the row can be deactive
-            //Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', ProductDownload::isCurrentlyUsed($this->def['table'], true));
+            // Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', ProductDownload::isCurrentlyUsed($this->def['table'], true));
             return true;
         }
 

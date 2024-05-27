@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
@@ -17,6 +16,7 @@ import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsGeneral_maxSizeShortDescription';
 
@@ -58,10 +58,10 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
       it('should go to \'Shop parameters > Product Settings\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.shopParametersParentLink,
-          dashboardPage.productSettingsLink,
+          boDashboardPage.shopParametersParentLink,
+          boDashboardPage.productSettingsLink,
         );
         await productSettingsPage.closeSfToolBar(page);
 

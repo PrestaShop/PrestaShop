@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import linkWidgetsPage from '@pages/BO/design/linkWidgets';
 import addLinkWidgetPage from '@pages/BO/design/linkWidgets/add';
 // Import FO pages
@@ -20,6 +19,7 @@ import {LinkWidgetPage} from '@data/types/linkWidget';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_linkWidget_createAndCheckFooterLinkWidget';
 
@@ -50,10 +50,10 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
   it('should go to \'Design > Link Widget\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLinkWidgetPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.linkWidgetLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.linkWidgetLink,
     );
     await linkWidgetsPage.closeSfToolBar(page);
 

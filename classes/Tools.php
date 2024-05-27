@@ -29,8 +29,6 @@ use PHPSQLParser\PHPSQLParser;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
@@ -71,7 +69,7 @@ class ToolsCore
     /**
      * @param Request $request
      */
-    public function __construct(Request $request = null)
+    public function __construct(?Request $request = null)
     {
         if ($request) {
             self::$request = $request;
@@ -140,7 +138,7 @@ class ToolsCore
      * @param Link|null $link
      * @param string|array $headers A list of headers to send before redirection
      */
-    public static function redirect($url, $base_uri = __PS_BASE_URI__, Link $link = null, $headers = null)
+    public static function redirect($url, $base_uri = __PS_BASE_URI__, ?Link $link = null, $headers = null)
     {
         if (!$link) {
             $link = Context::getContext()->link;
@@ -529,9 +527,9 @@ class ToolsCore
 
         /* Automatically detect language if not already defined, detect_language is set in Cookie::update */
         if (
-            !Tools::getValue('isolang') &&
-            !Tools::getValue('id_lang') &&
-            (!$cookie->id_lang || isset($cookie->detect_language))
+            !Tools::getValue('isolang')
+            && !Tools::getValue('id_lang')
+            && (!$cookie->id_lang || isset($cookie->detect_language))
             && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
         ) {
             $array = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
@@ -569,7 +567,7 @@ class ToolsCore
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public static function switchLanguage(Context $context = null)
+    public static function switchLanguage(?Context $context = null)
     {
         if (null === $context) {
             $context = Context::getContext();
@@ -582,9 +580,9 @@ class ToolsCore
         }
 
         if (
-            ($iso = Tools::getValue('isolang')) &&
-            Validate::isLanguageIsoCode($iso) &&
-            ($id_lang = (int) Language::getIdByIso($iso))
+            ($iso = Tools::getValue('isolang'))
+            && Validate::isLanguageIsoCode($iso)
+            && ($id_lang = (int) Language::getIdByIso($iso))
         ) {
             $_GET['id_lang'] = $id_lang;
         }
@@ -593,9 +591,9 @@ class ToolsCore
         $newLanguageId = (int) Tools::getValue('id_lang');
 
         if (
-            Validate::isUnsignedId($newLanguageId) &&
-            $newLanguageId !== 0 &&
-            $context->cookie->id_lang !== $newLanguageId
+            Validate::isUnsignedId($newLanguageId)
+            && $newLanguageId !== 0
+            && $context->cookie->id_lang !== $newLanguageId
         ) {
             $context->cookie->id_lang = $newLanguageId;
             $language = new Language($newLanguageId);
@@ -726,7 +724,7 @@ class ToolsCore
      *
      * @return float|null Price
      */
-    public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
+    public static function convertPrice($price, $currency = null, $to_currency = true, ?Context $context = null)
     {
         $default_currency = Currency::getDefaultCurrencyId();
 
@@ -760,7 +758,7 @@ class ToolsCore
      * @param Currency $currency_from if null we used the default currency
      * @param Currency $currency_to if null we used the default currency
      */
-    public static function convertPriceFull($amount, Currency $currency_from = null, Currency $currency_to = null)
+    public static function convertPriceFull($amount, ?Currency $currency_from = null, ?Currency $currency_to = null)
     {
         if ($currency_from == $currency_to) {
             return $amount;
@@ -797,7 +795,7 @@ class ToolsCore
      */
     public static function dateFormat($params, &$smarty)
     {
-        return Tools::displayDate($params['date'], (isset($params['full']) ? $params['full'] : false));
+        return Tools::displayDate($params['date'], isset($params['full']) ? $params['full'] : false);
     }
 
     /**
@@ -980,7 +978,7 @@ class ToolsCore
      *
      * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
      */
-    public static function displayError($errorMessage = null, $htmlentities = null, Context $context = null)
+    public static function displayError($errorMessage = null, $htmlentities = null, ?Context $context = null)
     {
         header('HTTP/1.1 500 Internal Server Error', true, 500);
         if (null !== $htmlentities) {
@@ -1116,7 +1114,7 @@ class ToolsCore
      *
      * @return string
      */
-    public static function getToken($page = true, Context $context = null)
+    public static function getToken($page = true, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1139,16 +1137,10 @@ class ToolsCore
     {
         $container = SymfonyContainer::getInstance();
         if (null !== $container) {
-            /** @var FeatureFlagStateCheckerInterface $featureFlagChecker */
-            $featureFlagChecker = $container->get(FeatureFlagStateCheckerInterface::class);
+            /** @var UserTokenManager $userTokenManager */
+            $userTokenManager = $container->get(UserTokenManager::class);
 
-            // When symfony layout is enabled even the legacy page must use a Symfony token
-            if ($featureFlagChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_SYMFONY_LAYOUT)) {
-                /** @var UserTokenManager $userTokenManager */
-                $userTokenManager = $container->get(UserTokenManager::class);
-
-                return $userTokenManager->getSymfonyToken();
-            }
+            return $userTokenManager->getSymfonyToken();
         }
 
         return !empty($string) ? Tools::hash($string) : false;
@@ -1160,7 +1152,7 @@ class ToolsCore
      *
      * @return bool|string
      */
-    public static function getAdminTokenLite($tab, Context $context = null)
+    public static function getAdminTokenLite($tab, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1229,7 +1221,7 @@ class ToolsCore
             $allow_accented_chars = Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
         }
 
-        return (self::getStringModifier())->str2url((string) $str, $allow_accented_chars);
+        return self::getStringModifier()->str2url((string) $str, $allow_accented_chars);
     }
 
     /**
@@ -1241,7 +1233,7 @@ class ToolsCore
      */
     public static function replaceAccentedChars($str)
     {
-        return (self::getStringModifier())->replaceAccentedChars($str);
+        return self::getStringModifier()->replaceAccentedChars($str);
     }
 
     /**
@@ -1279,7 +1271,7 @@ class ToolsCore
         return utf8_encode(substr($str, 0, $max_length - Tools::strlen($suffix)) . $suffix);
     }
 
-    /*Copied from CakePHP String utility file*/
+    /* Copied from CakePHP String utility file */
     public static function truncateString($text, $length = 120, $options = [])
     {
         $default = [
@@ -1495,7 +1487,7 @@ class ToolsCore
             return false;
         }
 
-        return mb_substr($str, (int) $start, ($length === false ? null : (int) $length), $encoding);
+        return mb_substr($str, (int) $start, $length === false ? null : (int) $length, $encoding);
     }
 
     public static function strpos($str, $find, $offset = 0, $encoding = 'UTF-8')
@@ -1521,7 +1513,7 @@ class ToolsCore
     public static function orderbyPrice(&$array, $order_way)
     {
         foreach ($array as &$row) {
-            $row['price_tmp'] = (float) Product::getPriceStatic($row['id_product'], true, ((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int) $row['id_product_attribute'] : null), 2);
+            $row['price_tmp'] = (float) Product::getPriceStatic($row['id_product'], true, (isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int) $row['id_product_attribute'] : null, 2);
         }
         unset($row);
 
@@ -1593,7 +1585,7 @@ class ToolsCore
      */
     public static function math_round($value, $places, $mode = PS_ROUND_HALF_UP)
     {
-        //If PHP_ROUND_HALF_UP exist (PHP 5.3) use it and pass correct mode value (PrestaShop define - 1)
+        // If PHP_ROUND_HALF_UP exist (PHP 5.3) use it and pass correct mode value (PrestaShop define - 1)
         if (defined('PHP_ROUND_HALF_UP')) {
             return round($value, $places, $mode - 1);
         }
@@ -1661,9 +1653,9 @@ class ToolsCore
             $tmp_value = floor($value + 0.5);
 
             if (
-                ($mode == PS_ROUND_HALF_DOWN && $value == (-0.5 + $tmp_value)) ||
-                ($mode == PS_ROUND_HALF_EVEN && $value == (0.5 + 2 * floor($tmp_value / 2.0))) ||
-                ($mode == PS_ROUND_HALF_ODD && $value == (0.5 + 2 * floor($tmp_value / 2.0) - 1.0))
+                ($mode == PS_ROUND_HALF_DOWN && $value == (-0.5 + $tmp_value))
+                || ($mode == PS_ROUND_HALF_EVEN && $value == (0.5 + 2 * floor($tmp_value / 2.0)))
+                || ($mode == PS_ROUND_HALF_ODD && $value == (0.5 + 2 * floor($tmp_value / 2.0) - 1.0))
             ) {
                 $tmp_value = $tmp_value - 1.0;
             }
@@ -1671,9 +1663,9 @@ class ToolsCore
             $tmp_value = ceil($value - 0.5);
 
             if (
-                ($mode == PS_ROUND_HALF_DOWN && $value == (0.5 + $tmp_value)) ||
-                ($mode == PS_ROUND_HALF_EVEN && $value == (-0.5 + 2 * ceil($tmp_value / 2.0))) ||
-                ($mode == PS_ROUND_HALF_ODD && $value == (-0.5 + 2 * ceil($tmp_value / 2.0) + 1.0))
+                ($mode == PS_ROUND_HALF_DOWN && $value == (0.5 + $tmp_value))
+                || ($mode == PS_ROUND_HALF_EVEN && $value == (-0.5 + 2 * ceil($tmp_value / 2.0)))
+                || ($mode == PS_ROUND_HALF_ODD && $value == (-0.5 + 2 * ceil($tmp_value / 2.0) + 1.0))
             ) {
                 $tmp_value = $tmp_value + 1.0;
             }
@@ -1765,7 +1757,7 @@ class ToolsCore
      */
     public static function refreshCACertFile()
     {
-        if ((time() - @filemtime(_PS_CACHE_CA_CERT_FILE_) > 1296000)) {
+        if (time() - @filemtime(_PS_CACHE_CA_CERT_FILE_) > 1296000) {
             $stream_context = @stream_context_create(
                 [
                     'http' => ['timeout' => 3],
@@ -1781,8 +1773,8 @@ class ToolsCore
             }
 
             if (
-                preg_match('/(.*-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----){50}$/Uims', $ca_cert_content) &&
-                substr(rtrim($ca_cert_content), -1) == '-'
+                preg_match('/(.*-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----){50}$/Uims', $ca_cert_content)
+                && substr(rtrim($ca_cert_content), -1) == '-'
             ) {
                 file_put_contents(_PS_CACHE_CA_CERT_FILE_, $ca_cert_content);
             }
@@ -1838,7 +1830,7 @@ class ToolsCore
                     curl_error($curl)
                 );
 
-                throw new \Exception($errorMessage);
+                throw new Exception($errorMessage);
             }
 
             curl_close($curl);
@@ -2738,7 +2730,7 @@ exit;
         }
     }
 
-    public static function enableCache($level = 1, Context $context = null)
+    public static function enableCache($level = 1, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -2757,7 +2749,7 @@ exit;
         $smarty->cache_lifetime = 31536000; // 1 Year
     }
 
-    public static function restoreCacheSettings(Context $context = null)
+    public static function restoreCacheSettings(?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -3618,7 +3610,7 @@ exit;
                 $cacheDir = _PS_CACHE_DIR_ . 'purifier';
                 // Make sure the cache directory exists, as the purifier won't create it automatically
                 if (!file_exists($cacheDir) && !mkdir($cacheDir, PsFileSystem::DEFAULT_MODE_FOLDER, true) && !is_dir($cacheDir)) {
-                    throw new \RuntimeException(sprintf('HTML purifier directory "%s" can not be created', $cacheDir));
+                    throw new RuntimeException(sprintf('HTML purifier directory "%s" can not be created', $cacheDir));
                 }
 
                 $config->set('Attr.EnableID', true);
@@ -3927,7 +3919,7 @@ exit;
      * Otherwise, params from $extraParams that have a null value are stripped,
      * and other params are added. Params not in $extraParams are unchanged.
      */
-    public static function updateCurrentQueryString(array $extraParams = null): string
+    public static function updateCurrentQueryString(?array $extraParams = null): string
     {
         $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
         $url = Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $uriWithoutParams;

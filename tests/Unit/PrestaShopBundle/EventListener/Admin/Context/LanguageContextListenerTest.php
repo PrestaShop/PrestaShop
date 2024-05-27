@@ -60,7 +60,7 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         );
 
         $event = $this->createRequestEvent(new Request());
-        $listener->onKernelRequest($event);
+        $listener->initLanguageContext($event);
         $this->assertEquals(self::EMPLOYEE_CONTEXT_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'languageId'));
     }
 
@@ -74,12 +74,12 @@ class LanguageContextListenerTest extends ContextEventListenerTestCase
         );
         $listener = new LanguageContextListener(
             $languageContextBuilder,
-            $this->mockEmployeeContext(null),
+            $this->createMock(EmployeeContext::class),
             $this->mockConfiguration(['PS_LANG_DEFAULT' => self::DEFAULT_CONFIGURATION_LANGUAGE_ID]),
         );
 
         $event = $this->createRequestEvent(new Request());
-        $listener->onKernelRequest($event);
+        $listener->initDefaultLanguageContext($event);
         $this->assertEquals(self::DEFAULT_CONFIGURATION_LANGUAGE_ID, $this->getPrivateField($languageContextBuilder, 'languageId'));
     }
 

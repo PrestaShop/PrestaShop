@@ -33,7 +33,7 @@ use Exception;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use RuntimeException;
 use Tests\Integration\Utility\PaymentModuleFake;
 use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;

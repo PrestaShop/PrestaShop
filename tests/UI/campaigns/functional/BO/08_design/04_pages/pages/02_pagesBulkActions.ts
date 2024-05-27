@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import addPagePage from '@pages/BO/design/pages/add';
 import pagesPage from '@pages/BO/design/pages';
 
@@ -15,6 +14,7 @@ import CMSPageData from '@data/faker/CMSpage';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_pages_pages_pagesBulkActions';
 
@@ -48,10 +48,10 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
   it('should go to \'Design > Pages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCmsPagesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.pagesLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.pagesLink,
     );
     await pagesPage.closeSfToolBar(page);
 

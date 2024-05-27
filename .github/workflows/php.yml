@@ -39,7 +39,7 @@ jobs:
         run: composer validate --strict
 
       - name: Composer Install
-        run: composer install --ansi --prefer-dist --no-interaction --no-progress
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
       - name: Run PHPCSFixer
         run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
@@ -80,7 +80,7 @@ jobs:
 
       - name: Composer Install
         run: |
-          composer install --ansi --prefer-dist --no-interaction --no-progress
+          COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
           rm composer.lock
           composer config platform.php ${{ matrix.php }}
 
@@ -121,11 +121,11 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Composer Install
-        run: composer install --ansi --prefer-dist --no-interaction --no-progress
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
       - name: Update phpunit version
         if: ${{ startsWith(matrix.php, '8.') }}
-        run: composer update -w --ignore-platform-reqs --no-interaction phpunit/phpunit
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer update -w --ignore-platform-reqs --no-interaction phpunit/phpunit
 
       - name: Run phpunit
         run: ./vendor/phpunit/phpunit/phpunit -c tests/Unit/phpunit.xml

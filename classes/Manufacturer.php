@@ -78,8 +78,8 @@ class ManufacturerCore extends ObjectModel
             'date_upd' => ['type' => self::TYPE_DATE],
 
             /* Lang fields */
-            'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
-            'short_description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 4194303],
+            'short_description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 4194303],
             'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
             'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
             'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'],
@@ -231,7 +231,7 @@ class ManufacturerCore extends ObjectModel
 						WHERE p.`id_product` = cp.`id_product` AND cg.`id_group` ' . $sqlGroups . '
 					)') . '
 					GROUP BY p.`id_manufacturer`'
-                );
+            );
 
             $counts = [];
             foreach ($results as $result) {
@@ -376,7 +376,7 @@ class ManufacturerCore extends ObjectModel
         $getTotal = false,
         $active = true,
         $activeCategory = true,
-        Context $context = null
+        ?Context $context = null
     ) {
         if (!$context) {
             $context = Context::getContext();

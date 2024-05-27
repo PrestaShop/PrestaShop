@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
 import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
@@ -19,6 +18,7 @@ import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
 
 import {
+  boDashboardPage,
   // Import data
   dataCustomers,
   dataOrderStatuses,
@@ -86,10 +86,10 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           `${baseContext}_preTest_${i}`,
         );
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
 
         const pageTitle = await ordersPage.getPageTitle(page);

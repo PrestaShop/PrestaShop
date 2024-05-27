@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
@@ -18,6 +17,7 @@ import homePage from '@pages/FO/hummingbird/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_sortAndFilter_sortProducts';
 
@@ -61,10 +61,10 @@ describe('FO - Menu and navigation : Sort products', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
       await productsPage.closeSfToolBar(page);
 
@@ -88,10 +88,10 @@ describe('FO - Menu and navigation : Sort products', async () => {
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.productSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.productSettingsLink,
       );
 
       const pageTitle = await productSettingsPage.getPageTitle(page);

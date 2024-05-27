@@ -56,10 +56,17 @@ if [ "${DISABLE_MAKE}" != "1" ]; then
   runuser -g www-data -u www-data -- php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');" && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer && rm -rf /tmp/composer-setup.php
 
   echo "\n* Running composer ...";
-  runuser -g www-data -u www-data -- /usr/local/bin/composer install --no-interaction
+  runuser -g www-data -u www-data -- /usr/bin/make composer
+  if [ $? -ne 0]; then
+    echo Composer install failed
+    exit 1
+  fi
 
   echo "\n* Build assets ...";
   runuser -g www-data -u www-data -- /usr/bin/make assets
+
+  echo "\n* Wait for assets built...";
+  /usr/bin/make wait-assets
 else
   echo "\n* Build of assets was disabled...";
 fi

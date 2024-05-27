@@ -8,8 +8,8 @@ import {expect} from 'chai';
 import testContext from '@utils/testContext';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_header_viewMyShop';
 
@@ -33,14 +33,14 @@ describe('BO - Header : View My Shop', async () => {
     const numPages = helper.getNumberTabs(browserContext);
     expect(numPages).to.be.eq(1);
 
-    const pageTitle = await dashboardPage.getPageTitle(page);
-    expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should click on View my shop', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickViewMyShop', baseContext);
 
-    page = await dashboardPage.viewMyShop(page);
+    page = await boDashboardPage.viewMyShop(page);
 
     const numPages = helper.getNumberTabs(browserContext);
     expect(numPages).to.be.eq(2);

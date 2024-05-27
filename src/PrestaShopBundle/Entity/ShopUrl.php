@@ -34,202 +34,143 @@ use Doctrine\ORM\Mapping as ORM;
  * ShopUrl
  *
  * @ORM\Table()
+ *
  * @ORM\Entity
  */
 class ShopUrl
 {
     /**
-     * @var int
-     *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_shop_url", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Shop", inversedBy="shopUrls")
+     *
      * @ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", nullable=false)
      */
-    private $shop;
+    private Shop $shop;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="domain", type="string", length=150)
      */
-    private $domain;
+    private string $domain;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="domain_ssl", type="string", length=150)
      */
-    private $domainSsl;
+    private string $domainSsl;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="physical_uri", type="string", length=64)
      */
-    private $physicalUri;
+    private string $physicalUri;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="virtual_uri", type="string", length=64)
      */
-    private $virtualUri;
+    private string $virtualUri;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="main", type="boolean")
      */
-    private $main;
+    private bool $main;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="active", type="boolean")
      */
-    private $active;
+    private bool $active;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param string $domain
-     *
-     * @return $this
-     */
-    public function setDomain(string $domain): self
+    public function setDomain(string $domain): static
     {
         $this->domain = $domain;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDomain(): string
     {
         return $this->domain;
     }
 
-    /**
-     * @param string $domainSsl
-     *
-     * @return $this
-     */
-    public function setDomainSsl(string $domainSsl): self
+    public function setDomainSsl(string $domainSsl): static
     {
         $this->domainSsl = $domainSsl;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDomainSsl(): string
     {
         return $this->domainSsl;
     }
 
-    /**
-     * @param string $physicalUri
-     *
-     * @return $this
-     */
-    public function setPhysicalUri(string $physicalUri): self
+    public function setPhysicalUri(string $physicalUri): static
     {
         $this->physicalUri = $physicalUri;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPhysicalUri(): string
     {
         return $this->physicalUri;
     }
 
-    /**
-     * @param string $virtualUri
-     *
-     * @return $this
-     */
-    public function setVirtualUri(string $virtualUri): self
+    public function setVirtualUri(string $virtualUri): static
     {
         $this->virtualUri = $virtualUri;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getVirtualUri(): string
     {
         return $this->virtualUri;
     }
 
-    /**
-     * @param bool $main
-     *
-     * @return $this
-     */
-    public function setMain(bool $main): self
+    public function setMain(bool $main): static
     {
         $this->main = $main;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getMain(): bool
     {
         return $this->main;
     }
 
-    /**
-     * @param bool $active
-     *
-     * @return $this
-     */
-    public function setActive(bool $active): self
+    public function setActive(bool $active): static
     {
         $this->active = $active;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getActive(): bool
     {
         return $this->active;
     }
 
-    /**
-     * Get shopGroup.
-     *
-     * @return Shop
-     */
     public function getShop(): Shop
     {
         return $this->shop;
+    }
+
+    public function setShop(Shop $shop): static
+    {
+        $this->shop = $shop;
+
+        return $this;
     }
 }

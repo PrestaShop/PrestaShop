@@ -66,7 +66,7 @@ class ApeCode
     {
         if (!is_string($code)
             || (!empty($code) && !((bool) preg_match(self::PATTERN, $code)))
-            ) {
+        ) {
             throw new CustomerConstraintException(sprintf('Invalid ape code %s provided', var_export($code, true)), CustomerConstraintException::INVALID_APE_CODE);
         }
     }

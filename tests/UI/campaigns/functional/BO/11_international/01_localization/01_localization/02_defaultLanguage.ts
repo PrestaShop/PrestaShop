@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
 import localizationPage from '@pages/BO/international/localization';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
@@ -17,6 +16,7 @@ import Languages from '@data/demo/languages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_localization_defaultLanguage';
 
@@ -48,10 +48,10 @@ describe('BO - International - Localization : Update default language', async ()
       it('should go to \'International > localization\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToLocalizationPage_${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.internationalParentLink,
-          dashboardPage.localizationLink,
+          boDashboardPage.internationalParentLink,
+          boDashboardPage.localizationLink,
         );
         await localizationPage.closeSfToolBar(page);
 

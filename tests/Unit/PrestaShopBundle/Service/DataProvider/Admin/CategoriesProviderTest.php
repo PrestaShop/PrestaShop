@@ -379,7 +379,7 @@ class CategoriesProviderTest extends TestCase
         );
     }
 
-    private function mockModule(string $moduleName, string $tab = null)
+    private function mockModule(string $moduleName, ?string $tab = null)
     {
         $mock = $this->getMockBuilder(Module::class)
             ->getMock();

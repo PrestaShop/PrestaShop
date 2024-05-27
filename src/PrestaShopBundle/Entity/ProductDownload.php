@@ -31,239 +31,196 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
+ *
  * @ORM\Entity
  */
 class ProductDownload
 {
     /**
-     * @var int
-     *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_product_download", type="integer", options={"unsigned"=true})
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="id_product", type="integer", options={"unsigned"=true})
      */
-    private $idProduct;
+    private int $idProduct;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="display_filename", type="string", length=255, nullable=true)
      */
-    private $displayFilename;
+    private ?string $displayFilename;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="filename", type="string", length=255, nullable=true)
      */
-    private $filename;
+    private ?string $filename;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="date_add", type="datetime")
      */
-    private $dateAdd;
+    private DateTime $dateAdd;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="date_expiration", type="datetime", nullable=true)
      */
-    private $dateExpiration;
+    private ?DateTime $dateExpiration;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="nb_days_accessible", type="integer", nullable=true, options={"unsigned"=true})
      */
-    private $nbDaysAccessible;
+    private ?int $nbDaysAccessible;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="nb_downloadable", type="integer", nullable=true, options={"default":1, "unsigned"=true})
      */
-    private $nbDownloadable;
+    private ?int $nbDownloadable;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="active", type="boolean", options={"default":1, "unsigned"=true})
      */
-    private $active;
+    private bool $active;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="is_shareable", type="boolean", options={"default":0, "unsigned"=true})
      */
-    private $isShareable;
+    private bool $isShareable;
 
     /**
      * Download ID, different from product ID.
-     *
-     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
      * Related product ID.
-     *
-     * @return int
      */
-    public function getIdProduct()
+    public function getIdProduct(): int
     {
         return $this->idProduct;
     }
 
     /**
      * Virtual filename, used for display on download.
-     *
-     * @return string
      */
-    public function getDisplayFilename()
+    public function getDisplayFilename(): ?string
     {
         return $this->displayFilename;
     }
 
     /**
      * Get actual filename on the shop filesystem.
-     *
-     * @return string
      */
-    public function getFilename()
+    public function getFilename(): ?string
     {
         return $this->filename;
     }
 
     /**
      * Date when the download was added.
-     *
-     * @return DateTime
      */
-    public function getDateAdd()
+    public function getDateAdd(): DateTime
     {
         return $this->dateAdd;
     }
 
     /**
      * Date until the product can be downloaded.
-     *
-     * @return DateTime
      */
-    public function getDateExpiration()
+    public function getDateExpiration(): ?DateTime
     {
         return $this->dateExpiration;
     }
 
     /**
      * Number of days (after order) the product can be downloaded.
-     *
-     * @return int
      */
-    public function getNbDaysAccessible()
+    public function getNbDaysAccessible(): ?int
     {
         return $this->nbDaysAccessible;
     }
 
     /**
      * The number of downloads of a product can be limited.
-     *
-     * @return int
      */
-    public function getNbDownloadable()
+    public function getNbDownloadable(): int
     {
         return $this->nbDownloadable;
     }
 
-    /**
-     * @return bool
-     */
-    public function getActive()
+    public function getActive(): bool
     {
         return $this->active;
     }
 
-    public function getIsShareable()
+    public function getIsShareable(): bool
     {
         return $this->isShareable;
     }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function setIdProduct($idProduct)
+    public function setIdProduct(int $idProduct): static
     {
         $this->idProduct = $idProduct;
 
         return $this;
     }
 
-    public function setDisplayFilename($displayFilename)
+    public function setDisplayFilename(?string $displayFilename): static
     {
         $this->displayFilename = $displayFilename;
 
         return $this;
     }
 
-    public function setFilename($filename)
+    public function setFilename(?string $filename): static
     {
         $this->filename = $filename;
 
         return $this;
     }
 
-    public function setDateAdd(DateTime $dateAdd)
+    public function setDateAdd(DateTime $dateAdd): static
     {
         $this->dateAdd = $dateAdd;
 
         return $this;
     }
 
-    public function setDateExpiration(DateTime $dateExpiration)
+    public function setDateExpiration(?DateTime $dateExpiration): static
     {
         $this->dateExpiration = $dateExpiration;
 
         return $this;
     }
 
-    public function setNbDaysAccessible($nbDaysAccessible)
+    public function setNbDaysAccessible(?int $nbDaysAccessible): static
     {
         $this->nbDaysAccessible = $nbDaysAccessible;
 
         return $this;
     }
 
-    public function setNbDownloadable($nbDownloadable)
+    public function setNbDownloadable(?int $nbDownloadable): static
     {
         $this->nbDownloadable = $nbDownloadable;
 
         return $this;
     }
 
-    public function setActive($active)
+    public function setActive(bool $active): static
     {
         $this->active = $active;
 
         return $this;
     }
 
-    public function setIsShareable($isShareable)
+    public function setIsShareable(bool $isShareable): static
     {
         $this->isShareable = $isShareable;
 
@@ -274,12 +231,13 @@ class ProductDownload
      * Now we tell doctrine that before we persist or update we call the updateTimestamps() function.
      *
      * @ORM\PrePersist
+     *
      * @ORM\PreUpdate
      */
-    public function updateTimestamps()
+    public function updateTimestamps(): void
     {
-        if ($this->getDateAdd() == null) {
-            $this->setDateAdd(new DateTime());
+        if (!isset($this->dateAdd)) {
+            $this->dateAdd = new DateTime();
         }
     }
 }

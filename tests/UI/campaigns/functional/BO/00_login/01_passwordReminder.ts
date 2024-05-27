@@ -10,8 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import employeesPage from '@pages/BO/advancedParameters/team';
-import dashboardPage from '@pages/BO/dashboard';
-import loginPage from '@pages/BO/login';
 
 // Import data
 import EmployeeData from '@data/faker/employee';
@@ -20,6 +18,10 @@ import type MailDevEmail from '@data/types/maildevEmail';
 import {expect} from 'chai';
 import type MailDev from 'maildev';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_login_passwordReminder';
 
@@ -81,10 +83,10 @@ describe('BO - Login : Password reminder', async () => {
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTeamPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.teamLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.teamLink,
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);
@@ -123,19 +125,19 @@ describe('BO - Login : Password reminder', async () => {
     it('should go to BO login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBOLoginPage', baseContext);
 
-      await loginPage.goTo(page, global.BO.URL);
+      await boLoginPage.goTo(page, global.BO.URL);
 
-      const pageTitle = await loginPage.getPageTitle(page);
-      expect(pageTitle).to.contains(loginPage.pageTitle);
+      const pageTitle = await boLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLoginPage.pageTitle);
     });
 
     it('should send reset password mail', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendResetPasswordMailAndCheckSuccess', baseContext);
 
-      await loginPage.sendResetPasswordLink(page, createEmployeeData.email);
+      await boLoginPage.sendResetPasswordLink(page, createEmployeeData.email);
 
-      const successTextContent = await loginPage.getResetPasswordSuccessMessage(page);
-      expect(successTextContent).to.contains(loginPage.resetPasswordSuccessText);
+      const successTextContent = await boLoginPage.getResetPasswordSuccessMessage(page);
+      expect(successTextContent).to.contains(boLoginPage.resetPasswordSuccessText);
     });
 
     it('should check if reset password mail is in mailbox', async function () {
@@ -153,10 +155,10 @@ describe('BO - Login : Password reminder', async () => {
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDelete', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.teamLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.teamLink,
       );
 
       const pageTitle = await employeesPage.getPageTitle(page);

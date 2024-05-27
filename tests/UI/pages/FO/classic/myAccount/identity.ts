@@ -60,6 +60,8 @@ class AccountIdentityPage extends FOBasePage {
 
   private readonly customerPrivacyCheckbox: string;
 
+  private readonly psgdprLabel: string;
+
   private readonly psgdprCheckbox: string;
 
   private readonly newsletterCheckbox: string;
@@ -104,6 +106,7 @@ class AccountIdentityPage extends FOBasePage {
     this.newPasswordInput = `${this.createAccountForm} #field-new_password`;
     this.birthdateInput = `${this.createAccountForm} #field-birthday`;
     this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;
+    this.psgdprLabel = `${this.createAccountForm} label[for="field-psgdpr"] + div > span.custom-checkbox > label`;
     this.psgdprCheckbox = `${this.createAccountForm} input[name='psgdpr']`;
     this.newsletterCheckbox = `${this.createAccountForm} input[name=newsletter]`;
     this.saveButton = `${this.createAccountForm} .form-control-submit`;
@@ -190,6 +193,24 @@ class AccountIdentityPage extends FOBasePage {
     await this.clickAndWaitForLoadState(page, this.saveButton);
 
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Return if the GDPR field is present
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async hasGDPRLabel(page: Page): Promise<boolean> {
+    return await page.locator(this.psgdprLabel).count() !== 0;
+  }
+
+  /**
+   * Return the label for the GDPR field
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getGDPRLabel(page: Page): Promise<string> {
+    return this.getTextContent(page, this.psgdprLabel);
   }
 }
 

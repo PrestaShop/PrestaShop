@@ -7,11 +7,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
 import importPage from '@pages/BO/advancedParameters/import';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_import_downloadSampleFiles';
 
@@ -37,10 +37,10 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
   it('should go to \'Advanced Parameters > Import\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToImportPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.advancedParametersLink,
-      dashboardPage.importLink,
+      boDashboardPage.advancedParametersLink,
+      boDashboardPage.importLink,
     );
     await importPage.closeSfToolBar(page);
 

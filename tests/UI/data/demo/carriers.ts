@@ -28,6 +28,7 @@ export default {
     delay: 'Buy more to pay less!',
     enable: false,
     freeShipping: false,
+    priceTTC: 6.00,
     position: 3,
   }),
   lightCarrier: new FakerCarrier({

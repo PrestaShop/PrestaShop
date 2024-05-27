@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Repository;
 
-use function bqSQL;
 use Db;
 use DbQuery;
 use ObjectModel;
@@ -153,16 +152,16 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
         $query = new DbQuery();
         if (Shop::isTableAssociated($objectTable)) {
             $query
-                ->select('e.`' . bqSQL($primaryColumn) . '` as id')
-                ->from(bqSQL($objectTable) . '_shop', 'e')
-                ->where('e.`' . bqSQL($primaryColumn) . '` = ' . $id)
+                ->select('e.`' . \bqSQL($primaryColumn) . '` as id')
+                ->from(\bqSQL($objectTable) . '_shop', 'e')
+                ->where('e.`' . \bqSQL($primaryColumn) . '` = ' . $id)
                 ->where('e.`id_shop` = ' . $shopId->getValue())
             ;
         } elseif (!empty($modelDefinition['multilang_shop'])) {
             $query
-                ->select('e.`' . bqSQL($primaryColumn) . '` as id')
-                ->from(bqSQL($objectTable) . '_lang', 'e')
-                ->where('e.`' . bqSQL($primaryColumn) . '` = ' . $id)
+                ->select('e.`' . \bqSQL($primaryColumn) . '` as id')
+                ->from(\bqSQL($objectTable) . '_lang', 'e')
+                ->where('e.`' . \bqSQL($primaryColumn) . '` = ' . $id)
                 ->where('e.`id_shop` = ' . $shopId->getValue())
             ;
         } else {
@@ -260,20 +259,20 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
         $primaryColumn = $modelDefinition['primary'];
 
         $query = new DbQuery();
-        $primaryColumn = 'e.`' . bqSQL($primaryColumn) . '`';
+        $primaryColumn = 'e.`' . \bqSQL($primaryColumn) . '`';
         $shopColumn = 'e.`id_shop`';
         if (Shop::isTableAssociated($objectTable)) {
             $query
                 ->select($shopColumn . ' AS id_shop')
                 ->where($primaryColumn . ' = ' . $id)
-                ->from(bqSQL($objectTable) . '_shop', 'e')
+                ->from(\bqSQL($objectTable) . '_shop', 'e')
                 ->groupBy($shopColumn)
             ;
         } elseif (!empty($modelDefinition['multilang_shop'])) {
             $query
                 ->select($shopColumn . ' AS id_shop')
                 ->where($primaryColumn . ' = ' . $id)
-                ->from(bqSQL($objectTable) . '_lang', 'e')
+                ->from(\bqSQL($objectTable) . '_lang', 'e')
                 ->groupBy($shopColumn)
             ;
         } else {

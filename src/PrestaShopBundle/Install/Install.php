@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Install;
 
+use Contact;
+use Exception;
 use FileLogger as LegacyFileLogger;
 use Language as LanguageLegacy;
 use PhpEncryption;
@@ -43,6 +45,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Group;
 use PrestaShop\PrestaShop\Adapter\Entity\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Entity\ImageType;
 use PrestaShop\PrestaShop\Adapter\Entity\Language as EntityLanguage;
+use PrestaShop\PrestaShop\Adapter\Entity\Link;
 use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
 use PrestaShop\PrestaShop\Adapter\Entity\Module as ModuleEntity;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
@@ -167,10 +170,10 @@ class Install extends AbstractInstall
         ) {
             $this->setError(
                 $this->translator->trans(
-                '%folder% folder is not writable (check permissions)',
-                ['%folder%' => dirname($this->settingsFile)],
-                'Install'
-            )
+                    '%folder% folder is not writable (check permissions)',
+                    ['%folder%' => dirname($this->settingsFile)],
+                    'Install'
+                )
             );
 
             return false;
@@ -284,7 +287,7 @@ class Install extends AbstractInstall
         try {
             Tools::clearSf2Cache('prod');
             Tools::clearSf2Cache('dev');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->setError($e->getMessage());
 
             return false;
@@ -759,7 +762,7 @@ class Install extends AbstractInstall
     {
         $this->getLogger()->log('Configuring shop');
 
-        //clear image cache in tmp folder
+        // clear image cache in tmp folder
         if (file_exists(_PS_TMP_IMG_DIR_)) {
             foreach (scandir(_PS_TMP_IMG_DIR_, SCANDIR_SORT_NONE) as $file) {
                 if ($file[0] != '.' && $file != 'index.php') {
@@ -907,7 +910,7 @@ class Install extends AbstractInstall
         Configuration::updateGlobalValue('PS_LOGS_EMAIL_RECEIVERS', $data['admin_email']);
 
         $contacts = new PrestaShopCollection('Contact');
-        /** @var \Contact $contact */
+        /** @var Contact $contact */
         foreach ($contacts as $contact) {
             $contact->email = $data['admin_email'];
             $contact->update();
@@ -1183,7 +1186,7 @@ class Install extends AbstractInstall
         return true;
     }
 
-    public function installTheme(string $themeName = null): bool
+    public function installTheme(?string $themeName = null): bool
     {
         $themeName = $themeName ?: _THEME_NAME_;
         $this->getLogger()->log('Installing theme ' . $themeName);
@@ -1216,6 +1219,36 @@ class Install extends AbstractInstall
         foreach ($languages as $iso) {
             $this->copyLanguageImages($iso);
         }
+
+        return true;
+    }
+
+    public function finalize(?string $randomizedAdminFolderName = null): bool
+    {
+        $adminFolder = 'admin-dev';
+        if (file_exists(_PS_ROOT_DIR_ . '/admin/')) {
+            $randomizedAdminFolderName = $randomizedAdminFolderName ?? sprintf(
+                'admin%03d%s/',
+                mt_rand(0, 999),
+                Tools::strtolower(Tools::passwdGen(16))
+            );
+            $adminFolder = $randomizedAdminFolderName;
+
+            // rename folder
+            if (@rename(_PS_ROOT_DIR_ . '/admin/', _PS_ROOT_DIR_ . '/' . $randomizedAdminFolderName)) {
+                $successLogMessage = sprintf('The admin folder was renamed into %s', $randomizedAdminFolderName);
+                $this->getLogger()->log($successLogMessage);
+                $this->clearCache();
+            } else {
+                $this->setError($this->translator->trans('The admin folder could not be renamed into %folderName%', ['%folderName%' => $randomizedAdminFolderName], 'Install'));
+
+                return false;
+            }
+        }
+        Context::getContext()->shop = new Shop(1);
+        Context::getContext()->link = new Link();
+        $adminUrl = rtrim(Context::getContext()->link->getAdminBaseLink(), '/') . '/' . $adminFolder;
+        $this->getLogger()->log(sprintf('You can now access your backoffice at %s.', $adminUrl));
 
         return true;
     }

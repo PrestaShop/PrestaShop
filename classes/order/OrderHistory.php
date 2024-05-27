@@ -203,7 +203,7 @@ class OrderHistoryCore extends ObjectModel
             $error_or_canceled_statuses = [Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED')];
 
             $employee = null;
-            if (!(int) $this->id_employee || !Validate::isLoadedObject(($employee = new Employee((int) $this->id_employee)))) {
+            if (!(int) $this->id_employee || !Validate::isLoadedObject($employee = new Employee((int) $this->id_employee))) {
                 if (!Validate::isLoadedObject($old_os) && $context != null) {
                     // First OrderHistory, there is no $old_os, so $employee is null before here
                     $employee = $context->employee; // filled if from BO and order created (because no old_os)
@@ -222,8 +222,8 @@ class OrderHistoryCore extends ObjectModel
                     if ($new_os->logable && !$old_os->logable) {
                         ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
                         // @since 1.5.0 - Stock Management
-                        if (!Pack::isPack($product['product_id']) &&
-                            in_array($old_os->id, $error_or_canceled_statuses)) {
+                        if (!Pack::isPack($product['product_id'])
+                            && in_array($old_os->id, $error_or_canceled_statuses)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
                         }
                     } elseif (!$new_os->logable && $old_os->logable) {
@@ -231,13 +231,13 @@ class OrderHistoryCore extends ObjectModel
                         ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
 
                         // @since 1.5.0 - Stock Management
-                        if (!Pack::isPack($product['product_id']) &&
-                            in_array($new_os->id, $error_or_canceled_statuses)) {
+                        if (!Pack::isPack($product['product_id'])
+                            && in_array($new_os->id, $error_or_canceled_statuses)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
                         }
-                    } elseif (!$new_os->logable && !$old_os->logable &&
-                        in_array($new_os->id, $error_or_canceled_statuses) &&
-                        !in_array($old_os->id, $error_or_canceled_statuses)
+                    } elseif (!$new_os->logable && !$old_os->logable
+                        && in_array($new_os->id, $error_or_canceled_statuses)
+                        && !in_array($old_os->id, $error_or_canceled_statuses)
                     ) {
                         // if waiting for payment => payment error/canceled
                         StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
@@ -254,7 +254,7 @@ class OrderHistoryCore extends ObjectModel
                     if ($product_quantity > 0) {
                         $current_shop_context_type = Context::getContext()->shop->getContextType();
                         if ($current_shop_context_type !== Shop::CONTEXT_SHOP) {
-                            //change to order shop context
+                            // change to order shop context
                             $current_shop_group_id = Context::getContext()->shop->getContextShopGroupID();
                             Context::getContext()->shop->setContext(Shop::CONTEXT_SHOP, $order->id_shop);
                         }
@@ -267,7 +267,7 @@ class OrderHistoryCore extends ObjectModel
                                 'id_stock_mvt_reason' => ($new_os->shipped == 1 ? Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON') : Configuration::get('PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON')),
                             ]
                         );
-                        //back to current shop context
+                        // back to current shop context
                         if ($current_shop_context_type !== Shop::CONTEXT_SHOP && isset($current_shop_group_id)) {
                             Context::getContext()->shop->setContext($current_shop_context_type, $current_shop_group_id);
                         }
@@ -361,7 +361,7 @@ class OrderHistoryCore extends ObjectModel
      *
      * @return bool
      */
-    public function addWithemail($autodate = true, $template_vars = false, Context $context = null)
+    public function addWithemail($autodate = true, $template_vars = false, ?Context $context = null)
     {
         $order = new Order($this->id_order);
 
@@ -426,7 +426,7 @@ class OrderHistoryCore extends ObjectModel
 
             if (Validate::isLoadedObject($order)) {
                 // Attach invoice and / or delivery-slip if they exists and status is set to attach them
-                if (($result['pdf_invoice'] || $result['pdf_delivery'])) {
+                if ($result['pdf_invoice'] || $result['pdf_delivery']) {
                     $currentLanguage = $context->language;
                     $orderLanguage = new Language((int) $order->id_lang);
                     $context->language = $orderLanguage;
@@ -521,7 +521,7 @@ class OrderHistoryCore extends ObjectModel
         $this->changeIdOrderState($this->id_order_state, $this->id_order);
 
         if ($sendemail) {
-            //Mail::Send requires link object on context and is not set when getting here
+            // Mail::Send requires link object on context and is not set when getting here
             $context = Context::getContext();
             if ($context->link == null) {
                 $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';

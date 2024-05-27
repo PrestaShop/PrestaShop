@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 // Import data
@@ -18,6 +17,7 @@ import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {boDashboardPage} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_apiresources_installation_disableEnableModule';
 
@@ -55,10 +55,10 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
       it('should go to \'Modules > Module Manager\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToModuleManagerPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.modulesParentLink,
-          dashboardPage.moduleManagerLink,
+          boDashboardPage.modulesParentLink,
+          boDashboardPage.moduleManagerLink,
         );
         await moduleManagerPage.closeSfToolBar(page);
 
@@ -88,10 +88,10 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
       it('should go to \'Advanced Parameters > API Client\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAdminAPIPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.advancedParametersLink,
-          dashboardPage.adminAPILink,
+          boDashboardPage.advancedParametersLink,
+          boDashboardPage.adminAPILink,
         );
 
         const pageTitle = await apiClientPage.getPageTitle(page);

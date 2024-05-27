@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 import countriesPage from '@pages/BO/international/locations/countries';
 // Import FO pages
@@ -25,6 +24,7 @@ import Carriers from '@data/demo/carriers';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
+  boDashboardPage,
   // Import data
   dataCountries,
   dataCustomers,
@@ -84,10 +84,10 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
     it('should go to \'International > Locations\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.internationalParentLink,
-        dashboardPage.locationsLink,
+        boDashboardPage.internationalParentLink,
+        boDashboardPage.locationsLink,
       );
       await zonesPage.closeSfToolBar(page);
 
@@ -146,10 +146,10 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.discountsLink,
       );
 
       const pageTitle = await cartRulesPage.getPageTitle(page);
