@@ -130,11 +130,6 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/add-to-wishlist.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2d96bb66d8541a89620d3c158ceef42b">
-        <source>Add to wishlist</source>
-        <target>Add to wishlist</target>
-        <note>Line: 37</note>
-      </trans-unit>
       <trans-unit id="31323452eb311e8fbef81c75d3062659">
         <source>No list found.</source>
         <target>No list found.</target>
@@ -163,6 +158,11 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/delete.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>Line: 31</note>
+      </trans-unit>
       <trans-unit id="a1cfe7cbeafd513db812282da3f01704">
         <source>Remove product from wishlist</source>
         <target>Remove product from wishlist</target>
@@ -206,11 +206,6 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/rename.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
-        <source>Cancel</source>
-        <target>Cancel</target>
-        <note>Line: 25</note>
-      </trans-unit>
       <trans-unit id="972d48662f3cf5d0514a3cbba209837a">
         <source>Wishlist name</source>
         <target>Wishlist name</target>

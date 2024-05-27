@@ -28,6 +28,21 @@ Comment: Confirm uninstall</note>
         <target><![CDATA[There was an error during the uninstallation. Please <a href="https://github.com/PrestaShop/PrestaShop/issues">open an issue</a> on the PrestaShop project.]]></target>
         <note>Line: 230</note>
       </trans-unit>
+      <trans-unit id="52f5e0bc3859bc5f5e25130b6c7e8881">
+        <source>Position</source>
+        <target>Position</target>
+        <note>Line: 278</note>
+      </trans-unit>
+      <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
+        <source>Description</source>
+        <target>Description</target>
+        <note>Line: 281</note>
+      </trans-unit>
+      <trans-unit id="06df33001c1d7187fdd81ea1f5b277aa">
+        <source>Actions</source>
+        <target>Actions</target>
+        <note>Line: 283</note>
+      </trans-unit>
       <trans-unit id="a596edf2f0e5ae9c2372c93e1c8fcc24">
         <source>Block updated</source>
         <target>Block updated</target>
@@ -57,21 +72,6 @@ Comment: Confirm uninstall</note>
         <source>An error occurred when removing block</source>
         <target>An error occurred when removing block</target>
         <note>Line: 528</note>
-      </trans-unit>
-      <trans-unit id="52f5e0bc3859bc5f5e25130b6c7e8881">
-        <source>Position</source>
-        <target>Position</target>
-        <note>Line: 278</note>
-      </trans-unit>
-      <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
-        <source>Description</source>
-        <target>Description</target>
-        <note>Line: 281</note>
-      </trans-unit>
-      <trans-unit id="06df33001c1d7187fdd81ea1f5b277aa">
-        <source>Actions</source>
-        <target>Actions</target>
-        <note>Line: 283</note>
       </trans-unit>
     </body>
   </file>
@@ -115,6 +115,11 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/appearance.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Save</target>
+        <note>Line: 63</note>
+      </trans-unit>
       <trans-unit id="156f728d597d7b34b3c4b9d567ebb328">
         <source>Customize Module Design</source>
         <target>Customize Module Design</target>
@@ -134,11 +139,6 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/content/config.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
-        <source>Save</source>
-        <target>Save</target>
-        <note>Line: 74</note>
-      </trans-unit>
       <trans-unit id="c177d75d997a0273d1cc5be2dc4ea701">
         <source>Reassurance Block</source>
         <target>Reassurance Block</target>
@@ -148,6 +148,15 @@ Comment: Confirm uninstall</note>
         <source>Return</source>
         <target>Return</target>
         <note>Line: 70</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/tabs/content/config_elements/cms.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="87d49200bfc48e0bcfd3bae27d5616f3">
+        <source>CMS Page</source>
+        <target>CMS Page</target>
+        <note>Line: 24</note>
       </trans-unit>
     </body>
   </file>
@@ -236,11 +245,6 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/content/listing.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="87d49200bfc48e0bcfd3bae27d5616f3">
-        <source>CMS Page</source>
-        <target>CMS Page</target>
-        <note>Line: 81</note>
-      </trans-unit>
       <trans-unit id="2fbc962c5748d8e3fb7ada6598049a67">
         <source>Block Content</source>
         <target>Block Content</target>
@@ -265,16 +269,6 @@ Comment: Confirm uninstall</note>
         <source>We recommend 3 blocks at maximum.</source>
         <target>We recommend 3 blocks at maximum.</target>
         <note>Line: 118</note>
-      </trans-unit>
-      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
-        <source>None</source>
-        <target>None</target>
-        <note>Line: 77</note>
-      </trans-unit>
-      <trans-unit id="334c4a4c42fdb79d7ebc3e73b517e6f8">
-        <source>none</source>
-        <target>none</target>
-        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>
@@ -308,6 +302,11 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/display/global.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
+        <source>None</source>
+        <target>None</target>
+        <note>Line: 93</note>
+      </trans-unit>
       <trans-unit id="23b5440c1d192315a80d4c47a0a6a777">
         <source>Header position on all pages</source>
         <target>Header position on all pages</target>
@@ -342,6 +341,11 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/display/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="334c4a4c42fdb79d7ebc3e73b517e6f8">
+        <source>none</source>
+        <target>none</target>
+        <note>Line: 41</note>
+      </trans-unit>
       <trans-unit id="3f01481a13daed04a03caaa1a28ab49f">
         <source>Main column</source>
         <target>Main column</target>

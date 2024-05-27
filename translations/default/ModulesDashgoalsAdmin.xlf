@@ -7,10 +7,10 @@
         <target>Dashboard Goals</target>
         <note>Line: 48</note>
       </trans-unit>
-      <trans-unit id="ac73c1d4a6befbca8cecf2171cd45d4f">
-        <source>Adds a block with your store's forecast.</source>
-        <target>Adds a block with your store's forecast.</target>
-        <note>Line: 50</note>
+      <trans-unit id="f8ba4f136132be32e4ddfdcc42ea44ab">
+        <source>Enrich your stats: add a block with your store’s forecast to always be one step ahead!</source>
+        <target>Enrich your stats: add a block with your store’s forecast to always be one step ahead!</target>
+        <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="86f5978d9b80124f509bdb71786e929e">
         <source>January</source>
@@ -92,11 +92,6 @@
         <target>Goal set:</target>
         <note>Line: 491</note>
       </trans-unit>
-      <trans-unit id="f8ba4f136132be32e4ddfdcc42ea44ab">
-        <source>Enrich your stats: add a block with your store’s forecast to always be one step ahead!</source>
-        <target>Enrich your stats: add a block with your store’s forecast to always be one step ahead!</target>
-        <note>Line: 49</note>
-      </trans-unit>
     </body>
   </file>
   <file original="modules/dashgoals/views/templates/hook/config.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -106,24 +101,24 @@
         <target>Conversion Rate</target>
         <note>Line: 33</note>
       </trans-unit>
-      <trans-unit id="e7935ae6c516d89405ec532359d2d75a">
-        <source>Traffic</source>
-        <target>Traffic</target>
-        <note>Line: 32</note>
-      </trans-unit>
-      <trans-unit id="8c804960da61b637c548c951652b0cac">
-        <source>Average Cart Value</source>
-        <target>Average Cart Value</target>
-        <note>Line: 34</note>
-      </trans-unit>
     </body>
   </file>
   <file original="modules/dashgoals/views/templates/hook/dashboard_zone_two.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="e7935ae6c516d89405ec532359d2d75a">
+        <source>Traffic</source>
+        <target>Traffic</target>
+        <note>Line: 58</note>
+      </trans-unit>
       <trans-unit id="3bb1503332637805beddb73a2dd1fe1b">
         <source>Conversion</source>
         <target>Conversion</target>
         <note>Line: 61</note>
+      </trans-unit>
+      <trans-unit id="8c804960da61b637c548c951652b0cac">
+        <source>Average Cart Value</source>
+        <target>Average Cart Value</target>
+        <note>Line: 64</note>
       </trans-unit>
       <trans-unit id="89c1265be62d3ba835a3d963db5956b0">
         <source>Forecast</source>

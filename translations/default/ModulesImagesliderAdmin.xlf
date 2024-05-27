@@ -62,11 +62,6 @@
         <target>Invalid filename.</target>
         <note>Line: 339</note>
       </trans-unit>
-      <trans-unit id="0f059227d0a750ce652337d911879671">
-        <source>The URL is not set.</source>
-        <target>The URL is not set.</target>
-        <note>Line: 352</note>
-      </trans-unit>
       <trans-unit id="8cf45ba354f4725ec8a0d31164910895">
         <source>The image is not set.</source>
         <target>The image is not set.</target>
