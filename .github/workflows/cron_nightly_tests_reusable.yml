@@ -226,7 +226,7 @@ jobs:
         name: Upload report
         with:
           name: reports_${{ env.GH_BRANCH }}
-          path: ${{ env.REPORTS_DIR }}
+          path: ${{ env.REPORTS_DIR }}-${{ env.TEST_CAMPAIGN }}
 
   # Second job: Merge Mochawesome reports and upload them on GCP
   ## Always executed even if tests are in error
@@ -258,7 +258,8 @@ jobs:
         name: Download reports
         with:
           name: reports_${{ env.GH_BRANCH }}
-          path: ${{ env.REPORTS_DIR }}
+          pattern: ${{ env.REPORTS_DIR }}-*
+          merge-multiple: true
 
       - name: Setup Node
         uses: actions/setup-node@v4
