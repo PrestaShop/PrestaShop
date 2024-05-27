@@ -47,5 +47,6 @@ export interface Attribute {
   group_id: number;
   group_name: string;
   name: string;
+  texture: string|null;
 }
 /* eslint-enable camelcase */

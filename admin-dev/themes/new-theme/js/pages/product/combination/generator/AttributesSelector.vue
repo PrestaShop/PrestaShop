@@ -111,6 +111,11 @@
                     v-if="attribute.color"
                     :style="`background-color: ${attribute.color}`"
                   />
+                  <span
+                    class="attribute-item-texture"
+                    v-if="attribute.texture"
+                    :style="`background: transparent url(${attribute.texture}) no-repeat; background-size: 100% auto;`"
+                  />
                   <span class="attribute-item-name">{{ attribute.name }}</span>
                 </div>
               </label>
@@ -406,7 +411,8 @@
             display: none;
           }
 
-          &-color {
+          &-color,
+          &-texture {
             display: block;
             width: 15px;
             height: 15px;
