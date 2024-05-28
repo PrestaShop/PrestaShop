@@ -35,6 +35,7 @@ use PrestaShopBundle\Entity\Employee\EmployeeSession;
 use PrestaShopBundle\EventListener\Admin\Context\ShopContextListener;
 use PrestaShopBundle\EventListener\Admin\EmployeeSessionSubscriber;
 use PrestaShopBundle\Security\Admin\EmployeeProvider;
+use PrestaShopBundle\Security\Admin\TokenAttributes;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 trait LoginTrait
@@ -61,6 +62,8 @@ trait LoginTrait
         $kernelBrowser->loginUser($employee, 'main', [
             EmployeeSessionSubscriber::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE => $employeeSession,
             ShopContextListener::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE => $shopConstraint,
+            // Simulate local IP address
+            TokenAttributes::IP_ADDRESS => '127.0.0.1',
         ]);
     }
 }
