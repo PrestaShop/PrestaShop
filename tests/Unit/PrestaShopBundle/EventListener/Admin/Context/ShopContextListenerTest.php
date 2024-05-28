@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\EventListener\Admin\Context\ShopContextListener;
+use PrestaShopBundle\Security\Admin\TokenAttributes;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -203,9 +204,9 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
 
         // Check the initial state of the token attribute
         if (null !== $originalTokenShopConstraint) {
-            $this->assertEquals($originalTokenShopConstraint, $security->getToken()->getAttribute(ShopContextListener::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE));
+            $this->assertEquals($originalTokenShopConstraint, $security->getToken()->getAttribute(TokenAttributes::SHOP_CONSTRAINT));
         } else {
-            $this->assertFalse($security->getToken()->hasAttribute(ShopContextListener::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE));
+            $this->assertFalse($security->getToken()->hasAttribute(TokenAttributes::SHOP_CONSTRAINT));
         }
         $listener->initShopContext($event);
 
@@ -213,9 +214,9 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
 
         // Check the updated state of the token attribute
         if (null !== $expectedTokenShopConstraint) {
-            $this->assertEquals($expectedTokenShopConstraint, $security->getToken()->getAttribute(ShopContextListener::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE));
+            $this->assertEquals($expectedTokenShopConstraint, $security->getToken()->getAttribute(TokenAttributes::SHOP_CONSTRAINT));
         } else {
-            $this->assertFalse($security->getToken()->hasAttribute(ShopContextListener::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE));
+            $this->assertFalse($security->getToken()->hasAttribute(TokenAttributes::SHOP_CONSTRAINT));
         }
     }
 
@@ -342,7 +343,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         $userMock = $this->createMock(UserInterface::class);
         $token = new UsernamePasswordToken($userMock, 'main', []);
         if (null !== $shopConstraint) {
-            $token->setAttribute(ShopContextListener::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE, $shopConstraint);
+            $token->setAttribute(TokenAttributes::SHOP_CONSTRAINT, $shopConstraint);
         }
         $securityMock->method('getToken')->willReturn($token);
 

@@ -61,8 +61,6 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
 {
     use TargetPathTrait;
 
-    public const EMPLOYEE_SESSION_TOKEN_ATTRIBUTE = '_employee_session';
-
     public function __construct(
         private readonly EmployeeProvider $employeeProvider,
         private readonly EmployeeRepository $employeeRepository,
@@ -102,7 +100,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         $this->entityManager->flush();
 
         // Set the EmployeeSession as a token attribute so that it is serialized in the session
-        $event->getAuthenticatedToken()->setAttribute(self::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE, $employeeSession);
+        $event->getAuthenticatedToken()->setAttribute(TokenAttributes::EMPLOYEE_SESSION, $employeeSession);
     }
 
     public function onLoginSuccess(LoginSuccessEvent $event): void
@@ -215,11 +213,11 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
 
     protected function getEmployeeSessionFromToken(): ?EmployeeSession
     {
-        if (!$this->security->getToken()?->hasAttribute(self::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE)) {
+        if (!$this->security->getToken()?->hasAttribute(TokenAttributes::EMPLOYEE_SESSION)) {
             return null;
         }
 
-        return $this->security->getToken()->getAttribute(self::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE);
+        return $this->security->getToken()->getAttribute(TokenAttributes::EMPLOYEE_SESSION);
     }
 
     protected function getIpAddressFromToken(): ?string
