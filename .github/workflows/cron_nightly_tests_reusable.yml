@@ -254,7 +254,7 @@ jobs:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         name: Download reports
         with:
           name: reports_${{ env.GH_BRANCH }}
