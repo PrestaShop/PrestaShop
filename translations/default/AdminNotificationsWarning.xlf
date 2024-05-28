@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="34ddce12eacd79ced0e326360863888f">
-        <source>No module has been installed.</source>
-        <target>No module has been installed.</target>
-        <note>Line: 545</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/images/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="729a51874fe901b092899e9e8b31c97a">
         <source>Are you sure?</source>
         <target>Are you sure?</target>
         <note>Line: 50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/stats/menu.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="34ddce12eacd79ced0e326360863888f">
+        <source>No module has been installed.</source>
+        <target>No module has been installed.</target>
+        <note>Line: 35</note>
       </trans-unit>
     </body>
   </file>
@@ -37,24 +37,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminImagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
-        <source>Delete selected items?</source>
-        <target>Delete selected items?</target>
-        <note>Line: 60</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
-        <source>Delete selected item?</source>
-        <target>Delete selected item?</target>
-        <note>Line: 566</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/gsitemap/gsitemap.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
@@ -64,12 +46,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/MerchandiseReturn/Configuration/MerchandiseReturnOptionsConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/Preferences/PreferencesConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="85265e940fbb820dd2475946e7bc48d9">
         <source>Invalid configuration</source>
         <target>Invalid configuration</target>
-        <note>Line: 64</note>
+        <note>Line: 75</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/CatalogPriceRuleGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
+        <source>Delete selected items?</source>
+        <target>Delete selected items?</target>
+        <note>Line: 343</note>
       </trans-unit>
     </body>
   </file>
@@ -87,7 +78,7 @@
       <trans-unit id="5887e86df08049bc0eab95e975e057c4">
         <source>Please select theme's import source.</source>
         <target>Please select theme's import source.</target>
-        <note>Line: 215</note>
+        <note>Line: 200</note>
       </trans-unit>
     </body>
   </file>
@@ -102,6 +93,11 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationItemType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
+        <source>Delete selected item?</source>
+        <target>Delete selected item?</target>
+        <note>Line: 94</note>
+      </trans-unit>
       <trans-unit id="400555f6e34160c3f31e229d1f7c88a6">
         <source>Delete selected item from current store?</source>
         <target>Delete selected item from current store?</target>
@@ -114,30 +110,26 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Type/EntitySearchInputType.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Details/FeatureValueType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e8cf85cec621489ec026f7e06c67eb4e">
         <source>Delete item</source>
         <target>Delete item</target>
-        <note>Line: 228</note>
+        <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="80ebdccece38141cd9c0f9b3b623091f">
+        <source>Are you sure you want to delete this item?</source>
+        <target>Are you sure you want to delete this item?</target>
+        <note>Line: 100</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Type/NumberMinMaxFilterType.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Type/IntegerMinMaxFilterType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c65196ecfecdada5e94d8d6ed8749789">
         <source>Maximum value must be higher than minimum value.</source>
         <target>Maximum value must be higher than minimum value.</target>
-        <note>Line: 61</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a157a50f5a421a7dfbdf280f3ff9d56e">
-        <source>You can't change the value of this configuration field in the context of this shop.</source>
-        <target>You can't change the value of this configuration field in the context of this shop.</target>
-        <note>Line: 72</note>
+        <note>Line: 67</note>
       </trans-unit>
     </body>
   </file>
@@ -146,21 +138,7 @@
       <trans-unit id="043f2b6920e5c8a140301051d18d8618">
         <source>Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.</source>
         <target>Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.</target>
-        <note>Line: 34</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/product.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="80ebdccece38141cd9c0f9b3b623091f">
-        <source>Are you sure you want to delete this item?</source>
-        <target>Are you sure you want to delete this item?</target>
-        <note>Line: 326</note>
-      </trans-unit>
-      <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
-        <source>Warning</source>
-        <target>Warning</target>
-        <note>Line: 252</note>
+        <note>Line: 33</note>
       </trans-unit>
     </body>
   </file>

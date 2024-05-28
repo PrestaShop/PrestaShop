@@ -7,11 +7,6 @@
         <target>Currency block</target>
         <note>Line: 48</note>
       </trans-unit>
-      <trans-unit id="80ed40ee905b534ee85ce49a54380107">
-        <source>Adds a block allowing customers to choose their preferred shopping currency.</source>
-        <target>Adds a block allowing customers to choose their preferred shopping currency.</target>
-        <note>Line: 48</note>
-      </trans-unit>
       <trans-unit id="f2fe6429e9a86a46f26a66cc63a836cc">
         <source>Offer your customers the possibility to buy matching items when on a product page.</source>
         <target>Offer your customers the possibility to buy matching items when on a product page.</target>

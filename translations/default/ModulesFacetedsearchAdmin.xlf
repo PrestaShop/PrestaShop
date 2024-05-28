@@ -17,10 +17,15 @@
         <target>Filter template name required (cannot be empty)</target>
         <note>Line: 606</note>
       </trans-unit>
-      <trans-unit id="8c97e587c1b4e519bec26f3903561da3">
-        <source>You must select at least one category.</source>
-        <target>You must select at least one category.</target>
-        <note>Line: 592</note>
+      <trans-unit id="9461ef0a8f8a2adbb3fa8ea0fda9949d">
+        <source>You must select at least one page.</source>
+        <target>You must select at least one page.</target>
+        <note>Line: 608</note>
+      </trans-unit>
+      <trans-unit id="d4513f10f8edb4426a5723738e129861">
+        <source>You must select at least one category if you want to use this filter template on category pages.</source>
+        <target>You must select at least one category if you want to use this filter template on category pages.</target>
+        <note>Line: 610</note>
       </trans-unit>
       <trans-unit id="817c37b9c1f5cd4a450dad384e63e6c7">
         <source>Your filter</source>
@@ -67,16 +72,6 @@
         <target>"%s" is not a valid url</target>
         <note>Line: 1382</note>
       </trans-unit>
-      <trans-unit id="9461ef0a8f8a2adbb3fa8ea0fda9949d">
-        <source>You must select at least one page.</source>
-        <target>You must select at least one page.</target>
-        <note>Line: 608</note>
-      </trans-unit>
-      <trans-unit id="d4513f10f8edb4426a5723738e129861">
-        <source>You must select at least one category if you want to use this filter template on category pages.</source>
-        <target>You must select at least one category if you want to use this filter template on category pages.</target>
-        <note>Line: 610</note>
-      </trans-unit>
       <trans-unit id="3adbdb3ac060038aa0e6e6c138ef9873">
         <source>Category</source>
         <target>Category</target>
@@ -119,12 +114,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_facetedsearch/src/Form/Attribute/FormModifier.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_facetedsearch/src/Form/AttributeGroup/FormModifier.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9e11e4b371570340ca07913bc4783a7a">
         <source>Meta title</source>
         <target>Meta title</target>
-        <note>Line: 89</note>
+        <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>
@@ -167,6 +162,16 @@
   </file>
   <file original="modules/ps_facetedsearch/views/templates/admin/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="18c6120643596bd2626f3b0720b1df3a">
+        <source>You must select at least one category</source>
+        <target>You must select at least one category</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="de9bebfdc6b9fc0ea050a478f27cbb92">
+        <source>You must select at least one page</source>
+        <target>You must select at least one page</target>
+        <note>Line: 30</note>
+      </trans-unit>
       <trans-unit id="dc3f85827350641490287c65c0c4ddf8">
         <source>You must select at least one filter</source>
         <target>You must select at least one filter</target>
@@ -253,6 +258,11 @@
         <target>Product stock filter</target>
         <note>Line: 95</note>
       </trans-unit>
+      <trans-unit id="4e0e25a7f0ffc6adce58b7fd3412cd35">
+        <source>Product extras filter</source>
+        <target>Product extras filter</target>
+        <note>Line: 127</note>
+      </trans-unit>
       <trans-unit id="048c1728a0a6cf36f56c9dcdd23d8a14">
         <source>Product condition filter</source>
         <target>Product condition filter</target>
@@ -273,95 +283,10 @@
         <target>Product price filter (slider)</target>
         <note>Line: 242</note>
       </trans-unit>
-      <trans-unit id="51e17eed0057675de4bde1b34206bb12">
-        <source>New filters template</source>
-        <target>New filters template</target>
-        <note>Line: 23</note>
-      </trans-unit>
-      <trans-unit id="88ec58dbbe7a8b727200696cfca4df3d">
-        <source>You can drag and drop filters to adjust position</source>
-        <target>You can drag and drop filters to adjust position</target>
-        <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="60266302eeda2ac9775c3a2036ae25ca">
-        <source>Filters:</source>
-        <target>Filters:</target>
-        <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="29da3cb8b65298a3e88f5041e9fb9761">
-        <source>Total filters: %s</source>
-        <target>Total filters: %s</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="379d3973e10dfd90c475060f31b9ae74">
-        <source>Filter result limit:</source>
-        <target>Filter result limit:</target>
-        <note>Line: 350</note>
-      </trans-unit>
-      <trans-unit id="284fd1ee8a33e84e08699ba0bbc44943">
-        <source>Filter style:</source>
-        <target>Filter style:</target>
-        <note>Line: 356</note>
-      </trans-unit>
-      <trans-unit id="4f8222964f9a317cef99dddc23a121bd">
-        <source>Checkbox</source>
-        <target>Checkbox</target>
-        <note>Line: 359</note>
-      </trans-unit>
-      <trans-unit id="07a9ca8c8228dd3399141e228034fedf">
-        <source>Radio button</source>
-        <target>Radio button</target>
-        <note>Line: 360</note>
-      </trans-unit>
-      <trans-unit id="5204077231fc7164e2269e96b584dd95">
-        <source>Drop-down list</source>
-        <target>Drop-down list</target>
-        <note>Line: 361</note>
-      </trans-unit>
-      <trans-unit id="ce9bd6e7a7bfa2fa2d9e43bc4fcfeb8a">
-        <source>List of ranges</source>
-        <target>List of ranges</target>
-        <note>Line: 250</note>
-      </trans-unit>
-      <trans-unit id="db6b86d05039c4f657a28647f8eb5140">
-        <source>Attribute group: %name% (%count% attributes)</source>
-        <target>Attribute group: %name% (%count% attributes)</target>
-        <note>Line: 270</note>
-      </trans-unit>
-      <trans-unit id="788a474b0e55d612b3d500743c6251a0">
-        <source>Attribute group: %name% (%count% attribute)</source>
-        <target>Attribute group: %name% (%count% attribute)</target>
-        <note>Line: 279</note>
-      </trans-unit>
-      <trans-unit id="ee59f74265cd7f85d0ad30206a1a89b0">
-        <source>This group will allow user to select a color</source>
-        <target>This group will allow user to select a color</target>
-        <note>Line: 289</note>
-      </trans-unit>
-      <trans-unit id="4127fb33c1db9597f3c881ae057f1370">
-        <source>Feature: %name% (%count% values)</source>
-        <target>Feature: %name% (%count% values)</target>
-        <note>Line: 329</note>
-      </trans-unit>
-      <trans-unit id="cadad7b648bb2b1d3f22421b00a14fd2">
-        <source>Feature: %name% (%count% value)</source>
-        <target>Feature: %name% (%count% value)</target>
-        <note>Line: 338</note>
-      </trans-unit>
-      <trans-unit id="4e0e25a7f0ffc6adce58b7fd3412cd35">
-        <source>Product extras filter</source>
-        <target>Product extras filter</target>
-        <note>Line: 127</note>
-      </trans-unit>
     </body>
   </file>
   <file original="modules/ps_facetedsearch/views/templates/admin/manage.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="18c6120643596bd2626f3b0720b1df3a">
-        <source>You must select at least one category</source>
-        <target>You must select at least one category</target>
-        <note>Line: 325</note>
-      </trans-unit>
       <trans-unit id="df2bbc994d10995dcffdf96dbb7acbb1">
         <source>Indexes and caches</source>
         <target>Indexes and caches</target>
@@ -392,15 +317,30 @@
         <target>Clear cache</target>
         <note>Line: 31</note>
       </trans-unit>
-      <trans-unit id="53795c3624ae2361363780589aa2aa42">
-        <source>You can set a cron job that will rebuild price index using the following URL:</source>
-        <target>You can set a cron job that will rebuild price index using the following URL:</target>
+      <trans-unit id="7ee2f2da463bebd7507e3e0a39de6e99">
+        <source>We recommend to set regular cron tasks to manage the indexes and cache on daily/weekly basis.</source>
+        <target>We recommend to set regular cron tasks to manage the indexes and cache on daily/weekly basis.</target>
         <note>Line: 36</note>
       </trans-unit>
-      <trans-unit id="e43b32b88c77e49f06144cd1ffaeba96">
-        <source>You can set a cron job that will rebuild attribute index using the following URL:</source>
-        <target>You can set a cron job that will rebuild attribute index using the following URL:</target>
-        <note>Line: 41</note>
+      <trans-unit id="964f08f089bd198a3b5433045510556b">
+        <source>Add missing products to price index:</source>
+        <target>Add missing products to price index:</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="d5da9a4cccaf88f37b2e097a9d34a836">
+        <source>Rebuild price index:</source>
+        <target>Rebuild price index:</target>
+        <note>Line: 40</note>
+      </trans-unit>
+      <trans-unit id="203b4e9a5b29bb6ed5aeb6d0692941ce">
+        <source>Rebuild attribute index:</source>
+        <target>Rebuild attribute index:</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="2707341ee97a7c74914e0d59adbcf5ab">
+        <source>Flush block cache:</source>
+        <target>Flush block cache:</target>
+        <note>Line: 44</note>
       </trans-unit>
       <trans-unit id="16349835364cf839e6670b0de7da6362">
         <source>A nightly rebuild is recommended.</source>
@@ -442,15 +382,30 @@
         <target>Enable cache system</target>
         <note>Line: 115</note>
       </trans-unit>
+      <trans-unit id="5466dc891d678f772cc36162753e92fa">
+        <source>This option caches filtering blocks, so the module does not have to query for matching products all the time. The cache is invalidated on every modification on your store. If you encounter some incosistencies, disable this cache or make sure to flush it if needed.</source>
+        <target>This option caches filtering blocks, so the module does not have to query for matching products all the time. The cache is invalidated on every modification on your store. If you encounter some incosistencies, disable this cache or make sure to flush it if needed.</target>
+        <note>Line: 131</note>
+      </trans-unit>
       <trans-unit id="8531c73de81b9ed94322dda7cf947daa">
         <source>Show the number of matching products</source>
         <target>Show the number of matching products</target>
         <note>Line: 137</note>
       </trans-unit>
+      <trans-unit id="2829d57ed813ec86c807b7dde4fe140c">
+        <source>Enable or disable display of matching products after filters. Disabling this won't bring any performance benefit, because matching products need to be calculated anyway.</source>
+        <target>Enable or disable display of matching products after filters. Disabling this won't bring any performance benefit, because matching products need to be calculated anyway.</target>
+        <note>Line: 153</note>
+      </trans-unit>
       <trans-unit id="ee61c015043c79c1370fc14980dd27b9">
         <source>Show products from subcategories</source>
         <target>Show products from subcategories</target>
         <note>Line: 159</note>
+      </trans-unit>
+      <trans-unit id="86c8e8e4e43a8e6d27907e9cde0b3a71">
+        <source>Enable this, if you want to display products from subcategories, even if they are not specifically assigned to the currently browsed category.</source>
+        <target>Enable this, if you want to display products from subcategories, even if they are not specifically assigned to the currently browsed category.</target>
+        <note>Line: 175</note>
       </trans-unit>
       <trans-unit id="dea2248d77db1c9f755f80ca9f874be8">
         <source>Show products only from default category</source>
@@ -462,10 +417,15 @@
         <target>Works only if "Show products from subcategories" is off.</target>
         <note>Line: 197</note>
       </trans-unit>
-      <trans-unit id="a19399fa42f1ab059401a14b9f13eba1">
-        <source>Category filter depth (0 for no limits, 1 by default)</source>
-        <target>Category filter depth (0 for no limits, 1 by default)</target>
-        <note>Line: 187</note>
+      <trans-unit id="dc668816c4d715e1021b44a4823924a4">
+        <source>Category filter depth</source>
+        <target>Category filter depth</target>
+        <note>Line: 203</note>
+      </trans-unit>
+      <trans-unit id="917b770ceaad28f806736a648ff6e0d6">
+        <source>This option controls the behavior of category filter block - how deep children of the currently browsed category you want to display? The default value is 1 - only the direct children. Use 0 for unlimited depth.</source>
+        <target>This option controls the behavior of category filter block - how deep children of the currently browsed category you want to display? The default value is 1 - only the direct children. Use 0 for unlimited depth.</target>
+        <note>Line: 209</note>
       </trans-unit>
       <trans-unit id="3e652bd299bb3ee3d458c0dcc7fd706e">
         <source>Use tax to filter price</source>
@@ -481,6 +441,26 @@
         <source>Show unavailable, out of stock last</source>
         <target>Show unavailable, out of stock last</target>
         <note>Line: 249</note>
+      </trans-unit>
+      <trans-unit id="2e465237d27547eb60889256909234e7">
+        <source>Use Jquery UI slider</source>
+        <target>Use Jquery UI slider</target>
+        <note>Line: 266</note>
+      </trans-unit>
+      <trans-unit id="1adb03626a4e0c1aaa27bf37f0f1096b">
+        <source>Switch this off only if your theme does not use Jquery UI slider. It is recommended to keep it on when using classic theme.</source>
+        <target>Switch this off only if your theme does not use Jquery UI slider. It is recommended to keep it on when using classic theme.</target>
+        <note>Line: 282</note>
+      </trans-unit>
+      <trans-unit id="b4f8e8e66907c50c52c0ad3bd31e29b0">
+        <source>Default filter template for new categories</source>
+        <target>Default filter template for new categories</target>
+        <note>Line: 288</note>
+      </trans-unit>
+      <trans-unit id="9e80bb018eeeced7e38da900e5f47135">
+        <source>If you want to automatically assign a filter template to new categories, select it here.</source>
+        <target>If you want to automatically assign a filter template to new categories, select it here.</target>
+        <note>Line: 298</note>
       </trans-unit>
       <trans-unit id="56fc8142961f1f3e9f9ec0c178881b69">
         <source>(in progress)</source>
@@ -532,80 +512,84 @@
         <target>You selected -All categories-: all existing filter templates will be deleted. Is it OK?</target>
         <note>Line: 324</note>
       </trans-unit>
-      <trans-unit id="2e465237d27547eb60889256909234e7">
-        <source>Use Jquery UI slider</source>
-        <target>Use Jquery UI slider</target>
-        <note>Line: 266</note>
+    </body>
+  </file>
+  <file original="modules/ps_facetedsearch/views/templates/admin/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="51e17eed0057675de4bde1b34206bb12">
+        <source>New filters template</source>
+        <target>New filters template</target>
+        <note>Line: 23</note>
       </trans-unit>
-      <trans-unit id="1adb03626a4e0c1aaa27bf37f0f1096b">
-        <source>Switch this off only if your theme does not use Jquery UI slider. It is recommended to keep it on when using classic theme.</source>
-        <target>Switch this off only if your theme does not use Jquery UI slider. It is recommended to keep it on when using classic theme.</target>
-        <note>Line: 282</note>
-      </trans-unit>
-      <trans-unit id="b4f8e8e66907c50c52c0ad3bd31e29b0">
-        <source>Default filter template for new categories</source>
-        <target>Default filter template for new categories</target>
-        <note>Line: 288</note>
-      </trans-unit>
-      <trans-unit id="9e80bb018eeeced7e38da900e5f47135">
-        <source>If you want to automatically assign a filter template to new categories, select it here.</source>
-        <target>If you want to automatically assign a filter template to new categories, select it here.</target>
-        <note>Line: 298</note>
-      </trans-unit>
-      <trans-unit id="de9bebfdc6b9fc0ea050a478f27cbb92">
-        <source>You must select at least one page</source>
-        <target>You must select at least one page</target>
-        <note>Line: 326</note>
-      </trans-unit>
-      <trans-unit id="7ee2f2da463bebd7507e3e0a39de6e99">
-        <source>We recommend to set regular cron tasks to manage the indexes and cache on daily/weekly basis.</source>
-        <target>We recommend to set regular cron tasks to manage the indexes and cache on daily/weekly basis.</target>
+      <trans-unit id="88ec58dbbe7a8b727200696cfca4df3d">
+        <source>You can drag and drop filters to adjust position</source>
+        <target>You can drag and drop filters to adjust position</target>
         <note>Line: 36</note>
       </trans-unit>
-      <trans-unit id="964f08f089bd198a3b5433045510556b">
-        <source>Add missing products to price index:</source>
-        <target>Add missing products to price index:</target>
-        <note>Line: 38</note>
+      <trans-unit id="60266302eeda2ac9775c3a2036ae25ca">
+        <source>Filters:</source>
+        <target>Filters:</target>
+        <note>Line: 36</note>
       </trans-unit>
-      <trans-unit id="d5da9a4cccaf88f37b2e097a9d34a836">
-        <source>Rebuild price index:</source>
-        <target>Rebuild price index:</target>
-        <note>Line: 40</note>
-      </trans-unit>
-      <trans-unit id="203b4e9a5b29bb6ed5aeb6d0692941ce">
-        <source>Rebuild attribute index:</source>
-        <target>Rebuild attribute index:</target>
+      <trans-unit id="29da3cb8b65298a3e88f5041e9fb9761">
+        <source>Total filters: %s</source>
+        <target>Total filters: %s</target>
         <note>Line: 42</note>
       </trans-unit>
-      <trans-unit id="2707341ee97a7c74914e0d59adbcf5ab">
-        <source>Flush block cache:</source>
-        <target>Flush block cache:</target>
-        <note>Line: 44</note>
+      <trans-unit id="379d3973e10dfd90c475060f31b9ae74">
+        <source>Filter result limit:</source>
+        <target>Filter result limit:</target>
+        <note>Line: 190</note>
       </trans-unit>
-      <trans-unit id="5466dc891d678f772cc36162753e92fa">
-        <source>This option caches filtering blocks, so the module does not have to query for matching products all the time. The cache is invalidated on every modification on your store. If you encounter some incosistencies, disable this cache or make sure to flush it if needed.</source>
-        <target>This option caches filtering blocks, so the module does not have to query for matching products all the time. The cache is invalidated on every modification on your store. If you encounter some incosistencies, disable this cache or make sure to flush it if needed.</target>
-        <note>Line: 131</note>
+      <trans-unit id="284fd1ee8a33e84e08699ba0bbc44943">
+        <source>Filter style:</source>
+        <target>Filter style:</target>
+        <note>Line: 196</note>
       </trans-unit>
-      <trans-unit id="2829d57ed813ec86c807b7dde4fe140c">
-        <source>Enable or disable display of matching products after filters. Disabling this won't bring any performance benefit, because matching products need to be calculated anyway.</source>
-        <target>Enable or disable display of matching products after filters. Disabling this won't bring any performance benefit, because matching products need to be calculated anyway.</target>
-        <note>Line: 153</note>
+      <trans-unit id="4f8222964f9a317cef99dddc23a121bd">
+        <source>Checkbox</source>
+        <target>Checkbox</target>
+        <note>Line: 199</note>
       </trans-unit>
-      <trans-unit id="86c8e8e4e43a8e6d27907e9cde0b3a71">
-        <source>Enable this, if you want to display products from subcategories, even if they are not specifically assigned to the currently browsed category.</source>
-        <target>Enable this, if you want to display products from subcategories, even if they are not specifically assigned to the currently browsed category.</target>
-        <note>Line: 175</note>
+      <trans-unit id="07a9ca8c8228dd3399141e228034fedf">
+        <source>Radio button</source>
+        <target>Radio button</target>
+        <note>Line: 200</note>
       </trans-unit>
-      <trans-unit id="dc668816c4d715e1021b44a4823924a4">
-        <source>Category filter depth</source>
-        <target>Category filter depth</target>
-        <note>Line: 203</note>
+      <trans-unit id="5204077231fc7164e2269e96b584dd95">
+        <source>Drop-down list</source>
+        <target>Drop-down list</target>
+        <note>Line: 201</note>
       </trans-unit>
-      <trans-unit id="917b770ceaad28f806736a648ff6e0d6">
-        <source>This option controls the behavior of category filter block - how deep children of the currently browsed category you want to display? The default value is 1 - only the direct children. Use 0 for unlimited depth.</source>
-        <target>This option controls the behavior of category filter block - how deep children of the currently browsed category you want to display? The default value is 1 - only the direct children. Use 0 for unlimited depth.</target>
-        <note>Line: 209</note>
+      <trans-unit id="ce9bd6e7a7bfa2fa2d9e43bc4fcfeb8a">
+        <source>List of ranges</source>
+        <target>List of ranges</target>
+        <note>Line: 72</note>
+      </trans-unit>
+      <trans-unit id="db6b86d05039c4f657a28647f8eb5140">
+        <source>Attribute group: %name% (%count% attributes)</source>
+        <target>Attribute group: %name% (%count% attributes)</target>
+        <note>Line: 110</note>
+      </trans-unit>
+      <trans-unit id="788a474b0e55d612b3d500743c6251a0">
+        <source>Attribute group: %name% (%count% attribute)</source>
+        <target>Attribute group: %name% (%count% attribute)</target>
+        <note>Line: 119</note>
+      </trans-unit>
+      <trans-unit id="ee59f74265cd7f85d0ad30206a1a89b0">
+        <source>This group will allow user to select a color</source>
+        <target>This group will allow user to select a color</target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="4127fb33c1db9597f3c881ae057f1370">
+        <source>Feature: %name% (%count% values)</source>
+        <target>Feature: %name% (%count% values)</target>
+        <note>Line: 169</note>
+      </trans-unit>
+      <trans-unit id="cadad7b648bb2b1d3f22421b00a14fd2">
+        <source>Feature: %name% (%count% value)</source>
+        <target>Feature: %name% (%count% value)</target>
+        <note>Line: 178</note>
       </trans-unit>
     </body>
   </file>
@@ -616,10 +600,6 @@
         <target>URL</target>
         <note>Line: 21</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_facetedsearch/views/templates/hook/attribute_group_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="e919c0dcca631198a18993158182c96b">
         <source>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</source>
         <target>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</target>
@@ -630,6 +610,10 @@
         <target>When the Faceted Search module is enabled, you can get more detailed page titles by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</target>
         <note>Line: 72</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_facetedsearch/views/templates/hook/feature_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="28034a200e932f22b324a4dda1bb9f64">
         <source><![CDATA[Invalid characters: <>;=#{}_]]></source>
         <target><![CDATA[Invalid characters: <>;=#{}_]]></target>
@@ -645,10 +629,6 @@
         <target>Use this attribute in URL generated by the Faceted Search module.</target>
         <note>Line: 93</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_facetedsearch/views/templates/hook/feature_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="81e6451dad5734120899da86f7da4e4e">
         <source>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this feature. By default, PrestaShop uses the feature's name, but you can change that setting using this field.</source>
         <target>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this feature. By default, PrestaShop uses the feature's name, but you can change that setting using this field.</target>

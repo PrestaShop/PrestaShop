@@ -7,9 +7,9 @@
         <target>404 error</target>
         <note>Line: 26</note>
       </trans-unit>
-      <trans-unit id="bd7929bc6bed5d8ec99db715a980ba04">
-        <source>Best sales</source>
-        <target>Best sales</target>
+      <trans-unit id="01f7ac959c1e6ebbb2e0ee706a7a5255">
+        <source>Best sellers</source>
+        <target>Best sellers</target>
         <note>Line: 27</note>
       </trans-unit>
       <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
@@ -17,9 +17,9 @@
         <target>Contact us</target>
         <note>Line: 28</note>
       </trans-unit>
-      <trans-unit id="2377be3c2ad9b435ba277a73f0f1ca76">
-        <source>Manufacturers</source>
-        <target>Manufacturers</target>
+      <trans-unit id="84be54bb4bd1b755a27d86388700d097">
+        <source>Brands</source>
+        <target>Brands</target>
         <note>Line: 29</note>
       </trans-unit>
       <trans-unit id="9ff0635f5737513b1a6f559ac2bff745">
@@ -142,15 +142,10 @@
         <target>Use our form to contact us</target>
         <note>Line: 55</note>
       </trans-unit>
-      <trans-unit id="94aafa0c1ac39af1afaa0e798b2bad73">
-        <source>Shop powered by PrestaShop</source>
-        <target>Shop powered by PrestaShop</target>
+      <trans-unit id="05c4839b0cd3c14808607f8efac33604">
+        <source>Brands list</source>
+        <target>Brands list</target>
         <note>Line: 57</note>
-      </trans-unit>
-      <trans-unit id="67c2b2e2172f6d03a44c4a93adbb4845">
-        <source>Brand list</source>
-        <target>Brand list</target>
-        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="f048e5676a4e7e45acea76628b628cf8">
         <source>Our new products</source>
@@ -162,10 +157,10 @@
         <target>Enter the e-mail address you use to sign in to receive an e-mail with a new password</target>
         <note>Line: 61</note>
       </trans-unit>
-      <trans-unit id="feb65ab262a484a24e2d6229ff42b136">
-        <source>On-sale products</source>
-        <target>On-sale products</target>
-        <note>Line: 65</note>
+      <trans-unit id="0553039d9d0270126b1c1eb150024896">
+        <source>Our special products</source>
+        <target>Our special products</target>
+        <note>Line: 63</note>
       </trans-unit>
       <trans-unit id="86791147a83e82f4bf90927c84fa3f6f">
         <source>Lost ? Find what your are looking for</source>
@@ -182,20 +177,20 @@
         <target>page-not-found</target>
         <note>Line: 68</note>
       </trans-unit>
-      <trans-unit id="2c9ff64fb8c71aa15080de697586fe68">
-        <source>best-sales</source>
-        <target>best-sales</target>
-        <note>Line: 71</note>
+      <trans-unit id="2e17b47c6438a2a4273e5bca5461c817">
+        <source>best-sellers</source>
+        <target>best-sellers</target>
+        <note>Line: 69</note>
       </trans-unit>
       <trans-unit id="03f2197d47a602c679c5f667e3482855">
         <source>contact-us</source>
         <target>contact-us</target>
         <note>Line: 70</note>
       </trans-unit>
-      <trans-unit id="077326568c4bb9ed153c12c171827a54">
-        <source>manufacturers</source>
-        <target>manufacturers</target>
-        <note>Line: 73</note>
+      <trans-unit id="633fb5d52c05cf5e69790ed8a01e0260">
+        <source>brands</source>
+        <target>brands</target>
+        <note>Line: 71</note>
       </trans-unit>
       <trans-unit id="169c4f8c3dcee7feff031dd2a73a44fb">
         <source>new-products</source>
@@ -217,10 +212,10 @@
         <target>sitemap</target>
         <note>Line: 75</note>
       </trans-unit>
-      <trans-unit id="99b0e8da24e29e4ccb5d7d76e677c2ac">
-        <source>supplier</source>
-        <target>supplier</target>
-        <note>Line: 78</note>
+      <trans-unit id="d9ddf16079b7ba158c82e819d2c363d1">
+        <source>suppliers</source>
+        <target>suppliers</target>
+        <note>Line: 76</note>
       </trans-unit>
       <trans-unit id="884d9804999fc47a3c2694e49ad2536a">
         <source>address</source>
@@ -301,41 +296,6 @@
         <source>order-confirmation</source>
         <target>order-confirmation</target>
         <note>Line: 92</note>
-      </trans-unit>
-      <trans-unit id="01f7ac959c1e6ebbb2e0ee706a7a5255">
-        <source>Best sellers</source>
-        <target>Best sellers</target>
-        <note>Line: 27</note>
-      </trans-unit>
-      <trans-unit id="84be54bb4bd1b755a27d86388700d097">
-        <source>Brands</source>
-        <target>Brands</target>
-        <note>Line: 29</note>
-      </trans-unit>
-      <trans-unit id="05c4839b0cd3c14808607f8efac33604">
-        <source>Brands list</source>
-        <target>Brands list</target>
-        <note>Line: 57</note>
-      </trans-unit>
-      <trans-unit id="0553039d9d0270126b1c1eb150024896">
-        <source>Our special products</source>
-        <target>Our special products</target>
-        <note>Line: 63</note>
-      </trans-unit>
-      <trans-unit id="2e17b47c6438a2a4273e5bca5461c817">
-        <source>best-sellers</source>
-        <target>best-sellers</target>
-        <note>Line: 69</note>
-      </trans-unit>
-      <trans-unit id="633fb5d52c05cf5e69790ed8a01e0260">
-        <source>brands</source>
-        <target>brands</target>
-        <note>Line: 71</note>
-      </trans-unit>
-      <trans-unit id="d9ddf16079b7ba158c82e819d2c363d1">
-        <source>suppliers</source>
-        <target>suppliers</target>
-        <note>Line: 76</note>
       </trans-unit>
     </body>
   </file>

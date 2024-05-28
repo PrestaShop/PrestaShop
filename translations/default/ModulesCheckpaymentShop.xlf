@@ -74,11 +74,6 @@
         <target>Mail to</target>
         <note>Line: 41</note>
       </trans-unit>
-      <trans-unit id="e1c54fdba2544646684f41ace03b5fda">
-        <source>Do not forget to insert your order number #%d.</source>
-        <target>Do not forget to insert your order number #%d.</target>
-        <note>Line: 53</note>
-      </trans-unit>
       <trans-unit id="4761b03b53bc2b3bd948bb7443a26f31">
         <source>Do not forget to insert your order reference %s.</source>
         <target>Do not forget to insert your order reference %s.</target>
@@ -103,11 +98,6 @@
         <source>customer service department.</source>
         <target>customer service department.</target>
         <note>Line: 54</note>
-      </trans-unit>
-      <trans-unit id="9bdf695c5a30784327137011da6ef568">
-        <source>We have noticed that there is a problem with your order. If you think this is an error, you can contact our</source>
-        <target>We have noticed that there is a problem with your order. If you think this is an error, you can contact our</target>
-        <note>Line: 76</note>
       </trans-unit>
     </body>
   </file>

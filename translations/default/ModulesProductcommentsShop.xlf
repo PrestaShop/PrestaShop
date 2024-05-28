@@ -60,15 +60,15 @@
         <target>You already reported this review as abusive.</target>
         <note>Line: 83</note>
       </trans-unit>
-      <trans-unit id="198645056f217f726ff1dc6e65ccc322">
-        <source>Cannot find the requested product review.</source>
-        <target>Cannot find the requested product review.</target>
-        <note>Line: 63</note>
-      </trans-unit>
     </body>
   </file>
   <file original="modules/productcomments/controllers/front/UpdateCommentUsefulness.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="198645056f217f726ff1dc6e65ccc322">
+        <source>Cannot find the requested product review.</source>
+        <target>Cannot find the requested product review.</target>
+        <note>Line: 87</note>
+      </trans-unit>
       <trans-unit id="4ab403bbf7563d87b327f2a9b2e04baa">
         <source>This feature is not enabled.</source>
         <target>This feature is not enabled.</target>
@@ -134,65 +134,70 @@
         <target>Sorry, your review cannot be posted.</target>
         <note>Line: 27</note>
       </trans-unit>
+      <trans-unit id="679d1d67dad6a3df0f8188a939c321e6">
+        <source>Please choose a rating for your review.</source>
+        <target>Please choose a rating for your review.</target>
+        <note>Line: 28</note>
+      </trans-unit>
       <trans-unit id="b78a3223503896721cca1303f776159b">
         <source>Title</source>
         <target>Title</target>
-        <note>Line: 101</note>
+        <note>Line: 103</note>
       </trans-unit>
       <trans-unit id="221e705c06e231636fdbccfdd14f4d5c">
         <source>Your name</source>
         <target>Your name</target>
-        <note>Line: 96</note>
+        <note>Line: 98</note>
       </trans-unit>
       <trans-unit id="457dd55184faedb7885afd4009d70163">
         <source>Review</source>
         <target>Review</target>
-        <note>Line: 105</note>
+        <note>Line: 107</note>
       </trans-unit>
       <trans-unit id="70397c4b252a5168c5ec003931cea215">
         <source>Required fields</source>
         <target>Required fields</target>
-        <note>Line: 112</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="ea4788705e6873b424c65e91c2846b19">
         <source>Cancel</source>
         <target>Cancel</target>
-        <note>Line: 116</note>
+        <note>Line: 118</note>
       </trans-unit>
       <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3">
         <source>Send</source>
         <target>Send</target>
-        <note>Line: 119</note>
+        <note>Line: 121</note>
       </trans-unit>
       <trans-unit id="b20968d9aecd2d075519992e9e2f1ffe">
         <source>Your comment has been submitted and will be available once approved by a moderator.</source>
         <target>Your comment has been submitted and will be available once approved by a moderator.</target>
-        <note>Line: 131</note>
+        <note>Line: 133</note>
       </trans-unit>
       <trans-unit id="9a2ccd41653469a8bd94fbb84b271a14">
         <source>Your comment has been added!</source>
         <target>Your comment has been added!</target>
-        <note>Line: 133</note>
+        <note>Line: 135</note>
       </trans-unit>
       <trans-unit id="b0e34b92ce3d4073d645119d68c5d551">
         <source>Review sent</source>
         <target>Review sent</target>
-        <note>Line: 137</note>
+        <note>Line: 139</note>
       </trans-unit>
       <trans-unit id="ffe435d2d09dddbaa6927987bc8466a7">
         <source>Your review cannot be sent</source>
         <target>Your review cannot be sent</target>
-        <note>Line: 144</note>
-      </trans-unit>
-      <trans-unit id="7966126831926ad29c528b239d69f855">
-        <source>Write your review</source>
-        <target>Write your review</target>
-        <note>Line: 34</note>
+        <note>Line: 146</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/productcomments/views/templates/hook/product-additional-info.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="7966126831926ad29c528b239d69f855">
+        <source>Write your review</source>
+        <target>Write your review</target>
+        <note>Line: 45</note>
+      </trans-unit>
       <trans-unit id="a71a0229e164fecdcde3c4e0f40473fa">
         <source>Read user reviews</source>
         <target>Read user reviews</target>

@@ -5,17 +5,17 @@
       <trans-unit id="350bfcb1e3cfb28ddff48ce525d4f139">
         <source>DD</source>
         <target>DD</target>
-        <note>Line: 948</note>
+        <note>Line: 839</note>
       </trans-unit>
       <trans-unit id="ad05f78187c942f9dd521605fa81f1ba">
         <source>MM</source>
         <target>MM</target>
-        <note>Line: 949</note>
+        <note>Line: 840</note>
       </trans-unit>
       <trans-unit id="8df34bb962577b90d574a51ed2ca757f">
         <source>YYYY</source>
         <target>YYYY</target>
-        <note>Line: 950</note>
+        <note>Line: 841</note>
       </trans-unit>
     </body>
   </file>
@@ -29,7 +29,7 @@
       <trans-unit id="b8760dae14ad4963c909f83424de3e7f">
         <source>(E.g.: %date_format%)</source>
         <target>(E.g.: %date_format%)</target>
-        <note>Line: 215</note>
+        <note>Line: 217</note>
       </trans-unit>
     </body>
   </file>
@@ -101,9 +101,9 @@
         <target>Your message here</target>
         <note>Line: 38</note>
       </trans-unit>
-      <trans-unit id="7e8cfff1e4f6fbdc4d6f4149c84e17ed">
-        <source>250 char. max</source>
-        <target>250 char. max</target>
+      <trans-unit id="636d7f8a501e2fc7140c273c9d4e766d">
+        <source>1024 char. max</source>
+        <target>1024 char. max</target>
         <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="9378eeabb3f4f2c5122659d50560a448">
