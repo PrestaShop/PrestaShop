@@ -37,8 +37,6 @@ final class AttributeGroupFilters extends Filters
     /** @var string */
     protected $filterId = AttributeGroupGridDefinitionFactory::GRID_ID;
 
-    protected $needsToBePersisted = false;
-
     /**
      * {@inheritdoc}
      */
@@ -47,7 +45,7 @@ final class AttributeGroupFilters extends Filters
         return [
             'limit' => 50,
             'offset' => 0,
-            'orderBy' => 'position',
+            'orderBy' => 'id',
             'sortOrder' => 'asc',
             'filters' => [],
         ];
