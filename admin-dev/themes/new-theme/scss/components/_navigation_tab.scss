@@ -20,4 +20,15 @@
       margin-bottom: 0;
     }
   }
+
+  &-footer {
+    padding: 0.625rem 0.9375rem;
+    background-color: $light-gray;
+    border-top: 1px solid $card-border-color;
+    @include border-radius(0 0 5px 5px);
+
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
 }
