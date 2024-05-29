@@ -90,10 +90,10 @@ class OrderConfirmationControllerCore extends FrontController
         // The confirmation link must contain a unique order secure key matching the key saved in database,
         // this prevents user to view other customer's order confirmations
         if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
-            if(stristr($redirectLink, '?')) {
-                Tools::redirect($redirectLink . '&slowvalidation');
+            if(Tools::isSubmit('slowvalidation')){
+                Tools::redirect($this->context->link->getPageLink('history', null, null, ['slowvalidation' => '1']));
             } else {
-                Tools::redirect($redirectLink . '?slowvalidation');
+                Tools::redirect($redirectLink);
             }
         }
 
