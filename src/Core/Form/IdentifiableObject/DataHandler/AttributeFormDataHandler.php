@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Handles data of submitted Attribute Group form.
@@ -56,13 +57,24 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        /** @var AttributeId $attributeId */
-        $attributeId = $this->commandBus->handle(new AddAttributeCommand(
+        $addAttributeCommand = new AddAttributeCommand(
             $data['attribute_group'],
             $data['name'],
             $data['color'] ?? '',
-            $data['shop_association']
-        ));
+            $data['shop_association'],
+        );
+
+        if (isset($data['texture'])) {
+            /** @var UploadedFile $file */
+            $file = $data['texture'];
+
+            $addAttributeCommand->setTextureFilePath(
+                $file->getPathname()
+            );
+        }
+
+        /** @var AttributeId $attributeId */
+        $attributeId = $this->commandBus->handle($addAttributeCommand);
 
         return $attributeId->getValue();
     }
@@ -77,6 +89,15 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
             ->setLocalizedNames($data['name'])
             ->setColor($data['color'])
             ->setAssociatedShopIds($data['shop_association']);
+
+        if (isset($data['texture'])) {
+            /** @var UploadedFile $file */
+            $file = $data['texture'];
+
+            $updateCommand->setTextureFilePath(
+                $file->getPathname()
+            );
+        }
 
         $this->commandBus->handle($updateCommand);
     }

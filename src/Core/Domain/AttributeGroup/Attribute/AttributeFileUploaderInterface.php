@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,11 +22,15 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% if record['texture'] is defined %}
-  <div class="attributes-color-container">
-    <img class="image-container" src="{{ record['texture'] }}" />
-  </div>
-{% else %}
-  <div style="background-color:{{ record[column.options.field] }};" class="attributes-color-container"></div>
-{% endif %}
+ */
+
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute;
+
+interface AttributeFileUploaderInterface
+{
+    /**
+     * @param string $filePath
+     * @param int $id
+     */
+    public function upload(string $filePath, int $id): void;
+}

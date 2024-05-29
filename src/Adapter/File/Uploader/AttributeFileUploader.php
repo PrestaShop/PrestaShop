@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,11 +22,31 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% if record['texture'] is defined %}
-  <div class="attributes-color-container">
-    <img class="image-container" src="{{ record['texture'] }}" />
-  </div>
-{% else %}
-  <div style="background-color:{{ record[column.options.field] }};" class="attributes-color-container"></div>
-{% endif %}
+ */
+
+namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
+
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\AttributeFileUploaderInterface;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeUploadFailedException;
+use PrestaShop\PrestaShop\Core\File\Exception\FileException;
+
+class AttributeFileUploader implements AttributeFileUploaderInterface
+{
+    public function upload(string $filePath, int $id): void
+    {
+        try {
+            if (file_exists($filePath)) {
+                move_uploaded_file($filePath, _PS_IMG_DIR_ . 'co/' . $id . '.jpg');
+            }
+        } catch (FileException $e) {
+            throw new AttributeUploadFailedException(sprintf('Failed to copy the file %s.', $filePath));
+        }
+    }
+
+    public function deleteOldFile(int $id): void
+    {
+        if (file_exists(_PS_IMG_DIR_ . 'co/' . $id . '.jpg')) {
+            unlink(_PS_IMG_DIR_ . 'co/' . $id . '.jpg');
+        }
+    }
+}

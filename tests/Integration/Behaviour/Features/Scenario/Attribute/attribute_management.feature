@@ -37,12 +37,14 @@ Feature: Attribute group management
       | name[fr-FR]     | Couleur           |
       | color           | #44DB6A           |
       | shopIds         | shop1,shop2,shop4 |
+      | texture         | null              |
     Then attribute "attribute1" should have the following properties:
       | attribute_group | attributeGroup1   |
       | name[en-US]     | Color             |
       | name[fr-FR]     | Couleur           |
       | color           | #44DB6A           |
       | shopIds         | shop1,shop2,shop4 |
+      | texture         | null              |
 
   Scenario: Editing attribute
     When I edit attribute "attribute1" with specified properties:
@@ -51,12 +53,14 @@ Feature: Attribute group management
       | name[fr-FR]     | Couleures       |
       | color           | #44DB6B         |
       | shopIds         | shop4           |
+      | texture         | null            |
     Then attribute "attribute1" should have the following properties:
       | attribute_group | attributeGroup2 |
       | name[en-US]     | Colores         |
       | name[fr-FR]     | Couleures       |
       | color           | #44DB6B         |
       | shopIds         | shop4           |
+      | texture         | null            |
     # Check partial updates
     When I edit attribute "attribute1" with specified properties:
       | attribute_group | attributeGroup1 |
@@ -101,7 +105,38 @@ Feature: Attribute group management
       | name[fr-FR]     | Couleur           |
       | color           | wrong_color       |
       | shopIds         | shop1,shop2,shop4 |
+      | texture         | null              |
     Then I should get an error that attribute field color value is invalid
+
+  Scenario: Adding new attribute with a texture
+    When I create attribute "attribute3" with specified properties:
+      | attribute_group | attributeGroup1   |
+      | name[en-US]     | Color             |
+      | name[fr-FR]     | Couleur           |
+      | color           | #44DB6B           |
+      | shopIds         | shop4             |
+      | texture         | logo.jpg          |
+    Then attribute "attribute3" should have the following properties:
+      | attribute_group | attributeGroup1   |
+      | name[en-US]     | Color             |
+      | name[fr-FR]     | Couleur           |
+      | color           | #44DB6B           |
+      | shopIds         | shop4             |
+      | texture         | logo.jpg          |
+    When I edit attribute "attribute3" with specified properties:
+      | attribute_group | attributeGroup1   |
+      | name[en-US]     | Color             |
+      | name[fr-FR]     | Couleur           |
+      | color           | #44DB6B           |
+      | shopIds         | shop4             |
+      | texture         | app_icon.png      |
+    Then attribute "attribute3" should have the following properties:
+      | attribute_group | attributeGroup1   |
+      | name[en-US]     | Color             |
+      | name[fr-FR]     | Couleur           |
+      | color           | #44DB6B           |
+      | shopIds         | shop4             |
+      | texture         | app_icon.png      |
 
   Scenario: Deleting attribute
     When I delete attribute "attribute1"

@@ -46,6 +46,8 @@ class EditAttributeCommand
 
     private ?string $color;
 
+    private ?string $pathName;
+
     /**
      * @var int[]
      */
@@ -123,6 +125,20 @@ class EditAttributeCommand
         $this->associatedShopIds = $associatedShopIds;
 
         return $this;
+    }
+
+    /**
+     * @param string $pathName
+     */
+    public function setTextureFilePath(
+        string $pathName,
+    ): void {
+        $this->pathName = $pathName;
+    }
+
+    public function getTextureFilePath(): ?string
+    {
+        return $this->pathName ?? null;
     }
 
     /**

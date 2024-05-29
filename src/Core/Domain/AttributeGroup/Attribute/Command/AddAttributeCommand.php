@@ -57,6 +57,11 @@ class AddAttributeCommand
     private $associatedShopIds;
 
     /**
+     * @var string|null
+     */
+    private $pathName;
+
+    /**
      * @param int $attributeGroupId
      * @param array $localizedValue
      * @param string $color
@@ -103,6 +108,20 @@ class AddAttributeCommand
     public function getAssociatedShopIds(): array
     {
         return $this->associatedShopIds;
+    }
+
+    /**
+     * @param string $pathName
+     */
+    public function setTextureFilePath(
+        string $pathName,
+    ): void {
+        $this->pathName = $pathName;
+    }
+
+    public function getTextureFilePath(): ?string
+    {
+        return $this->pathName;
     }
 
     /**
