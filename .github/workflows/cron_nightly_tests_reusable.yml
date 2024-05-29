@@ -225,8 +225,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         name: Upload report
         with:
-          name: reports_${{ env.GH_BRANCH }}
-          path: ${{ env.REPORTS_DIR }}-${{ env.TEST_CAMPAIGN }}
+          name: reports_${{ env.GH_BRANCH }}-${{ env.TEST_CAMPAIGN }}
+          path: ${{ env.REPORTS_DIR }}
 
   # Second job: Merge Mochawesome reports and upload them on GCP
   ## Always executed even if tests are in error
@@ -257,8 +257,8 @@ jobs:
       - uses: actions/download-artifact@v4
         name: Download reports
         with:
-          name: reports_${{ env.GH_BRANCH }}
-          pattern: ${{ env.REPORTS_DIR }}-*
+          pattern: reports_${{ env.GH_BRANCH }}-*
+          path: ${{ env.REPORTS_DIR }}
           merge-multiple: true
 
       - name: Setup Node
