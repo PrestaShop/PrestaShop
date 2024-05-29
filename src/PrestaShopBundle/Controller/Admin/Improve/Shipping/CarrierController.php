@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Shipping;
 
+use PrestaShop\PrestaShop\Adapter\Carrier\CarrierModuleAdviceAlertChecker;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\BulkDeleteCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\BulkToggleCarrierStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\DeleteCarrierCommand;
@@ -41,14 +43,15 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CarrierGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
-use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
-use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition;
 use PrestaShop\PrestaShop\Core\Search\Filters\CarrierFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,7 +59,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Responsible for handling "Improve > Shipping > Carriers" page.
  */
-class CarriersController extends FrameworkBundleAdminController
+class CarrierController extends PrestaShopAdminController
 {
     /**
      * Show carriers listing page
@@ -67,15 +70,19 @@ class CarriersController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, CarrierFilters $filters): Response
-    {
-        $carrierGridFactory = $this->get('prestashop.core.grid.factory.carrier');
+    public function indexAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.factory.carrier')]
+        GridFactoryInterface $carrierGridFactory,
+        CarrierFilters $filters,
+        CarrierModuleAdviceAlertChecker $carrierModuleAdviceAlertChecker,
+        EmployeeContext $employeeContext,
+    ): Response {
         $carrierGrid = $carrierGridFactory->getGrid($filters);
+        $showHeaderAlert = $carrierModuleAdviceAlertChecker->isAlertDisplayed();
 
-        $showHeaderAlert = $this->get('prestashop.adapter.carrier.carrier_module_advice_alert_checker')->isAlertDisplayed();
-
-        $showcaseCardIsClose = $this->getQueryBus()->handle(
-            new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::CARRIERS_CARD)
+        $showcaseCardIsClose = $this->dispatchQuery(
+            new GetShowcaseCardIsClosed($employeeContext->getEmployee()->getId(), ShowcaseCard::CARRIERS_CARD)
         );
 
         return $this->render('@PrestaShop/Admin/Improve/Shipping/Carriers/index.html.twig', [
@@ -86,7 +93,7 @@ class CarriersController extends FrameworkBundleAdminController
             'isShowcaseCardClosed' => $showcaseCardIsClose,
             'layoutHeaderToolbarBtn' => $this->getLayoutHeaderToolbarButtons(),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Carriers', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Carriers', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -98,13 +105,13 @@ class CarriersController extends FrameworkBundleAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function searchAction(Request $request): RedirectResponse
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.carrier'),
+    public function searchAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.definition.factory.carrier')]
+        GridDefinitionFactoryInterface $gridDefinitionFactory,
+    ): RedirectResponse {
+        return $this->buildSearchResponse(
+            $gridDefinitionFactory,
             $request,
             CarrierGridDefinitionFactory::GRID_ID,
             'admin_carriers_index'
@@ -121,7 +128,7 @@ class CarriersController extends FrameworkBundleAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function editAction(int $carrierId): RedirectResponse
     {
-        return $this->redirect($this->getAdminLink('AdminCarrierWizard', ['id_carrier' => $carrierId]));
+        return $this->redirect('');
     }
 
     /**
@@ -136,8 +143,8 @@ class CarriersController extends FrameworkBundleAdminController
     public function deleteAction(int $carrierId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteCarrierCommand($carrierId));
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->dispatchCommand(new DeleteCarrierCommand($carrierId));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (CarrierException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
@@ -157,11 +164,11 @@ class CarriersController extends FrameworkBundleAdminController
     public function toggleStatusAction(int $carrierId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new ToggleCarrierStatusCommand($carrierId));
+            $this->dispatchCommand(new ToggleCarrierStatusCommand($carrierId));
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (CarrierException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -182,11 +189,11 @@ class CarriersController extends FrameworkBundleAdminController
     public function toggleIsFreeAction(int $carrierId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new ToggleCarrierIsFreeCommand($carrierId));
+            $this->dispatchCommand(new ToggleCarrierIsFreeCommand($carrierId));
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (CarrierException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -204,23 +211,19 @@ class CarriersController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_carriers_index', message: 'You need permission to edit this.')]
-    public function updatePositionAction(Request $request): RedirectResponse
-    {
-        $positionsData = [
-            'positions' => $request->request->all('positions'),
-        ];
-
-        $positionDefinition = $this->get('prestashop.core.grid.carrier.position_definition');
-        $positionUpdateFactory = $this->get(PositionUpdateFactoryInterface::class);
-
+    public function updatePositionAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.carrier.position_definition')]
+        PositionDefinition $positionDefinition,
+    ): RedirectResponse {
         try {
-            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
-            $updater = $this->get(GridPositionUpdaterInterface::class);
-            $updater->update($positionUpdate);
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+            $this->updateGridPosition($positionDefinition, [
+                'positions' => $request->request->all('positions'),
+            ]);
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
         } catch (PositionUpdateException $e) {
             $errors = [$e->toArray()];
-            $this->flashErrors($errors);
+            $this->addFlashErrors($errors);
         }
 
         return $this->redirectToRoute('admin_carriers_index');
@@ -240,10 +243,10 @@ class CarriersController extends FrameworkBundleAdminController
         $carrierIds = $this->getCarrierIdsFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteCarrierCommand($carrierIds));
+            $this->dispatchCommand(new BulkDeleteCarrierCommand($carrierIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (CarrierException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -266,10 +269,10 @@ class CarriersController extends FrameworkBundleAdminController
         $carrierIds = $this->getCarrierIdsFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkToggleCarrierStatusCommand($carrierIds, true));
+            $this->dispatchCommand(new BulkToggleCarrierStatusCommand($carrierIds, true));
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (CarrierException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -292,10 +295,10 @@ class CarriersController extends FrameworkBundleAdminController
         $carrierIds = $this->getCarrierIdsFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkToggleCarrierStatusCommand($carrierIds, false));
+            $this->dispatchCommand(new BulkToggleCarrierStatusCommand($carrierIds, false));
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (CarrierException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -309,30 +312,36 @@ class CarriersController extends FrameworkBundleAdminController
         return [
             CarrierNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotToggleCarrierStatusException::class => [
                 CannotToggleCarrierStatusException::SINGLE_TOGGLE => $this->trans(
                     'An error occurred while updating the status for an object.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 CannotToggleCarrierStatusException::BULK_TOGGLE => $this->trans(
                     'An error occurred while updating the status.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             CannotDeleteCarrierException::class => [
                 CannotDeleteCarrierException::SINGLE_DELETE => $this->trans(
                     'An error occurred while deleting the object.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 CannotDeleteCarrierException::BULK_DELETE => $this->trans(
                     'An error occurred while deleting this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             CannotToggleCarrierIsFreeStatusException::class => $this->trans(
                 'An error occurred while updating the free shipping status.',
+                [],
                 'Admin.Shipping.Notification'
             ),
         ];
@@ -341,8 +350,8 @@ class CarriersController extends FrameworkBundleAdminController
     private function getLayoutHeaderToolbarButtons(): array
     {
         $toolbarButtons['add'] = [
-            'href' => $this->getAdminLink('AdminCarrierWizard', []),
-            'desc' => $this->trans('Add new carrier', 'Admin.Shipping.Feature'),
+            'href' => '',
+            'desc' => $this->trans('Add new carrier', [], 'Admin.Shipping.Feature'),
             'icon' => 'add_circle_outline',
         ];
 

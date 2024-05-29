@@ -26,8 +26,7 @@ services:
   prestashop.adapter.carrier.command_handler.bulk_toggle_carrier_status:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\BulkToggleCarrierStatusHandler'
 
-  prestashop.adapter.carrier.carrier_module_advice_alert_checker:
-    class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierModuleAdviceAlertChecker'
+  PrestaShop\PrestaShop\Adapter\Carrier\CarrierModuleAdviceAlertChecker: ~
 
   PrestaShop\PrestaShop\Adapter\Carrier\QueryHandler\GetCarrierForEditingHandler:
 
