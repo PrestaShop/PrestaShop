@@ -45,6 +45,8 @@ interface FormDataHandlerInterface
      *
      * @param int $id
      * @param array $data
+     *
+     * @return mixed Potential new ID of identifiable object
      */
     public function update($id, array $data);
 }
