@@ -42,6 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CarrierGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
@@ -118,17 +120,53 @@ class CarrierController extends PrestaShopAdminController
         );
     }
 
-    /**
-     * Redirect to carrier wizard for carrier editing.
-     *
-     * @param int $carrierId
-     *
-     * @return RedirectResponse
-     */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.carrier_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.carrier_form_handler')]
+        FormHandlerInterface $formHandler,
+    ): Response {
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+        $result = $formHandler->handle($form);
+
+        if ($result->isSubmitted() && $result->isValid()) {
+            $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_carriers_edit', ['carrierId' => $result->getIdentifiableObjectId()]);
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/Shipping/Carriers/form.html.twig', [
+            'layoutTitle' => $this->trans('New Carrier', [], 'Admin.Navigation.Menu'),
+            'carrierForm' => $form->createView(),
+        ]);
+    }
+
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
-    public function editAction(int $carrierId): RedirectResponse
-    {
-        return $this->redirect('');
+    public function editAction(
+        int $carrierId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.carrier_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.carrier_form_handler')]
+        FormHandlerInterface $formHandler,
+    ): Response {
+        $form = $formBuilder->getFormFor($carrierId);
+        $form->handleRequest($request);
+        $result = $formHandler->handleFor($carrierId, $form);
+
+        if ($result->isSubmitted() && $result->isValid()) {
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_carriers_edit', ['carrierId' => $result->getIdentifiableObjectId()]);
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/Shipping/Carriers/form.html.twig', [
+            'layoutTitle' => $this->trans('Carrier', [], 'Admin.Navigation.Menu'),
+            'carrierForm' => $form->createView(),
+        ]);
     }
 
     /**
@@ -350,7 +388,7 @@ class CarrierController extends PrestaShopAdminController
     private function getLayoutHeaderToolbarButtons(): array
     {
         $toolbarButtons['add'] = [
-            'href' => '',
+            'href' => $this->generateUrl('admin_carriers_create'),
             'desc' => $this->trans('Add new carrier', [], 'Admin.Shipping.Feature'),
             'icon' => 'add_circle_outline',
         ];

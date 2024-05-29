@@ -16,9 +16,17 @@ admin_carriers_search:
     _legacy_link: AdminCarriers:submitFiltercarrier
     _legacy_feature_flag: carrier
 
+admin_carriers_create:
+  path: /create
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarrierController::createAction'
+    _legacy_controller: AdminCarriers
+    _legacy_link: AdminCarriers:addcarrier
+
 admin_carriers_edit:
   path: /{carrierId}/edit
-  methods: GET
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarrierController::editAction'
     _legacy_controller: AdminCarriers
