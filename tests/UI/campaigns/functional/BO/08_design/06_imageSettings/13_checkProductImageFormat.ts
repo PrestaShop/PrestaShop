@@ -17,12 +17,12 @@ import {homePage} from '@pages/FO/classic/home';
 import {categoryPage} from '@pages/FO/classic/category';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_checkProductImageFormat';
 
@@ -32,17 +32,17 @@ describe('BO - Design - Image Settings - Check product image format', async () =
   let idProduct: number = 0;
   let idProductImage: number = 0;
 
-  const productDataJPG: ProductData = new ProductData({
+  const productDataJPG: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: 'coverJPG.jpg',
     status: true,
   });
-  const productDataPNG: ProductData = new ProductData({
+  const productDataPNG: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: 'coverPNG.png',
     status: true,
   });
-  const productDataWEBP: ProductData = new ProductData({
+  const productDataWEBP: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: 'coverWEBP.webp',
     status: true,
@@ -140,7 +140,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       extGenerated: 'jpg',
       extImageType: 'png',
     },
-  ].forEach((arg: {product: ProductData, extOriginal: string, extGenerated: string, extImageType: string}, index: number) => {
+  ].forEach((arg: {product: FakerProduct, extOriginal: string, extGenerated: string, extImageType: string}, index: number) => {
     describe(`Image Generation - Product - Image Format : ${arg.extOriginal.toUpperCase()}`, async () => {
       if (index) {
         it('should go to BO', async function () {
@@ -327,7 +327,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       product: productDataWEBP,
       extension: 'webp',
     },
-  ].forEach((arg: {product: ProductData, extension: string}) => {
+  ].forEach((arg: {product: FakerProduct, extension: string}) => {
     deleteProductTest(arg.product, `${baseContext}_removeProduct${arg.extension}`);
   });
 });

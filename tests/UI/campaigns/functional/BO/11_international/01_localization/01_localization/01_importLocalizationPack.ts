@@ -13,12 +13,10 @@ import languagesPage from '@pages/BO/international/languages';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 
-// Import data
-import Languages from '@data/demo/languages';
-
 import {
   boDashboardPage,
   dataCurrencies,
+  dataLanguages,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -104,10 +102,10 @@ describe('BO - International - Localization : Import a localization pack', async
     it('should change FO language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeFoLanguage', baseContext);
 
-      await foHomePage.changeLanguage(page, Languages.spanish.isoCode);
+      await foHomePage.changeLanguage(page, dataLanguages.spanish.isoCode);
 
       const shopLanguage = await foHomePage.getDefaultShopLanguage(page);
-      expect(Languages.spanish.name).to.contain(shopLanguage);
+      expect(dataLanguages.spanish.name).to.contain(shopLanguage);
     });
 
     it('should go back to BO', async function () {
@@ -130,16 +128,16 @@ describe('BO - International - Localization : Import a localization pack', async
       expect(pageTitle).to.contains(languagesPage.pageTitle);
     });
 
-    it(`should filter language by name '${Languages.spanish.name}'`, async function () {
+    it(`should filter language by name '${dataLanguages.spanish.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterLanguages', baseContext);
 
-      await languagesPage.filterTable(page, 'input', 'name', Languages.spanish.name);
+      await languagesPage.filterTable(page, 'input', 'name', dataLanguages.spanish.name);
 
       const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
       expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
       const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
-      expect(textColumn).to.contains(Languages.spanish.name);
+      expect(textColumn).to.contains(dataLanguages.spanish.name);
     });
 
     it('should delete language', async function () {

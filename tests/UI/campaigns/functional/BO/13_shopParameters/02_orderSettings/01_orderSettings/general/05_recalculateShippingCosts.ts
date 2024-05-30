@@ -12,16 +12,15 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import OrderData from '@data/faker/order';
-import Products from '@data/demo/products';
 import OrderShippingData from '@data/faker/orderShipping';
-import Carriers from '@data/demo/carriers';
 
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   dataCustomers,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -33,11 +32,11 @@ describe('BO - Shop Parameters - Order Settings : Recalculate shipping costs aft
   let browserContext: BrowserContext;
   let page: Page;
 
-  const orderByCustomerData: OrderData = new OrderData({
+  const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -46,14 +45,14 @@ describe('BO - Shop Parameters - Order Settings : Recalculate shipping costs aft
 
   const shippingDetailsData: OrderShippingData = new OrderShippingData({
     trackingNumber: '0523698',
-    carrier: Carriers.myCarrier.name,
-    carrierID: Carriers.myCarrier.id,
+    carrier: dataCarriers.myCarrier.name,
+    carrierID: dataCarriers.myCarrier.id,
   });
 
   const editShippingDetailsData: OrderShippingData = new OrderShippingData({
     trackingNumber: '0523698',
-    carrier: Carriers.default.name,
-    carrierID: Carriers.default.id,
+    carrier: dataCarriers.clickAndCollect.name,
+    carrierID: dataCarriers.clickAndCollect.id,
   });
 
   // Pre-condition: Create order in FO

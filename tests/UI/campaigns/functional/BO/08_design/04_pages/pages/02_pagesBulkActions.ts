@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import addPagePage from '@pages/BO/design/pages/add';
 import pagesPage from '@pages/BO/design/pages';
 
-// Import data
-import CMSPageData from '@data/faker/CMSpage';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCMSPage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_pages_pages_pagesBulkActions';
 
@@ -27,8 +27,8 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
   let page: Page;
   let numberOfPages: number = 0;
 
-  const firstPageData: CMSPageData = new CMSPageData({title: 'todelete'});
-  const secondPageData: CMSPageData = new CMSPageData({title: 'todelete'});
+  const firstPageData: FakerCMSPage = new FakerCMSPage({title: 'todelete'});
+  const secondPageData: FakerCMSPage = new FakerCMSPage({title: 'todelete'});
   const pagesTable: string = 'cms_page';
 
   // before and after functions
@@ -68,7 +68,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
 
   // 1 : Create 2 pages In BO
   describe('Create 2 pages', async () => {
-    [firstPageData, secondPageData].forEach((pageToCreate: CMSPageData, index: number) => {
+    [firstPageData, secondPageData].forEach((pageToCreate: FakerCMSPage, index: number) => {
       it('should go to add new page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddPage${index + 1}`, baseContext);
 

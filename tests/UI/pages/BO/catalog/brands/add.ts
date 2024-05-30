@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type BrandData from '@data/faker/brand';
-
 import type {Page} from 'playwright';
+import {
+  type FakerBrand,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add brand page, contains selectors and functions for the page
@@ -78,10 +79,10 @@ class AddBrand extends BOBasePage {
   /**
    * Create or edit Brand
    * @param page {Page} Browser tab
-   * @param brandData {BrandData} Data to set in brand form
+   * @param brandData {FakerBrand} Data to set in brand form
    * @returns {Promise<string>}
    */
-  async createEditBrand(page: Page, brandData: BrandData): Promise<string> {
+  async createEditBrand(page: Page, brandData: FakerBrand): Promise<string> {
     // Fill Name
     await this.setValue(page, this.nameInput, brandData.name);
     // Fill information in english

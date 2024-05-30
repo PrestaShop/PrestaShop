@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
-// Import data
-import Products from '@data/demo/products';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_footer';
 
@@ -50,17 +50,17 @@ describe('BO - Catalog - Products : Footer', async () => {
     expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
-  it(`should filter a product named "${Products.demo_12.name}"`, async function () {
+  it(`should filter a product named "${dataProducts.demo_12.name}"`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterProduct', baseContext);
 
     await productsPage.resetFilter(page);
-    await productsPage.filterProducts(page, 'product_name', Products.demo_12.name, 'input');
+    await productsPage.filterProducts(page, 'product_name', dataProducts.demo_12.name, 'input');
 
     const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
     expect(numberOfProductsAfterFilter).to.equal(1);
 
     const textColumn = await productsPage.getTextColumn(page, 'product_name', 1);
-    expect(textColumn).to.equal(Products.demo_12.name);
+    expect(textColumn).to.equal(dataProducts.demo_12.name);
   });
 
   it('should edit the product', async function () {
@@ -83,10 +83,10 @@ describe('BO - Catalog - Products : Footer', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDuplicatedProduct', baseContext);
 
     const nameEN = await createProductsPage.getProductName(page, 'en');
-    expect(nameEN).to.equal(`copy of ${Products.demo_12.name}`);
+    expect(nameEN).to.equal(`copy of ${dataProducts.demo_12.name}`);
 
     const nameFR = await createProductsPage.getProductName(page, 'fr');
-    expect(nameFR).to.equal(`copie de ${Products.demo_12.name}`);
+    expect(nameFR).to.equal(`copie de ${dataProducts.demo_12.name}`);
   });
 
   it('should delete the duplicated product', async function () {

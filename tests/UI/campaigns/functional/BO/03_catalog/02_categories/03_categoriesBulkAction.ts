@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
 
-// Import data
-import CategoryData from '@data/faker/category';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCategory,
+} from '@prestashop-core/ui-testing';
 
 const baseContext = 'functional_BO_catalog_categories_categoriesBulkActions';
 
@@ -25,8 +25,8 @@ describe('BO - Catalog - Categories : Enable/Disable/Delete categories by Bulk A
   let page: Page;
   let numberOfCategories: number = 0;
 
-  const firstCategoryData: CategoryData = new CategoryData({name: 'todelete'});
-  const secondCategoryData: CategoryData = new CategoryData({name: 'todeletetwo'});
+  const firstCategoryData: FakerCategory = new FakerCategory({name: 'todelete'});
+  const secondCategoryData: FakerCategory = new FakerCategory({name: 'todeletetwo'});
 
   // before and after functions
   before(async function () {

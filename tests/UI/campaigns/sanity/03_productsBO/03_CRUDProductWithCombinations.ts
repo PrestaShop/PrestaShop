@@ -13,12 +13,12 @@ import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_productsBO_CRUDProductWithCombinations';
 
@@ -27,7 +27,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   let page: Page;
 
   // Data to create product with combinations
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'combinations',
     taxRule: 'No tax',
     tax: 0,
@@ -36,7 +36,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     status: true,
   });
   // Data to edit product with combinations
-  const editProductData: ProductData = new ProductData({
+  const editProductData: FakerProduct = new FakerProduct({
     type: 'combinations',
     taxRule: 'No tax',
     tax: 0,

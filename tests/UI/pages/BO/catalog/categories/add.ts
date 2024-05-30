@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type CategoryData from '@data/faker/category';
-
 import type {Page} from 'playwright';
+import {
+  type FakerCategory,
+} from '@prestashop-core/ui-testing';
 
 class AddCategory extends BOBasePage {
   public readonly pageTitleCreate: string;
@@ -96,10 +97,10 @@ class AddCategory extends BOBasePage {
   /**
    * Fill form for add/edit category
    * @param page {Page} Browser tab
-   * @param categoryData {CategoryData} Data to set on new/edit category form
+   * @param categoryData {FakerCategory} Data to set on new/edit category form
    * @returns {Promise<string>}
    */
-  async createEditCategory(page: Page, categoryData: CategoryData): Promise<string> {
+  async createEditCategory(page: Page, categoryData: FakerCategory): Promise<string> {
     await this.setValue(page, this.nameInput, categoryData.name);
     await this.setChecked(page, this.displayedToggleInput(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.descriptionIframe, categoryData.description);
@@ -127,10 +128,10 @@ class AddCategory extends BOBasePage {
   /**
    * Edit home category
    * @param page {Page} Browser tab
-   * @param categoryData {CategoryData} Data to set on edit home category form
+   * @param categoryData {FakerCategory} Data to set on edit home category form
    * @returns {Promise<string>}
    */
-  async editHomeCategory(page: Page, categoryData: CategoryData): Promise<string> {
+  async editHomeCategory(page: Page, categoryData: FakerCategory): Promise<string> {
     await this.setValue(page, this.rootCategoryNameInput, categoryData.name);
     await this.setChecked(page, this.rootCategoryDisplayedToggleInput(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.rootCategoryDescriptionIframe, categoryData.description);

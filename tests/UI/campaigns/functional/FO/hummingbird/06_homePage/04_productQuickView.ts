@@ -13,12 +13,14 @@ import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 // Import data
-import Products from '@data/demo/products';
-import ProductData from '@data/faker/product';
 import {ProductAttribute} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_homePage_productQuickView';
 
@@ -50,7 +52,7 @@ describe('FO - Home Page : Product quick view', async () => {
   const attributesQty: number = 4;
 
   // Data to create product out of stock not allowed
-  const productOutOfStockNotAllowed: ProductData = new ProductData({
+  const productOutOfStockNotAllowed: FakerProduct = new FakerProduct({
     name: 'Out of stock not allowed',
     type: 'standard',
     taxRule: 'No tax',
@@ -86,7 +88,7 @@ describe('FO - Home Page : Product quick view', async () => {
       expect(result).to.equal(true);
     });
 
-    it(`should quick view the product '${Products.demo_6.name}'`, async function () {
+    it(`should quick view the product '${dataProducts.demo_6.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct1', baseContext);
 
       await homePage.quickViewProduct(page, 3);
@@ -100,12 +102,12 @@ describe('FO - Home Page : Product quick view', async () => {
 
       const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
-        expect(result.name).to.equal(Products.demo_6.name),
-        expect(result.price).to.equal(Products.demo_6.combinations[0].price),
+        expect(result.name).to.equal(dataProducts.demo_6.name),
+        expect(result.price).to.equal(dataProducts.demo_6.combinations[0].price),
         expect(result.taxShippingDeliveryLabel).to.equal('Tax included'),
-        expect(result.shortDescription).to.equal(Products.demo_6.summary),
-        expect(result.coverImage).to.contains(Products.demo_6.coverImage),
-        expect(result.thumbImage).to.contains(Products.demo_6.thumbImage),
+        expect(result.shortDescription).to.equal(dataProducts.demo_6.summary),
+        expect(result.coverImage).to.contains(dataProducts.demo_6.coverImage),
+        expect(result.thumbImage).to.contains(dataProducts.demo_6.thumbImage),
       ]);
 
       const resultAttributes = await quickViewModal.getSelectedAttributesFromQuickViewModal(page, defaultAttributes);
@@ -121,11 +123,11 @@ describe('FO - Home Page : Product quick view', async () => {
 
       const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
-        expect(result.name).to.equal(Products.demo_6.name),
-        expect(result.price).to.equal(Products.demo_6.combinations[1].price),
-        expect(result.shortDescription).to.equal(Products.demo_6.summary),
-        expect(result.coverImage).to.contains(Products.demo_6.coverImage),
-        expect(result.thumbImage).to.contains(Products.demo_6.thumbImage),
+        expect(result.name).to.equal(dataProducts.demo_6.name),
+        expect(result.price).to.equal(dataProducts.demo_6.combinations[1].price),
+        expect(result.shortDescription).to.equal(dataProducts.demo_6.summary),
+        expect(result.coverImage).to.contains(dataProducts.demo_6.coverImage),
+        expect(result.thumbImage).to.contains(dataProducts.demo_6.thumbImage),
       ]);
 
       const resultAttributes = await quickViewModal.getSelectedAttributesFromQuickViewModal(page, attributes);
@@ -153,7 +155,7 @@ describe('FO - Home Page : Product quick view', async () => {
   });
 
   describe('Quick view simple product', async () => {
-    it(`should quick view the product '${Products.demo_11.name}'`, async function () {
+    it(`should quick view the product '${dataProducts.demo_11.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct2', baseContext);
 
       await homePage.quickViewProduct(page, 6);
@@ -167,12 +169,12 @@ describe('FO - Home Page : Product quick view', async () => {
 
       const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
-        expect(result.name).to.equal(Products.demo_11.name),
-        expect(result.price).to.equal(Products.demo_11.finalPrice),
+        expect(result.name).to.equal(dataProducts.demo_11.name),
+        expect(result.price).to.equal(dataProducts.demo_11.finalPrice),
         expect(result.taxShippingDeliveryLabel).to.equal('Tax included'),
-        expect(result.shortDescription).to.equal(Products.demo_11.summary),
-        expect(result.coverImage).to.contains(Products.demo_11.coverImage),
-        expect(result.thumbImage).to.contains(Products.demo_11.thumbImage),
+        expect(result.shortDescription).to.equal(dataProducts.demo_11.summary),
+        expect(result.coverImage).to.contains(dataProducts.demo_11.coverImage),
+        expect(result.thumbImage).to.contains(dataProducts.demo_11.thumbImage),
       ]);
     });
 
@@ -204,7 +206,7 @@ describe('FO - Home Page : Product quick view', async () => {
       expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);
     });
 
-    it(`should go to the second page and quick view the product '${Products.demo_14.name}'`, async function () {
+    it(`should go to the second page and quick view the product '${dataProducts.demo_14.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewCustomizedProduct', baseContext);
 
       await categoryPage.goToNextPage(page);
@@ -219,12 +221,12 @@ describe('FO - Home Page : Product quick view', async () => {
 
       const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
-        expect(result.name).to.equal(Products.demo_14.name),
-        expect(result.price).to.equal(Products.demo_14.price),
+        expect(result.name).to.equal(dataProducts.demo_14.name),
+        expect(result.price).to.equal(dataProducts.demo_14.price),
         expect(result.taxShippingDeliveryLabel).to.equal('Tax included'),
-        expect(result.shortDescription).to.equal(Products.demo_14.summary),
-        expect(result.coverImage).to.contains(Products.demo_14.coverImage),
-        expect(result.thumbImage).to.contains(Products.demo_14.thumbImage),
+        expect(result.shortDescription).to.equal(dataProducts.demo_14.summary),
+        expect(result.coverImage).to.contains(dataProducts.demo_14.coverImage),
+        expect(result.thumbImage).to.contains(dataProducts.demo_14.thumbImage),
       ]);
     });
 

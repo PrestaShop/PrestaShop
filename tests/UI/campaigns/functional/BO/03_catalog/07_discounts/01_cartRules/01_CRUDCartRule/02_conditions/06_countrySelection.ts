@@ -19,15 +19,14 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import Products from '@data/demo/products';
-import Carriers from '@data/demo/carriers';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   dataCountries,
   dataCustomers,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -190,7 +189,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await foHomePage.goToProductPage(page, 3);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      expect(pageTitle.toUpperCase()).to.contains(Products.demo_6.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
@@ -252,7 +251,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
 
       const totalAfterDiscount = await checkoutPage.getATIPrice(page);
-      expect(totalAfterDiscount).to.eq(Products.demo_6.price - cartRule.discountAmount!.value + Carriers.myCarrier.price);
+      expect(totalAfterDiscount).to.eq(dataProducts.demo_6.price - cartRule.discountAmount!.value + dataCarriers.myCarrier.price);
     });
 
     it('should remove the discount', async function () {

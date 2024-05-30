@@ -12,14 +12,11 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {categoryPage} from '@pages/FO/classic/category';
 
-// Import data
-import Products from '@data/demo/products';
-import Carriers from '@data/demo/carriers';
-
 import {
-  // Import data
-  dataPaymentMethods,
+  dataCarriers,
   dataCustomers,
+  dataPaymentMethods,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -61,10 +58,10 @@ describe('FO - Order confirmation : Popular product', async () => {
     expect(result).to.eq(true);
   });
 
-  it(`should add the product ${Products.demo_6.name} to cart by quick view`, async function () {
+  it(`should add the product ${dataProducts.demo_6.name} to cart by quick view`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addDemo3ByQuickView', baseContext);
 
-    await homePage.searchProduct(page, Products.demo_6.name);
+    await homePage.searchProduct(page, dataProducts.demo_6.name);
     await searchResultsPage.quickViewProduct(page, 1);
 
     await quickViewModal.addToCartByQuickView(page);
@@ -103,7 +100,7 @@ describe('FO - Order confirmation : Popular product', async () => {
   it('should select the first carrier and go to payment step', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice1', baseContext);
 
-    await checkoutPage.chooseShippingMethod(page, Carriers.default.id);
+    await checkoutPage.chooseShippingMethod(page, dataCarriers.clickAndCollect.id);
 
     const isPaymentStep = await checkoutPage.goToPaymentStep(page);
     expect(isPaymentStep).to.eq(true);

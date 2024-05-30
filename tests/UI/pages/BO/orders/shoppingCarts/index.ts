@@ -1,8 +1,10 @@
 import BOBasePage from '@pages/BO/BObasePage';
 import date from '@utils/date';
-import {ShoppingCartDetails} from '@data/types/shoppingCart';
 
 import type {Page} from 'playwright';
+import {
+  type ShoppingCartDetails,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Shopping carts page, contains functions that can be used on shopping carts page

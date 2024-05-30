@@ -13,11 +13,8 @@ import foProductPage from '@pages/FO/hummingbird/product';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {
-  // Import data
+  dataProducts,
   FakerAddress,
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
@@ -98,7 +95,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await foHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should add product to cart and go to cart page', async function () {

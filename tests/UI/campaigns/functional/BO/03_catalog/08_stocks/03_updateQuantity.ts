@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import stocksPage from '@pages/BO/catalog/stocks';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_stocks_updateQuantity';
 
@@ -25,7 +25,7 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
   let firstProductQuantity: number = 0;
   let secondProductQuantity: number = 0;
 
-  const productStock: any = Products.demo_18;
+  const productStock: any = dataProducts.demo_18;
 
   // before and after functions
   before(async function () {

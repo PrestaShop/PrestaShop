@@ -16,12 +16,14 @@ import addFilePage from '@pages/BO/catalog/files/add';
 import productsPage from '@pages/BO/catalog/products';
 
 // Import data
-import ProductData from '@data/faker/product';
 import FileData from '@data/faker/file';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_administration_uploadQuota';
 
@@ -34,26 +36,26 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
   const secondFileData: FileData = new FileData({filename: 'image2.jpg'});
   // Image data with size < 1MB
   const thirdFileData: FileData = new FileData({filename: 'image3.jpg'});
-  const firstVirtualProductData: ProductData = new ProductData({
+  const firstVirtualProductData: FakerProduct = new FakerProduct({
     type: 'virtual',
     downloadFile: true,
     fileName: firstFileData.filename,
     allowedDownload: 1,
     status: true,
   });
-  const secondVirtualProductData: ProductData = new ProductData({
+  const secondVirtualProductData: FakerProduct = new FakerProduct({
     type: 'virtual',
     downloadFile: true,
     fileName: secondFileData.filename,
     allowedDownload: 1,
     status: true,
   });
-  const firstStandardProductData: ProductData = new ProductData({
+  const firstStandardProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: firstFileData.filename,
     status: true,
   });
-  const secondStandardProductData: ProductData = new ProductData({
+  const secondStandardProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: thirdFileData.filename,
     status: true,

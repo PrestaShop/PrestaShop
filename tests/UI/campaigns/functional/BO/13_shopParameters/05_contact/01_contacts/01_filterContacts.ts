@@ -10,11 +10,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import contactsPage from '@pages/BO/shopParameters/contact';
 
-// Import data
-import Contacts from '@data/demo/contacts';
-
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataContacts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_contact_contacts_filterContacts';
 
@@ -62,15 +62,15 @@ describe('BO - Shop Parameters - Contact : Filter Contacts table', async () => {
   // 1 : Filter Contacts with all inputs and selects in grid table
   describe('Filter Contacts', async () => {
     const tests = [
-      {args: {testIdentifier: 'filterId', filterBy: 'id_contact', filterValue: Contacts.webmaster.id.toString()}},
-      {args: {testIdentifier: 'filterName', filterBy: 'name', filterValue: Contacts.customerService.title}},
-      {args: {testIdentifier: 'filterEmail', filterBy: 'email', filterValue: Contacts.webmaster.email}},
+      {args: {testIdentifier: 'filterId', filterBy: 'id_contact', filterValue: dataContacts.webmaster.id.toString()}},
+      {args: {testIdentifier: 'filterName', filterBy: 'name', filterValue: dataContacts.customerService.title}},
+      {args: {testIdentifier: 'filterEmail', filterBy: 'email', filterValue: dataContacts.webmaster.email}},
       {
         args:
           {
             testIdentifier: 'filterDescription',
             filterBy: 'description',
-            filterValue: Contacts.customerService.description,
+            filterValue: dataContacts.customerService.description,
           },
       },
     ];

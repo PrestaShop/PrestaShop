@@ -16,13 +16,15 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 // Import data
-import Languages from '@data/demo/languages';
 import APIClientData from '@data/faker/APIClient';
-import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_product_patchProductId';
 
@@ -41,11 +43,11 @@ describe('API : PATCH /product/{productId}', async () => {
       clientScope,
     ],
   });
-  const createProduct: ProductData = new ProductData({
+  const createProduct: FakerProduct = new FakerProduct({
     type: 'standard',
     status: true,
   });
-  const patchProduct: ProductData = new ProductData({
+  const patchProduct: FakerProduct = new FakerProduct({
     type: 'virtual',
     status: false,
   });
@@ -191,15 +193,15 @@ describe('API : PATCH /product/{productId}', async () => {
       {
         propertyName: 'names',
         propertyValue: {
-          [Languages.english.id]: patchProduct.name,
-          [Languages.french.id]: patchProduct.nameFR,
+          [dataLanguages.english.id]: patchProduct.name,
+          [dataLanguages.french.id]: patchProduct.nameFR,
         },
       },
       {
         propertyName: 'descriptions',
         propertyValue: {
-          [Languages.english.id]: patchProduct.description,
-          [Languages.french.id]: patchProduct.descriptionFR,
+          [dataLanguages.english.id]: patchProduct.description,
+          [dataLanguages.french.id]: patchProduct.descriptionFR,
         },
       },
     ].forEach((data: { propertyName: string, propertyValue: boolean|string|object}) => {
@@ -237,18 +239,18 @@ describe('API : PATCH /product/{productId}', async () => {
             const valueProperty = await createProductsPage.getProductStatus(page);
             expect(valueProperty).to.equal(data.propertyValue);
           } else if (data.propertyName === 'names') {
-            const valuePropertyEN = await createProductsPage.getProductName(page, Languages.english.isoCode);
-            const valuePropertyFR = await createProductsPage.getProductName(page, Languages.french.isoCode);
+            const valuePropertyEN = await createProductsPage.getProductName(page, dataLanguages.english.isoCode);
+            const valuePropertyFR = await createProductsPage.getProductName(page, dataLanguages.french.isoCode);
             expect({
-              [Languages.english.id]: valuePropertyEN,
-              [Languages.french.id]: valuePropertyFR,
+              [dataLanguages.english.id]: valuePropertyEN,
+              [dataLanguages.french.id]: valuePropertyFR,
             }).to.deep.equal(data.propertyValue);
           } else if (data.propertyName === 'descriptions') {
-            const valuePropertyEN = await descriptionTab.getValue(page, 'description', Languages.english.id.toString());
-            const valuePropertyFR = await descriptionTab.getValue(page, 'description', Languages.french.id.toString());
+            const valuePropertyEN = await descriptionTab.getValue(page, 'description', dataLanguages.english.id.toString());
+            const valuePropertyFR = await descriptionTab.getValue(page, 'description', dataLanguages.french.id.toString());
             expect({
-              [Languages.english.id]: valuePropertyEN,
-              [Languages.french.id]: valuePropertyFR,
+              [dataLanguages.english.id]: valuePropertyEN,
+              [dataLanguages.french.id]: valuePropertyFR,
             }).to.deep.equal(data.propertyValue);
           }
         });

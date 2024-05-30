@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import ModuleCategories from '@data/demo/moduleCategories';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModuleCategories,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_modules_filterModulesByCategories';
 
@@ -50,7 +50,7 @@ describe('BO - Modules - Module Manager : Filter modules by Categories', async (
   });
 
   describe('Filter modules by categories', async () => {
-    ModuleCategories.forEach((category: string) => {
+    dataModuleCategories.forEach((category: string) => {
       it(`should filter by category : '${category}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterByCategory${category}`, baseContext);
 

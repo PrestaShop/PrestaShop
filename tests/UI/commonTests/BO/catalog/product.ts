@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -22,10 +22,10 @@ let numberOfProducts: number;
 
 /**
  * Function to create standard product
- * @param productData {ProductData} Data to set to create product
+ * @param productData {FakerProduct} Data to set to create product
  * @param baseContext {string} String to identify the test
  */
-function createProductTest(productData: ProductData, baseContext: string = 'commonTests-createProductTest'): void {
+function createProductTest(productData: FakerProduct, baseContext: string = 'commonTests-createProductTest'): void {
   describe(`PRE-TEST: Create product '${productData.name}'`, async () => {
     // before and after functions
     before(async function () {
@@ -80,10 +80,10 @@ function createProductTest(productData: ProductData, baseContext: string = 'comm
 
 /**
  * Function to delete product
- * @param productData {ProductData} Data to set to delete product
+ * @param productData {FakerProduct} Data to set to delete product
  * @param baseContext {string} String to identify the test
  */
-function deleteProductTest(productData: ProductData, baseContext: string = 'commonTests-deleteProductTest'): void {
+function deleteProductTest(productData: FakerProduct, baseContext: string = 'commonTests-deleteProductTest'): void {
   describe(`POST-TEST: Delete product '${productData.name}'`, async () => {
     // before and after functions
     before(async function () {

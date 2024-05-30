@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import stocksPage from '@pages/BO/catalog/stocks';
 
-// Import data
-import Products from '@data/demo/products';
-import Suppliers from '@data/demo/suppliers';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+  dataSuppliers,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_stocks_simpleFilterStocks';
 
@@ -62,9 +62,9 @@ describe('BO - Catalog - Stocks : Simple filter stocks', async () => {
   // Filter products by name, reference, supplier
   describe('Filter products by name, reference and supplier', async () => {
     [
-      {args: {testIdentifier: 'filterName', filterBy: 'product_name', filterValue: Products.demo_1.name}},
-      {args: {testIdentifier: 'filterReference', filterBy: 'reference', filterValue: Products.demo_1.reference}},
-      {args: {testIdentifier: 'filterSupplier', filterBy: 'supplier', filterValue: Suppliers.fashionSupplier.name}},
+      {args: {testIdentifier: 'filterName', filterBy: 'product_name', filterValue: dataProducts.demo_1.name}},
+      {args: {testIdentifier: 'filterReference', filterBy: 'reference', filterValue: dataProducts.demo_1.reference}},
+      {args: {testIdentifier: 'filterSupplier', filterBy: 'supplier', filterValue: dataSuppliers.fashion.name}},
     ].forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);

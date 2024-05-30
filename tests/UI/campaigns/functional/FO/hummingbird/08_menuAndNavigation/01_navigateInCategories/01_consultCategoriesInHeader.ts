@@ -8,12 +8,12 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
 
-// Import data
-import Categories from '@data/demo/categories';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import CategoryData from '@data/faker/category';
+import {
+  dataCategories,
+  FakerCategory,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigateInCategories_consultCategoriesInHeader';
 
@@ -49,7 +49,7 @@ describe('FO - Menu and Navigation : Check categories and subcategories links in
       expect(isHomePage).to.eq(true);
     });
 
-    [Categories.clothes, Categories.accessories, Categories.art].forEach((test: CategoryData) => {
+    [dataCategories.clothes, dataCategories.accessories, dataCategories.art].forEach((test: FakerCategory) => {
       it(`should check category '${test.name}' link`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `check${test.name}Link`, baseContext);
 
@@ -61,10 +61,10 @@ describe('FO - Menu and Navigation : Check categories and subcategories links in
     });
 
     [
-      {args: {category: Categories.clothes, subcategory: Categories.men}},
-      {args: {category: Categories.clothes, subcategory: Categories.women}},
-      {args: {category: Categories.accessories, subcategory: Categories.stationery}},
-      {args: {category: Categories.accessories, subcategory: Categories.homeAccessories}},
+      {args: {category: dataCategories.clothes, subcategory: dataCategories.men}},
+      {args: {category: dataCategories.clothes, subcategory: dataCategories.women}},
+      {args: {category: dataCategories.accessories, subcategory: dataCategories.stationery}},
+      {args: {category: dataCategories.accessories, subcategory: dataCategories.homeAccessories}},
     ].forEach((test) => {
       it(`should check subcategory '${test.args.subcategory.name}' link`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `check${test.args.subcategory.name}Link`, baseContext);

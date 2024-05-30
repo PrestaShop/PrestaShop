@@ -10,12 +10,12 @@ import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import stocksPage from '@pages/BO/catalog/stocks';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_stocks_filterStocksByStatus';
 
@@ -29,7 +29,7 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
   let page: Page;
   let numberOfProducts: number = 0;
 
-  const productData: ProductData = new ProductData({type: 'standard', status: false});
+  const productData: FakerProduct = new FakerProduct({type: 'standard', status: false});
 
   // before and after functions
   before(async function () {

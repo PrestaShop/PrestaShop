@@ -14,12 +14,14 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_information_disableStatus';
 
@@ -110,7 +112,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
@@ -126,7 +128,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotal', baseContext);
 
       const priceATI = await cartPage.getATIPrice(page);
-      expect(priceATI).to.equal(Products.demo_1.finalPrice);
+      expect(priceATI).to.equal(dataProducts.demo_1.finalPrice);
     });
 
     it('should check that the cart rule name is not visible', async function () {

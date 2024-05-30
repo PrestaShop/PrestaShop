@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import attributesPage from '@pages/BO/catalog/attributes';
 import viewAttributePage from '@pages/BO/catalog/attributes/view';
 
-// Import data
-import Attributes from '@data/demo/attributes';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataAttributes,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_attributes_changePosition';
 
@@ -125,13 +125,13 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
   });
 
   describe('Change value position', async () => {
-    it(`should filter list of attributes by Name ${Attributes.size.name}`, async function () {
+    it(`should filter list of attributes by Name ${dataAttributes.size.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAttributes', baseContext);
 
-      await attributesPage.filterTable(page, 'name', Attributes.size.name);
+      await attributesPage.filterTable(page, 'name', dataAttributes.size.name);
 
       const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
-      expect(textColumn).to.contains(Attributes.size.name);
+      expect(textColumn).to.contains(dataAttributes.size.name);
     });
 
     it('should view attribute', async function () {
@@ -140,7 +140,7 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
       await attributesPage.viewAttribute(page, 1);
 
       const pageTitle = await viewAttributePage.getPageTitle(page);
-      expect(pageTitle).to.contains(viewAttributePage.pageTitle(Attributes.size.name));
+      expect(pageTitle).to.contains(viewAttributePage.pageTitle(dataAttributes.size.name));
     });
 
     // Should reset filters before changing position

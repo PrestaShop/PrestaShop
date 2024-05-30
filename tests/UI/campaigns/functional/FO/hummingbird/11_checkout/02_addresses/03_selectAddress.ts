@@ -11,12 +11,9 @@ import productPage from '@pages/FO/hummingbird/product';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {
-  // Import data
   dataCustomers,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -71,7 +68,7 @@ describe('FO - Checkout - Addresses: Select address', async () => {
       await homePage.goToProductPage(page, 4);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_5.name);
+      expect(pageTitle).to.contains(dataProducts.demo_5.name);
     });
 
     it('should add product to cart and go to cart page', async function () {

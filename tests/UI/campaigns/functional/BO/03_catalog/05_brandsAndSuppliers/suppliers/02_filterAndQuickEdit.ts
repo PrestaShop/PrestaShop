@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import brandsPage from '@pages/BO/catalog/brands';
 import suppliersPage from '@pages/BO/catalog/suppliers';
 
-// Import data
-import Suppliers from '@data/demo/suppliers';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataSuppliers,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_suppliers_filterAndQuickEdit';
 
@@ -78,7 +78,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
             testIdentifier: 'filterName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: Suppliers.fashionSupplier.name,
+            filterValue: dataSuppliers.fashion.name,
           },
       },
       {
@@ -87,7 +87,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
             testIdentifier: 'filterProductsCount',
             filterType: 'input',
             filterBy: 'products_count',
-            filterValue: Suppliers.fashionSupplier.products.toString(),
+            filterValue: dataSuppliers.fashion.products.toString(),
           },
       },
       {
@@ -96,7 +96,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: Suppliers.accessoriesSupplier.enabled ? '1' : '0',
+            filterValue: dataSuppliers.accessories.enabled ? '1' : '0',
           },
       },
     ];
@@ -149,7 +149,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
     it('should filter supplier by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await suppliersPage.filterTable(page, 'input', 'name', Suppliers.fashionSupplier.name);
+      await suppliersPage.filterTable(page, 'input', 'name', dataSuppliers.fashion.name);
 
       // Check number od suppliers
       const numberOfSuppliersAfterFilter = await suppliersPage.getNumberOfElementInGrid(page);
@@ -157,7 +157,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
 
       // check text column of first row after filter
       const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
-      expect(textColumn).to.contains(Suppliers.fashionSupplier.name);
+      expect(textColumn).to.contains(dataSuppliers.fashion.name);
     });
 
     [

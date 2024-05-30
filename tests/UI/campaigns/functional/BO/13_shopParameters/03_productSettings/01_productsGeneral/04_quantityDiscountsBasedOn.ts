@@ -17,12 +17,14 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 
 // Import data
-import ProductData from '@data/faker/product';
 import {ProductAttribute} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsGeneral_quantityDiscountsBasedOn';
 
@@ -38,7 +40,7 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
   let page: Page;
   let numberOfProducts: number = 0;
 
-  const productWithCombinations: ProductData = new ProductData({
+  const productWithCombinations: FakerProduct = new FakerProduct({
     type: 'combinations',
     price: 20,
     tax: 0,

@@ -1,14 +1,15 @@
-// Import data
-import Languages from '@data/demo/languages';
-import Products from '@data/demo/products';
-import type LanguageData from '@data/faker/language';
-import type ProductData from '@data/faker/product';
 import TagCreator from '@data/types/tag';
 
 import {faker} from '@faker-js/faker';
+import {
+  dataLanguages,
+  dataProducts,
+  type FakerLanguage,
+  type FakerProduct,
+} from '@prestashop-core/ui-testing';
 
-const productsNames: string[] = Object.values(Products).map((product: ProductData) => product.name);
-const languagesNames: string[] = Object.values(Languages).map((language: LanguageData) => language.name);
+const productsNames: string[] = Object.values(dataProducts).map((product: FakerProduct) => product.name);
+const languagesNames: string[] = Object.values(dataLanguages).map((language: FakerLanguage) => language.name);
 
 /**
  * Create new tag to use on tag form on BO

@@ -11,12 +11,12 @@ import localizationPage from '@pages/BO/international/localization';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 
-// Import Data
-import Languages from '@data/demo/languages';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_localization_defaultLanguage';
 
@@ -25,10 +25,10 @@ describe('BO - International - Localization : Update default language', async ()
   let page: Page;
 
   [
-    {args: {language: Languages.french.name, defaultBrowserLanguage: false, languageToCheck: 'Français'}},
-    {args: {language: Languages.english.name, defaultBrowserLanguage: false, languageToCheck: 'English'}},
+    {args: {language: dataLanguages.french.name, defaultBrowserLanguage: false, languageToCheck: 'Français'}},
+    {args: {language: dataLanguages.english.name, defaultBrowserLanguage: false, languageToCheck: 'English'}},
     // To back to the default values
-    {args: {language: Languages.english.name, defaultBrowserLanguage: true}},
+    {args: {language: dataLanguages.english.name, defaultBrowserLanguage: true}},
   ].forEach((test, index: number) => {
     describe(`Set default language to '${test.args.language}' and default language from browser to`
       + ` '${test.args.defaultBrowserLanguage}'`, async () => {

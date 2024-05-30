@@ -23,14 +23,11 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataPaymentMethods,
+  FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
@@ -44,7 +41,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
   const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
 
   // Data to create standard product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'virtual',
     price: 0,
     quantity: 100,

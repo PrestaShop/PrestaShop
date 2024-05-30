@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type FeatureData from '@data/faker/feature';
-
 import type {Page} from 'playwright';
+import {
+  type FakerFeature,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add feature page, contains functions that can be used on add feature page
@@ -45,10 +46,10 @@ class AddFeature extends BOBasePage {
   /**
    * Fill feature form and save it
    * @param page {Page} Browser tab
-   * @param featureData {FeatureData} Values to set on add feature form inputs
+   * @param featureData {FakerFeature} Values to set on add feature form inputs
    * @return {Promise<string>}
    */
-  async setFeature(page: Page, featureData: FeatureData): Promise<string> {
+  async setFeature(page: Page, featureData: FakerFeature): Promise<string> {
     // Set name
     await this.setValue(page, this.nameInput, featureData.name);
 

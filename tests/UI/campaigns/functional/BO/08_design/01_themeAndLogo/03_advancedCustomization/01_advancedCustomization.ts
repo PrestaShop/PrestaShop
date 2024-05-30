@@ -13,12 +13,12 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_themeAndLogo_advancedCustomization_advancedCustomization';
 
@@ -69,18 +69,18 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
       );
     });
 
-    it(`should search for module ${Modules.themeCustomization.name}`, async function () {
+    it(`should search for module ${dataModules.themeCustomization.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.themeCustomization);
-      expect(isModuleVisible, `The module ${Modules.themeCustomization.name} is not installed`).to.eq(true);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.themeCustomization);
+      expect(isModuleVisible, `The module ${dataModules.themeCustomization.name} is not installed`).to.eq(true);
     });
 
-    it(`should check the status of the module ${Modules.themeCustomization.name}`, async function () {
+    it(`should check the status of the module ${dataModules.themeCustomization.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusModule', baseContext);
 
-      const isModuleEnabled = await moduleManagerPage.isModuleStatus(page, Modules.themeCustomization.name, 'enable');
-      expect(isModuleEnabled, `The module ${Modules.themeCustomization.name} is disabled`).to.eq(true);
+      const isModuleEnabled = await moduleManagerPage.isModuleStatus(page, dataModules.themeCustomization.name, 'enable');
+      expect(isModuleEnabled, `The module ${dataModules.themeCustomization.name} is disabled`).to.eq(true);
     });
   });
 

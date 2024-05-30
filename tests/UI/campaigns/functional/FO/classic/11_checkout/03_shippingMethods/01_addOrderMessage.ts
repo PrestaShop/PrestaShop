@@ -13,11 +13,8 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
-// Import data
-import Carriers from '@data/demo/carriers';
-
 import {
-  // Import data
+  dataCarriers,
   dataCustomers,
   dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
@@ -113,12 +110,12 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
   });
 
-  it(`should select '${Carriers.myCarrier.name}' and add a message`, async function () {
+  it(`should select '${dataCarriers.myCarrier.name}' and add a message`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
     const isPaymentStepDisplayed = await checkoutPage.chooseShippingMethodAndAddComment(
       page,
-      Carriers.myCarrier.id,
+      dataCarriers.myCarrier.id,
       message,
     );
     expect(isPaymentStepDisplayed, 'Payment Step is not displayed').to.eq(true);
@@ -133,10 +130,10 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     expect(orderMessage).to.equal(message);
   });
 
-  it(`should choose the other carrier '${Carriers.default.name}' and edit the order message`, async function () {
+  it(`should choose the other carrier '${dataCarriers.clickAndCollect.name}' and edit the order message`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseAnotherCarrier', baseContext);
 
-    await checkoutPage.chooseShippingMethodWithoutValidation(page, Carriers.default.id, editMessage);
+    await checkoutPage.chooseShippingMethodWithoutValidation(page, dataCarriers.clickAndCollect.id, editMessage);
 
     const isPaymentStep = await checkoutPage.goToPaymentStep(page);
     expect(isPaymentStep).to.eq(true);

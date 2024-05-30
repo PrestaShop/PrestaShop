@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_modules_searchModule';
 
@@ -49,10 +49,10 @@ describe('BO - Modules - Module Manager : Search module', async () => {
     expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  it(`should search the module ${Modules.contactForm.name}`, async function () {
+  it(`should search the module ${dataModules.contactForm.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
+    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.contactForm);
     expect(isModuleVisible, 'Module is not visible!').to.eq(true);
   });
 });

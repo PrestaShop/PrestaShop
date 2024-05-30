@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_modules_bulkActions';
 
@@ -56,10 +56,10 @@ describe('BO - Modules - Module Manager : Bulk actions', async () => {
     expect(isBulkActionsDisabled).to.eq(true);
   });
 
-  it(`should select the module '${Modules.availableQuantities.name}' and check the bulk actions button`, async function () {
+  it(`should select the module '${dataModules.availableQuantities.name}' and check the bulk actions button`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkBulkActionButtonEnabled', baseContext);
 
-    await moduleManagerPage.selectModule(page, Modules.availableQuantities.tag);
+    await moduleManagerPage.selectModule(page, dataModules.availableQuantities.tag);
 
     const isBulkActionsDisabled = await moduleManagerPage.isBulkActionsButtonDisabled(page);
     expect(isBulkActionsDisabled).to.eq(false);
@@ -69,23 +69,23 @@ describe('BO - Modules - Module Manager : Bulk actions', async () => {
     {
       args: {
         action: 'Disable',
-        message: moduleManagerPage.disableModuleSuccessMessage(Modules.availableQuantities.tag),
+        message: moduleManagerPage.disableModuleSuccessMessage(dataModules.availableQuantities.tag),
       },
     },
-    {args: {action: 'Enable', message: moduleManagerPage.enableModuleSuccessMessage(Modules.availableQuantities.tag)}},
+    {args: {action: 'Enable', message: moduleManagerPage.enableModuleSuccessMessage(dataModules.availableQuantities.tag)}},
     {
       args: {
         action: 'Uninstall',
-        message: moduleManagerPage.uninstallModuleSuccessMessage(Modules.availableQuantities.tag),
+        message: moduleManagerPage.uninstallModuleSuccessMessage(dataModules.availableQuantities.tag),
       },
     },
     {
       args: {
         action: 'Install',
-        message: moduleManagerPage.installModuleSuccessMessage(Modules.availableQuantities.tag),
+        message: moduleManagerPage.installModuleSuccessMessage(dataModules.availableQuantities.tag),
       },
     },
-    {args: {action: 'Reset', message: moduleManagerPage.resetModuleSuccessMessage(Modules.availableQuantities.tag)}},
+    {args: {action: 'Reset', message: moduleManagerPage.resetModuleSuccessMessage(dataModules.availableQuantities.tag)}},
   ].forEach((test, index: number) => {
     it(`should '${test.args.action}' with bulk actions`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `bulkActions${index}`, baseContext);

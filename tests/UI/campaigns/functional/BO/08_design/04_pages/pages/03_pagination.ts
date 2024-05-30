@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import pagesPage from '@pages/BO/design/pages';
 import addPagePage from '@pages/BO/design/pages/add';
 
-// Import data
-import CMSPageData from '@data/faker/CMSpage';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCMSPage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_pages_pages_pagination';
 
@@ -68,7 +68,7 @@ describe('BO - design - Pages : Pagination of Pages table', async () => {
 
     const tests = new Array(11).fill(0, 0, 11);
     tests.forEach((test: number, index: number) => {
-      const createPageData: CMSPageData = new CMSPageData({title: `todelete${index}`});
+      const createPageData: FakerCMSPage = new FakerCMSPage({title: `todelete${index}`});
 
       it('should go to add new page page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewPagePage${index}`, baseContext);

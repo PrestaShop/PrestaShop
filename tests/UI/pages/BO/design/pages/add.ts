@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type CMSPageData from '@data/faker/CMSpage';
-
 import type {Page} from 'playwright';
+import {
+  type FakerCMSPage,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add page page, contains functions that can be used on the page
@@ -64,10 +65,10 @@ class AddPage extends BOBasePage {
   /**
    * Fill form for add/edit page category
    * @param page {Page} Browser tab
-   * @param pageData {CMSPageData} Data to set on new/edit page form
+   * @param pageData {FakerCMSPage} Data to set on new/edit page form
    * @return {Promise<string>}
    */
-  async createEditPage(page: Page, pageData: CMSPageData): Promise<string> {
+  async createEditPage(page: Page, pageData: FakerCMSPage): Promise<string> {
     // Fill form
     await this.setValue(page, this.titleInput, pageData.title);
     await this.setValue(page, this.metaTitleInput, pageData.metaTitle);

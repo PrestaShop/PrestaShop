@@ -22,14 +22,13 @@ import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
-import Products from '@data/demo/products';
 import MessageData from '@data/faker/message';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataPaymentMethods,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -131,8 +130,8 @@ describe('FO - Order confirmation : Contact us', async () => {
 
       const result = await cartPage.getProductDetail(page, 1);
       await Promise.all([
-        expect(result.name).to.equal(Products.demo_1.name),
-        expect(result.price).to.equal(Products.demo_1.finalPrice),
+        expect(result.name).to.equal(dataProducts.demo_1.name),
+        expect(result.price).to.equal(dataProducts.demo_1.finalPrice),
         expect(result.quantity).to.equal(1),
       ]);
     });

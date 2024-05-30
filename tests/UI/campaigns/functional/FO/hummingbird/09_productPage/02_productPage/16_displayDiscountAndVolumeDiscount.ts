@@ -18,12 +18,12 @@ import foProductPage from '@pages/FO/hummingbird/product';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 import cartPage from '@pages/FO/hummingbird/cart';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_displayDiscountAndVolumeDiscount';
 
@@ -31,7 +31,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
@@ -45,7 +45,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
     status: true,
   });
 
-  const secondSpecificPriceData: ProductData = new ProductData({
+  const secondSpecificPriceData: FakerProduct = new FakerProduct({
     specificPrice: {
       attributes: null,
       discount: 15,

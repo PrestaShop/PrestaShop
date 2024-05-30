@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
-// Import data
-import ShoppingCarts from '@data/demo/shoppingCarts';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataShoppingCarts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_shoppingCarts_filterShoppingCarts';
 
@@ -111,7 +111,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
           testIdentifier: 'filterId',
           filterType: 'input',
           filterBy: 'id_cart',
-          filterValue: ShoppingCarts[1].id.toString(),
+          filterValue: dataShoppingCarts[1].id.toString(),
         },
     },
     {
@@ -120,7 +120,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
           testIdentifier: 'filterOrderID',
           filterType: 'input',
           filterBy: 'id_order',
-          filterValue: ShoppingCarts[2].orderID.toString(),
+          filterValue: dataShoppingCarts[2].orderID.toString(),
         },
     },
     {
@@ -129,7 +129,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
           testIdentifier: 'filterCustomer',
           filterType: 'input',
           filterBy: 'customer_name',
-          filterValue: ShoppingCarts[3].customer.lastName,
+          filterValue: dataShoppingCarts[3].customer.lastName,
         },
     },
     {
@@ -138,7 +138,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
           testIdentifier: 'filterCarrier',
           filterType: 'input',
           filterBy: 'carrier_name',
-          filterValue: ShoppingCarts[0].carrier.name,
+          filterValue: dataShoppingCarts[0].carrier.name,
         },
     },
     {
@@ -147,7 +147,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
           testIdentifier: 'filterOnline',
           filterType: 'select',
           filterBy: 'customer_online',
-          filterValue: ShoppingCarts[4].online ? 'Yes' : 'No',
+          filterValue: dataShoppingCarts[4].online ? 'Yes' : 'No',
         },
     },
   ];

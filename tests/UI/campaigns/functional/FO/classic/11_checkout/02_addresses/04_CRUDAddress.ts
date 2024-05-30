@@ -9,12 +9,11 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 // Import pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
-import Products from '@data/demo/products';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
-  // Import data
+  dataProducts,
   FakerAddress,
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
@@ -92,7 +91,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await foHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should add product to cart and go to cart page', async function () {

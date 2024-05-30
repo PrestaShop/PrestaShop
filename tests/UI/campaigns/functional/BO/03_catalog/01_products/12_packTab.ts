@@ -20,16 +20,13 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
-// Import data
-import Products from '@data/demo/products';
-import ProductData from '@data/faker/product';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
+  FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
@@ -80,33 +77,33 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it(`should filter the product "${Products.demo_1.reference}"`, async function () {
+    it(`should filter the product "${dataProducts.demo_1.reference}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterProductDemo1', baseContext);
 
       await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', Products.demo_1.name);
+      await productsPage.filterProducts(page, 'product_name', dataProducts.demo_1.name);
 
       const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.gte(1);
 
       const productReference = await productsPage.getTextColumn(page, 'reference', 1);
-      expect(productReference).to.be.eq(Products.demo_1.reference);
+      expect(productReference).to.be.eq(dataProducts.demo_1.reference);
 
       productStockDemo1 = await productsPage.getTextColumn(page, 'quantity', 1) as number;
       expect(productStockDemo1).to.be.gte(1);
     });
 
-    it(`should filter the product "${Products.demo_9.reference}"`, async function () {
+    it(`should filter the product "${dataProducts.demo_9.reference}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterProductDemo9', baseContext);
 
       await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', Products.demo_9.name);
+      await productsPage.filterProducts(page, 'product_name', dataProducts.demo_9.name);
 
       const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.gte(1);
 
       const productReference = await productsPage.getTextColumn(page, 'reference', 1);
-      expect(productReference).to.be.eq(Products.demo_9.reference);
+      expect(productReference).to.be.eq(dataProducts.demo_9.reference);
 
       productStockDemo9 = await productsPage.getTextColumn(page, 'quantity', 1) as number;
       expect(productStockDemo9).to.be.gte(1);
@@ -181,11 +178,11 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       const result = await packTab.getProductInPackInformation(page, 1);
       await Promise.all([
         expect(result.name).to.equal(
-          `${Products.demo_1.name}: `
-          + `${basicHelper.capitalize(Products.demo_1.attributes[0].name)} - ${Products.demo_1.attributes[0].values[0]}, `
-          + `${basicHelper.capitalize(Products.demo_1.attributes[1].name)} - ${Products.demo_1.attributes[1].values[0]}`,
+          `${dataProducts.demo_1.name}: `
+          + `${basicHelper.capitalize(dataProducts.demo_1.attributes[0].name)} - ${dataProducts.demo_1.attributes[0].values[0]}, `
+          + `${basicHelper.capitalize(dataProducts.demo_1.attributes[1].name)} - ${dataProducts.demo_1.attributes[1].values[0]}`,
         ),
-        expect(result.reference).to.equal(`Ref: ${Products.demo_1.reference}`),
+        expect(result.reference).to.equal(`Ref: ${dataProducts.demo_1.reference}`),
         expect(result.quantity).to.equal(1),
       ]);
     });
@@ -193,7 +190,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
     it('should add a product by reference to the pack', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductByRefToPack', baseContext);
 
-      await packTab.addProductToPack(page, Products.demo_14.reference, 1);
+      await packTab.addProductToPack(page, dataProducts.demo_14.reference, 1);
 
       const updateProductMessage = await createProductsPage.saveProduct(page);
       expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
@@ -203,8 +200,8 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
 
       const result = await packTab.getProductInPackInformation(page, 2);
       await Promise.all([
-        expect(result.name).to.equal(Products.demo_14.name),
-        expect(result.reference).to.equal(`Ref: ${Products.demo_14.reference}`),
+        expect(result.name).to.equal(dataProducts.demo_14.name),
+        expect(result.reference).to.equal(`Ref: ${dataProducts.demo_14.reference}`),
         expect(result.quantity).to.equal(1),
       ]);
     });
@@ -223,11 +220,11 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       const result = await packTab.getProductInPackInformation(page, 1);
       await Promise.all([
         expect(result.name).to.equal(
-          `${Products.demo_1.name}: `
-          + `${basicHelper.capitalize(Products.demo_1.attributes[0].name)} - ${Products.demo_1.attributes[0].values[0]}, `
-          + `${basicHelper.capitalize(Products.demo_1.attributes[1].name)} - ${Products.demo_1.attributes[1].values[0]}`,
+          `${dataProducts.demo_1.name}: `
+          + `${basicHelper.capitalize(dataProducts.demo_1.attributes[0].name)} - ${dataProducts.demo_1.attributes[0].values[0]}, `
+          + `${basicHelper.capitalize(dataProducts.demo_1.attributes[1].name)} - ${dataProducts.demo_1.attributes[1].values[0]}`,
         ),
-        expect(result.reference).to.equal(`Ref: ${Products.demo_1.reference}`),
+        expect(result.reference).to.equal(`Ref: ${dataProducts.demo_1.reference}`),
         expect(result.quantity).to.equal(productQuantity),
       ]);
     });
@@ -247,7 +244,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
     it('should add a product by reference to the pack', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductByRefToPack2', baseContext);
 
-      await packTab.addProductToPack(page, Products.demo_9.reference, 1);
+      await packTab.addProductToPack(page, dataProducts.demo_9.reference, 1);
 
       const updateProductMessage = await createProductsPage.saveProduct(page);
       expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
@@ -258,10 +255,10 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       const result = await packTab.getProductInPackInformation(page, 2);
       await Promise.all([
         expect(result.name).to.equal(
-          `${Products.demo_9.name}: `
-          + `${basicHelper.capitalize(Products.demo_9.attributes[0].name)} - ${Products.demo_9.attributes[0].values[0]}`,
+          `${dataProducts.demo_9.name}: `
+          + `${basicHelper.capitalize(dataProducts.demo_9.attributes[0].name)} - ${dataProducts.demo_9.attributes[0].values[0]}`,
         ),
-        expect(result.reference).to.equal(`Ref: ${Products.demo_9.reference}`),
+        expect(result.reference).to.equal(`Ref: ${dataProducts.demo_9.reference}`),
         expect(result.quantity).to.equal(1),
       ]);
     });
@@ -321,31 +318,31 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       const productsPrice = await foProductPage.getPackProductsPrice(page);
       const calculatedPrice = (
         ((
-          (Products.demo_1.price - (Products.demo_1.price * (Products.demo_1.specificPrice.discount / 100)))
-          * (1 + (Products.demo_1.tax / 100))
+          (dataProducts.demo_1.price - (dataProducts.demo_1.price * (dataProducts.demo_1.specificPrice.discount / 100)))
+          * (1 + (dataProducts.demo_1.tax / 100))
         ) * productQuantity)
-        + Products.demo_9.finalPrice
+        + dataProducts.demo_9.finalPrice
       ).toFixed(2);
       expect(calculatedPrice).to.eq(productsPrice.toString());
 
       const product1 = await foProductPage.getProductInPackList(page, 1);
       await Promise.all([
         expect(product1.name).to.equals(
-          `${Products.demo_1.name} `
-          + `${basicHelper.capitalize(Products.demo_1.attributes[0].name)}-${Products.demo_1.attributes[0].values[0]} `
-          + `${basicHelper.capitalize(Products.demo_1.attributes[1].name)}-${Products.demo_1.attributes[1].values[0]}`,
+          `${dataProducts.demo_1.name} `
+          + `${basicHelper.capitalize(dataProducts.demo_1.attributes[0].name)}-${dataProducts.demo_1.attributes[0].values[0]} `
+          + `${basicHelper.capitalize(dataProducts.demo_1.attributes[1].name)}-${dataProducts.demo_1.attributes[1].values[0]}`,
         ),
-        expect(product1.price).to.equals(`€${Products.demo_1.finalPrice.toFixed(2)}`),
+        expect(product1.price).to.equals(`€${dataProducts.demo_1.finalPrice.toFixed(2)}`),
         expect(product1.quantity).to.equals(productQuantity),
       ]);
 
       const product2 = await foProductPage.getProductInPackList(page, 2);
       await Promise.all([
         expect(product2.name).to.equals(
-          `${Products.demo_9.name} `
-          + `${basicHelper.capitalize(Products.demo_9.attributes[0].name)}-${Products.demo_9.attributes[0].values[0]}`,
+          `${dataProducts.demo_9.name} `
+          + `${basicHelper.capitalize(dataProducts.demo_9.attributes[0].name)}-${dataProducts.demo_9.attributes[0].values[0]}`,
         ),
-        expect(product2.price).to.equals(`€${Products.demo_9.finalPrice.toFixed(2)}`),
+        expect(product2.price).to.equals(`€${dataProducts.demo_9.finalPrice.toFixed(2)}`),
         expect(product2.quantity).to.equals(1),
       ]);
     });
@@ -542,17 +539,17 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it(`should filter and check the product "${Products.demo_1.reference}"`, async function () {
+    it(`should filter and check the product "${dataProducts.demo_1.reference}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterProductDemo11', baseContext);
 
       await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', Products.demo_1.name);
+      await productsPage.filterProducts(page, 'product_name', dataProducts.demo_1.name);
 
       const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.gte(1);
 
       const productReference = await productsPage.getTextColumn(page, 'reference', 1);
-      expect(productReference).to.be.eq(Products.demo_1.reference);
+      expect(productReference).to.be.eq(dataProducts.demo_1.reference);
 
       const productStock = await productsPage.getTextColumn(page, 'quantity', 1) as number;
       expect(productStock).to.be.gte(1);
@@ -560,17 +557,17 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       expect(productStock).to.be.eq(productStockDemo1 - productQuantity);
     });
 
-    it(`should filter and check the product "${Products.demo_9.reference}"`, async function () {
+    it(`should filter and check the product "${dataProducts.demo_9.reference}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterProductDemo91', baseContext);
 
       await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', Products.demo_9.name);
+      await productsPage.filterProducts(page, 'product_name', dataProducts.demo_9.name);
 
       const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.gte(1);
 
       const productReference = await productsPage.getTextColumn(page, 'reference', 1);
-      expect(productReference).to.be.eq(Products.demo_9.reference);
+      expect(productReference).to.be.eq(dataProducts.demo_9.reference);
 
       const productStock = await productsPage.getTextColumn(page, 'quantity', 1) as number;
       expect(productStock).to.be.gte(1);
@@ -586,7 +583,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
     });
   });
 
-  deleteProductTest(new ProductData({
+  deleteProductTest(new FakerProduct({
     name: productNameEn,
   }), `${baseContext}_postTest_0`);
 });

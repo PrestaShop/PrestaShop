@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO Pages
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
-// Import data
-import ImageTypes from '@data/demo/imageTypes';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataImageTypes,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_filterImageTypes';
 
@@ -68,7 +68,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_image_type',
-            filterValue: ImageTypes.first.id.toString(),
+            filterValue: dataImageTypes.imageType_1.id.toString(),
           },
       },
       {
@@ -77,7 +77,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: ImageTypes.first.name,
+            filterValue: dataImageTypes.imageType_1.name,
           },
       },
       {
@@ -86,7 +86,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterWidth',
             filterType: 'input',
             filterBy: 'width',
-            filterValue: ImageTypes.first.width.toString(),
+            filterValue: dataImageTypes.imageType_1.width.toString(),
           },
       },
       {
@@ -95,7 +95,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterHeight',
             filterType: 'input',
             filterBy: 'height',
-            filterValue: ImageTypes.first.height.toString(),
+            filterValue: dataImageTypes.imageType_1.height.toString(),
           },
       },
       {
@@ -104,7 +104,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterProducts',
             filterType: 'select',
             filterBy: 'products',
-            filterValue: ImageTypes.first.productsStatus ? 'Yes' : 'No',
+            filterValue: dataImageTypes.imageType_1.productsStatus ? 'Yes' : 'No',
           },
       },
       {
@@ -113,7 +113,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterCategories',
             filterType: 'select',
             filterBy: 'categories',
-            filterValue: ImageTypes.first.categoriesStatus ? 'Yes' : 'No',
+            filterValue: dataImageTypes.imageType_1.categoriesStatus ? 'Yes' : 'No',
           },
       },
       {
@@ -122,7 +122,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterManufacturers',
             filterType: 'select',
             filterBy: 'manufacturers',
-            filterValue: ImageTypes.first.manufacturersStatus ? 'Yes' : 'No',
+            filterValue: dataImageTypes.imageType_1.manufacturersStatus ? 'Yes' : 'No',
           },
       },
       {
@@ -131,7 +131,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterSuppliers',
             filterType: 'select',
             filterBy: 'suppliers',
-            filterValue: ImageTypes.first.suppliersStatus ? 'Yes' : 'No',
+            filterValue: dataImageTypes.imageType_1.suppliersStatus ? 'Yes' : 'No',
           },
       },
       {
@@ -140,7 +140,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterStores',
             filterType: 'select',
             filterBy: 'stores',
-            filterValue: ImageTypes.first.storesStatus ? 'Yes' : 'No',
+            filterValue: dataImageTypes.imageType_1.storesStatus ? 'Yes' : 'No',
           },
       },
     ];

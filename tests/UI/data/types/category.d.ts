@@ -1,7 +1,5 @@
-import CategoryData from '@data/faker/category';
-
 import {
-  // Import data
+  type FakerCategory,
   type FakerGroup,
 } from '@prestashop-core/ui-testing';
 
@@ -16,7 +14,7 @@ type CategoryCreator = {
   groupAccess?: FakerGroup
   coverImage?: string
   thumbnailImage?: string
-  children?: CategoryData[]
+  children?: FakerCategory[]
   products?: string[]
   redirectionWhenNotDisplayed?: CategoryRedirection
   redirectedCategory?: CategoryData|null

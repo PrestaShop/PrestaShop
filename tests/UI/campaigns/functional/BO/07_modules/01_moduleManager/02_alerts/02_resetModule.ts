@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import moduleAlertsPage from '@pages/BO/modules/moduleAlerts';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_alerts_resetModule';
 
@@ -59,10 +59,10 @@ describe('BO - Modules - Alerts tab : Reset module', async () => {
     expect(pageTitle).to.eq(moduleAlertsPage.pageTitle);
   });
 
-  it(`should reset the module '${Modules.psCheckPayment.name}'`, async function () {
+  it(`should reset the module '${dataModules.psCheckPayment.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-    const successMessage = await moduleAlertsPage.setActionInModule(page, Modules.psCheckPayment, 'reset');
-    expect(successMessage).to.eq(moduleAlertsPage.resetModuleSuccessMessage(Modules.psCheckPayment.tag));
+    const successMessage = await moduleAlertsPage.setActionInModule(page, dataModules.psCheckPayment, 'reset');
+    expect(successMessage).to.eq(moduleAlertsPage.resetModuleSuccessMessage(dataModules.psCheckPayment.tag));
   });
 });

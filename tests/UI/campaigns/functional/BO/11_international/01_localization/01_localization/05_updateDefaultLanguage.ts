@@ -8,13 +8,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import localizationPage from '@pages/BO/international/localization';
 
-// Import data
-import Languages from '@data/demo/languages';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  dataLanguages,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_localization_updateDefaultLanguage';
@@ -69,14 +67,14 @@ describe('BO - International - Localization : Update default language', async ()
   it('should set "Spanish" as \'Default language\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setSpanishAsDefaultLanguage', baseContext);
 
-    const textResult = await localizationPage.setDefaultLanguage(page, Languages.spanish.name, true);
+    const textResult = await localizationPage.setDefaultLanguage(page, dataLanguages.spanish.name, true);
     expect(textResult).to.equal(localizationPage.successfulSettingsUpdateMessage);
   });
 
   it('should set "English" as \'Default language\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setEnglishAsDefaultLanguage', baseContext);
 
-    const textResult = await localizationPage.setDefaultLanguage(page, Languages.english.name, true);
+    const textResult = await localizationPage.setDefaultLanguage(page, dataLanguages.english.name, true);
     expect(textResult).to.equal(localizationPage.successfulSettingsUpdateMessage);
   });
 });

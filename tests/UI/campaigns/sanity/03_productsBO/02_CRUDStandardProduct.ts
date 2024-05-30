@@ -12,12 +12,12 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_productsBO_CRUDStandardProduct';
 
@@ -26,7 +26,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
   let page: Page;
 
   // Data to create standard product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     taxRule: 'No tax',
     tax: 0,
@@ -34,7 +34,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
     minimumQuantity: 1,
     status: true,
   });
-  const editProductData: ProductData = new ProductData({
+  const editProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     taxRule: 'FR Taux réduit (10%)',
     tax: 10,

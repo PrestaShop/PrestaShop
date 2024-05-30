@@ -15,14 +15,13 @@ import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 
 // Import data
-import Carriers from '@data/demo/carriers';
-import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   dataCustomers,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -88,7 +87,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     name: 'WithGift',
     code: 'gift',
     freeGift: true,
-    freeGiftProduct: Products.demo_13,
+    freeGiftProduct: dataProducts.demo_13,
   });
   // Data to create cart rule with Free shipping
   const cartRuleFreeShippingData: CartRuleData = new CartRuleData({name: 'FreeShipping', code: 'free', freeShipping: true});
@@ -152,16 +151,16 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should add to cart the product \'demo_12\' and check details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
-      const productToSelect = `${Products.demo_12.name} - €${Products.demo_12.priceTaxExcluded.toFixed(2)}`;
-      await addOrderPage.addProductToCart(page, Products.demo_12, productToSelect);
+      const productToSelect = `${dataProducts.demo_12.name} - €${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`;
+      await addOrderPage.addProductToCart(page, dataProducts.demo_12, productToSelect);
 
       const result = await addOrderPage.getProductDetailsFromTable(page);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_12.thumbImage),
-        expect(result.description).to.equal(Products.demo_12.name),
-        expect(result.reference).to.equal(Products.demo_12.reference),
+        expect(result.image).to.contains(dataProducts.demo_12.thumbImage),
+        expect(result.description).to.equal(dataProducts.demo_12.name),
+        expect(result.reference).to.equal(dataProducts.demo_12.reference),
         expect(result.quantityMin).to.equal(1),
-        expect(result.price).to.equal(Products.demo_12.priceTaxExcluded),
+        expect(result.price).to.equal(dataProducts.demo_12.priceTaxExcluded),
       ]);
     });
 
@@ -180,15 +179,15 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock1', baseContext);
 
       const totalTaxes = await basicHelper.percentage(
-        Products.demo_12.priceTaxExcluded - cartRuleWithoutCodeData.discountAmount!.value,
+        dataProducts.demo_12.priceTaxExcluded - cartRuleWithoutCodeData.discountAmount!.value,
         20,
       );
-      const totalTaxExcluded = Products.demo_12.priceTaxExcluded - cartRuleWithoutCodeData.discountAmount!.value;
+      const totalTaxExcluded = dataProducts.demo_12.priceTaxExcluded - cartRuleWithoutCodeData.discountAmount!.value;
       const totalTaxIncluded = totalTaxes + totalTaxExcluded;
 
       const result = await addOrderPage.getSummaryDetails(page);
       await Promise.all([
-        expect(result.totalProducts).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
+        expect(result.totalProducts).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
         expect(result.totalVouchers).to.equal(`-€${cartRuleWithoutCodeData.discountAmount!.value.toFixed(2)}`),
         expect(result.totalShipping).to.equal('€0.00'),
         expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
@@ -281,16 +280,16 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should add to cart the product \'demo_12\' and check details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-      const productToSelect = `${Products.demo_12.name} - €${Products.demo_12.priceTaxExcluded.toFixed(2)}`;
-      await addOrderPage.addProductToCart(page, Products.demo_12, productToSelect);
+      const productToSelect = `${dataProducts.demo_12.name} - €${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`;
+      await addOrderPage.addProductToCart(page, dataProducts.demo_12, productToSelect);
 
       const result = await addOrderPage.getProductDetailsFromTable(page);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_12.thumbImage),
-        expect(result.description).to.equal(Products.demo_12.name),
-        expect(result.reference).to.equal(Products.demo_12.reference),
+        expect(result.image).to.contains(dataProducts.demo_12.thumbImage),
+        expect(result.description).to.equal(dataProducts.demo_12.name),
+        expect(result.reference).to.equal(dataProducts.demo_12.reference),
         expect(result.quantityMin).to.equal(1),
-        expect(result.price).to.equal(Products.demo_12.priceTaxExcluded),
+        expect(result.price).to.equal(dataProducts.demo_12.priceTaxExcluded),
       ]);
     });
 
@@ -319,15 +318,15 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock2', baseContext);
 
       const totalTaxes = await basicHelper.percentage(
-        Products.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount!.value,
+        dataProducts.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount!.value,
         20,
       );
-      const totalTaxExcluded = Products.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount!.value;
+      const totalTaxExcluded = dataProducts.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount!.value;
       const totalTaxIncluded = totalTaxes + totalTaxExcluded;
 
       const result = await addOrderPage.getSummaryDetails(page);
       await Promise.all([
-        expect(result.totalProducts).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
+        expect(result.totalProducts).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
         expect(result.totalVouchers).to.equal(`-€${cartRuleWithCodeData.discountAmount!.value.toFixed(2)}`),
         expect(result.totalShipping).to.equal('€0.00'),
         expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
@@ -357,16 +356,16 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock3', baseContext);
 
-      const totalTaxes = Products.demo_12.price - Products.demo_12.priceTaxExcluded;
+      const totalTaxes = dataProducts.demo_12.price - dataProducts.demo_12.priceTaxExcluded;
 
       const result = await addOrderPage.getSummaryDetails(page);
       await Promise.all([
-        expect(result.totalProducts).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
+        expect(result.totalProducts).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
         expect(result.totalVouchers).to.equal('€0.00'),
         expect(result.totalShipping).to.equal('€0.00'),
         expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
-        expect(result.totalTaxExcluded).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
-        expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${Products.demo_12.price.toFixed(2)}`),
+        expect(result.totalTaxExcluded).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
+        expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${dataProducts.demo_12.price.toFixed(2)}`),
       ]);
     });
   });
@@ -433,7 +432,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await Promise.all([
         expect(result.name).to.contains(cartRuleWithGiftData.name),
         expect(result.description).to.equal(cartRuleWithGiftData.description),
-        expect(result.value).to.equal(Products.demo_12.priceTaxExcluded),
+        expect(result.value).to.equal(dataProducts.demo_12.priceTaxExcluded),
       ]);
     });
 
@@ -442,9 +441,9 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
 
       const result = await addOrderPage.getProductGiftDetailsFromTable(page, 2);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_13.coverImage),
-        expect(result.description).to.equal(Products.demo_13.name),
-        expect(result.reference).to.equal(Products.demo_13.reference),
+        expect(result.image).to.contains(dataProducts.demo_13.coverImage),
+        expect(result.description).to.equal(dataProducts.demo_13.name),
+        expect(result.reference).to.equal(dataProducts.demo_13.reference),
         expect(result.basePrice).to.equal('Gift'),
         expect(result.quantity).to.equal(1),
         expect(result.price).to.equal('Gift'),
@@ -454,16 +453,16 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock4', baseContext);
 
-      const totalTaxes = Products.demo_12.price - Products.demo_12.priceTaxExcluded;
+      const totalTaxes = dataProducts.demo_12.price - dataProducts.demo_12.priceTaxExcluded;
 
       const result = await addOrderPage.getSummaryDetails(page);
       await Promise.all([
-        expect(result.totalProducts).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
+        expect(result.totalProducts).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
         expect(result.totalVouchers).to.equal('€0.00'),
         expect(result.totalShipping).to.equal('€0.00'),
         expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
-        expect(result.totalTaxExcluded).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
-        expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${Products.demo_12.price.toFixed(2)}`),
+        expect(result.totalTaxExcluded).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
+        expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${dataProducts.demo_12.price.toFixed(2)}`),
       ]);
     });
 
@@ -486,16 +485,16 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock5', baseContext);
 
-      const totalTaxes = Products.demo_12.price - Products.demo_12.priceTaxExcluded;
+      const totalTaxes = dataProducts.demo_12.price - dataProducts.demo_12.priceTaxExcluded;
 
       const result = await addOrderPage.getSummaryDetails(page);
       await Promise.all([
-        expect(result.totalProducts).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
+        expect(result.totalProducts).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
         expect(result.totalVouchers).to.equal('€0.00'),
         expect(result.totalShipping).to.equal('€0.00'),
         expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
-        expect(result.totalTaxExcluded).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
-        expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${Products.demo_12.price.toFixed(2)}`),
+        expect(result.totalTaxExcluded).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
+        expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${dataProducts.demo_12.price.toFixed(2)}`),
       ]);
     });
   });
@@ -512,7 +511,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should create the cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addFreeShippingVoucher', baseContext);
 
-      addVoucherPage = await addOrderPage.getCreateVoucherIframe(page);
+      addVoucherPage = addOrderPage.getCreateVoucherIframe(page);
       expect(addVoucherPage).to.not.eq(null);
 
       await addCartRulePage.createEditCartRules(addVoucherPage!, cartRuleFreeShippingData, false);
@@ -536,9 +535,9 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'selectMyCarrier', baseContext);
 
       const shippingPriceTTC = await addOrderPage.setDeliveryOption(
-        page, `${Carriers.myCarrier.name} - Delivery next day!`,
+        page, `${dataCarriers.myCarrier.name} - Delivery next day!`,
       );
-      expect(shippingPriceTTC).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
+      expect(shippingPriceTTC).to.equal(`€${dataCarriers.myCarrier.priceTTC.toFixed(2)}`);
     });
 
     it('should re-check voucher details', async function () {
@@ -555,16 +554,16 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock6', baseContext);
 
-      const totalTaxes = Products.demo_12.price - Products.demo_12.priceTaxExcluded;
+      const totalTaxes = dataProducts.demo_12.price - dataProducts.demo_12.priceTaxExcluded;
 
       const result = await addOrderPage.getSummaryDetails(page);
       await Promise.all([
-        expect(result.totalProducts).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
+        expect(result.totalProducts).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
         expect(result.totalVouchers).to.equal('-€7.00'),
         expect(result.totalShipping).to.equal('€7.00'),
         expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
-        expect(result.totalTaxExcluded).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
-        expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${Products.demo_12.price.toFixed(2)}`),
+        expect(result.totalTaxExcluded).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
+        expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${dataProducts.demo_12.price.toFixed(2)}`),
       ]);
     });
   });

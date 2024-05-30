@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type BrandAddressData from '@data/faker/brandAddress';
-
 import type {Page} from 'playwright';
+import {
+  type FakerBrandAddress,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add brand address page, contains selectors and functions for the page
@@ -66,10 +67,10 @@ class AddBrandAddress extends BOBasePage {
   /**
    * Create or edit Brand Address
    * @param page {Page} Browser tab
-   * @param brandAddressData {BrandAddressData} Data to set in address form
+   * @param brandAddressData {FakerBrandAddress} Data to set in address form
    * @return {Promise<string>}
    */
-  async createEditBrandAddress(page: Page, brandAddressData: BrandAddressData): Promise<string> {
+  async createEditBrandAddress(page: Page, brandAddressData: FakerBrandAddress): Promise<string> {
     // Fill information data
     await this.selectByVisibleText(page, this.brandSelect, brandAddressData.brandName);
     await this.setValue(page, this.lastnameInput, brandAddressData.lastName);

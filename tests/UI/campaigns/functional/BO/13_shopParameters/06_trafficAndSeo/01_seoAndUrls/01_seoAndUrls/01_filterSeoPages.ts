@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 
-// Import data
-import SeoPages from '@data/demo/seoPages';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataSeoPages,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_seoAndUrls_filterSeoPages';
 
@@ -63,10 +63,10 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter SEO pages with id, page,
 
   describe('Filter SEO pages', async () => {
     const tests = [
-      {args: {testIdentifier: 'filterIdMeta', filterBy: 'id_meta', filterValue: SeoPages.contact.id.toString()}},
-      {args: {testIdentifier: 'filterPage', filterBy: 'page', filterValue: SeoPages.contact.page}},
-      {args: {testIdentifier: 'filterTitle', filterBy: 'title', filterValue: SeoPages.contact.title}},
-      {args: {testIdentifier: 'filterUrlRewrite', filterBy: 'url_rewrite', filterValue: SeoPages.contact.friendlyUrl}},
+      {args: {testIdentifier: 'filterIdMeta', filterBy: 'id_meta', filterValue: dataSeoPages.contact.id.toString()}},
+      {args: {testIdentifier: 'filterPage', filterBy: 'page', filterValue: dataSeoPages.contact.page}},
+      {args: {testIdentifier: 'filterTitle', filterBy: 'title', filterValue: dataSeoPages.contact.title}},
+      {args: {testIdentifier: 'filterUrlRewrite', filterBy: 'url_rewrite', filterValue: dataSeoPages.contact.friendlyUrl}},
     ];
 
     tests.forEach((test) => {

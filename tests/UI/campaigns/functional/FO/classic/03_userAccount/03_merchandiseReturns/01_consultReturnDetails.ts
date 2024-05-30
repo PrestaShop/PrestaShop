@@ -22,17 +22,14 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {returnDetailsPage} from '@pages/FO/classic/myAccount/returnDetails';
 
-// Import data
-import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataOrderReturnStatuses,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -59,11 +56,11 @@ describe('FO - Account : Consult return details', async () => {
   let fileName: string = '#RE0000';
 
   // New order by customer data
-  const orderData: OrderData = new OrderData({
+  const orderData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -86,7 +83,7 @@ describe('FO - Account : Consult return details', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe(`Case 1 : Check merchandise returns status '${OrderReturnStatuses.waitingForConfirmation.name}'`, async () => {
+  describe(`Case 1 : Check merchandise returns status '${dataOrderReturnStatuses.waitingForConfirmation.name}'`, async () => {
     describe(`Change the created orders status to '${dataOrderStatuses.shipped.name}'`, async () => {
       it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
@@ -253,7 +250,7 @@ describe('FO - Account : Consult return details', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus', baseContext);
 
         const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
-        expect(packageStatus).to.equal(OrderReturnStatuses.waitingForConfirmation.name);
+        expect(packageStatus).to.equal(dataOrderReturnStatuses.waitingForConfirmation.name);
       });
 
       it('should verify the order return date issued', async function () {
@@ -285,18 +282,18 @@ describe('FO - Account : Consult return details', async () => {
         const orderReturnInfo = await returnDetailsPage.getOrderReturnInfo(page);
         expect(orderReturnInfo)
           .to.contains(`on ${orderDate} ${returnDetailsPage.orderReturnCardBlock}`)
-          .and.to.contains(OrderReturnStatuses.waitingForConfirmation.name)
-          .and.to.contains(`List of items to be returned: Product Quantity ${Products.demo_1.name} `
-            + `(Size: S - Color: White) Reference: ${Products.demo_1.reference} 1`);
+          .and.to.contains(dataOrderReturnStatuses.waitingForConfirmation.name)
+          .and.to.contains(`List of items to be returned: Product Quantity ${dataProducts.demo_1.name} `
+            + `(Size: S - Color: White) Reference: ${dataProducts.demo_1.reference} 1`);
       });
     });
   });
 
   const tests = [
-    {args: {status: OrderReturnStatuses.waitingForPackage.name}},
-    {args: {status: OrderReturnStatuses.packageReceived.name}},
-    {args: {status: OrderReturnStatuses.returnDenied.name}},
-    {args: {status: OrderReturnStatuses.returnCompleted.name}},
+    {args: {status: dataOrderReturnStatuses.waitingForPackage.name}},
+    {args: {status: dataOrderReturnStatuses.packageReceived.name}},
+    {args: {status: dataOrderReturnStatuses.returnDenied.name}},
+    {args: {status: dataOrderReturnStatuses.returnCompleted.name}},
   ];
   tests.forEach((test, index: number) => {
     describe(`Case ${index + 2} : Check merchandise returns with the status ${test.args.status}`, async () => {
@@ -426,8 +423,8 @@ describe('FO - Account : Consult return details', async () => {
           expect(orderReturnInfo)
             .to.contains(`${fileName} on ${orderDate} ${returnDetailsPage.orderReturnCardBlock}`)
             .and.to.contains(test.args.status)
-            .and.to.contains(`List of items to be returned: Product Quantity ${Products.demo_1.name} `
-              + `(Size: S - Color: White) Reference: ${Products.demo_1.reference} 1`);
+            .and.to.contains(`List of items to be returned: Product Quantity ${dataProducts.demo_1.name} `
+              + `(Size: S - Color: White) Reference: ${dataProducts.demo_1.reference} 1`);
         });
       });
     });

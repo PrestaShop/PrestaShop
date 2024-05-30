@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import attributesPage from '@pages/BO/catalog/attributes';
 import viewAttributePage from '@pages/BO/catalog/attributes/view';
 
-// Import data
-import Attributes from '@data/demo/attributes';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataAttributes,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_attributes_values_filterValues';
 
@@ -59,10 +59,10 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
   it('should filter attributes table by name \'Color\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterAttributes', baseContext);
 
-    await attributesPage.filterTable(page, 'name', Attributes.color.name);
+    await attributesPage.filterTable(page, 'name', dataAttributes.color.name);
 
     const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
-    expect(textColumn).to.contains(Attributes.color.name);
+    expect(textColumn).to.contains(dataAttributes.color.name);
   });
 
   it('should view attribute', async function () {
@@ -71,7 +71,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
     await attributesPage.viewAttribute(page, 1);
 
     const pageTitle = await viewAttributePage.getPageTitle(page);
-    expect(pageTitle).to.equal(viewAttributePage.pageTitle(Attributes.color.name));
+    expect(pageTitle).to.equal(viewAttributePage.pageTitle(dataAttributes.color.name));
   });
 
   it('should reset all filters and get number of values in BO', async function () {
@@ -88,7 +88,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
           {
             testIdentifier: 'filterId',
             filterBy: 'id_attribute',
-            filterValue: Attributes.color.values[13].id.toString(),
+            filterValue: dataAttributes.color.values[13].id.toString(),
           },
       },
       {
@@ -96,7 +96,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
           {
             testIdentifier: 'filterName',
             filterBy: 'name',
-            filterValue: Attributes.color.values[3].value,
+            filterValue: dataAttributes.color.values[3].value,
           },
       },
       {
@@ -104,7 +104,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
           {
             testIdentifier: 'filterColor',
             filterBy: 'color',
-            filterValue: Attributes.color.values[7].color,
+            filterValue: dataAttributes.color.values[7].color,
           },
       },
     ];

@@ -15,7 +15,6 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import productSettings from '@pages/BO/shopParameters/productSettings';
 
 // Import data
-import ProductData from '@data/faker/product';
 import type {
   ProductCombinationOptions,
   ProductAttribute,
@@ -23,7 +22,10 @@ import type {
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_combinationTab';
 
@@ -32,7 +34,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
   let page: Page;
 
   // Data to create product with combinations
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'combinations',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',

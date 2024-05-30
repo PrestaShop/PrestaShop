@@ -6,11 +6,11 @@ import helper from '@utils/helpers';
 import {homePage} from '@pages/FO/classic/home';
 import {categoryPage} from '@pages/FO/classic/category';
 
-// Import data
-import Categories from '@data/demo/categories';
-
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
+import {
+  dataCategories,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_catalogFO_filterProducts';
 
@@ -58,10 +58,10 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
     it('should filter products by the category \'Accessories\' and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'FilterProductByCategory', baseContext);
 
-      await categoryPage.goToCategory(page, Categories.accessories.id);
+      await categoryPage.goToCategory(page, dataCategories.accessories.id);
 
       const pageTitle = await categoryPage.getPageTitle(page);
-      expect(pageTitle).to.equal(Categories.accessories.name);
+      expect(pageTitle).to.equal(dataCategories.accessories.name);
 
       const numberOfProducts = await categoryPage.getProductsNumber(page);
       expect(numberOfProducts).to.be.below(allProductsNumber);
@@ -71,7 +71,7 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
       await testContext.addContextItem(this, 'testIdentifier', 'FilterProductBySubCategory', baseContext);
 
       await categoryPage.reloadPage(page);
-      await categoryPage.goToSubCategory(page, Categories.accessories.id, Categories.stationery.id);
+      await categoryPage.goToSubCategory(page, dataCategories.accessories.id, dataCategories.stationery.id);
 
       const numberOfProducts = await categoryPage.getProductsNumber(page);
       expect(numberOfProducts).to.be.below(allProductsNumber);

@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type AttributeValueData from '@data/faker/attributeValue';
-
 import type {Page} from 'playwright';
+import {
+  type FakerAttributeValue,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add value page, contains functions that can be used on the page
@@ -55,11 +56,11 @@ class AddValue extends BOBasePage {
   /**
    * Fill value form and save it
    * @param page {Page} Browser tab
-   * @param valueData {AttributeValueData} Data to set on add/edit value form
+   * @param valueData {FakerAttributeValue} Data to set on add/edit value form
    * @param saveAndStay {boolean} True if we need to save and stay, false if not
    * @return {Promise<string>}
    */
-  async addEditValue(page: Page, valueData: AttributeValueData, saveAndStay: boolean = false): Promise<string> {
+  async addEditValue(page: Page, valueData: FakerAttributeValue, saveAndStay: boolean = false): Promise<string> {
     // Set group and value
     await this.selectByVisibleText(page, this.attributeGroupSelect, `${valueData.attributeName} (#${valueData.attributeID})`);
     await this.setValue(page, this.valueInput, valueData.value);

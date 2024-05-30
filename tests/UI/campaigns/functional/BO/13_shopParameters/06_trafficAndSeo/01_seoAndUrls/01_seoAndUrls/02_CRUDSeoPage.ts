@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import addSeoAndUrlPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls/add';
 
-// Import data
-import SeoPages from '@data/demo/seoPages';
-import SeoPageData from '@data/faker/seoPage';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataSeoPages,
+  FakerSeoPage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_seoAndUrls_CRUDSeoPage';
 
@@ -24,8 +24,8 @@ describe('BO - Shop Parameters - Traffic & SEO : Create, update and delete seo p
   let page: Page;
   let numberOfSeoPages: number = 0;
 
-  const createSeoPageData: SeoPageData = SeoPages.orderReturn;
-  const editSeoPageData: SeoPageData = SeoPages.pdfOrderReturn;
+  const createSeoPageData: FakerSeoPage = dataSeoPages.orderReturn;
+  const editSeoPageData: FakerSeoPage = dataSeoPages.pdfOrderReturn;
 
   // before and after functions
   before(async function () {

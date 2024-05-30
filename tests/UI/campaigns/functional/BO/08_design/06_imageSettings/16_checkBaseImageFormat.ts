@@ -13,12 +13,12 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_checkBaseImageFormat';
 
@@ -28,17 +28,17 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
   let idProduct: number = 0;
   let idProductImage: number = 0;
 
-  const productDataPNGBaseFormatJPEG: ProductData = new ProductData({
+  const productDataPNGBaseFormatJPEG: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: 'coverPNGBaseFormatJPEG.png',
     status: true,
   });
-  const productDataJPEGBaseFormatJPEG: ProductData = new ProductData({
+  const productDataJPEGBaseFormatJPEG: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: 'coverJPEGBaseFormatJPEG.jpg',
     status: true,
   });
-  const productDataPNGBaseFormatPNG: ProductData = new ProductData({
+  const productDataPNGBaseFormatPNG: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: 'coverPNGBaseFormatPNG.png',
     status: true,
@@ -128,7 +128,7 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
         extOriginal: 'png',
         extGenerated: 'png',
       },
-    ].forEach((arg: {baseFormat: string, product: ProductData, extOriginal: string, extGenerated: string}, index: number) => {
+    ].forEach((arg: {baseFormat: string, product: FakerProduct, extOriginal: string, extGenerated: string}, index: number) => {
       describe(`Base Format : ${arg.baseFormat.toUpperCase()} - Image Extension : ${arg.extOriginal.toUpperCase()}`, async () => {
         if (index !== 0) {
           it('should go to \'Design > Image Settings\' page', async function () {
@@ -257,7 +257,7 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
     productDataPNGBaseFormatJPEG,
     productDataJPEGBaseFormatJPEG,
     productDataPNGBaseFormatPNG,
-  ].forEach((product: ProductData, index: number) => {
+  ].forEach((product: FakerProduct, index: number) => {
     deleteProductTest(product, `${baseContext}_removeProduct${index}`);
   });
 });

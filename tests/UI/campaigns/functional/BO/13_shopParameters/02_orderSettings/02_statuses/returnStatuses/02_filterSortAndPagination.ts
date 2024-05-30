@@ -11,13 +11,13 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 import addOrderReturnStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/returnStatus/add';
 
-// Import data
-import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
-import OrderReturnStatusData from '@data/faker/orderReturnStatus';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataOrderReturnStatuses,
+  FakerOrderReturnStatus,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_orderSettings_statuses_returnStatuses_filterSortAndPagination';
 
@@ -88,7 +88,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_order_return_state',
-            filterValue: OrderReturnStatuses.packageReceived.id.toString(),
+            filterValue: dataOrderReturnStatuses.packageReceived.id.toString(),
             idColumn: 1,
           },
       },
@@ -98,7 +98,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: OrderReturnStatuses.returnCompleted.name,
+            filterValue: dataOrderReturnStatuses.returnCompleted.name,
             idColumn: 2,
           },
       },
@@ -219,7 +219,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
 
   creationTests.forEach((test: number, index: number) => {
     describe(`Create order return status n°${index + 1} in BO`, async () => {
-      const orderReturnStatusData: OrderReturnStatusData = new OrderReturnStatusData({name: `todelete${index}`});
+      const orderReturnStatusData: FakerOrderReturnStatus = new FakerOrderReturnStatus({name: `todelete${index}`});
 
       it('should go to add new order status group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddOrderReturnStatusPage${index}`, baseContext);

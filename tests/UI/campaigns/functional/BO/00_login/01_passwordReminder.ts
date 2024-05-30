@@ -12,7 +12,6 @@ import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import employeesPage from '@pages/BO/advancedParameters/team';
 
 // Import data
-import EmployeeData from '@data/faker/employee';
 import type MailDevEmail from '@data/types/maildevEmail';
 
 import {expect} from 'chai';
@@ -21,6 +20,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  FakerEmployee,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_login_passwordReminder';
@@ -44,7 +44,7 @@ describe('BO - Login : Password reminder', async () => {
   let mailListener: MailDev;
 
   const resetPasswordMailSubject: string = 'Your new password';
-  const createEmployeeData: EmployeeData = new EmployeeData({
+  const createEmployeeData: FakerEmployee = new FakerEmployee({
     defaultPage: 'Products',
     language: 'English (English)',
     permissionProfile: 'Salesman',

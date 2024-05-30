@@ -10,13 +10,13 @@ import contactPage from '@pages/BO/shopParameters/contact';
 import storesPage from '@pages/BO/shopParameters/stores';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 
-// Import data
-import Stores from '@data/demo/stores';
-import StoreData from '@data/faker/store';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataStores,
+  FakerStore,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_contact_stores_contactDetails';
 
@@ -24,7 +24,7 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const storesContactToCreate: StoreData = new StoreData();
+  const storesContactToCreate: FakerStore = new FakerStore();
 
   // before and after functions
   before(async function () {
@@ -110,7 +110,7 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
   it('should back to default contact details information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultInformation', baseContext);
 
-    const textResult = await storesPage.setContactDetails(page, Stores.contact);
+    const textResult = await storesPage.setContactDetails(page, dataStores.contact);
     expect(textResult).to.contains(storesPage.contactFormSuccessfulUpdateMessage);
   });
 });

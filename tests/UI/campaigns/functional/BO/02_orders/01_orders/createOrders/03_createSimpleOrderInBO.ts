@@ -12,18 +12,15 @@ import addOrderPage from '@pages/BO/orders/add';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
-// Import data
-import Addresses from '@data/demo/address';
-import Carriers from '@data/demo/carriers';
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
+  dataAddresses,
+  dataCarriers,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -51,23 +48,23 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const orderToMake: OrderData = new OrderData({
+  const orderToMake: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_5,
+        product: dataProducts.demo_5,
         quantity: 4,
       },
     ],
-    deliveryAddress: Addresses.second,
-    invoiceAddress: Addresses.second,
+    deliveryAddress: dataAddresses.address_2,
+    invoiceAddress: dataAddresses.address_2,
     deliveryOption: {
-      name: `${Carriers.default.name} - ${Carriers.default.delay}`,
+      name: `${dataCarriers.clickAndCollect.name} - ${dataCarriers.clickAndCollect.delay}`,
       freeShipping: true,
     },
     paymentMethod: dataPaymentMethods.checkPayment,
     status: dataOrderStatuses.paymentAccepted,
-    totalPrice: (Products.demo_5.priceTaxExcluded * 4) * 1.2, // Price tax included
+    totalPrice: (dataProducts.demo_5.priceTaxExcluded * 4) * 1.2, // Price tax included
   });
 
   before(async function () {

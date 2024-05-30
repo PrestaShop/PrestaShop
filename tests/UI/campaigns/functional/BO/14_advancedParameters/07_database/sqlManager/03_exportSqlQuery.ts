@@ -11,19 +11,23 @@ import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
 import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/add';
 
 // Import data
-import Tables from '@data/demo/sqlTables';
 import SQLQueryFaker from '@data/faker/sqlQuery';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataSqlTables,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_database_sqlManager_exportSqlQuery';
 
 describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
   const dbPrefix: string = global.INSTALL.DB_PREFIX;
   const sqlQueryData: SQLQueryFaker = new SQLQueryFaker({tableName: `${dbPrefix}alias`});
-  const fileContent: string = `${Tables.ps_alias.columns[1]};${Tables.ps_alias.columns[2]};${Tables.ps_alias.columns[3]}`;
+  const fileContent: string = `${dataSqlTables.ps_alias.columns[1]};`
+    + `${dataSqlTables.ps_alias.columns[2]};`
+    + `${dataSqlTables.ps_alias.columns[3]}`;
 
   let browserContext: BrowserContext;
   let page: Page;

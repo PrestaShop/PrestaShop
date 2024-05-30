@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 import addImageTypePage from '@pages/BO/design/imageSettings/add';
 
-// Import data
-import ImageTypeData from '@data/faker/imageType';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerImageType,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_sortAndPagination';
 
@@ -68,7 +68,7 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
   describe('Create 15 image types', async () => {
     const creationTests: number[] = new Array(15).fill(0, 0, 15);
     creationTests.forEach((test: number, index: number) => {
-      const createImageTypeData: ImageTypeData = new ImageTypeData({name: `todelete${index}`});
+      const createImageTypeData: FakerImageType = new FakerImageType({name: `todelete${index}`});
 
       it('should go to add new image type page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddImageTypePage${index}`, baseContext);

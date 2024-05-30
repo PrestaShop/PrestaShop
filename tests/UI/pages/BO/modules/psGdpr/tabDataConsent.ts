@@ -1,6 +1,8 @@
 import type {Page} from 'playwright';
-import Languages from '@data/demo/languages';
 import {ModuleConfiguration} from '@pages/BO/modules/moduleConfiguration';
+import {
+  dataLanguages,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Module configuration page for module : psgdpr, contains selectors and functions for the page
@@ -67,7 +69,7 @@ class PsGdprTabDataConsentPage extends ModuleConfiguration {
    * @returns {Promise<void>}
    */
   async setAccountCreationMessage(page: Page, message: string): Promise<void> {
-    await this.setValueOnTinymceInput(page, this.messageCreationForm(Languages.english.id), message, false);
+    await this.setValueOnTinymceInput(page, this.messageCreationForm(dataLanguages.english.id), message, false);
   }
 
   /**
@@ -89,7 +91,7 @@ class PsGdprTabDataConsentPage extends ModuleConfiguration {
    * @returns {Promise<void>}
    */
   async setCustomerAccountMessage(page: Page, message: string): Promise<void> {
-    await this.setValueOnTinymceInput(page, this.messageCustomerForm(Languages.english.id), message, false);
+    await this.setValueOnTinymceInput(page, this.messageCustomerForm(dataLanguages.english.id), message, false);
   }
 
   /**
@@ -111,7 +113,7 @@ class PsGdprTabDataConsentPage extends ModuleConfiguration {
    * @returns {Promise<void>}
    */
   async setNewsletterMessage(page: Page, message: string): Promise<void> {
-    await this.setTinyMCEInputValue(page.frameLocator(this.messageModuleForm(Languages.english.id)).nth(0), message);
+    await this.setTinyMCEInputValue(page.frameLocator(this.messageModuleForm(dataLanguages.english.id)).nth(0), message);
   }
 
   /**
@@ -133,7 +135,7 @@ class PsGdprTabDataConsentPage extends ModuleConfiguration {
    * @returns {Promise<void>}
    */
   async setContactFormMessage(page: Page, message: string): Promise<void> {
-    await this.setTinyMCEInputValue(page.frameLocator(this.messageModuleForm(Languages.english.id)).nth(2), message);
+    await this.setTinyMCEInputValue(page.frameLocator(this.messageModuleForm(dataLanguages.english.id)).nth(2), message);
   }
 
   /**
@@ -155,7 +157,7 @@ class PsGdprTabDataConsentPage extends ModuleConfiguration {
    * @returns {Promise<void>}
    */
   async setProductCommentsMessage(page: Page, message: string): Promise<void> {
-    await this.setTinyMCEInputValue(page.frameLocator(this.messageModuleForm(Languages.english.id)).nth(1), message);
+    await this.setTinyMCEInputValue(page.frameLocator(this.messageModuleForm(dataLanguages.english.id)).nth(1), message);
   }
 
   /**
@@ -177,7 +179,7 @@ class PsGdprTabDataConsentPage extends ModuleConfiguration {
    * @param idLang {number} Lang ID
    * @returns {Promise<void>}
    */
-  async setMailAlertsMessage(page: Page, message: string, idLang: number = Languages.english.id): Promise<void> {
+  async setMailAlertsMessage(page: Page, message: string, idLang: number = dataLanguages.english.id): Promise<void> {
     await page.locator(this.btnDropdownLangModuleForm).nth(3).click();
     await page.locator(this.btnDropdownItemLangModuleForm(idLang)).click();
     await this.setTinyMCEInputValue(page.frameLocator(this.messageModuleForm(idLang)).nth(3), message);

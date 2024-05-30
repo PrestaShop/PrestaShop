@@ -20,13 +20,13 @@ import homePage from '@pages/FO/hummingbird/home';
 import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import productPage from '@pages/FO/hummingbird/product';
 
-// Import data
-import Products from '@data/demo/products';
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigationAndDisplay_displayTags';
 
@@ -54,7 +54,7 @@ describe('FO - Navigation and display : Display tags', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const specificPriceData: ProductData = new ProductData({
+  const specificPriceData: FakerProduct = new FakerProduct({
     specificPrice: {
       attributes: null,
       discount: 10,
@@ -62,7 +62,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       reductionType: '€',
     },
   });
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: 'image.jpg',
     taxRule: 'FR Taux standard (20%)',
@@ -71,7 +71,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     minimumQuantity: 2,
     status: true,
   });
-  const packOfProducts: ProductData = new ProductData({
+  const packOfProducts: FakerProduct = new FakerProduct({
     name: 'Pack of products',
     coverImage: 'image.jpg',
     type: 'pack',
@@ -121,10 +121,10 @@ describe('FO - Navigation and display : Display tags', async () => {
       expect(result).to.equal(true);
     });
 
-    it(`should search for the product '${Products.demo_6.name}'`, async function () {
+    it(`should search for the product '${dataProducts.demo_6.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProductDemo6', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_6.name);
+      await homePage.searchProduct(page, dataProducts.demo_6.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -136,7 +136,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await searchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_6.name);
+      expect(pageTitle).to.contains(dataProducts.demo_6.name);
     });
 
     it('should check the new tag', async function () {
@@ -183,10 +183,10 @@ describe('FO - Navigation and display : Display tags', async () => {
       expect(result).to.equal(true);
     });
 
-    it(`should search for the product '${Products.demo_6.name}'`, async function () {
+    it(`should search for the product '${dataProducts.demo_6.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProductDemo6_2', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_6.name);
+      await homePage.searchProduct(page, dataProducts.demo_6.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -198,7 +198,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await searchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_6.name);
+      expect(pageTitle).to.contains(dataProducts.demo_6.name);
     });
 
     it('should check that the new tag is not displayed', async function () {

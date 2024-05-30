@@ -10,12 +10,12 @@ import contactPage from '@pages/BO/shopParameters/contact';
 import storesPage from '@pages/BO/shopParameters/stores';
 import addStorePage from '@pages/BO/shopParameters/stores/add';
 
-// Import data
-import StoreData from '@data/faker/store';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerStore,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_contact_stores_bulkActionsStores';
 
@@ -24,9 +24,9 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
   let page: Page;
   let numberOfStores: number = 0;
 
-  const storesToCreate: StoreData[] = [
-    new StoreData({name: 'todelete1'}),
-    new StoreData({name: 'todelete2'}),
+  const storesToCreate: FakerStore[] = [
+    new FakerStore({name: 'todelete1'}),
+    new FakerStore({name: 'todelete2'}),
   ];
 
   // before and after functions
@@ -74,7 +74,7 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
   });
 
   describe('Create 2 stores in BO', async () => {
-    storesToCreate.forEach((storeToCreate: StoreData, index: number) => {
+    storesToCreate.forEach((storeToCreate: FakerStore, index: number) => {
       it('should go to add new store page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewStorePage${index + 1}`, baseContext);
 

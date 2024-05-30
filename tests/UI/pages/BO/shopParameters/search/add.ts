@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import SearchAliasData from '@data/faker/search';
-
 import type {Page} from 'playwright';
+import {
+  type FakerSearchAlias,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add alias page, contains selectors and functions for the page
@@ -40,10 +41,10 @@ class AddAlias extends BOBasePage {
   /**
    * Create/Edit alias
    * @param page {Page} Browser tab
-   * @param aliasData {SearchAliasData} Data to set on alias form
+   * @param aliasData {FakerSearchAlias} Data to set on alias form
    * @returns {Promise<string>}
    */
-  async setAlias(page: Page, aliasData: SearchAliasData): Promise<string> {
+  async setAlias(page: Page, aliasData: FakerSearchAlias): Promise<string> {
     await this.setValue(page, this.aliasInput, aliasData.alias);
     await this.setValue(page, this.resultInput, aliasData.result);
 

@@ -11,12 +11,12 @@ import localizationPage from '@pages/BO/international/localization';
 import languagesPage from '@pages/BO/international/languages';
 import addLanguagePage from '@pages/BO/international/languages/add';
 
-// Import data
-import LanguageData from '@data/faker/language';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerLanguage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_languages_bulkActionsLanguages';
 
@@ -31,8 +31,8 @@ describe('BO - International - Languages : Bulk disable, enable and delete langu
   let page: Page;
   let numberOfLanguages: number = 0;
 
-  const firstLanguageData: LanguageData = new LanguageData({name: 'languageToDelete1', isoCode: 'fi'});
-  const secondLanguageData: LanguageData = new LanguageData({name: 'languageToDelete2', isoCode: 'ca'});
+  const firstLanguageData: FakerLanguage = new FakerLanguage({name: 'languageToDelete1', isoCode: 'fi'});
+  const secondLanguageData: FakerLanguage = new FakerLanguage({name: 'languageToDelete2', isoCode: 'ca'});
 
   // before and after functions
   before(async function () {
@@ -93,7 +93,7 @@ describe('BO - International - Languages : Bulk disable, enable and delete langu
   });
 
   describe('Create 2 Languages', async () => {
-    [firstLanguageData, secondLanguageData].forEach((languageToCreate: LanguageData, index: number) => {
+    [firstLanguageData, secondLanguageData].forEach((languageToCreate: FakerLanguage, index: number) => {
       it('should go to add new language page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewLanguage${index + 1}`, baseContext);
 

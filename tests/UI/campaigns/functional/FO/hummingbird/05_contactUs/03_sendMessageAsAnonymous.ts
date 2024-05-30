@@ -23,12 +23,11 @@ import loginPage from '@pages/FO/hummingbird/login';
 // Import data
 import MessageData from '@data/faker/message';
 import MailDevEmail from '@data/types/maildevEmail';
-import Modules from '@data/demo/modules';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataModules,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -135,17 +134,17 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       expect(pageTitle).to.contains(moduleManager.pageTitle);
     });
 
-    it(`should search the module ${Modules.contactForm.name}`, async function () {
+    it(`should search the module ${dataModules.contactForm.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, Modules.contactForm);
+      const isModuleVisible = await moduleManager.searchModule(page, dataModules.contactForm);
       expect(isModuleVisible).to.equal(true);
     });
 
-    it(`should go to the configuration page of the module '${Modules.contactForm.name}'`, async function () {
+    it(`should go to the configuration page of the module '${dataModules.contactForm.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, Modules.contactForm.tag);
+      await moduleManager.goToConfigurationPage(page, dataModules.contactForm.tag);
 
       const pageTitle = await contactFormPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(contactFormPage.pageTitle);
@@ -312,17 +311,17 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       expect(pageTitle).to.contains(moduleManager.pageTitle);
     });
 
-    it(`should search the module ${Modules.contactForm.name}`, async function () {
+    it(`should search the module ${dataModules.contactForm.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule2', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, Modules.contactForm);
+      const isModuleVisible = await moduleManager.searchModule(page, dataModules.contactForm);
       expect(isModuleVisible).to.equal(true);
     });
 
-    it(`should go to the configuration page of the module '${Modules.contactForm.name}'`, async function () {
+    it(`should go to the configuration page of the module '${dataModules.contactForm.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage2', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, Modules.contactForm.tag);
+      await moduleManager.goToConfigurationPage(page, dataModules.contactForm.tag);
 
       const pageTitle = await contactFormPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(contactFormPage.pageTitle);

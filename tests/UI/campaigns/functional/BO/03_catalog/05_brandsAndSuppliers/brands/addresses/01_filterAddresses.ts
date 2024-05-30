@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import brandsPage from '@pages/BO/catalog/brands';
 
-// Import data
-import BrandsAddresses from '@data/demo/brandsAddresses';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataBrandAddresses,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_brands_addresses_filterAddresses';
 
@@ -70,7 +70,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_address',
-            filterValue: BrandsAddresses.first.id.toString(),
+            filterValue: dataBrandAddresses.brandAddress_4.id.toString(),
           },
       },
       {
@@ -79,7 +79,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: BrandsAddresses.first.brandName,
+            filterValue: dataBrandAddresses.brandAddress_4.brandName,
           },
       },
       {
@@ -88,7 +88,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterFirstName',
             filterType: 'input',
             filterBy: 'firstname',
-            filterValue: BrandsAddresses.first.firstName,
+            filterValue: dataBrandAddresses.brandAddress_4.firstName,
           },
       },
       {
@@ -97,7 +97,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterLastName',
             filterType: 'input',
             filterBy: 'lastname',
-            filterValue: BrandsAddresses.first.lastName,
+            filterValue: dataBrandAddresses.brandAddress_4.lastName,
           },
       },
       {
@@ -106,7 +106,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterPostCode',
             filterType: 'input',
             filterBy: 'postcode',
-            filterValue: BrandsAddresses.first.postalCode,
+            filterValue: dataBrandAddresses.brandAddress_4.postalCode,
           },
       },
       {
@@ -115,7 +115,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterCity',
             filterType: 'input',
             filterBy: 'city',
-            filterValue: BrandsAddresses.first.city,
+            filterValue: dataBrandAddresses.brandAddress_4.city,
           },
       },
       {
@@ -124,7 +124,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterCountry',
             filterType: 'select',
             filterBy: 'country',
-            filterValue: BrandsAddresses.first.country,
+            filterValue: dataBrandAddresses.brandAddress_4.country,
           },
       },
     ];

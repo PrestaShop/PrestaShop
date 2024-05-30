@@ -10,13 +10,10 @@ import customersPage from '@pages/BO/customers';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataModules,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -99,15 +96,15 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should go to '${Modules.psEmailSubscription.name}' module`, async function () {
+    it(`should go to '${dataModules.psEmailSubscription.name}' module`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToEmailSubscriptionModule${index}`, baseContext);
 
       // Search and go to configure module page
-      await moduleManagerPage.searchModule(page, Modules.psEmailSubscription);
-      await moduleManagerPage.goToConfigurationPage(page, Modules.psEmailSubscription.tag);
+      await moduleManagerPage.searchModule(page, dataModules.psEmailSubscription);
+      await moduleManagerPage.goToConfigurationPage(page, dataModules.psEmailSubscription.tag);
 
       const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
-      expect(pageTitle).to.contains(Modules.psEmailSubscription.name);
+      expect(pageTitle).to.contains(dataModules.psEmailSubscription.name);
     });
 
     it('should check customer registration to newsletter', async function () {

@@ -14,12 +14,12 @@ import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_general_general_allowIframes';
 
@@ -123,7 +123,7 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
         await foProductPage.changeLanguage(page, 'en');
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        expect(pageTitle).to.contains(Products.demo_14.name);
+        expect(pageTitle).to.contains(dataProducts.demo_14.name);
       });
 
       it('should check the existence of the iframe in the product description', async function () {
@@ -178,7 +178,7 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
       await testContext.addContextItem(this, 'testIdentifier', 'resetDescription', baseContext);
 
       await descriptionTab.setIframeInDescription(page, '');
-      await descriptionTab.setDescription(page, Products.demo_14.description);
+      await descriptionTab.setDescription(page, dataProducts.demo_14.description);
 
       const message = await addProductPage.saveProduct(page);
       expect(message).to.eq(addProductPage.successfulUpdateMessage);

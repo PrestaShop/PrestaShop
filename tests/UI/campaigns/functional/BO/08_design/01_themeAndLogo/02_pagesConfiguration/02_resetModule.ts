@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
 import pagesConfigurationPage from '@pages/BO/design/themeAndLogo/pagesConfiguration';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_themeAndLogo_pagesConfiguration_resetModule';
 
@@ -62,7 +62,7 @@ describe('BO - Design - Theme & Logo : Reset module', async () => {
   it('should reset the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-    const successMessage = await pagesConfigurationPage.setActionInModule(page, Modules.mainMenu, 'reset');
+    const successMessage = await pagesConfigurationPage.setActionInModule(page, dataModules.mainMenu, 'reset');
     expect(successMessage).to.eq(pagesConfigurationPage.successMessage);
   });
 });

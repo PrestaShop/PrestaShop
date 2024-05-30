@@ -15,13 +15,13 @@ import {categoryPage} from '@pages/FO/classic/category';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
-// Import data
-import Categories from '@data/demo/categories';
-import CategoryData from '@data/faker/category';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataCategories,
+  FakerCategory,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_categories_editHomeCategory';
 
@@ -31,7 +31,7 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
   let page: Page;
   let categoryID: number;
 
-  const editCategoryData: CategoryData = new CategoryData({name: 'Home'});
+  const editCategoryData: FakerCategory = new FakerCategory({name: 'Home'});
 
   // before and after functions
   before(async function () {
@@ -149,7 +149,7 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
   it('should reset update the category', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetUpdateCategory', baseContext);
 
-    const textResult = await editCategoryPage.editHomeCategory(page, Categories.home);
+    const textResult = await editCategoryPage.editHomeCategory(page, dataCategories.home);
     expect(textResult).to.equal(categoriesPage.pageRootTitle);
   });
 });

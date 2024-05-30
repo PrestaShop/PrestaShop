@@ -12,12 +12,12 @@ import localizationPage from '@pages/BO/international/localization';
 import languagesPage from '@pages/BO/international/languages';
 import addLanguagePage from '@pages/BO/international/languages/add';
 
-// Import data
-import Languages from '@data/demo/languages';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_languages_sortAndPagination';
 
@@ -33,8 +33,8 @@ describe('BO - International - Languages : Sort and pagination', async () => {
 
     // Create images
     await Promise.all([
-      files.generateImage(Languages.croatian.flag),
-      files.generateImage(Languages.croatian.noPicture),
+      files.generateImage(dataLanguages.croatian.flag),
+      files.generateImage(dataLanguages.croatian.noPicture),
     ]);
   });
 
@@ -42,8 +42,8 @@ describe('BO - International - Languages : Sort and pagination', async () => {
     await helper.closeBrowserContext(browserContext);
 
     await Promise.all([
-      files.deleteFile(Languages.croatian.flag),
-      files.deleteFile(Languages.croatian.noPicture),
+      files.deleteFile(dataLanguages.croatian.flag),
+      files.deleteFile(dataLanguages.croatian.noPicture),
     ]);
   });
 
@@ -142,15 +142,15 @@ describe('BO - International - Languages : Sort and pagination', async () => {
   // 2 - Pagination
   describe('Pagination of Languages table', async () => {
     const tests = [
-      {args: {languageData: Languages.spanish}},
-      {args: {languageData: Languages.deutsch}},
-      {args: {languageData: Languages.turkish}},
-      {args: {languageData: Languages.spanishAR}},
-      {args: {languageData: Languages.dutch}},
-      {args: {languageData: Languages.portuguese}},
-      {args: {languageData: Languages.croatian}},
-      {args: {languageData: Languages.simplifiedChinese}},
-      {args: {languageData: Languages.traditionalChinese}},
+      {args: {languageData: dataLanguages.spanish}},
+      {args: {languageData: dataLanguages.deutsch}},
+      {args: {languageData: dataLanguages.turkish}},
+      {args: {languageData: dataLanguages.spanishAR}},
+      {args: {languageData: dataLanguages.dutch}},
+      {args: {languageData: dataLanguages.portuguese}},
+      {args: {languageData: dataLanguages.croatian}},
+      {args: {languageData: dataLanguages.simplifiedChinese}},
+      {args: {languageData: dataLanguages.traditionalChinese}},
     ];
     describe('Create 9 Languages', async () => {
       tests.forEach((test, index: number) => {

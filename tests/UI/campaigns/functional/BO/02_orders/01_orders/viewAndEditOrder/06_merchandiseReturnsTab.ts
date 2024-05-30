@@ -21,17 +21,14 @@ import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/clas
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
-// Import data
-import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataOrderReturnStatuses,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -64,11 +61,11 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
   const merchandiseReturnsNumber: string = '#RE00000';
   const today: string = date.getDateFormat('mm/dd/yyyy');
   // New order by customer data
-  const orderByCustomerData: OrderData = new OrderData({
+  const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -320,9 +317,9 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
   });
 
   [
-    {args: {status: OrderReturnStatuses.waitingForPackage.name}},
-    {args: {status: OrderReturnStatuses.packageReceived.name}},
-    {args: {status: OrderReturnStatuses.returnCompleted.name}},
+    {args: {status: dataOrderReturnStatuses.waitingForPackage.name}},
+    {args: {status: dataOrderReturnStatuses.packageReceived.name}},
+    {args: {status: dataOrderReturnStatuses.returnCompleted.name}},
   ].forEach((test, index: number) => {
     describe(`Update status of merchandise return to '${test.args.status}'`, async () => {
       it('should go to \'Customer Service > Merchandise Returns\' page', async function () {

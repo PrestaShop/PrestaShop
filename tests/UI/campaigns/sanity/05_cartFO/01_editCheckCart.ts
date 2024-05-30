@@ -7,11 +7,11 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_cartFO_editCheckCart';
 
@@ -55,7 +55,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should add product to cart and check that the number of products was updated in cart header', async function () {
@@ -82,7 +82,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await homePage.goToProductPage(page, 2);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_3.name);
+      expect(pageTitle).to.contains(dataProducts.demo_3.name);
     });
 
     it('should add product to cart and check that the number of products was updated in cart header', async function () {
@@ -100,8 +100,8 @@ describe('FO - Cart : Check Cart in FO', async () => {
 
       const result = await cartPage.getProductDetail(page, 1);
       await Promise.all([
-        expect(result.name).to.equal(Products.demo_1.name),
-        expect(result.price).to.equal(Products.demo_1.finalPrice),
+        expect(result.name).to.equal(dataProducts.demo_1.name),
+        expect(result.price).to.equal(dataProducts.demo_1.finalPrice),
         expect(result.quantity).to.equal(1),
       ]);
     });
@@ -111,8 +111,8 @@ describe('FO - Cart : Check Cart in FO', async () => {
 
       const result = await cartPage.getProductDetail(page, 2);
       await Promise.all([
-        expect(result.name).to.equal(Products.demo_3.name),
-        expect(result.price).to.equal(Products.demo_3.finalPrice),
+        expect(result.name).to.equal(dataProducts.demo_3.name),
+        expect(result.price).to.equal(dataProducts.demo_3.finalPrice),
         expect(result.quantity).to.equal(1),
       ]);
     });
@@ -123,7 +123,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       // getNumberFromText is used to get the price ATI
       totalATI = await cartPage.getATIPrice(page);
       // @todo : https://github.com/PrestaShop/PrestaShop/issues/9779
-      // expect(totalATI.toString()).to.be.equal((Products.demo_3.finalPrice + Products.demo_1.finalPrice)
+      // expect(totalATI.toString()).to.be.equal((dataProducts.demo_3.finalPrice + dataProducts.demo_1.finalPrice)
       // .toFixed(2));
     });
 

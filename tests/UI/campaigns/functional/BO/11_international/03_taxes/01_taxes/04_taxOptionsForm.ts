@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import taxesPage from '@pages/BO/international/taxes';
 
-// Import data
-import TaxOptions from '@data/demo/taxOptions';
-import TaxOptionData from '@data/faker/taxOption';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataTaxOptions,
+  FakerTaxOption,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_taxes_taxes_taxOptionsForm';
 
@@ -53,7 +53,7 @@ describe('BO - International - Taxes : Edit Tax options with all EcoTax values',
 
   // Testing all options of EcoTax
   describe('Edit tax options', async () => {
-    TaxOptions.forEach((taxOption: TaxOptionData, index: number) => {
+    dataTaxOptions.forEach((taxOption: FakerTaxOption, index: number) => {
       it(`should edit Tax Option,
       \tEnable Tax:${taxOption.enabled},
       \tDisplay tax in the shopping cart: '${taxOption.displayInShoppingCart}',

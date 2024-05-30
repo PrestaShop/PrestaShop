@@ -26,17 +26,16 @@ import {creditSlipPage} from '@pages/FO/classic/myAccount/creditSlips';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
 import type MailDevEmail from '@data/types/maildevEmail';
 
 import {
   boDashboardPage,
-  // Import data
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -72,11 +71,11 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
     email: customerData.email,
     country: 'France',
   });
-  const orderData: OrderData = new OrderData({
+  const orderData: FakerOrder = new FakerOrder({
     customer: customerData,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],

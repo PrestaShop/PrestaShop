@@ -1,9 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
-import type {ModuleInfo} from '@data/types/module';
 
 import {
-  // Import data
   type FakerModule,
+  type ModuleInfo,
 } from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';

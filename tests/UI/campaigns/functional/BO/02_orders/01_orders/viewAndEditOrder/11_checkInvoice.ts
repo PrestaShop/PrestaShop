@@ -23,19 +23,16 @@ import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import Addresses from '@data/demo/address';
-import Carriers from '@data/demo/carriers';
-import Products from '@data/demo/products';
-import ProductData from '@data/faker/product';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
+  dataAddresses,
+  dataCarriers,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
+  FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -81,18 +78,18 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   // Prefix for the new products to simply delete them by bulk actions
   const prefixNewProduct: string = 'TOTEST';
   // First order by customer data
-  const firstOrderByCustomer: OrderData = new OrderData({
+  const firstOrderByCustomer: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
     paymentMethod: dataPaymentMethods.wirePayment,
   });
   // Customized product data
-  const customizedProduct: ProductData = new ProductData({
+  const customizedProduct: FakerProduct = new FakerProduct({
     name: `Customized product ${prefixNewProduct}`,
     type: 'standard',
     reference: 'bbcdef',
@@ -105,7 +102,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     },
   });
   // Second order by customer
-  const secondOrderByCustomer: OrderData = new OrderData({
+  const secondOrderByCustomer: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
@@ -116,7 +113,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     paymentMethod: dataPaymentMethods.wirePayment,
   });
   // Virtual product data
-  const virtualProduct: ProductData = new ProductData({
+  const virtualProduct: FakerProduct = new FakerProduct({
     name: `Virtual product ${prefixNewProduct}`,
     type: 'virtual',
     quantity: 20,
@@ -125,7 +122,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     stockLocation: 'stock 1',
   });
   // Product with specific price data
-  const productWithSpecificPrice: ProductData = new ProductData({
+  const productWithSpecificPrice: FakerProduct = new FakerProduct({
     name: `Product with sp price ${prefixNewProduct}`,
     reference: 'abcdef',
     type: 'standard',
@@ -140,7 +137,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     },
   });
   // Product with ecoTax data
-  const productWithEcoTax: ProductData = new ProductData({
+  const productWithEcoTax: FakerProduct = new FakerProduct({
     name: `Product with ecotax ${prefixNewProduct}`,
     type: 'standard',
     taxRule: 'No tax',
@@ -199,7 +196,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     customizedProduct,
     productWithSpecificPrice,
     productWithEcoTax,
-  ].forEach((product: ProductData, index: number) => {
+  ].forEach((product: FakerProduct, index: number) => {
     describe(`PRE-TEST: Create product '${product.name}'`, async () => {
       if (index === 0) {
         it('should click on \'New product\' button and check new product modal', async function () {
@@ -351,8 +348,9 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it('should change the \'Invoice address\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress1', baseContext);
 
-        const addressToSelect = `#${Addresses.third.id} ${Addresses.third.alias} - ${Addresses.third.address} `
-          + `${Addresses.third.secondAddress} ${Addresses.third.postalCode} ${Addresses.third.city}`;
+        const addressToSelect = `#${dataAddresses.address_5.id} ${dataAddresses.address_5.alias} - `
+          + `${dataAddresses.address_5.address} ${dataAddresses.address_5.secondAddress} `
+          + `${dataAddresses.address_5.postalCode} ${dataAddresses.address_5.city}`;
 
         const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
         expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -420,13 +418,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const deliveryAddressExist = await files.isTextInPDF(
             filePath,
             'Delivery address,,'
-            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
-            + `${Addresses.second.company},`
-            + `${Addresses.second.address},`
-            + `${Addresses.second.secondAddress},`
-            + `${Addresses.second.postalCode} ${Addresses.second.city},`
-            + `${Addresses.second.country},`
-            + `${Addresses.second.phone}`,
+            + `${dataAddresses.address_2.firstName} ${dataAddresses.address_2.lastName},`
+            + `${dataAddresses.address_2.company},`
+            + `${dataAddresses.address_2.address},`
+            + `${dataAddresses.address_2.secondAddress},`
+            + `${dataAddresses.address_2.postalCode} ${dataAddresses.address_2.city},`
+            + `${dataAddresses.address_2.country},`
+            + `${dataAddresses.address_2.phone}`,
           );
           expect(deliveryAddressExist, 'Delivery address is not correct in invoice!').to.eq(true);
         });
@@ -437,12 +435,12 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const billingAddressExist = await files.isTextInPDF(
             filePath,
             'Billing address,,'
-            + `${Addresses.third.firstName} ${Addresses.third.lastName},`
-            + `${Addresses.third.company},`
-            + `${Addresses.third.address} ${Addresses.third.secondAddress},`
-            + `${Addresses.third.city}, ${Addresses.third.state} ${Addresses.third.postalCode},`
-            + `${Addresses.third.country},`
-            + `${Addresses.third.phone}`,
+            + `${dataAddresses.address_5.firstName} ${dataAddresses.address_5.lastName},`
+            + `${dataAddresses.address_5.company},`
+            + `${dataAddresses.address_5.address} ${dataAddresses.address_5.secondAddress},`
+            + `${dataAddresses.address_5.city}, ${dataAddresses.address_5.state} ${dataAddresses.address_5.postalCode},`
+            + `${dataAddresses.address_5.country},`
+            + `${dataAddresses.address_5.phone}`,
           );
           expect(billingAddressExist, 'Billing address is not correct in invoice!').to.eq(true);
         });
@@ -526,8 +524,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that the carrier is not visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierNotVisible', baseContext);
 
-          const isCarrierVisible = await files.isTextInPDF(filePath, `Carrier, ${Carriers.default.name}`);
-          expect(isCarrierVisible, `Carrier '${Carriers.default.name}' is visible!`).to.eq(false);
+          const isCarrierVisible = await files.isTextInPDF(filePath, `Carrier, ${dataCarriers.clickAndCollect.name}`);
+          expect(isCarrierVisible, `Carrier '${dataCarriers.clickAndCollect.name}' is visible!`).to.eq(false);
         });
       });
 
@@ -656,13 +654,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const deliveryAddressExist = await files.isTextInPDF(
             filePath,
             'Delivery address,,'
-            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
-            + `${Addresses.second.company},`
-            + `${Addresses.second.address},`
-            + `${Addresses.second.secondAddress},`
-            + `${Addresses.second.postalCode} ${Addresses.second.city},`
-            + `${Addresses.second.country},`
-            + `${Addresses.second.phone}`,
+            + `${dataAddresses.address_2.firstName} ${dataAddresses.address_2.lastName},`
+            + `${dataAddresses.address_2.company},`
+            + `${dataAddresses.address_2.address},`
+            + `${dataAddresses.address_2.secondAddress},`
+            + `${dataAddresses.address_2.postalCode} ${dataAddresses.address_2.city},`
+            + `${dataAddresses.address_2.country},`
+            + `${dataAddresses.address_2.phone}`,
           );
           expect(deliveryAddressExist, 'Delivery address is not correct in invoice!').to.eq(true);
         });
@@ -673,13 +671,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const billingAddressExist = await files.isTextInPDF(
             filePath,
             'Billing address,,'
-            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
-            + `${Addresses.second.company},`
-            + `${Addresses.second.address},`
-            + `${Addresses.second.secondAddress},`
-            + `${Addresses.second.postalCode} ${Addresses.second.city},`
-            + `${Addresses.second.country},`
-            + `${Addresses.second.phone}`,
+            + `${dataAddresses.address_2.firstName} ${dataAddresses.address_2.lastName},`
+            + `${dataAddresses.address_2.company},`
+            + `${dataAddresses.address_2.address},`
+            + `${dataAddresses.address_2.secondAddress},`
+            + `${dataAddresses.address_2.postalCode} ${dataAddresses.address_2.city},`
+            + `${dataAddresses.address_2.country},`
+            + `${dataAddresses.address_2.phone}`,
           );
           expect(billingAddressExist, 'Billing address is not correct in invoice!').to.eq(true);
         });
@@ -760,8 +758,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that the carrier is visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierVisible2', baseContext);
 
-          const isCarrierVisible = await files.isTextInPDF(filePath, Carriers.default.name);
-          expect(isCarrierVisible, `Carrier '${Carriers.default.name}' is not visible!`).to.eq(true);
+          const isCarrierVisible = await files.isTextInPDF(filePath, dataCarriers.clickAndCollect.name);
+          expect(isCarrierVisible, `Carrier '${dataCarriers.clickAndCollect.name}' is not visible!`).to.eq(true);
         });
       });
 
@@ -854,13 +852,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const deliveryAddressExist = await files.isTextInPDF(
             filePath,
             'Delivery address,,'
-            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
-            + `${Addresses.second.company},`
-            + `${Addresses.second.address},`
-            + `${Addresses.second.secondAddress},`
-            + `${Addresses.second.postalCode} ${Addresses.second.city},`
-            + `${Addresses.second.country},`
-            + `${Addresses.second.phone}`,
+            + `${dataAddresses.address_2.firstName} ${dataAddresses.address_2.lastName},`
+            + `${dataAddresses.address_2.company},`
+            + `${dataAddresses.address_2.address},`
+            + `${dataAddresses.address_2.secondAddress},`
+            + `${dataAddresses.address_2.postalCode} ${dataAddresses.address_2.city},`
+            + `${dataAddresses.address_2.country},`
+            + `${dataAddresses.address_2.phone}`,
           );
           expect(deliveryAddressExist, 'Delivery address is not correct in invoice!').to.eq(true);
         });
@@ -871,13 +869,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const billingAddressExist = await files.isTextInPDF(
             filePath,
             'Billing address,,'
-            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
-            + `${Addresses.second.company},`
-            + `${Addresses.second.address},`
-            + `${Addresses.second.secondAddress},`
-            + `${Addresses.second.postalCode} ${Addresses.second.city},`
-            + `${Addresses.second.country},`
-            + `${Addresses.second.phone}`,
+            + `${dataAddresses.address_2.firstName} ${dataAddresses.address_2.lastName},`
+            + `${dataAddresses.address_2.company},`
+            + `${dataAddresses.address_2.address},`
+            + `${dataAddresses.address_2.secondAddress},`
+            + `${dataAddresses.address_2.postalCode} ${dataAddresses.address_2.city},`
+            + `${dataAddresses.address_2.country},`
+            + `${dataAddresses.address_2.phone}`,
           );
           expect(billingAddressExist, 'Billing address is not correct in invoice!').to.eq(true);
         });
@@ -962,8 +960,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that the carrier is visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierVisible3', baseContext);
 
-          const isCarrierVisible = await files.isTextInPDF(filePath, Carriers.default.name);
-          expect(isCarrierVisible, `Carrier '${Carriers.default.name}' is not visible!`).to.eq(true);
+          const isCarrierVisible = await files.isTextInPDF(filePath, dataCarriers.clickAndCollect.name);
+          expect(isCarrierVisible, `Carrier '${dataCarriers.clickAndCollect.name}' is not visible!`).to.eq(true);
         });
       });
 
@@ -1097,13 +1095,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const deliveryAddressExist = await files.isTextInPDF(
             filePath,
             'Delivery address,,'
-            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
-            + `${Addresses.second.company},`
-            + `${Addresses.second.address},`
-            + `${Addresses.second.secondAddress},`
-            + `${Addresses.second.postalCode} ${Addresses.second.city},`
-            + `${Addresses.second.country},`
-            + `${Addresses.second.phone}`,
+            + `${dataAddresses.address_2.firstName} ${dataAddresses.address_2.lastName},`
+            + `${dataAddresses.address_2.company},`
+            + `${dataAddresses.address_2.address},`
+            + `${dataAddresses.address_2.secondAddress},`
+            + `${dataAddresses.address_2.postalCode} ${dataAddresses.address_2.city},`
+            + `${dataAddresses.address_2.country},`
+            + `${dataAddresses.address_2.phone}`,
           );
           expect(deliveryAddressExist, 'Delivery address is not correct in invoice!').to.eq(true);
         });
@@ -1114,13 +1112,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const billingAddressExist = await files.isTextInPDF(
             filePath,
             'Billing address,,'
-            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
-            + `${Addresses.second.company},`
-            + `${Addresses.second.address},`
-            + `${Addresses.second.secondAddress},`
-            + `${Addresses.second.postalCode} ${Addresses.second.city},`
-            + `${Addresses.second.country},`
-            + `${Addresses.second.phone}`,
+            + `${dataAddresses.address_2.firstName} ${dataAddresses.address_2.lastName},`
+            + `${dataAddresses.address_2.company},`
+            + `${dataAddresses.address_2.address},`
+            + `${dataAddresses.address_2.secondAddress},`
+            + `${dataAddresses.address_2.postalCode} ${dataAddresses.address_2.city},`
+            + `${dataAddresses.address_2.country},`
+            + `${dataAddresses.address_2.phone}`,
           );
           expect(billingAddressExist, 'Billing address is not correct in invoice!').to.eq(true);
         });
@@ -1209,8 +1207,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that the carrier is visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierVisible4', baseContext);
 
-          const isCarrierVisible = await files.isTextInPDF(filePath, Carriers.default.name);
-          expect(isCarrierVisible, `Carrier '${Carriers.default.name}' is not visible!`).to.eq(true);
+          const isCarrierVisible = await files.isTextInPDF(filePath, dataCarriers.clickAndCollect.name);
+          expect(isCarrierVisible, `Carrier '${dataCarriers.clickAndCollect.name}' is not visible!`).to.eq(true);
         });
       });
 
@@ -1240,8 +1238,9 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should change the \'Shipping address\'', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress2', baseContext);
 
-          const addressToSelect = `#${Addresses.third.id} ${Addresses.third.alias} - ${Addresses.third.address} `
-            + `${Addresses.third.secondAddress} ${Addresses.third.postalCode} ${Addresses.third.city}`;
+          const addressToSelect = `#${dataAddresses.address_5.id} ${dataAddresses.address_5.alias} - `
+            + `${dataAddresses.address_5.address} ${dataAddresses.address_5.secondAddress} `
+            + `${dataAddresses.address_5.postalCode} ${dataAddresses.address_5.city}`;
 
           const alertMessage = await orderPageCustomerBlock.selectAnotherShippingAddress(page, addressToSelect);
           expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -1263,12 +1262,12 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const deliveryAddressExist = await files.isTextInPDF(
             filePath,
             'Delivery address,,'
-            + `${Addresses.third.firstName} ${Addresses.third.lastName},`
-            + `${Addresses.third.company},`
-            + `${Addresses.third.address} ${Addresses.third.secondAddress},`
-            + `${Addresses.third.city}, ${Addresses.third.state} ${Addresses.third.postalCode},`
-            + `${Addresses.third.country},`
-            + `${Addresses.third.phone}`,
+            + `${dataAddresses.address_5.firstName} ${dataAddresses.address_5.lastName},`
+            + `${dataAddresses.address_5.company},`
+            + `${dataAddresses.address_5.address} ${dataAddresses.address_5.secondAddress},`
+            + `${dataAddresses.address_5.city}, ${dataAddresses.address_5.state} ${dataAddresses.address_5.postalCode},`
+            + `${dataAddresses.address_5.country},`
+            + `${dataAddresses.address_5.phone}`,
           );
           expect(deliveryAddressExist, 'Delivery address is not correct!').to.eq(true);
         });
@@ -1276,8 +1275,9 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should change the \'Invoice address\'', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress3', baseContext);
 
-          const addressToSelect = `#${Addresses.third.id} ${Addresses.third.alias} - ${Addresses.third.address} `
-            + `${Addresses.third.secondAddress} ${Addresses.third.postalCode} ${Addresses.third.city}`;
+          const addressToSelect = `#${dataAddresses.address_5.id} ${dataAddresses.address_5.alias} - `
+            + `${dataAddresses.address_5.address} ${dataAddresses.address_5.secondAddress} `
+            + `${dataAddresses.address_5.postalCode} ${dataAddresses.address_5.city}`;
 
           const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
           expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -1299,12 +1299,12 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const deliveryAddressExist = await files.isTextInPDF(
             filePath,
             'Billing address,,'
-            + `${Addresses.third.firstName} ${Addresses.third.lastName},`
-            + `${Addresses.third.company},`
-            + `${Addresses.third.address} ${Addresses.third.secondAddress},`
-            + `${Addresses.third.city}, ${Addresses.third.state} ${Addresses.third.postalCode},`
-            + `${Addresses.third.country},`
-            + `${Addresses.third.phone}`,
+            + `${dataAddresses.address_5.firstName} ${dataAddresses.address_5.lastName},`
+            + `${dataAddresses.address_5.company},`
+            + `${dataAddresses.address_5.address} ${dataAddresses.address_5.secondAddress},`
+            + `${dataAddresses.address_5.city}, ${dataAddresses.address_5.state} ${dataAddresses.address_5.postalCode},`
+            + `${dataAddresses.address_5.country},`
+            + `${dataAddresses.address_5.phone}`,
           );
           expect(deliveryAddressExist, 'Billing address is not correct!').to.eq(true);
         });
@@ -1394,7 +1394,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const shippingDetailsData: OrderShippingData = new OrderShippingData({
             trackingNumber: '',
-            carrier: Carriers.myCarrier.name,
+            carrier: dataCarriers.myCarrier.name,
             carrierID: 1,
           });
 
@@ -1415,7 +1415,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that the edited \'Carrier\' is visible in the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCarrier', baseContext);
 
-          const isCarrierVisible = await files.isTextInPDF(filePath, `Carrier, ,${Carriers.myCarrier.name}`);
+          const isCarrierVisible = await files.isTextInPDF(filePath, `Carrier, ,${dataCarriers.myCarrier.name}`);
           expect(isCarrierVisible, 'New carrier not exist in invoice!').to.eq(true);
         });
 

@@ -14,16 +14,13 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 
-// Import data
-import Carriers from '@data/demo/carriers';
-import Products from '@data/demo/products';
-
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
   type FakerOrderStatus,
 } from '@prestashop-core/ui-testing';
 
@@ -159,13 +156,13 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      const productToSelect = `${Products.demo_11.name} - €${Products.demo_11.price.toFixed(2)}`;
-      await addOrderPage.addProductToCart(page, Products.demo_11, productToSelect);
+      const productToSelect = `${dataProducts.demo_11.name} - €${dataProducts.demo_11.price.toFixed(2)}`;
+      await addOrderPage.addProductToCart(page, dataProducts.demo_11, productToSelect);
 
       const result = await addOrderPage.getProductDetailsFromTable(page);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_11.thumbImage),
-        expect(result.description).to.equal(Products.demo_11.name),
+        expect(result.image).to.contains(dataProducts.demo_11.thumbImage),
+        expect(result.description).to.equal(dataProducts.demo_11.name),
       ]);
     });
 
@@ -176,24 +173,24 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       expect(isVisible, 'Shipping block is not visible!').to.eq(true);
     });
 
-    it(`should choose the carrier '${Carriers.myCarrier.name}' and check shipping price`, async function () {
+    it(`should choose the carrier '${dataCarriers.myCarrier.name}' and check shipping price`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingBlockContent', baseContext);
 
       const shippingPriceTTC = await addOrderPage.setDeliveryOption(
-        page, `${Carriers.myCarrier.name} - Delivery next day!`,
+        page, `${dataCarriers.myCarrier.name} - Delivery next day!`,
       );
-      expect(shippingPriceTTC).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
+      expect(shippingPriceTTC).to.equal(`€${dataCarriers.myCarrier.priceTTC.toFixed(2)}`);
     });
 
     it('should check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock1', baseContext);
 
-      const totalTaxExc = (Products.demo_12.priceTaxExcluded + Carriers.myCarrier.price).toFixed(2);
-      const totalTaxInc = (Products.demo_12.price + Carriers.myCarrier.priceTTC).toFixed(2);
+      const totalTaxExc = (dataProducts.demo_12.priceTaxExcluded + dataCarriers.myCarrier.price).toFixed(2);
+      const totalTaxInc = (dataProducts.demo_12.price + dataCarriers.myCarrier.priceTTC).toFixed(2);
 
       const result = await addOrderPage.getSummaryDetails(page);
       await Promise.all([
-        expect(result.totalShipping).to.equal(`€${Carriers.myCarrier.price.toFixed(2)}`),
+        expect(result.totalShipping).to.equal(`€${dataCarriers.myCarrier.price.toFixed(2)}`),
         expect(result.totalTaxExcluded).to.equal(`€${totalTaxExc}`),
         expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${totalTaxInc}`),
       ]);
@@ -214,8 +211,8 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       const result = await addOrderPage.getSummaryDetails(page);
       await Promise.all([
         expect(result.totalShipping).to.equal('€0.00'),
-        expect(result.totalTaxExcluded).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
-        expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${Products.demo_12.price.toFixed(2)}`),
+        expect(result.totalTaxExcluded).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
+        expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${dataProducts.demo_12.price.toFixed(2)}`),
       ]);
     });
 
@@ -233,8 +230,8 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await addOrderPage.setGift(page, true);
 
       const tax = await basicHelper.percentage(giftOptions.price, 10);
-      const totalTaxExc = (Products.demo_12.priceTaxExcluded + giftOptions.price).toFixed(2);
-      const totalTaxInc = (Products.demo_12.price + giftOptions.price + tax).toFixed(2);
+      const totalTaxExc = (dataProducts.demo_12.priceTaxExcluded + giftOptions.price).toFixed(2);
+      const totalTaxInc = (dataProducts.demo_12.price + giftOptions.price + tax).toFixed(2);
 
       const result = await addOrderPage.getSummaryDetails(page);
       await Promise.all([

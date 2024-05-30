@@ -14,12 +14,12 @@ import seoTab from '@pages/BO/catalog/products/add/seoTab';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_setUpUrls_enableDisableAccentedURL';
 
@@ -29,7 +29,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
 
   const productName: string = 'TESTURLÉ';
   const productNameWithoutAccent: string = 'TESTURLE';
-  const productData: ProductData = new ProductData({name: productName, type: 'standard'});
+  const productData: FakerProduct = new FakerProduct({name: productName, type: 'standard'});
 
   // before and after functions
   before(async function () {

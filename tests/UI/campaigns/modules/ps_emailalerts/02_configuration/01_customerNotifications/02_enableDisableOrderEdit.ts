@@ -15,16 +15,13 @@ import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
-// Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-import Modules from '@data/demo/modules';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataModules,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -54,11 +51,11 @@ describe('Mail alerts module - Enable/Disable return', async () => {
   let mailListener: MailDev;
 
   // New order by customer data
-  const orderData: OrderData = new OrderData({
+  const orderData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 3,
       },
     ],
@@ -99,7 +96,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     mailHelper.stopListener(mailListener);
   });
 
-  describe(`BO: case 1 - Enable 'Order edit' in the module '${Modules.psEmailAlerts.name}'`, async () => {
+  describe(`BO: case 1 - Enable 'Order edit' in the module '${dataModules.psEmailAlerts.name}'`, async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -118,17 +115,17 @@ describe('Mail alerts module - Enable/Disable return', async () => {
       expect(pageTitle).to.contains(moduleManager.pageTitle);
     });
 
-    it(`should search the module ${Modules.psEmailAlerts.name}`, async function () {
+    it(`should search the module ${dataModules.psEmailAlerts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, Modules.psEmailAlerts);
+      const isModuleVisible = await moduleManager.searchModule(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.equal(true);
     });
 
-    it(`should go to the configuration page of the module '${Modules.psEmailAlerts.name}'`, async function () {
+    it(`should go to the configuration page of the module '${dataModules.psEmailAlerts.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, Modules.psEmailAlerts.tag);
+      await moduleManager.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
       const pageTitle = await emailAlertsPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
@@ -179,10 +176,10 @@ describe('Mail alerts module - Enable/Disable return', async () => {
       expect(newMail.subject).to.contains(`[${global.INSTALL.SHOP_NAME}] Your order has been changed`);
     });
 
-    it(`should add the product '${Products.demo_14.name}' to the cart`, async function () {
+    it(`should add the product '${dataProducts.demo_14.name}' to the cart`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addCustomizedProduct', baseContext);
 
-      await orderPageProductsBlock.searchProduct(page, Products.demo_14.name);
+      await orderPageProductsBlock.searchProduct(page, dataProducts.demo_14.name);
 
       const textResult = await orderPageProductsBlock.addProductToCart(page);
       expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
@@ -210,7 +207,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     });
   });
 
-  describe(`BO: case 2 - Disable 'Order edit' in the module '${Modules.psEmailAlerts.name}'`, async () => {
+  describe(`BO: case 2 - Disable 'Order edit' in the module '${dataModules.psEmailAlerts.name}'`, async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage2', baseContext);
 
@@ -225,17 +222,17 @@ describe('Mail alerts module - Enable/Disable return', async () => {
       expect(pageTitle).to.contains(moduleManager.pageTitle);
     });
 
-    it(`should search the module ${Modules.psEmailAlerts.name}`, async function () {
+    it(`should search the module ${dataModules.psEmailAlerts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule2', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, Modules.psEmailAlerts);
+      const isModuleVisible = await moduleManager.searchModule(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.equal(true);
     });
 
-    it(`should go to the configuration page of the module '${Modules.psEmailAlerts.name}'`, async function () {
+    it(`should go to the configuration page of the module '${dataModules.psEmailAlerts.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage2', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, Modules.psEmailAlerts.tag);
+      await moduleManager.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
       const pageTitle = await emailAlertsPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
@@ -285,10 +282,10 @@ describe('Mail alerts module - Enable/Disable return', async () => {
       expect(allEmails.length).to.equal(newEmailsNumber + 2);
     });
 
-    it(`should add the product '${Products.demo_14.name}' to the cart`, async function () {
+    it(`should add the product '${dataProducts.demo_14.name}' to the cart`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProduct', baseContext);
 
-      await orderPageProductsBlock.searchProduct(page, Products.demo_12.name);
+      await orderPageProductsBlock.searchProduct(page, dataProducts.demo_12.name);
 
       const textResult = await orderPageProductsBlock.addProductToCart(page);
       expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);

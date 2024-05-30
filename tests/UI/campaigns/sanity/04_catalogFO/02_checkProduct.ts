@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_catalogFO_checkProduct';
 
@@ -49,7 +49,7 @@ describe('FO - Catalog : Check the Product page', async () => {
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should check the product page', async function () {
@@ -57,9 +57,9 @@ describe('FO - Catalog : Check the Product page', async () => {
 
       const result = await productPage.getProductInformation(page);
       await Promise.all([
-        expect(result.name).to.equal(Products.demo_1.name),
-        expect(result.price).to.equal(Products.demo_1.finalPrice),
-        expect(result.description).to.contains(Products.demo_1.description),
+        expect(result.name).to.equal(dataProducts.demo_1.name),
+        expect(result.price).to.equal(dataProducts.demo_1.finalPrice),
+        expect(result.description).to.contains(dataProducts.demo_1.description),
       ]);
     });
   });

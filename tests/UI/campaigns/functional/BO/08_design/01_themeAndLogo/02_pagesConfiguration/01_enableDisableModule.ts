@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
 import pagesConfigurationPage from '@pages/BO/design/themeAndLogo/pagesConfiguration';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_themeAndLogo_pagesConfiguration_enableDisableModule';
 
@@ -76,7 +76,7 @@ describe('BO - Design - Theme & Logo : Enable/disable module', async () => {
     it(`should ${test.args.title}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.action, baseContext);
 
-      const successMessage = await pagesConfigurationPage.setActionInModule(page, Modules.mainMenu, test.args.action);
+      const successMessage = await pagesConfigurationPage.setActionInModule(page, dataModules.mainMenu, test.args.action);
       expect(successMessage).to.eq(pagesConfigurationPage.successMessage);
     });
   });

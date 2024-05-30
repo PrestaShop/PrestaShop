@@ -9,17 +9,18 @@ import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-import OrderData from '@data/faker/order';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  FakerOrder,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Function to Create a non-ordered shopping cart connected in the FO
- * @param orderData {OrderData} Data to set when creating the order
+ * @param orderData {FakerOrder} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
-function createShoppingCart(orderData: OrderData, baseContext: string = 'commonTests-createShoppingCart'): void {
+function createShoppingCart(orderData: FakerOrder, baseContext: string = 'commonTests-createShoppingCart'): void {
   let browserContext: BrowserContext;
   let page: Page;
 

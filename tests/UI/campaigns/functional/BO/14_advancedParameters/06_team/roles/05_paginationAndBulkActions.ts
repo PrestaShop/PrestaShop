@@ -10,17 +10,17 @@ import employeesPage from '@pages/BO/advancedParameters/team';
 import rolesPage from '@pages/BO/advancedParameters/team/roles';
 import addProfilePage from '@pages/BO/advancedParameters/team/roles/add';
 
-// Import data
-import RoleData from '@data/faker/role';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerEmployeeRole,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_roles_paginationAndBulkActions';
 
 describe('BO - Advanced Parameters - Team : Pagination and delete roles by bulk actions', async () => {
-  const createRoleData: RoleData = new RoleData();
+  const createRoleData: FakerEmployeeRole = new FakerEmployeeRole();
 
   let browserContext: BrowserContext;
   let page: Page;

@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import moduleAlertsPage from '@pages/BO/modules/moduleAlerts';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_alerts_installUninstallModule';
 
@@ -59,17 +59,17 @@ describe('BO - Modules - Alerts : Install/Uninstall module', async () => {
     expect(pageTitle).to.eq(moduleAlertsPage.pageTitle);
   });
 
-  it(`should uninstall the module '${Modules.psCheckPayment.name}'`, async function () {
+  it(`should uninstall the module '${dataModules.psCheckPayment.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-    const successMessage = await moduleAlertsPage.setActionInModule(page, Modules.psCheckPayment, 'uninstall');
-    expect(successMessage).to.eq(moduleAlertsPage.uninstallModuleSuccessMessage(Modules.psCheckPayment.tag));
+    const successMessage = await moduleAlertsPage.setActionInModule(page, dataModules.psCheckPayment, 'uninstall');
+    expect(successMessage).to.eq(moduleAlertsPage.uninstallModuleSuccessMessage(dataModules.psCheckPayment.tag));
   });
 
-  it(`should install the module '${Modules.psCheckPayment.name}'`, async function () {
+  it(`should install the module '${dataModules.psCheckPayment.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
-    const successMessage = await moduleAlertsPage.setActionInModule(page, Modules.psCheckPayment, 'install');
-    expect(successMessage).to.eq(moduleAlertsPage.installModuleSuccessMessage(Modules.psCheckPayment.tag));
+    const successMessage = await moduleAlertsPage.setActionInModule(page, dataModules.psCheckPayment, 'install');
+    expect(successMessage).to.eq(moduleAlertsPage.installModuleSuccessMessage(dataModules.psCheckPayment.tag));
   });
 });

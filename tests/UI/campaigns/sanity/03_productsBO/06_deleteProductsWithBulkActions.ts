@@ -12,9 +12,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
-// Import data
-import ProductData from '@data/faker/product';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_productsBO_deleteProductsWithBulkActions';
 
@@ -24,7 +25,7 @@ describe('BO - Catalog - Products : Delete products with bulk actions', async ()
   let numberOfProducts: number = 0;
 
   // Data to create first product
-  const firstProductData: ProductData = new ProductData({
+  const firstProductData: FakerProduct = new FakerProduct({
     name: 'toDelete1'.toUpperCase(),
     type: 'standard',
     quantity: 50,
@@ -33,7 +34,7 @@ describe('BO - Catalog - Products : Delete products with bulk actions', async ()
   });
 
   // Data to create second product
-  const secondProductData: ProductData = new ProductData({
+  const secondProductData: FakerProduct = new FakerProduct({
     name: 'toDelete2'.toUpperCase(),
     type: 'standard',
     quantity: 100,

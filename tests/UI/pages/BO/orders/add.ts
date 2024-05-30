@@ -2,17 +2,14 @@
 import BOBasePage from '@pages/BO/BObasePage';
 import addCustomerPage from '@pages/BO/customers/add';
 
-// Import data
-import type ProductData from '@data/faker/product';
-
 import {
-  // Import data
   type FakerCustomer,
   type FakerOrderStatus,
+  type FakerProduct,
+  type FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import type {Frame, Page} from 'playwright';
-import OrderData from '@data/faker/order';
 
 /**
  * Add order page, contains functions that can be used on create order page
@@ -673,7 +670,7 @@ class AddOrder extends BOBasePage {
   /**
    * Add product to cart
    * @param page {Page} Browser tab
-   * @param productToSearch {ProductData} Product data to search with
+   * @param productToSearch {FakerProduct} Product data to search with
    * @param productToSelect {string} Product name to select
    * @param quantity {number} Product quantity to add to the cart
    * @param customizedValue {string}
@@ -681,7 +678,7 @@ class AddOrder extends BOBasePage {
    */
   async addProductToCart(
     page: Page,
-    productToSearch: ProductData,
+    productToSearch: FakerProduct,
     productToSelect: string,
     quantity: number = 1,
     customizedValue: string = '',
@@ -1230,11 +1227,11 @@ class AddOrder extends BOBasePage {
   /**
    * Create order with existing customer
    * @param page {Page} Browser tab
-   * @param orderToMake {OrderData} Order data to create
+   * @param orderToMake {FakerOrder} Order data to create
    * @param isNewCustomer {boolean} True if the customer is new
    * @returns {Promise<void>}
    */
-  async createOrder(page: Page, orderToMake: OrderData, isNewCustomer: boolean = false): Promise<void> {
+  async createOrder(page: Page, orderToMake: FakerOrder, isNewCustomer: boolean = false): Promise<void> {
     // Choose customer
     // If it's a new customer, the creation of customer should be done in test
     // with add customer page

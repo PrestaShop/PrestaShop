@@ -11,11 +11,11 @@ import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
 import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_search_searchProductAndValidate';
 
@@ -58,10 +58,10 @@ describe('FO - Search Page : Search product and validate', async () => {
       expect(isHomePage).to.eq(true);
     });
 
-    it(`should search for the product ${Products.demo_8.name} and check result`, async function () {
+    it(`should search for the product ${dataProducts.demo_8.name} and check result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct1', baseContext);
 
-      const searchValue: string = Products.demo_8.name;
+      const searchValue: string = dataProducts.demo_8.name;
       const numSearchResults: number = 3;
 
       const numResults = await homePage.countAutocompleteSearchResult(page, searchValue);
@@ -79,7 +79,7 @@ describe('FO - Search Page : Search product and validate', async () => {
       await homePage.clickAutocompleteSearchResult(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_8.name);
+      expect(pageTitle).to.contains(dataProducts.demo_8.name);
     });
 
     it('should go to home page', async function () {
@@ -94,7 +94,7 @@ describe('FO - Search Page : Search product and validate', async () => {
     it('should search for the product and click on enter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct2', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_8.name);
+      await homePage.searchProduct(page, dataProducts.demo_8.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -104,7 +104,7 @@ describe('FO - Search Page : Search product and validate', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSearchedValue', baseContext);
 
       const inputContent = await searchResultsPage.getSearchInput(page);
-      expect(inputContent).to.equal(Products.demo_8.name);
+      expect(inputContent).to.equal(dataProducts.demo_8.name);
     });
 
     it('should check the search result page', async function () {

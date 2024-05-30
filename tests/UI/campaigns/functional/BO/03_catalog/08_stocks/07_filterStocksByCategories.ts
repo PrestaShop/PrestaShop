@@ -9,11 +9,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 import addProductPage from '@pages/BO/catalog/products/add';
 import stocksPage from '@pages/BO/catalog/stocks';
 
-// Import data
-import Categories from '@data/demo/categories';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataCategories,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_stocks_filterStocksByCategories';
 
@@ -65,7 +65,7 @@ describe('BO - Catalog - Stocks : Filter stocks by categories', async () => {
     await stocksPage.filterByCategory(page, ['Art', 'Accessories']);
 
     const result = await stocksPage.getAllRowsColumnContent(page, 'reference');
-    expect(result).to.include.members(Categories.art.products.concat(Categories.accessories.products));
+    expect(result).to.include.members(dataCategories.art.products.concat(dataCategories.accessories.products));
 
     const numberOfProductsAfterFilter = await stocksPage.getTotalNumberOfProducts(page);
     expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
@@ -86,7 +86,7 @@ describe('BO - Catalog - Stocks : Filter stocks by categories', async () => {
     await stocksPage.filterByCategory(page, ['Clothes']);
 
     const result = await stocksPage.getAllRowsColumnContent(page, 'reference');
-    expect(result).to.include.members(Categories.clothes.products);
+    expect(result).to.include.members(dataCategories.clothes.products);
 
     const numberOfProductsAfterFilter = await stocksPage.getTotalNumberOfProducts(page);
     expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);

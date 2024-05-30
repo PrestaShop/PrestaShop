@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import attributesPage from '@pages/BO/catalog/attributes';
 
-// Import data
-import Attributes from '@data/demo/attributes';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataAttributes,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_attributes_attributes_filterAttributes';
 
@@ -65,12 +65,12 @@ describe('BO - Catalog - Attributes & Features : Filter attributes table', async
     const tests = [
       {
         args: {
-          testIdentifier: 'filterId', filterBy: 'id_attribute_group', filterValue: Attributes.size.id.toString(),
+          testIdentifier: 'filterId', filterBy: 'id_attribute_group', filterValue: dataAttributes.size.id.toString(),
         },
       },
       {
         args: {
-          testIdentifier: 'filterName', filterBy: 'name', filterValue: Attributes.color.name,
+          testIdentifier: 'filterName', filterBy: 'name', filterValue: dataAttributes.color.name,
         },
       },
     ];

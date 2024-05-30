@@ -1,11 +1,9 @@
-import type ProductData from '@data/faker/product';
-
 import {
-  // Import data
   type FakerAddress,
   type FakerCustomer,
   type FakerOrderStatus,
   type FakerPaymentMethod,
+  type FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 type OrderCreator = {
@@ -32,7 +30,7 @@ type OrderDeliveryOption = {
 }
 
 type OrderProduct = {
-  product: ProductData
+  product: FakerProduct
   quantity: number
 }
 

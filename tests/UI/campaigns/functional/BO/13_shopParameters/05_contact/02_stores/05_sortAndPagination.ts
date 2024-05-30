@@ -11,12 +11,12 @@ import contactPage from '@pages/BO/shopParameters/contact';
 import storesPage from '@pages/BO/shopParameters/stores';
 import addStorePage from '@pages/BO/shopParameters/stores/add';
 
-// Import data
-import StoreData from '@data/faker/store';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerStore,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_contact_stores_sortAndPagination';
 
@@ -190,7 +190,7 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
 
       creationTests.forEach((test: number, index: number) => {
         describe(`Create store n°${index + 1} in BO`, async () => {
-          const createStoreData: StoreData = new StoreData({name: `todelete${index}`});
+          const createStoreData: FakerStore = new FakerStore({name: `todelete${index}`});
 
           it('should go to add new store page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `goToAddStorePage${index}`, baseContext);

@@ -18,12 +18,11 @@ import creditSlipsPage from '@pages/BO/orders/creditSlips';
 import employeesPage from '@pages/BO/advancedParameters/team';
 import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
 
-// Import data
-import EmployeeData from '@data/faker/employee';
-import type {EmployeePermission} from '@data/types/employee';
 import {
   boDashboardPage,
   boLoginPage,
+  type EmployeePermission,
+  FakerEmployee,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_header_myProfile';
@@ -32,7 +31,7 @@ describe('BO - Header : My profile', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const employeeData = new EmployeeData({
+  const employeeData: FakerEmployee = new FakerEmployee({
     defaultPage: 'Products',
     language: 'English (English)',
     permissionProfile: 'Salesman',

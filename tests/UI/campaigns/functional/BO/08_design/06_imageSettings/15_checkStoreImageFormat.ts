@@ -15,12 +15,12 @@ import createStoresPage from '@pages/BO/shopParameters/stores/add';
 import {homePage} from '@pages/FO/classic/home';
 import {storesPage as storePage} from '@pages/FO/classic/stores';
 
-// Import data
-import StoreData from '@data/faker/store';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerStore,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_checkStoreImageFormat';
 
@@ -29,10 +29,10 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
   let page: Page;
   let idStore: number = 0;
 
-  const storeDataJPG: StoreData = new StoreData({
+  const storeDataJPG: FakerStore = new FakerStore({
     picture: 'pictureJPG.jpg',
   });
-  const storeDataPNG: StoreData = new StoreData({
+  const storeDataPNG: FakerStore = new FakerStore({
     picture: 'picturePNG.png',
   });
 
@@ -120,7 +120,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
       extGenerated: 'jpg',
       extImageType: 'jpg',
     },
-  ].forEach((arg: {store: StoreData, extOriginal: string, extGenerated: string, extImageType: string}, index: number) => {
+  ].forEach((arg: {store: FakerStore, extOriginal: string, extGenerated: string, extImageType: string}, index: number) => {
     describe(`Image Generation - Store - Image Format : ${arg.extOriginal.toUpperCase()}`, async () => {
       if (index) {
         it('should go to BO', async function () {
@@ -275,7 +275,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
       store: storeDataJPG,
       extension: 'jpg',
     },
-  ].forEach((arg: {store: StoreData, extension: string}, index: number) => {
+  ].forEach((arg: {store: FakerStore, extension: string}, index: number) => {
     describe(`POST-CONDITION : Remove store : ${arg.extension.toUpperCase()}`, async () => {
       if (!index) {
         it('should go to BO', async function () {

@@ -17,13 +17,10 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
-// Import data
-import Languages from '@data/demo/languages';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataLanguages,
   dataPaymentMethods,
 } from '@prestashop-core/ui-testing';
 
@@ -199,7 +196,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
             identifier: 'filterByLanguage',
             filterType: 'select',
             filterBy: 'id_lang',
-            filterValue: Languages.english.name,
+            filterValue: dataLanguages.english.name,
           },
       },
       {

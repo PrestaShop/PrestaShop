@@ -15,8 +15,10 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import ProductData from '@data/faker/product';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_productsBO_CRUDVirtualProduct';
 
@@ -25,7 +27,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
   let page: Page;
 
   // Data to create virtual product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'virtual',
     taxRule: 'No tax',
     tax: 0,
@@ -33,7 +35,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     minimumQuantity: 1,
     status: true,
   });
-  const editProductData: ProductData = new ProductData({
+  const editProductData: FakerProduct = new FakerProduct({
     type: 'virtual',
     taxRule: 'FR Taux réduit (10%)',
     tax: 10,

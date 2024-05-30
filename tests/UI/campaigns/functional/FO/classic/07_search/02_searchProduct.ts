@@ -7,11 +7,11 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_search_searchProduct';
 
@@ -48,21 +48,21 @@ describe('FO - Search Page : Search a product and validate', async () => {
   it('should check autocomplete', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAutocomplete', baseContext);
 
-    const numResults = await homePage.countAutocompleteSearchResult(page, Products.demo_8.name);
+    const numResults = await homePage.countAutocompleteSearchResult(page, dataProducts.demo_8.name);
     expect(numResults).equal(3);
 
-    const results = await homePage.getAutocompleteSearchResult(page, Products.demo_8.name);
+    const results = await homePage.getAutocompleteSearchResult(page, dataProducts.demo_8.name);
     expect(results).contains('notebook');
   });
 
   it('should choose product on the autocomplete list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseProductOnList', baseContext);
 
-    await homePage.setProductNameInSearchInput(page, Products.demo_8.name);
+    await homePage.setProductNameInSearchInput(page, dataProducts.demo_8.name);
     await homePage.clickAutocompleteSearchResult(page, 1);
 
     const pageTitle = await productPage.getPageTitle(page);
-    expect(pageTitle).to.contains(Products.demo_8.name);
+    expect(pageTitle).to.contains(dataProducts.demo_8.name);
 
     const inputValue = await homePage.getSearchValue(page);
     expect(inputValue).to.have.lengthOf(0);
@@ -80,12 +80,12 @@ describe('FO - Search Page : Search a product and validate', async () => {
   it('should click on Enter in autocomplete list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-    await homePage.searchProduct(page, Products.demo_8.name);
+    await homePage.searchProduct(page, dataProducts.demo_8.name);
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(searchResultsPage.pageTitle);
 
     const inputValue = await searchResultsPage.getSearchValue(page);
-    expect(inputValue).is.equal(Products.demo_8.name);
+    expect(inputValue).is.equal(dataProducts.demo_8.name);
   });
 });

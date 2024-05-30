@@ -21,15 +21,12 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Languages from '@data/demo/languages';
-import Products from '@data/demo/products';
-
 import {
   boDashboardPage,
-  // Import data
+  dataLanguages,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
@@ -175,7 +172,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       expect(cardHeaderText).to.contains(createCustomerData.socialTitle);
       expect(cardHeaderText).to.contains(`birth date: ${customerBirthDate}`);
       expect(cardHeaderText).to.contains('Never');
-      expect(cardHeaderText).to.contains(Languages.english.name);
+      expect(cardHeaderText).to.contains(dataLanguages.english.name);
       expect(cardHeaderText).to.contains('Newsletter');
       expect(cardHeaderText).to.contains('Partner offers');
       expect(cardHeaderText).to.contains('Active');
@@ -330,7 +327,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       expect(cardHeaderText).to.contains(createCustomerData.socialTitle);
       expect(cardHeaderText).to.contains(`birth date: ${customerBirthDate}`);
       expect(cardHeaderText).to.contains(today);
-      expect(cardHeaderText).to.contains(Languages.english.name);
+      expect(cardHeaderText).to.contains(dataLanguages.english.name);
       expect(cardHeaderText).to.contains('Newsletter');
       expect(cardHeaderText).to.contains('Partner offers');
       expect(cardHeaderText).to.contains('Active');
@@ -371,14 +368,14 @@ describe('BO - Customers - Customers : View information about customer', async (
 
       const carts = await viewCustomerPage.getTextFromElement(page, 'Carts');
       expect(carts).to.contains(today);
-      expect(carts).to.contains(Products.demo_1.finalPrice);
+      expect(carts).to.contains(dataProducts.demo_1.finalPrice);
     });
 
     it('should check purchased products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPurchasedProduct1', baseContext);
 
       const viewedProduct = await viewCustomerPage.getTextFromElement(page, 'Purchased products');
-      expect(viewedProduct).to.contains(Products.demo_1.name);
+      expect(viewedProduct).to.contains(dataProducts.demo_1.name);
     });
 
     it('should check address', async function () {
@@ -457,7 +454,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       expect(cardHeaderText).to.contains(editCustomerData.socialTitle);
       expect(cardHeaderText).to.contains(`birth date: ${editCustomerBirthDate}`);
       expect(cardHeaderText).to.contains(today);
-      expect(cardHeaderText).to.contains(Languages.english.name);
+      expect(cardHeaderText).to.contains(dataLanguages.english.name);
       expect(cardHeaderText).to.contains('Newsletter');
       expect(cardHeaderText).to.contains('Partner offers');
       expect(cardHeaderText).to.contains('Active');
@@ -528,7 +525,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       expect(carts).to.contains(today);
       expect(carts).to.contains('Bank transfer');
       expect(carts).to.contains(dataOrderStatuses.shipped.name);
-      expect(carts).to.contains(Products.demo_1.finalPrice);
+      expect(carts).to.contains(dataProducts.demo_1.finalPrice);
     });
 
     it('should check purchased products number', async function () {
@@ -543,7 +540,7 @@ describe('BO - Customers - Customers : View information about customer', async (
 
       const purchasedProduct = await viewCustomerPage.getTextFromElement(page, 'Purchased products');
       expect(purchasedProduct).to.contains(today);
-      expect(purchasedProduct).to.contains(Products.demo_1.name);
+      expect(purchasedProduct).to.contains(dataProducts.demo_1.name);
     });
   });
 

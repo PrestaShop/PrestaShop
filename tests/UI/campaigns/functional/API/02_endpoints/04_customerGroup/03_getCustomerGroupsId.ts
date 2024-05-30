@@ -15,12 +15,14 @@ import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
 // Import data
-import Languages from '@data/demo/languages';
 import APIClientData from '@data/faker/APIClient';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_customerGroup_getCustomerGroupsId';
 
@@ -188,10 +190,10 @@ describe('API : GET /customers/group/{customerGroupId}', async () => {
       showPrice = (await addGroupPage.getValue(page, 'showPrice')) === '1';
       expect(showPrice).to.be.a('boolean');
 
-      nameFr = await addGroupPage.getValue(page, 'localizedNames', Languages.french.id);
+      nameFr = await addGroupPage.getValue(page, 'localizedNames', dataLanguages.french.id);
       expect(nameFr).to.be.a('string');
 
-      nameEn = await addGroupPage.getValue(page, 'localizedNames', Languages.english.id);
+      nameEn = await addGroupPage.getValue(page, 'localizedNames', dataLanguages.english.id);
       expect(nameFr).to.be.a('string');
     });
   });
@@ -238,8 +240,8 @@ describe('API : GET /customers/group/{customerGroupId}', async () => {
 
       expect(jsonResponse).to.have.property('localizedNames');
       expect(jsonResponse.localizedNames).to.be.a('object');
-      expect(jsonResponse.localizedNames[Languages.english.id]).to.be.equal(nameEn);
-      expect(jsonResponse.localizedNames[Languages.french.id]).to.be.equal(nameFr);
+      expect(jsonResponse.localizedNames[dataLanguages.english.id]).to.be.equal(nameEn);
+      expect(jsonResponse.localizedNames[dataLanguages.french.id]).to.be.equal(nameFr);
     });
 
     it('should check the JSON Response : `reductionPercent`', async function () {

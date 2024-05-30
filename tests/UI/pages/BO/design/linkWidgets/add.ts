@@ -1,9 +1,10 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type LinkWidgetData from '@data/faker/linkWidget';
-import type {LinkWidgetPage} from '@data/types/linkWidget';
-
 import type {Page} from 'playwright';
+import {
+  type FakerLinkWidget,
+  type LinkWidgetPage,
+} from '@prestashop-core/ui-testing';
 
 /**
  * New link block page, contains functions that can be used on the page
@@ -211,11 +212,11 @@ class AddLinkBlock extends BOBasePage {
   /**
    * Add linkWidget
    * @param page {Page} Browser tab
-   * @param linkWidgetData {LinkWidgetData}}
+   * @param linkWidgetData {FakerLinkWidget}}
    * Data of link widget to set on link widget form
    * @return {Promise<string>}
    */
-  async addLinkWidget(page: Page, linkWidgetData: LinkWidgetData): Promise<string> {
+  async addLinkWidget(page: Page, linkWidgetData: FakerLinkWidget): Promise<string> {
     // Set name in languages
     await this.changeLanguage(page, 'en');
     await this.setValue(page, this.nameInput(1), linkWidgetData.name);

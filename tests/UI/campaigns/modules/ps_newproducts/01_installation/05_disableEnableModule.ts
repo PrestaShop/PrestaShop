@@ -12,12 +12,12 @@ import {homePage} from '@pages/FO/classic/home';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psNewProducts from '@pages/BO/modules/psNewProducts';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_newproducts_installation_disableEnableModule';
 
@@ -54,27 +54,27 @@ describe('New products block module - Disable/Enable module', async () => {
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psNewProducts.name}`, async function () {
+    it(`should search the module ${dataModules.psNewProducts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModuleForEnable', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psNewProducts);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psNewProducts);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should disable and cancel the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableCancelModule', baseContext);
 
-      await moduleManagerPage.setActionInModule(page, Modules.psNewProducts, 'disable', true);
+      await moduleManagerPage.setActionInModule(page, dataModules.psNewProducts, 'disable', true);
 
-      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, Modules.psNewProducts);
+      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, dataModules.psNewProducts);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should disable the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psNewProducts, 'disable');
-      expect(successMessage).to.eq(moduleManagerPage.disableModuleSuccessMessage(Modules.psNewProducts.tag));
+      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psNewProducts, 'disable');
+      expect(successMessage).to.eq(moduleManagerPage.disableModuleSuccessMessage(dataModules.psNewProducts.tag));
     });
 
     it('should go to the front office', async function () {
@@ -103,18 +103,18 @@ describe('New products block module - Disable/Enable module', async () => {
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psNewProducts.name}`, async function () {
+    it(`should search the module ${dataModules.psNewProducts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModuleForDisable', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psNewProducts);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psNewProducts);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should enable the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psNewProducts, 'enable');
-      expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(Modules.psNewProducts.tag));
+      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psNewProducts, 'enable');
+      expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(dataModules.psNewProducts.tag));
     });
 
     it('should go to the front office', async function () {

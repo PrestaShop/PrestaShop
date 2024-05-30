@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import linkWidgetsPage from '@pages/BO/design/linkWidgets';
 
-// Import data
-import Hooks from '@data/demo/hooks';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataHooks,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_linkWidget_sortLinkList';
 
@@ -90,15 +90,15 @@ describe('BO - Design - Link Widget : Sort link list', async () => {
         const nonSortedTable = await linkWidgetsPage.getAllRowsColumnContent(page,
           test.args.sortBy,
           test.args.sortBy,
-          Hooks.displayFooter.name,
+          dataHooks.displayFooter.name,
         );
 
-        await linkWidgetsPage.sortLinkWidget(page, test.args.sortBy, test.args.sortDirection, Hooks.displayFooter.name);
+        await linkWidgetsPage.sortLinkWidget(page, test.args.sortBy, test.args.sortDirection, dataHooks.displayFooter.name);
 
         const sortedTable = await linkWidgetsPage.getAllRowsColumnContent(page,
           test.args.sortBy,
           test.args.sortBy,
-          Hooks.displayFooter.name,
+          dataHooks.displayFooter.name,
         );
 
         if (test.args.isFloat) {

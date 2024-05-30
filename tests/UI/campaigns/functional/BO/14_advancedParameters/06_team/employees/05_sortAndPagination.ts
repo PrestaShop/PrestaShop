@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 
-// Import data
-import EmployeeData from '@data/faker/employee';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerEmployee,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_employees_sortAndPagination';
 
@@ -26,7 +26,7 @@ Pagination
 Delete created employees
  */
 describe('BO - Advanced Parameters - Team : Sort and pagination employees', async () => {
-  const employeeData: EmployeeData = new EmployeeData();
+  const employeeData: FakerEmployee = new FakerEmployee();
 
   let browserContext: BrowserContext;
   let page: Page;
@@ -71,7 +71,7 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
   const tests = new Array(10).fill(0, 0, 10);
   describe('Create 10 employees in BO', async () => {
     tests.forEach((test: number, index: number) => {
-      const employeeToCreate = new EmployeeData({email: `${employeeData.email}${index}`});
+      const employeeToCreate: FakerEmployee = new FakerEmployee({email: `${employeeData.email}${index}`});
 
       it('should go to add new employee page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewEmployeePage${index + 1}`, baseContext);

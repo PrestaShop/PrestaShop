@@ -1,6 +1,7 @@
 import fs from 'fs';
-
-import Modules from '@data/demo/modules';
+import {
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 function getComposerLockVersion(moduleName: string): null|string {
   const rawData: string = fs.readFileSync('../../composer.lock', 'utf8');
@@ -17,7 +18,7 @@ function getComposerLockVersion(moduleName: string): null|string {
 }
 
 // eslint-disable-next-line no-restricted-syntax
-for (const module of Object.values(Modules)) {
+for (const module of Object.values(dataModules)) {
   if (module.releaseZip) {
     const version = getComposerLockVersion(module.tag);
 

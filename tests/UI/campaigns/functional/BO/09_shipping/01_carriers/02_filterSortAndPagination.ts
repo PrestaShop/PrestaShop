@@ -11,12 +11,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
 
-// Import data
-import Carriers from '@data/demo/carriers';
-
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   FakerCarrier,
 } from '@prestashop-core/ui-testing';
 
@@ -75,7 +72,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_carrier',
-            filterValue: Carriers.cheapCarrier.id.toString(),
+            filterValue: dataCarriers.myCheapCarrier.id.toString(),
           },
       },
       {
@@ -84,7 +81,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: Carriers.myCarrier.name,
+            filterValue: dataCarriers.myCarrier.name,
           },
       },
       {
@@ -93,7 +90,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             testIdentifier: 'filterByDelay',
             filterType: 'input',
             filterBy: 'delay',
-            filterValue: Carriers.default.delay,
+            filterValue: dataCarriers.clickAndCollect.delay,
           },
       },
       {
@@ -102,7 +99,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             testIdentifier: 'filterByStatus',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: Carriers.default.enable ? '1' : '0',
+            filterValue: dataCarriers.clickAndCollect.enable ? '1' : '0',
           },
         expected: 'Enabled',
       },
@@ -112,7 +109,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             testIdentifier: 'filterByFreeShipping',
             filterType: 'select',
             filterBy: 'is_free',
-            filterValue: Carriers.lightCarrier.freeShipping ? '1' : '0',
+            filterValue: dataCarriers.myLightCarrier.freeShipping ? '1' : '0',
           },
         expected: 'Disabled',
       },
@@ -122,7 +119,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             testIdentifier: 'filterByPosition',
             filterType: 'input',
             filterBy: 'a!position',
-            filterValue: Carriers.lightCarrier.position.toString(),
+            filterValue: dataCarriers.myLightCarrier.position.toString(),
           },
       },
     ];

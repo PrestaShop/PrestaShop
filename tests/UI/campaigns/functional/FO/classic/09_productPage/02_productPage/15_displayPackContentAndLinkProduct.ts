@@ -8,11 +8,11 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_displayPackContentAndLinkProduct';
 
@@ -60,7 +60,7 @@ describe('FO - Product Page : Display pack content and link to product', async (
     await searchResultsPage.goToProductPage(page, 1);
 
     const pageTitle = await foProductPage.getPageTitle(page);
-    expect(pageTitle).to.contains(Products.demo_21.name);
+    expect(pageTitle).to.contains(dataProducts.demo_21.name);
   });
 
   it('should check product information', async function () {
@@ -69,17 +69,17 @@ describe('FO - Product Page : Display pack content and link to product', async (
     const product1 = await foProductPage.getProductInPackList(page, 1);
     await Promise.all([
       expect(product1.name).to.equals(
-        `${Products.demo_7.name} `
-        + `${basicHelper.capitalize(Products.demo_7.attributes[0].name)}-${Products.demo_7.attributes[0].values[0]}`,
+        `${dataProducts.demo_7.name} `
+        + `${basicHelper.capitalize(dataProducts.demo_7.attributes[0].name)}-${dataProducts.demo_7.attributes[0].values[0]}`,
       ),
-      expect(product1.price).to.equals(`€${Products.demo_7.price.toFixed(2)}`),
+      expect(product1.price).to.equals(`€${dataProducts.demo_7.price.toFixed(2)}`),
       expect(product1.quantity).to.equals(5),
     ]);
 
     const product2 = await foProductPage.getProductInPackList(page, 2);
     await Promise.all([
-      expect(product2.name).to.equals(Products.demo_12.name),
-      expect(product2.price).to.equals(`€${Products.demo_12.price.toFixed(2)}`),
+      expect(product2.name).to.equals(dataProducts.demo_12.name),
+      expect(product2.price).to.equals(`€${dataProducts.demo_12.price.toFixed(2)}`),
       expect(product2.quantity).to.equals(5),
     ]);
   });
@@ -90,6 +90,6 @@ describe('FO - Product Page : Display pack content and link to product', async (
     await foProductPage.clickProductInPackList(page, 1);
 
     const pageTitle = await foProductPage.getPageTitle(page);
-    expect(pageTitle).to.contains(Products.demo_7.name);
+    expect(pageTitle).to.contains(dataProducts.demo_7.name);
   });
 });

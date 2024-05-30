@@ -12,13 +12,13 @@ import addFeaturePage from '@pages/BO/catalog/features/addFeature';
 import viewFeaturePage from '@pages/BO/catalog/features/view';
 import addValuePage from '@pages/BO/catalog/features/addValue';
 
-// Import data
-import FeatureData from '@data/faker/feature';
-import FeatureValueData from '@data/faker/featureValue';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerFeature,
+  FakerFeatureValue,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_features_CRUDFeaturesAndValues';
 
@@ -37,17 +37,17 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
   let page: Page;
   let numberOfFeatures: number = 0;
   const numberOfValues: number = 0;
-  const createFeatureData: FeatureData = new FeatureData({name: 'Texture'});
-  const editFeatureData: FeatureData = new FeatureData({name: 'TextureEdit', metaTitle: 'Feature texture'});
-  const createFeatureValueData: FeatureValueData = new FeatureValueData({
+  const createFeatureData: FakerFeature = new FakerFeature({name: 'Texture'});
+  const editFeatureData: FakerFeature = new FakerFeature({name: 'TextureEdit', metaTitle: 'Feature texture'});
+  const createFeatureValueData: FakerFeatureValue = new FakerFeatureValue({
     featureName: createFeatureData.name,
     value: 'Smooth',
   });
-  const createSecondFeatureValueData: FeatureValueData = new FeatureValueData({
+  const createSecondFeatureValueData: FakerFeatureValue = new FakerFeatureValue({
     featureName: createFeatureData.name,
     value: 'Rough',
   });
-  const editSecondFeatureValueData: FeatureValueData = new FeatureValueData({
+  const editSecondFeatureValueData: FakerFeatureValue = new FakerFeatureValue({
     featureName: createFeatureData.name,
     value: 'Feature value smooth',
   });

@@ -18,14 +18,11 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataPaymentMethods,
+  FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -37,9 +34,9 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
   let browserContext: BrowserContext;
   let page: Page;
 
-  const firstProductData: ProductData = new ProductData({type: 'standard', quantity: 40, reference: 'demo_test1'});
-  const secondProductData: ProductData = new ProductData({type: 'standard', quantity: 30, reference: 'demo_test2'});
-  const productPackData: ProductData = new ProductData({
+  const firstProductData: FakerProduct = new FakerProduct({type: 'standard', quantity: 40, reference: 'demo_test1'});
+  const secondProductData: FakerProduct = new FakerProduct({type: 'standard', quantity: 30, reference: 'demo_test2'});
+  const productPackData: FakerProduct = new FakerProduct({
     type: 'pack',
     quantity: 15,
     pack: [

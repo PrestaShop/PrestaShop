@@ -13,16 +13,13 @@ import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data=
-import OrderData from '@data/faker/order';
-import ProductData from '@data/faker/product';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  FakerOrder,
+  FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -50,14 +47,14 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
   let fileName: string;
 
   const prefixToEdit: string = 'CreSlip';
-  const product: ProductData = new ProductData({
+  const product: FakerProduct = new FakerProduct({
     name: 'New product',
     type: 'standard',
     taxRule: 'No tax',
     quantity: 20,
   });
   // New order by customer
-  const orderByCustomerData: OrderData = new OrderData({
+  const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {

@@ -8,14 +8,14 @@ import testContext from '@utils/testContext';
 // Import common
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import data
-import Employees from '@data/demo/employees';
-
 // Import pages
 import logsPage from '@pages/BO/advancedParameters/logs';
 
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataEmployees,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
 
@@ -160,7 +160,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             testIdentifier: 'filterByEmployee',
             filterType: 'input',
             filterBy: 'employee',
-            filterValue: Employees.DefaultEmployee.lastName,
+            filterValue: dataEmployees.defaultEmployee.lastName,
           },
       },
       {

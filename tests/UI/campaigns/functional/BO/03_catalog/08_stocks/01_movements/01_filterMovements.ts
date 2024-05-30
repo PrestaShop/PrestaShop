@@ -25,18 +25,17 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import Categories from '@data/demo/categories';
-import Products from '@data/demo/products';
-import EmployeeData from '@data/faker/employee';
 import {ProductCombinationBulk} from '@data/types/product';
 
 import {
   boDashboardPage,
   boLoginPage,
-  // Import data
+  dataCategories,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
+  FakerEmployee,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -50,7 +49,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
   let orderId: number;
   let numElementsBeforeFilter: number;
 
-  const employeeData: EmployeeData = new EmployeeData({
+  const employeeData: FakerEmployee = new FakerEmployee({
     defaultPage: 'Dashboard',
     language: 'English (English)',
     permissionProfile: 'SuperAdmin',
@@ -159,7 +158,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
         await homePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        expect(pageTitle).to.contains(Products.demo_1.name);
+        expect(pageTitle).to.contains(dataProducts.demo_1.name);
       });
 
       it('should add product to cart', async function () {
@@ -305,10 +304,10 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
         await testContext.addContextItem(this, 'testIdentifier', 'checkFilteredRow', baseContext);
 
         const name = await movementsPage.getTextColumnFromTable(page, 1, 'product_name');
-        expect(name).to.contains(Products.demo_1.name);
+        expect(name).to.contains(dataProducts.demo_1.name);
 
         const reference = await movementsPage.getTextColumnFromTable(page, 1, 'reference');
-        expect(reference).to.be.equal(`${Products.demo_1.reference} ${Products.demo_1.reference}`);
+        expect(reference).to.be.equal(`${dataProducts.demo_1.reference} ${dataProducts.demo_1.reference}`);
 
         const quantity = await movementsPage.getTextColumnFromTable(page, 1, 'quantity');
         expect(quantity).to.be.equal('-1');
@@ -375,10 +374,10 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
         expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
-      it(`should filter by name '${Products.demo_8.name}'`, async function () {
+      it(`should filter by name '${dataProducts.demo_8.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-        await productsPage.filterProducts(page, 'product_name', Products.demo_8.name);
+        await productsPage.filterProducts(page, 'product_name', dataProducts.demo_8.name);
 
         const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
         expect(numberOfProductsAfterFilter).to.be.eq(1);
@@ -472,7 +471,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
         for (let i = 1; i <= numElements; i++) {
           const textColumn = await movementsPage.getTextColumnFromTable(page, i, 'product_name');
-          expect(textColumn).to.contains(Products.demo_8.name);
+          expect(textColumn).to.contains(dataProducts.demo_8.name);
         }*/
       });
 
@@ -534,14 +533,14 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/34334
     describe('BO - Check Filter "Categories"', async () => {
-      it(`should set the filter "Categories" to "${Categories.clothes.name}"`, async function () {
+      it(`should set the filter "Categories" to "${dataCategories.clothes.name}"`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'setFilterCategories', baseContext);
 
         this.skip();
 
         await movementsPage.setAdvancedFiltersVisible(page);
         await movementsPage.setAdvancedFiltersEmployee(page, `${employeeData.lastName} ${employeeData.firstName}`);
-        await movementsPage.setAdvancedFiltersCategory(page, Categories.clothes.name, true);
+        await movementsPage.setAdvancedFiltersCategory(page, dataCategories.clothes.name, true);
 
         const textContent = await movementsPage.getTextForEmptyTable(page);
         expect(textContent).to.be.eq(movementsPage.emptyTableMessage);
@@ -574,11 +573,11 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
         expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
-      it(`should filter by name '${Products.demo_8.name}'`, async function () {
+      it(`should filter by name '${dataProducts.demo_8.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEditForDisabling', baseContext);
 
         await productsPage.resetFilter(page);
-        await productsPage.filterProducts(page, 'product_name', Products.demo_8.name);
+        await productsPage.filterProducts(page, 'product_name', dataProducts.demo_8.name);
 
         const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
         expect(numberOfProductsAfterFilter).to.be.eq(1);
@@ -671,11 +670,11 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
         expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
-      it(`should filter by name '${Products.demo_8.name}'`, async function () {
+      it(`should filter by name '${dataProducts.demo_8.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEditForEnabling', baseContext);
 
         await productsPage.resetFilter(page);
-        await productsPage.filterProducts(page, 'product_name', Products.demo_8.name);
+        await productsPage.filterProducts(page, 'product_name', dataProducts.demo_8.name);
 
         const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
         expect(numberOfProductsAfterFilter).to.be.eq(1);

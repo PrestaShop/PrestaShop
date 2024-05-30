@@ -12,13 +12,13 @@ import addBrandPage from '@pages/BO/catalog/brands/add';
 import addBrandAddressPage from '@pages/BO/catalog/brands/addAddress';
 import viewBrandPage from '@pages/BO/catalog/brands/view';
 
-// Import data
-import BrandData from '@data/faker/brand';
-import BrandAddressData from '@data/faker/brandAddress';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerBrand,
+  FakerBrandAddress,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_brands_CRUDBrandAndAddress';
 
@@ -31,10 +31,10 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
 
   const brandsTable: string = 'manufacturer';
   const addressesTable: string = 'manufacturer_address';
-  const createBrandData: BrandData = new BrandData();
-  const editBrandData: BrandData = new BrandData();
-  const createBrandAddressData: BrandAddressData = new BrandAddressData({brandName: createBrandData.name});
-  const editBrandAddressData: BrandAddressData = new BrandAddressData({brandName: editBrandData.name});
+  const createBrandData: FakerBrand = new FakerBrand();
+  const editBrandData: FakerBrand = new FakerBrand();
+  const createBrandAddressData: FakerBrandAddress = new FakerBrandAddress({brandName: createBrandData.name});
+  const editBrandAddressData: FakerBrandAddress = new FakerBrandAddress({brandName: editBrandData.name});
 
   // before and after functions
   before(async function () {

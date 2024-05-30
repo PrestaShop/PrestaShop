@@ -3,11 +3,13 @@ import BOBasePage from '@pages/BO/BObasePage';
 import createProductPage from '@pages/BO/catalog/products/add';
 
 // Import data
-import type ProductData from '@data/faker/product';
 import {ProductFeatures} from '@data/types/product';
 
 import type {Frame, Page} from 'playwright';
 import {expect} from 'chai';
+import {
+  type FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Details tab on new product V2 page, contains functions that can be used on the page
@@ -167,10 +169,10 @@ class DetailsTab extends BOBasePage {
   /**
    * Set product details
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set in details form
+   * @param productData {FakerProduct} Data to set in details form
    * @returns {Promise<void>}
    */
-  async setProductDetails(page: Page, productData: ProductData): Promise<void> {
+  async setProductDetails(page: Page, productData: FakerProduct): Promise<void> {
     await this.waitForSelectorAndClick(page, this.detailsTabLink);
     await this.setValue(page, this.productReferenceInput, productData.reference);
   }
@@ -310,10 +312,10 @@ class DetailsTab extends BOBasePage {
   /**
    * Add new file
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set on add file form
+   * @param productData {FakerProduct} Data to set on add file form
    * @returns {Promise<void>}
    */
-  async addNewFile(page: Page, productData: ProductData): Promise<void> {
+  async addNewFile(page: Page, productData: FakerProduct): Promise<void> {
     for (let i: number = 0; i < productData.files.length; i++) {
       await this.waitForSelectorAndClick(page, this.addNewFileButton);
 
@@ -332,10 +334,10 @@ class DetailsTab extends BOBasePage {
   /**
    * Delete all files
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to delete file
+   * @param productData {FakerProduct} Data to delete file
    * @returns {Promise<void>}
    */
-  async deleteFiles(page: Page, productData: ProductData): Promise<void> {
+  async deleteFiles(page: Page, productData: FakerProduct): Promise<void> {
     for (let i: number = 0; i < productData.files.length; i++) {
       await this.waitForSelectorAndClick(page, this.deleteFileIcon(i));
       await this.waitForSelectorAndClick(page, this.deleteFileConfirmButton);
@@ -354,10 +356,10 @@ class DetailsTab extends BOBasePage {
   /**
    * Set condition
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set condition
+   * @param productData {FakerProduct} Data to set condition
    * @returns {Promise<void>}
    */
-  async setCondition(page: Page, productData: ProductData): Promise<void> {
+  async setCondition(page: Page, productData: FakerProduct): Promise<void> {
     await this.setChecked(page, this.displayCondition(productData.displayCondition ? 1 : 0));
     await this.selectByVisibleText(page, this.productConditionSelect, productData.condition);
   }
@@ -365,10 +367,10 @@ class DetailsTab extends BOBasePage {
   /**
    * Add new customization
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to add customization
+   * @param productData {FakerProduct} Data to add customization
    * @returns {Promise<void>}
    */
-  async addNewCustomizations(page: Page, productData: ProductData): Promise<void> {
+  async addNewCustomizations(page: Page, productData: FakerProduct): Promise<void> {
     await this.waitForSelectorAndClick(page, this.detailsTabLink);
     for (let i: number = 0; i < productData.customizations.length; i++) {
       await this.waitForSelectorAndClick(page, this.addNewCustomizationButton);
@@ -382,10 +384,10 @@ class DetailsTab extends BOBasePage {
   /**
    * Delete all customizations
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to delete customizations
+   * @param productData {FakerProduct} Data to delete customizations
    * @returns {Promise<void>}
    */
-  async deleteCustomizations(page: Page, productData: ProductData): Promise<void> {
+  async deleteCustomizations(page: Page, productData: FakerProduct): Promise<void> {
     for (let i: number = 0; i < productData.customizations.length; i++) {
       await this.waitForSelectorAndClick(page, this.deleteCustomizationIcon(i));
       await this.waitForSelectorAndClick(page, this.confirmDeleteCustomizationButton);

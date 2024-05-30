@@ -14,16 +14,15 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
 import MailDevEmail from '@data/types/maildevEmail';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -56,11 +55,11 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
   const creditSlipMailSubject: string = `[${global.INSTALL.SHOP_NAME}] New credit slip regarding your order`;
 
   // New order by customer data
-  const orderByCustomerData: OrderData = new OrderData({
+  const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],

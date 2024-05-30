@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
-// Import data
-import ProductFaker from '@data/faker/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_productBulkActions';
 
@@ -24,14 +24,14 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
   let numberOfProducts: number = 0;
 
   // Data to create first product
-  const firstProductData: ProductFaker = new ProductFaker({
+  const firstProductData: FakerProduct = new FakerProduct({
     name: 'myFavoriteProduct1',
     type: 'standard',
     status: true,
   });
 
   // Data to create second product
-  const secondProductData: ProductFaker = new ProductFaker({
+  const secondProductData: FakerProduct = new FakerProduct({
     name: 'myFavoriteProduct2',
     type: 'standard',
     status: true,

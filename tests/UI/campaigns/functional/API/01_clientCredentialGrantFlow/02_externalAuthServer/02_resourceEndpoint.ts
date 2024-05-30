@@ -9,13 +9,14 @@ import {installModule, uninstallModule} from '@commonTests/BO/modules/moduleMana
 import keycloakConnectorDemo from '@pages/BO/modules/keycloakConnectorDemo';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import {
   APIRequestContext, APIResponse, BrowserContext, Page,
 } from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_externalAuthServer_resourceEndpoint';
 
@@ -66,7 +67,7 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
     }
   });
 
-  installModule(Modules.keycloak, `${baseContext}_preTest_1`);
+  installModule(dataModules.keycloak, `${baseContext}_preTest_1`);
 
   describe('Resource Endpoint', async () => {
     it('should login in BO', async function () {
@@ -86,15 +87,15 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module '${Modules.keycloak.name}'`, async function () {
+    it(`should search the module '${dataModules.keycloak.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.keycloak);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.keycloak);
       expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
 
-    it(`should go to the configuration page of the module '${Modules.keycloak.name}'`, async function () {
+    it(`should go to the configuration page of the module '${dataModules.keycloak.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
-      await moduleManagerPage.goToConfigurationPage(page, Modules.keycloak.tag);
+      await moduleManagerPage.goToConfigurationPage(page, dataModules.keycloak.tag);
 
       const pageTitle = await keycloakConnectorDemo.getPageTitle(page);
       expect(pageTitle).to.eq(keycloakConnectorDemo.pageTitle);
@@ -232,5 +233,5 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
   });
 
   deleteAPIClientTest(`${baseContext}_postTest_0`);
-  uninstallModule(Modules.keycloak, `${baseContext}_postTest_1`);
+  uninstallModule(dataModules.keycloak, `${baseContext}_postTest_1`);
 });

@@ -17,13 +17,13 @@ import {categoryPage} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import Modules from '@data/demo/modules';
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_emailalerts_installation_uninstallAndDeleteModule';
 
@@ -33,7 +33,7 @@ describe('Mail alerts module - Uninstall and delete module', async () => {
   let idProduct: number;
   let nthProduct: number|null;
 
-  const productOutOfStockNotAllowed: ProductData = new ProductData({
+  const productOutOfStockNotAllowed: FakerProduct = new FakerProduct({
     name: 'Product Out of stock not allowed',
     type: 'standard',
     taxRule: 'No tax',
@@ -100,37 +100,37 @@ describe('Mail alerts module - Uninstall and delete module', async () => {
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psEmailAlerts.name}`, async function () {
+    it(`should search the module ${dataModules.psEmailAlerts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psEmailAlerts);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should display the uninstall modal and cancel it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetModuleAndCancel', baseContext);
 
-      const textResult = await moduleManagerPage.setActionInModule(page, Modules.psEmailAlerts, 'uninstall', true);
+      const textResult = await moduleManagerPage.setActionInModule(page, dataModules.psEmailAlerts, 'uninstall', true);
       expect(textResult).to.eq('');
 
-      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, Modules.psEmailAlerts);
+      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.eq(true);
 
-      const isModalVisible = await moduleManagerPage.isModalActionVisible(page, Modules.psEmailAlerts, 'uninstall');
+      const isModalVisible = await moduleManagerPage.isModalActionVisible(page, dataModules.psEmailAlerts, 'uninstall');
       expect(isModalVisible).to.eq(false);
 
-      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${Modules.psEmailAlerts.tag}/`);
+      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psEmailAlerts.tag}/`);
       expect(dirExists).to.eq(true);
     });
 
     it('should uninstall the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psEmailAlerts, 'uninstall', false, true);
-      expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.psEmailAlerts.tag));
+      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psEmailAlerts, 'uninstall', false, true);
+      expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.psEmailAlerts.tag));
 
-      // Check the directory `modules/Modules.psEmailAlerts.tag`
-      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${Modules.psEmailAlerts.tag}/`);
+      // Check the directory `modules/dataModules.psEmailAlerts.tag`
+      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psEmailAlerts.tag}/`);
       expect(dirExists).to.eq(false);
     });
 
@@ -178,7 +178,7 @@ describe('Mail alerts module - Uninstall and delete module', async () => {
     });
   });
 
-  installModule(Modules.psEmailAlerts, `${baseContext}_postTest_0`);
+  installModule(dataModules.psEmailAlerts, `${baseContext}_postTest_0`);
 
   deleteProductTest(productOutOfStockNotAllowed, `${baseContext}_postTest_1`);
 });

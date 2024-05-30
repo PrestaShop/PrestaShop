@@ -17,11 +17,13 @@ import {siteMapPage} from '@pages/FO/classic/siteMap';
 
 // Import data
 import CMSCategoryData from '@data/faker/CMScategory';
-import CMSPageData from '@data/faker/CMSpage';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCMSPage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_pages_CRUDPageCategory';
 
@@ -41,8 +43,8 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
   const createCategoryData: CMSCategoryData = new CMSCategoryData();
   const editCategoryData: CMSCategoryData = new CMSCategoryData({name: `update${createCategoryData.name}`});
-  const createPageData: CMSPageData = new CMSPageData();
-  const editPageData: CMSPageData = new CMSPageData({
+  const createPageData: FakerCMSPage = new FakerCMSPage();
+  const editPageData: FakerCMSPage = new FakerCMSPage({
     displayed: false,
     title: `update${createPageData.title}`,
   });

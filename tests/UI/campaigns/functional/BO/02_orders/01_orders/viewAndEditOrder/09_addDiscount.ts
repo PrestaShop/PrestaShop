@@ -13,16 +13,13 @@ import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import Carriers from '@data/demo/carriers';
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   dataCustomers,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -58,11 +55,11 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
   let totalOrder: number = 0;
 
   // New order by customer data
-  const orderByCustomerData: OrderData = new OrderData({
+  const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -125,8 +122,8 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
   };
   const shippingDetailsData: OrderShippingData = new OrderShippingData({
     trackingNumber: '0523698',
-    carrier: Carriers.myCarrier.name,
-    carrierID: Carriers.myCarrier.id,
+    carrier: dataCarriers.myCarrier.name,
+    carrierID: dataCarriers.myCarrier.id,
   });
   const shippingDetailsCost: string = '€8.40';
 

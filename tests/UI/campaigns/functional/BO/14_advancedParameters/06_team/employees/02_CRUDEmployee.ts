@@ -11,31 +11,29 @@ import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import productsPage from '@pages/BO/catalog/products';
 import ordersPage from '@pages/BO/orders';
 
-// Import data
-import EmployeeData from '@data/faker/employee';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  FakerEmployee,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_employees_CRUDEmployee';
 
 // Create, Read, Update and Delete Employee in BO
 describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
-  const createEmployeeData: EmployeeData = new EmployeeData({
+  const createEmployeeData: FakerEmployee = new FakerEmployee({
     defaultPage: 'Products',
     language: 'English (English)',
     permissionProfile: 'Salesman',
   });
-  const firstEditEmployeeData: EmployeeData = new EmployeeData({
+  const firstEditEmployeeData: FakerEmployee = new FakerEmployee({
     defaultPage: 'Orders',
     language: 'English (English)',
     permissionProfile: 'Salesman',
   });
-  const secondEditEmployeeData: EmployeeData = new EmployeeData({
+  const secondEditEmployeeData: FakerEmployee = new FakerEmployee({
     defaultPage: 'Orders',
     language: 'English (English)',
     permissionProfile: 'Salesman',

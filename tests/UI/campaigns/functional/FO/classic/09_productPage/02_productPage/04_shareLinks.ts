@@ -7,11 +7,11 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_shareLinks';
 
@@ -38,10 +38,10 @@ describe('FO - Product page - Product page : Share links', async () => {
     expect(isHomePage).to.equal(true);
   });
 
-  it(`should search for the product '${Products.demo_12.name}'`, async function () {
+  it(`should search for the product '${dataProducts.demo_12.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchDemo12', baseContext);
 
-    await homePage.searchProduct(page, Products.demo_12.name);
+    await homePage.searchProduct(page, dataProducts.demo_12.name);
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -53,7 +53,7 @@ describe('FO - Product page - Product page : Share links', async () => {
     await searchResultsPage.goToProductPage(page, 1);
 
     const pageTitle = await productPage.getPageTitle(page);
-    expect(pageTitle).to.contains(Products.demo_12.name);
+    expect(pageTitle).to.contains(dataProducts.demo_12.name);
   });
 
   [
@@ -79,7 +79,7 @@ describe('FO - Product page - Product page : Share links', async () => {
       page = await productPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_12.name);
+      expect(pageTitle).to.contains(dataProducts.demo_12.name);
     });
   });
 });

@@ -2,10 +2,12 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 // Import data
-import ProductData from '@data/faker/product';
 import type {ProductSpecificPrice} from '@data/types/product';
 
 import type {Page} from 'playwright';
+import {
+  type FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Pricing tab on new product V2 page, contains functions that can be used on the page
@@ -181,10 +183,10 @@ class PricingTab extends BOBasePage {
   /**
    * Set product pricing
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set in pricing form
+   * @param productData {FakerProduct} Data to set in pricing form
    * @returns {Promise<void>}
    */
-  async setProductPricing(page: Page, productData: ProductData): Promise<void> {
+  async setProductPricing(page: Page, productData: FakerProduct): Promise<void> {
     await this.waitForSelectorAndClick(page, this.pricingTabLink);
     // Select tax rule by ID
     await Promise.all([

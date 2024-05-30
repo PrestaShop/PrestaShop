@@ -16,13 +16,13 @@ import movementsPage from '@pages/BO/catalog/stocks/movements';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import Employees from '@data/demo/employees';
-import ProductData from '@data/faker/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataEmployees,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_stocksTab';
 
@@ -30,7 +30,7 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     status: true,
     quantity: 0,
@@ -129,7 +129,7 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
       const result = await stocksTab.getStockMovement(page, 1);
       await Promise.all([
         expect(result.dateTime).to.contains(todayDate),
-        expect(result.employee).to.equal(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`),
+        expect(result.employee).to.equal(`${dataEmployees.defaultEmployee.firstName} ${dataEmployees.defaultEmployee.lastName}`),
         expect(result.quantity).to.equal(productQuantity),
       ]);
     });
@@ -252,7 +252,7 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
       const result = await stocksTab.getStockMovement(page, 1);
       await Promise.all([
         expect(result.dateTime).to.contains(todayDate),
-        expect(result.employee).to.equal(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`),
+        expect(result.employee).to.equal(`${dataEmployees.defaultEmployee.firstName} ${dataEmployees.defaultEmployee.lastName}`),
         expect(result.quantity).to.equal(productQuantity * -1),
       ]);
     });

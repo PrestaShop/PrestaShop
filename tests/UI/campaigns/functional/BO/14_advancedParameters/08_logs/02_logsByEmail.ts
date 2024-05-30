@@ -14,15 +14,17 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
 // Import data
-import Employees from '@data/demo/employees';
 import MailDevEmail from '@data/types/maildevEmail';
-import ProductData from '@data/faker/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import MailDev from 'maildev';
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataEmployees,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_logs_logsByEmail';
 
@@ -33,7 +35,7 @@ describe('BO - Advanced Parameters - Logs : Logs by email', async () => {
   let numberOfEmails: number;
   let mailListener: MailDev;
   // Data to create product
-  const productData: ProductData = new ProductData({
+  const productData: FakerProduct = new FakerProduct({
     type: 'standard',
     taxRule: 'No tax',
     quantity: 1,
@@ -93,7 +95,7 @@ describe('BO - Advanced Parameters - Logs : Logs by email', async () => {
     it('should enter a valid email in \'Send emails to\' input', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setValidEmail', baseContext);
 
-      const errorMessage = await logsPage.setEmail(page, Employees.DefaultEmployee.email);
+      const errorMessage = await logsPage.setEmail(page, dataEmployees.defaultEmployee.email);
       expect(errorMessage).to.eq(logsPage.successfulUpdateMessage);
     });
 

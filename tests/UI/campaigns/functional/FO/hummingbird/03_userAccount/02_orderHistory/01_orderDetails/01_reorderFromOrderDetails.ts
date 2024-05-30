@@ -15,14 +15,11 @@ import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 
-// Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
-  // Import data
   dataCustomers,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -50,11 +47,11 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
   let browserContext: BrowserContext;
   let page: Page;
 
-  const orderData: OrderData = new OrderData({
+  const orderData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -200,7 +197,7 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'checkTheOrderedProduct', baseContext);
 
       const orderedProduct = await orderDetailsPage.getProductName(page, 1, 2);
-      expect(orderedProduct).to.contain(Products.demo_1.name);
+      expect(orderedProduct).to.contain(dataProducts.demo_1.name);
     });
 
     it('should sign out from FO', async function () {

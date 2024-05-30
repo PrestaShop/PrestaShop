@@ -1,6 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 import {Page} from 'playwright';
-import StoreData from '@data/faker/store';
+import {
+  type FakerStore,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add store page, contains selectors and functions for the page
@@ -85,10 +87,10 @@ class AddStore extends BOBasePage {
   /**
    * Fill creation / edition form for store and save it
    * @param page {Page} Browser tab
-   * @param storeData {StoreData} Data to set on store form
+   * @param storeData {FakerStore} Data to set on store form
    * @return {Promise<string>}
    */
-  async createEditStore(page: Page, storeData: StoreData): Promise<string> {
+  async createEditStore(page: Page, storeData: FakerStore): Promise<string> {
     // Set name
     await this.setValue(page, `${this.nameInput}_1`, storeData.name);
 

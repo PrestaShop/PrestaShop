@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import addSeoAndUrlPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls/add';
 
-// Import data
-import SeoPages from '@data/demo/seoPages';
-import SeoPageData from '@data/faker/seoPage';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataSeoPages,
+  FakerSeoPage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_seoAndUrls_bulkDeleteSeoPages';
 
@@ -24,9 +24,9 @@ describe('BO - Shop Parameters - Traffic & SEO : Bulk delete seo pages', async (
   let page: Page;
   let numberOfSeoPages: number = 0;
 
-  const seoPagesData: SeoPageData[] = [
-    new SeoPageData({page: SeoPages.orderReturn.page, title: 'ToDelete1'}),
-    new SeoPageData({page: SeoPages.pdfOrderReturn.page, title: 'ToDelete2'}),
+  const seoPagesData: FakerSeoPage[] = [
+    new FakerSeoPage({page: dataSeoPages.orderReturn.page, title: 'ToDelete1'}),
+    new FakerSeoPage({page: dataSeoPages.pdfOrderReturn.page, title: 'ToDelete2'}),
   ];
 
   // before and after functions
@@ -65,7 +65,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Bulk delete seo pages', async (
   });
 
   describe('Create 2 seo pages', async () => {
-    seoPagesData.forEach((seoPageData: SeoPageData, index: number) => {
+    seoPagesData.forEach((seoPageData: FakerSeoPage, index: number) => {
       it('should go to new seo page page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewSeoPage${index + 1}`, baseContext);
 

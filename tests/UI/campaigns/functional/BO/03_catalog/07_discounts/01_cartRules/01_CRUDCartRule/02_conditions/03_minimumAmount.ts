@@ -20,11 +20,13 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';
-import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_minimumAmount';
 
@@ -147,7 +149,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await cartPage.editProductQuantity(page, 1, 2);
 
       const totalBeforeDiscount = await cartPage.getATIPrice(page);
-      expect(totalBeforeDiscount).to.eq(parseFloat((Products.demo_6.combinations[0].price * 2).toFixed(2)));
+      expect(totalBeforeDiscount).to.eq(parseFloat((dataProducts.demo_6.combinations[0].price * 2).toFixed(2)));
     });
 
     it('should add the promo code and check the total', async function () {
@@ -155,10 +157,13 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
 
       await cartPage.addPromoCode(page, newCartRuleData.code);
 
-      const discount = await basicHelper.percentage(Products.demo_6.combinations[0].price * 2, newCartRuleData.discountPercent!);
+      const discount = await basicHelper.percentage(
+        dataProducts.demo_6.combinations[0].price * 2,
+        newCartRuleData.discountPercent!,
+      );
 
       const totalAfterDiscount = await cartPage.getATIPrice(page);
-      expect(totalAfterDiscount).to.eq(parseFloat((Products.demo_6.combinations[0].price * 2 - discount).toFixed(2)));
+      expect(totalAfterDiscount).to.eq(parseFloat((dataProducts.demo_6.combinations[0].price * 2 - discount).toFixed(2)));
     });
 
     it('should delete the last product from the cart', async function () {

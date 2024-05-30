@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type TaxOptionData from '@data/faker/taxOption';
-
 import type {Page} from 'playwright';
+import {
+  type FakerTaxOption,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Taxes page, contains functions that can be used on the page
@@ -376,10 +377,10 @@ class Taxes extends BOBasePage {
   /**
    * Update Tax Options
    * @param page {Page} Browser tab
-   * @param taxOptionData {TaxOptionData} Data to set on new/edit tax option
+   * @param taxOptionData {FakerTaxOption} Data to set on new/edit tax option
    * @returns {Promise<string>}
    */
-  async updateTaxOption(page: Page, taxOptionData: TaxOptionData): Promise<string> {
+  async updateTaxOption(page: Page, taxOptionData: FakerTaxOption): Promise<string> {
     await this.setChecked(page, this.taxStatusToggleInput(taxOptionData.enabled ? 1 : 0));
     if (taxOptionData.enabled) {
       await this.setChecked(page, this.displayTaxInCartToggleInput(taxOptionData.displayInShoppingCart ? 1 : 0));

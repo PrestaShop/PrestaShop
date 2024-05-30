@@ -16,16 +16,15 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 
 // Import data
-import OrderData from '@data/faker/order';
 import {OrderHistory} from '@data/types/order';
-import Products from '@data/demo/products';
 
 import {
-  // Import data
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -57,11 +56,11 @@ describe('FO - Account - Order history : Consult order list', async () => {
     email: customerData.email,
     country: 'France',
   });
-  const orderData: OrderData = new OrderData({
+  const orderData: FakerOrder = new FakerOrder({
     customer: customerData,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -158,7 +157,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
       await Promise.all([
         expect(result.reference).not.null,
         expect(result.date).to.equal(today),
-        expect(result.price).to.equal(`€${Products.demo_1.finalPrice}`),
+        expect(result.price).to.equal(`€${dataProducts.demo_1.finalPrice}`),
         expect(result.paymentType).to.equal(dataPaymentMethods.wirePayment.displayName),
         expect(result.status).to.equal(dataOrderStatuses.awaitingBankWire.name),
         expect(result.invoice).to.equal('-'),

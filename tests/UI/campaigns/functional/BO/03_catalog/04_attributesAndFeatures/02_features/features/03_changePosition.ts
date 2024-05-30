@@ -11,12 +11,12 @@ import attributesPage from '@pages/BO/catalog/attributes';
 import featuresPage from '@pages/BO/catalog/features';
 import addFeaturePage from '@pages/BO/catalog/features/addFeature';
 
-// Import data
-import FeatureData from '@data/faker/feature';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerFeature,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_features_features_changePosition';
 
@@ -29,7 +29,7 @@ Reset value position
 describe('BO - Catalog - Attributes & Features : Change feature position', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const createFeatureData: FeatureData = new FeatureData({name: 'Texture'});
+  const createFeatureData: FakerFeature = new FakerFeature({name: 'Texture'});
 
   // before and after functions
   before(async function () {

@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type AttributeData from '@data/faker/attribute';
-
 import type {Page} from 'playwright';
+import {
+  type FakerAttribute,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add attribute page, contains functions that can be used on the page
@@ -54,10 +55,10 @@ class AddAttribute extends BOBasePage {
   /**
    * Fill attribute form and save it
    * @param page {Page} Browser tab
-   * @param attributeData {AttributeData} Data to set on new/edit attribute form
+   * @param attributeData {FakerAttribute} Data to set on new/edit attribute form
    * @return {Promise<string>}
    */
-  async addEditAttribute(page: Page, attributeData: AttributeData): Promise<string> {
+  async addEditAttribute(page: Page, attributeData: FakerAttribute): Promise<string> {
     // Set names
     await this.setValue(page, this.nameInput, attributeData.name);
     await this.setValue(page, this.publicNameInput, attributeData.publicName);

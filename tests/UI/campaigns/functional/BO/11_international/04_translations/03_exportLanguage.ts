@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import translationsPage from '@pages/BO/international/translations';
 
-// Import data
-import Languages from '@data/demo/languages';
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_translations_exportLanguage';
 
@@ -54,22 +54,22 @@ describe('BO - International - Translation : Export languages', async () => {
     {
       args:
         {
-          language: Languages.english.name,
+          language: dataLanguages.english.name,
           types: ['Back office'],
         },
     },
     {
       args:
         {
-          language: Languages.french.name,
+          language: dataLanguages.french.name,
           types: ['Front office', 'Other'],
         },
     },
     {
       args:
         {
-          language: Languages.english.name,
-          module: Modules.psFacetedSearch.name,
+          language: dataLanguages.english.name,
+          module: dataModules.psFacetedSearch.name,
         },
     },
   ];
@@ -91,14 +91,16 @@ describe('BO - International - Translation : Export languages', async () => {
         await translationsPage.uncheckSelectedOptions(page, test.args.types);
       });
     } else {
-      it(`should export language '${test.args.language}' with installed module '${Modules.psFacetedSearch}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `exportLanguage${index}`, baseContext);
+      it(
+        `should export language '${test.args.language}' with installed module '${dataModules.psFacetedSearch}'`,
+        async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `exportLanguage${index}`, baseContext);
 
-        const filePath = await translationsPage.exportInstalledModuleTranslations(page, test.args.language, test.args.module!);
+          const filePath = await translationsPage.exportInstalledModuleTranslations(page, test.args.language, test.args.module!);
 
-        const doesFileExist = await files.doesFileExist(filePath);
-        expect(doesFileExist, `File '${filePath}' was not downloaded`).to.eq(true);
-      });
+          const doesFileExist = await files.doesFileExist(filePath);
+          expect(doesFileExist, `File '${filePath}' was not downloaded`).to.eq(true);
+        });
     }
   });
 });

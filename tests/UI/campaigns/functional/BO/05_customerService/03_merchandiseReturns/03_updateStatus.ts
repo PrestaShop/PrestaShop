@@ -25,18 +25,15 @@ import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/clas
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
-// Import data
-import Products from '@data/demo/products';
-import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
-import Addresses from '@data/demo/address';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
+  dataAddresses,
   dataCustomers,
+  dataOrderReturnStatuses,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -71,11 +68,11 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
   let numberOfEmails: number;
   let mailListener: MailDev;
   const todayDate: string = date.getDateFormat('mm/dd/yyyy');
-  const orderData: OrderData = new OrderData({
+  const orderData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -245,10 +242,10 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
     });
 
     const tests = [
-      {args: {status: OrderReturnStatuses.waitingForPackage.name}},
-      {args: {status: OrderReturnStatuses.packageReceived.name}},
-      {args: {status: OrderReturnStatuses.returnDenied.name}},
-      {args: {status: OrderReturnStatuses.returnCompleted.name}},
+      {args: {status: dataOrderReturnStatuses.waitingForPackage.name}},
+      {args: {status: dataOrderReturnStatuses.packageReceived.name}},
+      {args: {status: dataOrderReturnStatuses.returnDenied.name}},
+      {args: {status: dataOrderReturnStatuses.returnCompleted.name}},
     ];
     tests.forEach((test, index: number) => {
       describe(`Update returns status to ${test.args.status} and check result`, async () => {
@@ -285,7 +282,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
             .and.to.contains(`the new status is: "${test.args.status}".`);
         });
 
-        if (test.args.status === OrderReturnStatuses.waitingForPackage.name) {
+        if (test.args.status === dataOrderReturnStatuses.waitingForPackage.name) {
           it('should download and check the existence of the PDF print out file', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkPDF', baseContext);
 
@@ -320,13 +317,13 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
             const billingAddressExist = await files.isTextInPDF(
               filePath,
               'Billing & Delivery Address,,'
-              + `${Addresses.second.firstName} ${Addresses.second.lastName},`
-              + `${Addresses.second.company},`
-              + `${Addresses.second.address},`
-              + `${Addresses.second.secondAddress},`
-              + `${Addresses.second.postalCode} ${Addresses.second.city},`
-              + `${Addresses.second.country},`
-              + `${Addresses.second.phone}`,
+              + `${dataAddresses.address_2.firstName} ${dataAddresses.address_2.lastName},`
+              + `${dataAddresses.address_2.company},`
+              + `${dataAddresses.address_2.address},`
+              + `${dataAddresses.address_2.secondAddress},`
+              + `${dataAddresses.address_2.postalCode} ${dataAddresses.address_2.city},`
+              + `${dataAddresses.address_2.country},`
+              + `${dataAddresses.address_2.phone}`,
             );
             expect(billingAddressExist, 'Billing address is not correct in PDF!').to.eq(true);
           });
@@ -352,8 +349,8 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
 
             const isVisible = await files.isTextInPDF(
               filePath,
-              `Items to be returned, ,Reference, ,Qty,,${Products.demo_1.name} (Size: S - Color: White), ,`
-              + `${Products.demo_1.reference}, ,1`);
+              `Items to be returned, ,Reference, ,Qty,,${dataProducts.demo_1.name} (Size: S - Color: White), ,`
+              + `${dataProducts.demo_1.reference}, ,1`);
             expect(isVisible, 'Returned product details are not correct!').to.eq(true);
           });
         } else {

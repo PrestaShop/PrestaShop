@@ -13,11 +13,11 @@ import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import productPage from '@pages/FO/hummingbird/product';
 import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_addToCart';
 
@@ -52,10 +52,10 @@ describe('FO - Product page - Product page : Add to cart', async () => {
       expect(isHomePage).to.eq(true);
     });
 
-    it(`should search the product "${Products.demo_12.name}"`, async function () {
+    it(`should search the product "${dataProducts.demo_12.name}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchDemo12', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_12.name);
+      await homePage.searchProduct(page, dataProducts.demo_12.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -67,7 +67,7 @@ describe('FO - Product page - Product page : Add to cart', async () => {
       await searchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_12.name);
+      expect(pageTitle).to.contains(dataProducts.demo_12.name);
     });
 
     it('should add the product to cart', async function () {
@@ -77,7 +77,7 @@ describe('FO - Product page - Product page : Add to cart', async () => {
 
       const productDetails = await blockCartModal.getProductDetailsFromBlockCartModal(page);
       expect(productDetails.quantity).to.be.equal(qtyProductPage);
-      expect(productDetails.name).to.be.equal(Products.demo_12.name);
+      expect(productDetails.name).to.be.equal(dataProducts.demo_12.name);
     });
 
     it('should close the cart modal', async function () {
@@ -105,7 +105,7 @@ describe('FO - Product page - Product page : Add to cart', async () => {
 
       const productDetails = await blockCartModal.getProductDetailsFromBlockCartModal(page);
       expect(productDetails.quantity).to.be.equal(qtyQuickView);
-      expect(productDetails.name).to.be.equal(Products.demo_1.name);
+      expect(productDetails.name).to.be.equal(dataProducts.demo_1.name);
     });
 
     it('should close the cart modal from quickview', async function () {
@@ -122,7 +122,7 @@ describe('FO - Product page - Product page : Add to cart', async () => {
 
       const productDetails = await blockCartModal.getProductDetailsFromBlockCartModal(page);
       expect(productDetails.quantity).to.be.equal(qtyQuickView + qtyQuickAdd);
-      expect(productDetails.name).to.be.equal(Products.demo_1.name);
+      expect(productDetails.name).to.be.equal(dataProducts.demo_1.name);
     });
 
     it('should proceed to checkout', async function () {

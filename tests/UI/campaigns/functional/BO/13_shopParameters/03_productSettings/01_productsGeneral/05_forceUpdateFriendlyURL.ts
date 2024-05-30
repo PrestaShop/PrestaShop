@@ -11,12 +11,12 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import seoTab from '@pages/BO/catalog/products/add/seoTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsGeneral_forceUpdateFriendlyURL';
 
@@ -30,8 +30,8 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable force update 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductData = new ProductData({type: 'standard', status: false});
-  const editProductData: ProductData = new ProductData({
+  const productData: FakerProduct = new FakerProduct({type: 'standard', status: false});
+  const editProductData: FakerProduct = new FakerProduct({
     name: 'testForceFriendlyURL',
     type: 'standard',
     status: false,

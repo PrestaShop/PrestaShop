@@ -20,16 +20,13 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Carriers from '@data/demo/carriers';
-import Products from '@data/demo/products';
-
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -322,7 +319,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
 
       const isPaymentStepDisplayed = await checkoutPage.chooseShippingMethodAndAddComment(
         page,
-        Carriers.myCarrier.id,
+        dataCarriers.myCarrier.id,
       );
       expect(isPaymentStepDisplayed, 'Payment Step is not displayed').to.eq(true);
     });
@@ -355,10 +352,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       expect(pageTitle).to.contains(stocksPage.pageTitle);
     });
 
-    it(`should filter by product '${Products.demo_1.name}'`, async function () {
+    it(`should filter by product '${dataProducts.demo_1.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByProduct', baseContext);
 
-      await stocksPage.simpleFilter(page, Products.demo_1.name);
+      await stocksPage.simpleFilter(page, dataProducts.demo_1.name);
 
       const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.at.least(1);
@@ -420,7 +417,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     });
     [
       {args: {columnName: 'date', result: today}},
-      {args: {columnName: 'total', result: `€${(Products.demo_1.finalPrice + myCarrierCost).toFixed(2)}`}},
+      {args: {columnName: 'total', result: `€${(dataProducts.demo_1.finalPrice + myCarrierCost).toFixed(2)}`}},
     ].forEach((test) => {
       it(`should check the shopping cart ${test.args.columnName}`, async function () {
         await testContext
@@ -461,7 +458,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
 
       const cartTotal = await viewShoppingCartPage.getCartTotal(shoppingCartPage!);
       expect(cartTotal.toString())
-        .to.be.equal((Products.demo_1.finalPrice + myCarrierCost).toFixed(2));
+        .to.be.equal((dataProducts.demo_1.finalPrice + myCarrierCost).toFixed(2));
     });
 
     it('should check the customer Information Block', async function () {
@@ -494,14 +491,14 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     });
 
     [
-      {args: {columnName: 'image', result: Products.demo_1.thumbImage}},
-      {args: {columnName: 'title', result: Products.demo_1.name, result_2: Products.demo_1.reference}},
-      {args: {columnName: 'unit_price', result: `€${Products.demo_1.finalPrice}`}},
+      {args: {columnName: 'image', result: dataProducts.demo_1.thumbImage}},
+      {args: {columnName: 'title', result: dataProducts.demo_1.name, result_2: dataProducts.demo_1.reference}},
+      {args: {columnName: 'unit_price', result: `€${dataProducts.demo_1.finalPrice}`}},
       {args: {columnName: 'quantity', result: 1}},
-      {args: {columnName: 'total', result: `€${Products.demo_1.finalPrice}`}},
-      {args: {columnName: 'total_cost_products', result: `€${Products.demo_1.finalPrice}`}},
+      {args: {columnName: 'total', result: `€${dataProducts.demo_1.finalPrice}`}},
+      {args: {columnName: 'total_cost_products', result: `€${dataProducts.demo_1.finalPrice}`}},
       {args: {columnName: 'total_cost_shipping', result: `€${myCarrierCost}`}},
-      {args: {columnName: 'total_cart', result: `€${(Products.demo_1.finalPrice + myCarrierCost).toFixed(2)}`}},
+      {args: {columnName: 'total_cart', result: `€${(dataProducts.demo_1.finalPrice + myCarrierCost).toFixed(2)}`}},
     ].forEach((test) => {
       it(`should check the product's ${test.args.columnName} in cart Summary Block`, async function () {
         await testContext
@@ -537,7 +534,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliverySelected', baseContext);
 
       const deliveryOption = await addOrderPage.getDeliveryOption(page);
-      expect(deliveryOption).to.contains(Carriers.myCarrier.name);
+      expect(deliveryOption).to.contains(dataCarriers.myCarrier.name);
     });
 
     it('should check the shipping cost', async function () {
@@ -551,7 +548,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotal', baseContext);
 
       const totalOrder = await addOrderPage.getTotal(page);
-      expect(totalOrder).to.be.equal(`€${(Products.demo_1.finalPrice + myCarrierCost).toFixed(2)}`);
+      expect(totalOrder).to.be.equal(`€${(dataProducts.demo_1.finalPrice + myCarrierCost).toFixed(2)}`);
     });
 
     it('should complete the order', async function () {

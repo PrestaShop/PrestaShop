@@ -11,12 +11,12 @@ import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
 import monitoringPage from '@pages/BO/catalog/monitoring';
 
-// Import data
-import CategoryData from '@data/faker/category';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCategory,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_monitoring_deleteEmptyCategory';
 
@@ -31,7 +31,7 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
   let numberOfCategories: number = 0;
   let numberOfEmptyCategories: number = 0;
 
-  const createCategoryData: CategoryData = new CategoryData();
+  const createCategoryData: FakerCategory = new FakerCategory();
 
   // before and after functions
   before(async function () {

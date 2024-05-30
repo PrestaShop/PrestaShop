@@ -14,12 +14,12 @@ import addLanguagePage from '@pages/BO/international/languages/add';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 
-// Import data
-import LanguageData from '@data/faker/language';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerLanguage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_languages_CRUDLanguages';
 
@@ -35,8 +35,8 @@ describe('BO - International - Languages : CRUD language', async () => {
   let page: Page;
   let numberOfLanguages: number = 0;
 
-  const createLanguageData: LanguageData = new LanguageData({isoCode: 'de'});
-  const editLanguageData: LanguageData = new LanguageData({isoCode: 'nl', enabled: false});
+  const createLanguageData: FakerLanguage = new FakerLanguage({isoCode: 'de'});
+  const editLanguageData: FakerLanguage = new FakerLanguage({isoCode: 'nl', enabled: false});
 
   // before and after functions
   before(async function () {

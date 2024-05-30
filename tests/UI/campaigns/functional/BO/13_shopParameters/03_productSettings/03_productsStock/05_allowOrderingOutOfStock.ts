@@ -15,12 +15,12 @@ import {productPage} from '@pages/FO/classic/product';
 import {homePage} from '@pages/FO/classic/home';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsStock_allowOrderingOutOfStock';
 
@@ -28,7 +28,7 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductData = new ProductData({type: 'standard', quantity: 0});
+  const productData: FakerProduct = new FakerProduct({type: 'standard', quantity: 0});
 
   // before and after functions
   before(async function () {

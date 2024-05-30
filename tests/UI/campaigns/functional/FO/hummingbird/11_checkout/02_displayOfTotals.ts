@@ -17,13 +17,12 @@ import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import foLoginPage from '@pages/FO/hummingbird/login';
 
 // Import data
-import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 import {
-  // Import data
+  dataCarriers,
   dataCustomers,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
-import Carriers from '@data/demo/carriers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -110,10 +109,10 @@ describe('FO - Checkout : Display of totals', async () => {
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
-    it(`should search for the product ${Products.demo_12.name}`, async function () {
+    it(`should search for the product ${dataProducts.demo_12.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_12.name);
+      await homePage.searchProduct(page, dataProducts.demo_12.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -150,7 +149,7 @@ describe('FO - Checkout : Display of totals', async () => {
     it('should verify the total after the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount3', baseContext);
 
-      const totalAfterPromoCode: number = Products.demo_12.finalPrice - cartRuleWithCodeData.discountAmount!.value;
+      const totalAfterPromoCode: number = dataProducts.demo_12.finalPrice - cartRuleWithCodeData.discountAmount!.value;
 
       const priceATI = await cartPage.getATIPrice(page);
       expect(priceATI).to.equal(parseFloat(totalAfterPromoCode.toFixed(2)));
@@ -179,10 +178,10 @@ describe('FO - Checkout : Display of totals', async () => {
     it('should select the first carrier and check the shipping price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice1', baseContext);
 
-      await checkoutPage.chooseShippingMethod(page, Carriers.myCarrier.id);
+      await checkoutPage.chooseShippingMethod(page, dataCarriers.myCarrier.id);
 
       const shippingCost = await checkoutPage.getShippingCost(page);
-      expect(shippingCost).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
+      expect(shippingCost).to.equal(`€${dataCarriers.myCarrier.priceTTC.toFixed(2)}`);
     });
 
     it('should check the cart rule name', async function () {
@@ -197,7 +196,9 @@ describe('FO - Checkout : Display of totals', async () => {
 
       const totalAfterDiscount = await checkoutPage.getATIPrice(page);
       expect(totalAfterDiscount.toFixed(2))
-        .to.equal((Products.demo_12.price - cartRuleWithCodeData.discountAmount!.value + Carriers.myCarrier.priceTTC).toFixed(2));
+        .to.equal(
+          (dataProducts.demo_12.price - cartRuleWithCodeData.discountAmount!.value + dataCarriers.myCarrier.priceTTC).toFixed(2),
+        );
     });
 
     it('should remove the discount', async function () {

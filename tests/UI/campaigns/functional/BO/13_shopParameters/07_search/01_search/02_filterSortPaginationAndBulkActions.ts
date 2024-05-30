@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import searchPage from '@pages/BO/shopParameters/search';
 import addSearchPage from '@pages/BO/shopParameters/search/add';
 
-// Import data
-import SearchAliasData from '@data/faker/search';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerSearchAlias,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_search_search_filterSortPaginationAndBulkActions';
 
@@ -71,7 +71,7 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
   const creationTests: number[] = new Array(19).fill(0, 0, 19);
   describe('Create 19 aliases in BO', async () => {
     creationTests.forEach((test: number, index: number) => {
-      const aliasData: SearchAliasData = new SearchAliasData({alias: `todelete${index}`});
+      const aliasData: FakerSearchAlias = new FakerSearchAlias({alias: `todelete${index}`});
 
       it('should go to add new search page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddAliasPage${index}`, baseContext);

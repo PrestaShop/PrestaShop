@@ -10,11 +10,11 @@ import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
 import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_search_consultResultsList';
 
@@ -84,7 +84,7 @@ describe('FO - Search Page : Consult results list', async () => {
       await searchResultsPage.goToProductPage(page, 2);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_11.name);
+      expect(pageTitle).to.contains(dataProducts.demo_11.name);
     });
 
     it('should go back to the precedent page', async function () {
@@ -118,7 +118,7 @@ describe('FO - Search Page : Consult results list', async () => {
       await searchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_15.name);
+      expect(pageTitle).to.contains(dataProducts.demo_15.name);
     });
 
     it('should go back to the precedent page', async function () {

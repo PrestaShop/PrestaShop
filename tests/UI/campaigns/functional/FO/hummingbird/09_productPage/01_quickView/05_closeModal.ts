@@ -9,11 +9,11 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 import homePage from '@pages/FO/hummingbird/home';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_closeModal';
 
@@ -44,7 +44,7 @@ describe('FO - Product page - Quick view : Close quick view modal', async () => 
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe(`Display of the product '${Products.demo_6.name}'`, async () => {
+  describe(`Display of the product '${dataProducts.demo_6.name}'`, async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 

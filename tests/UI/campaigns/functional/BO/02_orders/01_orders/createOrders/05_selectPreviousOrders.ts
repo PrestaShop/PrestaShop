@@ -17,17 +17,14 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
+  FakerOrder,
   type FakerOrderStatus,
 } from '@prestashop-core/ui-testing';
 
@@ -63,11 +60,11 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     email: newCustomer.email,
     country: 'France',
   });
-  const orderData: OrderData = new OrderData({
+  const orderData: FakerOrder = new FakerOrder({
     customer: newCustomer,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -265,11 +262,11 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
 
       const result = await orderPageProductsBlock.getProductDetails(orderIframe!, 1);
       await Promise.all([
-        expect(result.name).to.equal(`${Products.demo_1.name} (Size: S - Color: White)`),
-        expect(result.reference).to.equal(`Reference number: ${Products.demo_1.reference}`),
-        expect(result.basePrice).to.equal(Products.demo_1.finalPrice),
+        expect(result.name).to.equal(`${dataProducts.demo_1.name} (Size: S - Color: White)`),
+        expect(result.reference).to.equal(`Reference number: ${dataProducts.demo_1.reference}`),
+        expect(result.basePrice).to.equal(dataProducts.demo_1.finalPrice),
         expect(result.quantity).to.equal(1),
-        expect(result.total).to.equal(Products.demo_1.finalPrice),
+        expect(result.total).to.equal(dataProducts.demo_1.finalPrice),
       ]);
     });
 

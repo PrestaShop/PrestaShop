@@ -12,12 +12,12 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 import psFacetedSearch from '@pages/BO/modules/psFacetedSearch';
 import psFacetedSearchFilterTemplate from '@pages/BO/modules/psFacetedSearch/filterTemplate';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_facetedsearch_configuration_addNewTemplate';
 
@@ -56,17 +56,17 @@ describe('Faceted search module - Add new template', async () => {
     expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  it(`should search the module ${Modules.psFacetedSearch.name}`, async function () {
+  it(`should search the module ${dataModules.psFacetedSearch.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psFacetedSearch);
+    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psFacetedSearch);
     expect(isModuleVisible).to.be.eq(true);
   });
 
-  it(`should go to the configuration page of the module '${Modules.psFacetedSearch.name}'`, async function () {
+  it(`should go to the configuration page of the module '${dataModules.psFacetedSearch.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-    await moduleManagerPage.goToConfigurationPage(page, Modules.psFacetedSearch.tag);
+    await moduleManagerPage.goToConfigurationPage(page, dataModules.psFacetedSearch.tag);
 
     const pageTitle = await psFacetedSearch.getPageSubtitle(page);
     expect(pageTitle).to.eq(psFacetedSearch.pageSubTitle);

@@ -12,12 +12,12 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
-// Import data
-import ProductFaker from '@data/faker/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_descriptionTab';
 
@@ -29,7 +29,7 @@ describe('BO - Catalog - Products : Description tab', async () => {
   const replaceProductCoverImage: string = 'productReplaceCoverImage.png';
 
   // Data to create product
-  const productData: ProductFaker = new ProductFaker({
+  const productData: FakerProduct = new FakerProduct({
     type: 'standard',
     name: 'hello word',
     coverImage: 'cover.jpg',

@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import pagesPage from '@pages/BO/design/pages';
 
-// Import data
-import CMSPages from '@data/demo/CMSpage';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataCMSPages,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_pages_pages_filterAndQuickEditPages';
 
@@ -72,7 +72,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_cms',
-            filterValue: CMSPages.delivery.id.toString(),
+            filterValue: dataCMSPages.delivery.id.toString(),
           },
       },
       {
@@ -81,7 +81,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
             testIdentifier: 'filterByLink',
             filterType: 'input',
             filterBy: 'link_rewrite',
-            filterValue: CMSPages.aboutUs.url,
+            filterValue: dataCMSPages.aboutUs.url,
           },
       },
       {
@@ -90,7 +90,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
             testIdentifier: 'filterByMetaTitle',
             filterType: 'input',
             filterBy: 'meta_title',
-            filterValue: CMSPages.termsAndCondition.title,
+            filterValue: dataCMSPages.termsAndCondition.title,
           },
       },
       {
@@ -99,7 +99,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
             testIdentifier: 'filterByActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: CMSPages.securePayment.displayed ? '1' : '0',
+            filterValue: dataCMSPages.securePayment.displayed ? '1' : '0',
           },
       },
     ];
@@ -149,7 +149,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
         pagesTableName,
         'input',
         'meta_title',
-        CMSPages.termsAndCondition.title,
+        dataCMSPages.termsAndCondition.title,
       );
 
       const numberOfPagesAfterFilter = await pagesPage.getNumberOfElementInGrid(page, pagesTableName);
@@ -161,7 +161,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
       }
 
       const textColumn = await pagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
-      expect(textColumn).to.contains(CMSPages.termsAndCondition.title);
+      expect(textColumn).to.contains(dataCMSPages.termsAndCondition.title);
     });
 
     [

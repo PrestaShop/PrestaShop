@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 
-// Import data
-import Employees from '@data/demo/employees';
-import EmployeeData from '@data/faker/employee';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataEmployees,
+  FakerEmployee,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_employees_filterAndQuickEditEmployees';
 
@@ -26,7 +26,7 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
 
   let numberOfEmployees: number = 0;
 
-  const createEmployeeData: EmployeeData = new EmployeeData({
+  const createEmployeeData: FakerEmployee = new FakerEmployee({
     defaultPage: 'Orders',
     permissionProfile: 'Logistician',
     active: false,
@@ -116,7 +116,7 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
             testIdentifier: 'filterLastName',
             filterType: 'input',
             filterBy: 'lastname',
-            filterValue: Employees.DefaultEmployee.lastName,
+            filterValue: dataEmployees.defaultEmployee.lastName,
           },
       },
       {

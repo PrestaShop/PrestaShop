@@ -1,8 +1,10 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import {ImageTypeRegeneration, ImageTypeRegenerationSpecific} from '@data/types/imageType';
-
 import type {Page} from 'playwright';
+import {
+  type ImageTypeRegeneration,
+  type ImageTypeRegenerationSpecific,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Image settings page, contains functions that can be used on the page

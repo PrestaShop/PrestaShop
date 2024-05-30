@@ -1,5 +1,3 @@
-import Products from '@data/demo/products';
-import ProductData from '@data/faker/product';
 import type {
   CartRuleCreator,
   CartRuleDiscountAmount,
@@ -8,13 +6,14 @@ import type {
 } from '@data/types/cartRule';
 
 import {
-  // Import data
+  dataProducts,
   FakerCustomer,
+  FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import {faker} from '@faker-js/faker';
 
-const productsNames: string[] = Object.values(Products).map((product: ProductData) => product.name);
+const productsNames: string[] = Object.values(dataProducts).map((product: FakerProduct) => product.name);
 
 /**
  * Create new cart rule to use on creation cart rule form on BO
@@ -79,7 +78,7 @@ export default class CartRuleData {
 
   public readonly freeGift: boolean;
 
-  public readonly freeGiftProduct: ProductData | null;
+  public readonly freeGiftProduct: FakerProduct | null;
 
   /**
    * Constructor for class CartRuleData
@@ -195,7 +194,7 @@ export default class CartRuleData {
     /** @type {boolean} True to enable free gift */
     this.freeGift = cartRuleToCreate.freeGift === undefined ? false : cartRuleToCreate.freeGift;
 
-    /** @type {ProductData|null} Product to set for the free gift */
+    /** @type {FakerProduct|null} Product to set for the free gift */
     this.freeGiftProduct = null;
     if (this.freeGift) {
       this.freeGiftProduct = cartRuleToCreate.freeGiftProduct || null;

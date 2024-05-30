@@ -9,12 +9,9 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {
-  // Import data
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
@@ -67,7 +64,7 @@ describe('FO - Checkout - Addresses: Use same invoice address', async () => {
     await homePage.goToProductPage(page, 4);
 
     const pageTitle = await productPage.getPageTitle(page);
-    expect(pageTitle).to.contains(Products.demo_5.name);
+    expect(pageTitle).to.contains(dataProducts.demo_5.name);
   });
 
   it('should add product to cart and go to cart page', async function () {

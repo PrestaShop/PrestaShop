@@ -16,11 +16,13 @@ import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import foLoginPage from '@pages/FO/hummingbird/login';
 
 // Import data
-import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_checkout_displayOfHighlightedCartRules';
 
@@ -93,10 +95,10 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
       expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
-    it(`should search for the product ${Products.demo_6.name}`, async function () {
+    it(`should search for the product ${dataProducts.demo_6.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_6.name);
+      await homePage.searchProduct(page, dataProducts.demo_6.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -133,7 +135,7 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
     it('should verify the total after the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount3', baseContext);
 
-      const totalAfterPromoCode: number = Products.demo_6.combinations[0].price - cartRuleWithCodeData.discountAmount!.value;
+      const totalAfterPromoCode: number = dataProducts.demo_6.combinations[0].price - cartRuleWithCodeData.discountAmount!.value;
 
       const priceATI = await cartPage.getATIPrice(page);
       expect(priceATI).to.equal(parseFloat(totalAfterPromoCode.toFixed(2)));
@@ -160,7 +162,7 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalWithoutDiscount', baseContext);
 
       const priceATI = await cartPage.getATIPrice(page);
-      expect(priceATI).to.equal(Products.demo_6.combinations[0].price);
+      expect(priceATI).to.equal(dataProducts.demo_6.combinations[0].price);
     });
   });
 

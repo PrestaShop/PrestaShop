@@ -1,11 +1,12 @@
 import FOBasePage from '@pages/FO/FObasePage';
-
-import ProductReviewData from '@data/faker/productReview';
 import {
   ProductAttribute, ProductImageUrls, ProductInformations,
 } from '@data/types/product';
 
 import type {Page} from 'playwright';
+import {
+  type FakerProductReview,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Product page, contains functions that can be used on the page
@@ -1156,10 +1157,10 @@ class Product extends FOBasePage {
   /**
    * Add a product review
    * @param page {Page} Browser tab
-   * @param productReviewData {ProductReviewData} The content of the product review (title, content, rating)
+   * @param productReviewData {FakerProductReview} The content of the product review (title, content, rating)
    * @returns {Promise<boolean>}
    */
-  async addProductReview(page: Page, productReviewData: ProductReviewData): Promise<boolean> {
+  async addProductReview(page: Page, productReviewData: FakerProductReview): Promise<boolean> {
     await this.clickAddReviewButton(page);
     await this.waitForVisibleSelector(page, this.productReviewModal);
     await this.setValue(page, this.reviewTitle, productReviewData.reviewTitle);

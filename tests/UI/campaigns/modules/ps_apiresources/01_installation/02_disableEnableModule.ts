@@ -12,12 +12,12 @@ import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_apiresources_installation_disableEnableModule';
 
@@ -66,22 +66,22 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
         expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
       });
 
-      it(`should search the module ${Modules.psApiResources.name}`, async function () {
+      it(`should search the module ${dataModules.psApiResources.name}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `searchModule${index}`, baseContext);
 
-        const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psApiResources);
+        const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psApiResources);
         expect(isModuleVisible).to.eq(true);
       });
 
       it(`should ${test.action} the module`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.action}Module`, baseContext);
 
-        const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psApiResources, test.action);
+        const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psApiResources, test.action);
 
         if (test.state) {
-          expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(Modules.psApiResources.tag));
+          expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(dataModules.psApiResources.tag));
         } else {
-          expect(successMessage).to.eq(moduleManagerPage.disableModuleSuccessMessage(Modules.psApiResources.tag));
+          expect(successMessage).to.eq(moduleManagerPage.disableModuleSuccessMessage(dataModules.psApiResources.tag));
         }
       });
 
@@ -133,7 +133,7 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
 
         this.skip();
         /*
-        const scopes = await addNewApiClientPage.getApiScopes(page, Modules.psApiResources.tag);
+        const scopes = await addNewApiClientPage.getApiScopes(page, dataModules.psApiResources.tag);
 
         // eslint-disable-next-line no-restricted-syntax
         for (const scope of scopes) {

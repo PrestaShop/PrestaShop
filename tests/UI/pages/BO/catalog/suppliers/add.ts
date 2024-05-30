@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type SupplierData from '@data/faker/supplier';
-
 import type {Page} from 'playwright';
+import {
+  type FakerSupplier,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add supplier page, contains functions that can be used on the page
@@ -112,10 +113,10 @@ class AddSupplier extends BOBasePage {
   /**
    * Create or edit Supplier
    * @param page {Page} Browser tab
-   * @param supplierData {SupplierData} Data to set on new/edit supplier form
+   * @param supplierData {FakerSupplier} Data to set on new/edit supplier form
    * @return {Promise<string>}
    */
-  async createEditSupplier(page: Page, supplierData: SupplierData): Promise<string> {
+  async createEditSupplier(page: Page, supplierData: FakerSupplier): Promise<string> {
     // Fill Name
     await this.setValue(page, this.nameInput, supplierData.name);
 

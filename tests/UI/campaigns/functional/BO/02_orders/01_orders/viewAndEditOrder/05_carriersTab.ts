@@ -12,16 +12,15 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Carriers from '@data/demo/carriers';
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
 import OrderShippingData from '@data/faker/orderShipping';
 
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   dataCustomers,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -45,16 +44,16 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
   const today: string = date.getDateFormat('mm/dd/yyyy');
   const shippingDetailsData: OrderShippingData = new OrderShippingData({
     trackingNumber: '0523698',
-    carrier: Carriers.myCarrier.name,
-    carrierID: Carriers.myCarrier.id,
+    carrier: dataCarriers.myCarrier.name,
+    carrierID: dataCarriers.myCarrier.id,
   });
   const shippingDetailsCost: string = '€8.40';
   // New order by customer data
-  const orderByCustomerData: OrderData = new OrderData({
+  const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -142,8 +141,8 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
       const result = await orderPageTabListBlock.getCarrierDetails(page);
       await Promise.all([
         expect(result.date).to.equal(today),
-        expect(result.carrier).to.equal(Carriers.default.name),
-        expect(result.weight).to.equal(`${Products.demo_1.packageDimensionWeight}00 kg`),
+        expect(result.carrier).to.equal(dataCarriers.clickAndCollect.name),
+        expect(result.weight).to.equal(`${dataProducts.demo_1.packageDimensionWeight}00 kg`),
         expect(result.shippingCost).to.equal('€0.00'),
         expect(result.trackingNumber).to.equal(''),
       ]);
@@ -172,7 +171,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
       await Promise.all([
         expect(result.date).to.equal(today),
         expect(result.carrier).to.equal(shippingDetailsData.carrier),
-        expect(result.weight).to.equal(`${Products.demo_1.packageDimensionWeight}00 kg`),
+        expect(result.weight).to.equal(`${dataProducts.demo_1.packageDimensionWeight}00 kg`),
         expect(result.shippingCost).to.equal(shippingDetailsCost),
         expect(result.trackingNumber).to.equal(shippingDetailsData.trackingNumber),
       ]);

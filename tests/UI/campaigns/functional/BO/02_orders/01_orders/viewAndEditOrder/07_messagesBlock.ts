@@ -20,16 +20,15 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 // Import data
-import Employees from '@data/demo/employees';
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
 import type {OrderHistoryMessage, OrderMessage} from '@data/types/order';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataEmployees,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -59,11 +58,11 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
   const messageData: OrderMessage = {orderMessage: 'Delay', displayToCustomer: true, message: ''};
   const secondMessageData: OrderMessage = {orderMessage: 'Delay', displayToCustomer: false, message: 'test message visibility'};
   // New order by customer data
-  const orderByCustomerData: OrderData = new OrderData({
+  const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -228,7 +227,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
       const message = await orderHistoryPage.getMessageRow(page);
       expect(message)
         .to.contain(today)
-        .and.to.contain(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`)
+        .and.to.contain(`${dataEmployees.defaultEmployee.firstName} ${dataEmployees.defaultEmployee.lastName}`)
         .and.to.contain(textMessage.substring(0, textMessage.indexOf('Me') - 1));
     });
 

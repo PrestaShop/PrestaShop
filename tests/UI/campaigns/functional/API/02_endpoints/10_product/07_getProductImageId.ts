@@ -15,13 +15,15 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 // Import data
-import Languages from '@data/demo/languages';
-import Products from '@data/demo/products';
 import APIClientData from '@data/faker/APIClient';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_product_getProductImageId';
 
@@ -162,8 +164,8 @@ describe('API : GET /product/image/{imageId}', async () => {
       expect(jsonResponse.imageId).to.be.gt(0);
       expect(jsonResponse.imageUrl).to.be.a('string');
       expect(jsonResponse.thumbnailUrl).to.be.a('string');
-      expect(jsonResponse.legends[Languages.english.id]).to.be.a('string');
-      expect(jsonResponse.legends[Languages.french.id]).to.be.a('string');
+      expect(jsonResponse.legends[dataLanguages.english.id]).to.be.a('string');
+      expect(jsonResponse.legends[dataLanguages.french.id]).to.be.a('string');
       expect(jsonResponse.cover).to.be.a('boolean');
       expect(jsonResponse.position).to.be.a('number');
       expect(jsonResponse.shopIds).to.be.a('array');
@@ -185,13 +187,13 @@ describe('API : GET /product/image/{imageId}', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterProduct', baseContext);
 
       await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', Products.demo_1.name);
+      await productsPage.filterProducts(page, 'product_name', dataProducts.demo_1.name);
 
       const numProducts = await productsPage.getNumberOfProductsFromList(page);
       expect(numProducts).to.be.equal(1);
 
       const productName = await productsPage.getTextColumn(page, 'product_name', 1);
-      expect(productName).to.contains(Products.demo_1.name);
+      expect(productName).to.contains(dataProducts.demo_1.name);
     });
 
     it('should go to edit product page', async function () {
@@ -210,8 +212,8 @@ describe('API : GET /product/image/{imageId}', async () => {
 
       expect(productImageInformation.id).to.equal(jsonResponse.imageId);
 
-      expect(productImageInformation.caption.en).to.equal(jsonResponse.legends[Languages.english.id]);
-      expect(productImageInformation.caption.fr).to.equal(jsonResponse.legends[Languages.french.id]);
+      expect(productImageInformation.caption.en).to.equal(jsonResponse.legends[dataLanguages.english.id]);
+      expect(productImageInformation.caption.fr).to.equal(jsonResponse.legends[dataLanguages.french.id]);
 
       expect(productImageInformation.isCover).to.equal(jsonResponse.cover);
 

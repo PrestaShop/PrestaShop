@@ -1,6 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 import {Page} from 'playwright';
-import ContactData from '@data/faker/contact';
+import {
+  type FakerContact,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add contact page, contains functions that can be used on the page
@@ -77,10 +79,10 @@ class AddContact extends BOBasePage {
   /**
    * Fill form for add/edit contact
    * @param page {Page} Browser tab
-   * @param contactData {ContactData} Data to set on contact form
+   * @param contactData {FakerContact} Data to set on contact form
    * @returns {Promise<string>}
    */
-  async createEditContact(page: Page, contactData: ContactData): Promise<string> {
+  async createEditContact(page: Page, contactData: FakerContact): Promise<string> {
     await this.setValue(page, this.titleInputEN, contactData.title);
     await this.setValue(page, this.emailAddressInput, contactData.email);
     await this.setValue(page, this.descriptionTextareaEN, contactData.description);

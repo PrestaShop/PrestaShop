@@ -30,16 +30,16 @@ import productPage from '@pages/FO/hummingbird/product';
 
 // Import data
 import MessageData from '@data/faker/message';
-import Products from '@data/demo/products';
-import {
-  // Import data
-  dataPaymentMethods,
-  FakerCustomer,
-  FakerAddress, boDashboardPage,
-} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  dataPaymentMethods,
+  dataProducts,
+  FakerCustomer,
+  FakerAddress,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_getGDPRDataInPDF';
 
@@ -449,7 +449,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         const isVisible = await files.isTextInPDF(filePath, `Carts Id Total products Date #${shoppingCartID}`
           + ` 1 ${shoppingCartDate} Product(s) in the cart : Reference Name Quantity `
-          + `${Products.demo_1.reference} ${Products.demo_1.name} 2`, true);
+          + `${dataProducts.demo_1.reference} ${dataProducts.demo_1.name} 2`, true);
         expect(isVisible, 'Data in Carts table is not correct!').to.eq(true);
       });
     });
@@ -603,8 +603,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
           + `${orderDate.substring(3, 5)} ${orderDate.substring(11, 19)}`;
         const isVisible = await files.isTextInPDF(filePath, 'Orders Reference Payment Order state Total paid '
           + `Date ${orderReference} Bank transfer Awaiting bank wire payment ${totalPaid} EUR `
-          + `${orderCreateDate} Product(s) in the order : Reference Name Quantity ${Products.demo_1.reference}`
-          + ` ${Products.demo_1.name} (Size: S - Color: White) 2`, true);
+          + `${orderCreateDate} Product(s) in the order : Reference Name Quantity ${dataProducts.demo_1.reference}`
+          + ` ${dataProducts.demo_1.name} (Size: S - Color: White) 2`, true);
         expect(isVisible, 'Data in Orders table is not correct!').to.eq(true);
       });
 
@@ -731,8 +731,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
           + `${orderDate.substring(3, 5)} ${orderDate.substring(11, 19)}`;
         const isVisible = await files.isTextInPDF(filePath, 'Orders Reference Payment Order state Total paid'
           + ` Date ${orderReference} Bank transfer Awaiting bank wire payment ${totalPaid} EUR `
-          + `${orderCreateDate} Product(s) in the order : Reference Name Quantity ${Products.demo_1.reference}`
-          + ` ${Products.demo_1.name} (Size: S - Color: White) 2`, true);
+          + `${orderCreateDate} Product(s) in the order : Reference Name Quantity ${dataProducts.demo_1.reference}`
+          + ` ${dataProducts.demo_1.name} (Size: S - Color: White) 2`, true);
         expect(isVisible, 'Data in Orders table is not correct!').to.eq(true);
       });
 
@@ -896,8 +896,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
           + `${orderDate.substring(3, 5)} ${orderDate.substring(11, 19)}`;
         const isVisible = await files.isTextInPDF(filePath, 'Orders Reference Payment Order state Total paid'
           + ` Date ${orderReference} Bank transfer Awaiting bank wire payment ${totalPaid} EUR `
-          + `${orderCreateDate} Product(s) in the order : Reference Name Quantity ${Products.demo_1.reference}`
-          + ` ${Products.demo_1.name} (Size: S - Color: White) 2`, true);
+          + `${orderCreateDate} Product(s) in the order : Reference Name Quantity ${dataProducts.demo_1.reference}`
+          + ` ${dataProducts.demo_1.name} (Size: S - Color: White) 2`, true);
         expect(isVisible, 'Data in Orders table is not correct!').to.eq(true);
       });
 

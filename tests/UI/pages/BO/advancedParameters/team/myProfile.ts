@@ -1,8 +1,9 @@
 import EmployeeBasePage from '@pages/BO/advancedParameters/team/employeeBasePage';
 
-import type EmployeeData from '@data/faker/employee';
-
 import type {Page} from 'playwright';
+import {
+  type FakerEmployee,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add employee page, contains functions that can be used on the page
@@ -60,10 +61,10 @@ class MyProfile extends EmployeeBasePage {
    * Fill form for update My Profile page
    * @param page {Page} Browser tab
    * @param currentPassword {string} Data to set on add/edit employee form
-   * @param newEmployeeData {EmployeeData} Data to set on add/edit employee form
+   * @param newEmployeeData {FakerEmployee} Data to set on add/edit employee form
    * @returns {Promise<void>}
    */
-  async updateEditEmployee(page: Page, currentPassword: string, newEmployeeData: EmployeeData): Promise<void> {
+  async updateEditEmployee(page: Page, currentPassword: string, newEmployeeData: FakerEmployee): Promise<void> {
     await this.setValue(page, this.firstNameInput, newEmployeeData.firstName);
     await this.setValue(page, this.lastNameInput, newEmployeeData.lastName);
     if (newEmployeeData.avatarFile) {

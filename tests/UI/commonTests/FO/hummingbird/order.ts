@@ -11,21 +11,21 @@ import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 
-// Import data
-import OrderData from '@data/faker/order';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  FakerOrder,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
 
 /**
  * Function to create simple order by customer in FO
- * @param orderData {OrderData} Data to set when creating the order
+ * @param orderData {FakerOrder} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
-function createOrderByCustomerTest(orderData: OrderData, baseContext: string = 'commonTests-createOrderByCustomerTest'): void {
+function createOrderByCustomerTest(orderData: FakerOrder, baseContext: string = 'commonTests-createOrderByCustomerTest'): void {
   describe('PRE-TEST: Create order by customer on FO', async () => {
     // before and after functions
     before(async function () {
@@ -115,11 +115,11 @@ function createOrderByCustomerTest(orderData: OrderData, baseContext: string = '
 
 /**
  * Function to create order with specific product by customer in FO
- * @param orderData {OrderData} Data to set when creating the order
+ * @param orderData {FakerOrder} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
 function createOrderSpecificProductTest(
-  orderData: OrderData,
+  orderData: FakerOrder,
   baseContext: string = 'commonTests-createOrderSpecificProductTest',
 ): void {
   describe(`PRE-TEST: Create order contain '${orderData.products[0].product.name}' by default customer in FO`, async () => {
@@ -216,10 +216,10 @@ function createOrderSpecificProductTest(
 
 /**
  * Function to create simple order by guest in FO
- * @param orderData {OrderData} Data to set when creating the order
+ * @param orderData {FakerOrder} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
-function createOrderByGuestTest(orderData: OrderData, baseContext: string = 'commonTests-createOrderByGuestTest'): void {
+function createOrderByGuestTest(orderData: FakerOrder, baseContext: string = 'commonTests-createOrderByGuestTest'): void {
   describe('PRE-TEST: Create order by guest in FO', async () => {
     // before and after functions
     before(async function () {
