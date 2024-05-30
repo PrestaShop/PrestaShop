@@ -30,13 +30,15 @@ jobs:
         run: docker compose build prestashop-git
 
       - name: Fetch dependencies
-        run: docker compose run --rm prestashop-git composer install --ansi --prefer-dist --no-interaction --no-progress
+        run: COMPOSER_PROCESS_TIMEOUT=600 docker compose run --rm prestashop-git composer install --ansi --prefer-dist --no-interaction --no-progress --no-dev
 
-      - name: Waiting for database
-        run: ./.docker/wait-for-it.sh --timeout=60 --strict localhost:3306
-
-      - name: Create base database
-        run: docker compose run --rm mysql mysql -hmysql -uroot -pprestashop -e "CREATE DATABASE presta_${{ matrix.branch }};"
+      - name: Create database
+        run: |
+          while ! docker compose run --rm mysql mysql -hmysql -uroot -pprestashop -e "status" &> /dev/null ; do
+            echo "Waiting for database connection..."
+            sleep 2
+          done
+          docker compose run --rm mysql mysql -hmysql -uroot -pprestashop -e "CREATE DATABASE presta_${{ matrix.branch }};"
 
       - name: Install shop
         run: docker compose run --rm prestashop-git php install-dev/index_cli.php \
