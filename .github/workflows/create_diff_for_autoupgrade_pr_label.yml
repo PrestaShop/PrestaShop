@@ -30,7 +30,7 @@ jobs:
         run: docker compose build prestashop-git
 
       - name: Fetch dependencies
-        run: docker compose run --rm prestashop-git composer install --ansi --prefer-dist --no-interaction --no-progress
+        run: COMPOSER_PROCESS_TIMEOUT=600 docker compose run --rm prestashop-git composer install --ansi --prefer-dist --no-interaction --no-progress --no-dev
 
       - name: Waiting for database
         run: ./.docker/wait-for-it.sh --timeout=60 --strict localhost:3306

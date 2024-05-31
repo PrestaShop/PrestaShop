@@ -56,7 +56,7 @@ if [ "${DISABLE_MAKE}" != "1" ]; then
   runuser -g www-data -u www-data -- php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');" && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer && rm -rf /tmp/composer-setup.php
 
   echo "\n* Running composer ...";
-  COMPOSER_PROCESS_TIMEOUT=600 runuser -g www-data -u www-data -- /usr/local/bin/composer install --no-interaction
+  COMPOSER_PROCESS_TIMEOUT=600 runuser -g www-data -u www-data -- /usr/local/bin/composer install --ansi --prefer-dist --no-interaction --no-progress
   if [ $? -ne 0]; then
     echo Composer install failed
     exit 1
