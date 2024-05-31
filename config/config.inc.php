@@ -46,7 +46,7 @@ ini_set('default_charset', 'utf-8');
 /* in dev mode - check if composer was executed */
 if (is_dir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'admin-dev') && (!is_dir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'vendor') ||
         !file_exists(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
-    die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
+    die('Config check Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
 /* No settings file? goto installer... */
