@@ -406,9 +406,6 @@ abstract class PaymentModuleCore extends Module
             }
         }
 
-        // Next !
-        $products = $this->context->cart->getProducts();
-
         // Make sure CartRule caches are empty
         CartRule::cleanCache();
         foreach ($order_detail_list as $key => $order_detail) {
@@ -419,29 +416,6 @@ abstract class PaymentModuleCore extends Module
                 PrestaShopLogger::addLog($error, 4, 2, 'Cart', (int) $order->id_cart);
                 die(Tools::displayError($error));
             }
-            if (!$secure_key) {
-                $message .= '<br />' . $this->trans('Warning: the secure key is empty, check your payment account before validation', [], 'Admin.Payment.Notification');
-            }
-            // Optional message to attach to this order
-            if (!empty($message)) {
-                $message = strip_tags($message, '<br>');
-                if (Validate::isCleanHtml($message)) {
-                    if (self::DEBUG_MODE) {
-                        PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int) $id_cart, true);
-                    }
-                    $msg = new Message();
-                    $msg->message = $message;
-                    $msg->id_cart = (int) $id_cart;
-                    $msg->id_customer = (int) $order->id_customer;
-                    $msg->id_order = (int) $order->id;
-                    $msg->private = true;
-                    $msg->add();
-                }
-            }
-
-            // Insert new Order detail list using cart for the current order
-            // $orderDetail = new OrderDetail(null, null, $this->context);
-            // $orderDetail->createList($order, $this->context->cart, $id_order_state);
 
             // Construct order detail table for the email
             $virtual_product = true;
@@ -529,33 +503,70 @@ abstract class PaymentModuleCore extends Module
                 $cart_rules_list_html = $this->getEmailTemplateContent('order_conf_cart_rules.tpl', Mail::TYPE_HTML, $cart_rules_list);
             }
 
-            // Specify order id for message
+            /*
+             * Now, we will save the messages for this order.
+             *
+             * We can have two types of messages:
+             * A) The one that is passed here as $message parameter. (private)
+             * B) The one that is already stored on the current cart and can be retrieved by Message::getMessageByCartId. (public)
+             *
+             * We will add both to customer_threads table, so we can continue working with them.
+             */
+            $messagesToStoreInTheThread = [];
+
+            /* 
+             * First, the message from $message method parameter. We will create new message object
+             * and mark it, so we can also create a thread from this.
+             */
+            if (!empty($message)) {
+                $message = strip_tags($message, '<br>');
+                if (Validate::isCleanHtml($message)) {
+                    $messageObject = new Message();
+                    $messageObject->message = $message;
+                    $messageObject->id_cart = (int) $id_cart;
+                    $messageObject->id_customer = (int) $order->id_customer;
+                    $messageObject->id_order = (int) $order->id;
+                    $messageObject->private = true;
+                    $messageObject->add();
+                    $messagesToStoreInTheThread[] = $messageObject;
+                }
+            }
+
+            /* 
+             * Second, the message already set on the cart. The message object already exists, so we will just update
+             * it with the new order ID we got.
+             */
             $old_message = Message::getMessageByCartId((int) $this->context->cart->id);
-            if ($old_message && !$old_message['private']) {
-                $update_message = new Message((int) $old_message['id_message']);
-                $update_message->id_order = (int) $order->id;
-                $update_message->update();
+            if (!empty($old_message)) {
+                $messageObject = new Message((int) $old_message['id_message']);
+                $messageObject->id_order = (int) $order->id;
+                $messageObject->update();
+                $messagesToStoreInTheThread[] = $messageObject;
+            }
 
-                // Add this message in the customer thread
-                $customer_thread = new CustomerThread();
-                $customer_thread->id_contact = 0;
-                $customer_thread->id_customer = (int) $order->id_customer;
-                $customer_thread->id_shop = (int) $this->context->shop->id;
-                $customer_thread->id_order = (int) $order->id;
-                $customer_thread->id_lang = (int) $this->context->language->id;
-                $customer_thread->email = $this->context->customer->email;
-                $customer_thread->status = 'open';
-                $customer_thread->token = Tools::passwdGen(12);
-                $customer_thread->add();
+            /*
+             * And finally, we will create a customer thread, so we have the messages stored in the "new way"
+             * and we can see them in backoffice
+             */
+            if (!empty($messagesToStoreInTheThread)) {
+                $customerThread = new CustomerThread();
+                $customerThread->id_contact = 0;
+                $customerThread->id_customer = (int) $order->id_customer;
+                $customerThread->id_shop = (int) $this->context->shop->id;
+                $customerThread->id_order = (int) $order->id;
+                $customerThread->id_lang = (int) $this->context->language->id;
+                $customerThread->email = $this->context->customer->email;
+                $customerThread->status = 'open';
+                $customerThread->token = Tools::passwdGen(12);
+                $customerThread->add();
 
-                $customer_message = new CustomerMessage();
-                $customer_message->id_customer_thread = $customer_thread->id;
-                $customer_message->id_employee = 0;
-                $customer_message->message = $update_message->message;
-                $customer_message->private = false;
-
-                if (!$customer_message->add()) {
-                    $this->_errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
+                foreach ($messagesToStoreInTheThread as $messageObjectToStore) {
+                    $customerMessage = new CustomerMessage();
+                    $customerMessage->id_customer_thread = (int) $customerThread->id;
+                    $customerMessage->id_employee = 0;
+                    $customerMessage->message = $messageObjectToStore->message;
+                    $customerMessage->private = (bool) $messageObjectToStore->private;
+                    $customerMessage->add();
                 }
             }
 
