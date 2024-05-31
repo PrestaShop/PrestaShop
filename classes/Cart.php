@@ -761,6 +761,8 @@ class CartCore extends ObjectModel
                 $products[$key] = array_merge($product, $reduction_type_row);
             }
         }
+
+        $this->getQuantitiesForAllProducts($products_ids, $this->id);
         // Thus you can avoid one query per product, because there will be only one query for all the products of the cart
         Product::cacheProductsFeatures($products_ids);
         Cart::cacheSomeAttributesLists($pa_ids, (int) $this->getAssociatedLanguage()->getId());
@@ -4782,5 +4784,47 @@ class CartCore extends ObjectModel
           FROM (' . $firstUnionSql . ' UNION ' . $secondUnionSql . ') as q';
 
         return Db::getInstance()->getRow($parentSql);
+    }
+
+    /*
+     * REFACTOR FUNCTIONS TO BE MOVED LATER
+     */
+
+    /**
+     * This function does the query to fetch quantities like in the getPriceStatic method,
+     * but one query for all products instead of one query per product.
+     * Then we recreate the same cache keys used by getPriceStatic
+     */
+    private function getQuantitiesForAllProducts(array $productIds, int $idCart): void
+    {
+        if (empty($productIds)) {
+            return;
+        }
+
+        // check first key to see if it has been generated already
+        $productIdCheck = $productIds[0];
+        $checkCacheId = 'Product::getPriceStatic_' . (int) $productIdCheck . '-' . (int) $idCart;
+
+        if (Cache::isStored($checkCacheId)) {
+            return;
+        }
+
+        $product_ids_str = implode(", ", $productIds);
+        $sql = "SELECT `id_product`, SUM(`quantity`) as quantity
+          FROM `ps_cart_product`
+          WHERE `id_cart` = 6
+          AND `id_product` IN ($product_ids_str)
+          GROUP BY `id_product`";
+
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+
+        if (empty($res)) {
+            return;
+        }
+
+        foreach ($res as $resdata) {
+            $cache_id = 'Product::getPriceStatic_' . (int) $resdata['id_product'] . '-' . (int) $idCart;
+            Cache::store($cache_id, $resdata['quantity']);
+        }
     }
 }
