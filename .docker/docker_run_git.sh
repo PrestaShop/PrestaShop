@@ -60,7 +60,8 @@ if [ "${DISABLE_MAKE}" != "1" ]; then
   fi
 
   echo "\n* Running composer ...";
-  COMPOSER_PROCESS_TIMEOUT=600 runuser -g www-data -u www-data -- /usr/local/bin/composer install --ansi --prefer-dist --no-interaction --no-progress
+  export COMPOSER_PROCESS_TIMEOUT=600
+  runuser -g www-data -u www-data -- /usr/local/bin/composer install --ansi --prefer-dist --no-interaction --no-progress
 
   echo "\n* Build assets ...";
   runuser -g www-data -u www-data -- /usr/bin/make assets
