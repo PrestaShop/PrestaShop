@@ -27,7 +27,7 @@ class ReturnDetails extends FOBasePage {
   constructor(theme: string = 'classic') {
     super(theme);
 
-    this.pageTitle = 'Return details';
+    this.pageTitle = 'Return Details';
     this.errorMessage = 'You must wait for confirmation before returning any merchandise.';
     this.orderReturnCardBlock = 'We have logged your return request. Your package must be returned to us within 14 days'
       + ' of receiving your order. The current status of your merchandise return is:';

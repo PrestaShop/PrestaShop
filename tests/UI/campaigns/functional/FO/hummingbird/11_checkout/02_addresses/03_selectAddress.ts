@@ -123,7 +123,7 @@ describe('FO - Checkout - Addresses: Select address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoPaymentMethodAvailable', baseContext);
 
       const alertMessage = await checkoutPage.getNoPaymentAvailableMessage(page);
-      expect(alertMessage).to.equal('Unfortunately, there are no payment method available.');
+      expect(alertMessage).to.equal('Unfortunately, there is no payment method available.');
     });
   });
 
