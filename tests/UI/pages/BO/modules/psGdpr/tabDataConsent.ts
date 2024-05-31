@@ -34,7 +34,7 @@ class PsGdprTabDataConsentPage extends ModuleConfiguration {
   constructor() {
     super();
 
-    this.saveFormMessage = 'Saved with success !';
+    this.saveFormMessage = 'Saved with success!';
 
     this.checkboxCreationForm = (status: boolean) => `#switch_account_creation_${status ? 'on' : 'off'}`;
     this.messageCreationForm = (idLang: number) => `#psgdpr_creation_form_${idLang}_ifr`;

@@ -233,7 +233,10 @@ describe('FO - Contact us : Send message from contact us page with customer not 
     it('should check that the confirmation mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMail', baseContext);
 
-      expect(newMail.subject).to.contains(`[${global.INSTALL.SHOP_NAME}] Your message has been correctly sent`);
+      // Translated message looks like this 'Your message no. ct%thread_id% has been correctly sent (thread ID tc%thread_token%)'
+      // so we check the two parts that are not dynamic
+      expect(newMail.subject).to.contains(`[${global.INSTALL.SHOP_NAME}] Your message`);
+      expect(newMail.subject).to.contains('has been correctly sent');
     });
   });
 
