@@ -199,6 +199,9 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
                 ])
                 ->setAssociatedColumn('name')
             )
+            ->add((new Filter('position', ReorderPositionsButtonType::class))
+                ->setAssociatedColumn('position')
+            )          
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
