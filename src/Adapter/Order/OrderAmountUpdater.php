@@ -371,7 +371,7 @@ class OrderAmountUpdater
         $cartProducts = $cart->getProducts(true, false, null, true, $this->keepOrderPrices);
         foreach ($order->getCartProducts() as $orderProduct) {
             $orderDetail = new OrderDetail($orderProduct['id_order_detail'], null, $this->contextStateManager->getContext());
-            $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id (int) $orderDetail->id_customization);
+            $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id, (int) $orderDetail->id_customization);
 
             $this->orderDetailUpdater->updateOrderDetail(
                 $orderDetail,
