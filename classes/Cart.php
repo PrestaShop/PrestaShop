@@ -1129,7 +1129,8 @@ class CartCore extends ObjectModel
             isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
             true,
             false,
-            true
+            true,
+            isset($productRow['id_customization']) ? (int) $productRow['id_customization'] : 0
         );
 
         $orderPrices['price_without_reduction_without_tax'] = Product::getPriceFromOrder(
@@ -1138,7 +1139,8 @@ class CartCore extends ObjectModel
             isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
             false,
             false,
-            true
+            true,
+            isset($productRow['id_customization']) ? (int) $productRow['id_customization'] : 0
         );
 
         $orderPrices['price_with_reduction'] = Product::getPriceFromOrder(
@@ -1147,7 +1149,8 @@ class CartCore extends ObjectModel
             isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
             true,
             true,
-            true
+            true,
+            isset($productRow['id_customization']) ? (int) $productRow['id_customization'] : 0
         );
 
         $orderPrices['price'] = $orderPrices['price_with_reduction_without_tax'] = Product::getPriceFromOrder(
@@ -1156,7 +1159,8 @@ class CartCore extends ObjectModel
             isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
             false,
             true,
-            true
+            true,
+            isset($productRow['id_customization']) ? (int) $productRow['id_customization'] : 0
         );
 
         // If the product price was not found in the order, use cart prices as fallback

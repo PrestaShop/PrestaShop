@@ -119,7 +119,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
                 (int) $orderDetail->product_id,
                 (int) $orderDetail->product_attribute_id,
                 $command->getPriceTaxExcluded(),
-                $command->getPriceTaxIncluded()
+                $command->getPriceTaxIncluded(),
+                (int) $orderDetail->id_customization
             );
 
             // Update invoice, quantity and amounts
