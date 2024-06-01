@@ -4058,7 +4058,7 @@ class ProductCore extends ObjectModel
         bool $withTaxes,
         bool $useReduction,
         bool $withEcoTax,
-        int $ustomizationId = 0
+        int $customizationId = 0
     ): ?float {
         $sql = new DbQuery();
         $sql->select('od.*, t.rate AS tax_rate');
