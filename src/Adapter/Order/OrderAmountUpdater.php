@@ -400,7 +400,7 @@ class OrderAmountUpdater
             $combinationMatch = $item['id_product_attribute'] == $productAttributeId;
             $customizationMatch = $item['id_customization'] == $customizationId;
 
-            return $productMatch && $customizationMatch && $customizationMatch ? $item : null;
+            return $productMatch && $combinationMatch && $customizationMatch ? $item : null;
         });
 
         // This shouldn't happen, if it does something was not done before updating the Order (removing an OrderDetail maybe)
