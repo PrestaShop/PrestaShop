@@ -514,7 +514,7 @@ abstract class PaymentModuleCore extends Module
              */
             $messagesToStoreInTheThread = [];
 
-            /* 
+            /*
              * First, the message from $message method parameter. We will create new message object
              * and mark it, so we can also create a thread from this.
              */
@@ -532,8 +532,8 @@ abstract class PaymentModuleCore extends Module
                 }
             }
 
-            /* 
-             * Second, the message already set on the cart. The message object already exists, so we will just update
+            /*
+             * Second, the message already set on the cart. The Message object already exists, so we will just update
              * it with the new order ID we got.
              */
             $old_message = Message::getMessageByCartId((int) $this->context->cart->id);
@@ -545,8 +545,8 @@ abstract class PaymentModuleCore extends Module
             }
 
             /*
-             * And finally, we will create a customer thread, so we have the messages stored in the "new way"
-             * and we can see them in backoffice
+             * And finally, we will create a CustomerThread, so we have the messages stored in the "new way"
+             * and we can see them in backoffice.
              */
             if (!empty($messagesToStoreInTheThread)) {
                 $customerThread = new CustomerThread();
