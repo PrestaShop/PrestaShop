@@ -389,7 +389,7 @@ class OrderAmountUpdater
      *
      * @return array
      */
-    private function getProductFromCart(array $cartProducts, int $productId, int $productAttributeId,int $customizationId = 0): array
+    private function getProductFromCart(array $cartProducts, int $productId, int $productAttributeId, int $customizationId = 0): array
     {
         $cartProduct = array_reduce($cartProducts, function ($carry, $item) use ($productId, $productAttributeId, $customizationId) {
             if (null !== $carry) {
