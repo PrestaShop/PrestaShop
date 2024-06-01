@@ -135,7 +135,7 @@ class OrderDetailUpdater
         int $combinationId,
         DecimalNumber $priceTaxExcluded,
         DecimalNumber $priceTaxIncluded,
-        int $customizationId
+        int $customizationId = 0
     ): void {
         list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
@@ -317,7 +317,7 @@ class OrderDetailUpdater
         int $roundType,
         int $computingPrecision,
         Address $taxAddress,
-        int $customizationId
+        int $customizationId = 0
     ): void {
         $identicalOrderDetails = $this->getOrderDetailsForProduct($order, $productId, $combinationId, $customizationId);
         if (empty($identicalOrderDetails)) {
