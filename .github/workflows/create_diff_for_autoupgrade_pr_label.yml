@@ -30,10 +30,10 @@ jobs:
         run: docker compose build prestashop-git
 
       - name: Fetch dependencies
-        run: docker compose run --rm prestashop-git composer install --ansi --prefer-dist --no-interaction --no-progress
+        run: COMPOSER_PROCESS_TIMEOUT=600 docker compose run --rm prestashop-git composer install --ansi --prefer-dist --no-interaction --no-progress --no-dev
 
       - name: Waiting for database
-        run: ./.docker/wait-for-it.sh --timeout=60 --strict localhost:3306
+        run: docker compose run --rm prestashop-git /tmp/wait-for-it.sh --timeout=60 --strict mysql:3306
 
       - name: Create base database
         run: docker compose run --rm mysql mysql -hmysql -uroot -pprestashop -e "CREATE DATABASE presta_${{ matrix.branch }};"

@@ -54,13 +54,14 @@ if [ "${DISABLE_MAKE}" != "1" ]; then
   mkdir -p /var/www/.composer
   chown -R www-data:www-data /var/www/.composer
   runuser -g www-data -u www-data -- php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');" && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer && rm -rf /tmp/composer-setup.php
-
-  echo "\n* Running composer ...";
-  COMPOSER_PROCESS_TIMEOUT=600 runuser -g www-data -u www-data -- /usr/local/bin/composer install --no-interaction
-  if [ $? -ne 0]; then
-    echo Composer install failed
+  if [ ! -f /usr/local/bin/composer ]; then
+    echo Composer installation failed
     exit 1
   fi
+
+  echo "\n* Running composer ...";
+  export COMPOSER_PROCESS_TIMEOUT=600
+  runuser -g www-data -u www-data -- /usr/local/bin/composer install --ansi --prefer-dist --no-interaction --no-progress
 
   echo "\n* Build assets ...";
   runuser -g www-data -u www-data -- /usr/bin/make assets

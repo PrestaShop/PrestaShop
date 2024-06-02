@@ -83,7 +83,7 @@ if (!defined('_PS_CORE_DIR_')) {
 /* in dev mode - check if composer was executed */
 if ((!is_dir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'vendor') ||
     !file_exists(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
-    die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
+    die('Init Install Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
 require_once _PS_CORE_DIR_ . '/config/defines.inc.php';

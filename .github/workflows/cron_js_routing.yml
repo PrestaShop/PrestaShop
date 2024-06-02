@@ -84,7 +84,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Install Composer dependencies
-        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --prefer-dist
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
       - name: Build assets
         run: make assets
