@@ -48,6 +48,11 @@ class EditCarrierCommand
     private ?int $max_weight;
     private ?array $associatedGroupIds;
     private ?string $logoPathName;
+    private ?bool $isShippingHandling;
+    private ?bool $isFree;
+    private ?int $shippingMethod;
+    private ?int $idTaxRuleGroup;
+    private ?bool $rangeBehavior;
 
     public function __construct(int $carrierId)
     {
@@ -205,6 +210,66 @@ class EditCarrierCommand
     public function setLogoPathName(?string $logoPathName): self
     {
         $this->logoPathName = $logoPathName;
+
+        return $this;
+    }
+
+    public function isShippingHandling(): ?bool
+    {
+        return $this->isShippingHandling ?? null;
+    }
+
+    public function setIsShippingHandling(bool $isShippingHandling): self
+    {
+        $this->isShippingHandling = $isShippingHandling;
+
+        return $this;
+    }
+
+    public function isFree(): ?bool
+    {
+        return $this->isFree ?? null;
+    }
+
+    public function setIsFree(bool $isFree): self
+    {
+        $this->isFree = $isFree;
+
+        return $this;
+    }
+
+    public function getShippingMethod(): ?int
+    {
+        return $this->shippingMethod ?? null;
+    }
+
+    public function setShippingMethod(int $shippingMethod): self
+    {
+        $this->shippingMethod = $shippingMethod;
+
+        return $this;
+    }
+
+    public function getIdTaxRuleGroup(): ?int
+    {
+        return $this->idTaxRuleGroup ?? null;
+    }
+
+    public function setIdTaxRuleGroup(int $idTaxRuleGroup): self
+    {
+        $this->idTaxRuleGroup = $idTaxRuleGroup;
+
+        return $this;
+    }
+
+    public function getRangeBehavior(): ?bool
+    {
+        return $this->rangeBehavior ?? null;
+    }
+
+    public function setRangeBehavior(bool $rangeBehavior): self
+    {
+        $this->rangeBehavior = $rangeBehavior;
 
         return $this;
     }
