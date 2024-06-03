@@ -15,12 +15,12 @@ import imageSettingsPage from '@pages/BO/design/imageSettings';
 import {homePage} from '@pages/FO/classic/home';
 import {categoryPage} from '@pages/FO/classic/category';
 
-// Import data
-import CategoryData from '@data/faker/category';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCategory,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_checkCategoryImageFormat';
 
@@ -29,15 +29,15 @@ describe('BO - Design - Image Settings - Check category image format', async () 
   let page: Page;
   let idCategory: number = 0;
 
-  const categoryDataJPG: CategoryData = new CategoryData({
+  const categoryDataJPG: FakerCategory = new FakerCategory({
     coverImage: 'coverJPG.jpg',
     thumbnailImage: 'thumbJPG.jpg',
   });
-  const categoryDataPNG: CategoryData = new CategoryData({
+  const categoryDataPNG: FakerCategory = new FakerCategory({
     coverImage: 'coverPNG.png',
     thumbnailImage: 'thumbPNG.png',
   });
-  const categoryDataWEBP: CategoryData = new CategoryData({
+  const categoryDataWEBP: FakerCategory = new FakerCategory({
     coverImage: 'coverWEBP.webp',
     thumbnailImage: 'thumbWEBP.webp',
   });
@@ -140,7 +140,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
       extGenerated: 'jpg',
       extImageType: 'png',
     },
-  ].forEach((arg: {category: CategoryData, extOriginal: string, extGenerated: string, extImageType: string}, index: number) => {
+  ].forEach((arg: {category: FakerCategory, extOriginal: string, extGenerated: string, extImageType: string}, index: number) => {
     const argExtension: string = arg.extOriginal;
     describe(
       `Image Generation - Category - Image Format : ${argExtension.toUpperCase()}`,
@@ -311,7 +311,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
       category: categoryDataWEBP,
       extension: 'webp',
     },
-  ].forEach((arg: {category: CategoryData, extension: string}) => {
+  ].forEach((arg: {category: FakerCategory, extension: string}) => {
     bulkDeleteCategoriesTest(
       {filterBy: 'name', value: arg.category.name},
       `${baseContext}_removeProduct${arg.extension}`,

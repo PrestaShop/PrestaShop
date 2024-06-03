@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type ImageTypeData from '@data/faker/imageType';
-
 import type {Page} from 'playwright';
+import {
+  type FakerImageType,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add image type page, contains functions that can be used on the page
@@ -62,10 +63,10 @@ class AddImageType extends BOBasePage {
   /**
    * Fill image type form in create or edit page and save
    * @param page {Page} Browser tab
-   * @param imageTypeData {ImageTypeData} Data to set on new/edit image type form
+   * @param imageTypeData {FakerImageType} Data to set on new/edit image type form
    * @return {Promise<string>}
    */
-  async createEditImageType(page: Page, imageTypeData: ImageTypeData): Promise<string> {
+  async createEditImageType(page: Page, imageTypeData: FakerImageType): Promise<string> {
     await this.setValue(page, this.nameInput, imageTypeData.name);
     await this.setValue(page, this.widthInput, imageTypeData.width.toString());
     await this.setValue(page, this.heightInput, imageTypeData.height.toString());

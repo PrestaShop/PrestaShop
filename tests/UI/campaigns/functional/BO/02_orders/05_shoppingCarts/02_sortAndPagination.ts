@@ -11,16 +11,13 @@ import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 // Import pages
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
-// Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -44,11 +41,11 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
   const addressData: FakerAddress = new FakerAddress({country: 'France'});
   const customerData: FakerCustomer = new FakerCustomer({password: '', lastName: 'guest'});
   // New order by guest data
-  const orderByGuestData: OrderData = new OrderData({
+  const orderByGuestData: FakerOrder = new FakerOrder({
     customer: customerData,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],

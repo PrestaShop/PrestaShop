@@ -18,14 +18,13 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataPaymentMethods,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -123,7 +122,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
         await foHomePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
@@ -146,8 +145,8 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
         it('should verify the total after discount', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount', baseContext);
 
-          const discountedPrice = Products.demo_1.finalPrice
-            - await basicHelper.percentage(Products.demo_1.finalPrice, cartRuleCode.discountPercent!);
+          const discountedPrice = dataProducts.demo_1.finalPrice
+            - await basicHelper.percentage(dataProducts.demo_1.finalPrice, cartRuleCode.discountPercent!);
 
           const totalAfterDiscount = await cartPage.getATIPrice(page);
           expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));

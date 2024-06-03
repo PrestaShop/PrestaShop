@@ -1,10 +1,12 @@
-import Tables from '@data/demo/sqlTables';
-import SqlTableData from '@data/faker/sqlTable';
 import type SqlQueryCreator from '@data/types/sqlQuery';
 
 import {faker} from '@faker-js/faker';
+import {
+  dataSqlTables,
+  type FakerSqlTable,
+} from '@prestashop-core/ui-testing';
 
-const tableNames: string[] = Object.values(Tables).map((table: SqlTableData) => table.name);
+const tableNames: string[] = Object.values(dataSqlTables).map((table: FakerSqlTable) => table.name);
 
 /**
  * Create new sql query to use on query creation form on BO

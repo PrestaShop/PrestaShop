@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import SeoPageData from '@data/faker/seoPage';
-
 import type {Page} from 'playwright';
+import {
+  type FakerSeoPage,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add seo and url page, contains selectors and functions for the page
@@ -110,10 +111,10 @@ class AddSeoUrl extends BOBasePage {
   /**
    * Create/Edit seo page
    * @param page {Page} Browser tab
-   * @param seoPageData {SeoPageData} Data to set on seo form
+   * @param seoPageData {FakerSeoPage} Data to set on seo form
    * @return {Promise<void>}
    */
-  async createEditSeoPage(page: Page, seoPageData: SeoPageData): Promise<string> {
+  async createEditSeoPage(page: Page, seoPageData: FakerSeoPage): Promise<string> {
     await this.selectByVisibleText(page, this.pageNameSelect, seoPageData.page);
     // Fill form in english
     await this.changeLanguageForSelectors(page, 'en');

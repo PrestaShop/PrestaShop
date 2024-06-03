@@ -24,16 +24,15 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Address from '@data/demo/address';
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
 import {WebservicePermission} from '@data/types/webservice';
 import getOrderXml from '@data/xml/order';
 
 import {
   boDashboardPage,
-  // Import data
+  dataAddresses,
   dataCustomers,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';
@@ -54,13 +53,13 @@ describe('WS - Orders : CRUD', async () => {
   let authorization: string = '';
   let idShoppingCart: number;
 
-  const orderByCustomerData: OrderData = new OrderData({
+  const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
-    deliveryAddress: Address.second,
-    invoiceAddress: Address.third,
+    deliveryAddress: dataAddresses.address_2,
+    invoiceAddress: dataAddresses.address_5,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],

@@ -17,14 +17,13 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import Carriers from '@data/demo/carriers';
-import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   dataCustomers,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -124,7 +123,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await foHomePage.goToProductPage(page, 3);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      expect(pageTitle.toUpperCase()).to.contains(Products.demo_6.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
@@ -173,7 +172,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
     it('should set the promo code and choose the wrong shipping method', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseWrongShippingMethod', baseContext);
 
-      await checkoutPage.chooseShippingMethodAndAddComment(page, Carriers.default.id);
+      await checkoutPage.chooseShippingMethodAndAddComment(page, dataCarriers.clickAndCollect.id);
       await checkoutPage.addPromoCode(page, newCartRuleData.code);
 
       const errorShippingMessage = await checkoutPage.getCartRuleErrorMessage(page);
@@ -185,11 +184,11 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
 
       await checkoutPage.goToShippingStep(page);
 
-      await checkoutPage.chooseShippingMethodAndAddComment(page, Carriers.myCarrier.id);
+      await checkoutPage.chooseShippingMethodAndAddComment(page, dataCarriers.myCarrier.id);
 
       const priceATI = await checkoutPage.getATIPrice(page);
       expect(priceATI.toFixed(2))
-        .to.equal((Products.demo_6.combinations[0].price + Carriers.myCarrier.priceTTC).toFixed(2));
+        .to.equal((dataProducts.demo_6.combinations[0].price + dataCarriers.myCarrier.priceTTC).toFixed(2));
     });
 
     it('should set the promo code for second time and check total after discount', async function () {
@@ -197,8 +196,8 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
 
       await checkoutPage.addPromoCode(page, newCartRuleData.code);
 
-      const totalAfterDiscount = Products.demo_6.combinations[0].price
-        - newCartRuleData.discountAmount!.value + Carriers.myCarrier.priceTTC;
+      const totalAfterDiscount = dataProducts.demo_6.combinations[0].price
+        - newCartRuleData.discountAmount!.value + dataCarriers.myCarrier.priceTTC;
 
       const priceATI = await checkoutPage.getATIPrice(page);
       expect(priceATI.toFixed(2)).to.equal(totalAfterDiscount.toFixed(2));

@@ -14,12 +14,9 @@ import {checkoutPage as foCheckoutPage} from '@pages/FO/classic/checkout';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 
-// Import data
-import Carriers from '@data/demo/carriers';
-
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   dataCustomers,
   FakerCarrier,
 } from '@prestashop-core/ui-testing';
@@ -69,8 +66,8 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
   });
 
   const carriers: FakerCarrier[] = [
-    Carriers.myCarrier,
-    Carriers.default,
+    dataCarriers.myCarrier,
+    dataCarriers.clickAndCollect,
   ];
 
   carriers.forEach((carrier: FakerCarrier, index: number) => {

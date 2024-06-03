@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
 import pagesConfigurationPage from '@pages/BO/design/themeAndLogo/pagesConfiguration';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_themeAndLogo_pagesConfiguration_installUninstallModule';
 
@@ -62,14 +62,14 @@ describe('BO - Design - Theme & Logo : Install/Uninstall module', async () => {
   it('should uninstall the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-    const successMessage = await pagesConfigurationPage.setActionInModule(page, Modules.mainMenu, 'uninstall');
+    const successMessage = await pagesConfigurationPage.setActionInModule(page, dataModules.mainMenu, 'uninstall');
     expect(successMessage).to.eq(pagesConfigurationPage.successMessage);
   });
 
   it('should install the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
-    const successMessage = await pagesConfigurationPage.setActionInModule(page, Modules.mainMenu, 'install');
+    const successMessage = await pagesConfigurationPage.setActionInModule(page, dataModules.mainMenu, 'install');
     expect(successMessage).to.eq(pagesConfigurationPage.successMessage);
   });
 });

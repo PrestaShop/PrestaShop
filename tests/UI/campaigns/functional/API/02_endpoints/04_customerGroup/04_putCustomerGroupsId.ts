@@ -15,11 +15,11 @@ import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
 // Import data
-import Languages from '@data/demo/languages';
 import APIClientData from '@data/faker/APIClient';
 
 import {
   boDashboardPage,
+  dataLanguages,
   FakerGroup,
 } from '@prestashop-core/ui-testing';
 
@@ -221,8 +221,8 @@ describe('API : PUT /customers/group/{customerGroupId}', async () => {
         data: {
           customerGroupId: idCustomerGroup,
           localizedNames: {
-            [Languages.french.id]: updateGroupData.frName,
-            [Languages.english.id]: updateGroupData.name,
+            [dataLanguages.french.id]: updateGroupData.frName,
+            [dataLanguages.english.id]: updateGroupData.name,
           },
           reductionPercent: updateGroupData.discount,
           displayPriceTaxExcluded: updateGroupData.priceDisplayMethod === 'Tax excluded',
@@ -287,15 +287,15 @@ describe('API : PUT /customers/group/{customerGroupId}', async () => {
     it('should check the JSON Response : `localizedNames` (EN)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLocalizedNamesEN', baseContext);
 
-      const value = await addGroupPage.getValue(page, 'localizedNames', Languages.english.id);
-      expect(jsonResponse.localizedNames[Languages.english.id]).to.be.equal(value);
+      const value = await addGroupPage.getValue(page, 'localizedNames', dataLanguages.english.id);
+      expect(jsonResponse.localizedNames[dataLanguages.english.id]).to.be.equal(value);
     });
 
     it('should check the JSON Response : `localizedNames` (FR)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLocalizedNamesFR', baseContext);
 
-      const value = await addGroupPage.getValue(page, 'localizedNames', Languages.french.id);
-      expect(jsonResponse.localizedNames[Languages.french.id]).to.be.equal(value);
+      const value = await addGroupPage.getValue(page, 'localizedNames', dataLanguages.french.id);
+      expect(jsonResponse.localizedNames[dataLanguages.french.id]).to.be.equal(value);
     });
 
     it('should check the JSON Response : `reductionPercent`', async function () {

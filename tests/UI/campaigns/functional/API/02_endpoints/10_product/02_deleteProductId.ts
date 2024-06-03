@@ -15,11 +15,13 @@ import productsPage from '@pages/BO/catalog/products';
 
 // Import data
 import APIClientData from '@data/faker/APIClient';
-import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_product_deleteProductId';
 
@@ -38,7 +40,7 @@ describe('API : DELETE /product/{productId}', async () => {
       clientScope,
     ],
   });
-  const productData: ProductData = new ProductData({type: 'standard', status: true});
+  const productData: FakerProduct = new FakerProduct({type: 'standard', status: true});
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -18,14 +18,12 @@ import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
-// Import data
-import Products from '@data/demo/products';
-import Carriers from '@data/demo/carriers';
-
 import {
-  // Import data
+  boDashboardPage,
+  dataCarriers,
+  dataCustomers,
   dataPaymentMethods,
-  dataCustomers, boDashboardPage,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -82,30 +80,30 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       expect(result).to.eq(true);
     });
 
-    it(`should add the product ${Products.demo_3.name} to cart by quick view`, async function () {
+    it(`should add the product ${dataProducts.demo_3.name} to cart by quick view`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addDemo3ByQuickView', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_3.name);
+      await homePage.searchProduct(page, dataProducts.demo_3.name);
       await searchResultsPage.quickViewProduct(page, 1);
 
       await quickViewModal.addToCartByQuickView(page);
       await blockCartModal.closeBlockCartModal(page);
     });
 
-    it(`should add the product ${Products.demo_5.name} to cart by quick view`, async function () {
+    it(`should add the product ${dataProducts.demo_5.name} to cart by quick view`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addDemo5ByQuickView', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_5.name);
+      await homePage.searchProduct(page, dataProducts.demo_5.name);
       await searchResultsPage.quickViewProduct(page, 1);
 
       await quickViewModal.addToCartByQuickView(page);
       await blockCartModal.closeBlockCartModal(page);
     });
 
-    it(`should add the product ${Products.demo_12.name} to cart by quick view`, async function () {
+    it(`should add the product ${dataProducts.demo_12.name} to cart by quick view`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addDemo12ByQuickView', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_12.name);
+      await homePage.searchProduct(page, dataProducts.demo_12.name);
       await searchResultsPage.quickViewProduct(page, 1);
 
       await quickViewModal.addToCartByQuickView(page);
@@ -115,7 +113,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
-    it(`should update the quantity for the product ${Products.demo_5.name}`, async function () {
+    it(`should update the quantity for the product ${dataProducts.demo_5.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateDemoQuantity', baseContext);
 
       await cartPage.editProductQuantity(page, 2, 2);
@@ -124,7 +122,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       expect(notificationsNumber).to.equal(4);
     });
 
-    it(`should update the quantity for the product ${Products.demo_12.name}`, async function () {
+    it(`should update the quantity for the product ${dataProducts.demo_12.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateDemo12Quantity', baseContext);
 
       await cartPage.editProductQuantity(page, 3, 2);
@@ -162,7 +160,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
     it('should select the first carrier and go to payment step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice1', baseContext);
 
-      await checkoutPage.chooseShippingMethod(page, Carriers.myCarrier.id);
+      await checkoutPage.chooseShippingMethod(page, dataCarriers.myCarrier.id);
 
       const isPaymentStep = await checkoutPage.goToPaymentStep(page);
       expect(isPaymentStep).to.eq(true);
@@ -214,8 +212,8 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentInformation', baseContext);
 
       page = await ordersPage.changePage(browserContext, 0);
-      const totalToPay: string = (Products.demo_3.finalPrice + (2 * Products.demo_5.finalPrice)
-        + (2 * Products.demo_12.finalPrice) + Carriers.myCarrier.priceTTC).toFixed(2);
+      const totalToPay: string = (dataProducts.demo_3.finalPrice + (2 * dataProducts.demo_5.finalPrice)
+        + (2 * dataProducts.demo_12.finalPrice) + dataCarriers.myCarrier.priceTTC).toFixed(2);
 
       const paymentInformation = await orderConfirmationPage.getPaymentInformation(page);
       expect(paymentInformation).to.contains('You have chosen payment by '
@@ -230,7 +228,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       const orderDetails = await orderConfirmationPage.getOrderDetails(page);
       expect(orderDetails).to.equal(`Order reference: ${orderReference} Payment method: `
         + `${dataPaymentMethods.wirePayment.displayName} Shipping method: `
-        + `${Carriers.myCarrier.name} - ${Carriers.myCarrier.delay}`);
+        + `${dataCarriers.myCarrier.name} - ${dataCarriers.myCarrier.delay}`);
     });
 
     it('should check the products number', async function () {
@@ -245,9 +243,9 @@ describe('FO - Order confirmation : List of ordered products', async () => {
 
       const result = await orderConfirmationPage.getProductDetailsInRow(page, 1);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_3.coverImage),
-        expect(result.details).to.equal(`${Products.demo_3.name} (Size: S) Reference ${Products.demo_3.reference}`),
-        expect(result.prices).to.equal(`€${Products.demo_3.finalPrice} (x1) €${Products.demo_3.finalPrice}`),
+        expect(result.image).to.contains(dataProducts.demo_3.coverImage),
+        expect(result.details).to.equal(`${dataProducts.demo_3.name} (Size: S) Reference ${dataProducts.demo_3.reference}`),
+        expect(result.prices).to.equal(`€${dataProducts.demo_3.finalPrice} (x1) €${dataProducts.demo_3.finalPrice}`),
       ]);
     });
 
@@ -256,10 +254,12 @@ describe('FO - Order confirmation : List of ordered products', async () => {
 
       const result = await orderConfirmationPage.getProductDetailsInRow(page, 2);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_5.coverImage),
-        expect(result.details).to.equal(`${Products.demo_5.name} (Dimension: 40x60cm) Reference ${Products.demo_5.reference}`),
-        expect(result.prices).to.equal(`€${Products.demo_5.finalPrice.toFixed(2)}`
-          + ` (x2) €${(Products.demo_5.finalPrice * 2).toFixed(2)}`),
+        expect(result.image).to.contains(dataProducts.demo_5.coverImage),
+        expect(result.details).to.equal(
+          `${dataProducts.demo_5.name} (Dimension: 40x60cm) Reference ${dataProducts.demo_5.reference}`,
+        ),
+        expect(result.prices).to.equal(`€${dataProducts.demo_5.finalPrice.toFixed(2)}`
+          + ` (x2) €${(dataProducts.demo_5.finalPrice * 2).toFixed(2)}`),
       ]);
     });
 
@@ -268,9 +268,11 @@ describe('FO - Order confirmation : List of ordered products', async () => {
 
       const result = await orderConfirmationPage.getProductDetailsInRow(page, 3);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_12.coverImage),
-        expect(result.details).to.equal(`${Products.demo_12.name} Reference ${Products.demo_12.reference}`),
-        expect(result.prices).to.equal(`€${Products.demo_12.finalPrice} (x2) €${(Products.demo_12.finalPrice * 2).toFixed(2)}`),
+        expect(result.image).to.contains(dataProducts.demo_12.coverImage),
+        expect(result.details).to.equal(`${dataProducts.demo_12.name} Reference ${dataProducts.demo_12.reference}`),
+        expect(result.prices).to.equal(
+          `€${dataProducts.demo_12.finalPrice} (x2) €${(dataProducts.demo_12.finalPrice * 2).toFixed(2)}`,
+        ),
       ]);
     });
   });

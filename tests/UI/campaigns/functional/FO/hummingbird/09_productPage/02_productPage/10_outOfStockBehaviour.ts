@@ -19,12 +19,12 @@ import movementsPage from '@pages/BO/catalog/stocks/movements';
 import foProductPage from '@pages/FO/hummingbird/product';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_outOfStockBehaviour';
 
@@ -34,7 +34,7 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
   const todayDate: string = date.getDateFormat('yyyy-mm-dd');
 
   // Data to create new product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     name: 'test',
     type: 'standard',
     quantity: 300,

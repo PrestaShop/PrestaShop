@@ -12,12 +12,12 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import productsPage from '@pages/BO/catalog/products';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_CRUDStandardProduct';
 
@@ -26,7 +26,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
   let page: Page;
 
   // Data to create standard product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
@@ -36,7 +36,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
     minimumQuantity: 2,
     status: true,
   });
-  const editProductData: ProductData = new ProductData({
+  const editProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     taxRule: 'FR Taux réduit (10%)',
     tax: 10,

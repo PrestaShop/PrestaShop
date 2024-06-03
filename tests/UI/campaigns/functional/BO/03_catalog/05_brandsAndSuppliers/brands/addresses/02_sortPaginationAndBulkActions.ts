@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import brandsPage from '@pages/BO/catalog/brands';
 import addBrandAddressPage from '@pages/BO/catalog/brands/addAddress';
 
-// Import data
-import BrandAddressData from '@data/faker/brandAddress';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerBrandAddress,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_brands_addresses_sortPaginationAndBulkActions';
 
@@ -71,7 +71,7 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
   const creationAddressTests: number[] = new Array(10).fill(0, 0, 10);
   describe('Create 10 new Addresses in BO', async () => {
     creationAddressTests.forEach((test: number, index: number) => {
-      const createAddressData: BrandAddressData = new BrandAddressData({city: `todelete${index}`});
+      const createAddressData: FakerBrandAddress = new FakerBrandAddress({city: `todelete${index}`});
 
       it('should go to add new address page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewAddressPage${index}`, baseContext);

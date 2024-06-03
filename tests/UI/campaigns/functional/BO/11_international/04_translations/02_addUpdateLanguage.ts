@@ -13,12 +13,12 @@ import languagesPage from '@pages/BO/international/languages';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 
-// Import data
-import Languages from '@data/demo/languages';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_translations_addUpdateLanguage';
 
@@ -55,17 +55,17 @@ describe('BO - International - Translation : Add update a language', async () =>
     expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
-  it(`should select from update language the '${Languages.english.name}' language`, async function () {
+  it(`should select from update language the '${dataLanguages.english.name}' language`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseLanguage1', baseContext);
 
-    const textResult = await translationsPage.addUpdateLanguage(page, Languages.english.name);
+    const textResult = await translationsPage.addUpdateLanguage(page, dataLanguages.english.name);
     expect(textResult).to.equal(translationsPage.successAlertMessage);
   });
 
-  it(`should select from add language the '${Languages.deutsch.name}' language`, async function () {
+  it(`should select from add language the '${dataLanguages.deutsch.name}' language`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseLanguage2', baseContext);
 
-    const textResult = await translationsPage.addUpdateLanguage(page, Languages.deutsch.name);
+    const textResult = await translationsPage.addUpdateLanguage(page, dataLanguages.deutsch.name);
     expect(textResult).to.equal(translationsPage.successAlertMessage);
   });
 
@@ -73,7 +73,7 @@ describe('BO - International - Translation : Add update a language', async () =>
     await testContext.addContextItem(this, 'testIdentifier', 'goToFOAndCheckLanguage', baseContext);
 
     page = await translationsPage.viewMyShop(page);
-    await homePage.changeLanguage(page, Languages.deutsch.isoCode);
+    await homePage.changeLanguage(page, dataLanguages.deutsch.isoCode);
 
     const isHomePage = await homePage.isHomePage(page);
     expect(isHomePage, 'Fail to open FO home page').to.eq(true);
@@ -89,11 +89,11 @@ describe('BO - International - Translation : Add update a language', async () =>
     expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
-  it(`should check that the language '${Languages.deutsch.name}' is visible in update a language list`, async function () {
+  it(`should check that the language '${dataLanguages.deutsch.name}' is visible in update a language list`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkLanguage', baseContext);
 
     const languagesInUpdateSection = await translationsPage.getLanguagesFromUpdateResult(page);
-    expect(languagesInUpdateSection).to.contains(Languages.deutsch.name);
+    expect(languagesInUpdateSection).to.contains(dataLanguages.deutsch.name);
   });
 
   // Post-condition : Delete language
@@ -127,14 +127,14 @@ describe('BO - International - Translation : Add update a language', async () =>
       expect(numberOfLanguages).to.be.above(0);
     });
 
-    it(`should filter language by name '${Languages.deutsch.name}'`, async function () {
+    it(`should filter language by name '${dataLanguages.deutsch.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       // Filter
-      await languagesPage.filterTable(page, 'input', 'name', Languages.deutsch.name);
+      await languagesPage.filterTable(page, 'input', 'name', dataLanguages.deutsch.name);
 
       const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
-      expect(textColumn).to.contains(Languages.deutsch.name);
+      expect(textColumn).to.contains(dataLanguages.deutsch.name);
     });
 
     it('should delete language', async function () {

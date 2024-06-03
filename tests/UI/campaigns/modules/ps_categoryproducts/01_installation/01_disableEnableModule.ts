@@ -12,13 +12,13 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 // Import BO pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import Modules from '@data/demo/modules';
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_categoryproducts_installation_disableEnableModule';
 
@@ -55,27 +55,27 @@ describe('Category products module - Disable/Enable module', async () => {
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psCategoryProducts.name}`, async function () {
+    it(`should search the module ${dataModules.psCategoryProducts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModuleForDisable', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psCategoryProducts);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psCategoryProducts);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should disable and cancel the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableCancelModule', baseContext);
 
-      await moduleManagerPage.setActionInModule(page, Modules.psCategoryProducts, 'disable', true);
+      await moduleManagerPage.setActionInModule(page, dataModules.psCategoryProducts, 'disable', true);
 
-      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, Modules.psCategoryProducts);
+      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, dataModules.psCategoryProducts);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should disable the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psCategoryProducts, 'disable');
-      expect(successMessage).to.eq(moduleManagerPage.disableModuleSuccessMessage(Modules.psCategoryProducts.tag));
+      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psCategoryProducts, 'disable');
+      expect(successMessage).to.eq(moduleManagerPage.disableModuleSuccessMessage(dataModules.psCategoryProducts.tag));
     });
 
     it('should go to the front office', async function () {
@@ -91,10 +91,10 @@ describe('Category products module - Disable/Enable module', async () => {
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageAfterDisable', baseContext);
 
-      await homePage.goToProductPage(page, Products.demo_6.id);
+      await homePage.goToProductPage(page, dataProducts.demo_6.id);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      expect(pageTitle.toUpperCase()).to.contains(Products.demo_6.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
     });
 
     it('should check if the "Category Products" block is not visible', async function () {
@@ -113,18 +113,18 @@ describe('Category products module - Disable/Enable module', async () => {
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psCategoryProducts.name}`, async function () {
+    it(`should search the module ${dataModules.psCategoryProducts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModuleForEnable', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psCategoryProducts);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psCategoryProducts);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should enable the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psCategoryProducts, 'enable');
-      expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(Modules.psCategoryProducts.tag));
+      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psCategoryProducts, 'enable');
+      expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(dataModules.psCategoryProducts.tag));
     });
 
     it('should go to the front office', async function () {
@@ -140,10 +140,10 @@ describe('Category products module - Disable/Enable module', async () => {
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageAfterEnable', baseContext);
 
-      await homePage.goToProductPage(page, Products.demo_6.id);
+      await homePage.goToProductPage(page, dataProducts.demo_6.id);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      expect(pageTitle.toUpperCase()).to.contains(Products.demo_6.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
     });
 
     it('should check if the "Category Products" block is visible', async function () {

@@ -11,8 +11,10 @@ import permissionsPage from '@pages/BO/advancedParameters/team/permissions';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {EmployeePermission} from '@data/types/employee';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  type EmployeePermission,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;

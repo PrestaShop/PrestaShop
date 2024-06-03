@@ -17,13 +17,12 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 
 // Import demo data
-import Orders from '@data/demo/orders';
 import MessageData from '@data/faker/message';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataOrders,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -40,7 +39,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: dataCustomers.johnDoe.email,
-    reference: Orders.firstOrder.reference,
+    reference: dataOrders.order_1.reference,
   });
 
   // before and after functions

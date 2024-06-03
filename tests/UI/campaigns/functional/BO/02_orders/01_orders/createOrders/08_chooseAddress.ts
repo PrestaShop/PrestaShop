@@ -19,15 +19,12 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
 } from '@prestashop-core/ui-testing';
 
@@ -125,16 +122,16 @@ describe('BO - Orders - Create order : Choose address', async () => {
     it('should add to cart the product \'demo_12\' and check details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      const productToSelect = `${Products.demo_12.name} - €${Products.demo_12.priceTaxExcluded.toFixed(2)}`;
-      await addOrderPage.addProductToCart(page, Products.demo_12, productToSelect);
+      const productToSelect = `${dataProducts.demo_12.name} - €${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`;
+      await addOrderPage.addProductToCart(page, dataProducts.demo_12, productToSelect);
 
       const result = await addOrderPage.getProductDetailsFromTable(page);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_12.thumbImage),
-        expect(result.description).to.equal(Products.demo_12.name),
-        expect(result.reference).to.equal(Products.demo_12.reference),
+        expect(result.image).to.contains(dataProducts.demo_12.thumbImage),
+        expect(result.description).to.equal(dataProducts.demo_12.name),
+        expect(result.reference).to.equal(dataProducts.demo_12.reference),
         expect(result.quantityMin).to.equal(1),
-        expect(result.price).to.equal(Products.demo_12.priceTaxExcluded),
+        expect(result.price).to.equal(dataProducts.demo_12.priceTaxExcluded),
       ]);
     });
 

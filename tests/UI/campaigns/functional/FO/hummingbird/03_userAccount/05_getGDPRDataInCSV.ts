@@ -29,13 +29,12 @@ import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalDa
 import productPage from '@pages/FO/hummingbird/product';
 
 // Import data
-import Products from '@data/demo/products';
 import MessageData from '@data/faker/message';
 
 import {
   boDashboardPage,
-  // Import data
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
@@ -478,7 +477,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           filePath,
           `CARTSId"Totalproducts"Date#${shoppingCartID}1`
           + `"${shoppingCartDate}""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity`
-          + `#${shoppingCartID}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}"2`,
+          + `#${shoppingCartID}${dataProducts.demo_1.reference}"${dataProducts.demo_1.name.replace(/\s/g, '')}"2`,
           true,
           true,
           'utf16le',
@@ -642,7 +641,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           filePath,
           `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
           + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
-          + `NameQuantity${orderReference}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}`
+          + `NameQuantity${orderReference}${dataProducts.demo_1.reference}"${dataProducts.demo_1.name.replace(/\s/g, '')}`
           + '(Size:S-Color:White)"2',
           true,
           true,
@@ -784,7 +783,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           filePath,
           `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
           + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
-          + `NameQuantity${orderReference}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}`
+          + `NameQuantity${orderReference}${dataProducts.demo_1.reference}"${dataProducts.demo_1.name.replace(/\s/g, '')}`
           + '(Size:S-Color:White)"2',
           true,
           true,
@@ -967,7 +966,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           filePath,
           `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
           + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
-          + `NameQuantity${orderReference}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}`
+          + `NameQuantity${orderReference}${dataProducts.demo_1.reference}"${dataProducts.demo_1.name.replace(/\s/g, '')}`
           + '(Size:S-Color:White)"2',
           true,
           true,

@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import demo data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_homePage_selectColor';
 
@@ -53,7 +53,7 @@ describe('FO - Home Page : Select color on hover on product list', async () => {
     await homePage.selectProductColor(page, 1, 'White');
 
     const pageTitle = await productPage.getPageTitle(page);
-    expect(pageTitle).to.contains(Products.demo_1.name);
+    expect(pageTitle).to.contains(dataProducts.demo_1.name);
   });
 
   it('should check that the displayed product is white', async function () {
@@ -79,7 +79,7 @@ describe('FO - Home Page : Select color on hover on product list', async () => {
     await homePage.selectProductColor(page, 1, 'Black');
 
     const pageTitle = await productPage.getPageTitle(page);
-    expect(pageTitle).to.contains(Products.demo_1.name);
+    expect(pageTitle).to.contains(dataProducts.demo_1.name);
   });
 
   it('should check that the displayed product is white', async function () {

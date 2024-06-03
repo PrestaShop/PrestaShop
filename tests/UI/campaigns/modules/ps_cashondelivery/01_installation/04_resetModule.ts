@@ -11,16 +11,11 @@ import {homePage} from '@pages/FO/classic/home';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {
-  // Import data
-  dataCustomers,
-  // Import BO pages
   boDashboardPage,
   boModuleManagerPage,
-  // Import FO pages
+  dataCustomers,
+  dataModules,
   foClassicCartPage,
   foClassicCheckoutPage,
   foClassicHomePage,
@@ -64,31 +59,31 @@ describe('Cash on delivery (COD) module - Reset module', async () => {
     expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
-  it(`should search the module ${Modules.psCashOnDelivery.name}`, async function () {
+  it(`should search the module ${dataModules.psCashOnDelivery.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await boModuleManagerPage.searchModule(page, Modules.psCashOnDelivery);
+    const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psCashOnDelivery);
     expect(isModuleVisible).to.eq(true);
   });
 
   it('should display the reset modal and cancel it', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModuleAndCancel', baseContext);
 
-    const textResult = await boModuleManagerPage.setActionInModule(page, Modules.psCashOnDelivery, 'reset', true);
+    const textResult = await boModuleManagerPage.setActionInModule(page, dataModules.psCashOnDelivery, 'reset', true);
     expect(textResult).to.eq('');
 
-    const isModuleVisible = await boModuleManagerPage.isModuleVisible(page, Modules.psCashOnDelivery);
+    const isModuleVisible = await boModuleManagerPage.isModuleVisible(page, dataModules.psCashOnDelivery);
     expect(isModuleVisible).to.eq(true);
 
-    const isModalVisible = await boModuleManagerPage.isModalActionVisible(page, Modules.psCashOnDelivery, 'reset');
+    const isModalVisible = await boModuleManagerPage.isModalActionVisible(page, dataModules.psCashOnDelivery, 'reset');
     expect(isModalVisible).to.eq(false);
   });
 
   it('should reset the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-    const successMessage = await boModuleManagerPage.setActionInModule(page, Modules.psCashOnDelivery, 'reset');
-    expect(successMessage).to.eq(boModuleManagerPage.resetModuleSuccessMessage(Modules.psCashOnDelivery.tag));
+    const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.psCashOnDelivery, 'reset');
+    expect(successMessage).to.eq(boModuleManagerPage.resetModuleSuccessMessage(dataModules.psCashOnDelivery.tag));
   });
 
   it('should go to Front Office', async function () {
@@ -162,11 +157,11 @@ describe('Cash on delivery (COD) module - Reset module', async () => {
     expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
   });
 
-  it(`should check the '${Modules.psCashOnDelivery.name}' payment module`, async function () {
+  it(`should check the '${dataModules.psCashOnDelivery.name}' payment module`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentModule', baseContext);
 
     // Payment step - Choose payment step
-    const isVisible = await foClassicCheckoutPage.isPaymentMethodExist(page, Modules.psCashOnDelivery.tag);
+    const isVisible = await foClassicCheckoutPage.isPaymentMethodExist(page, dataModules.psCashOnDelivery.tag);
     expect(isVisible).to.eq(true);
   });
 });

@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import searchPage from '@pages/BO/shopParameters/search';
 
-// Import data
-import Aliases from '@data/demo/search';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataSearchAliases,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_search_search_quickEditStatus';
 
@@ -63,10 +63,10 @@ describe('BO - Shop Parameters - Search : Quick edit status', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
     await searchPage.resetFilter(page);
-    await searchPage.filterTable(page, 'input', 'alias', Aliases.bloose.alias);
+    await searchPage.filterTable(page, 'input', 'alias', dataSearchAliases.bloose.alias);
 
     const textAlias = await searchPage.getTextColumn(page, 1, 'alias');
-    expect(textAlias).to.contains(Aliases.bloose.alias);
+    expect(textAlias).to.contains(dataSearchAliases.bloose.alias);
   });
 
   const statuses = [

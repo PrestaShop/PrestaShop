@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import attributesPage from '@pages/BO/catalog/attributes';
 import addAttributePage from '@pages/BO/catalog/attributes/addAttribute';
 
-// Import data
-import AttributeData from '@data/faker/attribute';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerAttribute,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_attributes_attributes_sortPaginationAndBulkDelete';
 
@@ -70,7 +70,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
   const creationTests: number[] = new Array(17).fill(0, 0, 17);
   describe('Create 17 new attributes in BO', async () => {
     creationTests.forEach((test: number, index: number) => {
-      const createAttributeData: AttributeData = new AttributeData({name: `todelete${index}`});
+      const createAttributeData: FakerAttribute = new FakerAttribute({name: `todelete${index}`});
       it('should go to add new attribute page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewAttributePage${index}`, baseContext);
 

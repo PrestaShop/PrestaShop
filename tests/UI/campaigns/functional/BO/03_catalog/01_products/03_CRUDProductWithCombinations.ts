@@ -17,7 +17,6 @@ import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import ProductData from '@data/faker/product';
 import type {
   ProductAttributes,
   ProductCombinationBulk,
@@ -26,7 +25,10 @@ import type {
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_CRUDProductWithCombinations';
 
@@ -36,7 +38,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   const todayDate: string = date.getDateFormat('yyyy-mm-dd');
 
   // Data to create product with combinations
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'combinations',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
@@ -108,14 +110,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   };
 
   // Data to edit the product price
-  const pricingData: ProductData = new ProductData({
+  const pricingData: FakerProduct = new FakerProduct({
     price: 18,
     taxRule: 'FR Taux standard (20%)',
     tax: 20,
   });
 
   // Data to edit the product with combinations
-  const editProductData: ProductData = new ProductData({
+  const editProductData: FakerProduct = new FakerProduct({
     type: 'combinations',
     taxRule: 'No tax',
     tax: 0,

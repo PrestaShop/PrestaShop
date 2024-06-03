@@ -12,12 +12,12 @@ import localizationPage from '@pages/BO/international/localization';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 
-// Import data
-import Languages from '@data/demo/languages';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_headerAndFooter_changeLanguage';
 
@@ -82,14 +82,14 @@ describe('FO - Header and Footer : Change language', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit1', baseContext);
 
       // Filter table
-      await languagesPage.filterTable(page, 'input', 'iso_code', Languages.french.isoCode);
+      await languagesPage.filterTable(page, 'input', 'iso_code', dataLanguages.french.isoCode);
 
       // Check number od languages
       const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
       expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
       const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
-      expect(textColumn).to.contains(Languages.french.isoCode);
+      expect(textColumn).to.contains(dataLanguages.french.isoCode);
     });
 
     it('should disable language', async function () {
@@ -177,14 +177,14 @@ describe('FO - Header and Footer : Change language', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit2', baseContext);
 
       // Filter table
-      await languagesPage.filterTable(page, 'input', 'iso_code', Languages.french.isoCode);
+      await languagesPage.filterTable(page, 'input', 'iso_code', dataLanguages.french.isoCode);
 
       // Check number od languages
       const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
       expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
       const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
-      expect(textColumn).to.contains(Languages.french.isoCode);
+      expect(textColumn).to.contains(dataLanguages.french.isoCode);
     });
 
     it('should enable language', async function () {

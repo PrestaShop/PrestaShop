@@ -16,14 +16,16 @@ import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import ProductData from '@data/faker/product';
-import Employees from '@data/demo/employees';
-import Products from '@data/demo/products';
 import {ProductPackOptions} from '@data/types/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataEmployees,
+  dataProducts,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_CRUDPackOfProducts';
 
@@ -33,7 +35,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
   const todayDate: string = date.getDateFormat('yyyy-mm-dd');
 
   // Data to create standard product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'pack',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
@@ -57,13 +59,13 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
   };
 
   // Data to edit the product price
-  const pricingData: ProductData = new ProductData({
+  const pricingData: FakerProduct = new FakerProduct({
     price: 18,
     taxRule: 'FR Taux standard (20%)',
     tax: 20,
   });
 
-  const editProductData: ProductData = new ProductData({
+  const editProductData: FakerProduct = new FakerProduct({
     type: 'pack',
     pack: [
       {
@@ -185,38 +187,39 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
           args:
             {
               productType: 'product with combination',
-              product: Products.demo_1,
+              product: dataProducts.demo_1,
               numberOfProducts: 8,
-              resultOfSearch: `${Products.demo_1.name}: Size - S, Color - White(Ref: ${Products.demo_1.reference}) `
-                + `${Products.demo_1.name}: Size - S, Color - Black(Ref: ${Products.demo_1.reference}) ${Products.demo_1.name}`
-                + `: Size - M, Color - White(Ref: ${Products.demo_1.reference}) ${Products.demo_1.name}: Size - M, `
-                + `Color - Black(Ref: ${Products.demo_1.reference}) ${Products.demo_1.name}: Size - L,`
-                + ` Color - White(Ref: ${Products.demo_1.reference}) ${Products.demo_1.name}: Size - L, Color - Black(Ref:`
-                + ` ${Products.demo_1.reference}) ${Products.demo_1.name}: Size - XL, Color - White(Ref: `
-                + `${Products.demo_1.reference}) ${Products.demo_1.name}: Size - XL, Color - Black(Ref: `
-                + `${Products.demo_1.reference})`,
+              resultOfSearch: `${dataProducts.demo_1.name}: Size - S, Color - White(Ref: ${dataProducts.demo_1.reference}) `
+                + `${dataProducts.demo_1.name}: Size - S, Color - Black(Ref: ${dataProducts.demo_1.reference}) `
+                + `${dataProducts.demo_1.name}: Size - M`
+                + `, Color - White(Ref: ${dataProducts.demo_1.reference}) ${dataProducts.demo_1.name}: Size - M, `
+                + `Color - Black(Ref: ${dataProducts.demo_1.reference}) ${dataProducts.demo_1.name}: Size - L,`
+                + ` Color - White(Ref: ${dataProducts.demo_1.reference}) ${dataProducts.demo_1.name}: Size - L, Color - `
+                + `Black(Ref: ${dataProducts.demo_1.reference}) ${dataProducts.demo_1.name}: Size - XL, Color - White(Ref: `
+                + `${dataProducts.demo_1.reference}) ${dataProducts.demo_1.name}: Size - XL, Color - Black(Ref: `
+                + `${dataProducts.demo_1.reference})`,
               productToChooseNumber: 3,
-              productToChooseName: `${Products.demo_1.name}: Size - M, Color - White`,
+              productToChooseName: `${dataProducts.demo_1.name}: Size - M, Color - White`,
             },
         },
         {
           args:
             {
               productType: 'virtual product',
-              product: Products.demo_18,
-              resultOfSearch: `${Products.demo_18.name}(Ref: ${Products.demo_18.reference})`,
+              product: dataProducts.demo_18,
+              resultOfSearch: `${dataProducts.demo_18.name}(Ref: ${dataProducts.demo_18.reference})`,
               numberOfProducts: 1,
-              productToChooseName: Products.demo_18.name,
+              productToChooseName: dataProducts.demo_18.name,
             },
         },
         {
           args:
             {
               productType: 'customized product',
-              product: Products.demo_14,
-              resultOfSearch: `${Products.demo_14.name}(Ref: ${Products.demo_14.reference})`,
+              product: dataProducts.demo_14,
+              resultOfSearch: `${dataProducts.demo_14.name}(Ref: ${dataProducts.demo_14.reference})`,
               numberOfProducts: 1,
-              productToChooseName: Products.demo_14.name,
+              productToChooseName: dataProducts.demo_14.name,
             },
         },
       ];
@@ -332,7 +335,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       const result = await packTab.getStockMovement(page, 1);
       await Promise.all([
         expect(result.dateTime).to.contains(todayDate),
-        expect(result.employee).to.equal(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`),
+        expect(result.employee).to.equal(`${dataEmployees.defaultEmployee.firstName} ${dataEmployees.defaultEmployee.lastName}`),
         expect(result.quantity).to.equal(editPackData.quantity),
       ]);
     });
@@ -393,9 +396,9 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
     });
 
     const tests = [
-      {args: {product: Products.demo_11, quantity: 15}},
-      {args: {product: Products.demo_18, quantity: 1}},
-      {args: {product: Products.demo_14, quantity: 1}},
+      {args: {product: dataProducts.demo_11, quantity: 15}},
+      {args: {product: dataProducts.demo_18, quantity: 1}},
+      {args: {product: dataProducts.demo_14, quantity: 1}},
     ];
     tests.forEach((test, index: number) => {
       it(`should check the product '${test.args.product.name}' in the pack`, async function () {
@@ -461,10 +464,10 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
     });
 
     const tests = [
-      {args: {product: Products.demo_11, quantity: 15}},
-      {args: {product: Products.demo_18, quantity: 1}},
-      {args: {product: Products.demo_19, quantity: 20}},
-      {args: {product: Products.demo_14, quantity: 1}},
+      {args: {product: dataProducts.demo_11, quantity: 15}},
+      {args: {product: dataProducts.demo_18, quantity: 1}},
+      {args: {product: dataProducts.demo_19, quantity: 20}},
+      {args: {product: dataProducts.demo_14, quantity: 1}},
     ];
     tests.forEach((test, index: number) => {
       it(`should check the product '${test.args.product.name}' in the pack`, async function () {

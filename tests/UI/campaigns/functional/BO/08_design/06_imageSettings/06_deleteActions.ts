@@ -10,13 +10,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 import addImageTypePage from '@pages/BO/design/imageSettings/add';
 
-// Import data
-import Products from '@data/demo/products';
-import ImageTypeData from '@data/faker/imageType';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+  FakerImageType,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_deleteActions';
 
@@ -70,7 +70,7 @@ describe('BO - Design - Image Settings : Delete Actions', async () => {
   // 1 : Create 2 new image types
   describe('Create 2 image types', async () => {
     testImageTypes.forEach((value: boolean, index: number) => {
-      const createImageTypeData: ImageTypeData = new ImageTypeData({name: `todelete${index}`});
+      const createImageTypeData: FakerImageType = new FakerImageType({name: `todelete${index}`});
 
       it('should go to add new image type page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddImageTypePage${index}`, baseContext);
@@ -104,8 +104,8 @@ describe('BO - Design - Image Settings : Delete Actions', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkProductsThumbnails${index}`, baseContext);
 
         const imagePath = await files.getFilePathAutomaticallyGenerated(
-          `img/p/${Products.demo_1.id}/`,
-          `${Products.demo_1.id}-todelete${index}.jpg`,
+          `img/p/${dataProducts.demo_1.id}/`,
+          `${dataProducts.demo_1.id}-todelete${index}.jpg`,
         );
 
         const exist = await files.doesFileExist(imagePath);
@@ -144,8 +144,8 @@ describe('BO - Design - Image Settings : Delete Actions', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkImagesRelativeImageType${index}`, baseContext);
 
         const imagePath = await files.getFilePathAutomaticallyGenerated(
-          `img/p/${Products.demo_1.id}/`,
-          `${Products.demo_1.id}-todelete${index}.jpg`,
+          `img/p/${dataProducts.demo_1.id}/`,
+          `${dataProducts.demo_1.id}-todelete${index}.jpg`,
         );
 
         const exist = await files.doesFileExist(imagePath);

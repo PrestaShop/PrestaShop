@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type FeatureValueData from '@data/faker/featureValue';
-
 import type {Page} from 'playwright';
+import {
+  type FakerFeatureValue,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add feature page, contains functions that can be used on add feature page
@@ -48,12 +49,12 @@ class AddValue extends BOBasePage {
   /**
    * Fill value form and save it
    * @param page {Page} Browser tab
-   * @param valueData {AttributeValueData} Values to set on add feature value form inputs
+   * @param valueData {FakerFeatureValue} Values to set on add feature value form inputs
    * @param saveAndStay {boolean} True if we need to save and stay
    * @return {Promise<string>}
    */
   // eslint-disable-next-line consistent-return
-  async addEditValue(page: Page, valueData: FeatureValueData, saveAndStay: boolean = false): Promise<string | void> {
+  async addEditValue(page: Page, valueData: FakerFeatureValue, saveAndStay: boolean = false): Promise<string | void> {
     // Set group and value
     if (!(await this.isDisabled(page, this.featureSelect))) {
       await this.selectByVisibleText(page, this.featureSelect, valueData.featureName);

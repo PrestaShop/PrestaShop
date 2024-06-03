@@ -10,12 +10,12 @@ import contactPage from '@pages/BO/shopParameters/contact';
 import storesPage from '@pages/BO/shopParameters/stores';
 import addStorePage from '@pages/BO/shopParameters/stores/add';
 
-// Import data
-import StoreFaker from '@data/faker/store';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerStore,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_contact_stores_CRUDStores';
 
@@ -24,8 +24,8 @@ describe('BO - Shop Parameters - Contact : Create, update and delete Store in BO
   let page: Page;
   let numberOfStores: number = 0;
 
-  const createStoreData: StoreFaker = new StoreFaker();
-  const editStoreData: StoreFaker = new StoreFaker();
+  const createStoreData: FakerStore = new FakerStore();
+  const editStoreData: FakerStore = new FakerStore();
 
   // before and after functions
   before(async function () {

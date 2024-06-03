@@ -18,12 +18,12 @@ import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_optionsTab';
 
@@ -33,7 +33,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
   let productsNumber: number;
 
   // Data to create standard product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     name: 'Sleek Concrete Shirt',
     type: 'standard',
     coverImage: 'cover.jpg',

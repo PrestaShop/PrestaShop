@@ -12,12 +12,12 @@ import {homePage} from '@pages/FO/classic/home';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psNewProducts from '@pages/BO/modules/psNewProducts';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_newproducts_configuration_configureSettingsNumberOfDays';
 
@@ -55,17 +55,17 @@ describe('New products block module - Configure settings of "Number of days for 
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psNewProducts.name}`, async function () {
+    it(`should search the module ${dataModules.psNewProducts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psNewProducts);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psNewProducts);
       expect(isModuleVisible).to.eq(true);
     });
 
-    it(`should go to the configuration page of the module '${Modules.psNewProducts.name}'`, async function () {
+    it(`should go to the configuration page of the module '${dataModules.psNewProducts.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManagerPage.goToConfigurationPage(page, Modules.psNewProducts.tag);
+      await moduleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
 
       const pageTitle = await psNewProducts.getPageSubtitle(page);
       expect(pageTitle).to.eq(psNewProducts.pageSubTitle);

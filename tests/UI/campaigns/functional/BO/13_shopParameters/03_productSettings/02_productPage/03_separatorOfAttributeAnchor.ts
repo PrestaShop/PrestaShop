@@ -13,12 +13,12 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productPage_separatorOfAttributeAnchor';
 
@@ -85,11 +85,11 @@ describe('BO - Shop Parameters - Product Settings : Update separator of attribut
     it('should search for the product and go to product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToProductPage${index}`, baseContext);
 
-      await homePage.searchProduct(page, Products.demo_1.name);
+      await homePage.searchProduct(page, dataProducts.demo_1.name);
       await searchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should check the attribute separator on the product links in FO', async function () {

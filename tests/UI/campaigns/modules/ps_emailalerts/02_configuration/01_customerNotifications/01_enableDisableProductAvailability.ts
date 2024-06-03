@@ -31,16 +31,15 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import Modules from '@data/demo/modules';
-import ProductData from '@data/faker/product';
 import MailDevEmail from '@data/types/maildevEmail';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataModules,
   dataOrderStatuses,
   dataPaymentMethods,
+  FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -59,7 +58,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
   const emailValid: string = faker.internet.email();
   const emailInvalid: string = 'test@test';
-  const productData: ProductData = new ProductData({
+  const productData: FakerProduct = new FakerProduct({
     quantity: 0,
   });
 
@@ -115,17 +114,17 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psEmailAlerts.name}`, async function () {
+    it(`should search the module ${dataModules.psEmailAlerts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psEmailAlerts);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.eq(true);
     });
 
-    it(`should go to the configuration page of the module '${Modules.psEmailAlerts.name}'`, async function () {
+    it(`should go to the configuration page of the module '${dataModules.psEmailAlerts.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManagerPage.goToConfigurationPage(page, Modules.psEmailAlerts.tag);
+      await moduleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
       const pageTitle = await psEmailAlerts.getPageSubtitle(page);
       expect(pageTitle).to.eq(psEmailAlerts.pageTitle);

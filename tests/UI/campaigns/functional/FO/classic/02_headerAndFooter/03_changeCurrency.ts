@@ -15,12 +15,10 @@ import localizationPage from '@pages/BO/international/localization';
 import {homePage} from '@pages/FO/classic/home';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {
   boDashboardPage,
   dataCurrencies,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -142,7 +140,7 @@ describe('FO - Header and Footer : Change currency', async () => {
     it('should search product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_11.name);
+      await homePage.searchProduct(page, dataProducts.demo_11.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -151,7 +149,7 @@ describe('FO - Header and Footer : Change currency', async () => {
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice', baseContext);
 
-      const newExchangeRateValue = (exchangeRateValue * Products.demo_11.finalPrice).toFixed(dataCurrencies.mad.decimals);
+      const newExchangeRateValue = (exchangeRateValue * dataProducts.demo_11.finalPrice).toFixed(dataCurrencies.mad.decimals);
 
       const productPrice = await searchResultsPage.getProductPrice(page);
       expect(productPrice).to.contains(`${dataCurrencies.mad.symbol}${newExchangeRateValue}`);
@@ -175,7 +173,7 @@ describe('FO - Header and Footer : Change currency', async () => {
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice2', baseContext);
 
-      const exchangeRate = Math.round(dataCurrencies.euro.exchangeRate * Products.demo_11.finalPrice);
+      const exchangeRate = Math.round(dataCurrencies.euro.exchangeRate * dataProducts.demo_11.finalPrice);
 
       const productPrice = await searchResultsPage.getProductPrice(page);
       expect(productPrice).to.contains(`${dataCurrencies.euro.symbol}${exchangeRate}`);

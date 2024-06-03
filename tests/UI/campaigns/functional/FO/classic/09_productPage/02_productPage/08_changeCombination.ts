@@ -22,29 +22,31 @@ import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
-import AttributeData from '@data/faker/attribute';
-import AttributeValueData from '@data/faker/attributeValue';
-import ProductData from '@data/faker/product';
 import {ProductAttribute} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerAttribute,
+  FakerAttributeValue,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_changeCombination';
 
 describe('FO - Product page - Product page : Change combination', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const createAttributeData: AttributeData = new AttributeData({name: 'Emballage', attributeType: 'Radio buttons'});
-  const valuesToCreate: AttributeValueData[] = [
-    new AttributeValueData({attributeName: 'Emballage', value: 'Soie'}),
-    new AttributeValueData({attributeName: 'Emballage', value: 'Carton'}),
+  const createAttributeData: FakerAttribute = new FakerAttribute({name: 'Emballage', attributeType: 'Radio buttons'});
+  const valuesToCreate: FakerAttributeValue[] = [
+    new FakerAttributeValue({attributeName: 'Emballage', value: 'Soie'}),
+    new FakerAttributeValue({attributeName: 'Emballage', value: 'Carton'}),
   ];
   let numberOfAttributes: number = 0;
   let attributeId: number = 0;
   // Data to create product with combinations
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'combinations',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
@@ -163,7 +165,7 @@ describe('FO - Product page - Product page : Change combination', async () => {
       expect(pageTitle).to.equal(addValuePage.createPageTitle);
     });
 
-    valuesToCreate.forEach((valueToCreate: AttributeValueData, index: number) => {
+    valuesToCreate.forEach((valueToCreate: FakerAttributeValue, index: number) => {
       it(`should create value n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createValue${index}`, baseContext);
 

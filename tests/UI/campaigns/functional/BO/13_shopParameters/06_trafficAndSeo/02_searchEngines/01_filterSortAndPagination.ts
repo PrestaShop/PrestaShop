@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import searchEnginesPage from '@pages/BO/shopParameters/trafficAndSeo/searchEngines';
 
-// Import data
-import SearchEngines from '@data/demo/searchEngines';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataSearchEngines,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_trafficAndSeo_searchEngines_filterSortAndPagination';
 
@@ -74,9 +74,9 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
 
   describe('Filter search engines', async () => {
     const tests = [
-      {args: {testIdentifier: 'filterId', filterBy: 'id_search_engine', filterValue: SearchEngines.lycos.id.toString()}},
-      {args: {testIdentifier: 'filterServer', filterBy: 'server', filterValue: SearchEngines.google.server}},
-      {args: {testIdentifier: 'filterKey', filterBy: 'query_key', filterValue: SearchEngines.voila.queryKey}},
+      {args: {testIdentifier: 'filterId', filterBy: 'id_search_engine', filterValue: dataSearchEngines.lycos.id.toString()}},
+      {args: {testIdentifier: 'filterServer', filterBy: 'server', filterValue: dataSearchEngines.google.server}},
+      {args: {testIdentifier: 'filterKey', filterBy: 'query_key', filterValue: dataSearchEngines.voila.queryKey}},
     ];
 
     tests.forEach((test) => {

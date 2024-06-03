@@ -18,13 +18,12 @@ import homePage from '@pages/FO/hummingbird/home';
 import loginPage from '@pages/FO/hummingbird/login';
 
 // Import data
-import Orders from '@data/demo/orders';
 import MessageData from '@data/faker/message';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataOrders,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -55,7 +54,7 @@ describe('FO - Contact us : Add attachment', async () => {
     lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: dataCustomers.johnDoe.email,
-    reference: Orders.firstOrder.reference,
+    reference: dataOrders.order_1.reference,
   });
 
   // Pre-condition : Install Hummingbird

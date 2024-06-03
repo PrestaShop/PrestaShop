@@ -17,15 +17,12 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
-// Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
-  // Import data
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -47,11 +44,11 @@ describe('FO - Account - Order details : Download invoice', async () => {
   let page: Page;
   let fileName: string;
 
-  const orderData: OrderData = new OrderData({
+  const orderData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],

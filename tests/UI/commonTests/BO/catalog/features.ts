@@ -10,12 +10,12 @@ import featuresPage from '@pages/BO/catalog/features';
 import addFeaturePage from '@pages/BO/catalog/features/addFeature';
 import attributesPage from '@pages/BO/catalog/attributes';
 
-// Import data
-import FeatureData from '@data/faker/feature';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  type FakerFeature,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -24,10 +24,10 @@ let numberOfFeaturesToDelete: number;
 
 /**
  * Function to create feature
- * @param createFeatureData {FeatureData} Data to set to create feature
+ * @param createFeatureData {FakerFeature} Data to set to create feature
  * @param baseContext {string} String to identify the test
  */
-function createFeatureTest(createFeatureData: FeatureData, baseContext: string = 'commonTests-createFeatureTest'): void {
+function createFeatureTest(createFeatureData: FakerFeature, baseContext: string = 'commonTests-createFeatureTest'): void {
   describe(`PRE-TEST: Create feature '${createFeatureData.name}'`, async () => {
     // before and after functions
     before(async function () {

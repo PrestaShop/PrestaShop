@@ -15,13 +15,15 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 // Import data
-import Languages from '@data/demo/languages';
-import Products from '@data/demo/products';
 import APIClientData from '@data/faker/APIClient';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_product_getProductId';
 
@@ -150,13 +152,13 @@ describe('API : GET /product/{productId}', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForCreation', baseContext);
 
       await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', Products.demo_1.name);
+      await productsPage.filterProducts(page, 'product_name', dataProducts.demo_1.name);
 
       const numProducts = await productsPage.getNumberOfProductsFromList(page);
       expect(numProducts).to.be.equal(1);
 
       const productName = await productsPage.getTextColumn(page, 'product_name', 1);
-      expect(productName).to.contains(Products.demo_1.name);
+      expect(productName).to.contains(dataProducts.demo_1.name);
 
       idProduct = parseInt((await productsPage.getTextColumn(page, 'id_product', 1)).toString(), 10);
       expect(idProduct).to.be.gt(0);
@@ -180,16 +182,16 @@ describe('API : GET /product/{productId}', async () => {
       productActive = await createProductsPage.getProductStatus(page);
       expect(productActive).to.be.a('boolean');
 
-      productNameEn = await createProductsPage.getProductName(page, Languages.english.isoCode);
+      productNameEn = await createProductsPage.getProductName(page, dataLanguages.english.isoCode);
       expect(productNameEn).to.be.a('string');
 
-      productNameFr = await createProductsPage.getProductName(page, Languages.french.isoCode);
+      productNameFr = await createProductsPage.getProductName(page, dataLanguages.french.isoCode);
       expect(productNameFr).to.be.a('string');
 
-      productDescriptionEn = await descriptionTab.getValue(page, 'description', Languages.english.id.toString());
+      productDescriptionEn = await descriptionTab.getValue(page, 'description', dataLanguages.english.id.toString());
       expect(productDescriptionEn).to.be.a('string');
 
-      productDescriptionFr = await descriptionTab.getValue(page, 'description', Languages.french.id.toString());
+      productDescriptionFr = await descriptionTab.getValue(page, 'description', dataLanguages.french.id.toString());
       expect(productDescriptionFr).to.be.a('string');
     });
   });
@@ -250,8 +252,8 @@ describe('API : GET /product/{productId}', async () => {
 
       expect(jsonResponse).to.have.property('names');
       expect(jsonResponse.names).to.be.a('object');
-      expect(jsonResponse.names[Languages.english.id]).to.be.equal(productNameEn);
-      expect(jsonResponse.names[Languages.french.id]).to.be.equal(productNameFr);
+      expect(jsonResponse.names[dataLanguages.english.id]).to.be.equal(productNameEn);
+      expect(jsonResponse.names[dataLanguages.french.id]).to.be.equal(productNameFr);
     });
 
     it('should check the JSON Response : `descriptions`', async function () {
@@ -259,8 +261,8 @@ describe('API : GET /product/{productId}', async () => {
 
       expect(jsonResponse).to.have.property('descriptions');
       expect(jsonResponse.descriptions).to.be.a('object');
-      expect(jsonResponse.descriptions[Languages.english.id]).to.be.equal(productDescriptionEn);
-      expect(jsonResponse.descriptions[Languages.french.id]).to.be.equal(productDescriptionFr);
+      expect(jsonResponse.descriptions[dataLanguages.english.id]).to.be.equal(productDescriptionEn);
+      expect(jsonResponse.descriptions[dataLanguages.french.id]).to.be.equal(productDescriptionFr);
     });
   });
 

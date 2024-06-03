@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_modules_installUninstallModule';
 
@@ -49,25 +49,25 @@ describe('BO - Modules - Module Manager : Install/Uninstall module', async () =>
     expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  it(`should search the module ${Modules.psEmailSubscription.name}`, async function () {
+  it(`should search the module ${dataModules.psEmailSubscription.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psEmailSubscription);
+    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psEmailSubscription);
     expect(isModuleVisible, 'Module is not visible!').to.eq(true);
   });
 
-  it(`should uninstall the module '${Modules.psEmailSubscription.name}'`, async function () {
+  it(`should uninstall the module '${dataModules.psEmailSubscription.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psEmailSubscription, 'uninstall');
-    expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.psEmailSubscription.tag));
+    const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psEmailSubscription, 'uninstall');
+    expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.psEmailSubscription.tag));
   });
 
-  it(`should install the module '${Modules.psEmailSubscription.name}'`, async function () {
+  it(`should install the module '${dataModules.psEmailSubscription.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
-    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psEmailSubscription, 'install');
-    expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.psEmailSubscription.tag));
+    const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psEmailSubscription, 'install');
+    expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(dataModules.psEmailSubscription.tag));
   });
 
   it('should show all modules', async function () {

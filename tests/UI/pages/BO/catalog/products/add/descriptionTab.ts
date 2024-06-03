@@ -1,8 +1,10 @@
 import type {Page} from 'playwright';
 
-import type ProductData from '@data/faker/product';
 import {ProductImageInformation} from '@data/types/product';
 import BOBasePage from '@pages/BO/BObasePage';
+import {
+  type FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Description tab on new product V2 page, contains functions that can be used on the page
@@ -396,10 +398,10 @@ class DescriptionTab extends BOBasePage {
   /**
    * Set product description
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set in description form
+   * @param productData {FakerProduct} Data to set in description form
    * @returns {Promise<void>}
    */
-  async setProductDescription(page: Page, productData: ProductData): Promise<void> {
+  async setProductDescription(page: Page, productData: FakerProduct): Promise<void> {
     await this.waitForSelectorAndClick(page, this.descriptionTabLink);
 
     await this.addProductImages(page, [productData.coverImage, productData.thumbImage]);

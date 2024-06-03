@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import BrandData from '@data/faker/brand';
-
 import type {Page} from 'playwright';
+import {
+  FakerBrand,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Brands page, contains selectors and functions for the page
@@ -511,10 +512,10 @@ class Brands extends BOBasePage {
    * @param row {number} Row in table to get text column
    * @return {Promise<BrandData>}
    */
-  async getBrandFromTable(page: Page, row: number): Promise<BrandData> {
+  async getBrandFromTable(page: Page, row: number): Promise<FakerBrand> {
     const adressesCount = await this.getTextColumnFromTableBrands(page, row, 'addresses_count');
 
-    return new BrandData({
+    return new FakerBrand({
       id: parseInt(await this.getTextColumnFromTableBrands(page, row, 'id_manufacturer'), 10),
       logo: await this.getLogoLinkFromBrandsTable(page, row),
       name: await this.getTextColumnFromTableBrands(page, row, 'name'),

@@ -14,12 +14,12 @@ import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 // Import data
 import APIClientData from '@data/faker/APIClient';
-import type {ModuleInfo} from '@data/types/module';
 
 import {
   boDashboardPage,
   boModuleManagerPage,
   FakerModule,
+  type ModuleInfo,
 } from '@prestashop-core/ui-testing';
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';

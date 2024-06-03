@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 
-// Import
-import type EmployeeData from '@data/faker/employee';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  type FakerEmployee,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -25,7 +25,7 @@ let numberOfEmployees: number = 0;
  * @param employeeData {EmployeeData} Data to set in employee form
  * @param baseContext {string} String to identify the test
  */
-function createEmployeeTest(employeeData: EmployeeData, baseContext: string = 'commonTests-createEmployeeTest'): void {
+function createEmployeeTest(employeeData: FakerEmployee, baseContext: string = 'commonTests-createEmployeeTest'): void {
   describe('PRE-TEST: Create employee', async () => {
     // before and after functions
     before(async function () {
@@ -84,7 +84,7 @@ function createEmployeeTest(employeeData: EmployeeData, baseContext: string = 'c
  * @param employeeData {EmployeeData} Data to set to delete employee
  * @param baseContext {string} String to identify the test
  */
-function deleteEmployeeTest(employeeData: EmployeeData, baseContext: string = 'commonTests-deleteEmployeeTest'): void {
+function deleteEmployeeTest(employeeData: FakerEmployee, baseContext: string = 'commonTests-deleteEmployeeTest'): void {
   describe('POST-TEST: Delete employee', async () => {
     // before and after functions
     before(async function () {

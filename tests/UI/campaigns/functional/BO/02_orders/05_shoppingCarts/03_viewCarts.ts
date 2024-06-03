@@ -15,17 +15,14 @@ import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import shoppingCartViewPage from '@pages/BO/orders/shoppingCarts/view';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
-// Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -54,11 +51,11 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
   let orderId: number;
 
   const customerData: FakerCustomer = new FakerCustomer();
-  const orderData: OrderData = new OrderData({
+  const orderData: FakerOrder = new FakerOrder({
     customer: customerData,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -138,7 +135,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
 
       const cartTotal = await shoppingCartViewPage.getCartTotal(page);
       expect(cartTotal.toString())
-        .to.be.equal((Products.demo_1.finalPrice).toFixed(2));
+        .to.be.equal((dataProducts.demo_1.finalPrice).toFixed(2));
     });
 
     it('should check the customer Information Block', async function () {
@@ -162,13 +159,13 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     [
-      {args: {columnName: 'image', result: Products.demo_1.thumbImage}},
-      {args: {columnName: 'title', result: Products.demo_1.name, result_2: Products.demo_1.reference}},
-      {args: {columnName: 'unit_price', result: `€${Products.demo_1.finalPrice}`}},
+      {args: {columnName: 'image', result: dataProducts.demo_1.thumbImage}},
+      {args: {columnName: 'title', result: dataProducts.demo_1.name, result_2: dataProducts.demo_1.reference}},
+      {args: {columnName: 'unit_price', result: `€${dataProducts.demo_1.finalPrice}`}},
       {args: {columnName: 'quantity', result: 1}},
-      {args: {columnName: 'total', result: `€${Products.demo_1.finalPrice}`}},
-      {args: {columnName: 'total_cost_products', result: `€${Products.demo_1.finalPrice}`}},
-      {args: {columnName: 'total_cart', result: `€${(Products.demo_1.finalPrice).toFixed(2)}`, row: 0}},
+      {args: {columnName: 'total', result: `€${dataProducts.demo_1.finalPrice}`}},
+      {args: {columnName: 'total_cost_products', result: `€${dataProducts.demo_1.finalPrice}`}},
+      {args: {columnName: 'total_cart', result: `€${(dataProducts.demo_1.finalPrice).toFixed(2)}`, row: 0}},
     ].forEach((test) => {
       it(`should check the product's ${test.args.columnName} in cart Summary Block`, async function () {
         await testContext
@@ -275,13 +272,13 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     [
-      {args: {columnName: 'image', result: Products.demo_1.thumbImage}},
-      {args: {columnName: 'title', result: Products.demo_1.name, result_2: Products.demo_1.reference}},
-      {args: {columnName: 'unit_price', result: `€${Products.demo_1.finalPrice}`}},
+      {args: {columnName: 'image', result: dataProducts.demo_1.thumbImage}},
+      {args: {columnName: 'title', result: dataProducts.demo_1.name, result_2: dataProducts.demo_1.reference}},
+      {args: {columnName: 'unit_price', result: `€${dataProducts.demo_1.finalPrice}`}},
       {args: {columnName: 'quantity', result: 1}},
-      {args: {columnName: 'total', result: `€${Products.demo_1.finalPrice}`}},
-      {args: {columnName: 'total_cost_products', result: `€${Products.demo_1.finalPrice}`}},
-      {args: {columnName: 'total_cart', result: `€${(Products.demo_1.finalPrice).toFixed(2)}`, row: 0}},
+      {args: {columnName: 'total', result: `€${dataProducts.demo_1.finalPrice}`}},
+      {args: {columnName: 'total_cost_products', result: `€${dataProducts.demo_1.finalPrice}`}},
+      {args: {columnName: 'total_cart', result: `€${(dataProducts.demo_1.finalPrice).toFixed(2)}`, row: 0}},
     ].forEach((test) => {
       it(`should check the product's ${test.args.columnName} in cart Summary Block`, async function () {
         await testContext

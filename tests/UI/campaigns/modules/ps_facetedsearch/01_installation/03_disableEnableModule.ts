@@ -13,13 +13,13 @@ import {categoryPage} from '@pages/FO/classic/category';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psFacetedSearch from '@pages/BO/modules/psFacetedSearch';
 
-// Import data
-import Categories from '@data/demo/categories';
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataCategories,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_facetedsearch_installation_disableEnableModule';
 
@@ -56,27 +56,27 @@ describe('Faceted search module - Disable/Enable module', async () => {
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psFacetedSearch.name}`, async function () {
+    it(`should search the module ${dataModules.psFacetedSearch.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModuleForDisable', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psFacetedSearch);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psFacetedSearch);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should disable and cancel the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableCancelModule', baseContext);
 
-      await moduleManagerPage.setActionInModule(page, Modules.psFacetedSearch, 'disable', true);
+      await moduleManagerPage.setActionInModule(page, dataModules.psFacetedSearch, 'disable', true);
 
-      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, Modules.psFacetedSearch);
+      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, dataModules.psFacetedSearch);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should disable the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psFacetedSearch, 'disable');
-      expect(successMessage).to.eq(moduleManagerPage.disableModuleSuccessMessage(Modules.psFacetedSearch.tag));
+      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psFacetedSearch, 'disable');
+      expect(successMessage).to.eq(moduleManagerPage.disableModuleSuccessMessage(dataModules.psFacetedSearch.tag));
     });
 
     it('should go to the front office', async function () {
@@ -92,13 +92,13 @@ describe('Faceted search module - Disable/Enable module', async () => {
     it('should go to the category Page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoryPage', baseContext);
 
-      await homePage.goToCategory(page, Categories.clothes.id);
+      await homePage.goToCategory(page, dataCategories.clothes.id);
 
       const pageTitle = await homePage.getPageTitle(page);
-      expect(pageTitle).to.equal(Categories.clothes.name);
+      expect(pageTitle).to.equal(dataCategories.clothes.name);
     });
 
-    it(`should check that ${Modules.psFacetedSearch.name} is not present`, async function () {
+    it(`should check that ${dataModules.psFacetedSearch.name} is not present`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModuleNotPresent', baseContext);
 
       const hasFilters = await categoryPage.hasSearchFilters(page);
@@ -114,18 +114,18 @@ describe('Faceted search module - Disable/Enable module', async () => {
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psFacetedSearch.name}`, async function () {
+    it(`should search the module ${dataModules.psFacetedSearch.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModuleForEnsable', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psFacetedSearch);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psFacetedSearch);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should enable the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psFacetedSearch, 'enable');
-      expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(Modules.psFacetedSearch.tag));
+      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psFacetedSearch, 'enable');
+      expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(dataModules.psFacetedSearch.tag));
     });
 
     it('should go to the front office', async function () {
@@ -141,13 +141,13 @@ describe('Faceted search module - Disable/Enable module', async () => {
     it('should go to the category Page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoryPageAfterEnable', baseContext);
 
-      await homePage.goToCategory(page, Categories.clothes.id);
+      await homePage.goToCategory(page, dataCategories.clothes.id);
 
       const pageTitle = await homePage.getPageTitle(page);
-      expect(pageTitle).to.equal(Categories.clothes.name);
+      expect(pageTitle).to.equal(dataCategories.clothes.name);
     });
 
-    it(`should check that ${Modules.psFacetedSearch.name} is present`, async function () {
+    it(`should check that ${dataModules.psFacetedSearch.name} is present`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModulePresent', baseContext);
 
       const hasFilters = await categoryPage.hasSearchFilters(page);

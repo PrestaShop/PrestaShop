@@ -26,16 +26,15 @@ import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 // Import data
-import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
-import OrderData from '@data/faker/order';
 
 import {
   boDashboardPage,
-  // Import data
   dataCurrencies,
   dataCustomers,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -76,7 +75,7 @@ describe(
       code: 'freeMug',
       discountType: 'None',
       freeGift: true,
-      freeGiftProduct: Products.demo_13,
+      freeGiftProduct: dataProducts.demo_13,
     });
     // Create sql query data to get last order discount and total price
     const sqlQueryData = new SqlQueryData({
@@ -86,10 +85,10 @@ describe(
     const sqlQueryTemplate = (orderRef: string) => 'SELECT total_discounts, total_paid_tax_incl '
       + `FROM  ${global.INSTALL.DB_PREFIX}orders WHERE reference = '${orderRef}'`;
     // Init data for the order
-    const orderToMake: OrderData = new OrderData({
+    const orderToMake: FakerOrder = new FakerOrder({
       products: [
         {
-          product: Products.demo_3,
+          product: dataProducts.demo_3,
           quantity: 4,
         },
       ],
@@ -340,7 +339,7 @@ describe(
         await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInBO', baseContext);
 
         // Get order reference to use in sql query
-        orderToMake.reference = await ordersPage.getTextColumn(page, 'reference', 1);
+        orderToMake.setReference(await ordersPage.getTextColumn(page, 'reference', 1));
 
         // Check total price
         const totalPriceInOrdersPage = await ordersPage.getOrderATIPrice(page, 1);

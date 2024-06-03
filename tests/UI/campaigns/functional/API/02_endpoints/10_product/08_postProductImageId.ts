@@ -17,15 +17,17 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 // Import data
-import Languages from '@data/demo/languages';
 import APIClientData from '@data/faker/APIClient';
-import ProductData from '@data/faker/product';
 import {ProductImageInformation} from '@data/types/product';
 
 import {expect} from 'chai';
 import fs from 'fs';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_product_postProductImageId';
 
@@ -52,7 +54,7 @@ describe('API : POST /product/image/{imageId}', async () => {
   const productCaptionFR: string = 'Caption FR';
   const productCaptionUpdatedEN: string = `${productCaptionEN} UPDATED`;
   const productCaptionUpdatedFR: string = `${productCaptionEN} MIS A JOUR`;
-  const createProduct: ProductData = new ProductData({
+  const createProduct: FakerProduct = new FakerProduct({
     type: 'standard',
     status: true,
   });
@@ -225,8 +227,8 @@ describe('API : POST /product/image/{imageId}', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
         const dataMultipart: any = {};
-        dataMultipart[`legends[${Languages.english.id}]`] = productCaptionUpdatedEN;
-        dataMultipart[`legends[${Languages.french.id}]`] = productCaptionUpdatedFR;
+        dataMultipart[`legends[${dataLanguages.english.id}]`] = productCaptionUpdatedEN;
+        dataMultipart[`legends[${dataLanguages.french.id}]`] = productCaptionUpdatedFR;
 
         const apiResponse = await apiContext.post(`product/image/${productImageInformation.id}`, {
           headers: {
@@ -273,10 +275,10 @@ describe('API : POST /product/image/{imageId}', async () => {
 
         expect(jsonResponse.thumbnailUrl).to.be.a('string');
 
-        expect(jsonResponse.legends[Languages.english.id]).to.be.a('string');
-        expect(jsonResponse.legends[Languages.english.id]).to.equals(productCaptionUpdatedEN);
-        expect(jsonResponse.legends[Languages.french.id]).to.be.a('string');
-        expect(jsonResponse.legends[Languages.french.id]).to.equals(productCaptionUpdatedFR);
+        expect(jsonResponse.legends[dataLanguages.english.id]).to.be.a('string');
+        expect(jsonResponse.legends[dataLanguages.english.id]).to.equals(productCaptionUpdatedEN);
+        expect(jsonResponse.legends[dataLanguages.french.id]).to.be.a('string');
+        expect(jsonResponse.legends[dataLanguages.french.id]).to.equals(productCaptionUpdatedFR);
 
         expect(jsonResponse.cover).to.be.a('boolean');
         expect(jsonResponse.cover).to.be.equals(true);
@@ -306,10 +308,10 @@ describe('API : POST /product/image/{imageId}', async () => {
       it('should check the JSON Response : `legends`', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLegends', baseContext);
 
-        expect(productImageInformation.caption.en).to.equal(jsonResponse.legends[Languages.english.id]);
+        expect(productImageInformation.caption.en).to.equal(jsonResponse.legends[dataLanguages.english.id]);
         expect(productImageInformation.caption.en).to.equal(productCaptionUpdatedEN);
 
-        expect(productImageInformation.caption.fr).to.equal(jsonResponse.legends[Languages.french.id]);
+        expect(productImageInformation.caption.fr).to.equal(jsonResponse.legends[dataLanguages.french.id]);
         expect(productImageInformation.caption.fr).to.equal(productCaptionUpdatedFR);
       });
 

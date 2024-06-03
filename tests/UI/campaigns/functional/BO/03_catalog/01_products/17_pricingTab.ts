@@ -17,12 +17,14 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
 
 // Import data
-import ProductData from '@data/faker/product';
 import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_pricingTab';
 
@@ -31,7 +33,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
   let page: Page;
 
   // Data to create standard product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     quantity: 10,
     minimumQuantity: 1,
@@ -40,7 +42,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
     status: true,
   });
   // Data to create specific price
-  const specificPriceData: ProductData = new ProductData({
+  const specificPriceData: FakerProduct = new FakerProduct({
     specificPrice: {
       attributes: null,
       discount: 20,
@@ -49,7 +51,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
     },
   });
   // Data to edit specific price
-  const editSpecificPriceData: ProductData = new ProductData({
+  const editSpecificPriceData: FakerProduct = new FakerProduct({
     specificPrice: {
       attributes: null,
       discount: 30,

@@ -1,10 +1,10 @@
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
 
-// Import data
-import type StoreData from '@data/faker/store';
-
 import type {Page} from 'playwright';
+import {
+  type FakerStore,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Stores page, contains selectors and functions for the page
@@ -305,7 +305,7 @@ class Stores extends BOBasePage {
    * @param columnName {string} Column name of the value to return
    * @return {Promise<string>}
    */
-  async getTextColumn(page: Page, row: number, columnName: string) {
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
     let columnSelector;
 
     switch (columnName) {
@@ -547,10 +547,10 @@ class Stores extends BOBasePage {
   /**
    * Se contact details
    * @param page {Page} Browser tab
-   * @param storeContactData {StoreData} Store contact data to set on contact detail form
+   * @param storeContactData {FakerStore} Store contact data to set on contact detail form
    * @returns {Promise<string>}
    */
-  async setContactDetails(page: Page, storeContactData: StoreData): Promise<string> {
+  async setContactDetails(page: Page, storeContactData: FakerStore): Promise<string> {
     // Set name
     await this.setValue(page, this.nameInput, storeContactData.name);
 

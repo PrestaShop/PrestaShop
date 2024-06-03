@@ -12,12 +12,14 @@ import tagsPage from '@pages/BO/shopParameters/search/tags';
 import addTagPage from '@pages/BO/shopParameters/search/tags/add';
 
 // Import data
-import Languages from '@data/demo/languages';
 import TagData from '@data/faker/tag';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_search_tags_filterSortAndPagination';
 
@@ -75,7 +77,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
     const creationTests: number[] = new Array(21).fill(0, 0, 21);
 
     creationTests.forEach((test: number, index: number) => {
-      const tagData: TagData = new TagData({name: `todelete${index}`, language: Languages.english.name});
+      const tagData: TagData = new TagData({name: `todelete${index}`, language: dataLanguages.english.name});
 
       it('should go to add new tag page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddTagPage${index}`, baseContext);
@@ -102,7 +104,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
   describe('Filter tags table', async () => {
     const tests = [
       {args: {testIdentifier: 'filterById', filterBy: 'id_tag', filterValue: '5'}},
-      {args: {testIdentifier: 'filterByLanguage', filterBy: 'l!name', filterValue: Languages.english.name}},
+      {args: {testIdentifier: 'filterByLanguage', filterBy: 'l!name', filterValue: dataLanguages.english.name}},
       {args: {testIdentifier: 'filterByName', filterBy: 'a!name', filterValue: 'todelete10'}},
       {args: {testIdentifier: 'filterByProducts', filterBy: 'products', filterValue: '0'}},
     ];

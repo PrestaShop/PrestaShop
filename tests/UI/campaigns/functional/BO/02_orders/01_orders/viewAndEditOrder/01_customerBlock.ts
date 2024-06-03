@@ -15,17 +15,14 @@ import customersPage from '@pages/BO/customers';
 import addressesPage from '@pages/BO/customers/addresses';
 import viewCustomerPage from '@pages/BO/customers/view';
 
-// Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -63,11 +60,11 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
   const editInvoiceAddressData: FakerAddress = new FakerAddress({country: 'France'});
   const privateNote: string = 'Test private note';
   // New order by customer data
-  const orderData: OrderData = new OrderData({
+  const orderData: FakerOrder = new FakerOrder({
     customer: customerData,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],

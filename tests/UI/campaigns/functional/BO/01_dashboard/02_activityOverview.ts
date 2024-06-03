@@ -37,17 +37,16 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import data
-import Orders from '@data/demo/orders';
-import ProductData from '@data/faker/product';
 import MessageData from '@data/faker/message';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataOrders,
   dataOrderStatuses,
   dataPaymentMethods,
   FakerCustomer,
+  FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -68,7 +67,7 @@ describe('BO - Dashboard : Activity overview', async () => {
   let totalSubscribersNumber: number;
 
   // Data to create product out of stock
-  const productData: ProductData = new ProductData({
+  const productData: FakerProduct = new FakerProduct({
     type: 'standard',
     quantity: 0,
     status: true,
@@ -76,7 +75,7 @@ describe('BO - Dashboard : Activity overview', async () => {
 
   const contactUsData: MessageData = new MessageData({
     subject: 'Customer service',
-    reference: Orders.firstOrder.reference,
+    reference: dataOrders.order_1.reference,
   });
 
   const createCustomerData: FakerCustomer = new FakerCustomer({newsletter: true});

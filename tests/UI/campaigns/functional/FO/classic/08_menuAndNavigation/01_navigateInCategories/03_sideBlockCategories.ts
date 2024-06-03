@@ -6,12 +6,12 @@ import testContext from '@utils/testContext';
 import {categoryPage} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 
-// Import data
-import Categories from '@data/demo/categories';
-import CategoryData from '@data/faker/category';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataCategories,
+  FakerCategory,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_menuAndNavigation_navigateInCategories_sideBlockCategories';
 
@@ -40,17 +40,17 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
 
   [
     {
-      parent: Categories.accessories,
-      child: Categories.stationery,
+      parent: dataCategories.accessories,
+      child: dataCategories.stationery,
     },
     {
-      parent: Categories.clothes,
-      child: Categories.women,
+      parent: dataCategories.clothes,
+      child: dataCategories.women,
     },
     {
-      parent: Categories.art,
+      parent: dataCategories.art,
     },
-  ].forEach((arg: {parent:CategoryData, child?: CategoryData}, index: number) => {
+  ].forEach((arg: {parent:FakerCategory, child?: FakerCategory}, index: number) => {
     it(`should click on category '${arg.parent.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToCategory${index}`, baseContext);
 

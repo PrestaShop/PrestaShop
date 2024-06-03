@@ -12,10 +12,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import productsPage from '@pages/BO/catalog/products';
 
 // Import data
-import Products from '@data/demo/products';
-import Categories from '@data/demo/categories';
 import {ProductFilterMinMax} from '@data/types/product';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+  dataCategories,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_filterProducts';
 
@@ -121,7 +123,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         args: {
           identifier: 'filterName',
           filterBy: 'product_name',
-          filterValue: Products.demo_14.name,
+          filterValue: dataProducts.demo_14.name,
           filterType: 'input',
         },
       },
@@ -129,7 +131,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         args: {
           identifier: 'filterReference',
           filterBy: 'reference',
-          filterValue: Products.demo_1.reference,
+          filterValue: dataProducts.demo_1.reference,
           filterType: 'input',
         },
       },
@@ -137,7 +139,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         args: {
           identifier: 'filterCategory',
           filterBy: 'category',
-          filterValue: Categories.women.name,
+          filterValue: dataCategories.women.name,
           filterType: 'input',
         },
       },

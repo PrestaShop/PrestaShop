@@ -12,12 +12,12 @@ import suppliersPage from '@pages/BO/catalog/suppliers';
 import addSupplierPage from '@pages/BO/catalog/suppliers/add';
 import viewSupplierPage from '@pages/BO/catalog/suppliers/view';
 
-// Import data
-import SupplierData from '@data/faker/supplier';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerSupplier,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_suppliers_CRUDSupplier';
 
@@ -26,8 +26,8 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const createSupplierData: SupplierData = new SupplierData();
-  const editSupplierData: SupplierData = new SupplierData();
+  const createSupplierData: FakerSupplier = new FakerSupplier();
+  const editSupplierData: FakerSupplier = new FakerSupplier();
 
   // before and after functions
   before(async function () {

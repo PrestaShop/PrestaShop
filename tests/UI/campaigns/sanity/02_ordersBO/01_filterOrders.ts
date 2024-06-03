@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import ordersPage from '@pages/BO/orders';
 
-// Import data
-import Orders from '@data/demo/orders';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataOrders,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_ordersBO_filterOrders';
 
@@ -69,7 +69,7 @@ describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATU
           identifier: 'filterId',
           filterType: 'input',
           filterBy: 'id_order',
-          filterValue: Orders.firstOrder.id.toString(),
+          filterValue: dataOrders.order_1.id.toString(),
         },
     },
     {
@@ -78,7 +78,7 @@ describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATU
           identifier: 'filterReference',
           filterType: 'input',
           filterBy: 'reference',
-          filterValue: Orders.fourthOrder.reference,
+          filterValue: dataOrders.order_4.reference,
         },
     },
     {
@@ -87,7 +87,7 @@ describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATU
           identifier: 'filterOsName',
           filterType: 'select',
           filterBy: 'osname',
-          filterValue: Orders.thirdOrder.status?.name,
+          filterValue: dataOrders.order_3.status?.name,
         },
     },
   ];

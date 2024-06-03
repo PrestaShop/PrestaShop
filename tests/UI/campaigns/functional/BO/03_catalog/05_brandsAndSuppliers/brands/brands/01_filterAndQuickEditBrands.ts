@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import brandsPage from '@pages/BO/catalog/brands';
 
-// Import data
-import Brands from '@data/demo/brands';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataBrands,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_brands_brands_filterAndQuickEditBrands';
 
@@ -70,7 +70,7 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_manufacturer',
-            filterValue: Brands.first.id.toString(),
+            filterValue: dataBrands.brand_1.id.toString(),
           },
       },
       {
@@ -79,7 +79,7 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
             testIdentifier: 'filterName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: Brands.first.name,
+            filterValue: dataBrands.brand_1.name,
           },
       },
       {
@@ -88,7 +88,7 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: Brands.first.enabled ? '1' : '0',
+            filterValue: dataBrands.brand_1.enabled ? '1' : '0',
           },
       },
     ];
@@ -136,13 +136,13 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
     it('should filter by brand name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await brandsPage.filterBrands(page, 'input', 'name', Brands.first.name);
+      await brandsPage.filterBrands(page, 'input', 'name', dataBrands.brand_1.name);
 
       const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, tableName);
       expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
 
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
-      expect(textColumn).to.contains(Brands.first.name);
+      expect(textColumn).to.contains(dataBrands.brand_1.name);
     });
 
     [

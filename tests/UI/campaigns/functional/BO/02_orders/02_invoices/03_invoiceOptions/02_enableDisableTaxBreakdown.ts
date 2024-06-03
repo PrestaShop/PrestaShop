@@ -24,15 +24,14 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import data
-import ProductData from '@data/faker/product';
 import TaxRulesGroupData from '@data/faker/taxRulesGroup';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  FakerProduct,
   FakerTaxRule,
 } from '@prestashop-core/ui-testing';
 
@@ -70,7 +69,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
     behaviour: 'Combine',
     name: 'TVA FR 10%',
   });
-  const productData: ProductData = new ProductData({
+  const productData: FakerProduct = new FakerProduct({
     type: 'standard',
     taxRule: taxRuleGroupToCreate.name,
   });

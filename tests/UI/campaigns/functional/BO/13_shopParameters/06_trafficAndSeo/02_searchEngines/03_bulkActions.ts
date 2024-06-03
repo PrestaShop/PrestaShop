@@ -10,12 +10,12 @@ import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import searchEnginesPage from '@pages/BO/shopParameters/trafficAndSeo/searchEngines';
 import addSearchEnginePage from '@pages/BO/shopParameters/trafficAndSeo/searchEngines/add';
 
-// Import data
-import SearchEngineDate from '@data/faker/searchEngine';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerSearchEngine,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_trafficAndSeo_searchEngines_bulkActions';
 
@@ -77,7 +77,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Bulk delete search engine', asy
 
   creationTests.forEach((test: number, index: number) => {
     describe(`Create search engine n°${index + 1}`, async () => {
-      const searchEngineData: SearchEngineDate = new SearchEngineDate({server: `todelete${index}`});
+      const searchEngineData: FakerSearchEngine = new FakerSearchEngine({server: `todelete${index}`});
       it('should go to new search engine', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewSearchEnginePage${index}`, baseContext);
 

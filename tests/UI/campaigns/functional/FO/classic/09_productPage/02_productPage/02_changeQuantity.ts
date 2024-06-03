@@ -8,11 +8,11 @@ import {productPage} from '@pages/FO/classic/product';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {cartPage} from '@pages/FO/classic/cart';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_changeQuantity';
 
@@ -52,7 +52,7 @@ describe('FO - Product page : Change quantity', async () => {
     await homePage.goToProductPage(page, 3);
 
     const pageTitle = await productPage.getPageTitle(page);
-    expect(pageTitle.toUpperCase()).to.contains(Products.demo_6.name.toUpperCase());
+    expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
   });
 
   it('should change the quantity by using the arrow \'UP\' button', async function () {

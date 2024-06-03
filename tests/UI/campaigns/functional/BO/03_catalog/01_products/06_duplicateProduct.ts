@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_duplicateProduct';
 
@@ -59,10 +59,10 @@ describe('BO - Catalog - Products : Duplicate product', async () => {
       expect(numberOfProducts).to.be.above(0);
     });
 
-    it(`should filter by reference '${Products.demo_14.reference}'`, async function () {
+    it(`should filter by reference '${dataProducts.demo_14.reference}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByReference', baseContext);
 
-      await productsPage.filterProducts(page, 'reference', Products.demo_14.reference);
+      await productsPage.filterProducts(page, 'reference', dataProducts.demo_14.reference);
 
       const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.equal(1);
@@ -111,10 +111,10 @@ describe('BO - Catalog - Products : Duplicate product', async () => {
       await productsPage.filterProducts(page, 'product_name', 'copy of');
 
       let textColumn = await productsPage.getTextColumn(page, 'product_name', 1);
-      expect(textColumn).to.contain(`copy of copy of ${Products.demo_14.name}`);
+      expect(textColumn).to.contain(`copy of copy of ${dataProducts.demo_14.name}`);
 
       textColumn = await productsPage.getTextColumn(page, 'product_name', 2);
-      expect(textColumn).to.contain(`copy of ${Products.demo_14.name}`);
+      expect(textColumn).to.contain(`copy of ${dataProducts.demo_14.name}`);
     });
   });
 

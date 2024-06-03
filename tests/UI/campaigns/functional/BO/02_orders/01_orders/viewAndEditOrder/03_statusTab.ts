@@ -16,21 +16,20 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Employees from '@data/demo/employees';
-import Products from '@data/demo/products';
-import EmployeeData from '@data/faker/employee';
-import OrderData from '@data/faker/order';
 import type MailDevEmail from '@data/types/maildevEmail';
 
 import {
   boDashboardPage,
   boLoginPage,
-  // Import data
   dataCustomers,
+  dataEmployees,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
+  FakerEmployee,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -73,28 +72,28 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   const addressData: FakerAddress = new FakerAddress({country: 'France'});
   const customerData: FakerCustomer = new FakerCustomer({password: ''});
   // New employee data
-  const createEmployeeData: EmployeeData = new EmployeeData({
+  const createEmployeeData: FakerEmployee = new FakerEmployee({
     defaultPage: 'Dashboard',
     language: 'English (English)',
     permissionProfile: 'SuperAdmin',
   });
   // New order by customer data
-  const orderByCustomerData: OrderData = new OrderData({
+  const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
     paymentMethod: dataPaymentMethods.wirePayment,
   });
   // New order by guest data
-  const orderByGuestData: OrderData = new OrderData({
+  const orderByGuestData: FakerOrder = new FakerOrder({
     customer: customerData,
     products: [
       {
-        product: Products.demo_5,
+        product: dataProducts.demo_5,
         quantity: 1,
       },
     ],
@@ -236,7 +235,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmployeeName1', baseContext);
 
       const employeeName = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'employee', 1);
-      expect(employeeName).to.be.equal(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`);
+      expect(employeeName).to.be.equal(`${dataEmployees.defaultEmployee.firstName} ${dataEmployees.defaultEmployee.lastName}`);
     });
 
     it('should check the date from the table', async function () {

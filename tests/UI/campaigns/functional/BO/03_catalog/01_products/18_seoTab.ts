@@ -15,13 +15,13 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 
-// Import data
-import Products from '@data/demo/products';
-import ProductData from '@data/faker/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_seoTab';
 
@@ -30,7 +30,7 @@ describe('BO - Catalog - Products : Seo tab', async () => {
   let page: Page;
 
   // Data to create standard product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     name: 'Oriental fresh chair',
     type: 'standard',
     quantity: 100,
@@ -38,7 +38,7 @@ describe('BO - Catalog - Products : Seo tab', async () => {
     status: true,
   });
   // Data to edit standard product
-  const editProductData: ProductData = new ProductData({
+  const editProductData: FakerProduct = new FakerProduct({
     metaTitle: 'lorem ipsum',
     metaDescription: 'lorem ipsum',
     friendlyUrl: 'lorem ipsum',
@@ -144,17 +144,17 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
     });
 
-    it(`'should choose redirectionPage 'Products : ${Products.demo_1.name}'`, async function () {
+    it(`'should choose redirectionPage 'Products : ${dataProducts.demo_1.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseRedirectionPage2', baseContext);
 
       await seoTab.selectRedirectionPage(page, 'Permanent redirection to a product (301)');
-      await seoTab.searchOptionTarget(page, Products.demo_1.name);
+      await seoTab.searchOptionTarget(page, dataProducts.demo_1.name);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
     });
 
-    it(`should preview product and check '${Products.demo_1.name}' page`, async function () {
+    it(`should preview product and check '${dataProducts.demo_1.name}' page`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
 
       // Click on preview button
@@ -162,7 +162,7 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should go back to BO', async function () {
@@ -235,7 +235,7 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       await foProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should search the new tag \'welcome\' from the search bar', async function () {

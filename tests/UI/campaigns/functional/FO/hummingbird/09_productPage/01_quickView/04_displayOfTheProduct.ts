@@ -11,10 +11,12 @@ import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 
 // Import data
 import {ProductAttribute} from '@data/types/product';
-import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_displayOfTheProduct';
 
@@ -49,7 +51,7 @@ describe('FO - Product page - Quick view : Display of the product', async () => 
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe(`Display of the product '${Products.demo_6.name}`, async () => {
+  describe(`Display of the product '${dataProducts.demo_6.name}`, async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
@@ -73,12 +75,12 @@ describe('FO - Product page - Quick view : Display of the product', async () => 
 
       const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
-        expect(result.name).to.equal(Products.demo_6.name),
-        expect(result.price).to.equal(Products.demo_6.combinations[0].price),
+        expect(result.name).to.equal(dataProducts.demo_6.name),
+        expect(result.price).to.equal(dataProducts.demo_6.combinations[0].price),
         expect(result.taxShippingDeliveryLabel).to.equal('Tax included'),
-        expect(result.shortDescription).to.equal(Products.demo_6.summary),
-        expect(result.coverImage).to.contains(Products.demo_6.coverImage),
-        expect(result.thumbImage).to.contains(Products.demo_6.thumbImage),
+        expect(result.shortDescription).to.equal(dataProducts.demo_6.summary),
+        expect(result.coverImage).to.contains(dataProducts.demo_6.coverImage),
+        expect(result.thumbImage).to.contains(dataProducts.demo_6.thumbImage),
       ]);
 
       const resultAttributes = await quickViewModal.getSelectedAttributesFromQuickViewModal(page, attributes);
@@ -91,7 +93,7 @@ describe('FO - Product page - Quick view : Display of the product', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductImage', baseContext);
 
       const quickViewImageMain = await quickViewModal.getQuickViewImageMain(page);
-      expect(quickViewImageMain).to.contains(Products.demo_6.coverImage);
+      expect(quickViewImageMain).to.contains(dataProducts.demo_6.coverImage);
     });
 
     it('should check that \'Add to cart\' button is enabled', async function () {

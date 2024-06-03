@@ -17,11 +17,8 @@ import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {
-  // Import data
+  dataProducts,
   FakerAddress,
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
@@ -205,7 +202,7 @@ describe('FO - Account : CRUD address', async () => {
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should add product to the cart', async function () {

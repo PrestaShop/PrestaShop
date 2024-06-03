@@ -10,11 +10,11 @@ import homePage from '@pages/FO/hummingbird/home';
 import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 
-// Import demo data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_search_consultProductQuickView';
 
@@ -88,12 +88,12 @@ describe('FO - Search Page : Consult product quick view', async () => {
 
       const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
-        expect(result.name).to.equal(Products.demo_14.name),
-        expect(result.price).to.equal(Products.demo_14.finalPrice),
+        expect(result.name).to.equal(dataProducts.demo_14.name),
+        expect(result.price).to.equal(dataProducts.demo_14.finalPrice),
         expect(result.taxShippingDeliveryLabel).to.equal('Tax included'),
-        expect(result.shortDescription).to.equal(Products.demo_14.summary),
-        expect(result.coverImage).to.contains(Products.demo_14.coverImage),
-        expect(result.thumbImage).to.contains(Products.demo_14.thumbImage),
+        expect(result.shortDescription).to.equal(dataProducts.demo_14.summary),
+        expect(result.coverImage).to.contains(dataProducts.demo_14.coverImage),
+        expect(result.thumbImage).to.contains(dataProducts.demo_14.thumbImage),
       ]);
     });
 

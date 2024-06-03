@@ -17,12 +17,12 @@ import {homePage} from '@pages/FO/classic/home';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_general_general_roundMode';
 
@@ -36,7 +36,7 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductData = new ProductData({
+  const productData: FakerProduct = new FakerProduct({
     name: 'Product round mode',
     type: 'standard',
     taxRule: 'No tax',
@@ -152,7 +152,7 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
   describe('Test round mode when the last digit of the price < 5', async () => {
     describe('Update product price', async () => {
       // Data to edit the product price
-      const pricingData: ProductData = new ProductData({
+      const pricingData: FakerProduct = new FakerProduct({
         price: 17.114,
       });
 
@@ -271,7 +271,7 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
   describe('Test round mode when the last digit of the price > 5', async () => {
     describe('Update product price', async () => {
       // Data to edit the product price
-      const pricingData: ProductData = new ProductData({
+      const pricingData: FakerProduct = new FakerProduct({
         price: 17.116,
       });
 

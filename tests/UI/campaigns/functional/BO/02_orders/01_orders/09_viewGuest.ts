@@ -11,16 +11,13 @@ import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 import viewCustomerPage from '@pages/BO/customers/view';
 import ordersPage from '@pages/BO/orders';
 
-// Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -46,11 +43,11 @@ describe('BO - Orders : View guest from orders page', async () => {
   const customerData: FakerCustomer = new FakerCustomer({password: ''});
   const addressData: FakerAddress = new FakerAddress({country: 'France'});
   // New order by guest data
-  const orderByGuestData: OrderData = new OrderData({
+  const orderByGuestData: FakerOrder = new FakerOrder({
     customer: customerData,
     products: [
       {
-        product: Products.demo_5,
+        product: dataProducts.demo_5,
         quantity: 1,
       },
     ],

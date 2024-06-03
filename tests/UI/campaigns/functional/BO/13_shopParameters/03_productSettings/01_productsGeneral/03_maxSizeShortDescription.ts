@@ -11,12 +11,12 @@ import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsGeneral_maxSizeShortDescription';
 
@@ -30,7 +30,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductData = new ProductData({type: 'standard', status: false});
+  const productData: FakerProduct = new FakerProduct({type: 'standard', status: false});
   const maxSummarySizeValue: number = 5;
   const defaultSummarySizeValue: number = 800;
 

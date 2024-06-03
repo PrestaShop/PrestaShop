@@ -1,8 +1,6 @@
-import type ProductData from '@data/faker/product';
-
 import {
-  // Import data
   type FakerCustomer,
+  type FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 type CartRuleCreator = {
@@ -35,7 +33,7 @@ type CartRuleCreator = {
   product?: string | null
   excludeDiscountProducts?: boolean
   freeGift?: boolean
-  freeGiftProduct?: ProductData | null
+  freeGiftProduct?: FakerProduct | null
 };
 
 type CartRuleDiscountAmount = {

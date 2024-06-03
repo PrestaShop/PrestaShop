@@ -16,12 +16,9 @@ import {checkoutPage as foCheckoutPage} from '@pages/FO/classic/checkout';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import Carriers from '@data/demo/carriers';
-
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   dataCustomers,
 } from '@prestashop-core/ui-testing';
 
@@ -74,11 +71,11 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
   });
 
   const carriersNames: string[] = [
-    Carriers.cheapCarrier.name,
-    Carriers.lightCarrier.name,
+    dataCarriers.myCheapCarrier.name,
+    dataCarriers.myLightCarrier.name,
   ];
 
-  describe(`Enable the 2 carriers '${Carriers.cheapCarrier.name}' and '${Carriers.lightCarrier.name}'`, async () => {
+  describe(`Enable the 2 carriers '${dataCarriers.myCheapCarrier.name}' and '${dataCarriers.myLightCarrier.name}'`, async () => {
     it('should reset all filters and get number of carriers in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
@@ -135,10 +132,10 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
     });
 
     const sortByPosition: string[] = [
-      Carriers.default.name,
-      Carriers.myCarrier.name,
-      Carriers.cheapCarrier.name,
-      Carriers.lightCarrier.name,
+      dataCarriers.clickAndCollect.name,
+      dataCarriers.myCarrier.name,
+      dataCarriers.myCheapCarrier.name,
+      dataCarriers.myLightCarrier.name,
     ];
     [
       {args: {sortBy: 'Position', orderBy: 'Ascending'}},
@@ -220,7 +217,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
     });
   });
 
-  describe(`Disable the 2 carriers '${Carriers.cheapCarrier.name}' and '${Carriers.lightCarrier.name}'`, async () => {
+  describe(`Disable the 2 carriers '${dataCarriers.myCheapCarrier.name}' and '${dataCarriers.myLightCarrier.name}'`, async () => {
     it('should go to \'Shipping > Carriers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPageToDisable', baseContext);
 

@@ -15,12 +15,12 @@ import {moduleManager as moduleManagerPage, moduleManager} from '@pages/BO/modul
 
 // Import data
 import APIClientData from '@data/faker/APIClient';
-import {ModuleInfo} from '@data/types/module';
 
 import {
   boDashboardPage,
   boModuleManagerPage,
   FakerModule,
+  type ModuleInfo,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';

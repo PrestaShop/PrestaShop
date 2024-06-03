@@ -9,14 +9,11 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
-// Import data
-import Products from '@data/demo/products';
-import Carriers from '@data/demo/carriers';
-
 import {
-  // Import data
+  dataCarriers,
   dataPaymentMethods,
   dataCustomers,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -66,14 +63,14 @@ describe('FO - Order confirmation : Display of product customization', async () 
       expect(result).to.eq(true);
     });
 
-    it(`should search for the product ${Products.demo_14.name} and go to product page`, async function () {
+    it(`should search for the product ${dataProducts.demo_14.name} and go to product page`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-      await homePage.setProductNameInSearchInput(page, Products.demo_14.name);
+      await homePage.setProductNameInSearchInput(page, dataProducts.demo_14.name);
       await homePage.clickAutocompleteSearchResult(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_14.name);
+      expect(pageTitle).to.contains(dataProducts.demo_14.name);
     });
 
     it('should add custom text and add the product to cart', async function () {
@@ -114,7 +111,7 @@ describe('FO - Order confirmation : Display of product customization', async () 
     it('should select the first carrier and go to payment step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice1', baseContext);
 
-      await checkoutPage.chooseShippingMethod(page, Carriers.myCarrier.id);
+      await checkoutPage.chooseShippingMethod(page, dataCarriers.myCarrier.id);
 
       const isPaymentStep = await checkoutPage.goToPaymentStep(page);
       expect(isPaymentStep).to.eq(true);
@@ -137,7 +134,7 @@ describe('FO - Order confirmation : Display of product customization', async () 
     it('should check the payment information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentInformation', baseContext);
 
-      const totalToPay: string = (Products.demo_14.finalPrice + Carriers.myCarrier.priceTTC).toFixed(2);
+      const totalToPay: string = (dataProducts.demo_14.finalPrice + dataCarriers.myCarrier.priceTTC).toFixed(2);
 
       const paymentInformation = await orderConfirmationPage.getPaymentInformation(page);
       expect(paymentInformation).to.contains('Please send us a '
@@ -151,7 +148,7 @@ describe('FO - Order confirmation : Display of product customization', async () 
       const orderDetails = await orderConfirmationPage.getOrderDetails(page);
       expect(orderDetails).to.contains('Payment method: '
         + `${dataPaymentMethods.wirePayment.displayName} Shipping method: `
-        + `${Carriers.myCarrier.name} ${Carriers.myCarrier.delay}`);
+        + `${dataCarriers.myCarrier.name} ${dataCarriers.myCarrier.delay}`);
     });
 
     it('should check the products number', async function () {
@@ -166,10 +163,10 @@ describe('FO - Order confirmation : Display of product customization', async () 
 
       const result = await orderConfirmationPage.getProductDetailsInRow(page, 1);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_14.coverImage),
-        expect(result.details).to.equal(`${Products.demo_14.name} Product customization × `
+        expect(result.image).to.contains(dataProducts.demo_14.coverImage),
+        expect(result.details).to.equal(`${dataProducts.demo_14.name} Product customization × `
          + 'Product customization Type your text here Hello world!'),
-        expect(result.prices).to.equal(`€${Products.demo_14.finalPrice} 1 €${Products.demo_14.finalPrice}`),
+        expect(result.prices).to.equal(`€${dataProducts.demo_14.finalPrice} 1 €${dataProducts.demo_14.finalPrice}`),
       ]);
     });
 

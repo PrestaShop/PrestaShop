@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import stocksPage from '@pages/BO/catalog/stocks';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_stocks_bulkEditQuantity';
 
@@ -64,17 +64,17 @@ describe('BO - Catalog - Stocks : Bulk edit quantity', async () => {
   });
 
   describe('Bulk edit quantity by setting input value', async () => {
-    it(`should filter by name '${Products.demo_8.name}'`, async function () {
+    it(`should filter by name '${dataProducts.demo_8.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateQuantities', baseContext);
 
-      await stocksPage.simpleFilter(page, Products.demo_8.name);
+      await stocksPage.simpleFilter(page, dataProducts.demo_8.name);
 
       const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
 
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const textColumn = await stocksPage.getTextColumnFromTableStocks(page, i, 'product_name');
-        expect(textColumn).to.contains(Products.demo_8.name);
+        expect(textColumn).to.contains(dataProducts.demo_8.name);
 
         // Get physical and available quantities of product
         stocks[`product${i}`] = {

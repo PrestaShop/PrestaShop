@@ -25,14 +25,11 @@ import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAcco
 import homePageHummingbird from '@pages/FO/hummingbird/home';
 import loginPageHummingbird from '@pages/FO/hummingbird/login';
 
-// Import data
-import Languages from '@data/demo/languages';
-import Modules from '@data/demo/modules';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataLanguages,
+  dataModules,
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
@@ -93,10 +90,10 @@ describe('BO - International - Translation : Modify translation', async () => {
       expect(pageTitle).to.contains(translationsPage.pageTitle);
     });
 
-    it(`should choose the translation 'Back office' and the language ${Languages.english.name}`, async function () {
+    it(`should choose the translation 'Back office' and the language ${dataLanguages.english.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation', baseContext);
 
-      await translationsPage.modifyTranslation(page, 'Back office translations', 'classic', Languages.english.name);
+      await translationsPage.modifyTranslation(page, 'Back office translations', 'classic', dataLanguages.english.name);
 
       const pageTitle = await translationsPage.getPageTitle(page);
       expect(pageTitle).to.contains(translationsPage.pageTitle);
@@ -155,10 +152,10 @@ describe('BO - International - Translation : Modify translation', async () => {
       expect(pageTitle).to.contains(translationsPage.pageTitle);
     });
 
-    it(`should choose the translation 'Front office' and the language '${Languages.french.name}'`, async function () {
+    it(`should choose the translation 'Front office' and the language '${dataLanguages.french.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation2', baseContext);
 
-      await translationsPage.modifyTranslation(page, 'Front office Translations', 'classic', Languages.french.name);
+      await translationsPage.modifyTranslation(page, 'Front office Translations', 'classic', dataLanguages.french.name);
 
       const pageTitle = await translationsPage.getPageTitle(page);
       expect(pageTitle).to.contains(translationsPage.pageTitle);
@@ -218,11 +215,11 @@ describe('BO - International - Translation : Modify translation', async () => {
       expect(pageTitle).to.contains(translationsPage.pageTitle);
     });
 
-    it(`should choose the translation 'Front office with hummingbird theme' and the language '${Languages.english.name}'`,
+    it(`should choose the translation 'Front office with hummingbird theme' and the language '${dataLanguages.english.name}'`,
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation3', baseContext);
 
-        await translationsPage.modifyTranslation(page, 'Front office Translations', 'hummingbird', Languages.english.name);
+        await translationsPage.modifyTranslation(page, 'Front office Translations', 'hummingbird', dataLanguages.english.name);
 
         const pageTitle = await translationsPage.getPageTitle(page);
         expect(pageTitle).to.contains(translationsPage.pageTitle);
@@ -300,15 +297,15 @@ describe('BO - International - Translation : Modify translation', async () => {
       expect(pageTitle).to.contains(translationsPage.pageTitle);
     });
 
-    it(`should choose the translation 'Installed modules' and the language '${Languages.english.name}'`, async function () {
+    it(`should choose the translation 'Installed modules' and the language '${dataLanguages.english.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation4', baseContext);
 
       await translationsPage.modifyTranslation(
         page,
         'Installed modules translations',
         'classic',
-        Languages.english.name,
-        Modules.contactForm.name,
+        dataLanguages.english.name,
+        dataModules.contactForm.name,
       );
 
       const pageTitle = await translationsPage.getPageTitle(page);
@@ -338,17 +335,17 @@ describe('BO - International - Translation : Modify translation', async () => {
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.contactForm.name}`, async function () {
+    it(`should search the module ${dataModules.contactForm.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.contactForm);
       expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
 
     it('should check the module name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModuleName', baseContext);
 
-      const moduleName = await moduleManagerPage.getModuleName(page, Modules.contactForm);
+      const moduleName = await moduleManagerPage.getModuleName(page, dataModules.contactForm);
       expect(moduleName).to.eq('Contact form Module Edited');
     });
   });
@@ -367,14 +364,14 @@ describe('BO - International - Translation : Modify translation', async () => {
       expect(pageTitle).to.contains(translationsPage.pageTitle);
     });
 
-    it(`should choose the translation 'Email translations' and the language '${Languages.english.name}'`, async function () {
+    it(`should choose the translation 'Email translations' and the language '${dataLanguages.english.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation5', baseContext);
 
       await translationsPage.modifyTranslation(
         page,
         'Email translations',
         'classic',
-        Languages.english.name,
+        dataLanguages.english.name,
         '',
         'Subject',
       );
@@ -474,10 +471,10 @@ describe('BO - International - Translation : Modify translation', async () => {
       expect(pageTitle).to.contains(translationsPage.pageTitle);
     });
 
-    it(`should choose the translation 'Other' and the language '${Languages.english.name}'`, async function () {
+    it(`should choose the translation 'Other' and the language '${dataLanguages.english.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation6', baseContext);
 
-      await translationsPage.modifyTranslation(page, 'Other translations', 'classic', Languages.english.name);
+      await translationsPage.modifyTranslation(page, 'Other translations', 'classic', dataLanguages.english.name);
 
       const pageTitle = await translationsPage.getPageTitle(page);
       expect(pageTitle).to.contains(translationsPage.pageTitle);

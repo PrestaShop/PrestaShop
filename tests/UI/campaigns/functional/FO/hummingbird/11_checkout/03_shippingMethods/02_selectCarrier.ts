@@ -13,12 +13,9 @@ import checkoutPage from '@pages/FO/hummingbird/checkout';
 import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
 
-// Import data
-import Carriers from '@data/demo/carriers';
-import Products from '@data/demo/products';
-
 import {
-  // Import data
+  dataCarriers,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
@@ -85,7 +82,7 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should add product to cart and go to cart page', async function () {
@@ -128,7 +125,7 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersList', baseContext);
 
       const carriers = await checkoutPage.getAllCarriersNames(page);
-      expect(carriers).to.deep.equal([Carriers.default.name, Carriers.myCarrier.name]);
+      expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, dataCarriers.myCarrier.name]);
     });
 
     it('should check the first carrier data', async function () {
@@ -136,8 +133,8 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
 
       const carrierData = await checkoutPage.getCarrierData(page, 1);
       await Promise.all([
-        expect(carrierData.name).to.equal(Carriers.default.name),
-        expect(carrierData.delay).to.equal(Carriers.default.delay),
+        expect(carrierData.name).to.equal(dataCarriers.clickAndCollect.name),
+        expect(carrierData.delay).to.equal(dataCarriers.clickAndCollect.delay),
         expect(carrierData.priceText).to.equal('Free'),
       ]);
     });
@@ -147,16 +144,16 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
 
       const carrierData = await checkoutPage.getCarrierData(page, 2);
       await Promise.all([
-        expect(carrierData.name).to.equal(Carriers.myCarrier.name),
-        expect(carrierData.delay).to.equal(Carriers.myCarrier.delay),
-        expect(carrierData.priceText).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)} tax incl.`),
+        expect(carrierData.name).to.equal(dataCarriers.myCarrier.name),
+        expect(carrierData.delay).to.equal(dataCarriers.myCarrier.delay),
+        expect(carrierData.priceText).to.equal(`€${dataCarriers.myCarrier.priceTTC.toFixed(2)} tax incl.`),
       ]);
     });
 
     it('should select the first carrier and check the shipping price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice1', baseContext);
 
-      await checkoutPage.chooseShippingMethod(page, Carriers.default.id);
+      await checkoutPage.chooseShippingMethod(page, dataCarriers.clickAndCollect.id);
 
       const shippingCost = await checkoutPage.getShippingCost(page);
       expect(shippingCost).to.equal('Free');
@@ -165,10 +162,10 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
     it('should select the second carrier and check the shipping price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice2', baseContext);
 
-      await checkoutPage.chooseShippingMethod(page, Carriers.myCarrier.id);
+      await checkoutPage.chooseShippingMethod(page, dataCarriers.myCarrier.id);
 
       const shippingCost = await checkoutPage.getShippingCost(page);
-      expect(shippingCost).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
+      expect(shippingCost).to.equal(`€${dataCarriers.myCarrier.priceTTC.toFixed(2)}`);
     });
   });
 
@@ -196,7 +193,7 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersList2', baseContext);
 
       const carriers = await checkoutPage.getAllCarriersNames(page);
-      expect(carriers).to.deep.equal([Carriers.myCarrier.name]);
+      expect(carriers).to.deep.equal([dataCarriers.myCarrier.name]);
     });
 
     it('should check the carrier data', async function () {
@@ -204,9 +201,9 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
 
       const carrierData = await checkoutPage.getCarrierData(page, 2);
       await Promise.all([
-        expect(carrierData.name).to.equal(Carriers.myCarrier.name),
-        expect(carrierData.delay).to.equal(Carriers.myCarrier.delay),
-        expect(carrierData.priceText).to.equal(`€${Carriers.myCarrier.price.toFixed(2)}`),
+        expect(carrierData.name).to.equal(dataCarriers.myCarrier.name),
+        expect(carrierData.delay).to.equal(dataCarriers.myCarrier.delay),
+        expect(carrierData.priceText).to.equal(`€${dataCarriers.myCarrier.price.toFixed(2)}`),
       ]);
     });
 
@@ -214,7 +211,7 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice3', baseContext);
 
       const shippingCost = await checkoutPage.getShippingCost(page);
-      expect(shippingCost).to.equal(`€${Carriers.myCarrier.price.toFixed(2)}`);
+      expect(shippingCost).to.equal(`€${dataCarriers.myCarrier.price.toFixed(2)}`);
     });
   });
 

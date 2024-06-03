@@ -23,15 +23,14 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 // Import data
-import ProductData from '@data/faker/product';
 import type MailDevEmail from '@data/types/maildevEmail';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
@@ -47,7 +46,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
   // Data to create standard product
   const mails: MailDevEmail[] = [];
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'virtual',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
@@ -61,7 +60,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     minimumQuantity: 1,
     status: true,
   });
-  const editProductData: ProductData = new ProductData({
+  const editProductData: FakerProduct = new FakerProduct({
     type: 'virtual',
     taxRule: 'FR Taux réduit (10%)',
     tax: 10,

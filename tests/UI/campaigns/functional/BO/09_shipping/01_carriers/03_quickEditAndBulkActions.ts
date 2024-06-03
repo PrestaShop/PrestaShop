@@ -11,13 +11,11 @@ import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Carriers from '@data/demo/carriers';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  dataCarriers,
   dataCustomers,
   FakerCarrier,
   foClassicCartPage,
@@ -241,8 +239,8 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
   });
 
   [
-    Carriers.cheapCarrier,
-    Carriers.lightCarrier,
+    dataCarriers.myCheapCarrier,
+    dataCarriers.myLightCarrier,
   ].forEach((carrier: FakerCarrier, index: number) => {
     it(`should reset in disabled mode the carrier "${carrier.name}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `resetCarrier${index}`, baseContext);

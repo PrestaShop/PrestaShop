@@ -16,13 +16,15 @@ import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 
 // Import data
-import ProductData from '@data/faker/product';
 import {ProductHeaderSummary} from '@data/types/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_header';
 
@@ -32,7 +34,7 @@ describe('BO - Catalog - Products : Header', async () => {
   let numberOfProducts: number = 0;
   let productHeaderSummaryInitial: ProductHeaderSummary;
 
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: 'cover.jpg',
     taxRule: 'FR Taux standard (20%)',

@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import categoriesPage from '@pages/BO/catalog/categories';
 
-// Import data
-import Categories from '@data/demo/categories';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataCategories,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_categories_filterAndQuickEditCategories';
 
@@ -67,7 +67,7 @@ describe('BO - Catalog - Categories : Filter and quick edit Categories table', a
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_category',
-            filterValue: Categories.art.id.toString(),
+            filterValue: dataCategories.art.id.toString(),
           },
       },
       {
@@ -76,7 +76,7 @@ describe('BO - Catalog - Categories : Filter and quick edit Categories table', a
             testIdentifier: 'filterName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: Categories.accessories.name,
+            filterValue: dataCategories.accessories.name,
           },
       },
       {
@@ -85,7 +85,7 @@ describe('BO - Catalog - Categories : Filter and quick edit Categories table', a
             testIdentifier: 'filterDescription',
             filterType: 'input',
             filterBy: 'description',
-            filterValue: Categories.accessories.description,
+            filterValue: dataCategories.accessories.description,
           },
       },
       {
@@ -94,7 +94,7 @@ describe('BO - Catalog - Categories : Filter and quick edit Categories table', a
             testIdentifier: 'filterPosition',
             filterType: 'input',
             filterBy: 'position',
-            filterValue: Categories.art.position.toString(),
+            filterValue: dataCategories.art.position.toString(),
           },
       },
       {
@@ -103,7 +103,7 @@ describe('BO - Catalog - Categories : Filter and quick edit Categories table', a
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: Categories.accessories.displayed ? '1' : '0',
+            filterValue: dataCategories.accessories.displayed ? '1' : '0',
           },
       },
     ];
@@ -159,7 +159,7 @@ describe('BO - Catalog - Categories : Filter and quick edit Categories table', a
         page,
         'input',
         'name',
-        Categories.art.name,
+        dataCategories.art.name,
       );
 
       const numberOfCategoriesAfterFilter = await categoriesPage.getNumberOfElementInGrid(page);

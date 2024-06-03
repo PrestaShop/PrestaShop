@@ -12,12 +12,12 @@ import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_apiresources_installation_uninstallAndInstallModule';
 
@@ -57,37 +57,37 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psApiResources.name}`, async function () {
+    it(`should search the module ${dataModules.psApiResources.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psApiResources);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psApiResources);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should display the uninstall modal and cancel it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModuleAndCancel', baseContext);
 
-      const textResult = await moduleManagerPage.setActionInModule(page, Modules.psApiResources, 'uninstall', true);
+      const textResult = await moduleManagerPage.setActionInModule(page, dataModules.psApiResources, 'uninstall', true);
       expect(textResult).to.eq('');
 
-      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, Modules.psApiResources);
+      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, dataModules.psApiResources);
       expect(isModuleVisible).to.eq(true);
 
-      const isModalVisible = await moduleManagerPage.isModalActionVisible(page, Modules.psApiResources, 'uninstall');
+      const isModalVisible = await moduleManagerPage.isModalActionVisible(page, dataModules.psApiResources, 'uninstall');
       expect(isModalVisible).to.eq(false);
 
-      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${Modules.psApiResources.tag}/`);
+      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psApiResources.tag}/`);
       expect(dirExists).to.eq(true);
     });
 
     it('should uninstall the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psApiResources, 'uninstall', false);
-      expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.psApiResources.tag));
+      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psApiResources, 'uninstall', false);
+      expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.psApiResources.tag));
 
-      // Check the directory `modules/Modules.psApiResources.tag`
-      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${Modules.psApiResources.tag}/`);
+      // Check the directory `modules/dataModules.psApiResources.tag`
+      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psApiResources.tag}/`);
       expect(dirExists).to.eq(true);
     });
   });
@@ -132,7 +132,7 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
     it('should check that scopes from Module are not present', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkScopeModule', baseContext);
 
-      const scopes = await addNewApiClientPage.getApiScopes(page, Modules.psApiResources.tag);
+      const scopes = await addNewApiClientPage.getApiScopes(page, dataModules.psApiResources.tag);
       expect(scopes.length).to.be.eq(0);
     });
   });
@@ -152,21 +152,21 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psApiResources.name}`, async function () {
+    it(`should search the module ${dataModules.psApiResources.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModuleInstall', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psApiResources);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psApiResources);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should install the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psApiResources, 'install', false);
-      expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.psApiResources.tag));
+      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psApiResources, 'install', false);
+      expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(dataModules.psApiResources.tag));
 
-      // Check the directory `modules/Modules.psEmailAlerts.tag`
-      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${Modules.psApiResources.tag}/`);
+      // Check the directory `modules/dataModules.psEmailAlerts.tag`
+      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psApiResources.tag}/`);
       expect(dirExists).to.eq(true);
     });
   });
@@ -218,7 +218,7 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
     it('should check that scopes from Module are present', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkScopeModulePresent', baseContext);
 
-      const scopes = await addNewApiClientPage.getApiScopes(page, Modules.psApiResources.tag);
+      const scopes = await addNewApiClientPage.getApiScopes(page, dataModules.psApiResources.tag);
       expect(scopes.length).to.be.gt(0);
     });
   });

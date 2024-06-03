@@ -11,12 +11,12 @@ import {createFeatureTest, bulkDeleteFeaturesTest} from '@commonTests/BO/catalog
 import attributesPage from '@pages/BO/catalog/attributes';
 import featuresPage from '@pages/BO/catalog/features';
 
-// Import data
-import FeatureData from '@data/faker/feature';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerFeature,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_features_features_sortPaginationAndBulkDelete';
 
@@ -38,7 +38,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
   // PRE-condition : Create 19 features
   const creationTests: number[] = new Array(19).fill(0, 0, 19);
   creationTests.forEach((test: number, index: number) => {
-    const createFeatureData: FeatureData = new FeatureData({name: `toDelete${index}`});
+    const createFeatureData: FakerFeature = new FakerFeature({name: `toDelete${index}`});
     createFeatureTest(createFeatureData, `${baseContext}_preTest${index}`);
   });
 

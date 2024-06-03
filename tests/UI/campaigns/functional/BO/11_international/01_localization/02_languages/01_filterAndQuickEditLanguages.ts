@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import localizationPage from '@pages/BO/international/localization';
 import languagesPage from '@pages/BO/international/languages';
 
-// Import data
-import Languages from '@data/demo/languages';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_languages_filterAndQuickEditLanguages';
 
@@ -80,7 +80,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_lang',
-            filterValue: Languages.english.id.toString(),
+            filterValue: dataLanguages.english.id.toString(),
           },
       },
       {
@@ -89,7 +89,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
             testIdentifier: 'filterName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: Languages.english.name,
+            filterValue: dataLanguages.english.name,
           },
       },
       {
@@ -98,7 +98,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
             testIdentifier: 'filterIsoCode',
             filterType: 'input',
             filterBy: 'iso_code',
-            filterValue: Languages.english.isoCode,
+            filterValue: dataLanguages.english.isoCode,
           },
       },
       {
@@ -107,7 +107,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
             testIdentifier: 'filterLanguageCode',
             filterType: 'input',
             filterBy: 'language_code',
-            filterValue: Languages.english.languageCode,
+            filterValue: dataLanguages.english.languageCode,
           },
       },
       {
@@ -116,7 +116,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
             testIdentifier: 'filterDateFormatLite',
             filterType: 'input',
             filterBy: 'date_format_lite',
-            filterValue: Languages.english.dateFormat,
+            filterValue: dataLanguages.english.dateFormat,
           },
       },
       {
@@ -125,7 +125,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
             testIdentifier: 'filterDateFormatFull',
             filterType: 'input',
             filterBy: 'date_format_full',
-            filterValue: Languages.english.fullDateFormat,
+            filterValue: dataLanguages.english.fullDateFormat,
           },
       },
       {
@@ -134,7 +134,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: Languages.english.enabled ? '1' : '0',
+            filterValue: dataLanguages.english.enabled ? '1' : '0',
           },
       },
     ];
@@ -183,14 +183,14 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
     it('should filter by iso_code \'en\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDisableDefaultLanguage', baseContext);
 
-      await languagesPage.filterTable(page, 'input', 'iso_code', Languages.english.isoCode);
+      await languagesPage.filterTable(page, 'input', 'iso_code', dataLanguages.english.isoCode);
 
       // Check number of languages
       const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
       expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
       const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
-      expect(textColumn).to.contains(Languages.english.isoCode);
+      expect(textColumn).to.contains(dataLanguages.english.isoCode);
     });
 
     it('should disable \'en\' language and check error message', async function () {
@@ -215,14 +215,14 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
       // Filter table
-      await languagesPage.filterTable(page, 'input', 'iso_code', Languages.french.isoCode);
+      await languagesPage.filterTable(page, 'input', 'iso_code', dataLanguages.french.isoCode);
 
       // Check number od languages
       const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
       expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
       const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
-      expect(textColumn).to.contains(Languages.french.isoCode);
+      expect(textColumn).to.contains(dataLanguages.french.isoCode);
     });
 
     const tests = [

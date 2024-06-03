@@ -23,14 +23,11 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataPaymentMethods,
+  dataProducts,
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
@@ -45,8 +42,8 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
   let page: Page;
   const createCustomerData: FakerCustomer = new FakerCustomer();
   const messageSend: string = faker.lorem.sentence().substring(0, 35).trim();
-  const messageOption: string = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes[0].values[0]} `
-    + `- Color: ${Products.demo_1.attributes[1].values[0]})`;
+  const messageOption: string = `${dataProducts.demo_1.name} (Size: ${dataProducts.demo_1.attributes[0].values[0]} `
+    + `- Color: ${dataProducts.demo_1.attributes[1].values[0]})`;
 
   // before and after functions
   before(async function () {

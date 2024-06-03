@@ -17,12 +17,12 @@ import {productPage, productPage as foProductPage} from '@pages/FO/classic/produ
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {cartPage} from '@pages/FO/classic/cart';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_displayVolumeDiscount';
 
@@ -30,7 +30,7 @@ describe('FO - Product page - Product page : Display volume discount', async () 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
@@ -45,7 +45,7 @@ describe('FO - Product page - Product page : Display volume discount', async () 
     status: true,
   });
 
-  const secondSpecificPriceData: ProductData = new ProductData({
+  const secondSpecificPriceData: FakerProduct = new FakerProduct({
     specificPrice: {
       attributes: null,
       discount: 15,

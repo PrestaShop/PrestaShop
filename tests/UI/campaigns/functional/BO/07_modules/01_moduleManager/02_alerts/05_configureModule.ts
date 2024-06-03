@@ -10,12 +10,12 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 import moduleAlertsPage from '@pages/BO/modules/moduleAlerts';
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_alerts_configureModule';
 
@@ -63,9 +63,9 @@ describe('BO - Modules - Alerts : Configure module', async () => {
   it('should go to module configuration page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'configureModule', baseContext);
 
-    await moduleAlertsPage.goToConfigurationPage(page, Modules.psCheckPayment.tag);
+    await moduleAlertsPage.goToConfigurationPage(page, dataModules.psCheckPayment.tag);
 
     const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-    expect(pageSubtitle).to.contains(Modules.psCheckPayment.name);
+    expect(pageSubtitle).to.contains(dataModules.psCheckPayment.name);
   });
 });

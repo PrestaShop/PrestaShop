@@ -16,13 +16,15 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
 // Import data
-import Categories from '@data/demo/categories';
-import CategoryData from '@data/faker/category';
 import type {CategoryRedirection} from '@data/types/category';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataCategories,
+  FakerCategory,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_categories_CRUDCategoryInBO';
 
@@ -36,16 +38,16 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
   let subcategoryID: number = 0;
   let categoryFriendlyURL: string = '';
 
-  const createCategoryData: CategoryData = new CategoryData({
+  const createCategoryData: FakerCategory = new FakerCategory({
     displayed: true,
     redirectionWhenNotDisplayed: '301',
-    redirectedCategory: Categories.art,
+    redirectedCategory: dataCategories.art,
   });
-  const createSubCategoryData: CategoryData = new CategoryData({
+  const createSubCategoryData: FakerCategory = new FakerCategory({
     name: 'subCategoryToCreate',
     displayed: true,
     redirectionWhenNotDisplayed: '302',
-    redirectedCategory: Categories.clothes,
+    redirectedCategory: dataCategories.clothes,
   });
 
   // before and after functions
@@ -341,7 +343,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       type: 'subcategory',
       category: createSubCategoryData,
     },
-  ].forEach((arg: {type: string, category: CategoryData}, index: number) => {
+  ].forEach((arg: {type: string, category: FakerCategory}, index: number) => {
     describe(`Disable ${arg.type} and check the redirection (${arg.category.redirectionWhenNotDisplayed})`, async () => {
       it('should go to \'Catalog > Categories\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToCategoriesPageToDisable${index}`, baseContext);
@@ -461,7 +463,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       category: createSubCategoryData,
       newRedirect: '410' as CategoryRedirection,
     },
-  ].forEach((arg: {type: string, category: CategoryData, newRedirect: CategoryRedirection}, index: number) => {
+  ].forEach((arg: {type: string, category: FakerCategory, newRedirect: CategoryRedirection}, index: number) => {
     describe(`Change the redirection for ${arg.type} and check the error page (${arg.newRedirect})`, async () => {
       it('should go to \'Catalog > Categories\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToCategoriesPageToSetRedirection${index}`, baseContext);

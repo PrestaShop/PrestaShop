@@ -15,14 +15,14 @@ import {moduleManager} from '@pages/BO/modules/moduleManager';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {emailSubscriptionPage} from '@pages/FO/classic/emailSubscription';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import MailDevEmail from '@data/types/maildevEmail';
 import MailDev from 'maildev';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_emailsubscription_configuration_checkConfirmationEmail';
 
@@ -76,7 +76,7 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
     mailHelper.stopListener(mailListener);
   });
 
-  describe(`BO: case 1 - Enable 'Send confirmation email' in the module '${Modules.psEmailSubscription.name}'`, async () => {
+  describe(`BO: case 1 - Enable 'Send confirmation email' in the module '${dataModules.psEmailSubscription.name}'`, async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -95,17 +95,17 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
       expect(pageTitle).to.contains(moduleManager.pageTitle);
     });
 
-    it(`should search the module ${Modules.psEmailSubscription.name}`, async function () {
+    it(`should search the module ${dataModules.psEmailSubscription.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, Modules.psEmailSubscription);
+      const isModuleVisible = await moduleManager.searchModule(page, dataModules.psEmailSubscription);
       expect(isModuleVisible).to.equal(true);
     });
 
-    it(`should go to the configuration page of the module '${Modules.psEmailSubscription.name}'`, async function () {
+    it(`should go to the configuration page of the module '${dataModules.psEmailSubscription.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, Modules.psEmailSubscription.tag);
+      await moduleManager.goToConfigurationPage(page, dataModules.psEmailSubscription.tag);
 
       const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(psEmailSubscriptionPage.pageTitle);
@@ -144,7 +144,7 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
     });
   });
 
-  describe(`Enable 'Send verification email' in the module '${Modules.psEmailSubscription.name}'`, async () => {
+  describe(`Enable 'Send verification email' in the module '${dataModules.psEmailSubscription.name}'`, async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
@@ -208,7 +208,7 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
     });
   });
 
-  describe(`BO: case 2 - Disable all options in the module '${Modules.psEmailSubscription.name}'`, async () => {
+  describe(`BO: case 2 - Disable all options in the module '${dataModules.psEmailSubscription.name}'`, async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 

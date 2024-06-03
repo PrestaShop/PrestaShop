@@ -17,12 +17,12 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_changeImage';
 
@@ -43,7 +43,7 @@ describe('FO - Product page - Quick view : Change image', async () => {
   let page: Page;
 
   // Data to create product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     quantity: 2,
     coverImage: 'coverImage.jpg',

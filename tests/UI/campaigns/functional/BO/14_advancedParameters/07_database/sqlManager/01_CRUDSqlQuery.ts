@@ -11,12 +11,14 @@ import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/ad
 import viewQueryManagerPage from '@pages/BO/advancedParameters/database/sqlManager/view';
 
 // Import data
-import Tables from '@data/demo/sqlTables';
 import SqlQueryData from '@data/faker/sqlQuery';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataSqlTables,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_database_sqlManager_CRUDSqlQuery';
 
@@ -117,9 +119,9 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
     it('should check columns name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkColumnsNameForNewSQLQuery', baseContext);
 
-      for (let i = 0; i <= Tables.ps_alias.columns.length - 1; i++) {
+      for (let i = 0; i <= dataSqlTables.ps_alias.columns.length - 1; i++) {
         const columnNameText = await viewQueryManagerPage.getColumnName(page, i + 1);
-        expect(columnNameText).to.be.equal(Tables.ps_alias.columns[i]);
+        expect(columnNameText).to.be.equal(dataSqlTables.ps_alias.columns[i]);
       }
     });
   });
@@ -198,9 +200,9 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
     it('should check columns name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkColumnsNameForUpdatedSQLQuery', baseContext);
 
-      for (let i = 0; i <= Tables.ps_access.columns.length - 1; i++) {
+      for (let i = 0; i <= dataSqlTables.ps_access.columns.length - 1; i++) {
         const columnNameText = await viewQueryManagerPage.getColumnName(page, i + 1);
-        expect(columnNameText).to.be.equal(Tables.ps_access.columns[i]);
+        expect(columnNameText).to.be.equal(dataSqlTables.ps_access.columns[i]);
       }
     });
   });

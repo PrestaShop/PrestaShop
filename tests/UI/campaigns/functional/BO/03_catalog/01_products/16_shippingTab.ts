@@ -17,14 +17,11 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
-// Import data
-import ProductData from '@data/faker/product';
-import Carriers from '@data/demo/carriers';
-
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   dataCustomers,
+  FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
@@ -37,13 +34,13 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
   let page: Page;
 
   // Data to create standard product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     quantity: 10,
     status: true,
   });
   // Data to edit standard product
-  const editProductData: ProductData = new ProductData({
+  const editProductData: FakerProduct = new FakerProduct({
     quantity: -10,
     packageDimensionWidth: 12,
     packageDimensionHeight: 12,
@@ -87,7 +84,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
       const isModalVisible = await productsPage.clickOnNewProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      expect(isModalVisible).to.equals(true);
     });
 
     it('should choose \'Standard product\' and go to new product page', async function () {
@@ -97,14 +94,14 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
       await productsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductPage.pageTitle);
+      expect(pageTitle).to.contains(createProductPage.pageTitle);
     });
 
     it('should create standard product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
       const createProductMessage = await createProductPage.setProduct(page, newProductData);
-      await expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
+      expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
     });
   });
 
@@ -357,7 +354,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should select the first carrier and check the shipping price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice1', baseContext);
 
-      await checkoutPage.chooseShippingMethod(page, Carriers.myCarrier.id);
+      await checkoutPage.chooseShippingMethod(page, dataCarriers.myCarrier.id);
 
       const shippingCost = await checkoutPage.getShippingCost(page);
       expect(shippingCost).to.equal('€20.40');
@@ -408,7 +405,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
       await cartPage.clickOnProceedToCheckout(page);
 
       const carriers = await checkoutPage.getAllCarriersNames(page);
-      expect(carriers).to.deep.eq([Carriers.default.name]);
+      expect(carriers).to.deep.eq([dataCarriers.clickAndCollect.name]);
     });
 
     it('should go back to BO', async function () {

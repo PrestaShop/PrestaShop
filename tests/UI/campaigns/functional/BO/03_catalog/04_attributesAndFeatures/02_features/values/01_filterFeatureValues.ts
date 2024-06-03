@@ -10,12 +10,12 @@ import attributesPage from '@pages/BO/catalog/attributes';
 import featuresPage from '@pages/BO/catalog/features';
 import viewFeaturePage from '@pages/BO/catalog/features/view';
 
-// Import data
-import Features from '@data/demo/features';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataFeatures,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_features_values_filterFeatureValues';
 
@@ -66,10 +66,10 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
     await testContext.addContextItem(this, 'testIdentifier', 'filterFeatures', baseContext);
 
     await featuresPage.resetFilter(page);
-    await featuresPage.filterTable(page, 'name', Features.composition.name);
+    await featuresPage.filterTable(page, 'name', dataFeatures.composition.name);
 
     const textColumn = await featuresPage.getTextColumn(page, 1, 'name', 'id_feature');
-    expect(textColumn).to.contains(Features.composition.name);
+    expect(textColumn).to.contains(dataFeatures.composition.name);
   });
 
   it('should view feature', async function () {
@@ -78,7 +78,7 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
     await featuresPage.viewFeature(page, 1);
 
     const pageTitle = await viewFeaturePage.getPageTitle(page);
-    expect(pageTitle).to.contains(`${Features.composition.name} • ${global.INSTALL.SHOP_NAME}`);
+    expect(pageTitle).to.contains(`${dataFeatures.composition.name} • ${global.INSTALL.SHOP_NAME}`);
   });
 
   it('should reset all filters and get number of features in BO', async function () {
@@ -95,7 +95,7 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
           {
             testIdentifier: 'filterId',
             filterBy: 'id_feature_value',
-            filterValue: Features.composition.values[0].id.toString(),
+            filterValue: dataFeatures.composition.values[0].id.toString(),
           },
       },
       {
@@ -103,7 +103,7 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
           {
             testIdentifier: 'filterValue',
             filterBy: 'value',
-            filterValue: Features.composition.values[0].value,
+            filterValue: dataFeatures.composition.values[0].value,
           },
       },
     ];

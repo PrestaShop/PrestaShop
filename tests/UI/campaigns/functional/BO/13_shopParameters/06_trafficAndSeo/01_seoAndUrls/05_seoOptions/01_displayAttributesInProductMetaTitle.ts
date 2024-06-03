@@ -12,13 +12,13 @@ import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Attributes from '@data/demo/attributes';
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataAttributes,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_seoOptions_'
   + 'displayAttributesInProductMetaTitle';
@@ -60,15 +60,15 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       args: {
         action: 'enable',
         enable: true,
-        metaTitle: `${Products.demo_1.name} ${Attributes.size.name} ${Attributes.size.values[0].value}`
-          + ` ${Attributes.color.name} ${Attributes.color.values[3].value}`,
+        metaTitle: `${dataProducts.demo_1.name} ${dataAttributes.size.name} ${dataAttributes.size.values[0].value}`
+          + ` ${dataAttributes.color.name} ${dataAttributes.color.values[3].value}`,
       },
     },
     {
       args: {
         action: 'disable',
         enable: false,
-        metaTitle: Products.demo_1.name,
+        metaTitle: dataProducts.demo_1.name,
       },
     },
   ];

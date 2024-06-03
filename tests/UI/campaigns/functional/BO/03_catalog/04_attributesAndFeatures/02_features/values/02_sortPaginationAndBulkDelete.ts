@@ -12,13 +12,13 @@ import featuresPage from '@pages/BO/catalog/features';
 import addValuePage from '@pages/BO/catalog/features/addValue';
 import viewFeaturePage from '@pages/BO/catalog/features/view';
 
-// Import data
-import Features from '@data/demo/features';
-import FeatureValueData from '@data/faker/featureValue';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataFeatures,
+  FakerFeatureValue,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_features_values_sortPaginationAndBulkDelete';
 
@@ -77,7 +77,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
   it('should filter list of features by name \'Composition\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDeleteAttributes', baseContext);
 
-    await featuresPage.filterTable(page, 'name', Features.composition.name);
+    await featuresPage.filterTable(page, 'name', dataFeatures.composition.name);
 
     const textColumn = await featuresPage.getTextColumn(page, 1, 'name', 'id_feature');
     expect(textColumn).to.contains('Composition');
@@ -89,7 +89,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
     await featuresPage.viewFeature(page, 1);
 
     const pageTitle = await viewFeaturePage.getPageTitle(page);
-    expect(pageTitle).to.contains(`${Features.composition.name} • ${global.INSTALL.SHOP_NAME}`);
+    expect(pageTitle).to.contains(`${dataFeatures.composition.name} • ${global.INSTALL.SHOP_NAME}`);
 
     numberOfValues = await viewFeaturePage.resetAndGetNumberOfLines(page);
     expect(numberOfValues).to.be.above(0);
@@ -108,7 +108,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
     });
 
     creationTests.forEach((test: number, index: number) => {
-      const createFeatureValueData: FeatureValueData = new FeatureValueData({
+      const createFeatureValueData: FakerFeatureValue = new FakerFeatureValue({
         featureName: 'Composition',
         value: `todelete${index}`,
       });
@@ -128,7 +128,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
       await testContext.addContextItem(this, 'testIdentifier', 'viewFeatureComposition2', baseContext);
 
       const pageTitle = await viewFeaturePage.getPageTitle(page);
-      expect(pageTitle).to.contains(`${Features.composition.name} • ${global.INSTALL.SHOP_NAME}`);
+      expect(pageTitle).to.contains(`${dataFeatures.composition.name} • ${global.INSTALL.SHOP_NAME}`);
 
       const numberOfValuesAfterCreation = await viewFeaturePage.resetAndGetNumberOfLines(page);
       expect(numberOfValuesAfterCreation).to.equal(numberOfValues + 15);

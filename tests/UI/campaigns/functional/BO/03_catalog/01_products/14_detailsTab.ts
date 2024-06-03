@@ -17,12 +17,14 @@ import filesPage from '@pages/BO/catalog/files';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import ProductData from '@data/faker/product';
 import {ProductFeatures} from '@data/types/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_detailsTab';
 
@@ -31,7 +33,7 @@ describe('BO - Catalog - Products : Details tab', async () => {
   let page: Page;
 
   // Data to create standard product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     quantity: 100,
     minimumQuantity: 1,
@@ -42,7 +44,7 @@ describe('BO - Catalog - Products : Details tab', async () => {
     isbn: 'lorem ipsum',
   });
   // Data to edit standard product
-  const editProductData: ProductData = new ProductData({
+  const editProductData: FakerProduct = new FakerProduct({
     mpn: 'HSC0424PP',
     upc: '987654321098',
     ean13: '9782409038600',

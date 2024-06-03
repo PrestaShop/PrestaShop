@@ -14,17 +14,14 @@ import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import Carriers from '@data/demo/carriers';
-import OrderData from '@data/faker/order';
-import ProductData from '@data/faker/product';
-
 import {
   boDashboardPage,
-  // Import data
+  dataCarriers,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  FakerOrder,
+  FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -60,21 +57,21 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
   // Prefix for the new products to simply delete them by bulk actions
   const prefixNewProduct: string = 'TOTEST';
   // First product to create
-  const firstProduct: ProductData = new ProductData({
+  const firstProduct: FakerProduct = new FakerProduct({
     name: `First product ${prefixNewProduct}`,
     type: 'standard',
     taxRule: 'No tax',
     quantity: 20,
   });
   // Second product to create
-  const secondProduct: ProductData = new ProductData({
+  const secondProduct: FakerProduct = new FakerProduct({
     name: `second product ${prefixNewProduct}`,
     type: 'standard',
     taxRule: 'No tax',
     quantity: 20,
   });
   // New order by customer data
-  const orderByCustomerData: OrderData = new OrderData({
+  const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
@@ -86,8 +83,8 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
   });
   const carrierDataToSelect: OrderShippingData = new OrderShippingData({
     trackingNumber: '',
-    carrier: Carriers.myCarrier.name,
-    carrierID: Carriers.myCarrier.id,
+    carrier: dataCarriers.myCarrier.name,
+    carrierID: dataCarriers.myCarrier.id,
   });
 
   // Pre-condition: Create first product
@@ -189,7 +186,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       await orderPageProductsBlock.selectInvoice(page);
 
       const carrierName = await orderPageProductsBlock.getNewInvoiceCarrierName(page);
-      expect(carrierName).to.contains(`Carrier : ${Carriers.default.name}`);
+      expect(carrierName).to.contains(`Carrier : ${dataCarriers.clickAndCollect.name}`);
 
       const isSelected = await orderPageProductsBlock.isFreeShippingSelected(page);
       expect(isSelected).to.eq(false);
@@ -357,7 +354,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       expect(isModalVisible, 'Edit shipping modal is not visible!').to.eq(true);
     });
 
-    it(`should select the default not free carrier '${Carriers.myCarrier.name}'`, async function () {
+    it(`should select the default not free carrier '${dataCarriers.myCarrier.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectNewCarrier', baseContext);
 
       const textResult = await orderPageTabListBlock.setShippingDetails(page, carrierDataToSelect);
@@ -380,7 +377,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       await orderPageProductsBlock.selectInvoice(page);
 
       const carrierName = await orderPageProductsBlock.getNewInvoiceCarrierName(page);
-      expect(carrierName).to.contains(`Carrier : ${Carriers.myCarrier.name}`);
+      expect(carrierName).to.contains(`Carrier : ${dataCarriers.myCarrier.name}`);
 
       const isSelected = await orderPageProductsBlock.isFreeShippingSelected(page);
       expect(isSelected).to.eq(false);

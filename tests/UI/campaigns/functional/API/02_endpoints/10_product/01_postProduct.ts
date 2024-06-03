@@ -16,13 +16,15 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 // Import data
-import Languages from '@data/demo/languages';
 import APIClientData from '@data/faker/APIClient';
-import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_product_postProduct';
 
@@ -41,7 +43,7 @@ describe('API : POST /product', async () => {
       clientScope,
     ],
   });
-  const createProduct: ProductData = new ProductData({});
+  const createProduct: FakerProduct = new FakerProduct({});
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -142,12 +144,12 @@ describe('API : POST /product', async () => {
           type: createProduct.type,
           active: createProduct.status,
           names: {
-            [Languages.english.id]: createProduct.name,
-            [Languages.french.id]: createProduct.nameFR,
+            [dataLanguages.english.id]: createProduct.name,
+            [dataLanguages.french.id]: createProduct.nameFR,
           },
           descriptions: {
-            [Languages.english.id]: createProduct.description,
-            [Languages.french.id]: createProduct.descriptionFR,
+            [dataLanguages.english.id]: createProduct.description,
+            [dataLanguages.french.id]: createProduct.descriptionFR,
           },
         },
       });
@@ -175,11 +177,11 @@ describe('API : POST /product', async () => {
 
       expect(jsonResponse.productId).to.be.gt(0);
       expect(jsonResponse.type).to.equal(createProduct.type);
-      expect(jsonResponse.names[Languages.english.id]).to.equal(createProduct.name);
-      expect(jsonResponse.names[Languages.french.id]).to.equal(createProduct.nameFR);
+      expect(jsonResponse.names[dataLanguages.english.id]).to.equal(createProduct.name);
+      expect(jsonResponse.names[dataLanguages.french.id]).to.equal(createProduct.nameFR);
       // @todo : https://github.com/PrestaShop/PrestaShop/issues/35619
-      //expect(jsonResponse.descriptions[Languages.english.id]).to.equal(createProduct.description);
-      //expect(jsonResponse.descriptions[Languages.french.id]).to.equal(createProduct.descriptionFR);
+      //expect(jsonResponse.descriptions[dataLanguages.english.id]).to.equal(createProduct.description);
+      //expect(jsonResponse.descriptions[dataLanguages.french.id]).to.equal(createProduct.descriptionFR);
     });
   });
 
@@ -237,29 +239,29 @@ describe('API : POST /product', async () => {
     it('should check the JSON Response : `names` (EN)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseNamesEN', baseContext);
 
-      const value = await createProductsPage.getProductName(page, Languages.english.isoCode);
-      expect(value).to.equal(jsonResponse.names[Languages.english.id]);
+      const value = await createProductsPage.getProductName(page, dataLanguages.english.isoCode);
+      expect(value).to.equal(jsonResponse.names[dataLanguages.english.id]);
     });
 
     it('should check the JSON Response : `names` (FR)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseNamesFR', baseContext);
 
-      const value = await createProductsPage.getProductName(page, Languages.french.isoCode);
-      expect(value).to.equal(jsonResponse.names[Languages.french.id]);
+      const value = await createProductsPage.getProductName(page, dataLanguages.french.isoCode);
+      expect(value).to.equal(jsonResponse.names[dataLanguages.french.id]);
     });
 
     it('should check the JSON Response : `description` (EN)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDescriptionsEN', baseContext);
 
-      const value = await descriptionTab.getValue(page, 'description', Languages.english.id.toString());
-      expect(value).to.equal(jsonResponse.descriptions[Languages.english.id]);
+      const value = await descriptionTab.getValue(page, 'description', dataLanguages.english.id.toString());
+      expect(value).to.equal(jsonResponse.descriptions[dataLanguages.english.id]);
     });
 
     it('should check the JSON Response : `description` (FR)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDescriptionsFR', baseContext);
 
-      const value = await descriptionTab.getValue(page, 'description', Languages.french.id.toString());
-      expect(value).to.equal(jsonResponse.descriptions[Languages.french.id]);
+      const value = await descriptionTab.getValue(page, 'description', dataLanguages.french.id.toString());
+      expect(value).to.equal(jsonResponse.descriptions[dataLanguages.french.id]);
     });
   });
 

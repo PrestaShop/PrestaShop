@@ -17,15 +17,17 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 // Import data
-import Languages from '@data/demo/languages';
 import APIClientData from '@data/faker/APIClient';
-import ProductData from '@data/faker/product';
 import {ProductImageInformation} from '@data/types/product';
 
 import {expect} from 'chai';
 import fs from 'fs';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataLanguages,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_product_postProductIdImage';
 
@@ -46,7 +48,7 @@ describe('API : POST /product/{productId}/image', async () => {
       clientScope,
     ],
   });
-  const createProduct: ProductData = new ProductData({});
+  const createProduct: FakerProduct = new FakerProduct({});
 
   createProductTest(createProduct, `${baseContext}_preTest`);
 
@@ -217,10 +219,10 @@ describe('API : POST /product/{productId}/image', async () => {
 
         expect(jsonResponse.thumbnailUrl).to.be.a('string');
 
-        expect(jsonResponse.legends[Languages.english.id]).to.be.a('string');
-        expect(jsonResponse.legends[Languages.english.id]).to.equals('');
-        expect(jsonResponse.legends[Languages.french.id]).to.be.a('string');
-        expect(jsonResponse.legends[Languages.french.id]).to.equals('');
+        expect(jsonResponse.legends[dataLanguages.english.id]).to.be.a('string');
+        expect(jsonResponse.legends[dataLanguages.english.id]).to.equals('');
+        expect(jsonResponse.legends[dataLanguages.french.id]).to.be.a('string');
+        expect(jsonResponse.legends[dataLanguages.french.id]).to.equals('');
 
         expect(jsonResponse.cover).to.be.a('boolean');
         expect(jsonResponse.cover).to.be.equals(true);
@@ -254,8 +256,8 @@ describe('API : POST /product/{productId}/image', async () => {
       it('should check the JSON Response : `legends`', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLegends', baseContext);
 
-        expect(productImageInformation.caption.en).to.equal(jsonResponse.legends[Languages.english.id]);
-        expect(productImageInformation.caption.fr).to.equal(jsonResponse.legends[Languages.french.id]);
+        expect(productImageInformation.caption.en).to.equal(jsonResponse.legends[dataLanguages.english.id]);
+        expect(productImageInformation.caption.fr).to.equal(jsonResponse.legends[dataLanguages.french.id]);
       });
 
       it('should check the JSON Response : `cover`', async function () {

@@ -1,10 +1,10 @@
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
 
-// Import data
-import OrderReturnStatusData from '@data/faker/orderReturnStatus';
-
 import {Page} from 'playwright';
+import {
+  type FakerOrderReturnStatus,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add order return status page, contains selectors and functions for the page
@@ -43,10 +43,10 @@ class AddOrderReturnStatus extends BOBasePage {
   /**
    * Fill order return status form
    * @param page {Page} Browser tab
-   * @param orderReturnStatusData {OrderReturnStatusData} Data to set on order return status form
+   * @param orderReturnStatusData {FakerOrderReturnStatus} Data to set on order return status form
    * @return {Promise<string>}
    */
-  async setOrderReturnStatus(page: Page, orderReturnStatusData: OrderReturnStatusData): Promise<string> {
+  async setOrderReturnStatus(page: Page, orderReturnStatusData: FakerOrderReturnStatus): Promise<string> {
     await this.setValue(page, this.nameInput, orderReturnStatusData.name);
 
     // Set color

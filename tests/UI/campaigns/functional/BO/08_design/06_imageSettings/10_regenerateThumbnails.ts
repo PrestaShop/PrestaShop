@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
-// Import datas
-import {ImageTypeRegenerationSpecific} from '@data/types/imageType';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  type ImageTypeRegenerationSpecific,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_regenerateThumbnails';
 

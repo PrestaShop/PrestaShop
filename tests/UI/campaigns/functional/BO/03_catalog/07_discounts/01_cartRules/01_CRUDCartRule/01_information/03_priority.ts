@@ -16,12 +16,14 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 // Import data
-import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_information_priority';
 
@@ -149,7 +151,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
       await foHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
@@ -174,7 +176,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
     it('should check the total after discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount', baseContext);
 
-      const totalAfterDiscount = Products.demo_1.finalPrice
+      const totalAfterDiscount = dataProducts.demo_1.finalPrice
         - (cartRulePriority2.discountAmount!.value + cartRulePriority1.discountAmount!.value);
 
       const priceATI = await cartPage.getATIPrice(page);

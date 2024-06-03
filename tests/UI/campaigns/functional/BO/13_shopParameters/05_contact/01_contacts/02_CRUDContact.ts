@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import contactsPage from '@pages/BO/shopParameters/contact';
 import addContactPage from '@pages/BO/shopParameters/contact/add';
 
-// Import data
-import ContactData from '@data/faker/contact';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerContact,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_contact_contacts_CRUDContact';
 
@@ -24,8 +24,8 @@ describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in 
   let page: Page;
   let numberOfContacts: number = 0;
 
-  const createContactData: ContactData = new ContactData();
-  const editContactData: ContactData = new ContactData({saveMessage: false});
+  const createContactData: FakerContact = new FakerContact();
+  const editContactData: FakerContact = new FakerContact({saveMessage: false});
 
   // before and after functions
   before(async function () {

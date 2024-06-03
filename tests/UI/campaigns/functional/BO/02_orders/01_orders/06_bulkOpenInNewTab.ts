@@ -11,16 +11,13 @@ import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
-// Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
   dataPaymentMethods,
+  dataProducts,
   FakerAddress,
   FakerCustomer,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -45,22 +42,22 @@ describe('BO - Orders : Bulk open on new tab', async () => {
   const firstCustomerData: FakerCustomer = new FakerCustomer();
   const secondCustomerData: FakerCustomer = new FakerCustomer();
   const addressData: FakerAddress = new FakerAddress({country: 'France'});
-  const firstOrderByGuestData: OrderData = new OrderData({
+  const firstOrderByGuestData: FakerOrder = new FakerOrder({
     customer: firstCustomerData,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
     deliveryAddress: addressData,
     paymentMethod: dataPaymentMethods.wirePayment,
   });
-  const secondOrderByGuestData: OrderData = new OrderData({
+  const secondOrderByGuestData: FakerOrder = new FakerOrder({
     customer: secondCustomerData,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],

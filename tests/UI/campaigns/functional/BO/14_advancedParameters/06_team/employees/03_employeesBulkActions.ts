@@ -9,24 +9,24 @@ import loginCommon from '@commonTests/BO/loginBO';
 import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 
-// Import data
-import EmployeeData from '@data/faker/employee';
-import Employees from '@data/demo/employees';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataEmployees,
+  FakerEmployee,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_employees_employeesBulkActions';
 
 // Create Employees, Then disable / Enable and Delete with Bulk actions
 describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delete Employees', async () => {
-  const firstEmployeeData: EmployeeData = new EmployeeData({
+  const firstEmployeeData: FakerEmployee = new FakerEmployee({
     firstName: 'todelete',
     defaultPage: 'Orders',
     permissionProfile: 'Logistician',
   });
-  const secondEmployeeData: EmployeeData = new EmployeeData({
+  const secondEmployeeData: FakerEmployee = new FakerEmployee({
     firstName: 'todelete',
     defaultPage: 'Orders',
     permissionProfile: 'Logistician',
@@ -76,10 +76,10 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
     it('should filter by First name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterDefaultEmployee', baseContext);
 
-      await employeesPage.filterEmployees(page, 'input', 'firstname', Employees.DefaultEmployee.firstName);
+      await employeesPage.filterEmployees(page, 'input', 'firstname', dataEmployees.defaultEmployee.firstName);
 
       const textColumn = await employeesPage.getTextColumnFromTable(page, 1, 'firstname');
-      expect(textColumn).to.contains(Employees.DefaultEmployee.firstName);
+      expect(textColumn).to.contains(dataEmployees.defaultEmployee.firstName);
     });
 
     const statuses = [
@@ -108,9 +108,9 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
 
   // 3 : Create employees and Filter with all inputs and selects in grid table in BO
   describe('Case 2 : Create 2 employees then filter the table', async () => {
-    const employeesToCreate: EmployeeData[] = [firstEmployeeData, secondEmployeeData];
+    const employeesToCreate: FakerEmployee[] = [firstEmployeeData, secondEmployeeData];
 
-    employeesToCreate.forEach((employeeToCreate: EmployeeData, index: number) => {
+    employeesToCreate.forEach((employeeToCreate: FakerEmployee, index: number) => {
       it('should go to add new employee page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewEmployeePage${index + 1}`, baseContext);
 

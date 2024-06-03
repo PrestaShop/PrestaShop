@@ -12,12 +12,12 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsGeneral_catalogMode';
 
@@ -130,7 +130,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
           await homePage.goToProductPage(page, 1);
 
           const pageTitle = await productPage.getPageTitle(page);
-          expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+          expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
         });
 
         it('should check the existence of product price and add to cart button', async function () {
@@ -176,7 +176,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
         await homePage.goToProductPage(page, 1);
 
         const pageTitle = await productPage.getPageTitle(page);
-        expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
       });
 
       it('should check the existence of product price and add to cart button', async function () {

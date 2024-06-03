@@ -12,11 +12,11 @@ import productPage from '@pages/FO/hummingbird/product';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
-// Import demo data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_cart_cart_displayModalProductCustomization';
 
@@ -48,10 +48,10 @@ describe('FO - cart : Display modal of product customization', async () => {
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
-    it(`should search for the product '${Products.demo_14.name}'`, async function () {
+    it(`should search for the product '${dataProducts.demo_14.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_14.name);
+      await homePage.searchProduct(page, dataProducts.demo_14.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -63,7 +63,7 @@ describe('FO - cart : Display modal of product customization', async () => {
       await searchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_14.name);
+      expect(pageTitle).to.contains(dataProducts.demo_14.name);
     });
 
     it('should add custom text and add the product to cart', async function () {

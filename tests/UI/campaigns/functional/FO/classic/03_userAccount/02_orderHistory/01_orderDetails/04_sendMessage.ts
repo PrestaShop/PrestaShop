@@ -22,15 +22,12 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -65,8 +62,8 @@ describe('FO - Account : Send a message with an ordered product', async () => {
   let mailListener: MailDev;
 
   const messageSend: string = faker.lorem.sentence().substring(0, 35).trim();
-  const messageOption: string = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes[0].values[0]} `
-    + `- Color: ${Products.demo_1.attributes[1].values[0]})`;
+  const messageOption: string = `${dataProducts.demo_1.name} (Size: ${dataProducts.demo_1.attributes[0].values[0]} `
+    + `- Color: ${dataProducts.demo_1.attributes[1].values[0]})`;
 
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest`);

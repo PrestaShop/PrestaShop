@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_modules_enableDisableModule';
 
@@ -54,30 +54,30 @@ describe('BO - Modules - Module Manager : Enable/Disable module', async () => {
       args: {
         title: 'disable the module',
         action: 'disable',
-        message: moduleManagerPage.disableModuleSuccessMessage(Modules.availableQuantities.tag),
+        message: moduleManagerPage.disableModuleSuccessMessage(dataModules.availableQuantities.tag),
       },
     },
   ].forEach((test) => {
     it(`should ${test.args.title}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.action, baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.availableQuantities, test.args.action);
+      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.availableQuantities, test.args.action);
       expect(successMessage).to.eq(test.args.message);
     });
   });
 
-  it(`should search the module ${Modules.availableQuantities.name}`, async function () {
+  it(`should search the module ${dataModules.availableQuantities.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.availableQuantities);
+    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.availableQuantities);
     expect(isModuleVisible).to.eq(true);
   });
 
   it('should enable the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableModule', baseContext);
 
-    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.availableQuantities, 'enable');
-    expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(Modules.availableQuantities.tag));
+    const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.availableQuantities, 'enable');
+    expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(dataModules.availableQuantities.tag));
   });
 
   it('should show all modules', async function () {

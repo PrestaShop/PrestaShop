@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type RoleData from '@data/faker/role';
-
 import type {Page} from 'playwright';
+import {
+  type FakerEmployeeRole,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add profile page, contains functions that can be used on the page
@@ -41,10 +42,10 @@ class AddRole extends BOBasePage {
   /**
    * Fill form for add/edit page profile
    * @param page {Page} Browser tab
-   * @param roleData {RoleData} Data to set on add/edit profile form
+   * @param roleData {FakerEmployeeRole} Data to set on add/edit profile form
    * @return {Promise<string>}
    */
-  async createEditRole(page: Page, roleData: RoleData): Promise<string> {
+  async createEditRole(page: Page, roleData: FakerEmployeeRole): Promise<string> {
     await this.setValue(page, this.nameInput, roleData.name);
     await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);

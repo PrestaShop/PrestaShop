@@ -25,18 +25,15 @@ import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 import returnDetailsPage from '@pages/FO/hummingbird/myAccount/returnDetails';
 
-// Import data
-import Addresses from '@data/demo/address';
-import Products from '@data/demo/products';
-import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
+  dataAddresses,
   dataCustomers,
+  dataOrderReturnStatuses,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -68,11 +65,11 @@ describe('FO - Account : Check order return PDF', async () => {
 
   const today: string = date.getDateFormat('mm/dd/yyyy');
   // New order by customer data
-  const orderData: OrderData = new OrderData({
+  const orderData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -264,7 +261,7 @@ describe('FO - Account : Check order return PDF', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus1', baseContext);
 
       const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
-      expect(packageStatus).to.equal(OrderReturnStatuses.waitingForConfirmation.name);
+      expect(packageStatus).to.equal(dataOrderReturnStatuses.waitingForConfirmation.name);
     });
 
     it('should verify the order return date issued', async function () {
@@ -296,14 +293,14 @@ describe('FO - Account : Check order return PDF', async () => {
       const orderReturnInfo = await returnDetailsPage.getOrderReturnInfo(page);
       expect(orderReturnInfo)
         .to.contains(`on ${orderDate} ${returnDetailsPage.orderReturnCardBlock}`)
-        .and.to.contains(OrderReturnStatuses.waitingForConfirmation.name)
-        .and.to.contains(`List of items to be returned: Product Quantity ${Products.demo_1.name} `
-          + `(Size: S - Color: White) Reference: ${Products.demo_1.reference} 1`);
+        .and.to.contains(dataOrderReturnStatuses.waitingForConfirmation.name)
+        .and.to.contains(`List of items to be returned: Product Quantity ${dataProducts.demo_1.name} `
+          + `(Size: S - Color: White) Reference: ${dataProducts.demo_1.reference} 1`);
     });
   });
 
   describe('Check the return details PDF', async () => {
-    describe(`Change the merchandise returns status to '${OrderReturnStatuses.waitingForPackage.name}'`, async () => {
+    describe(`Change the merchandise returns status to '${dataOrderReturnStatuses.waitingForPackage.name}'`, async () => {
       it('should go to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToBO', baseContext);
 
@@ -361,7 +358,7 @@ describe('FO - Account : Check order return PDF', async () => {
       it('should edit merchandise returns status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editReturnStatus', baseContext);
 
-        const textResult = await editMerchandiseReturnsPage.setStatus(page, OrderReturnStatuses.waitingForPackage.name);
+        const textResult = await editMerchandiseReturnsPage.setStatus(page, dataOrderReturnStatuses.waitingForPackage.name);
         expect(textResult).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
       });
     });
@@ -401,7 +398,7 @@ describe('FO - Account : Check order return PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus2', baseContext);
 
         const fileName = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
-        expect(fileName).to.be.equal(OrderReturnStatuses.waitingForPackage.name);
+        expect(fileName).to.be.equal(dataOrderReturnStatuses.waitingForPackage.name);
       });
 
       it('should download the return form', async function () {
@@ -424,9 +421,9 @@ describe('FO - Account : Check order return PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress', baseContext);
 
         const isVisible = await files.isTextInPDF(filePath, `Billing & Delivery Address,,${dataCustomers.johnDoe.firstName}`
-          + ` ${dataCustomers.johnDoe.lastName},${Addresses.second.company},${Addresses.second.address},`
-          + `${Addresses.second.secondAddress},${Addresses.second.postalCode} ${Addresses.second.city}`
-          + `,${Addresses.second.country},${Addresses.second.phone},,`);
+          + ` ${dataCustomers.johnDoe.lastName},${dataAddresses.address_2.company},${dataAddresses.address_2.address},`
+          + `${dataAddresses.address_2.secondAddress},${dataAddresses.address_2.postalCode} ${dataAddresses.address_2.city}`
+          + `,${dataAddresses.address_2.country},${dataAddresses.address_2.phone},,`);
 
         expect(isVisible, 'Billing and delivery address are not correct!').to.eq(true);
       });
@@ -443,7 +440,7 @@ describe('FO - Account : Check order return PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkReturnedProduct', baseContext);
 
         const isVisible = await files.isTextInPDF(filePath, 'Items to be returned, ,Reference, ,Qty,,'
-          + `${Products.demo_1.name} (Size: S - Color: White), ,${Products.demo_1.reference}, ,1`);
+          + `${dataProducts.demo_1.name} (Size: S - Color: White), ,${dataProducts.demo_1.reference}, ,1`);
 
         expect(isVisible, 'returned product list is not correct!').to.eq(true);
       });

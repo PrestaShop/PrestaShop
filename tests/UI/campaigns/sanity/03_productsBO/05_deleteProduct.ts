@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_productsBO_deleteProduct';
 
@@ -24,7 +24,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
   let numberOfProducts: number = 0;
 
   // Data to create standard product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     quantity: 50,
     minimumQuantity: 1,

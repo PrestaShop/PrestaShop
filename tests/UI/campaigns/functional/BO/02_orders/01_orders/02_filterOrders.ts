@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import ordersPage from '@pages/BO/orders';
 
-// Import data
-import Orders from '@data/demo/orders';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataOrders,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_orders_filterOrders';
 
@@ -70,7 +70,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterById',
           filterType: 'input',
           filterBy: 'id_order',
-          filterValue: Orders.firstOrder.id.toString(),
+          filterValue: dataOrders.order_1.id.toString(),
         },
     },
     {
@@ -79,7 +79,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByReference',
           filterType: 'input',
           filterBy: 'reference',
-          filterValue: Orders.fourthOrder.reference,
+          filterValue: dataOrders.order_4.reference,
         },
     },
     {
@@ -88,7 +88,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByNewClient',
           filterType: 'select',
           filterBy: 'new',
-          filterValue: Orders.firstOrder.newClient ? 'Yes' : 'No',
+          filterValue: dataOrders.order_1.newClient ? 'Yes' : 'No',
         },
     },
     {
@@ -97,7 +97,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByDelivery',
           filterType: 'select',
           filterBy: 'country_name',
-          filterValue: Orders.firstOrder.delivery,
+          filterValue: dataOrders.order_1.delivery,
         },
     },
     {
@@ -106,7 +106,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByCustomer',
           filterType: 'input',
           filterBy: 'customer',
-          filterValue: `${Orders.firstOrder.customer.firstName[0]}. ${Orders.firstOrder.customer.lastName.toUpperCase()}`,
+          filterValue: `${dataOrders.order_1.customer.firstName[0]}. ${dataOrders.order_1.customer.lastName.toUpperCase()}`,
         },
     },
     {
@@ -115,7 +115,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByTotalPaid',
           filterType: 'input',
           filterBy: 'total_paid_tax_incl',
-          filterValue: Orders.fourthOrder.totalPaid.toString(),
+          filterValue: dataOrders.order_4.totalPaid.toString(),
         },
     },
     {
@@ -124,7 +124,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByPayment',
           filterType: 'input',
           filterBy: 'payment',
-          filterValue: Orders.firstOrder.paymentMethod.name,
+          filterValue: dataOrders.order_1.paymentMethod.name,
         },
     },
     {
@@ -133,7 +133,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterOsName',
           filterType: 'select',
           filterBy: 'osname',
-          filterValue: Orders.thirdOrder.status?.name,
+          filterValue: dataOrders.order_3.status?.name,
         },
     },
   ].forEach((test) => {

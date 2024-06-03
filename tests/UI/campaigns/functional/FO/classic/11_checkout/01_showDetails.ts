@@ -11,11 +11,11 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_checkout_showDetails';
 
@@ -101,10 +101,10 @@ describe('FO - Checkout : Show details', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkFirstProductDetails', baseContext);
     const result = await checkoutPage.getProductDetails(page, 1);
     await Promise.all([
-      expect(result.image).to.contains(Products.demo_1.coverImage),
-      expect(result.name).to.equal(Products.demo_1.name),
+      expect(result.image).to.contains(dataProducts.demo_1.coverImage),
+      expect(result.name).to.equal(dataProducts.demo_1.name),
       expect(result.quantity).to.equal(1),
-      expect(result.price).to.equal(Products.demo_1.finalPrice),
+      expect(result.price).to.equal(dataProducts.demo_1.finalPrice),
     ]);
 
     const attributes = await checkoutPage.getProductAttributes(page, 1);
@@ -115,10 +115,10 @@ describe('FO - Checkout : Show details', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSecondProductDetails', baseContext);
     const result = await checkoutPage.getProductDetails(page, 2);
     await Promise.all([
-      expect(result.image).to.contains(Products.demo_6.coverImage),
-      expect(result.name).to.equal(Products.demo_6.name),
+      expect(result.image).to.contains(dataProducts.demo_6.coverImage),
+      expect(result.name).to.equal(dataProducts.demo_6.name),
       expect(result.quantity).to.equal(2),
-      expect(result.price).to.equal(Products.demo_6.combinations[0].price),
+      expect(result.price).to.equal(dataProducts.demo_6.combinations[0].price),
     ]);
 
     const attributes = await checkoutPage.getProductAttributes(page, 2);
@@ -131,7 +131,7 @@ describe('FO - Checkout : Show details', async () => {
     page = await checkoutPage.clickOnProductName(page, 1);
 
     const productInformation = await productPage.getProductInformation(page);
-    expect(productInformation.name).to.equal(Products.demo_1.name);
+    expect(productInformation.name).to.equal(dataProducts.demo_1.name);
   });
 
   it('should close the page and click on the first product image', async function () {
@@ -141,6 +141,6 @@ describe('FO - Checkout : Show details', async () => {
     await checkoutPage.clickOnProductImage(page, 1);
 
     const productInformation = await productPage.getProductInformation(page);
-    expect(productInformation.name).to.equal(Products.demo_1.name);
+    expect(productInformation.name).to.equal(dataProducts.demo_1.name);
   });
 });

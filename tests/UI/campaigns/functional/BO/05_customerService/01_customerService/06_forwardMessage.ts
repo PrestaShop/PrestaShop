@@ -15,7 +15,6 @@ import viewPage from '@pages/BO/customerService/customerService/view';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
-import Products from '@data/demo/products';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -27,14 +26,14 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
 import MessageData from '@data/faker/message';
-import EmployeeData from '@data/faker/employee';
 import type MailDevEmail from '@data/types/maildevEmail';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataPaymentMethods,
+  dataProducts,
+  FakerEmployee,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -49,7 +48,7 @@ describe('BO - Customer Service : Forward message', async () => {
   let newMail: MailDevEmail;
   let mailListener: MailDev;
 
-  const employeeData = new EmployeeData({
+  const employeeData: FakerEmployee = new FakerEmployee({
     defaultPage: 'Products',
     language: 'English (English)',
     permissionProfile: 'SuperAdmin',
@@ -63,8 +62,8 @@ describe('BO - Customer Service : Forward message', async () => {
 
   const messageSend: string = 'I want to exchange my product';
 
-  const messageOption: string = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes[0].values[0]} `
-    + `- Color: ${Products.demo_1.attributes[1].values[0]})`;
+  const messageOption: string = `${dataProducts.demo_1.name} (Size: ${dataProducts.demo_1.attributes[0].values[0]} `
+    + `- Color: ${dataProducts.demo_1.attributes[1].values[0]})`;
 
   // Pre-condition: Create new employee
   createEmployeeTest(employeeData, `${baseContext}_preTest_1`);

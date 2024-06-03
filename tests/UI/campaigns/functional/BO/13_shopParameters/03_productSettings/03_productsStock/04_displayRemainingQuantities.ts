@@ -15,12 +15,12 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsStock_displayRemainingQuantities';
 
@@ -35,7 +35,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductData = new ProductData({type: 'standard', quantity: 2});
+  const productData: FakerProduct = new FakerProduct({type: 'standard', quantity: 2});
   const remainingQuantity: number = 0;
   const defaultRemainingQuantity: number = 3;
 

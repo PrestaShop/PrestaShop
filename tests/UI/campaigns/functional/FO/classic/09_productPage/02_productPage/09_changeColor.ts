@@ -7,11 +7,11 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_changeColor';
 
@@ -39,10 +39,10 @@ describe('FO - Product page - Product page : Change Color', async () => {
     expect(isHomePage).to.equal(true);
   });
 
-  it(`should search the product "${Products.demo_1.name}"`, async function () {
+  it(`should search the product "${dataProducts.demo_1.name}"`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchDemo1', baseContext);
 
-    await homePage.searchProduct(page, Products.demo_1.name);
+    await homePage.searchProduct(page, dataProducts.demo_1.name);
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -54,7 +54,7 @@ describe('FO - Product page - Product page : Change Color', async () => {
     await searchResultsPage.goToProductPage(page, 1);
 
     const pageTitle = await productPage.getPageTitle(page);
-    expect(pageTitle).to.contains(Products.demo_1.name);
+    expect(pageTitle).to.contains(dataProducts.demo_1.name);
   });
 
   it('should get the default color selected', async function () {

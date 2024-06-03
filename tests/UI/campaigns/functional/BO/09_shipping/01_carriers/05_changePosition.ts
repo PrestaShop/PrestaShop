@@ -19,8 +19,11 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 // Import data
-import {boDashboardPage, dataCustomers} from '@prestashop-core/ui-testing';
-import Carriers from '@data/demo/carriers';
+import {
+  boDashboardPage,
+  dataCarriers,
+  dataCustomers,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shipping_carriers_changePosition';
 
@@ -84,7 +87,7 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPosition', baseContext);
 
       const carriers = await checkoutPage.getAllCarriersNames(page);
-      expect(carriers).to.deep.equal([Carriers.default.name, Carriers.myCarrier.name]);
+      expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, dataCarriers.myCarrier.name]);
     });
 
     it('should open the back office in new tab', async function () {
@@ -156,7 +159,7 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
       await checkoutPage.reloadPage(page);
 
       const carriers = await checkoutPage.getAllCarriersNames(page);
-      expect(carriers).to.deep.equal([Carriers.myCarrier.name, Carriers.default.name]);
+      expect(carriers).to.deep.equal([dataCarriers.myCarrier.name, dataCarriers.clickAndCollect.name]);
     });
   });
 

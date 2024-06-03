@@ -9,11 +9,11 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 import homePage from '@pages/FO/hummingbird/home';
 import categoryPage from '@pages/FO/hummingbird/category';
 
-// Import data
-import Categories from '@data/demo/categories';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataCategories,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigateInCategories_breadcrumb';
 
@@ -47,10 +47,10 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
     it('should go to the category Clothes', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkClothesLink', baseContext);
 
-      await homePage.goToCategory(page, Categories.clothes.id);
+      await homePage.goToCategory(page, dataCategories.clothes.id);
 
       const pageTitle = await categoryPage.getPageTitle(page);
-      expect(pageTitle).to.equal(Categories.clothes.name);
+      expect(pageTitle).to.equal(dataCategories.clothes.name);
     });
 
     it('should check breadcrumb', async function () {
@@ -63,10 +63,10 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
     it('should go to the subcategory Men', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMenLink', baseContext);
 
-      await homePage.goToSubCategory(page, Categories.clothes.id, Categories.men.id);
+      await homePage.goToSubCategory(page, dataCategories.clothes.id, dataCategories.men.id);
 
       const pageTitle = await homePage.getPageTitle(page);
-      expect(pageTitle).to.equal(Categories.men.name);
+      expect(pageTitle).to.equal(dataCategories.men.name);
     });
 
     it('should check breadcrumb', async function () {
@@ -82,7 +82,7 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
       await categoryPage.clickOnBreadCrumbLink(page, 'clothes');
 
       const pageTitle = await categoryPage.getPageTitle(page);
-      expect(pageTitle).to.equal(Categories.clothes.name);
+      expect(pageTitle).to.equal(dataCategories.clothes.name);
     });
 
     it('should check breadcrumb', async function () {
@@ -104,10 +104,10 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
     it('should go to the subcategory stationery', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStationeryLink', baseContext);
 
-      await homePage.goToSubCategory(page, Categories.accessories.id, Categories.stationery.id);
+      await homePage.goToSubCategory(page, dataCategories.accessories.id, dataCategories.stationery.id);
 
       const pageTitle = await categoryPage.getPageTitle(page);
-      expect(pageTitle).to.equal(Categories.stationery.name);
+      expect(pageTitle).to.equal(dataCategories.stationery.name);
     });
 
     it('should check breadcrumb', async function () {
@@ -123,7 +123,7 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
       await categoryPage.clickOnBreadCrumbLink(page, 'accessories');
 
       const pageTitle = await categoryPage.getPageTitle(page);
-      expect(pageTitle).to.equal(Categories.accessories.name);
+      expect(pageTitle).to.equal(dataCategories.accessories.name);
     });
 
     it('should check breadcrumb', async function () {

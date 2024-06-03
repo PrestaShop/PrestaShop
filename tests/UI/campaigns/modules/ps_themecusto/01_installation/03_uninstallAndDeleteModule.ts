@@ -11,12 +11,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_themecusto_installation_uninstallAndDeleteModule';
 
@@ -53,37 +53,37 @@ describe('Theme Customization module - Uninstall and delete module', async () =>
     expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  it(`should search the module ${Modules.psThemeCusto.name}`, async function () {
+  it(`should search the module ${dataModules.psThemeCusto.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psThemeCusto);
+    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psThemeCusto);
     expect(isModuleVisible).to.eq(true);
   });
 
   it('should display the uninstall modal and cancel it', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModuleAndCancel', baseContext);
 
-    const textResult = await moduleManagerPage.setActionInModule(page, Modules.psThemeCusto, 'uninstall', true);
+    const textResult = await moduleManagerPage.setActionInModule(page, dataModules.psThemeCusto, 'uninstall', true);
     expect(textResult).to.eq('');
 
-    const isModuleVisible = await moduleManagerPage.isModuleVisible(page, Modules.psThemeCusto);
+    const isModuleVisible = await moduleManagerPage.isModuleVisible(page, dataModules.psThemeCusto);
     expect(isModuleVisible).to.eq(true);
 
-    const isModalVisible = await moduleManagerPage.isModalActionVisible(page, Modules.psThemeCusto, 'uninstall');
+    const isModalVisible = await moduleManagerPage.isModalActionVisible(page, dataModules.psThemeCusto, 'uninstall');
     expect(isModalVisible).to.eq(false);
 
-    const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${Modules.psThemeCusto.tag}/`);
+    const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psThemeCusto.tag}/`);
     expect(dirExists).to.eq(true);
   });
 
   it('should uninstall the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psThemeCusto, 'uninstall', false, true);
-    expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.psThemeCusto.tag));
+    const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psThemeCusto, 'uninstall', false, true);
+    expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.psThemeCusto.tag));
 
-    // Check the directory `modules/Modules.psThemeCusto.tag`
-    const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${Modules.psThemeCusto.tag}/`);
+    // Check the directory `modules/dataModules.psThemeCusto.tag`
+    const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psThemeCusto.tag}/`);
     expect(dirExists).to.eq(false);
   });
 
@@ -113,7 +113,7 @@ describe('Theme Customization module - Uninstall and delete module', async () =>
     expect(hasSubTabPagesConfiguration).to.equal(false);
   });
 
-  describe(`POST-CONDITION : Install the module ${Modules.psThemeCusto.name}`, async () => {
+  describe(`POST-CONDITION : Install the module ${dataModules.psThemeCusto.name}`, async () => {
     it('should go back to Back Office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToModulesManager', baseContext);
 
@@ -127,16 +127,16 @@ describe('Theme Customization module - Uninstall and delete module', async () =>
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should download the zip of the module '${Modules.psThemeCusto.name}'`, async function () {
+    it(`should download the zip of the module '${dataModules.psThemeCusto.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadModule', baseContext);
 
-      await files.downloadFile(Modules.psThemeCusto.releaseZip, 'module.zip');
+      await files.downloadFile(dataModules.psThemeCusto.releaseZip, 'module.zip');
 
       const found = await files.doesFileExist('module.zip');
       expect(found).to.eq(true);
     });
 
-    it(`should upload the module '${Modules.psThemeCusto.name}'`, async function () {
+    it(`should upload the module '${dataModules.psThemeCusto.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uploadModule', baseContext);
 
       const successMessage = await moduleManagerPage.uploadModule(page, 'module.zip');
@@ -150,10 +150,10 @@ describe('Theme Customization module - Uninstall and delete module', async () =>
       expect(isModalNotVisible).to.eq(true);
     });
 
-    it(`should search the module '${Modules.psThemeCusto.name}'`, async function () {
+    it(`should search the module '${dataModules.psThemeCusto.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModulePresent', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psThemeCusto);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psThemeCusto);
       expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
   });

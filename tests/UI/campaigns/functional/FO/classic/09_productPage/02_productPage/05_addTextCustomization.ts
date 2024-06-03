@@ -14,12 +14,12 @@ import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_addTextCustomization';
 
@@ -27,7 +27,7 @@ describe('FO - Product page - Product page : Add a text customization', async ()
   let browserContext: BrowserContext;
   let page: Page;
   // Data to create standard product with 2 customizations
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     quantity: 100,
     minimumQuantity: 1,

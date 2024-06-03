@@ -14,13 +14,13 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
-// Import data
-import CategoryData from '@data/faker/category';
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCategory,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_imageGenerationOnCreation';
 
@@ -32,7 +32,7 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
   let idProduct: number = 0;
   let idCategory: number = 0;
 
-  const productData: ProductData = new ProductData({
+  const productData: FakerProduct = new FakerProduct({
     type: 'standard',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
@@ -42,7 +42,7 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
     minimumQuantity: 2,
     status: true,
   });
-  const categoryData: CategoryData = new CategoryData({
+  const categoryData: FakerCategory = new FakerCategory({
     coverImage: 'cover.jpg',
     thumbnailImage: 'thumb.jpg',
   });

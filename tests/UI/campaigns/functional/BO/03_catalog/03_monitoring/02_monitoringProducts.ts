@@ -11,12 +11,12 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import monitoringPage from '@pages/BO/catalog/monitoring';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_monitoring_monitoringProducts';
 
@@ -31,12 +31,12 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
   let numberOfProducts: number = 0;
   let numberOfProductsIngrid: number = 0;
 
-  const productWithoutImage: ProductData = new ProductData({type: 'standard'});
-  const disabledProduct: ProductData = new ProductData({type: 'standard', status: false});
-  const productWithoutCombinationsWithoutQuantity: ProductData = new ProductData({type: 'standard', quantity: 0});
-  const productWithCombinationsWithoutQuantity: ProductData = new ProductData({type: 'combinations', quantity: 0});
-  const productWithoutPrice: ProductData = new ProductData({type: 'standard', price: 0});
-  const productWithoutDescription: ProductData = new ProductData({type: 'standard', description: '', summary: ''});
+  const productWithoutImage: FakerProduct = new FakerProduct({type: 'standard'});
+  const disabledProduct: FakerProduct = new FakerProduct({type: 'standard', status: false});
+  const productWithoutCombinationsWithoutQuantity: FakerProduct = new FakerProduct({type: 'standard', quantity: 0});
+  const productWithCombinationsWithoutQuantity: FakerProduct = new FakerProduct({type: 'combinations', quantity: 0});
+  const productWithoutPrice: FakerProduct = new FakerProduct({type: 'standard', price: 0});
+  const productWithoutDescription: FakerProduct = new FakerProduct({type: 'standard', description: '', summary: ''});
 
   // before and after functions
   before(async function () {
@@ -89,7 +89,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
       productToCreate: productWithoutDescription,
       gridName: 'product_without_description',
     },
-  ].forEach((test: {testIdentifier: string, productType: string, productToCreate: ProductData, gridName: string}) => {
+  ].forEach((test: {testIdentifier: string, productType: string, productToCreate: FakerProduct, gridName: string}) => {
     describe(`Create product ${test.productType} in BO`, async () => {
       it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}_goToProductsPage`, baseContext);

@@ -14,14 +14,14 @@ import {moduleManager} from '@pages/BO/modules/moduleManager';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import MailDevEmail from '@data/types/maildevEmail';
 import MailDev from 'maildev';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_emailsubscription_configuration_checkWelcomeVoucher';
 
@@ -68,7 +68,7 @@ describe('Mail alerts module - Check welcome voucher code', async () => {
     mailHelper.stopListener(mailListener);
   });
 
-  describe(`Set a welcome voucher in the module '${Modules.psEmailSubscription.name}'`, async () => {
+  describe(`Set a welcome voucher in the module '${dataModules.psEmailSubscription.name}'`, async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -87,17 +87,17 @@ describe('Mail alerts module - Check welcome voucher code', async () => {
       expect(pageTitle).to.contains(moduleManager.pageTitle);
     });
 
-    it(`should search the module ${Modules.psEmailSubscription.name}`, async function () {
+    it(`should search the module ${dataModules.psEmailSubscription.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, Modules.psEmailSubscription);
+      const isModuleVisible = await moduleManager.searchModule(page, dataModules.psEmailSubscription);
       expect(isModuleVisible).to.equal(true);
     });
 
-    it(`should go to the configuration page of the module '${Modules.psEmailSubscription.name}'`, async function () {
+    it(`should go to the configuration page of the module '${dataModules.psEmailSubscription.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, Modules.psEmailSubscription.tag);
+      await moduleManager.goToConfigurationPage(page, dataModules.psEmailSubscription.tag);
 
       const pageTitle = await emailSubscriptionPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(emailSubscriptionPage.pageTitle);
@@ -137,7 +137,7 @@ describe('Mail alerts module - Check welcome voucher code', async () => {
     });
   });
 
-  describe(`Delete voucher '${Modules.psEmailSubscription.name}'`, async () => {
+  describe(`Delete voucher '${dataModules.psEmailSubscription.name}'`, async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 

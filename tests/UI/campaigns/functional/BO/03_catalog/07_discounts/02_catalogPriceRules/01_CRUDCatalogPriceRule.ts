@@ -15,12 +15,14 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 // Import data
-import Products from '@data/demo/products';
 import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_catalogPriceRules_CRUDCatalogPriceRule';
 
@@ -53,7 +55,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
     fromQuantity: 4,
     reduction: 15,
   });
-  const productPrice: number = Products.demo_1.finalPrice;
+  const productPrice: number = dataProducts.demo_1.finalPrice;
   const defaultDiscount: string = 'Save 20%';
   const priceAfterNewDiscount: number = 8.68;
   const discountAmountForNewDiscount: string = 'Save €20.00';
@@ -130,7 +132,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should check the discount', async function () {
@@ -208,7 +210,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle).to.contains(Products.demo_1.name);
+      expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should check the discount', async function () {

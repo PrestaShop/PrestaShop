@@ -23,19 +23,17 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 import psGdpr from '@pages/BO/modules/psGdpr';
 import psGdprTabDataConsent from '@pages/BO/modules/psGdpr/tabDataConsent';
 
-// Import data
-import Languages from '@data/demo/languages';
-import Modules from '@data/demo/modules';
-import Products from '@data/demo/products';
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {faker, fakerFR} from '@faker-js/faker';
 import {
   boDashboardPage,
   boDesignPositionsHookModulePage,
+  dataLanguages,
+  dataModules,
+  dataProducts,
   FakerCustomer,
+  FakerProduct,
   foClassicHomePage,
   foClassicLoginPage,
 } from '@prestashop-core/ui-testing';
@@ -53,7 +51,7 @@ describe('GDPR : Consent checkbox customization', async () => {
   const messageMailAlerts: string = faker.lorem.sentence();
   const messageMailAlertsFR: string = fakerFR.lorem.sentence();
   const customerData: FakerCustomer = new FakerCustomer();
-  const productOutOfStock: ProductData = new ProductData({
+  const productOutOfStock: FakerProduct = new FakerProduct({
     quantity: 0,
   });
 
@@ -88,17 +86,17 @@ describe('GDPR : Consent checkbox customization', async () => {
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psGdpr.name}`, async function () {
+    it(`should search the module ${dataModules.psGdpr.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psGdpr);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psGdpr);
       expect(isModuleVisible).to.eq(true);
     });
 
-    it(`should go to the configuration page of the module '${Modules.psGdpr.name}'`, async function () {
+    it(`should go to the configuration page of the module '${dataModules.psGdpr.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManagerPage.goToConfigurationPage(page, Modules.psGdpr.tag);
+      await moduleManagerPage.goToConfigurationPage(page, dataModules.psGdpr.tag);
 
       const pageTitle = await psGdpr.getPageSubtitle(page);
       expect(pageTitle).to.eq(psGdpr.pageSubTitle);
@@ -315,17 +313,17 @@ describe('GDPR : Consent checkbox customization', async () => {
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search the module ${Modules.psGdpr.name}`, async function () {
+    it(`should search the module ${dataModules.psGdpr.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule2', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psGdpr);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psGdpr);
       expect(isModuleVisible).to.eq(true);
     });
 
-    it(`should go to the configuration page of the module '${Modules.psGdpr.name}'`, async function () {
+    it(`should go to the configuration page of the module '${dataModules.psGdpr.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage2', baseContext);
 
-      await moduleManagerPage.goToConfigurationPage(page, Modules.psGdpr.tag);
+      await moduleManagerPage.goToConfigurationPage(page, dataModules.psGdpr.tag);
 
       const pageTitle = await psGdpr.getPageSubtitle(page);
       expect(pageTitle).to.eq(psGdpr.pageSubTitle);
@@ -396,7 +394,7 @@ describe('GDPR : Consent checkbox customization', async () => {
       await foHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
     });
 
     it('should open the product review modal and check the GDPR label', async function () {
@@ -533,7 +531,7 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'setMailAlertsMessageFR', baseContext);
 
       page = await foCreateAccountPage.changePage(browserContext, 0);
-      await psGdprTabDataConsent.setMailAlertsMessage(page, messageMailAlertsFR, Languages.french.id);
+      await psGdprTabDataConsent.setMailAlertsMessage(page, messageMailAlertsFR, dataLanguages.french.id);
 
       const successMessage = await psGdprTabDataConsent.saveForm(page);
       expect(successMessage).to.be.contains(psGdprTabDataConsent.saveFormMessage);
@@ -588,7 +586,7 @@ describe('GDPR : Consent checkbox customization', async () => {
 
   deleteProductTest(productOutOfStock, `${baseContext}_postTest_0`);
 
-  resetModule(Modules.psGdpr, `${baseContext}_postTest_1`);
+  resetModule(dataModules.psGdpr, `${baseContext}_postTest_1`);
 
-  resetModule(Modules.psEmailSubscription, `${baseContext}_postTest_2`);
+  resetModule(dataModules.psEmailSubscription, `${baseContext}_postTest_2`);
 });

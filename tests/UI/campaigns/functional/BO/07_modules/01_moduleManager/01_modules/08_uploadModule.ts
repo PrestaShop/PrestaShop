@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_modules_uploadModule';
 
@@ -37,10 +37,10 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it(`should download the zip of the module '${Modules.keycloak.name}'`, async function () {
+  it(`should download the zip of the module '${dataModules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'downloadModule', baseContext);
 
-    await files.downloadFile(Modules.keycloak.releaseZip, 'module.zip');
+    await files.downloadFile(dataModules.keycloak.releaseZip, 'module.zip');
 
     const found = await files.doesFileExist('module.zip');
     expect(found).to.eq(true);
@@ -60,7 +60,7 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
     expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  it(`should upload the module '${Modules.keycloak.name}'`, async function () {
+  it(`should upload the module '${dataModules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uploadModule', baseContext);
 
     const successMessage = await moduleManagerPage.uploadModule(page, 'module.zip');
@@ -74,17 +74,17 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
     expect(isModalVisible).to.eq(true);
   });
 
-  it(`should search the module '${Modules.keycloak.name}'`, async function () {
+  it(`should search the module '${dataModules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.keycloak);
+    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.keycloak);
     expect(isModuleVisible, 'Module is not visible!').to.eq(true);
   });
 
-  it(`should uninstall the module '${Modules.keycloak.name}'`, async function () {
+  it(`should uninstall the module '${dataModules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.keycloak, 'uninstall');
-    expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.keycloak.tag));
+    const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.keycloak, 'uninstall');
+    expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.keycloak.tag));
   });
 });

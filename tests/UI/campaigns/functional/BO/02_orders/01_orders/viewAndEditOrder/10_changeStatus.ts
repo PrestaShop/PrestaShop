@@ -11,16 +11,13 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -43,11 +40,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
   let filePath: string|null;
 
   // New order by customer data
-  const orderByCustomerData: OrderData = new OrderData({
+  const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],

@@ -13,11 +13,11 @@ import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 // Import data
-import Products from '@data/demo/products';
 import {ProductAttribute} from '@data/types/product';
 
 import {
   type CartProductDetails,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -42,10 +42,10 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
   let page: Page;
 
   const checkProductDetails: CartProductDetails = {
-    name: Products.demo_1.name,
-    price: Products.demo_1.finalPrice,
-    cartSubtotal: Products.demo_1.finalPrice,
-    totalTaxIncl: Products.demo_1.finalPrice,
+    name: dataProducts.demo_1.name,
+    price: dataProducts.demo_1.finalPrice,
+    cartSubtotal: dataProducts.demo_1.finalPrice,
+    totalTaxIncl: dataProducts.demo_1.finalPrice,
     quantity: 1,
     cartProductsCount: 1,
     cartShipping: 'Free',
@@ -134,11 +134,11 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
 
       const result = await cartPage.getProductDetail(page, 1);
       await Promise.all([
-        expect(result.name).to.equal(Products.demo_1.name),
-        expect(result.regularPrice).to.equal(Products.demo_1.retailPrice),
-        expect(result.price).to.equal(Products.demo_1.finalPrice),
-        expect(result.discountPercentage).to.equal(`-${Products.demo_1.specificPrice.discount}%`),
-        expect(result.image).to.contains(Products.demo_1.coverImage),
+        expect(result.name).to.equal(dataProducts.demo_1.name),
+        expect(result.regularPrice).to.equal(dataProducts.demo_1.retailPrice),
+        expect(result.price).to.equal(dataProducts.demo_1.finalPrice),
+        expect(result.discountPercentage).to.equal(`-${dataProducts.demo_1.specificPrice.discount}%`),
+        expect(result.image).to.contains(dataProducts.demo_1.coverImage),
         expect(result.quantity).to.equal(checkProductDetails.quantity),
         expect(result.totalPrice).to.equal(checkProductDetails.totalTaxIncl),
       ]);
@@ -162,10 +162,10 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
-    it(`should search for the product ${Products.demo_14.name}`, async function () {
+    it(`should search for the product ${dataProducts.demo_14.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForProductCustomized', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_14.name);
+      await homePage.searchProduct(page, dataProducts.demo_14.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(searchResultsPage.pageTitle);

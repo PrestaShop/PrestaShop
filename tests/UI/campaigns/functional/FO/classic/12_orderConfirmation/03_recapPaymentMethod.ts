@@ -17,14 +17,12 @@ import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import Products from '@data/demo/products';
-import Carriers from '@data/demo/carriers';
-
 import {
-  // Import data
+  boDashboardPage,
+  dataCarriers,
+  dataCustomers,
   dataPaymentMethods,
-  dataCustomers, boDashboardPage,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -74,10 +72,10 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
       expect(result).to.eq(true);
     });
 
-    it(`should add the product ${Products.demo_6.name} to cart by quick view`, async function () {
+    it(`should add the product ${dataProducts.demo_6.name} to cart by quick view`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addDemo3ByQuickView', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_6.name);
+      await homePage.searchProduct(page, dataProducts.demo_6.name);
       await searchResultsPage.quickViewProduct(page, 1);
 
       await quickViewModal.addToCartByQuickView(page);
@@ -116,7 +114,7 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
     it('should select the first carrier and go to payment step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice1', baseContext);
 
-      await checkoutPage.chooseShippingMethod(page, Carriers.default.id);
+      await checkoutPage.chooseShippingMethod(page, dataCarriers.clickAndCollect.id);
 
       const isPaymentStep = await checkoutPage.goToPaymentStep(page);
       expect(isPaymentStep).to.eq(true);
@@ -170,7 +168,7 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
       await testContext.addContextItem(this, 'testIdentifier', 'checkSubTotal', baseContext);
 
       const orderSubTotal = await orderConfirmationPage.getOrderSubTotal(page);
-      expect(orderSubTotal).to.equal(`€${Products.demo_6.combinations[0].price.toFixed(2)}`);
+      expect(orderSubTotal).to.equal(`€${dataProducts.demo_6.combinations[0].price.toFixed(2)}`);
     });
 
     it('should check the shipping total', async function () {
@@ -184,7 +182,7 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalTaxInc', baseContext);
 
       const orderTotalTaxInc = await orderConfirmationPage.getOrderTotal(page);
-      expect(orderTotalTaxInc).to.equal(`€${Products.demo_6.combinations[0].price.toFixed(2)}`);
+      expect(orderTotalTaxInc).to.equal(`€${dataProducts.demo_6.combinations[0].price.toFixed(2)}`);
     });
 
     it('should check the order details', async function () {
@@ -197,7 +195,7 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
       expect(orderReferenceValue).to.contains(orderReference);
 
       const shippingMethod = await orderConfirmationPage.getShippingMethod(page);
-      expect(shippingMethod).to.contains(`${Carriers.default.name} ${Carriers.default.delay}`);
+      expect(shippingMethod).to.contains(`${dataCarriers.clickAndCollect.name} ${dataCarriers.clickAndCollect.delay}`);
     });
   });
 });

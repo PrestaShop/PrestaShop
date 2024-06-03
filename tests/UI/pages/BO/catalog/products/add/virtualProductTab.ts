@@ -3,8 +3,9 @@ import type {Page} from 'playwright';
 // Import page
 import BOBasePage from '@pages/BO/BObasePage';
 
-// Import data
-import ProductData from '@data/faker/product';
+import {
+  type FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Virtual product tab on new product V2 page, contains functions that can be used on the page
@@ -93,10 +94,10 @@ class VirtualProductTab extends BOBasePage {
   /**
    * Set virtual product
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set in virtual product form
+   * @param productData {FakerProduct} Data to set in virtual product form
    * @returns {Promise<void>}
    */
-  async setVirtualProduct(page: Page, productData: ProductData): Promise<void> {
+  async setVirtualProduct(page: Page, productData: FakerProduct): Promise<void> {
     await this.setProductQuantity(page, productData.quantity);
     await this.setValue(page, this.productMinimumQuantityInput, productData.minimumQuantity);
     if (productData.downloadFile) {

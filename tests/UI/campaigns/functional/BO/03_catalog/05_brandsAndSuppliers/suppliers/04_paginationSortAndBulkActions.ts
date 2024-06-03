@@ -12,12 +12,12 @@ import brandsPage from '@pages/BO/catalog/brands';
 import suppliersPage from '@pages/BO/catalog/suppliers';
 import addSupplierPage from '@pages/BO/catalog/suppliers/add';
 
-// Import data
-import SupplierData from '@data/faker/supplier';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerSupplier,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_suppliers_paginationSortAndBulkActions';
 
@@ -78,7 +78,7 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
   describe('Create 11 suppliers in BO', async () => {
     const creationTests: number[] = new Array(11).fill(0, 0, 11);
     creationTests.forEach((test: number, index: number) => {
-      const createSupplierData: SupplierData = new SupplierData({name: `todelete${index}`});
+      const createSupplierData: FakerSupplier = new FakerSupplier({name: `todelete${index}`});
       before(() => files.generateImage(createSupplierData.logo));
 
       it('should go to add new supplier page', async function () {

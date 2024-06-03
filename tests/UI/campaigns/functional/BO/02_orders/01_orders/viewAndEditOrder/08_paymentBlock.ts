@@ -16,17 +16,16 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
 import type {OrderPayment} from '@data/types/order';
 
 import {
   boDashboardPage,
-  // Import data
   dataCurrencies,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -59,11 +58,11 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   const todayToCheck: string = date.getDateFormat('mm/dd/yyyy');
   const totalOrder: number = 22.94;
   // New order by customer data
-  const orderByCustomerData: OrderData = new OrderData({
+  const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
@@ -101,7 +100,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     date: today,
     paymentMethod: 'Bank transfer',
     transactionID: 12190,
-    amount: Products.demo_5.price,
+    amount: dataProducts.demo_5.price,
     currency: '€',
   };
 
@@ -436,10 +435,10 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       invoiceID = await orderPageMessagesBlock.getInvoiceID(page);
     });
 
-    it(`should add the product '${Products.demo_5.name}' to the cart`, async function () {
+    it(`should add the product '${dataProducts.demo_5.name}' to the cart`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCustomizedProduct', baseContext);
 
-      await orderPageProductsBlock.searchProduct(page, Products.demo_5.name);
+      await orderPageProductsBlock.searchProduct(page, dataProducts.demo_5.name);
       await orderPageProductsBlock.selectInvoice(page);
 
       const textResult = await orderPageProductsBlock.addProductToCart(page, 1, true);

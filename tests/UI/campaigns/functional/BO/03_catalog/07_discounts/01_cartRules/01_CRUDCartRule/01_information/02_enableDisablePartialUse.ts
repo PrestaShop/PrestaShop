@@ -18,14 +18,13 @@ import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouche
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 // Import data
-import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataPaymentMethods,
+  dataProducts,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -61,7 +60,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
     },
   });
 
-  const amountValue: number = cartRuleEnabledPartialUse.discountAmount!.value - Products.demo_1.finalPrice;
+  const amountValue: number = cartRuleEnabledPartialUse.discountAmount!.value - dataProducts.demo_1.finalPrice;
 
   // before and after functions
   before(async function () {
@@ -127,7 +126,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await homePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
@@ -149,7 +148,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
 
         const discountValue = await cartPage.getDiscountValue(page);
-        expect(discountValue.toString()).to.equal(`-${Products.demo_1.finalPrice}`);
+        expect(discountValue.toString()).to.equal(`-${dataProducts.demo_1.finalPrice}`);
       });
 
       it('should validate shopping cart and go to checkout page', async function () {
@@ -335,7 +334,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await homePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
@@ -357,7 +356,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
 
         const discountValue = await cartPage.getDiscountValue(page);
-        expect(discountValue.toString()).to.equal(`-${Products.demo_1.finalPrice}`);
+        expect(discountValue.toString()).to.equal(`-${dataProducts.demo_1.finalPrice}`);
       });
 
       it('should validate shopping cart and go to checkout page', async function () {

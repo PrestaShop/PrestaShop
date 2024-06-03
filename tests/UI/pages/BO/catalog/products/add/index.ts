@@ -8,10 +8,12 @@ import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import packTab from '@pages/BO/catalog/products/add/packTab';
 
-import type ProductData from '@data/faker/product';
 import type {ProductHeaderSummary} from '@data/types/product';
 
 import type {Frame, Page} from 'playwright';
+import {
+  type FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Create Product V2 page, contains functions that can be used on the page
@@ -344,10 +346,10 @@ class CreateProduct extends BOBasePage {
   /**
    * Set product
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set in new product page
+   * @param productData {FakerProduct} Data to set in new product page
    * @returns {Promise<string>}
    */
-  async setProduct(page: Page, productData: ProductData): Promise<string> {
+  async setProduct(page: Page, productData: FakerProduct): Promise<string> {
     // Set status
     await this.setProductStatus(page, productData.status);
     // Set description

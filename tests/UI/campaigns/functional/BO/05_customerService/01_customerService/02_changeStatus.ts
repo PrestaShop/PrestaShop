@@ -17,12 +17,11 @@ import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
 // Import data
 import MessageData from '@data/faker/message';
-import Employees from '@data/demo/employees';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  dataEmployees,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -41,7 +40,7 @@ describe('BO - Customer Service : Change status', async () => {
   const contactUsData: MessageData = new MessageData({subject: 'Customer service', reference: 'OHSATSERP'});
 
   const forwardMessageData: MessageData = new MessageData({
-    employeeName: `${Employees.DefaultEmployee.firstName.slice(0, 1)}. ${Employees.DefaultEmployee.lastName}`,
+    employeeName: `${dataEmployees.defaultEmployee.firstName.slice(0, 1)}. ${dataEmployees.defaultEmployee.lastName}`,
     message: 'Forward message',
   });
 
@@ -192,8 +191,8 @@ describe('BO - Customer Service : Change status', async () => {
 
       const messages = await viewPage.getThreadMessages(page);
       expect(messages)
-        .to.contains(`${viewPage.forwardMessageSuccessMessage} ${Employees.DefaultEmployee.firstName}`
-          + ` ${Employees.DefaultEmployee.lastName}`)
+        .to.contains(`${viewPage.forwardMessageSuccessMessage} ${dataEmployees.defaultEmployee.firstName}`
+          + ` ${dataEmployees.defaultEmployee.lastName}`)
         .and.contains(forwardMessageData.message);
     });
 
@@ -202,8 +201,8 @@ describe('BO - Customer Service : Change status', async () => {
 
       const text = await viewPage.getOrdersAndMessagesTimeline(page);
       expect(text).to.contains('Orders and messages timeline')
-        .and.contains(`${viewPage.forwardMessageSuccessMessage} ${Employees.DefaultEmployee.firstName}`
-        + ` ${Employees.DefaultEmployee.lastName}`)
+        .and.contains(`${viewPage.forwardMessageSuccessMessage} ${dataEmployees.defaultEmployee.firstName}`
+        + ` ${dataEmployees.defaultEmployee.lastName}`)
         .and.contains(`Comment: ${forwardMessageData.message}`);
     });
   });

@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import stocksPage from '@pages/BO/catalog/stocks';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_stocks_movements_sortAndPagination';
 
@@ -52,10 +52,10 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
       expect(pageTitle).to.contains(stocksPage.pageTitle);
     });
 
-    it(`should bulk edit the quantity of the product '${Products.demo_1.name}'`, async function () {
+    it(`should bulk edit the quantity of the product '${dataProducts.demo_1.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkEditQuantity', baseContext);
 
-      await stocksPage.simpleFilter(page, Products.demo_1.name);
+      await stocksPage.simpleFilter(page, dataProducts.demo_1.name);
 
       // Update quantity and check successful message
       const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 301);

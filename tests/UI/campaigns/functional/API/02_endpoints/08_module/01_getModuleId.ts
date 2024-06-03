@@ -14,7 +14,6 @@ import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 // Import data
 import APIClientData from '@data/faker/APIClient';
-import {ModuleInfo} from '@data/types/module';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
@@ -22,6 +21,7 @@ import {
   boDashboardPage,
   boModuleManagerPage,
   dataModules,
+  type ModuleInfo,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_module_getModuleId';

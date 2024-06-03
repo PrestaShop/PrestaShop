@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 import addImageTypePage from '@pages/BO/design/imageSettings/add';
 
-// Import data
-import ImageTypeData from '@data/faker/imageType';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerImageType,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_CRUDImageType';
 
@@ -28,8 +28,8 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
   let page: Page;
   let numberOfImageTypes: number = 0;
 
-  const createImageTypeData: ImageTypeData = new ImageTypeData();
-  const editImageTypeData: ImageTypeData = new ImageTypeData();
+  const createImageTypeData: FakerImageType = new FakerImageType();
+  const editImageTypeData: FakerImageType = new FakerImageType();
 
   // before and after functions
   before(async function () {

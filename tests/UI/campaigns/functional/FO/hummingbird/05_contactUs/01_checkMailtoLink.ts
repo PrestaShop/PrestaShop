@@ -9,11 +9,11 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import homePage from '@pages/FO/hummingbird/home';
 
-// Import data
-import Employees from '@data/demo/employees';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataEmployees,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_contactUs_checkMailtoLink';
 
@@ -67,7 +67,7 @@ describe('FO - Contact us : Check mail link on contact us page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmailUsLink', baseContext);
 
       const emailUsLinkHref = await contactUsPage.getEmailUsLink(page);
-      expect(emailUsLinkHref).to.equal(`mailto:${Employees.DefaultEmployee.email}`);
+      expect(emailUsLinkHref).to.equal(`mailto:${dataEmployees.defaultEmployee.email}`);
     });
   });
 

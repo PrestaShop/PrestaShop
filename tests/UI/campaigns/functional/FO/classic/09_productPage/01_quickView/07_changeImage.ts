@@ -11,11 +11,11 @@ import {homePage} from '@pages/FO/classic/home';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_quickView_changeImage';
 
@@ -34,7 +34,7 @@ describe('FO - Product page - Quick view : Change image', async () => {
   let page: Page;
 
   // Data to create product out of stock not allowed
-  const productWith2Images: ProductData = new ProductData({
+  const productWith2Images: FakerProduct = new FakerProduct({
     type: 'standard',
     quantity: 2,
     coverImage: 'coverImage.jpg',

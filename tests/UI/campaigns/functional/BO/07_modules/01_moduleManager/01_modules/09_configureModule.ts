@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_modules_configureModule';
 
@@ -50,19 +50,19 @@ describe('BO - Modules - Module Manager : Configure module', async () => {
     expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  it(`should search for module ${Modules.contactForm.name}`, async function () {
+  it(`should search for module ${dataModules.contactForm.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
+    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.contactForm);
     expect(isModuleVisible, 'Module is not visible!').to.eq(true);
   });
 
   it('should go to module configuration page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'configureModule', baseContext);
 
-    await moduleManagerPage.goToConfigurationPage(page, Modules.contactForm.tag);
+    await moduleManagerPage.goToConfigurationPage(page, dataModules.contactForm.tag);
 
     const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-    expect(pageSubtitle).to.contains(Modules.contactForm.name);
+    expect(pageSubtitle).to.contains(dataModules.contactForm.name);
   });
 });

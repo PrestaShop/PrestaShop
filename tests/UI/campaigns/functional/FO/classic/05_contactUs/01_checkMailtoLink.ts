@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage} from '@pages/FO/classic/home';
 
-// Import data
-import Employees from '@data/demo/employees';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  dataEmployees,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_contactUs_checkMailtoLink';
 
@@ -55,6 +55,6 @@ describe('FO - Contact us : Check mail link on contact us page', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkEmailUsLink', baseContext);
 
     const emailUsLinkHref = await contactUsPage.getEmailUsLink(page);
-    expect(emailUsLinkHref).to.equal(`mailto:${Employees.DefaultEmployee.email}`);
+    expect(emailUsLinkHref).to.equal(`mailto:${dataEmployees.defaultEmployee.email}`);
   });
 });

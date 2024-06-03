@@ -11,12 +11,12 @@ import attributesPage from '@pages/BO/catalog/attributes';
 import addValuePage from '@pages/BO/catalog/attributes/addValue';
 import viewAttributePage from '@pages/BO/catalog/attributes/view';
 
-// Import data
-import AttributeValueData from '@data/faker/attributeValue';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerAttributeValue,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_attributes_values_sortPaginationAndBulkDelete';
 
@@ -109,7 +109,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       it(`should create value n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createNewValue${index}`, baseContext);
 
-        const createValueData = new AttributeValueData({
+        const createValueData: FakerAttributeValue = new FakerAttributeValue({
           attributeID: idAttribute,
           attributeName: 'Color',
           value: `todelete${index}`,

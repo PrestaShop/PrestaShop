@@ -12,13 +12,13 @@ import addAttributePage from '@pages/BO/catalog/attributes/addAttribute';
 import addValuePage from '@pages/BO/catalog/attributes/addValue';
 import viewAttributePage from '@pages/BO/catalog/attributes/view';
 
-// Import data
-import AttributeData from '@data/faker/attribute';
-import AttributeValueData from '@data/faker/attributeValue';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerAttribute,
+  FakerAttributeValue,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_attributes_CRUDAttributesAndValues';
 
@@ -39,13 +39,13 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
   let numberOfAttributes: number = 0;
   let attributeId: number = 0;
 
-  const createAttributeData: AttributeData = new AttributeData();
-  const updateAttributeData: AttributeData = new AttributeData();
-  const valuesToCreate: AttributeValueData[] = [
-    new AttributeValueData({attributeName: createAttributeData.name}),
-    new AttributeValueData({attributeName: createAttributeData.name}),
+  const createAttributeData: FakerAttribute = new FakerAttribute();
+  const updateAttributeData: FakerAttribute = new FakerAttribute();
+  const valuesToCreate: FakerAttributeValue[] = [
+    new FakerAttributeValue({attributeName: createAttributeData.name}),
+    new FakerAttributeValue({attributeName: createAttributeData.name}),
   ];
-  const updateValueData: AttributeValueData = new AttributeValueData({attributeName: updateAttributeData.name});
+  const updateValueData: FakerAttributeValue = new FakerAttributeValue({attributeName: updateAttributeData.name});
 
   // before and after functions
   before(async function () {
@@ -149,7 +149,7 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
       expect(pageTitle).to.equal(addValuePage.createPageTitle);
     });
 
-    valuesToCreate.forEach((valueToCreate: AttributeValueData, index: number) => {
+    valuesToCreate.forEach((valueToCreate: FakerAttributeValue, index: number) => {
       it(`should create value n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createValue${index}`, baseContext);
 

@@ -10,12 +10,12 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 import addOrderReturnStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/returnStatus/add';
 
-// Import data
-import OrderReturnStatusData from '@data/faker/orderReturnStatus';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerOrderReturnStatus,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_orderSettings_statuses_returnStatuses_CRUDOrderReturnStatus';
 
@@ -30,8 +30,8 @@ describe('BO - Shop Parameters - Order Settings - Statuses : CRUD order return s
   let numberOfOrderReturnStatuses: number = 0;
 
   const tableName: string = 'order_return';
-  const createOrderReturnStatusData: OrderReturnStatusData = new OrderReturnStatusData();
-  const editOrderStatusData: OrderReturnStatusData = new OrderReturnStatusData({
+  const createOrderReturnStatusData: FakerOrderReturnStatus = new FakerOrderReturnStatus();
+  const editOrderStatusData: FakerOrderReturnStatus = new FakerOrderReturnStatus({
     name: `edit_${createOrderReturnStatusData.name}`,
   });
 

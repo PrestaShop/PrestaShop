@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 import addImageTypePage from '@pages/BO/design/imageSettings/add';
 
-// Import data
-import ImageTypeData from '@data/faker/imageType';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerImageType,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_bulkDeleteImageTypes';
 
@@ -27,9 +27,9 @@ describe('BO - Design - Image Settings : Bulk delete image types', async () => {
   let page: Page;
   let numberOfImageTypes: number = 0;
 
-  const ImageTypesToCreate: ImageTypeData[] = [
-    new ImageTypeData({name: 'todelete1'}),
-    new ImageTypeData({name: 'todelete2'}),
+  const ImageTypesToCreate: FakerImageType[] = [
+    new FakerImageType({name: 'todelete1'}),
+    new FakerImageType({name: 'todelete2'}),
   ];
 
   // before and after functions
@@ -68,7 +68,7 @@ describe('BO - Design - Image Settings : Bulk delete image types', async () => {
   });
 
   describe('Create 2 image types in BO', async () => {
-    ImageTypesToCreate.forEach((ImageTypeToCreate: ImageTypeData, index: number) => {
+    ImageTypesToCreate.forEach((ImageTypeToCreate: FakerImageType, index: number) => {
       it('should go to add new image type page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewImageTypePage${index + 1}`, baseContext);
 

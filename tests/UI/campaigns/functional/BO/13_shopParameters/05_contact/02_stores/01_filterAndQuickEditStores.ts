@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import contactPage from '@pages/BO/shopParameters/contact';
 import storesPage from '@pages/BO/shopParameters/stores';
 
-// Import data
-import Stores from '@data/demo/stores';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataStores,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_contact_stores_filterAndQuickEditStores';
 
@@ -75,7 +75,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'Id',
             filterType: 'input',
             filterBy: 'id_store',
-            filterValue: Stores.first.id.toString(),
+            filterValue: dataStores.store_1.id.toString(),
           },
       },
       {
@@ -84,7 +84,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'Name',
             filterType: 'input',
             filterBy: 'sl!name',
-            filterValue: Stores.first.name,
+            filterValue: dataStores.store_1.name,
           },
       },
       {
@@ -93,7 +93,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'Address',
             filterType: 'input',
             filterBy: 'sl!address1',
-            filterValue: Stores.first.address1,
+            filterValue: dataStores.store_1.address1,
           },
       },
       {
@@ -102,7 +102,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'City',
             filterType: 'input',
             filterBy: 'city',
-            filterValue: Stores.first.city,
+            filterValue: dataStores.store_1.city,
           },
       },
       {
@@ -111,7 +111,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'PostCode',
             filterType: 'input',
             filterBy: 'postcode',
-            filterValue: Stores.first.postcode,
+            filterValue: dataStores.store_1.postcode,
           },
       },
       {
@@ -120,7 +120,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'State',
             filterType: 'input',
             filterBy: 'st!name',
-            filterValue: Stores.first.state,
+            filterValue: dataStores.store_1.state,
           },
       },
       {
@@ -129,7 +129,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'country',
             filterType: 'input',
             filterBy: 'cl!name',
-            filterValue: Stores.first.country,
+            filterValue: dataStores.store_1.country,
           },
       },
       {
@@ -138,7 +138,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'Phone',
             filterType: 'input',
             filterBy: 'phone',
-            filterValue: Stores.first.phone,
+            filterValue: dataStores.store_1.phone,
           },
       },
       {
@@ -147,7 +147,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'Fax',
             filterType: 'input',
             filterBy: 'fax',
-            filterValue: Stores.first.fax,
+            filterValue: dataStores.store_1.fax,
           },
       },
       {
@@ -156,7 +156,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'Status',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: Stores.first.status ? '1' : '0',
+            filterValue: dataStores.store_1.status ? '1' : '0',
           },
       },
     ];
@@ -196,16 +196,16 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
   });
 
   describe('Quick edit stores', async () => {
-    it(`should filter by name '${Stores.second.name}'`, async function () {
+    it(`should filter by name '${dataStores.store_2.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await storesPage.filterTable(page, 'input', 'sl!name', Stores.second.name);
+      await storesPage.filterTable(page, 'input', 'sl!name', dataStores.store_2.name);
 
       const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
       expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
 
       const textColumn = await storesPage.getTextColumn(page, 1, 'sl!name');
-      expect(textColumn).to.contains(Stores.second.name);
+      expect(textColumn).to.contains(dataStores.store_2.name);
     });
 
     const tests = [

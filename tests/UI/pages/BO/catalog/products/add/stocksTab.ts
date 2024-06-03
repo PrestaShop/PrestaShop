@@ -2,10 +2,12 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 // Import data
-import type ProductData from '@data/faker/product';
 import type {ProductStockMovement} from '@data/types/product';
 
 import type {Page} from 'playwright';
+import {
+  type FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Stocks tab on new product V2 page, contains functions that can be used on the page
@@ -124,10 +126,10 @@ class StocksTab extends BOBasePage {
   /**
    * Set product stock
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set in stock form
+   * @param productData {FakerProduct} Data to set in stock form
    * @returns {Promise<void>}
    */
-  async setProductStock(page:Page, productData: ProductData): Promise<void> {
+  async setProductStock(page:Page, productData: FakerProduct): Promise<void> {
     await this.waitForSelectorAndClick(page, this.stocksTabLink);
     await this.setQuantityDelta(page, productData.quantity);
     await this.setValue(page, this.productMinimumQuantityInput, productData.minimumQuantity);

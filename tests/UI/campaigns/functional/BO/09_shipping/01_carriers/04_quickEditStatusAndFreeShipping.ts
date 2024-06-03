@@ -14,12 +14,11 @@ import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
-// Import data
 import {
   boDashboardPage,
+  dataCarriers,
   dataCustomers,
 } from '@prestashop-core/ui-testing';
-import Carriers from '@data/demo/carriers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -122,7 +121,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersList', baseContext);
 
       const carriers = await checkoutPage.getAllCarriersNames(page);
-      expect(carriers).to.deep.equal([Carriers.myCarrier.name]);
+      expect(carriers).to.deep.equal([dataCarriers.myCarrier.name]);
     });
 
     it('should go back to BO', async function () {
@@ -156,7 +155,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       await checkoutPage.reloadPage(page);
 
       const carriers = await checkoutPage.getAllCarriersNames(page);
-      expect(carriers).to.deep.equal([Carriers.cheapCarrier.name, Carriers.myCarrier.name]);
+      expect(carriers).to.deep.equal([dataCarriers.myCheapCarrier.name, dataCarriers.myCarrier.name]);
     });
 
     it('should go back to BO', async function () {
@@ -191,9 +190,9 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
 
       const carrierData = await checkoutPage.getCarrierData(page, 3);
       await Promise.all([
-        expect(carrierData.name).to.equal(Carriers.cheapCarrier.name),
-        expect(carrierData.delay).to.equal(Carriers.cheapCarrier.delay),
-        expect(carrierData.priceText).to.equal(`€${Carriers.cheapCarrier.priceTTC.toFixed(2)} tax incl.`),
+        expect(carrierData.name).to.equal(dataCarriers.myCheapCarrier.name),
+        expect(carrierData.delay).to.equal(dataCarriers.myCheapCarrier.delay),
+        expect(carrierData.priceText).to.equal(`€${dataCarriers.myCheapCarrier.priceTTC.toFixed(2)} tax incl.`),
       ]);
     });
 
@@ -202,8 +201,8 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
 
       const carrierData = await checkoutPage.getCarrierData(page, 2);
       await Promise.all([
-        expect(carrierData.name).to.equal(Carriers.myCarrier.name),
-        expect(carrierData.delay).to.equal(Carriers.myCarrier.delay),
+        expect(carrierData.name).to.equal(dataCarriers.myCarrier.name),
+        expect(carrierData.delay).to.equal(dataCarriers.myCarrier.delay),
         expect(carrierData.priceText).to.equal('Free'),
       ]);
     });

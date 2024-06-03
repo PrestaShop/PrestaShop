@@ -17,11 +17,13 @@ import {productPage} from '@pages/FO/classic/product';
 
 // Import data
 import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
-import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataProducts,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productPage_displayDiscountedPrice';
 
@@ -150,7 +152,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
       await homePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
-      expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+      expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
     });
 
     it('should check the existence of the unit value', async function () {

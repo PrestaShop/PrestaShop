@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import contactsPage from '@pages/BO/shopParameters/contact';
 import addContactPage from '@pages/BO/shopParameters/contact/add';
 
-// Import data
-import ContactData from '@data/faker/contact';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerContact,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_contact_contacts_contactBulkActions';
 
@@ -24,8 +24,8 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
   let page: Page;
   let numberOfContacts: number = 0;
 
-  const firstContactData: ContactData = new ContactData({title: 'todelete'});
-  const secondContactData: ContactData = new ContactData({title: 'todelete'});
+  const firstContactData: FakerContact = new FakerContact({title: 'todelete'});
+  const secondContactData: FakerContact = new FakerContact({title: 'todelete'});
 
   // before and after functions
   before(async function () {

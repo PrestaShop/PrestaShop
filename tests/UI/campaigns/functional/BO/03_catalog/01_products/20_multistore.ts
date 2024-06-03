@@ -17,12 +17,14 @@ import productsPage from '@pages/BO/catalog/products';
 import {homePage} from '@pages/FO/classic/home';
 
 // Import data
-import ProductData from '@data/faker/product';
 import ShopData from '@data/faker/shop';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerProduct,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_multistore';
 
@@ -32,14 +34,14 @@ describe('BO - Catalog - Products : Multistore', async () => {
   const createShopData: ShopData = new ShopData({name: 'newShop', shopGroup: 'Default', categoryRoot: 'Home'});
 
   // Data to create standard product
-  const newProductData: ProductData = new ProductData({
+  const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     quantity: 100,
     minimumQuantity: 1,
     status: true,
   });
 
-  const editProductData: ProductData = new ProductData({
+  const editProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     applyChangesToAllStores: true,
     quantity: 100,

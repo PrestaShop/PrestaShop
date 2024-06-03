@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_modules_filterModulesByStatus';
 
@@ -50,11 +50,11 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
   });
 
   describe('Filter modules by status', async () => {
-    it(`should uninstall the module '${Modules.contactForm.name}'`, async function () {
+    it(`should uninstall the module '${dataModules.contactForm.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, 'uninstall');
-      expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.contactForm.tag));
+      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.contactForm, 'uninstall');
+      expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.contactForm.tag));
     });
 
     ['enabled', 'disabled', 'installed', 'uninstalled'].forEach((status: string, index: number) => {
@@ -70,11 +70,11 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
       });
     });
 
-    it(`should install the module '${Modules.contactForm.name}'`, async function () {
+    it(`should install the module '${dataModules.contactForm.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, 'install');
-      expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.contactForm.tag));
+      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.contactForm, 'install');
+      expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(dataModules.contactForm.tag));
     });
 
     it('should show all modules and check the different blocks', async function () {
