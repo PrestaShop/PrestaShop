@@ -17,14 +17,20 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        BRANCH:
-          - 1.7.8.x
-          - 8.0.x
-          - 8.1.x
-          - develop
+        include:
+          - branch: 1.7.8.x
+            database: mysql
+          - branch: 8.0.x
+            database: mysql
+          - branch: 8.1.x
+            database: mysql
+          - branch: develop
+            database: mysql
+          - branch: develop
+            database: mariadb
 
     steps:
       - name: Push reports
         run: |
-          REPORT_NAME="$(date +%Y-%m-%d)-${{ matrix.branch }}"
-          curl -v "https://api-nightly.prestashop-project.org/hook/reports/import?token=${{ secrets.NIGHTLY_TOKEN }}&filename=${REPORT_NAME}.json"
+          REPORT_NAME="$(date +%Y-%m-%d)-${{ matrix.branch }}-${{matrix.database}}"
+          curl -v "https://api-nightly.prestashop-project.org/hook/reports/import?token=${{ secrets.NIGHTLY_TOKEN }}&filename=${REPORT_NAME}.json&database=${{matrix.database}}"

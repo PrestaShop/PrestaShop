@@ -10,6 +10,10 @@ inputs:
     required: false
     description: Node Version to Build Themes
     default: 16.20.1
+  DB_SERVER:
+    required: false
+    description: Database Server for PrestaShop (mysql/mariadb)
+    default: mysql
   ENABLE_SSL:
     required: false
     description: True to Run with SSL
@@ -18,7 +22,8 @@ inputs:
     required: false
     description: True To Auto Install
     default: 'true'
-  CP_API_CONFIG:    # Workaround until https://github.com/PrestaShop/PrestaShop/issues/29813 is fixed
+  CP_API_CONFIG:
+    # Workaround until 8.1.x is supported
     required: false
     description: True To Copy API Config
     default: 'false'
@@ -71,9 +76,9 @@ runs:
         NODE_VERSION: ${{ inputs.NODE_VERSION }}
         URL_FO: ${{ (inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/' || 'https://localhost:8002/' }}
         URL_PING: ${{ (inputs.INSTALL_AUTO == 'true') && 'en/' || 'install-dev/' }}
-        PS_DOMAIN: ${{ (inputs.ENABLE_SSL == 'false')  && 'localhost:8001' || 'localhost:8002' }}
+        PS_DOMAIN: ${{ (inputs.ENABLE_SSL == 'false') && 'localhost:8001' || 'localhost:8002' }}
         PS_DEV_MODE: ${{ (inputs.DEV_MODE == 'false') && '0' || '1' }}
-        DB_SERVER: 'mysql'
+        DB_SERVER: ${{ inputs.DB_SERVER }}
         DB_NAME: 'prestashop'
         DB_PREFIX: 'tst_'
         DB_USER: 'root'
@@ -82,5 +87,5 @@ runs:
         ADMIN_PASSWD: 'Correct Horse Battery Staple'
       run: |
         USER_ID=$(id -u) GROUP_ID=$(id -g) \
-        docker compose -f docker-compose.yml up -d --build
+        docker compose -f ${{ (inputs.DB_SERVER == 'mysql') && 'docker-compose.yml' || 'docker-compose.mariadb.yml' }} up -d prestashop-git --build
         bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }})" != "200" ]]; do sleep 5; done'

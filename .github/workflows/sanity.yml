@@ -20,8 +20,46 @@ jobs:
     name: Sanity
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3' ]
-        browser: [ 'chromium', 'firefox', 'webkit' ]
+        include:
+          ## 8.1
+          - php: 8.1
+            browser: chromium
+            db: mysql
+          - php: 8.1
+            browser: firefox
+            db: mysql
+          - php: 8.1
+            browser: webkit
+            db: mysql
+          - php: 8.1
+            browser: chromium
+            db: mariadb
+          ## 8.2
+          - php: 8.2
+            browser: chromium
+            db: mysql
+          - php: 8.2
+            browser: firefox
+            db: mysql
+          - php: 8.2
+            browser: webkit
+            db: mysql
+          - php: 8.2
+            browser: chromium
+            db: mariadb
+          ## 8.3
+          - php: 8.3
+            browser: chromium
+            db: mysql
+          - php: 8.3
+            browser: firefox
+            db: mysql
+          - php: 8.3
+            browser: webkit
+            db: mysql
+          - php: 8.3
+            browser: chromium
+            db: mariadb
       fail-fast: false
 
     steps:
@@ -34,11 +72,14 @@ jobs:
           PHP_VERSION: ${{ matrix.php }}
           ENABLE_SSL: 'true'
           INSTALL_AUTO: 'false'
+          DB_SERVER: ${{ matrix.db }}
+
       - name: Setup Environment failure
         uses: ./.github/actions/setup-env-export-logs
         with:
           DOCKER_PREFIX: prestashop
-          ARTIFACT_NAME: setup-sanity-${{ matrix.php }}-${{ matrix.browser }}
+          ARTIFACT_NAME: setup-sanity-${{ matrix.php }}-${{ matrix.browser }}-${{ matrix.db }}
+          DB_SERVER: ${{ matrix.db }}
         if: failure()
 
       - name: Run Tests
@@ -46,12 +87,13 @@ jobs:
         with:
           TEST_CAMPAIGN: ${{ env.TEST_CAMPAIGN }}
           BROWSER: ${{ matrix.browser }}
+          DB_SERVER: ${{ matrix.db }}
 
       - name: Export docker logs
         if: failure()
         run: |
           mkdir -p ./var/docker-logs
-          docker logs prestashop-mysql-1 > ./var/docker-logs/mysql.log
+          docker logs prestashop-${{ matrix.db }}-1 > ./var/docker-logs/${{ matrix.db }}.log
           docker logs prestashop-prestashop-git-1 > ./var/docker-logs/prestashop.log
 
       - name: Upload Screenshots and logs

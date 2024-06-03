@@ -16,6 +16,10 @@ on:
         description: 'Node Version'
         required: true
         type: string
+      DB_SERVER:
+        description: 'Database Server (MySQL `mysql` / MariaDB `mariadb`)'
+        required: true
+        type: string
       TESTS_DIR:
         description: 'Where UI tests are'
         required: false
@@ -192,11 +196,13 @@ jobs:
           ENABLE_SSL: ${{ env.ENABLE_SSL }}
           INSTALL_AUTO: ${{ env.INSTALL_AUTO }}
           CP_API_CONFIG: ${{ (env.GH_BRANCH == '8.1.x') && 'true' || 'false' }}
+          DB_SERVER: ${{ inputs.DB_SERVER }}
       - name: Setup Environment failure
         uses: ./.github/actions/setup-env-export-logs
         with:
           DOCKER_PREFIX: prestashop
-          ARTIFACT_NAME: setup-nightly-${{ matrix.BRANCH }}-${{ matrix.CAMPAIGN }}
+          ARTIFACT_NAME: setup-nightly-${{ matrix.BRANCH }}-${{ matrix.CAMPAIGN }}-${{ inputs.DB_SERVER }}
+          DB_SERVER: ${{ inputs.DB_SERVER }}
         if: failure()
 
       # Keycloak is only needed for API campaign
@@ -211,6 +217,7 @@ jobs:
           NODE_VERSION: ${{ inputs.NODE_VERSION }}
           TEST_CAMPAIGN: ${{ env.TEST_CAMPAIGN }}
           TESTS_DIR: ${{ inputs.TESTS_DIR }}
+          DB_SERVER: ${{ inputs.DB_SERVER }}
 
       # Rename and upload report as artifact
       - name: Rename file reports
@@ -276,7 +283,7 @@ jobs:
           COMBINED_REPORT_DIR_PATH: ${{ github.workspace }}/${{ env.COMBINED_REPORT_DIR }}
         run: |
           mkdir -p ${{ env.COMBINED_REPORT_DIR_PATH }}
-          REPORT_NAME="$(date +%Y-%m-%d)-${{ env.GH_BRANCH }}"
+          REPORT_NAME="$(date +%Y-%m-%d)-${{ env.GH_BRANCH }}-${{ inputs.DB_SERVER }}"
           npx mochawesome-merge "${{ env.REPORTS_DIR_PATH }}/*.json" -o "${{ env.COMBINED_REPORT_DIR_PATH }}/${REPORT_NAME}.json"
 
       - name: Auth Cloud Sdk

@@ -59,6 +59,11 @@ describe('FO - Home Page : Select color on hover on product list', async () => {
   it('should check that the displayed product is white', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDisplayedProduct', baseContext);
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/36356
+    if (global.INSTALL.DB_SERVER === 'mariadb') {
+      this.skip();
+    }
+
     const pageURL = await productPage.getCurrentURL(page);
     expect(pageURL).to.contains('color-white')
       .and.to.contains('size-m');
@@ -82,7 +87,7 @@ describe('FO - Home Page : Select color on hover on product list', async () => {
     expect(pageTitle).to.contains(dataProducts.demo_1.name);
   });
 
-  it('should check that the displayed product is white', async function () {
+  it('should check that the displayed product is black', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDisplayedProduct2', baseContext);
 
     const pageURL = await productPage.getCurrentURL(page);
