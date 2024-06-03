@@ -96,7 +96,7 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         if ($carrier->position) {
             $newCarrier->position = $carrier->position;
         }
-        if ($carrier->active) {
+        if (null !== $carrier->active) {
             $newCarrier->active = $carrier->active;
         }
         if ($carrier->delay) {
@@ -114,10 +114,24 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         if ($carrier->max_weight) {
             $newCarrier->max_weight = $carrier->max_weight;
         }
+        if (null !== $carrier->shipping_handling) {
+            $newCarrier->shipping_handling = $carrier->shipping_handling;
+        }
+        if (null !== $carrier->is_free) {
+            $newCarrier->is_free = $carrier->is_free;
+        }
+        if (null !== $carrier->shipping_method) {
+            $newCarrier->shipping_method = $carrier->shipping_method;
+        }
+        if (null !== $carrier->range_behavior) {
+            $newCarrier->range_behavior = $carrier->range_behavior;
+        }
+
         $newCarrier->deleted = false; // just to be sure...
 
         // Copy all others information like ranges, shops associated, ...
         $newCarrier->copyCarrierData($carrierId->getValue());
+
         $this->updateObjectModel($newCarrier, CannotUpdateCarrierException::class);
 
         $newCarrier->setGroups($oldCarrier->getAssociatedGroupIds());

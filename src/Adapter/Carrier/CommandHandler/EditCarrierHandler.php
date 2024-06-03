@@ -57,6 +57,8 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
     public function handle(EditCarrierCommand $command): CarrierId
     {
         $carrier = $this->carrierRepository->get($command->getCarrierId());
+
+        // General information
         if ($command->getName()) {
             $carrier->name = $command->getName();
         }
@@ -69,7 +71,7 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         if ($command->getPosition()) {
             $carrier->position = $command->getPosition();
         }
-        if ($command->getActive()) {
+        if (null !== $command->getActive()) {
             $carrier->active = $command->getActive();
         }
         if ($command->getLocalizedDelay()) {
@@ -88,6 +90,23 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
             $carrier->max_weight = $command->getMaxWeight();
         }
 
+        // Shipping information
+        if (null !== $command->isShippingHandling()) {
+            $carrier->shipping_handling = $command->isShippingHandling();
+        }
+
+        if (null !== $command->isFree()) {
+            $carrier->is_free = $command->isFree();
+        }
+
+        if ($command->getShippingMethod()) {
+            $carrier->shipping_method = $command->getShippingMethod();
+        }
+
+        if (null !== $command->getRangeBehavior()) {
+            $carrier->range_behavior = $command->getRangeBehavior();
+        }
+
         $this->carrierValidator->validate($carrier);
         if ($command->getAssociatedGroupIds()) {
             $this->carrierValidator->validateGroupsExist($command->getAssociatedGroupIds());
@@ -100,6 +119,10 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         if ($command->getAssociatedGroupIds()) {
             $newCarrier->setGroups($command->getAssociatedGroupIds());
         }
+        if (null !== $command->getIdTaxRuleGroup()) {
+            $newCarrier->setTaxRulesGroup($command->getIdTaxRuleGroup());
+        }
+
         if ($command->getLogoPathName() !== null) {
             $this->carrierLogoFileUploader->deleteOldFile($newCarrier->id);
 

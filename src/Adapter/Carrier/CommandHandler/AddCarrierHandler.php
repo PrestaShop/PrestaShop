@@ -57,6 +57,7 @@ class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHand
     public function handle(AddCarrierCommand $command): CarrierId
     {
         $carrier = new Carrier();
+        // General information
         $carrier->name = $command->getName();
         $carrier->grade = $command->getGrade();
         $carrier->url = $command->getTrackingUrl();
@@ -68,11 +69,20 @@ class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHand
         $carrier->max_weight = $command->getMaxWeight();
         $carrier->max_depth = $command->getMaxDepth();
 
+        // Shipping information
+        $carrier->shipping_handling = $command->isShippingHandling();
+        $carrier->is_free = $command->isFree();
+        $carrier->shipping_method = $command->getShippingMethod();
+        $carrier->range_behavior = $command->getRangeBehavior();
+
         $this->carrierValidator->validate($carrier);
         $this->carrierValidator->validateGroupsExist($command->getAssociatedGroupIds());
 
         $carrierId = $this->carrierRepository->add($carrier);
         $carrier->setGroups($command->getAssociatedGroupIds());
+
+        // Set tax rules group
+        $carrier->setTaxRulesGroup($command->getIdTaxRuleGroup());
 
         if ($command->getLogoPathName() !== null) {
             $this->carrierValidator->validateLogoUpload($command->getLogoPathName());
