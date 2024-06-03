@@ -1,3 +1,5 @@
+@import "../../config/settings";
+
 body {
   font-size: 12px;
 }
@@ -8,11 +10,11 @@ label {
 
 #login-panel {
   position: relative;
-  width: 500px;
+  max-width: 500px;
   margin: 0 auto;
 
   #login-header {
-    padding-top: 40px;
+    padding-top: 4.5rem;
     margin-bottom: 30px;
     color: #6d6d6d;
   }
@@ -38,17 +40,24 @@ label {
     #login_form {
       .checkbox-widget {
         position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
 
         .form-external-link {
-          position: absolute;
-          top: 0;
-          right: 0;
+          padding: 0.5rem 0;
 
           a.btn {
             padding: 0;
             font-size: 12px;
             font-weight: 400;
           }
+        }
+
+        .form-check-radio {
+          flex-grow: 1;
+          margin-right: auto;
+          margin-bottom: 0;
         }
       }
     }
@@ -73,14 +82,18 @@ label {
 
   a.login-back {
     position: fixed;
-    top: 1rem;
-    left: 1rem;
+    top: 0;
+    left: 0;
+    z-index: 100;
     display: flex;
     align-items: center;
+    width: 100%;
+    padding: 1rem;
     font-size: 1rem;
     font-weight: 400;
     color: inherit;
     text-decoration: none;
+    background-color: $background-grey;
 
     i {
       margin-right: 0.5rem;
