@@ -60,6 +60,8 @@ services:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/*"
   PrestaShopBundle\Form\Admin\Login\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Login/*"
+  PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/*"
 
   PrestaShopBundle\Form\Admin\Type\DatePickerType:
     arguments:

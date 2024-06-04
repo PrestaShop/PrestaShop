@@ -283,3 +283,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ImageTypeFormDataHandler:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CarrierFormDataHandler:
+    autowire: true
+    public: false

@@ -36,7 +36,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form type is used as a container of sub forms, each sub form will be rendered as a part of navigation tab
- * component. Each first level child is used as a different tab, its label is used for the tab name and it's widget
+ * component. Each first level child is used as a different tab, its label is used for the tab name, and it's widget
  * as the tab content.
  */
 class NavigationTabType extends AbstractType
@@ -70,18 +70,26 @@ class NavigationTabType extends AbstractType
     {
         parent::buildForm($builder, $options);
         if (!empty($options['toolbar_buttons'])) {
-            if ($builder->has('_toolbar_buttons')) {
-                if ($this->isDebug) {
-                    throw new InvalidConfigurationException('You cannot add a field which name is _toolbar_buttons on this component as it is used internally.');
-                } else {
-                    $this->logger->warning('You should not add a field which name is _toolbar_buttons on this component as it is used internally.');
-                }
-            }
-
-            $builder->add('_toolbar_buttons', ButtonCollectionType::class, array_merge([
-                'buttons' => $options['toolbar_buttons'],
-            ], $options['toolbar_options']));
+            $this->addButtonCollection($builder, '_toolbar_buttons', $options['toolbar_buttons'], $options['toolbar_options']);
         }
+        if (!empty($options['footer_buttons'])) {
+            $this->addButtonCollection($builder, '_footer_buttons', $options['footer_buttons'], $options['footer_options']);
+        }
+    }
+
+    protected function addButtonCollection(FormBuilderInterface $builder, string $buttonCollectionName, array $buttons, array $buttonCollectionOptions): void
+    {
+        if ($builder->has($buttonCollectionName)) {
+            if ($this->isDebug) {
+                throw new InvalidConfigurationException(sprintf('You cannot add a field which name is %s on this component as it is used internally.', $buttonCollectionName));
+            } else {
+                $this->logger->warning(sprintf('You should not add a field which name is %s on this component as it is used internally.', $buttonCollectionName));
+            }
+        }
+
+        $builder->add($buttonCollectionName, ButtonCollectionType::class, array_merge([
+            'buttons' => $buttons,
+        ], $buttonCollectionOptions));
     }
 
     /**
@@ -94,9 +102,13 @@ class NavigationTabType extends AbstractType
             ->setDefaults([
                 'toolbar_buttons' => [],
                 'toolbar_options' => [],
+                'footer_buttons' => [],
+                'footer_options' => [],
             ])
             ->setAllowedTypes('toolbar_buttons', 'array')
             ->setAllowedTypes('toolbar_options', 'array')
+            ->setAllowedTypes('footer_buttons', 'array')
+            ->setAllowedTypes('footer_options', 'array')
         ;
     }
 }

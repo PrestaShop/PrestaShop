@@ -1330,7 +1330,11 @@
 {% block image_preview_widget %}
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
-  <img src="{{ value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" class="{{ form.vars.image_class }}" />
+  {% if value is not empty %}
+    <img src="{{ value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" class="{{ form.vars.image_class }}" />
+  {% else %}
+    {{ 'No picture'|trans({}, 'Admin.Global') }}
+  {% endif %}
 {% endblock %}
 
 {% block delta_quantity_widget %}
@@ -1428,7 +1432,7 @@
     <ul class="nav nav-tabs js-nav-tabs" id="form-nav" role="tablist">
     {% set firstRenderedChild = true %}
     {% for child in form.children %}
-      {% if not child.rendered and child.vars.name != '_toolbar_buttons' and child.vars.name != '_token' %}
+      {% if not child.rendered and child.vars.name != '_toolbar_buttons' and child.vars.name != '_footer_buttons' and child.vars.name != '_token' %}
       <li id="{{ child.vars.id }}-tab-nav" class="nav-item{% if not child.vars.valid %} has-error{% endif %}">
         <a href="#{{ child.vars.id }}-tab" role="tab" data-toggle="tab" class="nav-link{% if firstRenderedChild %} active{% endif %}">
           {{ child.vars.label }}
@@ -1453,7 +1457,7 @@
   <div id="{{ form.vars.id }}-tabs-content" class="tab-content">
     {% set firstRenderedChild = true %}
     {% for child in form.children %}
-      {% if not child.rendered and child.vars.name != '_token' %}
+      {% if not child.rendered and child.vars.name != '_footer_buttons' and child.vars.name != '_token' %}
       <div role="tabpanel" class="form-contenttab tab-pane container-fluid{% if firstRenderedChild %} active{% endif %}" id="{{ child.vars.id }}-tab">
         {% if child.vars.label_tab is defined %}
           {{ form_label(child, child.vars.label_tab) }}
@@ -1465,6 +1469,12 @@
       {% endif %}
     {% endfor %}
   </div>
+
+  {% if form.offsetExists('_footer_buttons') %}
+    <div class="navigation-tab-widget-footer">
+      {{ form_widget(form._footer_buttons) }}
+    </div>
+  {% endif %}
 </div>
 {% endblock %}
 

@@ -8,10 +8,19 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.grid.presenter.grid_presenter:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
+  PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter:
+    public: false
     arguments:
       - '@prestashop.core.hook.dispatcher'
+
+  prestashop.core.grid.presenter.grid_presenter:
+    alias: PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter
+    public: true
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenterInterface: '@PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
 
   prestashop.core.grid.query.doctrine_query_parser:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryParser'

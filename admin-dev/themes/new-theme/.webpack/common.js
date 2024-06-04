@@ -50,6 +50,7 @@ module.exports = {
     attribute_group_form: './js/pages/attribute-group/form',
     backup: './js/pages/backup',
     carrier: './js/pages/carrier',
+    carrier_form: './js/pages/carrier/form',
     cart_rule: './js/pages/cart-rule',
     cart_rule_form: './js/pages/cart-rule/form',
     catalog: './js/app/pages/catalog',

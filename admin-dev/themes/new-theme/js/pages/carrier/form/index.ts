@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,29 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
+import onReady from '@components/on-ready';
+import TranslatableInput from '@components/translatable-input';
 
-/**
- * Interface IdentifiableObjectFormDataHandlerInterface.
- */
-interface FormDataHandlerInterface
-{
-    /**
-     * Create object from form data.
-     *
-     * @param array $data
-     *
-     * @return mixed ID of identifiable object
-     */
-    public function create(array $data);
-
-    /**
-     * Update object with form data.
-     *
-     * @param int $id
-     * @param array $data
-     *
-     * @return mixed Potential new ID of identifiable object
-     */
-    public function update($id, array $data);
-}
+onReady(() => {
+  new TranslatableInput();
+});
