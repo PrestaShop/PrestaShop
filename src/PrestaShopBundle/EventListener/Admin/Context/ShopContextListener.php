@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Routing\LegacyControllerConstants;
+use PrestaShopBundle\Security\Admin\TokenAttributes;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -62,8 +63,6 @@ class ShopContextListener implements EventSubscriberInterface
      * Priority higher than Symfony router listener (which is 32)
      */
     public const BEFORE_ROUTER_PRIORITY = 33;
-
-    public const SHOP_CONSTRAINT_TOKEN_ATTRIBUTE = '_shop_constraint';
 
     public function __construct(
         private readonly ShopContextBuilder $shopContextBuilder,
@@ -189,11 +188,11 @@ class ShopContextListener implements EventSubscriberInterface
      */
     private function getShopConstraintFromTokenAttribute(): ?ShopConstraint
     {
-        if (!$this->security->getToken() || !$this->security->getToken()->hasAttribute(self::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE)) {
+        if (!$this->security->getToken() || !$this->security->getToken()->hasAttribute(TokenAttributes::SHOP_CONSTRAINT)) {
             return null;
         }
 
-        $shopConstraint = $this->security->getToken()->getAttribute(self::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE);
+        $shopConstraint = $this->security->getToken()->getAttribute(TokenAttributes::SHOP_CONSTRAINT);
         if ($shopConstraint instanceof ShopConstraint) {
             return $shopConstraint;
         }
@@ -226,7 +225,7 @@ class ShopContextListener implements EventSubscriberInterface
         }
 
         // Update the token attribute value, it will be persisted by Symfony at the end of the redirect request
-        $this->security->getToken()->setAttribute(self::SHOP_CONSTRAINT_TOKEN_ATTRIBUTE, $parameterShopConstraint);
+        $this->security->getToken()->setAttribute(TokenAttributes::SHOP_CONSTRAINT, $parameterShopConstraint);
 
         // Redirect to same url but remove setShopContext and conf parameters
         return new RedirectResponse(UrlCleaner::cleanUrl(

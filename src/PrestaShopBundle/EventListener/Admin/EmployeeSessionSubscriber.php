@@ -28,16 +28,19 @@ namespace PrestaShopBundle\EventListener\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Employee\EmployeeSession;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
 use PrestaShopBundle\Security\Admin\EmployeeProvider;
+use PrestaShopBundle\Security\Admin\TokenAttributes;
 use PrestaShopBundle\Service\Routing\Router;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
@@ -47,6 +50,7 @@ use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This subscriber watches the various authentication event and saves or removes the persisted
@@ -57,8 +61,6 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
 {
     use TargetPathTrait;
 
-    public const EMPLOYEE_SESSION_TOKEN_ATTRIBUTE = '_employee_session';
-
     public function __construct(
         private readonly EmployeeProvider $employeeProvider,
         private readonly EmployeeRepository $employeeRepository,
@@ -68,6 +70,8 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         private readonly LegacyContext $legacyContext,
         private readonly CsrfTokenManagerInterface $tokenManager,
         private readonly RouterInterface $router,
+        private readonly ConfigurationInterface $configuration,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -96,7 +100,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         $this->entityManager->flush();
 
         // Set the EmployeeSession as a token attribute so that it is serialized in the session
-        $event->getAuthenticatedToken()->setAttribute(self::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE, $employeeSession);
+        $event->getAuthenticatedToken()->setAttribute(TokenAttributes::EMPLOYEE_SESSION, $employeeSession);
     }
 
     public function onLoginSuccess(LoginSuccessEvent $event): void
@@ -109,6 +113,12 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
             $tokenizedUrl = Router::generateTokenizedUrl($eventResponse->getTargetUrl(), $this->tokenManager->refreshToken($event->getAuthenticatedToken()->getUserIdentifier())->getValue());
             $eventResponse->setTargetUrl($tokenizedUrl);
             $event->setResponse($eventResponse);
+        }
+
+        // Save the IP used when the user logged in
+        if ((bool) $this->configuration->get('PS_COOKIE_CHECKIP')) {
+            $requestIpAddress = $event->getRequest()->getClientIp();
+            $event->getAuthenticatedToken()->setAttribute(TokenAttributes::IP_ADDRESS, $requestIpAddress);
         }
 
         // Update the cookie after successful login
@@ -139,6 +149,13 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
             return;
         }
 
+        if ((bool) $this->configuration->get('PS_COOKIE_CHECKIP') && $this->getIpAddressFromToken() !== $event->getRequest()->getClientIp()) {
+            $this->logger->debug('Employee IP Address does not match with the expected one');
+            $this->logoutAndStopEvent($event);
+
+            return;
+        }
+
         // Update the legacy cookie on each request in case it has been modified, this way we make sure the legacy modules and
         // legacy controllers that rely on it always have up-to-date info
         $this->updateLegacyCookie($event->getRequest());
@@ -150,7 +167,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         $employee = $this->employeeProvider->loadUserByIdentifier($event->getOriginalToken()->getUserIdentifier());
         if ($employee instanceof Employee) {
             // If the employee has been forcefully deauthenticated, it is safe to assume that all his related sessions
-            // can no longer be considered safe so they are all removed, thus the employee will be logged out on all
+            // can no longer be considered safe, so they are all removed, thus the employee will be logged out on all
             // their devices
             $employee->removeAllSessions();
             $this->entityManager->flush();
@@ -187,15 +204,29 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         // Stop the event propagation, nothing more needs to happen except for redirection, and it prevents the event to
         // keep travelling and be caught by other unwanted listeners (like the TokenizedUrlsListener)
         $event->stopPropagation();
+
+        $session = $event->getRequest()->getSession();
+        if ($session instanceof FlashBagAwareSessionInterface) {
+            $session->getFlashBag()->add('warning', $this->translator->trans('You have been logged out for security reasons', [], 'Admin.Login.Feature'));
+        }
     }
 
     protected function getEmployeeSessionFromToken(): ?EmployeeSession
     {
-        if (!$this->security->getToken()?->hasAttribute(self::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE)) {
+        if (!$this->security->getToken()?->hasAttribute(TokenAttributes::EMPLOYEE_SESSION)) {
             return null;
         }
 
-        return $this->security->getToken()->getAttribute(self::EMPLOYEE_SESSION_TOKEN_ATTRIBUTE);
+        return $this->security->getToken()->getAttribute(TokenAttributes::EMPLOYEE_SESSION);
+    }
+
+    protected function getIpAddressFromToken(): ?string
+    {
+        if (!$this->security->getToken()?->hasAttribute(TokenAttributes::IP_ADDRESS)) {
+            return null;
+        }
+
+        return $this->security->getToken()->getAttribute(TokenAttributes::IP_ADDRESS);
     }
 
     /**
