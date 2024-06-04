@@ -30,7 +30,7 @@ export default {
   loginForm: '#login_form',
   forgotPasswordForm: '#forgot_password_form',
   forgotPasswordLink: '#forgot-password-link',
-  cancelResetPasswordButton: '#reset_password_buttons_cancel',
+  cancelResetPasswordButton: '#request_password_reset_buttons_cancel',
   passwordStrengthFeedbackContainer: '.password-strength-feedback',
   resetNewPassword: '#reset_password_new_password_first',
   resetNewPasswordConfirmation: '#reset_password_new_password_second',
