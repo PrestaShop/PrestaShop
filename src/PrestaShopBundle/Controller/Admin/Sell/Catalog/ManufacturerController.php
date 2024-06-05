@@ -427,7 +427,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_manufacturers_edit', redirectQueryParamsToKeep: ['manufacturerId'])]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectQueryParamsToKeep: ['manufacturerId'], redirectRoute: 'admin_manufacturers_edit')]
     public function deleteLogoImageAction(Request $request, int $manufacturerId): RedirectResponse
     {
         if (!$this->isCsrfTokenValid('delete-logo-thumbnail', $request->request->get('_csrf_token'))) {

@@ -280,15 +280,11 @@ class AttributeController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     message="You do not have permission to export this."
-     * )
-     *
      * @param AttributeFilters $filters
      *
      * @return CsvResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to export this.')]
     public function exportAction(AttributeFilters $filters): CsvResponse
     {
         $filters = new AttributeFilters(['limit' => null] + $filters->all());
