@@ -835,9 +835,9 @@ class DispatcherCore
         if (!in_array($front_controller, [
             self::FC_ADMIN,
             self::FC_FRONT,
-            self::FC_MODULE
+            self::FC_MODULE,
         ])) {
-            throw new PrestaShopException('Dispatcher::setFrontController() fron_controller name is not valid');
+            throw new PrestaShopException('Dispatcher::setFrontController() front_controller name is not valid');
         }
 
         $this->front_controller = $front_controller;
