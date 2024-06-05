@@ -56,10 +56,10 @@
         "pelago/emogrifier": "^v7.0.0",
         "phpoffice/phpspreadsheet": "^1.19",
         "prestashop/autoload": "^v1.0.2",
-        "prestashop/blockreassurance": "^5.1",
+        "prestashop/blockreassurance": "^6",
         "prestashop/blockwishlist": "^3.0",
         "prestashop/circuit-breaker": "^4.0",
-        "prestashop/classic": "develop-dev",
+        "prestashop/classic": "dev-develop",
         "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
         "prestashop/dashgoals": "^2",
@@ -71,7 +71,7 @@
         "prestashop/gsitemap": "^4",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^7.0",
-        "prestashop/ps_apiresources": "dev-upload-product-image",
+        "prestashop/ps_apiresources": "dev-dev",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
         "prestashop/ps_brandlist": "^1.0",
@@ -89,7 +89,7 @@
         "prestashop/ps_distributionapiclient": "^1.0",
         "prestashop/ps_emailalerts": "^3",
         "prestashop/ps_emailsubscription": "^2.7",
-        "prestashop/ps_facetedsearch": "^3.2.1",
+        "prestashop/ps_facetedsearch": "^3",
         "prestashop/ps_faviconnotificationbo": "^2",
         "prestashop/ps_featuredproducts": "^2",
         "prestashop/ps_googleanalytics": "^5",
@@ -256,7 +256,7 @@
     "repositories": {
         "ps_apiresources": {
             "type": "vcs",
-            "url": "https://github.com/jolelievre/ps_apiresources.git"
+            "url": "https://github.com/PrestaShop/ps_apiresources.git"
         }
     },
     "minimum-stability": "dev",
