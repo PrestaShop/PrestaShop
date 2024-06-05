@@ -47,6 +47,9 @@ parameters:
     - '#constructor expects Symfony\\Contracts\\Translation\\TranslatorInterface\|null, Symfony\\Component\\Translation\\TranslatorInterface given\.$#'
     - '#^Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface\:\:dispatch\(\) invoked with 2 parameters, 1 required\.$#'
     - '~^Access to an undefined property PrestaShop\\PrestaShop\\Core\\Module\\ModuleInterface::\$(attributes|disk|database)\.$~'
+    - message: "#^Dead catch \\- Symfony\\\\Component\\\\HttpFoundation\\\\File\\\\Exception\\\\FileNotFoundException is never thrown in the try block\\.$#"
+      count: 1
+      path: src/PrestaShopBundle/Controller/Admin/SecuredFileReaderController.php
     ## Smarty functions
     - '#^Function smartyRegisterFunction not found\.$#'
     ## CQRS API Platform operations

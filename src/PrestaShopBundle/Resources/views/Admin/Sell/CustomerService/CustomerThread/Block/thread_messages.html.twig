@@ -59,7 +59,7 @@
 
           {% if message.attachmentFile %}
             <i class="material-icons font-16">attachment</i>
-            <a href="{{ message.attachmentFile }}" target="_blank">
+            <a href="{{ path('admin_common_secured_file_image_reader', { 'fileName': message.attachmentFile }) }}" target="_blank">
               {{ 'Attachment'|trans({}, 'Admin.Catalog.Feature') }}
             </a>
           {% endif %}
