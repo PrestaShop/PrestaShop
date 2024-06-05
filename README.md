@@ -90,8 +90,7 @@ docker compose up
 ```
 
 ### BLACKFIRE
-By default, blackfire will not be installed. During the install process, the installation of blackfire is based on 3
-environment variables:
+By default, blackfire will not be installed. During the install process, the installation of blackfire is based on 3 environment variables:
 
 ```
 BLACKFIRE_ENABLE: 1
