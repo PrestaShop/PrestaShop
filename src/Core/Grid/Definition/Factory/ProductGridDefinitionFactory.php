@@ -634,6 +634,14 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
+                (new LinkGridAction('export'))
+                    ->setName($this->trans('Export', [], 'Admin.Actions'))
+                    ->setIcon('cloud_download')
+                    ->setOptions([
+                        'route' => 'admin_products_export',
+                    ])
+            )
+            ->add(
                 (new SimpleGridAction('common_refresh_list'))
                     ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
                     ->setIcon('refresh')
