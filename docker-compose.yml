@@ -46,6 +46,9 @@ services:
       PS_USE_DOCKER_MAILDEV: ${PS_USE_DOCKER_MAILDEV:-1}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
       ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
+      BLACKFIRE_ENABLE: ${BLACKFIRE_ENABLE:-0}
+      BLACKFIRE_SERVER_ID: ${BLACKFIRE_SERVER_ID:-0}
+      BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN:-0}
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
     ports:
       - "8001:80"
