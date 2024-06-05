@@ -816,13 +816,15 @@ class DispatcherCore
      *
      * @return null
      */
-    public function setController(string $controller)
+    public function setController(string $controller): self
     {
         if (!Validate::isControllerName($controller)) {
             throw new PrestaShopException('Dispatcher::setController() controller name is not valid');
         }
 
         $this->controller = $controller;
+
+        return $this;
     }
 
     /**
@@ -830,7 +832,7 @@ class DispatcherCore
      *
      * @return null
      */
-    public function setFrontController(string $front_controller)
+    public function setFrontController(int $front_controller): self
     {
         if (!in_array($front_controller, [
             self::FC_ADMIN,
@@ -841,6 +843,8 @@ class DispatcherCore
         }
 
         $this->front_controller = $front_controller;
+
+        return $this;
     }
 
     /**
