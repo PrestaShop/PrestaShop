@@ -173,6 +173,7 @@
         "symfony/templating": "6.4.*",
         "symfony/translation": "6.4.*",
         "symfony/twig-bundle": "6.4.*",
+        "symfony/ux-icons": "^2.17",
         "symfony/ux-twig-component": "^2.9",
         "symfony/validator": "6.4.*",
         "symfony/var-dumper": "6.4.*",

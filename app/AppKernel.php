@@ -76,6 +76,7 @@ abstract class AppKernel extends Kernel
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Symfony\UX\TwigComponent\TwigComponentBundle(),
             new Twig\Extra\TwigExtraBundle\TwigExtraBundle(),
+            new Symfony\UX\Icons\UXIconsBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

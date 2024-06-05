@@ -10,3 +10,6 @@ framework:
     strict_requirements: ~
   session:
     cookie_secure: 'auto'
+
+ux_icons:
+  icon_dir: '%prestashop.admin_dir%/themes/new-theme/icons'
