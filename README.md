@@ -80,12 +80,30 @@ docker compose down -v
 docker compose build --no-cache
 docker compose up --build --force-recreate
 ```
-**Note:** To add a PHPMyAdmin service to your Docker Compose setup, you can copy the existing `docker-compose.override.yml.dist` to `docker-compose.override.yml` and then start your Docker Compose setup (override file will be included as it is a convention)
+
+### PHPMyAdmin
+To add a PHPMyAdmin service to your Docker Compose setup, you can copy the existing `docker-compose.override.yml.dist` to `docker-compose.override.yml` and then start your Docker Compose setup (override file will be included as it is a convention)
 
 ```
 cp docker-compose.override.yml.dist docker-compose.override.yml
 docker compose up
 ```
+
+### BLACKFIRE
+By default, blackfire will not be installed. During the install process, the installation of blackfire is based on 3
+environment variables:
+
+```
+BLACKFIRE_ENABLE: 1
+BLACKFIRE_SERVER_ID: "your_server_id"
+BLACKFIRE_SERVER_TOKEN: "your_blackfire_server_token"
+```
+
+Those env variables are self-explanatory, you can either set them yourself or override the docker-compose default values:
+
+Open the file `docker-compose.override.yml` (copy it from `docker-compose.override.yml.dist`
+if it's not already done, see command just above in the PHPMyadmin section).
+Then uncomment the 3 docker lines and fill the BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN with your account's server id and token.
 
 Documentation
 --------
