@@ -159,7 +159,7 @@ const initPrestashopComponents = (): void => {
     TinyMCEEditor,
     TranslatableField,
     TranslatableInput,
-    EntitySearchInput
+    EntitySearchInput,
   };
 };
 export default initPrestashopComponents;
