@@ -150,7 +150,7 @@ if [ $PS_USE_DOCKER_MAILDEV -eq 1 ]; then
 fi
 
 if [ $BLACKFIRE_ENABLE -eq 1 ]; then
-    if [ $BLACKFIRE_SERVER_ID -eq 0 ] || [ $BLACKFIRE_SERVER_TOKEN -eq 0 ]; then
+    if [ "$BLACKFIRE_SERVER_ID" = "0" ] || [ "$BLACKFIRE_SERVER_TOKEN" = "0" ]; then
             echo "\n* BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN environment variables missing."
             echo "\n* Skipping blackfire install..."
     else
