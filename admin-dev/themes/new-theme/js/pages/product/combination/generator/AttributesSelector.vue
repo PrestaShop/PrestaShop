@@ -111,6 +111,11 @@
                     v-if="attribute.color"
                     :style="`background-color: ${attribute.color}`"
                   />
+                  <span
+                    class="attribute-item-texture"
+                    v-if="attribute.texture"
+                    :style="`background: transparent url(${attribute.texture}) no-repeat; background-size: 100% auto;`"
+                  />
                   <span class="attribute-item-name">{{ attribute.name }}</span>
                 </div>
               </label>
@@ -322,6 +327,12 @@
       }
     }
 
+    .tags-wrapper {
+      width: 100%;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
     #attributes-list-selector {
       max-height: 50vh;
 
@@ -400,7 +411,8 @@
             display: none;
           }
 
-          &-color {
+          &-color,
+          &-texture {
             display: block;
             width: 15px;
             height: 15px;

@@ -101,6 +101,7 @@ class JavascriptManagerCore extends AbstractAssetManager
         $position = $this->getSanitizedPosition($position);
         $attribute = $this->getSanitizedAttribute($attribute);
 
+        $srcPath = $fullPath;
         $fullPath = $version ? $fullPath . '?' . $version : $fullPath;
 
         if ('remote' === $server) {
@@ -114,7 +115,7 @@ class JavascriptManagerCore extends AbstractAssetManager
         $this->list[$position][$type][$id] = [
             'id' => $id,
             'type' => $type,
-            'path' => $fullPath,
+            'path' => $srcPath,
             'uri' => $uri,
             'priority' => $priority,
             'attribute' => $attribute,

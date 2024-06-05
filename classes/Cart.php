@@ -2394,6 +2394,15 @@ class CartCore extends ObjectModel
 
     /**
      * Get products grouped by package and by addresses to be sent individualy (one package = one shipping cost).
+     * This method tries to separate products to as small number of packages as possible. Ideally one.
+     *
+     * If there is a carrier that sends all products, it will use it.
+     * If not, it will separate it to multiple packages.
+     *
+     * What can also happen is that it will return one package, but with no carrier available.
+     * It can also return more packages, but some of the packages may not have any carrier to send it.
+     * ("carrier_list" => [0 => 0])
+     * The core needs to handle these cases later in the process.
      *
      * @return array array(
      *               0 => array( // First address
@@ -2606,6 +2615,14 @@ class CartCore extends ObjectModel
         $delivery_option_list = [];
         $carriers_price = [];
         $carrier_collection = [];
+
+        /*
+         * We get a list of packages. This list is always composed of
+         * $id_address and corresponding packages of products.
+         *
+         * The $id_address will always be only one. There used to be a feature that allowed
+         * to send some products to different addresses. This is gone now.
+         */
         $package_list = $this->getPackageList($flush);
 
         // Foreach addresses
@@ -2618,7 +2635,10 @@ class CartCore extends ObjectModel
             $best_grade_carriers = [];
             $carriers_instance = [];
 
-            // Get country
+            /*
+             * We initialize address. If no addres was provided ($id_address can be zero),
+             * we will use the default country ID to fetch our shipping prices.
+             */
             if ($id_address) {
                 $address = new Address($id_address);
                 $country = new Country($address->id_country);
@@ -2628,8 +2648,18 @@ class CartCore extends ObjectModel
 
             // Foreach packages, get the carriers with best price, best position and best grade
             foreach ($packages as $id_package => $package) {
-                // No carriers available
-                if (count($packages) == 1 && count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0) {
+                /*
+                 * Usually, there is only one package of products with multiple carriers.
+                 * But, if there is no carrier that sends everything in the cart, the core will
+                 * separate the order into multiple packages. (multishipping)
+                 *
+                 * So, we need to check, if we have AT LEAST ONE carrier for every package.
+                 * If there is one package and it doesn't have any carriers => no delivery options.
+                 * If there are multiple packages and one of them doesn't have any carriers => no delivery options.
+                 *
+                 * We can't just use empty($package['carrier_list']) because it looks like [0 => 0] if there are no carriers.
+                 */
+                if (count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0) {
                     $cache[$this->id] = [];
 
                     return $cache[$this->id];
