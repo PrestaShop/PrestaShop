@@ -78,6 +78,13 @@ label {
     a {
       color: #a0aab5;
     }
+
+    .login-footer-social {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   a.login-back {
