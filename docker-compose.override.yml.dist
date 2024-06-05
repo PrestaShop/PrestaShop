@@ -10,9 +10,6 @@ services:
       PMA_USER: root
       PMA_PASSWORD: prestashop
       MYSQL_ROOT_PASSWORD: prestashop
-      # BLACKFIRE_ENABLE: 1
-      # BLACKFIRE_SERVER_ID: "your_blackfire_server_id"
-      # BLACKFIRE_SERVER_TOKEN: "your_blackfire_server_token"
     restart: unless-stopped
     depends_on:
       - mysql
