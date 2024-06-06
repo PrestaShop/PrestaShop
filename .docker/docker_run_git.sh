@@ -150,6 +150,22 @@ if [ $PS_USE_DOCKER_MAILDEV -eq 1 ]; then
     runuser -g www-data -u www-data -- php /var/www/html/bin/console prestashop:config set PS_MAIL_SMTP_PORT --value "1025"
 fi
 
+if [ $BLACKFIRE_ENABLE -eq 1 ]; then
+    if [ "$BLACKFIRE_SERVER_ID" = "0" ] || [ "$BLACKFIRE_SERVER_TOKEN" = "0" ]; then
+            echo "\n* BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN environment variables missing."
+            echo "\n* Skipping blackfire install..."
+    else
+      echo "\n* Installing Blackfire..."
+      wget -q -O - https://packages.blackfire.io/gpg.key | dd of=/usr/share/keyrings/blackfire-archive-keyring.asc
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/blackfire-archive-keyring.asc] http://packages.blackfire.io/debian any main" | tee /etc/apt/sources.list.d/blackfire.list
+      apt update
+      apt install -y blackfire
+      blackfire agent:config --server-id=$BLACKFIRE_SERVER_ID --server-token=$BLACKFIRE_SERVER_TOKEN
+      service blackfire-agent restart
+      apt install -y blackfire-php
+    fi
+fi
+
 echo "\n***"
 echo "**"
 echo "** Front-office: http://${PS_DOMAIN}/"
