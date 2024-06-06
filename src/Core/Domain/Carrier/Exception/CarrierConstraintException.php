@@ -117,4 +117,9 @@ class CarrierConstraintException extends CarrierException
      * Thrown when carrier range behavior is not valid
      */
     public const INVALID_RANGE_BEHAVIOR = 160;
+
+    /**
+     * Thrown when carrier shipping handling is set with free shipping
+     */
+    public const INVALID_HAS_ADDITIONAL_HANDLING_FEE_WITH_FREE_SHIPPING = 170;
 }

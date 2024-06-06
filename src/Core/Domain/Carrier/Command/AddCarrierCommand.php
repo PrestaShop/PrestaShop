@@ -28,11 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+
 /**
  * Command aim to add carrier
  */
 class AddCarrierCommand
 {
+    private ShippingMethod $shippingMethod;
+    private OutOfRangeBehavior $rangeBehavior;
+
+    /**
+     * @throws CarrierConstraintException
+     */
     public function __construct(
         private string $name,
         /** @var string[] $localizedDelay */
@@ -42,17 +52,19 @@ class AddCarrierCommand
         private int $position,
         private bool $active,
         private array $associatedGroupIds,
-        private bool $isShippingHandling,
+        private bool $hasAdditionalHandlingFee,
         private bool $isFree,
-        private int $shippingMethod,
+        int $shippingMethod,
         private int $idTaxRuleGroup,
-        private bool $rangeBehavior,
+        int $rangeBehavior,
         private int $max_width = 0,
         private int $max_height = 0,
         private int $max_depth = 0,
         private int $max_weight = 0,
-        private ?string $logoPathName = null,
+        private ?string $logoPathName = null
     ) {
+        $this->shippingMethod = new ShippingMethod($shippingMethod);
+        $this->rangeBehavior = new OutOfRangeBehavior($rangeBehavior);
     }
 
     public function getName(): string
@@ -116,9 +128,9 @@ class AddCarrierCommand
         return $this->logoPathName;
     }
 
-    public function isShippingHandling(): bool
+    public function hasAdditionalHandlingFee(): bool
     {
-        return $this->isShippingHandling;
+        return $this->hasAdditionalHandlingFee;
     }
 
     public function isFree(): bool
@@ -126,17 +138,17 @@ class AddCarrierCommand
         return $this->isFree;
     }
 
-    public function getShippingMethod(): int
+    public function getShippingMethod(): ShippingMethod
     {
         return $this->shippingMethod;
     }
 
-    public function getIdTaxRuleGroup(): int
+    public function getTaxRuleGroupId(): int
     {
         return $this->idTaxRuleGroup;
     }
 
-    public function getRangeBehavior(): bool
+    public function getRangeBehavior(): OutOfRangeBehavior
     {
         return $this->rangeBehavior;
     }

@@ -56,6 +56,13 @@ class CarrierFormDataProvider implements FormDataProviderInterface
                 'logo_preview' => $carrier->getLogoPath(),
                 'tracking_url' => $carrier->getTrackingUrl(),
             ],
+            'shipping_settings' => [
+                'has_additional_handling_fee' => $carrier->hasAdditionalHandlingFee(),
+                'is_free' => $carrier->isFree(),
+                'shipping_method' => $carrier->getShippingMethod(),
+                'id_tax_rule_group' => $carrier->getIdTaxRuleGroup(),
+                'range_behavior' => $carrier->getRangeBehavior(),
+            ],
         ];
     }
 

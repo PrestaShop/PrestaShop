@@ -65,7 +65,7 @@ class CarrierValidator extends AbstractObjectModelValidator
     public function validate(Carrier $carrier): void
     {
         $this->validateGeneral($carrier);
-        $this->validateShippingGeneral($carrier);
+        $this->validateShipping($carrier);
     }
 
     public function validateLogoUpload(string $filePath): void
@@ -95,7 +95,7 @@ class CarrierValidator extends AbstractObjectModelValidator
     public function validateGroupsExist(array $groupIds): void
     {
         foreach ($groupIds as $groupId) {
-            $this->groupRepository->assertGroupExists(new GroupId((int)$groupId));
+            $this->groupRepository->assertGroupExists(new GroupId((int) $groupId));
         }
     }
 
@@ -118,7 +118,7 @@ class CarrierValidator extends AbstractObjectModelValidator
     /**
      * @throws CoreException
      */
-    private function validateShippingGeneral(Carrier $carrier): void
+    private function validateShipping(Carrier $carrier): void
     {
         $this->validateObjectModelProperty($carrier, 'shipping_handling', CarrierConstraintException::class, CarrierConstraintException::INVALID_SHIPPING_HANDLING);
         $this->validateObjectModelProperty($carrier, 'is_free', CarrierConstraintException::class, CarrierConstraintException::INVALID_IS_FREE);
@@ -129,7 +129,7 @@ class CarrierValidator extends AbstractObjectModelValidator
         if ($carrier->shipping_handling && $carrier->is_free) {
             throw new CarrierConstraintException(
                 'Carrier cannot be both shipping handling and free',
-                CarrierConstraintException::INVALID_SHIPPING_HANDLING
+                CarrierConstraintException::INVALID_HAS_ADDITIONAL_HANDLING_FEE_WITH_FREE_SHIPPING
             );
         }
 

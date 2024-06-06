@@ -58,11 +58,16 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
             0, // @todo: should not be in the add command but auto-computed or at least be optional
             (bool) $data['general_settings']['active'],
             $data['general_settings']['group_access'],
-            $logoPath,
+            (bool) $data['shipping_settings']['has_additional_handling_fee'],
+            (bool) $data['shipping_settings']['is_free'],
+            $data['shipping_settings']['shipping_method'],
+            $data['shipping_settings']['id_tax_rule_group'],
+            $data['shipping_settings']['range_behavior'],
             $data['general_settings']['max_width'] ?? 0,
             $data['general_settings']['max_height'] ?? 0,
             $data['general_settings']['max_depth'] ?? 0,
             $data['general_settings']['max_weight'] ?? 0,
+            $logoPath,
         ));
 
         return $carrierId->getValue();

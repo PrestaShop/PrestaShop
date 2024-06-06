@@ -47,12 +47,12 @@ class EditableCarrier
         private int $max_depth,
         private int $max_weight,
         private array $associatedGroupIds,
-        private bool $isShippingHandling,
+        private bool $hasAdditionalHandlingFee,
         private bool $isFree,
         private int $shippingMethod,
         private int $idTaxRuleGroup,
-        private bool $rangeBehavior,
-        private ?string $logoPath = null
+        private int $rangeBehavior,
+        private ?string $logoPath = null,
     ) {
     }
 
@@ -99,11 +99,6 @@ class EditableCarrier
         return $this->logoPath;
     }
 
-    public function getDelay(): array
-    {
-        return $this->delay;
-    }
-
     public function getMaxWidth(): int
     {
         return $this->max_width;
@@ -129,9 +124,9 @@ class EditableCarrier
         return $this->associatedGroupIds;
     }
 
-    public function isShippingHandling(): bool
+    public function hasAdditionalHandlingFee(): bool
     {
-        return $this->isShippingHandling;
+        return $this->hasAdditionalHandlingFee;
     }
 
     public function isFree(): bool
@@ -149,7 +144,7 @@ class EditableCarrier
         return $this->idTaxRuleGroup;
     }
 
-    public function getRangeBehavior(): bool
+    public function getRangeBehavior(): int
     {
         return $this->rangeBehavior;
     }

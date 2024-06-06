@@ -70,10 +70,10 @@ class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHand
         $carrier->max_depth = $command->getMaxDepth();
 
         // Shipping information
-        $carrier->shipping_handling = $command->isShippingHandling();
+        $carrier->shipping_handling = $command->hasAdditionalHandlingFee();
         $carrier->is_free = $command->isFree();
-        $carrier->shipping_method = $command->getShippingMethod();
-        $carrier->range_behavior = $command->getRangeBehavior();
+        $carrier->shipping_method = $command->getShippingMethod()->getValue();
+        $carrier->range_behavior = (bool) $command->getRangeBehavior()->getValue();
 
         $this->carrierValidator->validate($carrier);
         $this->carrierValidator->validateGroupsExist($command->getAssociatedGroupIds());
@@ -82,7 +82,7 @@ class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHand
         $carrier->setGroups($command->getAssociatedGroupIds());
 
         // Set tax rules group
-        $carrier->setTaxRulesGroup($command->getIdTaxRuleGroup());
+        $carrier->setTaxRulesGroup($command->getTaxRuleGroupId());
 
         if ($command->getLogoPathName() !== null) {
             $this->carrierValidator->validateLogoUpload($command->getLogoPathName());

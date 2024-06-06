@@ -91,20 +91,30 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         }
 
         // Shipping information
-        if (null !== $command->isShippingHandling()) {
-            $carrier->shipping_handling = $command->isShippingHandling();
+        if (null !== $command->hasAdditionalHandlingFee()) {
+            $carrier->shipping_handling = $command->hasAdditionalHandlingFee();
+        } else {
+            // If carrier is free, we should not have shipping handling
+            if ($command->isFree()) {
+                $carrier->shipping_handling = false;
+            }
         }
 
         if (null !== $command->isFree()) {
             $carrier->is_free = $command->isFree();
+        } else {
+            // If carrier has additional handling fee, we should not have free shipping enabled
+            if ($command->hasAdditionalHandlingFee()) {
+                $carrier->is_free = false;
+            }
         }
 
         if ($command->getShippingMethod()) {
-            $carrier->shipping_method = $command->getShippingMethod();
+            $carrier->shipping_method = $command->getShippingMethod()->getValue();
         }
 
         if (null !== $command->getRangeBehavior()) {
-            $carrier->range_behavior = $command->getRangeBehavior();
+            $carrier->range_behavior = (bool) $command->getRangeBehavior()->getValue();
         }
 
         $this->carrierValidator->validate($carrier);
@@ -119,8 +129,8 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         if ($command->getAssociatedGroupIds()) {
             $newCarrier->setGroups($command->getAssociatedGroupIds());
         }
-        if (null !== $command->getIdTaxRuleGroup()) {
-            $newCarrier->setTaxRulesGroup($command->getIdTaxRuleGroup());
+        if (null !== $command->getTaxRuleGroupId()) {
+            $newCarrier->setTaxRulesGroup($command->getTaxRuleGroupId());
         }
 
         if ($command->getLogoPathName() !== null) {

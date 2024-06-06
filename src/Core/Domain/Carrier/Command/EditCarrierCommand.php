@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 
 /**
  * Command aim to edit carrier
@@ -48,11 +50,11 @@ class EditCarrierCommand
     private ?int $max_weight;
     private ?array $associatedGroupIds;
     private ?string $logoPathName;
-    private ?bool $isShippingHandling;
+    private ?bool $hasAdditionalHandlingFee;
     private ?bool $isFree;
-    private ?int $shippingMethod;
+    private ?ShippingMethod $shippingMethod;
     private ?int $idTaxRuleGroup;
-    private ?bool $rangeBehavior;
+    private ?OutOfRangeBehavior $rangeBehavior;
 
     public function __construct(int $carrierId)
     {
@@ -214,14 +216,14 @@ class EditCarrierCommand
         return $this;
     }
 
-    public function isShippingHandling(): ?bool
+    public function hasAdditionalHandlingFee(): ?bool
     {
-        return $this->isShippingHandling ?? null;
+        return $this->hasAdditionalHandlingFee ?? null;
     }
 
-    public function setIsShippingHandling(bool $isShippingHandling): self
+    public function setAdditionalHandlingFee(bool $hasAdditionalHandlingFee): self
     {
-        $this->isShippingHandling = $isShippingHandling;
+        $this->hasAdditionalHandlingFee = $hasAdditionalHandlingFee;
 
         return $this;
     }
@@ -238,19 +240,19 @@ class EditCarrierCommand
         return $this;
     }
 
-    public function getShippingMethod(): ?int
+    public function getShippingMethod(): ?ShippingMethod
     {
         return $this->shippingMethod ?? null;
     }
 
     public function setShippingMethod(int $shippingMethod): self
     {
-        $this->shippingMethod = $shippingMethod;
+        $this->shippingMethod = new ShippingMethod($shippingMethod);
 
         return $this;
     }
 
-    public function getIdTaxRuleGroup(): ?int
+    public function getTaxRuleGroupId(): ?int
     {
         return $this->idTaxRuleGroup ?? null;
     }
@@ -262,14 +264,14 @@ class EditCarrierCommand
         return $this;
     }
 
-    public function getRangeBehavior(): ?bool
+    public function getRangeBehavior(): ?OutOfRangeBehavior
     {
         return $this->rangeBehavior ?? null;
     }
 
-    public function setRangeBehavior(bool $rangeBehavior): self
+    public function setRangeBehavior(int $rangeBehavior): self
     {
-        $this->rangeBehavior = $rangeBehavior;
+        $this->rangeBehavior = new OutOfRangeBehavior($rangeBehavior);
 
         return $this;
     }
