@@ -24,11 +24,12 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
-#   v9.0.0 Alpha 1 - (2024-05-15)
+#   v9.0.0 Alpha 1 - (2024-06-06)
 ####################################
 
 - Back Office:
   - New feature:
+    - #36271: Create basic general form for carrier (by @jolelievre)
     - #35983: [BC Break] Migrate login and authentication in Back Office to Symfony (by @jolelievre)
     - #35907: Handle API upload file (by @jolelievre)
     - #35270: [BC Break] Enable attribute migrated page (by @jolelievre)
@@ -63,6 +64,10 @@ Changelog for PrestaShop 9
     - #30938: APIS08c - Add and edit authorized application (by @mflasquin)
     - #31109: Change limit of filed value on ps_customized_data so that it can accepts more than 255 characters (by @lartist)
   - Improvement:
+    - #36314: Update missing security attributes (by @jolelievre)
+    - #36264: Check Employee IP address in BO (by @jolelievre)
+    - #36203: Improve access controls (by @jolelievre)
+    - #36139: Symfony login page improvement (by @jolelievre)
     - #36136: Remove attribute feature flag (by @jolelievre)
     - #35996: [BC Break] Update redirect_type enum values (by @M0rgan01)
     - #36021: [BC Break] Integrate phpstan extension for Doctrine (by @jolelievre)
@@ -161,6 +166,17 @@ Changelog for PrestaShop 9
     - #31104: Improve customer view totals (by @Hlavtox)
     - #31105: Improve buttons in customer detail (by @Hlavtox)
   - Bug fix:
+    - #36309: Integrate social icons on login page with symfony ux-icons (by @mattgoud)
+    - #36301: Reset password page - updating cancel btn selector (css… (by @mattgoud)
+    - #36299: Login page responsive (by @mattgoud)
+    - #36068: Add texture in attribute color (by @tleon)
+    - #36256: Fixed incorrect link to documentation (by @nicosomb)
+    - #36244: Product page fixes (by @jolelievre)
+    - #35775: Responsive visual issues new product page (by @mattgoud)
+    - #36229: Fix the reformating of legacy controller class name (by @jolelievre)
+    - #36028: Clickable rows for attributes group and attributes lists  (by @mattgoud)
+    - #36027: Dynamic form fields based on choice of attribute-group field (attribute form) (by @mattgoud)
+    - #36122: Error 500 fix for Admin Categories If description null (backport from develop) (by @ShaiMagal)
     - #36101: Fix display of available hooks for a module (by @nicosomb)
     - #36052: Removed useless aliases which cause issue with MariaDB (by @nicosomb)
     - #34917: Groups list : display new group buttons even after saving options (by @HiCharly)
@@ -220,6 +236,8 @@ Changelog for PrestaShop 9
     - #31223: Don't catch exception that implements ModuleErrorInterface (by @bibips)
     - #31153: Always set HelperKpi source and use conditional refresh (by @atomiix)
   - Refactoring:
+    - #36162: Refacto login forms and add Employee CQRS commands (by @jolelievre)
+    - #36158: EmployeeHomepageProvider service provides homepage url (by @jolelievre)
     - #36109: Fix forgotten tab (by @Hlavtox)
     - #35824: Prevent errors on different address formats (by @Hlavtox)
     - #35830: Fix notice on nulls (by @Hlavtox)
@@ -326,6 +344,9 @@ Changelog for PrestaShop 9
     - #33335: [BC Break] Lazyload product features (by @Hlavtox)
     - #31825: Improve smartyClassname() (by @justeen35)
   - Bug fix:
+    - #35962: CartRule.php - performance bottleneck - duplicating query (by @ShaiMagal)
+    - #36074: Fix specific scenario when multiple carriers are used. (by @Hlavtox)
+    - #35565: Fix CCC error for path with version (by @ComonSoft)
     - #35812: Fix unit price everywhere (by @Hlavtox)
     - #35729: Remove deprecated jquery method (by @Hlavtox)
     - #35584: Fix(merchandise-return): deprecation alert is displayed on the return form (by @TheoAlloin)
@@ -379,8 +400,21 @@ Changelog for PrestaShop 9
     - #31683: Set possibility to ignore warnings and notices in dev mode (by @web-cooking-factory)
     - #31294: New hook for performing actions when address change on cart (by @Prestaworks)
   - Improvement:
+    - #36312: Add optional blackfire installation in docker (by @matthieu-rolland)
+    - #36293: Update Symfony components after 6.4.8 release (by @nicosomb)
+    - #36313: Update licenses everywhere (by @jolelievre)
+    - #36316: Update auto generated hooks (by @jolelievre)
+    - #36288: Bump mysql2 from 3.9.8 to 3.10.0 in /tests/UI (by @dependabot[bot])
+    - #36292: Bump eslint-plugin-deprecation from 2.0.0 to 3.0.0 in /tests/UI (by @dependabot[bot])
+    - #36240: Bump @prestashop-core/ui-testing from `2acb006` to `5cbc261` in /tests/UI (by @dependabot[bot])
+    - #36237: Bump mysql2 from 3.9.7 to 3.9.8 in /tests/UI (by @dependabot[bot])
+    - #36063: Migration Carrier pages - CQRS for Add / Get / Update / Upload logo  (by @boherm)
+    - #36207: [BC Break] Upgrade NodeJS version in Github Actions (by @nicosomb)
+    - #36194: Bump fast-xml-parser from 4.3.6 to 4.4.0 in /tests/UI (by @dependabot[bot])
+    - #36163: Update Changelog for 9.0.0 alplha 1 build 2 (by @jolelievre)
     - #36073: Improved Github Actions when updating php modules (by @nicosomb)
     - #36081: Update changelog for alpha v9 (by @matthieu-rolland)
+    - #36069: Upgraded productcomments (by @nicosomb)
     - #34908: Don't create useless file "index.php" in every image folder (by @ShaiMagal)
     - #36050: Update Symfony components after 6.4.7 release (by @nicosomb)
     - #36043: Bump eslint-plugin-html from 8.1.0 to 8.1.1 in /tests/UI (by @dependabot[bot])
@@ -724,6 +758,7 @@ Changelog for PrestaShop 9
     - #28532: [BC Break] Removed deprecated Form Types (by @Progi1984)
     - #28550: [BC Break] Removed deprecated methods in Order class (by @Progi1984)
   - Bug fix:
+    - #36266: Do not use makefile to do a composer install in docker script (by @matthieu-rolland)
     - #34875: Add cart rule module validation (by @Hlavtox)
     - #35621: Fix: Clear cache module multishop (by @pvujic)
     - #35587: Fix $action variable in postProcess method (by @SharakPL)
@@ -801,6 +836,7 @@ Changelog for PrestaShop 9
     - #28564: [BC Break] Remove deprecated in Adapter namespace (by @Progi1984)
 - Installer:
   - Improvement:
+    - #36127: Update default catalog develop (by @ps-jarvis)
     - #35989: Add xdebug install into the dockerfile (by @tleon)
     - #35496: Fix docker config (by @SharakPL)
     - #33229: Add Warning check in updateSchema command output (by @M0rgan01)
@@ -841,6 +877,15 @@ Changelog for PrestaShop 9
   - New feature:
     - #31363: Add registered customer edit test (by @Hlavtox)
   - Improvement:
+    - #36298: Increase composer timeout globally in docker init script (by @jolelievre)
+    - #36231: Use actions/upload-artifact@v4 to get access to archives sooner (by @jolelievre)
+    - #36210: Stabilise UI tests and nightly (by @jolelievre)
+    - #36221: Functional Tests : BO - Advanced Parameters - Webservice - Configuration (by @Progi1984)
+    - #36215: Functional Tests : BO - International - Localization : Update default  language (by @Progi1984)
+    - #36211: Functional Tests : `ui-testing-library` : Migrate `boLoginPage` (by @Progi1984)
+    - #36188: Functional Tests : `ui-testing-library` : Migrate `boDashboardPage` (by @Progi1984)
+    - #36168: Functional Tests : BO - Shipping - Carriers : Bulk actions (by @Progi1984)
+    - #36154: Functional Tests : Fixed #35612 (by @Progi1984)
     - #36112: Functional Tests : BO - Shipping - Carriers : CRUD carrier in BO (by @Progi1984)
     - #36048: Functional Tests : FO - Product Page : Display pack content and link to product (Classic & Hummingbird) (by @Progi1984)
     - #36045: Functional Tests : FO - Guest checkout: Billing address when logged in (Classic & Hummingbird) (by @Progi1984)
@@ -978,6 +1023,15 @@ Changelog for PrestaShop 9
     - #31592: Functional Tests : Splits Tests in small packages (by @Progi1984)
     - #31165: Running nightly on branch 8.1.x (by @boubkerbribri)
   - Bug fix:
+    - #36250: Stabilise CI and docker initialisation (by @jolelievre)
+    - #36279: Update UI tests expected wording to match new catalog (by @jolelievre)
+    - #36275: Nightly : Revert Github Actions to v3 (by @Progi1984)
+    - #36268: Nightly : Fixed download & upload of artifacts (by @Progi1984)
+    - #36252: Nightly : Bump to `actions/download-artifact@v4` (by @Progi1984)
+    - #36247: Nightly : Fixed artifact after upgrade to `actions/upload-artifact@v4` (by @Progi1984)
+    - #36213: Nightly : Defined Node version for each supported version of PS (by @Progi1984)
+    - #36190: Functional Tests : Fixed campaign `functional/FO/*/09*/02*/04*` (by @Progi1984)
+    - #36189: Functional Tests : Fixed campaign `functional/API/02*/09*/03*` (by @Progi1984)
     - #36098: Functional Tests : Fixed `check:data:modules` (by @Progi1984)
     - #35944: Nightly : Fixed cron_nightly_tests_reusable.yml (by @Progi1984)
     - #35941: Nightly : Fixed API : GET /languages (by @Progi1984)
@@ -1030,6 +1084,9 @@ Changelog for PrestaShop 9
     - #31632: Functional Tests : Add the script `test:functional:productV2` (by @Progi1984)
     - #31628: Fix Sanity Product V2 tests blocking CI (by @0x346e3730)
   - Refactoring:
+    - #36274: Functional Tests : Migrate `@data/demo` to `@prestashop-core/ui-testing` (by @Progi1984)
+    - #36156: Functional tests - Add new test to check out of stock behaviour in FO >Product page in hummingbird theme (by @nesrineabdmouleh)
+    - #36142: Functional tests - Add new tests to check discount on FO (by @nesrineabdmouleh)
     - #36141: Functional tests - Add new test to change color in FO > Product page (by @nesrineabdmouleh)
     - #36111: Functional tests - Refacto 'BO > Shipping > Carriers > Quick edit and change position' tests (by @nesrineabdmouleh)
     - #36137: Functional tests - Add new test to display specific delivery time in FO (Classix & Hummingbird) Theme (by @nesrineabdmouleh)
