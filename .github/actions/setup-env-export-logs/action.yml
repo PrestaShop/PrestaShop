@@ -25,10 +25,15 @@ runs:
         docker logs ${{ inputs.DOCKER_PREFIX }}-prestashop-git-1 > ./var/docker-logs/prestashop.log
       shell: bash
 
+    - name: Sanitize artifact name
+      id: sanitize-artifact-name
+      run: echo "ARTIFACT_NAME=$( echo -e '${{ inputs.ARTIFACT_NAME }}' | tr ':' '-' )" >> $GITHUB_OUTPUT
+      shell: bash
+
     - name: Save logs in case of error
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.ARTIFACT_NAME }}
+        name: ${{ steps.sanitize-artifact-name.outputs.ARTIFACT_NAME }}
         path: |
           ./var/logs
           ./var/docker-logs
