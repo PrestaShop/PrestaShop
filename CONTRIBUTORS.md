@@ -220,6 +220,7 @@ GitHub contributors:
 - David-Julian BUCH
 - Davide
 - davidglezz
+- David Paris
 - Davy Rolink
 - de saint leger
 - Denis Yurevich
@@ -247,7 +248,7 @@ GitHub contributors:
 - doeselschnecke
 - DogSports
 - Dominic Taylor
-- Dominik Ulrich
+- Dominik Shaim Ulrich
 - dparis
 - Dragan Skrbic
 - DRC
