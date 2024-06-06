@@ -232,11 +232,6 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
     {
     }
 
-    public function getUsername(): string
-    {
-        return $this->getClientName();
-    }
-
     public function getUserIdentifier(): string
     {
         return $this->getClientId();

@@ -36,8 +36,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserProvider
 {
-    public const ANONYMOUS_USER = 'ANONYMOUS_USER';
-
     public function __construct(
         private readonly Security $security,
     ) {
@@ -54,16 +52,6 @@ class UserProvider
         }
 
         return null;
-    }
-
-    public function getUsername(): string
-    {
-        $user = $this->getUser();
-        if ($user instanceof UserInterface) {
-            return $user->getUserIdentifier();
-        }
-
-        return self::ANONYMOUS_USER;
     }
 
     public function logout(): void
