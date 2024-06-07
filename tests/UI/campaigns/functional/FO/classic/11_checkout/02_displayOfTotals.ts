@@ -15,15 +15,13 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {loginPage} from '@pages/FO/classic/login';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataCarriers,
   dataCustomers,
   dataProducts,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_checkout_displayOfTotals';
@@ -47,7 +45,7 @@ describe('FO - Checkout : Display of totals', async () => {
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
 
   // Data to create cart rule with code
-  const cartRuleWithCodeData: CartRuleData = new CartRuleData({
+  const cartRuleWithCodeData: FakerCartRule = new FakerCartRule({
     name: 'kdo',
     code: '1234',
     highlight: true,

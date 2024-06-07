@@ -12,12 +12,12 @@ import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';
 
-// Import data
-import ShopData from '@data/faker/shop';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerShop,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_multistore_filterSortAndPaginationShopUrls';
 
@@ -79,7 +79,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   // 3 : Create 20 shop urls
   describe('Create 20 shop Urls', async () => {
     Array(20).fill(0, 0, 20).forEach((test: number, index: number) => {
-      const shopUrlData: ShopData = new ShopData({
+      const shopUrlData: FakerShop = new FakerShop({
         name: `ToDelete${index + 1}Shop`,
         shopGroup: '',
         categoryRoot: '',

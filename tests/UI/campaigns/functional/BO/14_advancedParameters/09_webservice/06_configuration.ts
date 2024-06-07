@@ -10,13 +10,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 import webservicePage from '@pages/BO/advancedParameters/webservice';
 import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 
-// Import data
-import WebserviceData from '@data/faker/webservice';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  FakerWebservice,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_webservice_configuration';
@@ -29,7 +27,7 @@ describe('BO - Advanced Parameters - Webservice : Configuration', async () => {
 
   let numberOfWebserviceKeys: number = 0;
 
-  const webserviceData: WebserviceData = new WebserviceData({
+  const webserviceData: FakerWebservice = new FakerWebservice({
     permissions: [
       {
         resource: 'addresses',

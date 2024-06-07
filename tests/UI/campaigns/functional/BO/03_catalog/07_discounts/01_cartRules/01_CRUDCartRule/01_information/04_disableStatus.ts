@@ -13,14 +13,12 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataProducts,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_information_disableStatus';
@@ -37,7 +35,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
   let page: Page;
 
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
-  const disabledCartRule: CartRuleData = new CartRuleData({
+  const disabledCartRule: FakerCartRule = new FakerCartRule({
     name: 'disabledCartRule',
     status: false,
     dateFrom: pastDate,

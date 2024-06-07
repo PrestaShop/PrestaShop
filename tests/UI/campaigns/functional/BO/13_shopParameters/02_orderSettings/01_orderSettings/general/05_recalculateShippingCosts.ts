@@ -11,9 +11,6 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import OrderShippingData from '@data/faker/orderShipping';
-
 import {
   boDashboardPage,
   dataCarriers,
@@ -21,6 +18,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  FakerOrderShipping,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -43,13 +41,13 @@ describe('BO - Shop Parameters - Order Settings : Recalculate shipping costs aft
     paymentMethod: dataPaymentMethods.wirePayment,
   });
 
-  const shippingDetailsData: OrderShippingData = new OrderShippingData({
+  const shippingDetailsData: FakerOrderShipping = new FakerOrderShipping({
     trackingNumber: '0523698',
     carrier: dataCarriers.myCarrier.name,
     carrierID: dataCarriers.myCarrier.id,
   });
 
-  const editShippingDetailsData: OrderShippingData = new OrderShippingData({
+  const editShippingDetailsData: FakerOrderShipping = new FakerOrderShipping({
     trackingNumber: '0523698',
     carrier: dataCarriers.clickAndCollect.name,
     carrierID: dataCarriers.clickAndCollect.id,

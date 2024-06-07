@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type CMSCategoryData from '@data/faker/CMScategory';
-
 import type {Page} from 'playwright';
+import {
+  type FakerCMSCategory,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add page category page, contains functions that can be used on the page
@@ -55,10 +56,10 @@ class AddPageCategory extends BOBasePage {
   /**
    * Fill form for add/edit page category
    * @param page {Page} Browser tab
-   * @param pageCategoryData {CMSCategoryData} Data to set on page category form
+   * @param pageCategoryData {FakerCMSCategory} Data to set on page category form
    * @returns {Promise<string>}
    */
-  async createEditPageCategory(page: Page, pageCategoryData: CMSCategoryData): Promise<string> {
+  async createEditPageCategory(page: Page, pageCategoryData: FakerCMSCategory): Promise<string> {
     await this.setValue(page, this.nameInput, pageCategoryData.name);
     await this.setChecked(page, this.displayedToggleInput(pageCategoryData.displayed ? 1 : 0));
     await this.setValue(page, this.descriptionIframe, pageCategoryData.description);

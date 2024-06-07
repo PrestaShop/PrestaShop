@@ -25,7 +25,6 @@ import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import data
-import MessageData from '@data/faker/message';
 import type MailDevEmail from '@data/types/maildevEmail';
 
 import {
@@ -33,6 +32,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  FakerContactMessage,
   FakerEmployee,
 } from '@prestashop-core/ui-testing';
 
@@ -54,7 +54,7 @@ describe('BO - Customer Service : Forward message', async () => {
     permissionProfile: 'SuperAdmin',
   });
 
-  const contactUsData: MessageData = new MessageData({
+  const contactUsData: FakerContactMessage = new FakerContactMessage({
     subject: 'Customer service',
     emailAddress: employeeData.email,
     reference: '',
@@ -214,7 +214,7 @@ describe('BO - Customer Service : Forward message', async () => {
   });
 
   describe('BO: Forward message to another employee', async () => {
-    const forwardMessageData: MessageData = new MessageData({
+    const forwardMessageData: FakerContactMessage = new FakerContactMessage({
       employeeName: `${employeeData.firstName.slice(0, 1)}. ${employeeData.lastName}`,
       message: 'Forward message',
     });
@@ -282,7 +282,7 @@ describe('BO - Customer Service : Forward message', async () => {
   });
 
   describe('BO: Forward message to someone else', async () => {
-    const forwardMessageData: MessageData = new MessageData({
+    const forwardMessageData: FakerContactMessage = new FakerContactMessage({
       employeeName: 'Someone else',
       emailAddress: 'someoneelse@prestashop.com',
       message: 'checkThis',

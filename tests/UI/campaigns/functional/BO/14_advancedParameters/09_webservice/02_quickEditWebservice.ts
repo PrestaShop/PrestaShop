@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import webservicePage from '@pages/BO/advancedParameters/webservice';
 import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 
-// Import data
-import WebserviceData from '@data/faker/webservice';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerWebservice,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_webservice_quickEditWebservice';
 
@@ -24,7 +24,7 @@ describe('BO - Advanced Parameters - Webservice : Quick edit webservice', async 
 
   let numberOfWebserviceKeys: number = 0;
 
-  const webServiceData: WebserviceData = new WebserviceData();
+  const webServiceData: FakerWebservice = new FakerWebservice();
 
   // before and after functions
   before(async function () {

@@ -14,12 +14,12 @@ import localizationPage from '@pages/BO/international/localization';
 import languagesPage from '@pages/BO/international/languages';
 import addLanguagePage from '@pages/BO/international/languages/add';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerAPIClient,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_language_getLanguages';
 
@@ -31,7 +31,7 @@ describe('API : GET /languages', async () => {
   let accessToken: string;
   let jsonResponse: any;
 
-  const clientData: APIClientData = new APIClientData({
+  const clientData: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [],
   });

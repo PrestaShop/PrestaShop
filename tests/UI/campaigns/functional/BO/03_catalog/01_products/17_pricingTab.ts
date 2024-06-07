@@ -16,13 +16,11 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
 
-// Import data
-import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
+  FakerCatalogPriceRule,
   FakerProduct,
 } from '@prestashop-core/ui-testing';
 
@@ -60,7 +58,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
     },
   });
   // Data to create new catalog price rule
-  const newCatalogPriceRuleData: CatalogPriceRuleData = new CatalogPriceRuleData({
+  const newCatalogPriceRuleData: FakerCatalogPriceRule = new FakerCatalogPriceRule({
     currency: 'All currencies',
     country: 'All countries',
     group: 'All groups',

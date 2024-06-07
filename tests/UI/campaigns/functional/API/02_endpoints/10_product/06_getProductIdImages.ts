@@ -14,15 +14,13 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataLanguages,
   dataProducts,
+  FakerAPIClient,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_product_getProductIdImages';
@@ -36,7 +34,7 @@ describe('API : GET /product/{productId}/images', async () => {
   let jsonResponse: any;
 
   const clientScope: string = 'product_read';
-  const clientData: APIClientData = new APIClientData({
+  const clientData: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       clientScope,

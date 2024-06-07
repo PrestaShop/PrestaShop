@@ -12,12 +12,12 @@ import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
 import shopPage from '@pages/BO/advancedParameters/multistore/shop';
 
-// Import data
-import ShopData from '@data/faker/shop';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerShop,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_multistore_filterSortAndPaginationShops';
 
@@ -33,7 +33,7 @@ Disable multistore
 describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination shops', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const shopCreate: ShopData = new ShopData({name: 'todelete0', shopGroup: 'Default', categoryRoot: 'Home'});
+  const shopCreate: FakerShop = new FakerShop({name: 'todelete0', shopGroup: 'Default', categoryRoot: 'Home'});
 
   //Pre-condition: Enable multistore
   setMultiStoreStatus(true, `${baseContext}_preTest`);
@@ -88,7 +88,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   // 3 : Create 19 shops
   describe('Create 19 shops', async () => {
     Array(19).fill(0, 0, 19).forEach((test: number, index: number) => {
-      const shopCreate: ShopData = new ShopData({
+      const shopCreate: FakerShop = new FakerShop({
         name: `Todelete${index + 1}`,
         shopGroup: 'Default',
         categoryRoot: 'Home',

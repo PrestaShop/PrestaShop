@@ -1,10 +1,10 @@
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import type {Page} from 'playwright';
+import {
+  type FakerAPIClient,
+} from '@prestashop-core/ui-testing';
 
 /**
  * New API Client page, contains functions that can be used on the page
@@ -104,10 +104,10 @@ class AddNewAPIClient extends BOBasePage {
   /**
    * Add API Client
    * @param page {Page} Browser tab
-   * @param apiClientData {APIClientData}}
+   * @param apiClientData {FakerAPIClient}}
    * @return {Promise<string>}
    */
-  async addAPIClient(page: Page, apiClientData: APIClientData): Promise<string> {
+  async addAPIClient(page: Page, apiClientData: FakerAPIClient): Promise<string> {
     await this.setValue(page, this.clientNameInput, apiClientData.clientName);
     await this.setValue(page, this.clientIdInput, apiClientData.clientId);
     await this.setValue(page, this.descriptionInput, apiClientData.description);

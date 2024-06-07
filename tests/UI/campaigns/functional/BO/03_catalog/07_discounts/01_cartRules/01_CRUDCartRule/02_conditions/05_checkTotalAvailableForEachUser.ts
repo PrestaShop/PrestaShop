@@ -19,14 +19,12 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {loginPage} from '@pages/FO/classic/login';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {
   boDashboardPage,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -49,7 +47,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
   let browserContext: BrowserContext;
   let page: Page;
 
-  const newCartRuleData: CartRuleData = new CartRuleData({
+  const newCartRuleData: FakerCartRule = new FakerCartRule({
     name: 'New cart rule',
     code: '4QABV6L3',
     quantity: 2,

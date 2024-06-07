@@ -1,5 +1,7 @@
-import ImportData from '@data/faker/import';
-import type {ImportProduct} from '@data/types/import';
+import {
+  FakerImport,
+  type ImportProduct,
+} from '@prestashop-core/ui-testing';
 
 const records: ImportProduct[] = [
   {
@@ -323,7 +325,7 @@ const records: ImportProduct[] = [
   },
 ];
 
-export default new ImportData({
+export default new FakerImport({
   entity: 'Products',
   header: [
     {id: 'id', title: 'Product ID*'},

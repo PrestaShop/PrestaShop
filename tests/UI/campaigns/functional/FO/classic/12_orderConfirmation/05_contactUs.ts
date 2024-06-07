@@ -21,14 +21,12 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
-// Import data
-import MessageData from '@data/faker/message';
-
 import {
   boDashboardPage,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  FakerContactMessage,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -53,7 +51,7 @@ describe('FO - Order confirmation : Contact us', async () => {
   let page: Page;
   const filename: string = 'testfile.txt';
 
-  const contactUsData: MessageData = new MessageData({
+  const contactUsData: FakerContactMessage = new FakerContactMessage({
     subject: 'Customer service',
     message: 'Test message to customer service for order reference',
     emailAddress: dataCustomers.johnDoe.email,

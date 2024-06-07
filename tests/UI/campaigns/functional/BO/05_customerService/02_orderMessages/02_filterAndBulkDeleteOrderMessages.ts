@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import orderMessagesPage from '@pages/BO/customerService/orderMessages';
 import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 
-// Import data
-import OrderMessageData from '@data/faker/orderMessage';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerOrderMessage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customerService_orderMessages_filterAndBulkDeleteOrderMessages';
 
@@ -28,8 +28,8 @@ describe('BO - Customer Service - Order Messages : Filter and bulk delete order 
   let page: Page;
   let numberOfOrderMessages: number = 0;
 
-  const firstOrderMessageData: OrderMessageData = new OrderMessageData({name: 'todelete'});
-  const secondOrderMessageData: OrderMessageData = new OrderMessageData({name: 'todelete2'});
+  const firstOrderMessageData: FakerOrderMessage = new FakerOrderMessage({name: 'todelete'});
+  const secondOrderMessageData: FakerOrderMessage = new FakerOrderMessage({name: 'todelete2'});
 
   // before and after functions
   before(async function () {

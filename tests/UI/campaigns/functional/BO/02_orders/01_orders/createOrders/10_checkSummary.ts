@@ -17,7 +17,6 @@ import orderPageMessagesBlock from '@pages/BO/orders/view/messagesBlock';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 // Import data
-import CartRuleData from '@data/faker/cartRule';
 import type MailDevEmail from '@data/types/maildevEmail';
 
 import {
@@ -27,6 +26,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -54,7 +54,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
   let mailListener: MailDev;
 
   // Data to create cart rule with code
-  const cartRuleWithCodeData: CartRuleData = new CartRuleData({
+  const cartRuleWithCodeData: FakerCartRule = new FakerCartRule({
     name: 'WithCode',
     code: 'Discount',
     discountType: 'Amount',

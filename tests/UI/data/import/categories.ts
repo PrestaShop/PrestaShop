@@ -1,5 +1,7 @@
-import ImportData from '@data/faker/import';
-import type {ImportCategory} from '@data/types/import';
+import {
+  FakerImport,
+  type ImportCategory,
+} from '@prestashop-core/ui-testing';
 
 const records: ImportCategory[] = [
   {
@@ -92,7 +94,7 @@ const records: ImportCategory[] = [
   },
 ];
 
-export default new ImportData({
+export default new FakerImport({
   entity: 'Categories',
   header: [
     {id: 'id', title: 'Category ID'},

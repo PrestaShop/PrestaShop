@@ -10,14 +10,12 @@ import searchPage from '@pages/BO/shopParameters/search';
 import tagsPage from '@pages/BO/shopParameters/search/tags';
 import addTagPage from '@pages/BO/shopParameters/search/tags/add';
 
-// Import data
-import TagData from '@data/faker/tag';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataLanguages,
+  FakerSearchTag,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_search_tags_CRUDTag';
@@ -32,8 +30,8 @@ describe('BO - Shop Parameters - Search : Create, update and delete tag in BO', 
   let page: Page;
   let numberOfTags: number = 0;
 
-  const createTagData: TagData = new TagData({language: dataLanguages.english.name});
-  const editTagData: TagData = new TagData({language: dataLanguages.french.name});
+  const createTagData: FakerSearchTag = new FakerSearchTag({language: dataLanguages.english.name});
+  const editTagData: FakerSearchTag = new FakerSearchTag({language: dataLanguages.french.name});
 
   // before and after functions
   before(async function () {

@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCartRule,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_sortAndPaginationCartRule';
 
@@ -68,7 +68,7 @@ describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () =
   describe('Create 21 cart rules', async () => {
     const creationTests: number[] = new Array(21).fill(0, 0, 21);
     creationTests.forEach((test: number, index: number) => {
-      const cartRuleData: CartRuleData = new CartRuleData({
+      const cartRuleData: FakerCartRule = new FakerCartRule({
         name: `todelete${index}`,
         discountType: 'Percent',
         discountPercent: 20,

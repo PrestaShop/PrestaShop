@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type CartRuleData from '@data/faker/cartRule';
-
 import type {Frame, Page} from 'playwright';
+import {
+  type FakerCartRule,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add cart rule page, contains functions that can be used on the page
@@ -298,10 +299,10 @@ class AddCartRule extends BOBasePage {
   /**
    * Fill form in information tab
    * @param page {Frame|Page} Browser tab
-   * @param cartRuleData {CartRuleData} Data to set on information form
+   * @param cartRuleData {FakerCartRule} Data to set on information form
    * @return {Promise<void>}
    */
-  async fillInformationForm(page: Frame | Page, cartRuleData: CartRuleData): Promise<void> {
+  async fillInformationForm(page: Frame | Page, cartRuleData: FakerCartRule): Promise<void> {
     // Go to tab conditions
     await page.locator(this.infomationsTabLink).click();
 
@@ -332,10 +333,10 @@ class AddCartRule extends BOBasePage {
   /**
    * Fill form in condition tab
    * @param page {Frame|Page} Browser tab
-   * @param cartRuleData {CartRuleData} Data to set on conditions form
+   * @param cartRuleData {FakerCartRule} Data to set on conditions form
    * @return {Promise<void>}
    */
-  async fillConditionsForm(page: Frame | Page, cartRuleData: CartRuleData): Promise<void> {
+  async fillConditionsForm(page: Frame | Page, cartRuleData: FakerCartRule): Promise<void> {
     // Go to tab conditions
     await page.locator(this.conditionsTabLink).click();
 
@@ -419,10 +420,10 @@ class AddCartRule extends BOBasePage {
   /**
    * Fill actions tab
    * @param page {Frame|Page} Browser tab
-   * @param cartRuleData {CartRuleData} Data to set on actions form
+   * @param cartRuleData {FakerCartRule} Data to set on actions form
    * @return {Promise<void>}
    */
-  async fillActionsForm(page: Frame | Page, cartRuleData: CartRuleData): Promise<void> {
+  async fillActionsForm(page: Frame | Page, cartRuleData: FakerCartRule): Promise<void> {
     // Go to actions tab
     await page.locator(this.actionsTabLink).click();
 
@@ -506,13 +507,13 @@ class AddCartRule extends BOBasePage {
   /**
    * Create/edit cart rule
    * @param page {Frame|Page} Browser tab
-   * @param cartRuleData {CartRuleData} Data to set on add/edit cart rule form
+   * @param cartRuleData {FakerCartRule} Data to set on add/edit cart rule form
    * @param waitForNavigation {boolean} True if we need to save and waitForNavigation
    * @returns {Promise<string|null>}
    */
   async createEditCartRules(
     page: Frame | Page,
-    cartRuleData: CartRuleData,
+    cartRuleData: FakerCartRule,
     waitForNavigation: boolean = true,
   ): Promise<string | null> {
     // Fill information form

@@ -1,9 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-// Import data
-import CustomerServiceOptionsData from '@data/faker/customerServiceOptions';
-
 import type {Page} from 'playwright';
+import {
+  type FakerCustomerServiceOptions,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Customer service page, contains selectors and functions for the page
@@ -366,10 +366,10 @@ class CustomerService extends BOBasePage {
   /**
    * Set customer service options
    * @param page {Page} Browser tab
-   * @param optionsData {CustomerServiceOptionsData} Data to set in customer service options form
+   * @param optionsData {FakerCustomerServiceOptions} Data to set in customer service options form
    * @returns {Promise<string>}
    */
-  async setCustomerServiceOptions(page: Page, optionsData: CustomerServiceOptionsData): Promise<string> {
+  async setCustomerServiceOptions(page: Page, optionsData: FakerCustomerServiceOptions): Promise<string> {
     await page.locator(this.imapUrlInput).fill(optionsData.imapUrl);
     await page.locator(this.imapPortInput).fill(optionsData.imapPort);
     await page.locator(this.imapUserInput).fill(optionsData.imapUser);

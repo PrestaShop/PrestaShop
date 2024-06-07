@@ -10,13 +10,10 @@ import ordersPage from '@pages/BO/orders';
 import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import DeliverySlipOptionsData from '@data/faker/deliverySlipOptions';
-
 import {
   boDashboardPage,
-  // Import data
   dataOrderStatuses,
+  FakerOrderDeliverySlipOptions,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -35,7 +32,7 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
   let page: Page;
   let fileName: string;
 
-  const deliverySlipData: DeliverySlipOptionsData = new DeliverySlipOptionsData();
+  const deliverySlipData: FakerOrderDeliverySlipOptions = new FakerOrderDeliverySlipOptions();
   const defaultPrefix: string = '#DE';
 
   // before and after functions

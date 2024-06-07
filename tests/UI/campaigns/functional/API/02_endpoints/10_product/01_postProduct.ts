@@ -15,14 +15,12 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataLanguages,
+  FakerAPIClient,
   FakerProduct,
 } from '@prestashop-core/ui-testing';
 
@@ -37,7 +35,7 @@ describe('API : POST /product', async () => {
   let jsonResponse: any;
 
   const clientScope: string = 'product_write';
-  const clientData: APIClientData = new APIClientData({
+  const clientData: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       clientScope,

@@ -13,13 +13,11 @@ import apiClientPage from '@pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import productsPage from '@pages/BO/catalog/products';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  FakerAPIClient,
   FakerProduct,
 } from '@prestashop-core/ui-testing';
 
@@ -34,7 +32,7 @@ describe('API : DELETE /product/{productId}', async () => {
   let accessToken: string;
 
   const clientScope: string = 'product_write';
-  const clientData: APIClientData = new APIClientData({
+  const clientData: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       clientScope,

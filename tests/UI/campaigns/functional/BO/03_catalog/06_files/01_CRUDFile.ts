@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import filesPage from '@pages/BO/catalog/files';
 import addFilePage from '@pages/BO/catalog/files/add';
 
-// Import data
-import FileData from '@data/faker/file';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerFile,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_files_CRUDFile';
 
@@ -29,8 +29,8 @@ describe('BO - Catalog - Files : CRUD file', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const createFileData: FileData = new FileData();
-  const editFileData: FileData = new FileData();
+  const createFileData: FakerFile = new FakerFile();
+  const editFileData: FakerFile = new FakerFile();
 
   // before and after functions
   before(async function () {

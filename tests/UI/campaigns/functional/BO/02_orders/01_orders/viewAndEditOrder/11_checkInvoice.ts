@@ -32,12 +32,12 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  FakerOrderShipping,
   FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import OrderShippingData from '@data/faker/orderShipping';
 import type {OrderPayment} from '@data/types/order';
 import type {ProductDiscount} from '@data/types/product';
 
@@ -1392,7 +1392,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should update the carrier', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'updateCarrier', baseContext);
 
-          const shippingDetailsData: OrderShippingData = new OrderShippingData({
+          const shippingDetailsData: FakerOrderShipping = new FakerOrderShipping({
             trackingNumber: '',
             carrier: dataCarriers.myCarrier.name,
             carrierID: 1,

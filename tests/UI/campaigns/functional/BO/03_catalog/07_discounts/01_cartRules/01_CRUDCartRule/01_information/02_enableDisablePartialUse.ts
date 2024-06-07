@@ -17,14 +17,12 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {
   boDashboardPage,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -37,7 +35,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
   let page: Page;
 
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
-  const cartRuleEnabledPartialUse: CartRuleData = new CartRuleData({
+  const cartRuleEnabledPartialUse: FakerCartRule = new FakerCartRule({
     name: 'partialUseEnabled',
     partialUse: true,
     dateFrom: pastDate,
@@ -48,7 +46,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       tax: 'Tax included',
     },
   });
-  const cartRuleDisabledPartialUse: CartRuleData = new CartRuleData({
+  const cartRuleDisabledPartialUse: FakerCartRule = new FakerCartRule({
     name: 'partialUseEnabled',
     partialUse: false,
     dateFrom: pastDate,

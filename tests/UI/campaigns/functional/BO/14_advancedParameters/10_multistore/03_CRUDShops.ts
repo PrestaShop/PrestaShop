@@ -12,12 +12,12 @@ import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
 import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 import shopPage from '@pages/BO/advancedParameters/multistore/shop';
 
-// Import data
-import ShopData from '@data/faker/shop';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerShop,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_multistore_CRUDShops';
 
@@ -27,8 +27,8 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
   let page: Page;
 
   let shopID: number = 0;
-  const createShopData: ShopData = new ShopData({shopGroup: 'Default', categoryRoot: 'Home'});
-  const updateShopData: ShopData = new ShopData({shopGroup: 'Default', categoryRoot: 'Home'});
+  const createShopData: FakerShop = new FakerShop({shopGroup: 'Default', categoryRoot: 'Home'});
+  const updateShopData: FakerShop = new FakerShop({shopGroup: 'Default', categoryRoot: 'Home'});
 
   //Pre-condition: Enable multistore
   setMultiStoreStatus(true, `${baseContext}_preTest`);

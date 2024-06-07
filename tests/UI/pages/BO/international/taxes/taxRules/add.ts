@@ -1,9 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type TaxRulesGroupData from '@data/faker/taxRulesGroup';
-
 import {
   type FakerTaxRule,
+  type FakerTaxRulesGroup,
 } from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
@@ -76,10 +75,10 @@ class AddTaxRules extends BOBasePage {
   /**
    * Fill form for add/edit tax rules group
    * @param page {Page} Browser tab
-   * @param taxRuleGroupData {TaxRulesGroupData} Data to set on tax rule group data
+   * @param taxRuleGroupData {FakerTaxRulesGroup} Data to set on tax rule group data
    * @returns {Promise<string>}
    */
-  async createEditTaxRulesGroup(page: Page, taxRuleGroupData: TaxRulesGroupData): Promise<string> {
+  async createEditTaxRulesGroup(page: Page, taxRuleGroupData: FakerTaxRulesGroup): Promise<string> {
     await this.setValue(page, this.nameInput, taxRuleGroupData.name);
     await this.setChecked(page, this.statusInput(taxRuleGroupData.enabled ? 'on' : 'off'));
     // Save Tax rules group

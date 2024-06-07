@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import pagesPage from '@pages/BO/design/pages';
 import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 
-// Import data
-import CMSCategoryData from '@data/faker/CMScategory';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCMSCategory,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_pages_categories_filterAndQuickEditCategories';
 
@@ -29,8 +29,8 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
   let page: Page;
   let numberOfCategories: number = 0;
 
-  const firstCategoryData: CMSCategoryData = new CMSCategoryData();
-  const secondCategoryData: CMSCategoryData = new CMSCategoryData();
+  const firstCategoryData: FakerCMSCategory = new FakerCMSCategory();
+  const secondCategoryData: FakerCMSCategory = new FakerCMSCategory();
   const categoriesTableName: string = 'cms_page_category';
 
   // before and after functions
@@ -63,7 +63,7 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
 
   // 1 : Create two categories and filter with all inputs and selects in grid table
   describe('Create 2 categories then filter the table', async () => {
-    [firstCategoryData, secondCategoryData].forEach((categoryToCreate: CMSCategoryData, index: number) => {
+    [firstCategoryData, secondCategoryData].forEach((categoryToCreate: FakerCMSCategory, index: number) => {
       it('should go to add new category', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCategory${index + 1}`, baseContext);
 

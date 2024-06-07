@@ -12,12 +12,12 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
 import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
 
-// Import data
-import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCatalogPriceRule,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_catalogPriceRules_filterSortAndPagination';
 
@@ -37,7 +37,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
 
   const today: string = date.getDateFormat('yyyy-mm-dd');
   const dateToCheck: string = date.getDateFormat('mm/dd/yyyy');
-  const priceRuleData: CatalogPriceRuleData = new CatalogPriceRuleData({fromDate: today, toDate: today});
+  const priceRuleData: FakerCatalogPriceRule = new FakerCatalogPriceRule({fromDate: today, toDate: today});
 
   // before and after functions
   before(async function () {
@@ -81,7 +81,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
   describe('Create 21 catalog price rules in BO', async () => {
     const creationTests: number[] = new Array(21).fill(0, 0, 21);
     creationTests.forEach((test: number, index: number) => {
-      const priceRuleData: CatalogPriceRuleData = new CatalogPriceRuleData({
+      const priceRuleData: FakerCatalogPriceRule = new FakerCatalogPriceRule({
         name: `todelete${index}`,
         fromDate: today,
         toDate: today,

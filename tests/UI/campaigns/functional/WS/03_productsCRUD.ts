@@ -25,14 +25,16 @@ import shippingTab from '@pages/BO/catalog/products/add/shippingTab';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 
 // Import data
-import {WebservicePermission} from '@data/types/webservice';
 import getProductXml from '@data/xml/product';
 
 import {expect} from 'chai';
 import type {
   APIResponse, APIRequestContext, BrowserContext, Page,
 } from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  type WebservicePermission,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_WS_productsCRUD';
 

@@ -16,12 +16,12 @@ import quickAccessPage from '@pages/BO/quickAccess';
 import addNewQuickAccessPage from '@pages/BO/quickAccess/add';
 import newCustomerPage from '@pages/BO/customers/add';
 
-// Import data
-import QuickAccessData from '@data/faker/quickAccess';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerQuickAccess,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_header_quickAccess';
 
@@ -29,7 +29,7 @@ describe('BO - Header : Quick access links', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const quickAccessLinkData: QuickAccessData = new QuickAccessData({
+  const quickAccessLinkData: FakerQuickAccess = new FakerQuickAccess({
     name: 'New customer',
     url: 'index.php/sell/customers/new',
     openNewWindow: true,

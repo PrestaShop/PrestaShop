@@ -15,13 +15,11 @@ import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
-// Import data
-import MessageData from '@data/faker/message';
-
 import {
   boDashboardPage,
   dataCustomers,
   dataEmployees,
+  FakerContactMessage,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -37,9 +35,9 @@ describe('BO - Customer Service : Change status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const contactUsData: MessageData = new MessageData({subject: 'Customer service', reference: 'OHSATSERP'});
+  const contactUsData: FakerContactMessage = new FakerContactMessage({subject: 'Customer service', reference: 'OHSATSERP'});
 
-  const forwardMessageData: MessageData = new MessageData({
+  const forwardMessageData: FakerContactMessage = new FakerContactMessage({
     employeeName: `${dataEmployees.defaultEmployee.firstName.slice(0, 1)}. ${dataEmployees.defaultEmployee.lastName}`,
     message: 'Forward message',
   });

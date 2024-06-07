@@ -23,9 +23,6 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
-// Import data
-import TaxRulesGroupData from '@data/faker/taxRulesGroup';
-
 import {
   boDashboardPage,
   dataCustomers,
@@ -33,6 +30,7 @@ import {
   dataPaymentMethods,
   FakerProduct,
   FakerTaxRule,
+  FakerTaxRulesGroup,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -58,7 +56,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
   let firstInvoiceFileName: string | null;
   let secondInvoiceFileName: string | null;
 
-  const taxRuleGroupToCreate: TaxRulesGroupData = new TaxRulesGroupData();
+  const taxRuleGroupToCreate: FakerTaxRulesGroup = new FakerTaxRulesGroup();
   const firstTaxRuleToCreate: FakerTaxRule = new FakerTaxRule({
     country: 'France',
     behaviour: 'Combine',

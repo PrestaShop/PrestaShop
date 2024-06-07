@@ -1,9 +1,12 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type WebserviceData from '@data/faker/webservice';
-
 import type {Page} from 'playwright';
-import {WebserviceMethod, WebservicePermission} from '@data/types/webservice';
+
+import {
+  FakerWebservice,
+  type WebserviceMethod,
+  type WebservicePermission,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add webservice page, contains functions that can be used on the page
@@ -54,11 +57,11 @@ class AddWebserviceKey extends BOBasePage {
   /**
    * Fill form for add/edit webservice key
    * @param page {Page} Browser tab
-   * @param webserviceData {WebserviceData} Data to set on add/edit webservice form
+   * @param webserviceData {FakerWebservice} Data to set on add/edit webservice form
    * @param toGenerate
    * @returns {Promise<string>}
    */
-  async createEditWebservice(page: Page, webserviceData: WebserviceData, toGenerate: boolean = true): Promise<string> {
+  async createEditWebservice(page: Page, webserviceData: FakerWebservice, toGenerate: boolean = true): Promise<string> {
     // Key
     if (toGenerate) {
       await page.locator(this.generateButton).click();

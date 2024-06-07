@@ -20,9 +20,6 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
-// Import data
-import OrderShippingData from '@data/faker/orderShipping';
-
 import {
   boDashboardPage,
   dataCarriers,
@@ -30,6 +27,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  FakerOrderShipping,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -57,7 +55,7 @@ describe('BO - Orders : Preview order', async () => {
   const addressData: FakerAddress = new FakerAddress({country: 'France'});
   const editShippingAddressData: FakerAddress = new FakerAddress({country: 'France'});
   const editInvoiceAddressData: FakerAddress = new FakerAddress({country: 'France'});
-  const shippingDetailsData: OrderShippingData = new OrderShippingData({
+  const shippingDetailsData: FakerOrderShipping = new FakerOrderShipping({
     trackingNumber: '123654789',
     carrier: dataCarriers.myCarrier.name,
     carrierID: dataCarriers.myCarrier.id,

@@ -16,12 +16,11 @@ import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import foLoginPage from '@pages/FO/hummingbird/login';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
 import {
   dataCarriers,
   dataCustomers,
   dataProducts,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -50,7 +49,7 @@ describe('FO - Checkout : Display of totals', async () => {
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
 
   // Data to create cart rule with code
-  const cartRuleWithCodeData: CartRuleData = new CartRuleData({
+  const cartRuleWithCodeData: FakerCartRule = new FakerCartRule({
     name: 'kdo',
     code: '1234',
     highlight: true,

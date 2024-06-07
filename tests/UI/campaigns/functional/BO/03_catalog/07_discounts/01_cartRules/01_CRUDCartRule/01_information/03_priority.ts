@@ -15,14 +15,12 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataProducts,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_information_priority';
@@ -41,7 +39,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
 
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
   const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
-  const cartRulePriority2: CartRuleData = new CartRuleData({
+  const cartRulePriority2: FakerCartRule = new FakerCartRule({
     name: 'cartRulePriority2',
     priority: 2,
     status: true,
@@ -54,7 +52,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
       tax: 'Tax included',
     },
   });
-  const cartRulePriority1: CartRuleData = new CartRuleData({
+  const cartRulePriority1: FakerCartRule = new FakerCartRule({
     name: 'cartRulePriority1',
     priority: 1,
     status: true,

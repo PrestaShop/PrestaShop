@@ -15,13 +15,11 @@ import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
-// Import data
-import MessageData from '@data/faker/message';
-
 import {
   boDashboardPage,
   dataCustomers,
   dataOrders,
+  FakerContactMessage,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -42,7 +40,7 @@ describe('FO - Contact us : Add attachment', async () => {
   let idCustomer: string;
   let messageDateTime: string;
 
-  const contactUsData: MessageData = new MessageData({
+  const contactUsData: FakerContactMessage = new FakerContactMessage({
     firstName: dataCustomers.johnDoe.firstName,
     lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',

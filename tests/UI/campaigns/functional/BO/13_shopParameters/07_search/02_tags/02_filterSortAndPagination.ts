@@ -11,14 +11,12 @@ import searchPage from '@pages/BO/shopParameters/search';
 import tagsPage from '@pages/BO/shopParameters/search/tags';
 import addTagPage from '@pages/BO/shopParameters/search/tags/add';
 
-// Import data
-import TagData from '@data/faker/tag';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataLanguages,
+  FakerSearchTag,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_search_tags_filterSortAndPagination';
@@ -77,7 +75,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
     const creationTests: number[] = new Array(21).fill(0, 0, 21);
 
     creationTests.forEach((test: number, index: number) => {
-      const tagData: TagData = new TagData({name: `todelete${index}`, language: dataLanguages.english.name});
+      const tagData: FakerSearchTag = new FakerSearchTag({name: `todelete${index}`, language: dataLanguages.english.name});
 
       it('should go to add new tag page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddTagPage${index}`, baseContext);

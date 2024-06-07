@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
 import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/add';
 
-// Import data
-import SqlQueryData from '@data/faker/sqlQuery';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerSqlQuery,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_database_sqlManager_filterSortAndPagination';
 
@@ -75,7 +75,7 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
   describe('Create 11 SQL queries in BO', async () => {
     const creationTests: number[] = new Array(11).fill(0, 0, 11);
     creationTests.forEach((test: number, index: number) => {
-      const sqlQueryData = new SqlQueryData({name: `todelete${index}`, tableName: `${dbPrefix}alias`});
+      const sqlQueryData: FakerSqlQuery = new FakerSqlQuery({name: `todelete${index}`, tableName: `${dbPrefix}alias`});
 
       it('should go to add new SQL query page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddSqlQueryPage${index}`, baseContext);

@@ -11,12 +11,12 @@ import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerAPIClient,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_apiClient_patchApiClientId';
 
@@ -29,20 +29,20 @@ describe('API : PATCH /api-client/{apiClientId}', async () => {
   let idApiClient: number;
 
   const clientScope: string = 'api_client_write';
-  const clientData: APIClientData = new APIClientData({
+  const clientData: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       clientScope,
     ],
   });
-  const createClient: APIClientData = new APIClientData({
+  const createClient: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       'api_client_read',
       'hook_write',
     ],
   });
-  const patchClient: APIClientData = new APIClientData({
+  const patchClient: FakerAPIClient = new FakerAPIClient({
     clientId: 'Client ID Patch',
     clientName: 'Client Name Patch',
     description: 'Description Patch',

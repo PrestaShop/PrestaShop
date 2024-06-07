@@ -12,12 +12,12 @@ import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import productsPage from '@pages/BO/catalog/products';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerAPIClient,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_products_getProducts';
 
@@ -30,7 +30,7 @@ describe('API : GET /products', async () => {
   let jsonResponse: any;
 
   const clientScope: string = 'product_read';
-  const clientData: APIClientData = new APIClientData({
+  const clientData: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       clientScope,

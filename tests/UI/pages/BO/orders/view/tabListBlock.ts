@@ -1,8 +1,9 @@
 import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
-import type OrderShippingData from '@data/faker/orderShipping';
-
 import type {Frame, Page} from 'playwright';
+import {
+  type FakerOrderShipping,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Tab list block, contains functions that can be used on status, documents, carriers and merchandise returns tabs
@@ -597,10 +598,10 @@ class TabListBlock extends ViewOrderBasePage {
   /**
    * Set shipping details
    * @param page {Page} Browser tab
-   * @param shippingData {OrderShippingData} Data to set on shipping form
+   * @param shippingData {FakerOrderShipping} Data to set on shipping form
    * @returns {Promise<string>}
    */
-  async setShippingDetails(page: Page, shippingData: OrderShippingData): Promise<string> {
+  async setShippingDetails(page: Page, shippingData: FakerOrderShipping): Promise<string> {
     await this.setValue(page, this.trackingNumberInput, shippingData.trackingNumber);
     await page.locator(this.carrierSelect2).click();
     await this.waitForSelectorAndClick(page, this.carrierToSelect(shippingData.carrierID));

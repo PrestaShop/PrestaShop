@@ -18,12 +18,12 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCartRule,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_invalidDateTime';
 
@@ -42,7 +42,7 @@ describe('BO - Catalog - Cart rules : Invalid date time', async () => {
 
   // Data to create a date format
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
-  const newCartRuleData: CartRuleData = new CartRuleData({
+  const newCartRuleData: FakerCartRule = new FakerCartRule({
     name: 'Cart rule invalid date time',
     discountType: 'Percent',
     discountPercent: 20,

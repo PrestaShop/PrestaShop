@@ -10,12 +10,12 @@ import {createAPIClientTest} from '@commonTests/BO/advancedParameters/authServer
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerAPIClient,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_adminAPI_editAPIClient';
 
@@ -23,12 +23,12 @@ describe('BO - Advanced Parameter - Authorization Server : Edit API Client', asy
   let browserContext: BrowserContext;
   let page: Page;
 
-  const createAPIClient: APIClientData = new APIClientData({
+  const createAPIClient: FakerAPIClient = new FakerAPIClient({
     clientName: 'API Client XYZ',
     clientId: 'api-client-xyz',
     description: 'Description ABC',
   });
-  const editAPIClient: APIClientData = new APIClientData({
+  const editAPIClient: FakerAPIClient = new FakerAPIClient({
     clientName: 'API Client UVW',
     clientId: 'api-client-uvw',
     description: 'Description DEF',

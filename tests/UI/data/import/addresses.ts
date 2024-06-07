@@ -1,11 +1,10 @@
-import ImportData from '@data/faker/import';
-import type {ImportAddress} from '@data/types/import';
-
 import {
   // Import data
   dataCountries,
   dataCustomers,
+  FakerImport,
   type FakerCountry,
+  type ImportAddress,
 } from '@prestashop-core/ui-testing';
 
 import {fakerFR as faker} from '@faker-js/faker';
@@ -44,7 +43,7 @@ function createRecord(): ImportAddress[] {
   return records;
 }
 
-export default new ImportData({
+export default new FakerImport({
   entity: 'Addresses',
   header: [
     {id: 'id', title: 'Address ID'},

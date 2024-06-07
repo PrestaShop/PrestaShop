@@ -15,14 +15,12 @@ import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRul
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataProducts,
+  FakerCatalogPriceRule,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productPage_displayDiscountedPrice';
@@ -31,7 +29,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
   let browserContext: BrowserContext;
   let page: Page;
 
-  const priceRuleData: CatalogPriceRuleData = new CatalogPriceRuleData({
+  const priceRuleData: FakerCatalogPriceRule = new FakerCatalogPriceRule({
     currency: 'All currencies',
     country: 'All countries',
     group: 'All groups',
