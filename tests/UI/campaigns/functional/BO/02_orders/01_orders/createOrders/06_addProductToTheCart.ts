@@ -20,14 +20,12 @@ import stocksPage from '@pages/BO/catalog/stocks';
 import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {
   boDashboardPage,
   dataCurrencies,
   dataCustomers,
   dataProducts,
+  FakerCartRule,
   FakerProduct,
 } from '@prestashop-core/ui-testing';
 
@@ -169,7 +167,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
     behaviourOutOfStock: 'Default behavior',
   });
   // Data to create cart rule
-  const newCartRuleData: CartRuleData = new CartRuleData({
+  const newCartRuleData: FakerCartRule = new FakerCartRule({
     applyDiscountTo: 'Specific product',
     dateFrom: pastDate,
     product: productWithCartRule.name,

@@ -11,9 +11,6 @@ import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import DeliverySlipOptionsData from '@data/faker/deliverySlipOptions';
-
 import {
   boDashboardPage,
   dataCustomers,
@@ -21,6 +18,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  FakerOrderDeliverySlipOptions,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -52,7 +50,7 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
     ],
     paymentMethod: dataPaymentMethods.wirePayment,
   });
-  const deliverySlipData: DeliverySlipOptionsData = new DeliverySlipOptionsData();
+  const deliverySlipData: FakerOrderDeliverySlipOptions = new FakerOrderDeliverySlipOptions();
 
   // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);

@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerAPIClient,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_apiClient_deleteApiClientId';
 
@@ -28,7 +28,7 @@ describe('API : DELETE /api-client/{apiClientId}', async () => {
   let idApiClient: number;
 
   const clientScope: string = 'api_client_write';
-  const clientData: APIClientData = new APIClientData({
+  const clientData: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       clientScope,

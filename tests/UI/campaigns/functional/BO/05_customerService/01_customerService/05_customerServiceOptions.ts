@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import customerServicePage from '@pages/BO/customerService/customerService';
 
-// Import data
-import CustomerServiceOptionsData from '@data/faker/customerServiceOptions';
-
 import {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCustomerServiceOptions,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customerService_customerService_customerServiceOptions';
 
@@ -21,7 +21,7 @@ describe('BO - Customer Service : Customer service options', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const optionsData: CustomerServiceOptionsData = new CustomerServiceOptionsData({
+  const optionsData: FakerCustomerServiceOptions = new FakerCustomerServiceOptions({
     imapUrl: 'outlook.office365.com',
     imapPort: '993',
     imapUser: 'presta_test@outlook.fr',

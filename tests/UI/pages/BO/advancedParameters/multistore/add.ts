@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type ShopGroupData from '@data/faker/shopGroup';
-
 import type {Page} from 'playwright';
+import {
+  type FakerShopGroup,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add shop group page, contains functions that can be used on the page
@@ -52,10 +53,10 @@ class AddShopGroup extends BOBasePage {
   /**
    * Fill form for add/edit shop group
    * @param page {Page} Browser tab
-   * @param shopGroupData {ShopGroupData} Data to set on add/edit shop group form
+   * @param shopGroupData {FakerShopGroup} Data to set on add/edit shop group form
    * @returns {Promise<string>}
    */
-  async setShopGroup(page: Page, shopGroupData: ShopGroupData): Promise<string> {
+  async setShopGroup(page: Page, shopGroupData: FakerShopGroup): Promise<string> {
     await this.setValue(page, this.nameInput, shopGroupData.name);
 
     await this.setChecked(page, this.shareCustomersToggleInput(shopGroupData.shareCustomer ? 'on' : 'off'));

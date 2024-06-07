@@ -12,9 +12,6 @@ import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import InvoiceData from '@data/faker/invoice';
-
 import {
   boDashboardPage,
   dataCustomers,
@@ -22,6 +19,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  FakerOrderInvoice,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -44,8 +42,8 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
   let fileName: string;
   let filePath: string|null;
 
-  const invoiceData: InvoiceData = new InvoiceData({legalFreeText: 'Legal free text'});
-  const invoiceDefaultData: InvoiceData = new InvoiceData({
+  const invoiceData: FakerOrderInvoice = new FakerOrderInvoice({legalFreeText: 'Legal free text'});
+  const invoiceDefaultData: FakerOrderInvoice = new FakerOrderInvoice({
     prefix: invoiceData.prefix,
     invoiceNumber: '0',
     legalFreeText: '',

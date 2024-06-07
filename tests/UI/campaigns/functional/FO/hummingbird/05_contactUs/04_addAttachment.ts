@@ -17,13 +17,11 @@ import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import homePage from '@pages/FO/hummingbird/home';
 import loginPage from '@pages/FO/hummingbird/login';
 
-// Import data
-import MessageData from '@data/faker/message';
-
 import {
   boDashboardPage,
   dataCustomers,
   dataOrders,
+  FakerContactMessage,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -49,7 +47,7 @@ describe('FO - Contact us : Add attachment', async () => {
   let idCustomer: string;
   let messageDateTime: string;
 
-  const contactUsData: MessageData = new MessageData({
+  const contactUsData: FakerContactMessage = new FakerContactMessage({
     firstName: dataCustomers.johnDoe.firstName,
     lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',

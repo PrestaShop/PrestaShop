@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import orderMessagesPage from '@pages/BO/customerService/orderMessages';
 import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 
-// Import data
-import OrderMessageData from '@data/faker/orderMessage';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerOrderMessage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customerService_orderMessages_paginationAndSortOrderMessages';
 
@@ -68,7 +68,7 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
   describe('Create 10 order messages in BO', async () => {
     const tests: number[] = new Array(10).fill(0, 0, 10);
     tests.forEach((test: number, index: number) => {
-      const createOrderMessageData: OrderMessageData = new OrderMessageData({
+      const createOrderMessageData: FakerOrderMessage = new FakerOrderMessage({
         name: `toSortAndPaginate${index}`,
       });
 

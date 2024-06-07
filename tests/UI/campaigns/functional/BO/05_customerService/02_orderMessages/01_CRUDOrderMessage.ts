@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import orderMessagesPage from '@pages/BO/customerService/orderMessages';
 import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 
-// Import data
-import OrderMessageData from '@data/faker/orderMessage';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerOrderMessage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customerService_orderMessages_CRUDOrderMessage';
 
@@ -28,8 +28,8 @@ describe('BO - Customer Service - Order Messages : CRUD order message', async ()
   let page: Page;
   let numberOfOrderMessages: number = 0;
 
-  const createOrderMessageData: OrderMessageData = new OrderMessageData();
-  const editOrderMessageData: OrderMessageData = new OrderMessageData();
+  const createOrderMessageData: FakerOrderMessage = new FakerOrderMessage();
+  const editOrderMessageData: FakerOrderMessage = new FakerOrderMessage();
 
   // before and after functions
   before(async function () {

@@ -2,13 +2,14 @@ import fs from 'fs';
 import path from 'path';
 import https from 'https';
 
-import ImportData from '@data/faker/import';
-
 import {createObjectCsvWriter} from 'csv-writer';
 import imgGen from 'js-image-generator';
 import {getDocument, OPS, PDFDocumentProxy} from 'pdfjs-dist/legacy/build/pdf.js';
 import {TextItem, TextMarkedContent} from 'pdfjs-dist/types/src/display/api';
 import {RawImageData} from 'jpeg-js';
+import {
+  type FakerImport,
+} from '@prestashop-core/ui-testing';
 
 /**
  * @module FilesHelper
@@ -370,10 +371,10 @@ export default {
    * Create csv file
    * @param path {string} Path of the file
    * @param fileName {string} Name of the file to create
-   * @param data {ImportData} Data to create csv file
+   * @param data {FakerImport} Data to create csv file
    * @returns {Promise<void>}
    */
-  async createCSVFile(path: string, fileName: string, data: ImportData): Promise<void> {
+  async createCSVFile(path: string, fileName: string, data: FakerImport): Promise<void> {
     await this.createFile(path, fileName, '');
     if ('header' in data && 'records' in data) {
       const csvWriter = createObjectCsvWriter({path: fileName, header: data.header, fieldDelimiter: ';'});

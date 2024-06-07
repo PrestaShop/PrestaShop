@@ -14,8 +14,9 @@ import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/ca
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
+import {
+  FakerCartRule,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_cart_cart_addPromoCode';
 
@@ -24,7 +25,7 @@ describe('FO - cart : Add promo code', async () => {
   let page: Page;
 
   // Data to create cart rule
-  const newCartRuleData: CartRuleData = new CartRuleData({
+  const newCartRuleData: FakerCartRule = new FakerCartRule({
     name: 'reduction',
     code: 'reduc',
     discountType: 'Amount',

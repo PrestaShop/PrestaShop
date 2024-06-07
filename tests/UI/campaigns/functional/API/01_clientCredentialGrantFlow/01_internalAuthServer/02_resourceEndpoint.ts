@@ -11,12 +11,12 @@ import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerAPIClient,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_internalAuthServer_resourceEndpoint';
 
@@ -28,7 +28,7 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
   let accessTokenExpired: string;
   let clientSecret: string;
 
-  const clientClient: APIClientData = new APIClientData({
+  const clientClient: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       'hook_read',

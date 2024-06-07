@@ -15,13 +15,11 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {
   boDashboardPage,
   dataCustomers,
   dataProducts,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -43,7 +41,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const cartRuleCode: CartRuleData = new CartRuleData({
+  const cartRuleCode: FakerCartRule = new FakerCartRule({
     name: 'New Cart rule customer group selection',
     code: '4QABV6L3',
     customerGroupSelection: true,

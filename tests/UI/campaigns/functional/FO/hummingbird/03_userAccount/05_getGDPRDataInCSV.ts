@@ -28,14 +28,12 @@ import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
 import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalData';
 import productPage from '@pages/FO/hummingbird/product';
 
-// Import data
-import MessageData from '@data/faker/message';
-
 import {
   boDashboardPage,
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
+  FakerContactMessage,
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
@@ -87,7 +85,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
     city: 'Paris',
     company: 'PrestaShop',
   });
-  const contactUsData: MessageData = new MessageData({
+  const contactUsData: FakerContactMessage = new FakerContactMessage({
     firstName: customerData.firstName,
     lastName: customerData.lastName,
     subject: 'Customer service',

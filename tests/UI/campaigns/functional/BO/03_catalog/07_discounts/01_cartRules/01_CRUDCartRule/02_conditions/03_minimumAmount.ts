@@ -18,14 +18,12 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataProducts,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_minimumAmount';
@@ -45,7 +43,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const newCartRuleData: CartRuleData = new CartRuleData({
+  const newCartRuleData: FakerCartRule = new FakerCartRule({
     name: 'Cart rule minimum amount',
     code: 'test',
     minimumAmount: {

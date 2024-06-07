@@ -14,14 +14,12 @@ import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataLanguages,
+  FakerAPIClient,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_customerGroup_getCustomerGroupsId';
@@ -41,7 +39,7 @@ describe('API : GET /customers/group/{customerGroupId}', async () => {
   let nameEn: string;
 
   const clientScope: string = 'customer_group_read';
-  const clientData: APIClientData = new APIClientData({
+  const clientData: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       clientScope,

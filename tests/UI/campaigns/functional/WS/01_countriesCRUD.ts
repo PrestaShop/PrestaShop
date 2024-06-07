@@ -18,14 +18,16 @@ import countriesPage from '@pages/BO/international/locations/countries';
 import addCountryPage from '@pages/BO/international/locations/countries/add';
 
 // Import data
-import {WebservicePermission} from '@data/types/webservice';
 import getCountryXml from '@data/xml/country';
 
 import {expect} from 'chai';
 import type {
   APIResponse, APIRequestContext, BrowserContext, Page,
 } from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  type WebservicePermission,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_WS_countriesCRUD';
 

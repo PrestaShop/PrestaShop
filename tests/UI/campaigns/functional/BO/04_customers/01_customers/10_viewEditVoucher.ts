@@ -11,13 +11,10 @@ import customersPage from '@pages/BO/customers';
 import viewCustomerPage from '@pages/BO/customers/view';
 import editRulesPage from '@pages/BO/catalog/discounts/add';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -30,7 +27,7 @@ describe('BO - Customers - Customers : View/edit voucher', async () => {
   let page: Page;
 
   // Data to create cart rule
-  const newCartRuleData: CartRuleData = new CartRuleData({
+  const newCartRuleData: FakerCartRule = new FakerCartRule({
     name: 'reduction',
     customer: dataCustomers.johnDoe,
     discountType: 'Amount',
@@ -41,7 +38,7 @@ describe('BO - Customers - Customers : View/edit voucher', async () => {
     },
   });
 
-  const editCartRuleData: CartRuleData = new CartRuleData({
+  const editCartRuleData: FakerCartRule = new FakerCartRule({
     name: 'reduction',
     description: 'abkjbhvggfvfi',
     discountType: 'Amount',

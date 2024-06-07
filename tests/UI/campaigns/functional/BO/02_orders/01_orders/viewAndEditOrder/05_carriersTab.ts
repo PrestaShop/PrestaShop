@@ -11,9 +11,6 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import OrderShippingData from '@data/faker/orderShipping';
-
 import {
   boDashboardPage,
   dataCarriers,
@@ -21,6 +18,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  FakerOrderShipping,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -42,7 +40,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
   let page: Page;
 
   const today: string = date.getDateFormat('mm/dd/yyyy');
-  const shippingDetailsData: OrderShippingData = new OrderShippingData({
+  const shippingDetailsData: FakerOrderShipping = new FakerOrderShipping({
     trackingNumber: '0523698',
     carrier: dataCarriers.myCarrier.name,
     carrierID: dataCarriers.myCarrier.id,

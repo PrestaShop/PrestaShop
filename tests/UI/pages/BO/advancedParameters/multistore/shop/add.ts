@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type ShopData from '@data/faker/shop';
-
 import type {Page} from 'playwright';
+import {
+  type FakerShop,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add shop page, contains functions that can be used on the page
@@ -55,10 +56,10 @@ class AddShop extends BOBasePage {
   /**
    * Fill form for add/edit shop
    * @param page {Page} Browser tab
-   * @param shopData {ShopData} Data to set on create/edit shop form
+   * @param shopData {FakerShop} Data to set on create/edit shop form
    * @returns {Promise<string>}
    */
-  async setShop(page: Page, shopData: ShopData): Promise<string> {
+  async setShop(page: Page, shopData: FakerShop): Promise<string> {
     const currentUrl: string = page.url();
 
     await this.setValue(page, this.nameInput, shopData.name);

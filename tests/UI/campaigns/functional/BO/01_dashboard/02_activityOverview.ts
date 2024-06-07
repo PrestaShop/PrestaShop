@@ -36,15 +36,13 @@ import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
-// Import data
-import MessageData from '@data/faker/message';
-
 import {
   boDashboardPage,
   dataCustomers,
   dataOrders,
   dataOrderStatuses,
   dataPaymentMethods,
+  FakerContactMessage,
   FakerCustomer,
   FakerProduct,
 } from '@prestashop-core/ui-testing';
@@ -73,7 +71,7 @@ describe('BO - Dashboard : Activity overview', async () => {
     status: true,
   });
 
-  const contactUsData: MessageData = new MessageData({
+  const contactUsData: FakerContactMessage = new FakerContactMessage({
     subject: 'Customer service',
     reference: dataOrders.order_1.reference,
   });

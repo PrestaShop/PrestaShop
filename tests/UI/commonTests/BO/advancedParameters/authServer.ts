@@ -6,18 +6,19 @@ import loginCommon from '@commonTests/BO/loginBO';
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  type FakerAPIClient,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Function to create API Client
- * @param apiClient {APIClientData} Data to set in API Client form
+ * @param apiClient {FakerAPIClient} Data to set in API Client form
  * @param baseContext {string} String to identify the test
  */
-function createAPIClientTest(apiClient: APIClientData, baseContext: string = 'commonTests-createAPIClientTest'): void {
+function createAPIClientTest(apiClient: FakerAPIClient, baseContext: string = 'commonTests-createAPIClientTest'): void {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfAPIClient: number = 0;

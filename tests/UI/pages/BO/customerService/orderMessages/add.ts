@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type OrderMessageData from '@data/faker/orderMessage';
-
 import type {Page} from 'playwright';
+import {
+  type FakerOrderMessage,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add order message page, contains selectors and functions for the page
@@ -72,10 +73,10 @@ class AddOrderMessage extends BOBasePage {
   /**
    * Add/Edit order message
    * @param page {Page} Browser tab
-   * @param orderMessageData {OrderMessageData} Data to set order message form
+   * @param orderMessageData {FakerOrderMessage} Data to set order message form
    * @returns {Promise<string>}
    */
-  async addEditOrderMessage(page: Page, orderMessageData: OrderMessageData): Promise<string> {
+  async addEditOrderMessage(page: Page, orderMessageData: FakerOrderMessage): Promise<string> {
     // Change lang to 'en' than set inputs value
     await this.changeFormLang(page, 'en');
     await this.setValue(page, this.nameInput(1), orderMessageData.name);

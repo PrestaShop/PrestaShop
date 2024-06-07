@@ -11,12 +11,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerAPIClient,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_apiClient_postApiClient';
 
@@ -29,13 +29,13 @@ describe('API : POST /api-client', async () => {
   let jsonResponse: any;
 
   const clientScope: string = 'api_client_write';
-  const clientData: APIClientData = new APIClientData({
+  const clientData: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       clientScope,
     ],
   });
-  const createClient: APIClientData = new APIClientData({
+  const createClient: FakerAPIClient = new FakerAPIClient({
     scopes: [
       'api_client_read',
       'hook_read',

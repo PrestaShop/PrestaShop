@@ -12,12 +12,12 @@ import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';
 import shopPage from '@pages/BO/advancedParameters/multistore/shop';
 import editShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 
-// Import data
-import ShopData from '@data/faker/shop';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerShop,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_multistore_editUrlOptions';
 
@@ -34,7 +34,7 @@ Post-condition:
 describe('BO - Advanced Parameters - Multistore : Edit URL options', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const ShopUrlData: ShopData = new ShopData({name: 'polpol', shopGroup: '', categoryRoot: ''});
+  const ShopUrlData: FakerShop = new FakerShop({name: 'polpol', shopGroup: '', categoryRoot: ''});
 
   //Pre-condition: Enable multistore
   setMultiStoreStatus(true, `${baseContext}_preTest`);

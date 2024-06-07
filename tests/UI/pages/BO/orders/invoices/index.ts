@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type InvoiceData from '@data/faker/invoice';
-
 import type {Page} from 'playwright';
+import {
+  type FakerOrderInvoice,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Invoices page, contains functions that can be used on invoices page
@@ -219,10 +220,10 @@ class Invoice extends BOBasePage {
   /**
    * Set invoiceNumber, LegalFreeText, footerText
    * @param page {Page} Browser tab
-   * @param data {InvoiceData} Values to set on invoice option inputs
+   * @param data {FakerOrderInvoice} Values to set on invoice option inputs
    * @returns {Promise<void>}
    */
-  async setInputOptions(page: Page, data: InvoiceData): Promise<void> {
+  async setInputOptions(page: Page, data: FakerOrderInvoice): Promise<void> {
     await this.setValue(page, this.invoiceNumberInput, data.invoiceNumber);
     await this.setValue(page, this.legalFreeTextInput, data.legalFreeText);
     await this.setValue(page, this.footerTextInput, data.footerText);

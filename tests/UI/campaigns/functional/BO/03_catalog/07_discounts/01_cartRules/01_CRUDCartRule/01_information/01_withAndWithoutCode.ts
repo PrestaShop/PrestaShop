@@ -15,14 +15,12 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataProducts,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_information_withAndWithoutCode';
@@ -32,20 +30,20 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
   let page: Page;
 
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
-  const cartRuleWithoutCode: CartRuleData = new CartRuleData({
+  const cartRuleWithoutCode: FakerCartRule = new FakerCartRule({
     dateFrom: pastDate,
     name: 'withoutCode',
     discountType: 'Percent',
     discountPercent: 20,
   });
-  const cartRuleWithCode: CartRuleData = new CartRuleData({
+  const cartRuleWithCode: FakerCartRule = new FakerCartRule({
     name: 'withCodeHighlightFalse',
     code: '4QABV6L3',
     highlight: false,
     discountType: 'Percent',
     discountPercent: 20,
   });
-  const secondCartRuleWithCode: CartRuleData = new CartRuleData({
+  const secondCartRuleWithCode: FakerCartRule = new FakerCartRule({
     name: 'withCodeHighlightTrue',
     code: '4QABU4OP',
     highlight: true,

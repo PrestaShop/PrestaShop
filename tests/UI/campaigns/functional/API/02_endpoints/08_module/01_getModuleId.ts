@@ -12,15 +12,13 @@ import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import {moduleManager} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
   dataModules,
+  FakerAPIClient,
   type ModuleInfo,
 } from '@prestashop-core/ui-testing';
 
@@ -36,7 +34,7 @@ describe('API : GET /module/{moduleId}', async () => {
   let moduleInfo: ModuleInfo;
 
   const clientScope: string = 'module_read';
-  const clientData: APIClientData = new APIClientData({
+  const clientData: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       clientScope,

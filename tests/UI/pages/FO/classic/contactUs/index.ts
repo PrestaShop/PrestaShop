@@ -1,10 +1,10 @@
 // Import FO pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-// Import data
-import type MessageData from '@data/faker/message';
-
 import type {Page} from 'playwright';
+import {
+  type FakerContactMessage,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Contact us page, contains functions that can be used on the page
@@ -85,11 +85,11 @@ class ContactUsPage extends FOBasePage {
   /**
    * Send message
    * @param page {Page} Browser tab
-   * @param contactUsData {MessageData} The data for fill the form
+   * @param contactUsData {FakerContactMessage} The data for fill the form
    * @param file {string|null} The path of the file to upload
    * @returns {Promise<void>}
    */
-  async sendMessage(page: Page, contactUsData: MessageData, file: string|null = null): Promise<void> {
+  async sendMessage(page: Page, contactUsData: FakerContactMessage, file: string|null = null): Promise<void> {
     await this.selectByVisibleText(page, this.subjectSelect, contactUsData.subject);
     await this.setValue(page, this.emailAddressInput, contactUsData.emailAddress);
 

@@ -13,12 +13,10 @@ import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 import {moduleManager as moduleManagerPage, moduleManager} from '@pages/BO/modules/moduleManager';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {
   boDashboardPage,
   boModuleManagerPage,
+  FakerAPIClient,
   FakerModule,
   type ModuleInfo,
 } from '@prestashop-core/ui-testing';
@@ -38,7 +36,7 @@ describe('API : PUT /modules/toggle-status', async () => {
   let moduleInfo2: ModuleInfo;
 
   const clientScope: string = 'module_write';
-  const clientData: APIClientData = new APIClientData({
+  const clientData: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       clientScope,

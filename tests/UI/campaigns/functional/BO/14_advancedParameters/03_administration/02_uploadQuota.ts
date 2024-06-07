@@ -15,13 +15,11 @@ import filesPage from '@pages/BO/catalog/files';
 import addFilePage from '@pages/BO/catalog/files/add';
 import productsPage from '@pages/BO/catalog/products';
 
-// Import data
-import FileData from '@data/faker/file';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  FakerFile,
   FakerProduct,
 } from '@prestashop-core/ui-testing';
 
@@ -31,11 +29,11 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
   let browserContext: BrowserContext;
   let page: Page;
   // Image data with size > 2MB
-  const firstFileData: FileData = new FileData({filename: 'image1.jpg'});
+  const firstFileData: FakerFile = new FakerFile({filename: 'image1.jpg'});
   // Image data with size < 2MB
-  const secondFileData: FileData = new FileData({filename: 'image2.jpg'});
+  const secondFileData: FakerFile = new FakerFile({filename: 'image2.jpg'});
   // Image data with size < 1MB
-  const thirdFileData: FileData = new FileData({filename: 'image3.jpg'});
+  const thirdFileData: FakerFile = new FakerFile({filename: 'image3.jpg'});
   const firstVirtualProductData: FakerProduct = new FakerProduct({
     type: 'virtual',
     downloadFile: true,

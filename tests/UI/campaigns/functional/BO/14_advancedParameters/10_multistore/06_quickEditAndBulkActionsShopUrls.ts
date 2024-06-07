@@ -11,12 +11,12 @@ import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';
 
-// Import data
-import ShopData from '@data/faker/shop';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerShop,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_multistore_quickEditAndBulkActionsShopUrls';
 
@@ -32,7 +32,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfShopUrls: number = 0;
-  const ShopUrlData: ShopData = new ShopData({name: 'ToDelete', shopGroup: '', categoryRoot: ''});
+  const ShopUrlData: FakerShop = new FakerShop({name: 'ToDelete', shopGroup: '', categoryRoot: ''});
 
   // Pre-condition: Enable multistore
   setMultiStoreStatus(true, `${baseContext}_preTest`);

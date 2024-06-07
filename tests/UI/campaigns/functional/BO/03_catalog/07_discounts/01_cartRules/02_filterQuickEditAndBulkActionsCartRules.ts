@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerCartRule,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_filterQuickEditAndBulkActionsCartRules';
 
@@ -29,13 +29,13 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
   let page: Page;
   let numberOfCartRules: number = 0;
 
-  const firstCartRule: CartRuleData = new CartRuleData({
+  const firstCartRule: FakerCartRule = new FakerCartRule({
     name: 'todelete1',
     code: '4QABV6I0',
     discountType: 'Percent',
     discountPercent: 20,
   });
-  const secondCartRule: CartRuleData = new CartRuleData({
+  const secondCartRule: FakerCartRule = new FakerCartRule({
     name: 'todelete2',
     code: '3PAJA674',
     discountType: 'Percent',
@@ -78,7 +78,7 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
 
   describe('Create 2 cart rules', async () => {
     [firstCartRule, secondCartRule]
-      .forEach((cartRuleToCreate: CartRuleData, index: number) => {
+      .forEach((cartRuleToCreate: FakerCartRule, index: number) => {
         it('should go to new cart rule page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToNewCartRulePage${index}`, baseContext);
 

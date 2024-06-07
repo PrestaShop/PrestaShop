@@ -17,11 +17,9 @@ import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/ca
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {
   dataProducts,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_cart_cart_displayDiscount';
@@ -31,7 +29,7 @@ describe('FO - cart : Display discount', async () => {
   let page: Page;
 
   // Data to create first cart rule
-  const firstCartRuleData: CartRuleData = new CartRuleData({
+  const firstCartRuleData: FakerCartRule = new FakerCartRule({
     name: 'test1',
     code: '123456',
     quantity: 100,
@@ -42,7 +40,7 @@ describe('FO - cart : Display discount', async () => {
     product: dataProducts.demo_8.name,
   });
   // Data to create second cart rule
-  const secondCartRuleData: CartRuleData = new CartRuleData({
+  const secondCartRuleData: FakerCartRule = new FakerCartRule({
     name: 'test2',
     code: '123456789',
     quantity: 100,

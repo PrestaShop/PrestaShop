@@ -14,12 +14,12 @@ import viewPage from '@pages/BO/customerService/customerService/view';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage} from '@pages/FO/classic/home';
 
-// Import data
-import MessageData from '@data/faker/message';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerContactMessage,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customerService_customerService_viewMessage';
 
@@ -33,7 +33,7 @@ describe('BO - Customer Service : View message', async () => {
   let idCustomer: string = '0';
   let messageDateTime: string = '';
 
-  const contactUsData: MessageData = new MessageData({subject: 'Customer service'});
+  const contactUsData: FakerContactMessage = new FakerContactMessage({subject: 'Customer service'});
 
   // before and after functions
   before(async function () {

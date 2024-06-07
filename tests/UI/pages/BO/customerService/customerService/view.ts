@@ -1,7 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 import type {Page} from 'playwright';
-import MessageData from '@data/faker/message';
+import {
+  type FakerContactMessage,
+} from '@prestashop-core/ui-testing';
 
 /**
  * View customer service page, contains selectors and functions for the page
@@ -167,10 +169,10 @@ class ViewCustomer extends BOBasePage {
   /**
    * Forward message
    * @param page {Page} Browser tab
-   * @param messageData {MessageData} Message data to set
+   * @param messageData {FakerContactMessage} Message data to set
    * @returns {Promise<void>}
    */
-  async forwardMessage(page: Page, messageData: MessageData): Promise<void> {
+  async forwardMessage(page: Page, messageData: FakerContactMessage): Promise<void> {
     await this.selectByVisibleText(page, this.forwardModalEmployeeIDSelect, messageData.employeeName);
     if (await this.elementVisible(page, this.forwardModalEmailInput, 2000)) {
       await this.setValue(page, this.forwardModalEmailInput, messageData.emailAddress);

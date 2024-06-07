@@ -1,10 +1,8 @@
-import ImportData from '@data/faker/import';
-import type {ImportCustomer} from '@data/types/import';
-
 import {
-  // Import data
   dataGroups,
+  FakerImport,
   type FakerGroup,
+  type ImportCustomer,
 } from '@prestashop-core/ui-testing';
 
 import {faker} from '@faker-js/faker';
@@ -36,7 +34,7 @@ function createRecord(): ImportCustomer[] {
   return records;
 }
 
-export default new ImportData({
+export default new FakerImport({
   entity: 'Customers',
   header: [
     {id: 'id', title: 'Customer ID'},

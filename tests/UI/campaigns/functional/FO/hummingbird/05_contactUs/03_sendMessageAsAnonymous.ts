@@ -21,13 +21,13 @@ import homePage from '@pages/FO/hummingbird/home';
 import loginPage from '@pages/FO/hummingbird/login';
 
 // Import data
-import MessageData from '@data/faker/message';
 import MailDevEmail from '@data/types/maildevEmail';
 
 import {
   boDashboardPage,
   dataCustomers,
   dataModules,
+  FakerContactMessage,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -58,26 +58,26 @@ describe('FO - Contact us : Send message from contact us page with customer not 
   let newMail: MailDevEmail;
   let mailListener: MailDev;
 
-  const contactUsEmptyEmail: MessageData = new MessageData({
+  const contactUsEmptyEmail: FakerContactMessage = new FakerContactMessage({
     firstName: dataCustomers.johnDoe.firstName,
     lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: '',
   });
-  const contactUsInvalidEmail: MessageData = new MessageData({
+  const contactUsInvalidEmail: FakerContactMessage = new FakerContactMessage({
     firstName: dataCustomers.johnDoe.firstName,
     lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: 'demo@prestashop',
   });
-  const contactUsEmptyContent: MessageData = new MessageData({
+  const contactUsEmptyContent: FakerContactMessage = new FakerContactMessage({
     firstName: dataCustomers.johnDoe.firstName,
     lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: dataCustomers.johnDoe.email,
     message: '',
   });
-  const contactUsData: MessageData = new MessageData({
+  const contactUsData: FakerContactMessage = new FakerContactMessage({
     firstName: dataCustomers.johnDoe.firstName,
     lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',

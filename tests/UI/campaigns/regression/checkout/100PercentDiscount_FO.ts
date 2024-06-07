@@ -17,13 +17,10 @@ import {homePage} from '@pages/FO/classic/home';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {
   boDashboardPage,
-  // Import data
   FakerAddress,
+  FakerCartRule,
   FakerCustomer,
 } from '@prestashop-core/ui-testing';
 
@@ -47,7 +44,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
   let browserContext: BrowserContext;
   let page: Page;
 
-  const percentCartRule: CartRuleData = new CartRuleData({
+  const percentCartRule: FakerCartRule = new FakerCartRule({
     name: 'discount100',
     code: 'discount100',
     discountType: 'Percent',

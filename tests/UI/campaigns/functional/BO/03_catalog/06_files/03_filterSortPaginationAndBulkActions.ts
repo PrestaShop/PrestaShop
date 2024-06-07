@@ -11,12 +11,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import filesPage from '@pages/BO/catalog/files';
 import addFilePage from '@pages/BO/catalog/files/add';
 
-// Import data
-import FileData from '@data/faker/file';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerFile,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_files_filterSortPaginationAndBulkActions';
 
@@ -66,7 +66,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
   describe('Create 11 files in BO', async () => {
     const creationTests: number[] = new Array(11).fill(0, 0, 11);
     creationTests.forEach((test: number, index: number) => {
-      const createFileData: FileData = new FileData({name: `todelete${index}`});
+      const createFileData: FakerFile = new FakerFile({name: `todelete${index}`});
       before(() => files.createFile('.', createFileData.filename, `test ${createFileData.filename}`));
 
       it('should go to new file page', async function () {

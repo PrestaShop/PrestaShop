@@ -10,22 +10,20 @@ import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
 import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/add';
 import viewQueryManagerPage from '@pages/BO/advancedParameters/database/sqlManager/view';
 
-// Import data
-import SqlQueryData from '@data/faker/sqlQuery';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataSqlTables,
+  FakerSqlQuery,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_database_sqlManager_CRUDSqlQuery';
 
 describe('BO - Advanced Parameters - Database : Create, View, update and delete SQL query', async () => {
   const dbPrefix: string = global.INSTALL.DB_PREFIX;
-  const sqlQueryData: SqlQueryData = new SqlQueryData({tableName: `${dbPrefix}alias`});
-  const editSqlQueryData: SqlQueryData = new SqlQueryData({name: `edit${sqlQueryData.name}`, tableName: `${dbPrefix}access`});
+  const sqlQueryData: FakerSqlQuery = new FakerSqlQuery({tableName: `${dbPrefix}alias`});
+  const editSqlQueryData: FakerSqlQuery = new FakerSqlQuery({name: `edit${sqlQueryData.name}`, tableName: `${dbPrefix}access`});
 
   let browserContext: BrowserContext;
   let page: Page;

@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerAPIClient,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_adminAPI_addAPIClient';
 
@@ -22,7 +22,7 @@ describe('BO - Advanced Parameter - API Client : Add API Client', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const createAPIClient: APIClientData = new APIClientData({
+  const createAPIClient: FakerAPIClient = new FakerAPIClient({
     clientName: 'API Client XYZ',
     clientId: 'api-client-xyz',
     description: 'Description ABC',

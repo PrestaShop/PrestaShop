@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import webservicePage from '@pages/BO/advancedParameters/webservice';
 import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 
-// Import data
-import WebserviceData from '@data/faker/webservice';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerWebservice,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_webservice_bulkActions';
 
@@ -24,8 +24,8 @@ describe('BO - Advanced Parameters - Webservice : Bulk actions', async () => {
 
   let numberOfWebserviceKeys: number = 0;
 
-  const firstWebServiceData: WebserviceData = new WebserviceData({keyDescription: 'todelete'});
-  const secondWebServiceData: WebserviceData = new WebserviceData();
+  const firstWebServiceData: FakerWebservice = new FakerWebservice({keyDescription: 'todelete'});
+  const secondWebServiceData: FakerWebservice = new FakerWebservice();
 
   // before and after functions
   before(async function () {
@@ -67,7 +67,7 @@ describe('BO - Advanced Parameters - Webservice : Bulk actions', async () => {
     {args: {webserviceToCreate: secondWebServiceData}},
   ];
 
-  tests.forEach((test: { args: { webserviceToCreate: WebserviceData } }, index: number) => {
+  tests.forEach((test: { args: { webserviceToCreate: FakerWebservice } }, index: number) => {
     it('should go to add new webservice key page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToAddNewWebserviceKeyPage_${index}`, baseContext);
 

@@ -1,8 +1,9 @@
 import {Page} from 'playwright';
 
-import type FileData from '@data/faker/file';
-
 import BOBasePage from '@pages/BO/BObasePage';
+import {
+  type FakerFile,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add file page, contains functions that can be used on the page
@@ -50,11 +51,11 @@ class AddFile extends BOBasePage {
   /**
    * Create or edit file
    * @param page {Page} Browser tab
-   * @param fileData {FileData} Data to set on add/edit file form
+   * @param fileData {FakerFile} Data to set on add/edit file form
    * @param save {boolean} True if we need to save the form
    * @returns {Promise<string>}
    */
-  async createEditFile(page: Page, fileData: FileData, save: boolean = true): Promise<string | null> {
+  async createEditFile(page: Page, fileData: FakerFile, save: boolean = true): Promise<string | null> {
     // Fill name and description in english
     await this.changeLanguageForSelectors(page, 'en');
     await this.setValue(page, this.nameInput(1), fileData.name);

@@ -21,12 +21,12 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   FakerOrder,
+  FakerOrderShipping,
   FakerProduct,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import OrderShippingData from '@data/faker/orderShipping';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_checkMultiInvoice';
 
@@ -81,7 +81,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     ],
     paymentMethod: dataPaymentMethods.wirePayment,
   });
-  const carrierDataToSelect: OrderShippingData = new OrderShippingData({
+  const carrierDataToSelect: FakerOrderShipping = new FakerOrderShipping({
     trackingNumber: '',
     carrier: dataCarriers.myCarrier.name,
     carrierID: dataCarriers.myCarrier.id,

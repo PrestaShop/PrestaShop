@@ -20,13 +20,10 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -53,7 +50,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
   const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
   const expirationDate: string = date.getDateFormat('mm/dd/yyyy', 'future');
-  const newCartRuleData: CartRuleData = new CartRuleData({
+  const newCartRuleData: FakerCartRule = new FakerCartRule({
     name: 'Cart rule limit to single customer',
     customer: dataCustomers.johnDoe,
     discountType: 'Percent',

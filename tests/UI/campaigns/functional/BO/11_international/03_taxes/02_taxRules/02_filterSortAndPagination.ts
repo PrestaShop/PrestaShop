@@ -11,13 +11,10 @@ import taxesPage from '@pages/BO/international/taxes';
 import taxRulesPage from '@pages/BO/international/taxes/taxRules';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 
-// Import data
-import TaxRulesGroupData from '@data/faker/taxRulesGroup';
-
 import {
   boDashboardPage,
-  // Import data
   dataTaxRules,
+  FakerTaxRulesGroup,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -211,7 +208,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
 
   creationTests.forEach((test: number, index: number) => {
     describe(`Create tax rule n°${index + 1} in BO`, async () => {
-      const taxRuleData = new TaxRulesGroupData({name: `todelete${index}`});
+      const taxRuleData: FakerTaxRulesGroup = new FakerTaxRulesGroup({name: `todelete${index}`});
 
       it('should go to add new tax rule group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddTaxRuleGroupPage${index}`, baseContext);

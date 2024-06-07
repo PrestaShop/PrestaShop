@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type SqlQueryData from '@data/faker/sqlQuery';
-
 import type {Page} from 'playwright';
+import {
+  type FakerSqlQuery,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add sql query page, contains functions that can be used on the page
@@ -43,10 +44,10 @@ class AddSQLQuery extends BOBasePage {
   /**
    * Fill form for add/edit sql query
    * @param page {Page} Browser tab
-   * @param sqlQueryData {sqlQueryData} Data to set on create/edit sql query
+   * @param sqlQueryData {FakerSqlQuery} Data to set on create/edit sql query
    * @returns {Promise<string>}
    */
-  async createEditSQLQuery(page: Page, sqlQueryData: SqlQueryData): Promise<string> {
+  async createEditSQLQuery(page: Page, sqlQueryData: FakerSqlQuery): Promise<string> {
     await this.setValue(page, this.sqlQueryNameInput, sqlQueryData.name);
     await this.setValue(page, this.sqlQueryTextArea, sqlQueryData.sqlQuery);
     await this.clickAndWaitForURL(page, this.saveButton);

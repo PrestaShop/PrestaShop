@@ -14,14 +14,12 @@ import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRul
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
-// Import data
-import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataProducts,
+  FakerCatalogPriceRule,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_catalogPriceRules_CRUDCatalogPriceRule';
@@ -37,7 +35,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const newCatalogPriceRuleData: CatalogPriceRuleData = new CatalogPriceRuleData({
+  const newCatalogPriceRuleData: FakerCatalogPriceRule = new FakerCatalogPriceRule({
     currency: 'All currencies',
     country: 'All countries',
     group: 'All groups',
@@ -46,7 +44,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
     fromQuantity: 3,
     reduction: 20,
   });
-  const editCatalogPriceRuleData: CatalogPriceRuleData = new CatalogPriceRuleData({
+  const editCatalogPriceRuleData: FakerCatalogPriceRule = new FakerCatalogPriceRule({
     currency: 'All currencies',
     country: 'All countries',
     group: 'All groups',

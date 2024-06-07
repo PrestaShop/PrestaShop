@@ -16,13 +16,11 @@ import loginPage from '@pages/FO/hummingbird/login';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalData';
 
-// Import demo data
-import MessageData from '@data/faker/message';
-
 import {
   boDashboardPage,
   dataCustomers,
   dataOrders,
+  FakerContactMessage,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -34,7 +32,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const contactUsData: MessageData = new MessageData({
+  const contactUsData: FakerContactMessage = new FakerContactMessage({
     firstName: dataCustomers.johnDoe.firstName,
     lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',

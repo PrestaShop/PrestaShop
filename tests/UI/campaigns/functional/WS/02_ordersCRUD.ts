@@ -24,7 +24,6 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {WebservicePermission} from '@data/types/webservice';
 import getOrderXml from '@data/xml/order';
 
 import {
@@ -33,6 +32,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerOrder,
+  type WebservicePermission,
 } from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';

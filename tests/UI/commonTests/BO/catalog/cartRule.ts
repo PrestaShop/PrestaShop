@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
-// Import data
-import type CartRuleData from '@data/faker/cartRule';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  type FakerCartRule,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -22,10 +22,10 @@ let numberOfCartRules: number;
 
 /**
  * Function to create cart rule
- * @param cartRuleData {CartRuleData} Cart rule data to create
+ * @param cartRuleData {FakerCartRule} Cart rule data to create
  * @param baseContext {string} String to identify the test
  */
-function createCartRuleTest(cartRuleData: CartRuleData, baseContext: string = 'commonTests-createCartRuleTest'): void {
+function createCartRuleTest(cartRuleData: FakerCartRule, baseContext: string = 'commonTests-createCartRuleTest'): void {
   describe('PRE-TEST: Create cart rule', async () => {
     // before and after functions
     before(async function () {

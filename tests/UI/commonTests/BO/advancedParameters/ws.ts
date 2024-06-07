@@ -11,9 +11,11 @@ import webservicePage from '@pages/BO/advancedParameters/webservice';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
-import WebserviceData from '@data/faker/webservice';
-import {WebservicePermission} from '@data/types/webservice';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  FakerWebservice,
+  type WebservicePermission,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -70,7 +72,7 @@ function addWebserviceKey(
   describe(`Add a new webservice key named "${keyDescription}"`, async () => {
     let numberOfWebserviceKeys: number = 0;
 
-    const webserviceData: WebserviceData = new WebserviceData({
+    const webserviceData: FakerWebservice = new FakerWebservice({
       keyDescription,
       permissions: keyPermissions,
     });

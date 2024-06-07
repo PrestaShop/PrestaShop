@@ -14,12 +14,10 @@ import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
-// Import data
-import APIClientData from '@data/faker/APIClient';
-
 import {
   boDashboardPage,
   dataLanguages,
+  FakerAPIClient,
   FakerGroup,
 } from '@prestashop-core/ui-testing';
 
@@ -39,7 +37,7 @@ describe('API : PUT /customers/group/{customerGroupId}', async () => {
   let accessToken: string;
 
   const clientScope: string = 'customer_group_write';
-  const clientData: APIClientData = new APIClientData({
+  const clientData: FakerAPIClient = new FakerAPIClient({
     enabled: true,
     scopes: [
       clientScope,

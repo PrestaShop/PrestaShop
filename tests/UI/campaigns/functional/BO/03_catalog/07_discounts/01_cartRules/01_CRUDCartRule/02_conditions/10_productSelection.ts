@@ -20,13 +20,11 @@ import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
-// Import data
-import CartRuleData from '@data/faker/cartRule';
-
 import {
   boDashboardPage,
   dataCustomers,
   dataProducts,
+  FakerCartRule,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -49,7 +47,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const newCartRuleData: CartRuleData = new CartRuleData({
+  const newCartRuleData: FakerCartRule = new FakerCartRule({
     name: 'Discount product selection',
     code: '4QABV6L3',
     productSelection: true,
