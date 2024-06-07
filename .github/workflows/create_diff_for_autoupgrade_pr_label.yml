@@ -5,9 +5,30 @@ name: Create diff for 'Needs autoupgrade PR' label
 on: pull_request
 
 jobs:
+
+  check_is_merge:
+    name: Check is merge PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check is merge PR
+        id: check-is-merge
+        run: |
+          description=$(
+          cat <<"EOF"
+          ${{ toJSON(github.event.pull_request.body) }}
+          EOF
+          )
+          if [[ $description =~ \|?[[:space:]]*Category\?[[:space:]]*\|[[:space:]]*ME([[:space:]]|(\\[rn]))+ ]]; then
+              echo "isMerge=true" >> $GITHUB_OUTPUT
+          fi
+    outputs:
+      isMerge: ${{ steps.check-is-merge.outputs.isMerge }}
+
   install_prestashop_and_dump:
     name: Install Prestashop and create database dump
     runs-on: ubuntu-latest
+    needs: [ check_is_merge ]
+    if: needs.check_is_merge.outputs.isMerge != 'true'
     strategy:
       matrix:
         branch: [ base, head ]
