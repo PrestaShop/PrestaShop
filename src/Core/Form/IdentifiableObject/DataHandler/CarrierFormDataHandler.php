@@ -57,7 +57,12 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
             $data['general_settings']['tracking_url'] ?? '',
             0, // @todo: should not be in the add command but auto-computed or at least be optional
             (bool) $data['general_settings']['active'],
+            $data['general_settings']['group_access'],
             $logoPath,
+            $data['general_settings']['max_width'] ?? 0,
+            $data['general_settings']['max_height'] ?? 0,
+            $data['general_settings']['max_depth'] ?? 0,
+            $data['general_settings']['max_weight'] ?? 0,
         ));
 
         return $carrierId->getValue();
@@ -72,6 +77,11 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
             ->setGrade($data['general_settings']['grade'])
             ->setActive((bool) $data['general_settings']['active'])
             ->setTrackingUrl($data['general_settings']['tracking_url'] ?? '')
+            ->setMaxWidth($data['general_settings']['max_width'] ?? null)
+            ->setMaxHeight($data['general_settings']['max_height'] ?? null)
+            ->setMaxDepth($data['general_settings']['max_depth'] ?? null)
+            ->setMaxWeight($data['general_settings']['max_weight'] ?? null)
+            ->setAssociatedGroupIds($data['general_settings']['group_access'] ?? null)
         ;
         /** @var UploadedFile|null $logo */
         $logo = $data['general_settings']['logo'];

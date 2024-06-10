@@ -76,16 +76,16 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
             $carrier->delay = $command->getLocalizedDelay();
         }
         if ($command->getMaxWidth()) {
-            $carrier->width = $command->getMaxWidth();
+            $carrier->max_width = $command->getMaxWidth();
         }
         if ($command->getMaxHeight()) {
-            $carrier->height = $command->getMaxHeight();
+            $carrier->max_height = $command->getMaxHeight();
         }
         if ($command->getMaxDepth()) {
-            $carrier->depth = $command->getMaxDepth();
+            $carrier->max_depth = $command->getMaxDepth();
         }
         if ($command->getMaxWeight()) {
-            $carrier->weight = $command->getMaxWeight();
+            $carrier->max_weight = $command->getMaxWeight();
         }
 
         $this->carrierValidator->validate($carrier);
@@ -95,7 +95,6 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         if ($command->getLogoPathName() !== null && $command->getLogoPathName() !== '') {
             $this->carrierValidator->validateLogoUpload($command->getLogoPathName());
         }
-
 
         $newCarrier = $this->carrierRepository->updateInNewVersion($command->getCarrierId(), $carrier);
         if ($command->getAssociatedGroupIds()) {

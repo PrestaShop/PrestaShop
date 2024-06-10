@@ -152,10 +152,10 @@ Feature: Carrier management
       | trackingUrl  | http://prestashop-project.org/track.php?num=@ |
       | position     | 2                                             |
       | active       | 1                                             |
-      | max_width    | 1234                                          |
+      | max_width    | 1454                                          |
       | max_height   | 1234                                          |
-      | max_depth    | 1234                                          |
-      | max_weight   | 1234                                          |
+      | max_depth    | 1111                                          |
+      | max_weight   | 3864                                          |
       | group_access | visitor, guest                                |
       | delay[en-US] | Shipping delay                                |
 
@@ -293,10 +293,10 @@ Feature: Carrier management
       | group_access | visitor, guest                     |
       | delay[en-US] | Shipping delay                     |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
-      | max_width    | 3333                               |
-      | max_height   | 4444                               |
-      | max_depth    | 5555                               |
-      | max_weight   | 6666                               |
+      | max_width  | 3333 |
+      | max_height | 4444 |
+      | max_depth  | 5555 |
+      | max_weight | 6666 |
     Then carrier "carrier1" should have the following properties:
       | name         | Carrier 1                          |
       | grade        | 1                                  |
@@ -320,7 +320,7 @@ Feature: Carrier management
       | max_depth    | 5555                               |
       | max_weight   | 6666                               |
       | group_access | visitor, guest                     |
-      | delay[en-US] | Shipping delay new                 |
+      | delay[en-US] | Shipping delay                     |
 
   Scenario: Partially editing carrier with group_access
     When I create carrier "carrier1" with specified properties:
@@ -336,7 +336,7 @@ Feature: Carrier management
       | group_access | visitor, guest                     |
       | delay[en-US] | Shipping delay                     |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
-      | group_access | visitor                            |
+      | group_access | visitor |
     Then carrier "carrier1" should have the following properties:
       | name         | Carrier 1                          |
       | grade        | 1                                  |
@@ -360,7 +360,7 @@ Feature: Carrier management
       | max_depth    | 1111                               |
       | max_weight   | 3864                               |
       | group_access | visitor                            |
-      | delay[en-US] | Shipping delay new                 |
+      | delay[en-US] | Shipping delay                     |
 
   Scenario: Upload logo for carrier
     When I create carrier "carrier1" with specified properties:

@@ -107,10 +107,10 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $properties['trackingUrl'],
                 (int) $properties['position'],
                 (bool) $properties['active'],
-                (int) $properties['max_width'] ?? 0,
-                (int) $properties['max_height'] ?? 0,
-                (int) $properties['max_depth'] ?? 0,
-                (int) $properties['max_weight'] ?? 0,
+                (int) $properties['max_width'],
+                (int) $properties['max_height'],
+                (int) $properties['max_depth'],
+                (int) $properties['max_weight'],
                 $this->referencesToIds($properties['group_access']),
                 $properties['logoPathName'] ?? null
             );
@@ -167,7 +167,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $command->setMaxWeight((int) $properties['max_weight']);
             }
             if (isset($properties['group_access'])) {
-                $command->setAssociatedGroupIds(explode(',', $properties['group_access']));
+                $command->setAssociatedGroupIds($this->referencesToIds($properties['group_access']));
             }
 
             if (isset($properties['logoPathName']) && 'null' !== $properties['logoPathName']) {
@@ -272,12 +272,12 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             $trackingUrl,
             $position,
             $active,
+            $group_access,
+            $logoPathName,
             $max_width,
             $max_height,
             $max_depth,
-            $max_weight,
-            $group_access,
-            $logoPathName
+            $max_weight
         );
 
         return $this->getCommandBus()->handle($command);

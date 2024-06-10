@@ -36,17 +36,17 @@ class AddCarrierCommand
     public function __construct(
         private string $name,
         /** @var string[] $localizedDelay */
-        private array   $localizedDelay,
-        private int     $grade,
-        private string  $trackingUrl,
-        private int     $position,
-        private bool    $active,
-        private int     $max_width = 0,
-        private int     $max_height = 0,
-        private int     $max_depth = 0,
-        private int     $max_weight = 0,
-        private array   $associatedGroupIds,
+        private array $localizedDelay,
+        private int $grade,
+        private string $trackingUrl,
+        private int $position,
+        private bool $active,
+        private array $associatedGroupIds,
         private ?string $logoPathName,
+        private int $max_width = 0,
+        private int $max_height = 0,
+        private int $max_depth = 0,
+        private int $max_weight = 0,
     ) {
     }
 

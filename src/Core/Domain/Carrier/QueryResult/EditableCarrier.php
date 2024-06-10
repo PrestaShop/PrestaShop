@@ -36,17 +36,17 @@ class EditableCarrier
     public function __construct(
         private int $carrierId,
         private string $name,
-        private int     $grade,
-        private string  $trackingUrl,
-        private int     $position,
-        private bool    $active,
+        private int $grade,
+        private string $trackingUrl,
+        private int $position,
+        private bool $active,
         /** @var string[] $delay */
-        private array   $delay,
-        private int     $max_width,
-        private int     $max_height,
-        private int     $max_depth,
-        private int     $max_weight,
-        private array   $associatedGroupIds,
+        private array $delay,
+        private int $max_width,
+        private int $max_height,
+        private int $max_depth,
+        private int $max_weight,
+        private array $associatedGroupIds,
         private ?string $logoPath = null
     ) {
     }
