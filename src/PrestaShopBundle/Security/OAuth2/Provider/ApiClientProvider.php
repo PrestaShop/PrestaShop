@@ -69,9 +69,4 @@ class ApiClientProvider implements UserProviderInterface
     {
         return $class === ApiClient::class;
     }
-
-    public function loadUserByUsername(string $username): ApiClient
-    {
-        return $this->loadUserByIdentifier($username);
-    }
 }

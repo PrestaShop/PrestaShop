@@ -64,11 +64,6 @@ class JwtTokenUser implements UserInterface, PasswordAuthenticatedUserInterface
         return;
     }
 
-    public function getUsername()
-    {
-        return '';
-    }
-
     public function getUserIdentifier(): string
     {
         return $this->userId;
