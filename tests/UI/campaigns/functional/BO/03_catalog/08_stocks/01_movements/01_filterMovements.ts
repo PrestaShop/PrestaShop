@@ -24,9 +24,6 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import {ProductCombinationBulk} from '@data/types/product';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -36,6 +33,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerEmployee,
+  type ProductCombinationBulk,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';

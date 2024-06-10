@@ -15,9 +15,6 @@ import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import type MailDevEmail from '@data/types/maildevEmail';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -30,11 +27,12 @@ import {
   FakerCustomer,
   FakerEmployee,
   FakerOrder,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import type MailDev from 'maildev';
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_statusTab';
 

@@ -22,9 +22,6 @@ import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
 import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
-// Import data
-import {ProductAttribute} from '@data/types/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -32,6 +29,7 @@ import {
   FakerAttribute,
   FakerAttributeValue,
   FakerProduct,
+  type ProductAttribute,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_changeCombination';

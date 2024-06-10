@@ -12,14 +12,12 @@ import categoryPage from '@pages/FO/hummingbird/category';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
-// Import data
-import {ProductAttribute} from '@data/types/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   FakerProduct,
+  type ProductAttribute,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_homePage_productQuickView';

@@ -1,6 +1,9 @@
 import LocalizationBasePage from '@pages/BO/international/localization/localizationBasePage';
 
 import type {Page} from 'playwright';
+import {
+  type ImportContent,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Localization page, contains functions that can be used on the page

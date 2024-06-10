@@ -15,13 +15,11 @@ import {categoryPage} from '@pages/FO/classic/category';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
-// Import data
-import type {CategoryRedirection} from '@data/types/category';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  type CategoryRedirection,
   dataCategories,
   FakerCategory,
 } from '@prestashop-core/ui-testing';

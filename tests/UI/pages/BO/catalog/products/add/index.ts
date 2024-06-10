@@ -8,11 +8,10 @@ import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import packTab from '@pages/BO/catalog/products/add/packTab';
 
-import type {ProductHeaderSummary} from '@data/types/product';
-
 import type {Frame, Page} from 'playwright';
 import {
   type FakerProduct,
+  type ProductHeaderSummary,
 } from '@prestashop-core/ui-testing';
 
 /**

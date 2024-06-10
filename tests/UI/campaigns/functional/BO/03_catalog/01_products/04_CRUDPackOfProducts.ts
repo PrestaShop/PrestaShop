@@ -15,9 +15,6 @@ import packTab from '@pages/BO/catalog/products/add/packTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import {ProductPackOptions} from '@data/types/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
@@ -25,6 +22,7 @@ import {
   dataEmployees,
   dataProducts,
   FakerProduct,
+  type ProductPackOptions,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_CRUDPackOfProducts';

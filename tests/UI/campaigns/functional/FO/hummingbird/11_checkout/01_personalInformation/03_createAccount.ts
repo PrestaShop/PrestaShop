@@ -16,17 +16,15 @@ import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 
 import {
-  // Import data
   dataPaymentMethods,
   FakerAddress,
   FakerCustomer,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-
-import MailDevEmail from '@data/types/maildevEmail';
-import MailDev from 'maildev';
 
 const baseContext: string = 'functional_FO_hummingbird_checkout_personalInformation_createAccount';
 

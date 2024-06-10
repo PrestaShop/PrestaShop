@@ -1,8 +1,9 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-import {MerchandiseReturns as OrderMerchandiseReturns} from '@data/types/order';
-
 import type {Page} from 'playwright';
+import {
+  type OrderMerchandiseReturns,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Merchandise returns page, contains functions that can be used on the page

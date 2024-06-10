@@ -1,6 +1,8 @@
 import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
-import type {ProductDiscount} from '@data/types/product';
+import {
+  type ProductDiscount,
+} from '@prestashop-core/ui-testing';
 
 import type {Frame, Page} from 'playwright';
 

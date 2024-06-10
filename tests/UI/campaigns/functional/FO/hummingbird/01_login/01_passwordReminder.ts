@@ -15,16 +15,13 @@ import loginPage from '@pages/FO/hummingbird/login';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import passwordReminderPage from '@pages/FO/hummingbird/passwordReminder';
 
-// Import data
-import type MailDevEmail from '@data/types/maildevEmail';
-
 import {
-  // Import data
   FakerCustomer,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type MailDev from 'maildev';
 import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_login_passwordReminder';

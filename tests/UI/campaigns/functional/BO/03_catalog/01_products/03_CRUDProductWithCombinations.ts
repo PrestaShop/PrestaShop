@@ -16,18 +16,14 @@ import attributesPage from '@pages/BO/catalog/attributes';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import type {
-  ProductAttributes,
-  ProductCombinationBulk,
-  ProductCombinationOptions,
-} from '@data/types/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  type ProductAttributes,
+  type ProductCombinationBulk,
+  type ProductCombinationOptions,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_CRUDProductWithCombinations';

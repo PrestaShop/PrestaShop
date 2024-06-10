@@ -15,15 +15,13 @@ import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 
-// Import data
-import {ProductHeaderSummary} from '@data/types/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 import {
   boDashboardPage,
   FakerProduct,
+  type ProductHeaderSummary,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_header';

@@ -16,14 +16,12 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 
-// Import data
-import {ProductAttribute} from '@data/types/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  type ProductAttribute,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsGeneral_quantityDiscountsBasedOn';

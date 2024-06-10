@@ -1,6 +1,8 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-import {MerchandiseProductReturn} from '@data/types/order';
+import {
+  type OrderMerchandiseProductReturn,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -134,14 +136,14 @@ class OrderDetailsPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @param messageText {string} Value of message text to set on return input
    * @param productsNumber {number} Number of products to return
-   * @param returnData {MerchandiseProductReturn[]} Data of return
+   * @param returnData {OrderMerchandiseProductReturn[]} Data of return
    * @returns {Promise<void>}
    */
   async requestMerchandiseReturn(
     page: Page,
     messageText: string = 'test',
     productsNumber: number = 1,
-    returnData: MerchandiseProductReturn[] = [{quantity: 1}],
+    returnData: OrderMerchandiseProductReturn[] = [{quantity: 1}],
   ): Promise<void> {
     await this.chooseProductsToReturn(page, productsNumber, returnData);
     await this.setValue(page, this.returnTextarea, messageText);
@@ -152,10 +154,10 @@ class OrderDetailsPage extends FOBasePage {
    * Choose products to return
    * @param page {Page} Browser tab
    * @param productsNumber {number} Number of products to return
-   * @param returnData {MerchandiseProductReturn[]} Data of return
+   * @param returnData {OrderMerchandiseProductReturn[]} Data of return
    * @returns {Promise<void>}
    */
-  async chooseProductsToReturn(page: Page, productsNumber: number, returnData: MerchandiseProductReturn[]): Promise<void> {
+  async chooseProductsToReturn(page: Page, productsNumber: number, returnData: OrderMerchandiseProductReturn[]): Promise<void> {
     for (let i = 0; i < productsNumber; i++) {
       const index: number = i + 1;
       await this.setChecked(page, this.tableReturnProductRowCheckboxButton(index));

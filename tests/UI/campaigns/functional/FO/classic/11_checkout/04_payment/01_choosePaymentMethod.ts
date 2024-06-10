@@ -19,12 +19,12 @@ import {
   dataCustomers,
   dataPaymentMethods,
   type FakerPaymentMethod,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import MailDevEmail from '@data/types/maildevEmail';
-import MailDev from 'maildev';
 
 const baseContext: string = 'functional_FO_classic_checkout_payment_choosePaymentMethod';
 

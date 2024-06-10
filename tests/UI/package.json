@@ -119,7 +119,6 @@
     "jpeg-js": "^0.4.4",
     "js-image-generator": "^1.0.4",
     "libsodium-wrappers": "^0.7.13",
-    "maildev": "^2.1.0",
     "mocha": "^10.4.0",
     "mochawesome": "^7.1.3",
     "mysql2": "^3.10.0",

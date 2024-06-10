@@ -16,17 +16,14 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 
-// Import data
-import type MailDevEmail from '@data/types/maildevEmail';
-
 import {
-  // Import data
   FakerCustomer,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import type MailDev from 'maildev';
 
 const baseContext: string = 'functional_FO_classic_checkout_personalInformation_passwordReminder';
 

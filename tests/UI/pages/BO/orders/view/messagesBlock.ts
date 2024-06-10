@@ -1,7 +1,9 @@
 import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 import type {Page} from 'playwright';
-import {OrderMessage} from '@data/types/order';
+import {
+  type OrderMessage,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Messages block, contains functions that can be used on view/edit messages block on view order page

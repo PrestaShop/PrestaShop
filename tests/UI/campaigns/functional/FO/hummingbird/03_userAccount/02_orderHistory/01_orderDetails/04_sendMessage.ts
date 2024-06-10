@@ -29,13 +29,13 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 import type {BrowserContext, Page} from 'playwright';
-import MailDevEmail from '@data/types/maildevEmail';
-import MailDev from 'maildev';
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_orderDetails_sendMessage';
 

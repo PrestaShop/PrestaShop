@@ -1,8 +1,9 @@
 // Import FO Pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-// Import data
-import {ProductAttribute} from '@data/types/product';
+import {
+  type ProductAttribute,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 

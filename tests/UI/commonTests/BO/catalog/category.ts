@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import categoriesPage from '@pages/BO/catalog/categories';
 
-// Import data
-import {CategoryFilter} from '@data/types/category';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  type CategoryFilter,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;

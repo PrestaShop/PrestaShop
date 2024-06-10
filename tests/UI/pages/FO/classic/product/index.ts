@@ -1,11 +1,11 @@
 import FOBasePage from '@pages/FO/FObasePage';
-import {
-  ProductAttribute, ProductImageUrls, ProductInformations,
-} from '@data/types/product';
 
 import type {Page} from 'playwright';
 import {
   type FakerProductReview,
+  type ProductAttribute,
+  type ProductImageUrls,
+  type ProductInformations,
 } from '@prestashop-core/ui-testing';
 
 /**

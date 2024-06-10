@@ -16,9 +16,6 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
-// Import data
-import {ProductImageInformation} from '@data/types/product';
-
 import {expect} from 'chai';
 import fs from 'fs';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
@@ -27,6 +24,7 @@ import {
   dataLanguages,
   FakerAPIClient,
   FakerProduct,
+  type ProductImageInformation,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_product_postProductImageId';

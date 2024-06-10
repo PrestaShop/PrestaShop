@@ -11,14 +11,12 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
-// Import data
-import {ProductFilterMinMax} from '@data/types/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataCategories,
+  type ProductFilterMinMax,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_filterSortPagination';

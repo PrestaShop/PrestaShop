@@ -28,12 +28,12 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import MailDevEmail from '@data/types/maildevEmail';
-import MailDev from 'maildev';
 
 const baseContext: string = 'modules_ps_emailalerts_configuration_merchantNotifications_enableDisableNewOrder';
 

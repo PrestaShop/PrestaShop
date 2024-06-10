@@ -16,12 +16,12 @@ import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import MailDevEmail from '@data/types/maildevEmail';
-import MailDev from 'maildev';
 import {
   boDashboardPage,
   dataModules,
   FakerProduct,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_emailalerts_configuration_merchantNotifications_enableDisableOutOfStock';

@@ -13,9 +13,6 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
-// Import data
-import MailDevEmail from '@data/types/maildevEmail';
-
 import {
   boDashboardPage,
   dataCustomers,
@@ -23,10 +20,11 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import MailDev from 'maildev';
 import mailHelper from '@utils/mailHelper';
 import type {BrowserContext, Page} from 'playwright';
 

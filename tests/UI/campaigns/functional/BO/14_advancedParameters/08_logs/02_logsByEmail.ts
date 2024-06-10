@@ -13,17 +13,15 @@ import logsPage from '@pages/BO/advancedParameters/logs';
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
-// Import data
-import MailDevEmail from '@data/types/maildevEmail';
-
 import type {BrowserContext, Page} from 'playwright';
-import MailDev from 'maildev';
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 import {
   boDashboardPage,
   dataEmployees,
   FakerProduct,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_logs_logsByEmail';

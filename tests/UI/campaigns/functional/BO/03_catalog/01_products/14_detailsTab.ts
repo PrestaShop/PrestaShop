@@ -16,14 +16,12 @@ import filesPage from '@pages/BO/catalog/files';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
-// Import data
-import {ProductFeatures} from '@data/types/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
   FakerProduct,
+  type ProductFeatures,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_detailsTab';

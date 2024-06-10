@@ -18,20 +18,18 @@ import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
-// Import data
-import MailDevEmail from '@data/types/maildevEmail';
-
 import {
   boDashboardPage,
   dataCustomers,
   dataModules,
   dataOrders,
   FakerContactMessage,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import MailDev from 'maildev';
 
 const baseContext: string = 'functional_FO_classic_contactUs_sendMessageWithCustomer';
 

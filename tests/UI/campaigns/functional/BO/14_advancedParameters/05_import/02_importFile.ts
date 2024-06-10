@@ -11,13 +11,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import importPage from '@pages/BO/advancedParameters/import';
 
-// Import data
-import type MailDevEmail from '@data/types/maildevEmail';
-
 import {expect} from 'chai';
-import type MailDev from 'maildev';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  type MailDev,
+  type MailDevEmail,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_import_importFile';
 

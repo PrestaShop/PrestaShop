@@ -26,9 +26,6 @@ import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import creditSlipPage from '@pages/FO/hummingbird/myAccount/creditSlips';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 
-// Import data
-import type MailDevEmail from '@data/types/maildevEmail';
-
 import {
   boDashboardPage,
   dataOrderStatuses,
@@ -37,11 +34,12 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import type MailDev from 'maildev';
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_creditSlips_consultCreditSlip';
 

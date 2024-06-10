@@ -1,4 +1,6 @@
-import type {ProductOrderConfirmation} from '@data/types/product';
+import {
+  type ProductOrderConfirmation,
+} from '@prestashop-core/ui-testing';
 import {OrderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import type {Page} from 'playwright';
 

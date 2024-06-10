@@ -15,9 +15,6 @@ import orderPageMessagesBlock from '@pages/BO/orders/view/paymentBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
-// Import data
-import type {OrderPayment} from '@data/types/order';
-
 import {
   boDashboardPage,
   dataCurrencies,
@@ -26,6 +23,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  type OrderPayment,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';

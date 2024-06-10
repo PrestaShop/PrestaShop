@@ -18,11 +18,11 @@ import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import MailDevEmail from '@data/types/maildevEmail';
-import MailDev from 'maildev';
 import {
   boDashboardPage,
   FakerContactMessage,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customerService_customerService_respondToMessage';

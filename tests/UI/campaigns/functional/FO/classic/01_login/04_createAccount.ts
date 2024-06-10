@@ -12,16 +12,13 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
-// Import data
-import type MailDevEmail from '@data/types/maildevEmail';
-
 import {
-  // Import data
   FakerCustomer,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type MailDev from 'maildev';
 import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_login_createAccount';

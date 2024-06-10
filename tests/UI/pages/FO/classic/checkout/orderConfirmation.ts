@@ -3,7 +3,9 @@ import FOBasePage from '@pages/FO/FObasePage';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import type {Page} from 'playwright';
-import type {ProductOrderConfirmation} from '@data/types/product';
+import {
+  type ProductOrderConfirmation,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Order confirmation page, contains functions that can be used on the page

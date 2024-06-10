@@ -16,11 +16,11 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import MailDevEmail from '@data/types/maildevEmail';
-import MailDev from 'maildev';
 import {
   boDashboardPage,
   dataModules,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_emailsubscription_configuration_checkVerificationEmail';

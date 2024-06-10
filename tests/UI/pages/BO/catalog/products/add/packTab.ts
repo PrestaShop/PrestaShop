@@ -1,10 +1,13 @@
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {ProductPackInformation, ProductPackItem} from '@data/types/product';
-
 import type {Locator, Page} from 'playwright';
-import {ProductPackOptions, ProductStockMovement} from '@data/types/product';
+import {
+  type ProductPackInformation,
+  type ProductPackItem,
+  type ProductPackOptions,
+  type ProductStockMovement,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Pack tab on new product V2 page, contains functions that can be used on the page
