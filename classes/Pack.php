@@ -241,7 +241,7 @@ class PackCore extends Product
         $idProduct = (int) $idProduct;
         $wantedQuantity = (int) $wantedQuantity;
         $product = new Product($idProduct, false);
-        $packQuantity = self::getQuantity($idProduct, null, null, $cart);
+        $packQuantity = self::getQuantity($idProduct, null, null, $cart, false);
 
         if ($product->isAvailableWhenOutOfStock($product->out_of_stock)) {
             return true;
@@ -262,7 +262,7 @@ class PackCore extends Product
      * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack (unused, you can pass null)
      * @param CartCore|null $cart Pass if you want to reduce the quantity by amount in cart
-     * @param int|null $idCustomization Product customization id (optional)
+     * @param bool|int|null $idCustomization Product customization id (optional)
      *
      * @return int
      *

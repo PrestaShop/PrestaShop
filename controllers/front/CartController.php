@@ -619,7 +619,7 @@ class CartControllerCore extends FrontController
             $this->id_product_attribute,
             null,
             $this->context->cart,
-            $this->customization_id
+            false
         );
 
         return $productQuantityAvailableAfterCartItemsHaveBeenRemovedFromStock < 0;

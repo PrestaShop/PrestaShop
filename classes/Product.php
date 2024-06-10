@@ -4324,7 +4324,7 @@ class ProductCore extends ObjectModel
      * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack (unused, you can pass null)
      * @param CartCore|null $cart Pass if you want to reduce the quantity by amount in cart
-     * @param int|null $idCustomization Product customization id (optional)
+     * @param int|bool|null $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
      */
@@ -5794,7 +5794,8 @@ class ProductCore extends ObjectModel
             (int) $row['id_product'],
             0,
             isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
-            $context->cart
+            $context->cart,
+            false
         );
 
         $row['quantity_all_versions'] = $row['quantity'];
@@ -5805,7 +5806,8 @@ class ProductCore extends ObjectModel
                 (int) $row['id_product'],
                 $id_product_attribute,
                 isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
-                $context->cart
+                $context->cart,
+                false
             );
 
             $row['available_date'] = Product::getAvailableDate(
