@@ -26,7 +26,7 @@ php tools/build/CreateRelease.php --version="1.7.2.4"
 ```
 
 Available options:
-* --version: Desired release version of PrestaShop. Required.
+* --version: Desired release version of PrestaShop. Default: current version set in \PrestaShop\PrestaShop\Core\Version::VERSION const.
 * --no-installer: Do not put the installer in the release. Default: false.
 * --no-zip: Do not zip the release directory. Default: false.
 * --destination-dir: Path where the release will be stored. Default: tools/build/releases/prestashop_{version}.
