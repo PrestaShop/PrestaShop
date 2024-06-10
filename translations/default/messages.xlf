@@ -193,12 +193,12 @@
       <trans-unit id="dc647eb65e6711e155375218212b3964">
         <source>Password</source>
         <target>Password</target>
-        <note>Line: 68</note>
+        <note>Line: 67</note>
       </trans-unit>
       <trans-unit id="685de99eb748aa2bba879a87af2ffed4">
         <source>Your password has been successfully changed.</source>
         <target>Your password has been successfully changed.</target>
-        <note>Line: 118</note>
+        <note>Line: 117</note>
       </trans-unit>
     </body>
   </file>
@@ -242,6 +242,11 @@
         <source>Please note that for security reasons, you can only add modules that are being distributed on PrestaShop Addons, the official marketplace.</source>
         <target>Please note that for security reasons, you can only add modules that are being distributed on PrestaShop Addons, the official marketplace.</target>
         <note>Line: 56</note>
+      </trans-unit>
+      <trans-unit id="96e36efe70e72835ae51946e2650f9e7">
+        <source>Add a new module</source>
+        <target>Add a new module</target>
+        <note>Line: 35</note>
       </trans-unit>
     </body>
   </file>
@@ -472,11 +477,6 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/page.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="96e36efe70e72835ae51946e2650f9e7">
-        <source>Add a new module</source>
-        <target>Add a new module</target>
-        <note>Line: 31</note>
-      </trans-unit>
       <trans-unit id="6afd80bf62a1b8bdfe729af8a0159fee">
         <source>Modules list</source>
         <target>Modules list</target>
@@ -720,7 +720,7 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_errors.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
         <source>%limit% for suhosin.post.max_vars.</source>
@@ -735,12 +735,8 @@
       <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
         <source>%d</source>
         <target>%d</target>
-        <note>Line: 52</note>
+        <note>Line: 58</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="54524210ee89080b3da6c88a11c6d438">
         <source>You must use this syntax in your translations. Here are several examples:</source>
         <target>You must use this syntax in your translations. Here are several examples:</target>
@@ -1010,6 +1006,11 @@
         <target>Dec</target>
         <note>Line: 115</note>
       </trans-unit>
+      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
+        <source>From</source>
+        <target>From</target>
+        <note>Line: 87</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/helpers/dataviz/graph.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1052,6 +1053,11 @@
         <source>Group:</source>
         <target>Group:</target>
         <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="741aae2e1e9e98305742675d1cfc3fb0">
+        <source>All stores</source>
+        <target>All stores</target>
+        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -1148,11 +1154,6 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
-        <source>From</source>
-        <target>From</target>
-        <note>Line: 358</note>
-      </trans-unit>
       <trans-unit id="6ccfec41b65de46efeb7ca242341e8ea">
         <source>Please fill at least one field to perform a search in this list.</source>
         <target>Please fill at least one field to perform a search in this list.</target>
@@ -1245,20 +1246,10 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="741aae2e1e9e98305742675d1cfc3fb0">
-        <source>All stores</source>
-        <target>All stores</target>
-        <note>Line: 32</note>
-      </trans-unit>
       <trans-unit id="804ccd6219996d12eda865d1c0707423">
         <source>All shops</source>
         <target>All shops</target>
         <note>Line: 32</note>
-      </trans-unit>
-      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
-        <source>%s group</source>
-        <target>%s group</target>
-        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
@@ -1321,6 +1312,16 @@
         <target>Remove file</target>
         <note>Line: 178</note>
       </trans-unit>
+      <trans-unit id="1908624a0bca678cd26b99bfd405324e">
+        <source>File size</source>
+        <target>File size</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="3fcbe6bd34e9279ec2c7b13adf7e4095">
+        <source>You have reached the limit (%s) of files to upload, please remove files to continue uploading</source>
+        <target>You have reached the limit (%s) of files to upload, please remove files to continue uploading</target>
+        <note>Line: 48</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/helpers/uploader/simple.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1329,16 +1330,6 @@
         <source>Download current file</source>
         <target>Download current file</target>
         <note>Line: 72</note>
-      </trans-unit>
-      <trans-unit id="1908624a0bca678cd26b99bfd405324e">
-        <source>File size</source>
-        <target>File size</target>
-        <note>Line: 39</note>
-      </trans-unit>
-      <trans-unit id="3fcbe6bd34e9279ec2c7b13adf7e4095">
-        <source>You have reached the limit (%s) of files to upload, please remove files to continue uploading</source>
-        <target>You have reached the limit (%s) of files to upload, please remove files to continue uploading</target>
-        <note>Line: 56</note>
       </trans-unit>
       <trans-unit id="d39ec66f08507e26fe86aa5325d070df">
         <source>Add files</source>
@@ -1424,6 +1415,15 @@
         <source>by ip address</source>
         <target>by ip address</target>
         <note>Line: 46</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
+        <source>%s group</source>
+        <target>%s group</target>
+        <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>

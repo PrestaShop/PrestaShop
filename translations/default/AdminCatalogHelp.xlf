@@ -119,6 +119,11 @@
         <target>Save then add another value</target>
         <note>Line: 576</note>
       </trans-unit>
+      <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
+        <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
+        <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
+        <note>Line: 325</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -217,20 +222,6 @@
         <target>Add new feature values</target>
         <note>Line: 272</note>
       </trans-unit>
-      <trans-unit id="7aad0283b11e41230d9d1fc7372c3862">
-        <source>Add new feature value</source>
-        <target>Add new feature value</target>
-        <note>Line: 224</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
-        <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
-        <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
-        <note>Line: 202</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminSuppliersController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -250,16 +241,6 @@
         <target>Mobile phone number for this supplier.</target>
         <note>Line: 183</note>
       </trans-unit>
-      <trans-unit id="afd7431f75b5801226c9ee37acc1a504">
-        <source>Will appear in the list of suppliers.</source>
-        <target>Will appear in the list of suppliers.</target>
-        <note>Line: 163</note>
-      </trans-unit>
-      <trans-unit id="e865605842d16d0d11c266c731e00507">
-        <source>Upload a supplier logo from your computer.</source>
-        <target>Upload a supplier logo from your computer.</target>
-        <note>Line: 256</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -277,6 +258,15 @@
         <source>Create a new product: CTRL+P</source>
         <target>Create a new product: CTRL+P</target>
         <note>Line: 388</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7aad0283b11e41230d9d1fc7372c3862">
+        <source>Add new feature value</source>
+        <target>Add new feature value</target>
+        <note>Line: 210</note>
       </trans-unit>
     </body>
   </file>
@@ -300,15 +290,6 @@
         <source><![CDATA[Unless the 'Accented URL' option is enabled (in Shop parameters > Traffic & SEO), only letters, numbers, underscores (_), and hyphens (-) are allowed.]]></source>
         <target><![CDATA[Unless the 'Accented URL' option is enabled (in Shop parameters > Traffic & SEO), only letters, numbers, underscores (_), and hyphens (-) are allowed.]]></target>
         <note>Line: 193</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductCombination.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="16a5534d559007de7e8f5b4f17112203">
-        <source>Leave empty to disable</source>
-        <target>Leave empty to disable</target>
-        <note>Line: 200</note>
       </trans-unit>
     </body>
   </file>
@@ -345,8 +326,22 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductPrice.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="420f46a170eef476454fa134085a85a2">
+        <source>Per kilo, per litre</source>
+        <target>Per kilo, per litre</target>
+        <note>Line: 237</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Product/ProductQuantity.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="16a5534d559007de7e8f5b4f17112203">
+        <source>Leave empty to disable</source>
+        <target>Leave empty to disable</target>
+        <note>Line: 209</note>
+      </trans-unit>
       <trans-unit id="e63e2ba42470a41ba75e0d7ea35a410f">
         <source>Combine several attributes, e.g.: "Size: all", "Color: red".</source>
         <target>Combine several attributes, e.g.: "Size: all", "Color: red".</target>
@@ -376,15 +371,35 @@
         <target>To have a different title from the product name, enter it here.</target>
         <note>Line: 101</note>
       </trans-unit>
-      <trans-unit id="b0ea2bd9df4b8ee746b4e5fd28503851">
-        <source>Public title that may appear in the browser and search engines. The recommended length is about 60 characters (including spaces). If you leave it blank, the product name will be used.</source>
-        <target>Public title that may appear in the browser and search engines. The recommended length is about 60 characters (including spaces). If you leave it blank, the product name will be used.</target>
-        <note>Line: 112</note>
-      </trans-unit>
       <trans-unit id="5f99bb8ecd940f311cb66fadfc467a2b">
         <source>To have a different description than your product summary in search results pages, write it here.</source>
         <target>To have a different description than your product summary in search results pages, write it here.</target>
         <note>Line: 126</note>
+      </trans-unit>
+      <trans-unit id="96bacc9c71fc8b7763f985fed3dfc545">
+        <source>To which product should the page redirect?</source>
+        <target>To which product should the page redirect?</target>
+        <note>Line: 186</note>
+      </trans-unit>
+      <trans-unit id="6dd1254fcdbcc7b3fd459617adad9289">
+        <source>To which category should the page redirect?</source>
+        <target>To which category should the page redirect?</target>
+        <note>Line: 188</note>
+      </trans-unit>
+      <trans-unit id="1b9648d6a32243bb7003ae8046dc7c1a">
+        <source>By default, the main category will be used if no category is selected.</source>
+        <target>By default, the main category will be used if no category is selected.</target>
+        <note>Line: 189</note>
+      </trans-unit>
+      <trans-unit id="8533d8d42f2c7ef3078797984ea14675">
+        <source>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)</source>
+        <target>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)</target>
+        <note>Line: 137</note>
+      </trans-unit>
+      <trans-unit id="b0ea2bd9df4b8ee746b4e5fd28503851">
+        <source>Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.</source>
+        <target>Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.</target>
+        <note>Line: 112</note>
       </trans-unit>
     </body>
   </file>
@@ -397,21 +412,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/BulkCombinationPriceType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c4b69e0455faf0784b6a8b2fd9634d16">
-        <source>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</source>
-        <target>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</target>
-        <note>Line: 109</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationFormType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="762d425093de542e7ab628b44ff68515">
         <source>This interface allows you to specify the suppliers of the current combination.</source>
         <target>This interface allows you to specify the suppliers of the current combination.</target>
         <note>Line: 88</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationPriceImpactType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c4b69e0455faf0784b6a8b2fd9634d16">
+        <source>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</source>
+        <target>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</target>
+        <note>Line: 123</note>
       </trans-unit>
     </body>
   </file>
@@ -486,11 +501,6 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/UnitPriceType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="420f46a170eef476454fa134085a85a2">
-        <source>Per kilo, per litre</source>
-        <target>Per kilo, per litre</target>
-        <note>Line: 101</note>
-      </trans-unit>
       <trans-unit id="dfeaf70424e17fcd26f016ace18f2139">
         <source>Indicate the price for a single unit of the product. For instance, if you're selling fabrics, it would be the price per meter.</source>
         <target>Indicate the price for a single unit of the product. For instance, if you're selling fabrics, it would be the price per meter.</target>
@@ -500,21 +510,6 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/RedirectOptionType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="96bacc9c71fc8b7763f985fed3dfc545">
-        <source>To which product should the page redirect?</source>
-        <target>To which product should the page redirect?</target>
-        <note>Line: 104</note>
-      </trans-unit>
-      <trans-unit id="6dd1254fcdbcc7b3fd459617adad9289">
-        <source>To which category should the page redirect?</source>
-        <target>To which category should the page redirect?</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="1b9648d6a32243bb7003ae8046dc7c1a">
-        <source>By default, the main category will be used if no category is selected.</source>
-        <target>By default, the main category will be used if no category is selected.</target>
-        <note>Line: 115</note>
-      </trans-unit>
       <trans-unit id="e35bdf9023b638203d854dd2d9382878">
         <source>[1]No redirection (200), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return normal 200 response.</source>
         <target>[1]No redirection (200), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return normal 200 response.</target>
@@ -554,17 +549,12 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="8533d8d42f2c7ef3078797984ea14675">
-        <source>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)</source>
-        <target>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)</target>
-        <note>Line: 142</note>
-      </trans-unit>
-      <trans-unit id="b51716b6494f24132f3543c516d59742">
+      <trans-unit id="bf8d04437124c71dcf4c8c9d067c59a4">
         <source>Public title that may appear in the browser and search engines. The recommended length is about 60 characters (including spaces). If you leave it blank, the product name will be used.</source>
         <target>Public title that may appear in the browser and search engines. The recommended length is about 60 characters (including spaces). If you leave it blank, the product name will be used.</target>
         <note>Line: 117</note>
       </trans-unit>
-      <trans-unit id="390348fb4642f64089e6e9ee71f25a7c">
+      <trans-unit id="73e5c34274fdcc69469b9185f7c3fd96">
         <source>Summary for robots, that could appear in search engines. The recommended length is about 160 characters (including spaces). If you leave it blank, an excerpt from the short description will be used.</source>
         <target>Summary for robots, that could appear in search engines. The recommended length is about 160 characters (including spaces). If you leave it blank, an excerpt from the short description will be used.</target>
         <note>Line: 146</note>
@@ -582,6 +572,25 @@
         <source>Search combination</source>
         <target>Search combination</target>
         <note>Line: 104</note>
+      </trans-unit>
+      <trans-unit id="877410fd0e911c487f3d64381a98e592">
+        <source>Controls how you want stock of the pack to be calculated. You can decide, if you want to manage the stocks of packs manually, or if it should be calculated automatically depending on stock of the products inside. In that case, the quantity of the pack inside is ignored.</source>
+        <target>Controls how you want stock of the pack to be calculated. You can decide, if you want to manage the stocks of packs manually, or if it should be calculated automatically depending on stock of the products inside. In that case, the quantity of the pack inside is ignored.</target>
+        <note>Line: 118</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Supplier/SupplierType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="afd7431f75b5801226c9ee37acc1a504">
+        <source>Will appear in the list of suppliers.</source>
+        <target>Will appear in the list of suppliers.</target>
+        <note>Line: 150</note>
+      </trans-unit>
+      <trans-unit id="e865605842d16d0d11c266c731e00507">
+        <source>Upload a supplier logo from your computer.</source>
+        <target>Upload a supplier logo from your computer.</target>
+        <note>Line: 278</note>
       </trans-unit>
     </body>
   </file>
@@ -663,6 +672,11 @@
         <source>If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).  A new category will not automatically appear in your shop's menu, please read the Help about it.</source>
         <target>If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).  A new category will not automatically appear in your shop's menu, please read the Help about it.</target>
         <note>Line: 56</note>
+      </trans-unit>
+      <trans-unit id="c5abe76b24973299661ce389d1a092e1">
+        <source>Search categories</source>
+        <target>Search categories</target>
+        <note>Line: 35</note>
       </trans-unit>
     </body>
   </file>
@@ -1056,15 +1070,6 @@ Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no clo
         <source>To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].</source>
         <target>To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].</target>
         <note>Line: 34</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/FormTheme/categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c5abe76b24973299661ce389d1a092e1">
-        <source>Search categories</source>
-        <target>Search categories</target>
-        <note>Line: 55</note>
       </trans-unit>
     </body>
   </file>

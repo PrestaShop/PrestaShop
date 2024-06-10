@@ -384,21 +384,6 @@
         <target>Please select a module to unhook.</target>
         <note>Line: 213</note>
       </trans-unit>
-      <trans-unit id="1c1824ce21df05df8689641c516c9d75">
-        <source>This module cannot be loaded.</source>
-        <target>This module cannot be loaded.</target>
-        <note>Line: 222</note>
-      </trans-unit>
-      <trans-unit id="0c01b89a049f95e9eb10cfeb2a2901f0">
-        <source>Hook cannot be loaded.</source>
-        <target>Hook cannot be loaded.</target>
-        <note>Line: 224</note>
-      </trans-unit>
-      <trans-unit id="c40924509e257aa0e73ccc576bd6b953">
-        <source>An error occurred while deleting the module from its hook.</source>
-        <target>An error occurred while deleting the module from its hook.</target>
-        <note>Line: 227</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/Adapter/Module/ModuleDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -528,10 +513,35 @@
         <target>Configuration successfully applied.</target>
         <note>Line: 183</note>
       </trans-unit>
+      <trans-unit id="1ff626f78b7506f340c7b2ce3398367a">
+        <source>Cannot %action% module %module%. %error_details%</source>
+        <target>Cannot %action% module %module%. %error_details%</target>
+        <note>Line: 207</note>
+      </trans-unit>
+      <trans-unit id="9dca2e42fe7a0db763b8737e9a8f9133">
+        <source>%action% action on module %module% succeeded.</source>
+        <target>%action% action on module %module% succeeded.</target>
+        <note>Line: 193</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/PositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="1c1824ce21df05df8689641c516c9d75">
+        <source>This module cannot be loaded.</source>
+        <target>This module cannot be loaded.</target>
+        <note>Line: 182</note>
+      </trans-unit>
+      <trans-unit id="0c01b89a049f95e9eb10cfeb2a2901f0">
+        <source>Hook cannot be loaded.</source>
+        <target>Hook cannot be loaded.</target>
+        <note>Line: 191</note>
+      </trans-unit>
+      <trans-unit id="c40924509e257aa0e73ccc576bd6b953">
+        <source>An error occurred while deleting the module from its hook.</source>
+        <target>An error occurred while deleting the module from its hook.</target>
+        <note>Line: 200</note>
+      </trans-unit>
       <trans-unit id="980b6caee06822f8c5df45eb7db277be">
         <source>The module transplanted successfully to the hook.</source>
         <target>The module transplanted successfully to the hook.</target>
@@ -546,16 +556,6 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1ff626f78b7506f340c7b2ce3398367a">
-        <source>Cannot %action% module %module%. %error_details%</source>
-        <target>Cannot %action% module %module%. %error_details%</target>
-        <note>Line: 289</note>
-      </trans-unit>
-      <trans-unit id="9dca2e42fe7a0db763b8737e9a8f9133">
-        <source>%action% action on module %module% succeeded.</source>
-        <target>%action% action on module %module% succeeded.</target>
-        <note>Line: 263</note>
-      </trans-unit>
       <trans-unit id="89d371deca1b2b50a933fabc8005ccfb">
         <source>%module% did not return a valid response on installation.</source>
         <target>%module% did not return a valid response on installation.</target>
