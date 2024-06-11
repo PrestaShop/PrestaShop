@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d0be5dac08a3f4ffccfa501815d8c9d",
+    "content-hash": "e9ed96112baedf6d3f99dd4d2f1bbbbb",
     "packages": [
         {
             "name": "api-platform/core",
@@ -4854,20 +4854,20 @@
         },
         {
             "name": "prestashop/blockreassurance",
-            "version": "v6.0.0",
+            "version": "v5.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockreassurance.git",
-                "reference": "740d5fa61a078c1dc49ad88b9db567ce22a4f415"
+                "reference": "e39663c439e025fe27721b265b0493df6ca3d7e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/740d5fa61a078c1dc49ad88b9db567ce22a4f415",
-                "reference": "740d5fa61a078c1dc49ad88b9db567ce22a4f415",
+                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/e39663c439e025fe27721b265b0493df6ca3d7e7",
+                "reference": "e39663c439e025fe27721b265b0493df6ca3d7e7",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1.3"
+                "php": ">=5.6.0"
             },
             "require-dev": {
                 "prestashop/php-dev-tools": "^4.3"
@@ -4878,7 +4878,8 @@
                     "PrestaShop\\Module\\BlockReassurance\\": "src/"
                 },
                 "classmap": [
-                    "blockreassurance.php"
+                    "blockreassurance.php",
+                    "classes/ReassuranceActivity.php"
                 ],
                 "exclude-from-classmap": []
             },
@@ -4895,9 +4896,9 @@
             "description": "PrestaShop module blockreassurance",
             "homepage": "https://github.com/PrestaShop/blockreassurance",
             "support": {
-                "source": "https://github.com/PrestaShop/blockreassurance/tree/v6.0.0"
+                "source": "https://github.com/PrestaShop/blockreassurance/tree/v5.1.4"
             },
-            "time": "2024-02-29T07:45:04+00:00"
+            "time": "2023-11-08T09:53:12+00:00"
         },
         {
             "name": "prestashop/blockwishlist",
