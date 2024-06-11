@@ -154,15 +154,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/AddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
-        <source>Addresses</source>
-        <target>Addresses</target>
-        <note>Line: 69</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/front/DiscountController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
@@ -182,41 +173,41 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/OrderReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
-        <source>Merchandise returns</source>
-        <target>Merchandise returns</target>
-        <note>Line: 180</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/front/OrderConfirmationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="30a3534b67a9a2c4cb3f1bb8659b321f">
         <source>Very weak</source>
         <target>Very weak</target>
-        <note>Line: 182</note>
+        <note>Line: 148</note>
       </trans-unit>
       <trans-unit id="7324e3727807d95037eb19d304fd91ec">
         <source>Weak</source>
         <target>Weak</target>
-        <note>Line: 183</note>
+        <note>Line: 149</note>
       </trans-unit>
       <trans-unit id="b1897515d548a960afe49ecf66a29021">
         <source>Average</source>
         <target>Average</target>
-        <note>Line: 184</note>
+        <note>Line: 150</note>
       </trans-unit>
       <trans-unit id="c43e0fd449c758dab8f891d8e19eb1a9">
         <source>Strong</source>
         <target>Strong</target>
-        <note>Line: 185</note>
+        <note>Line: 151</note>
       </trans-unit>
       <trans-unit id="516b34a4d2351006f3a0f39ccffccefa">
         <source>Very strong</source>
         <target>Very strong</target>
-        <note>Line: 186</note>
+        <note>Line: 152</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderFollowController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
+        <source>Merchandise returns</source>
+        <target>Merchandise returns</target>
+        <note>Line: 138</note>
       </trans-unit>
     </body>
   </file>
@@ -225,7 +216,7 @@
       <trans-unit id="f2fbecfb4e1f8fd471dcc0881d8518f1">
         <source>The page you are looking for was not found.</source>
         <target>The page you are looking for was not found.</target>
-        <note>Line: 1458</note>
+        <note>Line: 1455</note>
       </trans-unit>
     </body>
   </file>
@@ -319,16 +310,25 @@
       <trans-unit id="d3d2e617335f08df83599665eef8a418">
         <source>Close</source>
         <target>Close</target>
-        <note>Line: 35</note>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
         <source>Store information</source>
         <target>Store information</target>
-        <note>Line: 63</note>
+        <note>Line: 27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_customeraccountlinks/ps_customeraccountlinks.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
+        <source>Addresses</source>
+        <target>Addresses</target>
+        <note>Line: 114</note>
       </trans-unit>
     </body>
   </file>
@@ -352,16 +352,6 @@
   </file>
   <file original="src/Adapter/Presenter/Order/OrderLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1f87346a16cf80c372065de3c54c86d9">
-        <source>(tax incl.)</source>
-        <target>(tax incl.)</target>
-        <note>Line: 425</note>
-      </trans-unit>
-      <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
-        <source>(tax excl.)</source>
-        <target>(tax excl.)</target>
-        <note>Line: 426</note>
-      </trans-unit>
       <trans-unit id="e3ddbe6b144e01554bfa072db9bcca2f">
         <source>(tax included)</source>
         <target>(tax included)</target>
@@ -376,6 +366,16 @@
   </file>
   <file original="src/Adapter/Presenter/Product/ProductLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="1f87346a16cf80c372065de3c54c86d9">
+        <source>(tax incl.)</source>
+        <target>(tax incl.)</target>
+        <note>Line: 419</note>
+      </trans-unit>
+      <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
+        <source>(tax excl.)</source>
+        <target>(tax excl.)</target>
+        <note>Line: 420</note>
+      </trans-unit>
       <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
         <source>Tax included</source>
         <target>Tax included</target>
@@ -393,12 +393,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_contactinfo/nav.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
         <source>Contact us</source>
         <target>Contact us</target>
-        <note>Line: 39</note>
+        <note>Line: 42</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_contactinfo/nav.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c6359db4a43cb7267a84b389229fd073">
+        <source>Call us: [1]%phone%[/1]</source>
+        <target>Call us: [1]%phone%[/1]</target>
+        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>
@@ -414,20 +423,15 @@
         <target>Fax:</target>
         <note>Line: 47</note>
       </trans-unit>
+      <trans-unit id="a0bfe0853cf82bdf5dcb9b0bac76c357">
+        <source>Email us:</source>
+        <target>Email us:</target>
+        <note>Line: 57</note>
+      </trans-unit>
     </body>
   </file>
   <file original="themes/classic/modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c6359db4a43cb7267a84b389229fd073">
-        <source>Call us: [1]%phone%[/1]</source>
-        <target>Call us: [1]%phone%[/1]</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="a0bfe0853cf82bdf5dcb9b0bac76c357">
-        <source>Email us:</source>
-        <target>Email us:</target>
-        <note>Line: 67</note>
-      </trans-unit>
       <trans-unit id="da6eb684bd77243a780629a180c9d19b">
         <source>Fax: [1]%fax%[/1]</source>
         <target>Fax: [1]%fax%[/1]</target>
@@ -496,30 +500,30 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_shoppingcart/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d0f369aab921195580d8319855bbb69f">
-        <source>%label%:</source>
-        <target>%label%:</target>
-        <note>Line: 87</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7601c8e861088bd27255e18afaefab6b">
-        <source>%copyright% %year% - Ecommerce software by %prestashop%</source>
-        <target>%copyright% %year% - Ecommerce software by %prestashop%</target>
-        <note>Line: 49</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/classic/templates/catalog/_partials/sort-orders.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="98438bb96e6464272cadcd6a9c5774b7">
         <source>Sort by selection</source>
         <target>Sort by selection</target>
         <note>Line: 32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/checkout/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7601c8e861088bd27255e18afaefab6b">
+        <source>%copyright% %year% - Ecommerce software by %prestashop%</source>
+        <target>%copyright% %year% - Ecommerce software by %prestashop%</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/checkout/_partials/order-confirmation-table.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d0f369aab921195580d8319855bbb69f">
+        <source>%label%:</source>
+        <target>%label%:</target>
+        <note>Line: 141</note>
       </trans-unit>
     </body>
   </file>

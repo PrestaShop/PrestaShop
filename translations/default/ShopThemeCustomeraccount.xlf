@@ -70,20 +70,20 @@
         <target>Create account</target>
         <note>Line: 53</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_customersignin/ps_customersignin.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="4b877ba8588b19f1b278510bf2b57ebb">
         <source>Log me out</source>
         <target>Log me out</target>
-        <note>Line: 27</note>
+        <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="d4151a9a3959bdd43690735737034f27">
         <source>Log in to your customer account</source>
         <target>Log in to your customer account</target>
-        <note>Line: 30</note>
+        <note>Line: 52</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_customersignin/ps_customersignin.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="2cbfb6731610056e1d0aaacde07096c1">
         <source>View my customer account</source>
         <target>View my customer account</target>
@@ -105,6 +105,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="themes/classic/templates/checkout/_partials/order-final-summary.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="755bb0834a77079fd1330b555b69e6bf">
+        <source>You have given permission to receive your order in recycled packaging.</source>
+        <target>You have given permission to receive your order in recycled packaging.</target>
+        <note>Line: 90</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="themes/classic/templates/checkout/_partials/steps/personal-information.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6280ed214163d6e214763ff970910cdc">
@@ -116,6 +125,11 @@
         <source>Not you? [1]Log out[/1]</source>
         <target>Not you? [1]Log out[/1]</target>
         <note>Line: 26</note>
+      </trans-unit>
+      <trans-unit id="2fdfd506efea08144c0794c32ca8250a">
+        <source>Create an account</source>
+        <target>Create an account</target>
+        <note>Line: 63</note>
       </trans-unit>
     </body>
   </file>
@@ -147,17 +161,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/customer/_partials/order-detail-no-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/customer/_partials/order-detail-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="10fe8cbbbb00225183547fea1d675020">
         <source>Virtual products can't be returned.</source>
         <target>Virtual products can't be returned.</target>
-        <note>Line: 51</note>
+        <note>Line: 55</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/customer/_partials/order-detail-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="fdfac28b5ad628f25649d9c2eb4fc62e">
         <source>Returned</source>
         <target>Returned</target>
@@ -312,11 +322,6 @@
   </file>
   <file original="themes/classic/templates/customer/order-detail.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="755bb0834a77079fd1330b555b69e6bf">
-        <source>You have given permission to receive your order in recycled packaging.</source>
-        <target>You have given permission to receive your order in recycled packaging.</target>
-        <note>Line: 71</note>
-      </trans-unit>
       <trans-unit id="f5d74ea75357b5e139854c14f8e24fe3">
         <source>Order details</source>
         <target>Order details</target>
@@ -483,6 +488,10 @@
         <target>Please enter the email address you used to register. You will receive a temporary link to reset your password.</target>
         <note>Line: 48</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/password-infos.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="01a569ddc6cf67ddec2a683f0a5f5956">
         <source>Forgot your password?</source>
         <target>Forgot your password?</target>
@@ -506,11 +515,6 @@
   </file>
   <file original="themes/classic/templates/customer/registration.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2fdfd506efea08144c0794c32ca8250a">
-        <source>Create an account</source>
-        <target>Create an account</target>
-        <note>Line: 28</note>
-      </trans-unit>
       <trans-unit id="21bdc5689c12595ae14298354d5550d5">
         <source>Already have an account?</source>
         <target>Already have an account?</target>

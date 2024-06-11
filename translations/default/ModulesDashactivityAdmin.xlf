@@ -74,67 +74,67 @@
       <trans-unit id="edfc5fccc0439856b5bd432522ef47aa">
         <source>Online Visitors</source>
         <target>Online Visitors</target>
-        <note>Line: 45</note>
+        <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="962b7da7912bc637b03626e23b5832b5">
         <source>in the last %d minutes</source>
         <target>in the last %d minutes</target>
-        <note>Line: 58</note>
+        <note>Line: 60</note>
       </trans-unit>
       <trans-unit id="7aaacf26dbf7d8929916618bb57d81f8">
         <source>Active Shopping Carts</source>
         <target>Active Shopping Carts</target>
-        <note>Line: 56</note>
+        <note>Line: 58</note>
       </trans-unit>
       <trans-unit id="24042b0e4b783724dac4178df4db5d68">
         <source>Currently Pending</source>
         <target>Currently Pending</target>
-        <note>Line: 68</note>
+        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="247d96cbab5bfc79dff10eb2ce6d8897">
         <source>Return/Exchanges</source>
         <target>Return/Exchanges</target>
-        <note>Line: 77</note>
+        <note>Line: 79</note>
       </trans-unit>
       <trans-unit id="1c4407dd95b9ef941d30c2838208977e">
         <source>Out of Stock Products</source>
         <target>Out of Stock Products</target>
-        <note>Line: 90</note>
+        <note>Line: 92</note>
       </trans-unit>
       <trans-unit id="a644e8cd597f2b92aa52861632c0363d">
         <source>New Messages</source>
         <target>New Messages</target>
-        <note>Line: 102</note>
+        <note>Line: 104</note>
       </trans-unit>
       <trans-unit id="56d4e9a4c8e9f47549e8129393b3740f">
         <source>Product Reviews</source>
         <target>Product Reviews</target>
-        <note>Line: 109</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="e539ae01694149c9e12295fe564a376b">
         <source><![CDATA[Customers & Newsletters]]></source>
         <target><![CDATA[Customers & Newsletters]]></target>
-        <note>Line: 118</note>
+        <note>Line: 120</note>
       </trans-unit>
       <trans-unit id="8471314b4a53476fbf2379d9a0f7ac28">
         <source>New Customers</source>
         <target>New Customers</target>
-        <note>Line: 121</note>
+        <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="d833d1b3c98b980090f79ad42badcf9f">
         <source>New Subscriptions</source>
         <target>New Subscriptions</target>
-        <note>Line: 127</note>
+        <note>Line: 130</note>
       </trans-unit>
       <trans-unit id="e42bc03dcf18091455cb8a06ce1d56e9">
         <source>Total Subscribers</source>
         <target>Total Subscribers</target>
-        <note>Line: 133</note>
+        <note>Line: 138</note>
       </trans-unit>
       <trans-unit id="e7935ae6c516d89405ec532359d2d75a">
         <source>Traffic</source>
         <target>Traffic</target>
-        <note>Line: 142</note>
+        <note>Line: 148</note>
       </trans-unit>
       <trans-unit id="1a4aeb4ca6cd736a4a7b25d8657d9972">
         <source>Link to your Google Analytics account</source>
@@ -144,17 +144,17 @@
       <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
         <source>Visits</source>
         <target>Visits</target>
-        <note>Line: 146</note>
+        <note>Line: 153</note>
       </trans-unit>
       <trans-unit id="945f170a18e4894c90381a3d01bdef8b">
         <source>Unique Visitors</source>
         <target>Unique Visitors</target>
-        <note>Line: 152</note>
+        <note>Line: 161</note>
       </trans-unit>
       <trans-unit id="0fcff541ec15c6ed895d5dec49436488">
         <source>Traffic Sources</source>
         <target>Traffic Sources</target>
-        <note>Line: 158</note>
+        <note>Line: 168</note>
       </trans-unit>
     </body>
   </file>

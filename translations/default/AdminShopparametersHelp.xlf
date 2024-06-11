@@ -227,16 +227,6 @@
         <target>Upload an icon from your computer (File type: .gif, suggested size: 16x16).</target>
         <note>Line: 305</note>
       </trans-unit>
-      <trans-unit id="f0fe1aebeace842330fb048126151e06">
-        <source>Only letters, numbers and underscores ("_") are allowed.</source>
-        <target>Only letters, numbers and underscores ("_") are allowed.</target>
-        <note>Line: 424</note>
-      </trans-unit>
-      <trans-unit id="3d034f43e44ee495a11005507185a0a0">
-        <source>Email template for both .html and .txt.</source>
-        <target>Email template for both .html and .txt.</target>
-        <note>Line: 425</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -482,6 +472,20 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f0fe1aebeace842330fb048126151e06">
+        <source>Only letters, numbers and underscores ("_") are allowed.</source>
+        <target>Only letters, numbers and underscores ("_") are allowed.</target>
+        <note>Line: 201</note>
+      </trans-unit>
+      <trans-unit id="3d034f43e44ee495a11005507185a0a0">
+        <source>Email template for both .html and .txt.</source>
+        <target>Email template for both .html and .txt.</target>
+        <note>Line: 202</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bd92437d0543aa142ccea7c021c9efe9">
@@ -641,6 +645,11 @@
         <target>Note that the label will be displayed only if backorders are denied.</target>
         <note>Line: 205</note>
       </trans-unit>
+      <trans-unit id="ebdfb266f97bd01d837a5cdeb992fd5c">
+        <source>For packs of products, stocks can be managed manually or automatically based on individual product stock levels. Further customization is possible for each product.</source>
+        <target>For packs of products, stocks can be managed manually or automatically based on individual product stock levels. Further customization is possible for each product.</target>
+        <note>Line: 64</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SEOOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -720,11 +729,6 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
-        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
-        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
-        <note>Line: 70</note>
-      </trans-unit>
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>
         <target>Invalid characters:</target>
@@ -768,6 +772,15 @@
         <source>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</source>
         <target>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</target>
         <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
+        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
+        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
+        <note>Line: 169</note>
       </trans-unit>
     </body>
   </file>

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="151648106e4bf98297882ea2ea1c4b0e">
-        <source>Update successful</source>
-        <target>Update successful</target>
-        <note>Line: 228</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d4eab6753f9f3d4b57580427264beaa6">
         <source>Successful update</source>
         <target>Successful update</target>
         <note>Line: 82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="151648106e4bf98297882ea2ea1c4b0e">
+        <source>Update successful</source>
+        <target>Update successful</target>
+        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
@@ -62,30 +62,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminSearchConfController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4f29bc7b6f8b0da95b46defd28f72618">
-        <source>Successful creation</source>
-        <target>Successful creation</target>
-        <note>Line: 489</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="79f062391903591d68e514a400e136cf">
         <source>The status has been updated successfully.</source>
         <target>The status has been updated successfully.</target>
-        <note>Line: 766</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_categoryproducts/ps_categoryproducts.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="efc226b17e0532afff43be870bff0de7">
-        <source>The settings have been updated.</source>
-        <target>The settings have been updated.</target>
-        <note>Line: 101</note>
+        <note>Line: 85</note>
       </trans-unit>
     </body>
   </file>
@@ -95,6 +77,15 @@
         <source>Settings updated</source>
         <target>Settings updated</target>
         <note>Line: 116</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_dataprivacy/ps_dataprivacy.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="efc226b17e0532afff43be870bff0de7">
+        <source>The settings have been updated.</source>
+        <target>The settings have been updated.</target>
+        <note>Line: 111</note>
       </trans-unit>
     </body>
   </file>
@@ -121,30 +112,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmailController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6483df61619946ebf2427ba360df7ce5">
-        <source>The settings have been successfully updated.</source>
-        <target>The settings have been successfully updated.</target>
-        <note>Line: 140</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MetaController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/Product/AdminProductWrapper.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7173e38e8a10ed379625687638ddfe74">
         <source>Successful deletion</source>
         <target>Successful deletion</target>
-        <note>Line: 202</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1802a23025825ae791c1eea0118ee5f0">
-        <source>The status has been successfully updated.</source>
-        <target>The status has been successfully updated.</target>
-        <note>Line: 431</note>
+        <note>Line: 581</note>
       </trans-unit>
     </body>
   </file>
@@ -174,6 +147,11 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="6483df61619946ebf2427ba360df7ce5">
+        <source>The settings have been successfully updated.</source>
+        <target>The settings have been successfully updated.</target>
+        <note>Line: 133</note>
+      </trans-unit>
       <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
         <source>Your theme has been correctly exported: %path%</source>
         <target>Your theme has been correctly exported: %path%</target>
@@ -187,6 +165,15 @@
         <source>The selection has been successfully deleted</source>
         <target>The selection has been successfully deleted</target>
         <note>Line: 275</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1802a23025825ae791c1eea0118ee5f0">
+        <source>The status has been successfully updated.</source>
+        <target>The status has been successfully updated.</target>
+        <note>Line: 1224</note>
       </trans-unit>
     </body>
   </file>
@@ -209,12 +196,12 @@
       <trans-unit id="63cca4f457cad586dc9495a2e671b745">
         <source>Successful duplication</source>
         <target>Successful duplication</target>
-        <note>Line: 1185</note>
+        <note>Line: 1232</note>
       </trans-unit>
       <trans-unit id="b33f41d62d6358d2af05d739ac193889">
         <source>Your store context has been automatically modified.</source>
         <target>Your store context has been automatically modified.</target>
-        <note>Line: 435</note>
+        <note>Line: 436</note>
       </trans-unit>
     </body>
   </file>
@@ -224,6 +211,15 @@
         <source>Update successful.</source>
         <target>Update successful.</target>
         <note>Line: 1008</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/OrderMessageController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4f29bc7b6f8b0da95b46defd28f72618">
+        <source>Successful creation</source>
+        <target>Successful creation</target>
+        <note>Line: 104</note>
       </trans-unit>
     </body>
   </file>

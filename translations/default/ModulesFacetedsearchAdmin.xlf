@@ -119,12 +119,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_facetedsearch/src/Form/Attribute/FormModifier.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_facetedsearch/src/Form/AttributeGroup/FormModifier.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9e11e4b371570340ca07913bc4783a7a">
         <source>Meta title</source>
         <target>Meta title</target>
-        <note>Line: 89</note>
+        <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>
@@ -171,6 +171,16 @@
         <source>You must select at least one filter</source>
         <target>You must select at least one filter</target>
         <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="18c6120643596bd2626f3b0720b1df3a">
+        <source>You must select at least one category</source>
+        <target>You must select at least one category</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="de9bebfdc6b9fc0ea050a478f27cbb92">
+        <source>You must select at least one page</source>
+        <target>You must select at least one page</target>
+        <note>Line: 30</note>
       </trans-unit>
     </body>
   </file>
@@ -273,81 +283,6 @@
         <target>Product price filter (slider)</target>
         <note>Line: 242</note>
       </trans-unit>
-      <trans-unit id="51e17eed0057675de4bde1b34206bb12">
-        <source>New filters template</source>
-        <target>New filters template</target>
-        <note>Line: 23</note>
-      </trans-unit>
-      <trans-unit id="88ec58dbbe7a8b727200696cfca4df3d">
-        <source>You can drag and drop filters to adjust position</source>
-        <target>You can drag and drop filters to adjust position</target>
-        <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="60266302eeda2ac9775c3a2036ae25ca">
-        <source>Filters:</source>
-        <target>Filters:</target>
-        <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="29da3cb8b65298a3e88f5041e9fb9761">
-        <source>Total filters: %s</source>
-        <target>Total filters: %s</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="379d3973e10dfd90c475060f31b9ae74">
-        <source>Filter result limit:</source>
-        <target>Filter result limit:</target>
-        <note>Line: 350</note>
-      </trans-unit>
-      <trans-unit id="284fd1ee8a33e84e08699ba0bbc44943">
-        <source>Filter style:</source>
-        <target>Filter style:</target>
-        <note>Line: 356</note>
-      </trans-unit>
-      <trans-unit id="4f8222964f9a317cef99dddc23a121bd">
-        <source>Checkbox</source>
-        <target>Checkbox</target>
-        <note>Line: 359</note>
-      </trans-unit>
-      <trans-unit id="07a9ca8c8228dd3399141e228034fedf">
-        <source>Radio button</source>
-        <target>Radio button</target>
-        <note>Line: 360</note>
-      </trans-unit>
-      <trans-unit id="5204077231fc7164e2269e96b584dd95">
-        <source>Drop-down list</source>
-        <target>Drop-down list</target>
-        <note>Line: 361</note>
-      </trans-unit>
-      <trans-unit id="ce9bd6e7a7bfa2fa2d9e43bc4fcfeb8a">
-        <source>List of ranges</source>
-        <target>List of ranges</target>
-        <note>Line: 250</note>
-      </trans-unit>
-      <trans-unit id="db6b86d05039c4f657a28647f8eb5140">
-        <source>Attribute group: %name% (%count% attributes)</source>
-        <target>Attribute group: %name% (%count% attributes)</target>
-        <note>Line: 270</note>
-      </trans-unit>
-      <trans-unit id="788a474b0e55d612b3d500743c6251a0">
-        <source>Attribute group: %name% (%count% attribute)</source>
-        <target>Attribute group: %name% (%count% attribute)</target>
-        <note>Line: 279</note>
-      </trans-unit>
-      <trans-unit id="ee59f74265cd7f85d0ad30206a1a89b0">
-        <source>This group will allow user to select a color</source>
-        <target>This group will allow user to select a color</target>
-        <note>Line: 289</note>
-      </trans-unit>
-      <trans-unit id="4127fb33c1db9597f3c881ae057f1370">
-        <source>Feature: %name% (%count% values)</source>
-        <target>Feature: %name% (%count% values)</target>
-        <note>Line: 329</note>
-      </trans-unit>
-      <trans-unit id="cadad7b648bb2b1d3f22421b00a14fd2">
-        <source>Feature: %name% (%count% value)</source>
-        <target>Feature: %name% (%count% value)</target>
-        <note>Line: 338</note>
-      </trans-unit>
       <trans-unit id="4e0e25a7f0ffc6adce58b7fd3412cd35">
         <source>Product extras filter</source>
         <target>Product extras filter</target>
@@ -357,11 +292,6 @@
   </file>
   <file original="modules/ps_facetedsearch/views/templates/admin/manage.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="18c6120643596bd2626f3b0720b1df3a">
-        <source>You must select at least one category</source>
-        <target>You must select at least one category</target>
-        <note>Line: 325</note>
-      </trans-unit>
       <trans-unit id="df2bbc994d10995dcffdf96dbb7acbb1">
         <source>Indexes and caches</source>
         <target>Indexes and caches</target>
@@ -552,11 +482,6 @@
         <target>If you want to automatically assign a filter template to new categories, select it here.</target>
         <note>Line: 298</note>
       </trans-unit>
-      <trans-unit id="de9bebfdc6b9fc0ea050a478f27cbb92">
-        <source>You must select at least one page</source>
-        <target>You must select at least one page</target>
-        <note>Line: 326</note>
-      </trans-unit>
       <trans-unit id="7ee2f2da463bebd7507e3e0a39de6e99">
         <source>We recommend to set regular cron tasks to manage the indexes and cache on daily/weekly basis.</source>
         <target>We recommend to set regular cron tasks to manage the indexes and cache on daily/weekly basis.</target>
@@ -609,6 +534,85 @@
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_facetedsearch/views/templates/admin/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="51e17eed0057675de4bde1b34206bb12">
+        <source>New filters template</source>
+        <target>New filters template</target>
+        <note>Line: 23</note>
+      </trans-unit>
+      <trans-unit id="88ec58dbbe7a8b727200696cfca4df3d">
+        <source>You can drag and drop filters to adjust position</source>
+        <target>You can drag and drop filters to adjust position</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="60266302eeda2ac9775c3a2036ae25ca">
+        <source>Filters:</source>
+        <target>Filters:</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="29da3cb8b65298a3e88f5041e9fb9761">
+        <source>Total filters: %s</source>
+        <target>Total filters: %s</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="379d3973e10dfd90c475060f31b9ae74">
+        <source>Filter result limit:</source>
+        <target>Filter result limit:</target>
+        <note>Line: 190</note>
+      </trans-unit>
+      <trans-unit id="284fd1ee8a33e84e08699ba0bbc44943">
+        <source>Filter style:</source>
+        <target>Filter style:</target>
+        <note>Line: 196</note>
+      </trans-unit>
+      <trans-unit id="4f8222964f9a317cef99dddc23a121bd">
+        <source>Checkbox</source>
+        <target>Checkbox</target>
+        <note>Line: 199</note>
+      </trans-unit>
+      <trans-unit id="07a9ca8c8228dd3399141e228034fedf">
+        <source>Radio button</source>
+        <target>Radio button</target>
+        <note>Line: 200</note>
+      </trans-unit>
+      <trans-unit id="5204077231fc7164e2269e96b584dd95">
+        <source>Drop-down list</source>
+        <target>Drop-down list</target>
+        <note>Line: 201</note>
+      </trans-unit>
+      <trans-unit id="ce9bd6e7a7bfa2fa2d9e43bc4fcfeb8a">
+        <source>List of ranges</source>
+        <target>List of ranges</target>
+        <note>Line: 72</note>
+      </trans-unit>
+      <trans-unit id="db6b86d05039c4f657a28647f8eb5140">
+        <source>Attribute group: %name% (%count% attributes)</source>
+        <target>Attribute group: %name% (%count% attributes)</target>
+        <note>Line: 110</note>
+      </trans-unit>
+      <trans-unit id="788a474b0e55d612b3d500743c6251a0">
+        <source>Attribute group: %name% (%count% attribute)</source>
+        <target>Attribute group: %name% (%count% attribute)</target>
+        <note>Line: 119</note>
+      </trans-unit>
+      <trans-unit id="ee59f74265cd7f85d0ad30206a1a89b0">
+        <source>This group will allow user to select a color</source>
+        <target>This group will allow user to select a color</target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="4127fb33c1db9597f3c881ae057f1370">
+        <source>Feature: %name% (%count% values)</source>
+        <target>Feature: %name% (%count% values)</target>
+        <note>Line: 169</note>
+      </trans-unit>
+      <trans-unit id="cadad7b648bb2b1d3f22421b00a14fd2">
+        <source>Feature: %name% (%count% value)</source>
+        <target>Feature: %name% (%count% value)</target>
+        <note>Line: 178</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_facetedsearch/views/templates/hook/attribute_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
@@ -616,10 +620,6 @@
         <target>URL</target>
         <note>Line: 21</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_facetedsearch/views/templates/hook/attribute_group_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="e919c0dcca631198a18993158182c96b">
         <source>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</source>
         <target>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</target>
@@ -630,6 +630,10 @@
         <target>When the Faceted Search module is enabled, you can get more detailed page titles by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</target>
         <note>Line: 72</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_facetedsearch/views/templates/hook/feature_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="28034a200e932f22b324a4dda1bb9f64">
         <source><![CDATA[Invalid characters: <>;=#{}_]]></source>
         <target><![CDATA[Invalid characters: <>;=#{}_]]></target>
@@ -645,10 +649,6 @@
         <target>Use this attribute in URL generated by the Faceted Search module.</target>
         <note>Line: 93</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_facetedsearch/views/templates/hook/feature_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="81e6451dad5734120899da86f7da4e4e">
         <source>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this feature. By default, PrestaShop uses the feature's name, but you can change that setting using this field.</source>
         <target>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this feature. By default, PrestaShop uses the feature's name, but you can change that setting using this field.</target>

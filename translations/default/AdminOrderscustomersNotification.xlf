@@ -30,11 +30,6 @@
         <target>The order cannot be renewed.</target>
         <note>Line: 602</note>
       </trans-unit>
-      <trans-unit id="53a60d3bbec32a4bf2777704834dc35e">
-        <source>You must add a minimum quantity of %d</source>
-        <target>You must add a minimum quantity of %d</target>
-        <note>Line: 512</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -97,11 +92,6 @@
         <source>The order invoice cannot be found within your database.</source>
         <target>The order invoice cannot be found within your database.</target>
         <note>Line: 230</note>
-      </trans-unit>
-      <trans-unit id="1244f34e7f971d0b80cd2fd7cbbfb22c">
-        <source>The order cannot be found within your database.</source>
-        <target>The order cannot be found within your database.</target>
-        <note>Line: 218</note>
       </trans-unit>
     </body>
   </file>
@@ -222,6 +212,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/Adapter/PDF/DeliverySlipPdfGenerator.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1244f34e7f971d0b80cd2fd7cbbfb22c">
+        <source>The order cannot be found within your database.</source>
+        <target>The order cannot be found within your database.</target>
+        <note>Line: 71</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Form/ChoiceProvider/CustomerDeleteMethodChoiceProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ecace08642e28fc9c2704b5f73605b6d">
@@ -236,17 +235,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmployeeController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9e2dcf2660b82a0204f668565417010a">
         <source>An account already exists for this email address:</source>
         <target>An account already exists for this email address:</target>
-        <note>Line: 529</note>
+        <note>Line: 931</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="8562db06e3931e51ac8c456b56088b02">
         <source>This customer does not exist.</source>
         <target>This customer does not exist.</target>
@@ -274,6 +269,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/CustomerThreadController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9cdca3c7972c48111e79648c942ac672">
+        <source>The message was successfully sent to the customer.</source>
+        <target>The message was successfully sent to the customer.</target>
+        <note>Line: 168</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/MerchandiseReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="fb31a2cb28ec3e7dee5df6dce5e1a68f">
@@ -297,6 +301,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="53a60d3bbec32a4bf2777704834dc35e">
+        <source>You must add a minimum quantity of %d</source>
+        <target>You must add a minimum quantity of %d</target>
+        <note>Line: 607</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/CreditSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="cdbb58c797028e137b1ebf1dcc9efe92">
@@ -308,11 +321,6 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9cdca3c7972c48111e79648c942ac672">
-        <source>The message was successfully sent to the customer.</source>
-        <target>The message was successfully sent to the customer.</target>
-        <note>Line: 1464</note>
-      </trans-unit>
       <trans-unit id="1923e1e610686f1182bf54f573b86921">
         <source>A partial refund was successfully created.</source>
         <target>A partial refund was successfully created.</target>
@@ -510,12 +518,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/View/carts.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/View/groups.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1c28cbdd010068123432a5885ebfdb65">
         <source>No cart is available</source>
         <target>No cart is available</target>
-        <note>Line: 73</note>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>
@@ -627,6 +635,11 @@
         <target>Are you sure you want to create a new invoice?</target>
         <note>Line: 67</note>
       </trans-unit>
+      <trans-unit id="ca4c54eff098a5785c2016718a00ef1f">
+        <source>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</source>
+        <target>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</target>
+        <note>Line: 71</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/documents.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -640,11 +653,6 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ca4c54eff098a5785c2016718a00ef1f">
-        <source>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</source>
-        <target>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</target>
-        <note>Line: 54</note>
-      </trans-unit>
       <trans-unit id="99def74fcec1306526eaf054ccd2a5f7">
         <source>Are you sure you want to edit this product price? It will be applied to all identical products in this order.</source>
         <target>Are you sure you want to edit this product price? It will be applied to all identical products in this order.</target>
