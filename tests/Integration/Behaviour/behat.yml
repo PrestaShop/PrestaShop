@@ -615,6 +615,7 @@ default:
           contexts:
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\CarrierFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
         employee:
           paths:
             - "%paths.base%/Features/Scenario/Employee"

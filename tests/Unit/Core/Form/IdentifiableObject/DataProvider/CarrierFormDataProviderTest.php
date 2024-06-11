@@ -51,6 +51,11 @@ class CarrierFormDataProviderTest extends TestCase
                     1 => 'English delay',
                     2 => 'French delay',
                 ],
+                1234,
+                1123,
+                3421,
+                1657,
+                [1, 2, 3],
                 '/img/c/45.jkg',
             ))
         ;
@@ -66,6 +71,11 @@ class CarrierFormDataProviderTest extends TestCase
                 ],
                 'active' => true,
                 'grade' => 5,
+                'max_width' => 1234,
+                'max_height' => 1123,
+                'max_depth' => 3421,
+                'max_weight' => 1657,
+                'group_access' => [1, 2, 3],
                 'logo_preview' => '/img/c/45.jkg',
                 'tracking_url' => 'http://track.to',
             ],

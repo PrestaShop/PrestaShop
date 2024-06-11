@@ -107,6 +107,11 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $properties['trackingUrl'],
                 (int) $properties['position'],
                 (bool) $properties['active'],
+                (int) $properties['max_width'],
+                (int) $properties['max_height'],
+                (int) $properties['max_depth'],
+                (int) $properties['max_weight'],
+                $this->referencesToIds($properties['group_access']),
                 $properties['logoPathName'] ?? null
             );
 
@@ -148,6 +153,21 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             }
             if (isset($properties['active'])) {
                 $command->setActive((bool) $properties['active']);
+            }
+            if (isset($properties['max_width'])) {
+                $command->setMaxWidth((int) $properties['max_width']);
+            }
+            if (isset($properties['max_height'])) {
+                $command->setMaxHeight((int) $properties['max_height']);
+            }
+            if (isset($properties['max_depth'])) {
+                $command->setMaxDepth((int) $properties['max_depth']);
+            }
+            if (isset($properties['max_weight'])) {
+                $command->setMaxWeight((int) $properties['max_weight']);
+            }
+            if (isset($properties['group_access'])) {
+                $command->setAssociatedGroupIds($this->referencesToIds($properties['group_access']));
             }
 
             if (isset($properties['logoPathName']) && 'null' !== $properties['logoPathName']) {
@@ -196,6 +216,21 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['delay'])) {
             Assert::assertEquals($data['delay'], $carrier->getLocalizedDelay());
         }
+        if (isset($data['max_width'])) {
+            Assert::assertEquals($data['max_width'], $carrier->getMaxWidth());
+        }
+        if (isset($data['max_height'])) {
+            Assert::assertEquals($data['max_height'], $carrier->getMaxHeight());
+        }
+        if (isset($data['max_depth'])) {
+            Assert::assertEquals($data['max_depth'], $carrier->getMaxDepth());
+        }
+        if (isset($data['max_weight'])) {
+            Assert::assertEquals($data['max_weight'], $carrier->getMaxWeight());
+        }
+        if (isset($data['group_access'])) {
+            Assert::assertEquals($this->referencesToIds($data['group_access']), $carrier->getAssociatedGroupIds());
+        }
     }
 
     /**
@@ -223,6 +258,11 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         string $trackingUrl,
         int $position,
         bool $active,
+        int $max_width,
+        int $max_height,
+        int $max_depth,
+        int $max_weight,
+        array $group_access,
         ?string $logoPathName
     ): CarrierId {
         $command = new AddCarrierCommand(
@@ -232,7 +272,12 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             $trackingUrl,
             $position,
             $active,
-            $logoPathName
+            $group_access,
+            $logoPathName,
+            $max_width,
+            $max_height,
+            $max_depth,
+            $max_weight
         );
 
         return $this->getCommandBus()->handle($command);

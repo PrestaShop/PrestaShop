@@ -63,10 +63,16 @@ class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHand
         $carrier->position = $command->getPosition();
         $carrier->active = $command->getActive();
         $carrier->delay = $command->getLocalizedDelay();
+        $carrier->max_width = $command->getMaxWidth();
+        $carrier->max_height = $command->getMaxHeight();
+        $carrier->max_weight = $command->getMaxWeight();
+        $carrier->max_depth = $command->getMaxDepth();
 
         $this->carrierValidator->validate($carrier);
+        $this->carrierValidator->validateGroupsExist($command->getAssociatedGroupIds());
 
         $carrierId = $this->carrierRepository->add($carrier);
+        $carrier->setGroups($command->getAssociatedGroupIds());
 
         if ($command->getLogoPathName() !== null) {
             $this->carrierValidator->validateLogoUpload($command->getLogoPathName());

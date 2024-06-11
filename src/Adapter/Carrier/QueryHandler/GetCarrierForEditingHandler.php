@@ -64,7 +64,12 @@ final class GetCarrierForEditingHandler implements GetCarrierForEditingHandlerIn
             $carrier->position,
             $carrier->active,
             $carrier->delay,
-            $logoPath,
+            $carrier->max_width,
+            $carrier->max_height,
+            $carrier->max_depth,
+            $carrier->max_weight,
+            $carrier->getAssociatedGroupIds(),
+            $logoPath
         );
     }
 }
