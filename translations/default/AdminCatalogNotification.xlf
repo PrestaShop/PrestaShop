@@ -14,12 +14,12 @@
       <trans-unit id="30a367ba686890c829937e768d588b8f">
         <source>You cannot set 0 or a negative position, the minimum is 1.</source>
         <target>You cannot set 0 or a negative position, the minimum is 1.</target>
-        <note>Line: 7233</note>
+        <note>Line: 7235</note>
       </trans-unit>
       <trans-unit id="cf99dad7d7306d9ac01ba5a2e2d2c715">
         <source>You cannot set a position greater than the total number of products in the category, starting at 1.</source>
         <target>You cannot set a position greater than the total number of products in the category, starting at 1.</target>
-        <note>Line: 7254</note>
+        <note>Line: 7256</note>
       </trans-unit>
     </body>
   </file>
