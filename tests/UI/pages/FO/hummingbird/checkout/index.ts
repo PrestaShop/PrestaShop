@@ -1,7 +1,10 @@
 // Import FO pages
 import {CheckoutPage} from '@pages/FO/classic/checkout';
 import type {Page} from 'playwright';
-import {ProductDetailsBasic} from '@data/types/product';
+
+import {
+  type ProductDetailsBasic,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Cart page, contains functions that can be used on the page

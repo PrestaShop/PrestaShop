@@ -1,12 +1,10 @@
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
 
-// Import data
-import type {ProductStockMovement} from '@data/types/product';
-
 import type {Page} from 'playwright';
 import {
   type FakerProduct,
+  type ProductStockMovement,
 } from '@prestashop-core/ui-testing';
 
 /**

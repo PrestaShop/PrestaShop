@@ -1,8 +1,7 @@
 import LocalizationBasePage from '@pages/BO/international/localization/localizationBasePage';
 
-import {CurrencyFormat} from '@data/types/currency';
-
 import {
+  type CurrencyFormat,
   type FakerCurrency,
 } from '@prestashop-core/ui-testing';
 

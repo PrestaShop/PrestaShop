@@ -21,11 +21,11 @@ import {
   dataProducts,
   FakerOrder,
   FakerOrderShipping,
+  type ProductDiscount,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import type {ProductDiscount} from '@data/types/product';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_addDiscount';
 

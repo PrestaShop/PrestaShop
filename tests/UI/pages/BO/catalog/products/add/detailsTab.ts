@@ -2,13 +2,11 @@
 import BOBasePage from '@pages/BO/BObasePage';
 import createProductPage from '@pages/BO/catalog/products/add';
 
-// Import data
-import {ProductFeatures} from '@data/types/product';
-
 import type {Frame, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   type FakerProduct,
+  type ProductFeatures,
 } from '@prestashop-core/ui-testing';
 
 /**

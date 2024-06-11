@@ -24,9 +24,6 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
-// Import data
-import type MailDevEmail from '@data/types/maildevEmail';
-
 import {
   boDashboardPage,
   dataCustomers,
@@ -34,10 +31,11 @@ import {
   dataProducts,
   FakerContactMessage,
   FakerEmployee,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import MailDev from 'maildev';
 import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_customerService_customerService_forwardMessage';

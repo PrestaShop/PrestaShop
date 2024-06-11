@@ -20,12 +20,12 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import MailDevEmail from '@data/types/maildevEmail';
-import MailDev from 'maildev';
 
 const baseContext = 'functional_BO_customers_customers_transformGuestToCustomer';
 

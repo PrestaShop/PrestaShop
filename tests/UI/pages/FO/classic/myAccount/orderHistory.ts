@@ -2,7 +2,10 @@ import FOBasePage from '@pages/FO/FObasePage';
 
 import type {Page} from 'playwright';
 
-import {OrderHistory, OrderHistoryMessage} from '@data/types/order';
+import {
+  type OrderHistory,
+  type OrderHistoryMessage,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Order history page, contains functions that can be used on the page

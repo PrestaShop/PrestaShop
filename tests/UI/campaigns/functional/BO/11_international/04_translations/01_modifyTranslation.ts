@@ -1,7 +1,6 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import MailDevEmail from '@data/types/maildevEmail';
 import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
@@ -31,12 +30,12 @@ import {
   dataLanguages,
   dataModules,
   FakerCustomer,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-
-import MailDev from 'maildev';
 
 const baseContext: string = 'functional_BO_international_translations_modifyTranslation';
 

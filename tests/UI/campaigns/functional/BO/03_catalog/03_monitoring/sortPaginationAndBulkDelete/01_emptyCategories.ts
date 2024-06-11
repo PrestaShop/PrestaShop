@@ -15,11 +15,13 @@ import monitoringPage from '@pages/BO/catalog/monitoring';
 
 // Import data
 import ImportCategories from '@data/import/categories';
-import type {CategoryFilter} from '@data/types/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  type CategoryFilter,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_monitoring_sortPaginationAndBulkDelete_emptyCategories';
 

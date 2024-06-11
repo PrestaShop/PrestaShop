@@ -2,14 +2,13 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 import {
-  // Import data
   FakerAddress,
   FakerCarrier,
   FakerCustomer,
+  type ProductDetailsBasic,
 } from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
-import {ProductDetailsBasic} from '@data/types/product';
 
 /**
  * Checkout page, contains functions that can be used on the page

@@ -12,12 +12,10 @@ import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
-// Import data
-import {ProductAttribute} from '@data/types/product';
-
 import {
   type CartProductDetails,
   dataProducts,
+  type ProductAttribute,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';

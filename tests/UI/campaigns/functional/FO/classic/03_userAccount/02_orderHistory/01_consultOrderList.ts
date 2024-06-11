@@ -15,9 +15,6 @@ import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 
-// Import data
-import {OrderHistory} from '@data/types/order';
-
 import {
   dataOrderStatuses,
   dataPaymentMethods,
@@ -25,6 +22,7 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  type OrderHistory,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';

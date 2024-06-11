@@ -34,12 +34,12 @@ import {
   FakerOrder,
   FakerOrderShipping,
   FakerProduct,
+  type OrderPayment,
+  type ProductDiscount,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import type {OrderPayment} from '@data/types/order';
-import type {ProductDiscount} from '@data/types/product';
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_checkInvoice';
 

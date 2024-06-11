@@ -16,9 +16,6 @@ import orderPageMessagesBlock from '@pages/BO/orders/view/messagesBlock';
 // Import FO pages
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
-// Import data
-import type MailDevEmail from '@data/types/maildevEmail';
-
 import {
   boDashboardPage,
   dataCarriers,
@@ -27,11 +24,12 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCartRule,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import type MailDev from 'maildev';
 
 const baseContext: string = 'functional_BO_orders_orders_createOrders_checkSummary';
 

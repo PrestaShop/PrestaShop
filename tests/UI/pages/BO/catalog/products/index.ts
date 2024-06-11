@@ -3,7 +3,9 @@ import BOBasePage from '@pages/BO/BObasePage';
 
 import type {Frame, Page} from 'playwright';
 import {expect} from 'chai';
-import {ProductFilterMinMax} from '@data/types/product';
+import {
+  type ProductFilterMinMax,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Products V2 page, contains functions that can be used on the page

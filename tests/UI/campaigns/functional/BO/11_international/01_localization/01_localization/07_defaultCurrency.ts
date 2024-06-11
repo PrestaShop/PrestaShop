@@ -17,6 +17,7 @@ import {
   boDashboardPage,
   dataCurrencies,
   dataLanguages,
+  type ImportContent,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';

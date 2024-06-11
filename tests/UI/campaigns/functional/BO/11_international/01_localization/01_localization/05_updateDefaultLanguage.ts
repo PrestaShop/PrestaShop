@@ -13,6 +13,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataLanguages,
+  type ImportContent,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_localization_updateDefaultLanguage';

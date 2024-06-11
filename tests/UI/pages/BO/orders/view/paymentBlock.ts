@@ -1,6 +1,8 @@
 import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
-import type {OrderPayment} from '@data/types/order';
+import {
+  type OrderPayment,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 

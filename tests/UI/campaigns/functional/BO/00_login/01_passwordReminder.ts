@@ -11,16 +11,14 @@ import loginCommon from '@commonTests/BO/loginBO';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import employeesPage from '@pages/BO/advancedParameters/team';
 
-// Import data
-import type MailDevEmail from '@data/types/maildevEmail';
-
 import {expect} from 'chai';
-import type MailDev from 'maildev';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   FakerEmployee,
+  type MailDev,
+  type MailDevEmail,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_login_passwordReminder';

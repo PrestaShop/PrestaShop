@@ -1,4 +1,6 @@
-import MailDev from 'maildev';
+import {
+  MailDev,
+} from '@prestashop-core/ui-testing';
 
 /**
  * @module MailDevHelper

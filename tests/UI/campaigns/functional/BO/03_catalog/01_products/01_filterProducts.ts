@@ -11,12 +11,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import productsPage from '@pages/BO/catalog/products';
 
-// Import data
-import {ProductFilterMinMax} from '@data/types/product';
 import {
   boDashboardPage,
   dataProducts,
   dataCategories,
+  type ProductFilterMinMax,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_filterProducts';

@@ -1,16 +1,15 @@
 // Import page
 import BOBasePage from '@pages/BO/BObasePage';
 
-// Import data
 import {
-  ProductAttributes,
-  ProductCombinationBulk,
-  ProductCombinationBulkRetailPrice,
-  ProductCombinationBulkSpecificReferences,
-  ProductCombinationBulkStock,
-  ProductCombinationOptions,
-  ProductStockMovement,
-} from '@data/types/product';
+  type ProductAttributes,
+  type ProductCombinationBulk,
+  type ProductCombinationBulkRetailPrice,
+  type ProductCombinationBulkSpecificReferences,
+  type ProductCombinationBulkStock,
+  type ProductCombinationOptions,
+  type ProductStockMovement,
+} from '@prestashop-core/ui-testing';
 
 import type {Frame, Page} from 'playwright';
 import {expect} from 'chai';

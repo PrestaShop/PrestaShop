@@ -6,15 +6,13 @@ import testContext from '@utils/testContext';
 import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
-
-// Import data
-import {ProductAttribute} from '@data/types/product';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   type CartProductDetails,
   dataProducts,
+  type ProductAttribute,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';

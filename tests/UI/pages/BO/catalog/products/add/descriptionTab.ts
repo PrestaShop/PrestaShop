@@ -1,9 +1,9 @@
 import type {Page} from 'playwright';
 
-import {ProductImageInformation} from '@data/types/product';
 import BOBasePage from '@pages/BO/BObasePage';
 import {
   type FakerProduct,
+  type ProductImageInformation,
 } from '@prestashop-core/ui-testing';
 
 /**

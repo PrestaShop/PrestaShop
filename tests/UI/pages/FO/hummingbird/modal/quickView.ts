@@ -1,7 +1,9 @@
 import {Page} from 'playwright';
 // Import FO Pages
 import {QuickViewModal} from '@pages/FO/classic/modal/quickView';
-import {ProductAttribute} from '@data/types/product';
+import {
+  type ProductAttribute,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Quick view modal, contains functions that can be used on the page
