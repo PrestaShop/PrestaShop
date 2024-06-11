@@ -48,6 +48,7 @@ import TextWithLengthCounter from '@components/form/text-with-length-counter';
 import TinyMCEEditor from '@js/components/tinymce-editor';
 import TranslatableField from '@js/components/translatable-field';
 import TranslatableInput from '@js/components/translatable-input';
+import EntitySearchInput from '@js/components/entity-search-input';
 
 // Grid extensions
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
@@ -158,6 +159,7 @@ const initPrestashopComponents = (): void => {
     TinyMCEEditor,
     TranslatableField,
     TranslatableInput,
+    EntitySearchInput,
   };
 };
 export default initPrestashopComponents;
