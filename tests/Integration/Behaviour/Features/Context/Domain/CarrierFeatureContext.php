@@ -37,9 +37,12 @@ use Group;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\EditCarrierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShopException;
 use Tests\Resources\DummyFileUploader;
 use Tests\Resources\Resetter\CarrierResetter;
@@ -100,19 +103,26 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $properties['logoPathName'] = DummyFileUploader::upload($properties['logoPathName']);
             }
 
+            $taxRulesGroupId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($properties['taxRuleGroup'])->id;
+
             $carrierId = $this->createCarrierUsingCommand(
                 $properties['name'],
                 $properties['delay'],
                 (int) $properties['grade'],
                 $properties['trackingUrl'],
                 (int) $properties['position'],
-                (bool) $properties['active'],
+                filter_var($properties['active'], FILTER_VALIDATE_BOOLEAN),
                 (int) $properties['max_width'],
                 (int) $properties['max_height'],
                 (int) $properties['max_depth'],
                 (int) $properties['max_weight'],
                 $this->referencesToIds($properties['group_access']),
-                $properties['logoPathName'] ?? null
+                filter_var($properties['shippingHandling'], FILTER_VALIDATE_BOOLEAN),
+                filter_var($properties['isFree'], FILTER_VALIDATE_BOOLEAN),
+                $properties['shippingMethod'],
+                $taxRulesGroupId,
+                $properties['rangeBehavior'],
+                $properties['logoPathName'] ?? null,
             );
 
             if (isset($tmpLogo)) {
@@ -136,6 +146,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         try {
             $command = new EditCarrierCommand($carrierId);
 
+            // General information
             if (isset($properties['name'])) {
                 $command->setName($properties['name']);
             }
@@ -152,7 +163,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $command->setPosition((int) $properties['position']);
             }
             if (isset($properties['active'])) {
-                $command->setActive((bool) $properties['active']);
+                $command->setActive(filter_var($properties['active'], FILTER_VALIDATE_BOOLEAN));
             }
             if (isset($properties['max_width'])) {
                 $command->setMaxWidth((int) $properties['max_width']);
@@ -177,6 +188,28 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $command->setLogoPathName($tmpLogo ?? '');
             }
 
+            // Shipping information
+            if (isset($properties['shippingHandling'])) {
+                $command->setAdditionalHandlingFee(filter_var($properties['shippingHandling'], FILTER_VALIDATE_BOOLEAN));
+            }
+
+            if (isset($properties['isFree'])) {
+                $command->setIsFree(filter_var($properties['isFree'], FILTER_VALIDATE_BOOLEAN));
+            }
+
+            if (isset($properties['shippingMethod'])) {
+                $command->setShippingMethod($this->convertShippingMethodToInt($properties['shippingMethod']));
+            }
+
+            if (isset($properties['taxRuleGroup'])) {
+                $taxRulesGroupId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($properties['taxRuleGroup'])->id;
+                $command->setIdTaxRuleGroup($taxRulesGroupId);
+            }
+
+            if (isset($properties['rangeBehavior'])) {
+                $command->setRangeBehavior($this->convertOutOfRangeBehaviorToInt($properties['rangeBehavior']));
+            }
+
             $newCarrierId = $this->getCommandBus()->handle($command);
 
             if (isset($tmpLogo)) {
@@ -198,6 +231,8 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     {
         $carrier = $this->getCarrier($reference);
         $data = $this->localizeByRows($tableNode);
+
+        // General information
         if (isset($data['name'])) {
             Assert::assertEquals($data['name'], $carrier->getName());
         }
@@ -211,7 +246,10 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             Assert::assertEquals($data['position'], $carrier->getPosition());
         }
         if (isset($data['active'])) {
-            Assert::assertEquals($data['active'], $carrier->isActive());
+            Assert::assertEquals(
+                filter_var($data['active'], FILTER_VALIDATE_BOOLEAN),
+                $carrier->isActive()
+            );
         }
         if (isset($data['delay'])) {
             Assert::assertEquals($data['delay'], $carrier->getLocalizedDelay());
@@ -230,6 +268,40 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['group_access'])) {
             Assert::assertEquals($this->referencesToIds($data['group_access']), $carrier->getAssociatedGroupIds());
+        }
+
+        // Shipping information
+        if (isset($data['shippingHandling'])) {
+            Assert::assertEquals(
+                filter_var($data['shippingHandling'], FILTER_VALIDATE_BOOLEAN),
+                $carrier->hasAdditionalHandlingFee()
+            );
+        }
+
+        if (isset($data['isFree'])) {
+            Assert::assertEquals(
+                filter_var($data['isFree'], FILTER_VALIDATE_BOOLEAN),
+                $carrier->isFree()
+            );
+        }
+
+        if (isset($data['shippingMethod'])) {
+            Assert::assertEquals(
+                $this->convertShippingMethodToInt($data['shippingMethod']),
+                $carrier->getShippingMethod()
+            );
+        }
+
+        if (isset($data['taxRuleGroup'])) {
+            $expectedId = TaxRulesGroupFeatureContext::getTaxRulesGroupByName($data['taxRuleGroup'])->id;
+            Assert::assertEquals($expectedId, $carrier->getIdTaxRuleGroup());
+        }
+
+        if (isset($data['rangeBehavior'])) {
+            Assert::assertEquals(
+                $this->convertOutOfRangeBehaviorToInt($data['rangeBehavior']),
+                $carrier->getRangeBehavior()
+            );
         }
     }
 
@@ -251,6 +323,17 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         Assert::assertNull($carrier->getLogoPath());
     }
 
+    /**
+     * @Then carrier edit should throw an error with error code :errorCode
+     */
+    public function carrierEditShouldThrowAnError(string $errorCode)
+    {
+        $this->assertLastErrorIs(
+            CarrierConstraintException::class,
+            constant(CarrierConstraintException::class . '::' . $errorCode)
+        );
+    }
+
     private function createCarrierUsingCommand(
         string $name,
         array $delay,
@@ -263,7 +346,12 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         int $max_depth,
         int $max_weight,
         array $group_access,
-        ?string $logoPathName
+        bool $hasAdditionalHandlingFee,
+        bool $isFree,
+        string $shippingMethod,
+        int $idTaxRuleGroup,
+        string $rangeBehavior,
+        ?string $logoPathName,
     ): CarrierId {
         $command = new AddCarrierCommand(
             $name,
@@ -273,11 +361,16 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             $position,
             $active,
             $group_access,
-            $logoPathName,
+            $hasAdditionalHandlingFee,
+            $isFree,
+            $this->convertShippingMethodToInt($shippingMethod),
+            $idTaxRuleGroup,
+            $this->convertOutOfRangeBehaviorToInt($rangeBehavior),
             $max_width,
             $max_height,
             $max_depth,
-            $max_weight
+            $max_weight,
+            $logoPathName,
         );
 
         return $this->getCommandBus()->handle($command);
@@ -295,5 +388,37 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         if ('' !== $filename) {
             copy($filename, _PS_SHIP_IMG_DIR_ . $carrierId . '.jpg');
         }
+    }
+
+    /**
+     * @param string $shippingMethod
+     *
+     * @return int
+     */
+    protected function convertShippingMethodToInt(string $shippingMethod): int
+    {
+        $intValues = [
+            'weight' => ShippingMethod::BY_WEIGHT,
+            'price' => ShippingMethod::BY_PRICE,
+            'invalid' => 42, // This random number is hardcoded intentionally to reflect invalid shipping method
+        ];
+
+        return $intValues[$shippingMethod];
+    }
+
+    /**
+     * @param string $outOfRangeBehavior
+     *
+     * @return int
+     */
+    protected function convertOutOfRangeBehaviorToInt(string $outOfRangeBehavior): int
+    {
+        $intValues = [
+            'highest_range' => OutOfRangeBehavior::USE_HIGHEST_RANGE,
+            'disabled' => OutOfRangeBehavior::DISABLED,
+            'invalid' => 42, // This random number is hardcoded intentionally to reflect invalid out of range behavior
+        ];
+
+        return $intValues[$outOfRangeBehavior];
     }
 }

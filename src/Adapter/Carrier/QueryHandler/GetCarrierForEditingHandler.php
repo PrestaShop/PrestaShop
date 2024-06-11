@@ -69,7 +69,12 @@ final class GetCarrierForEditingHandler implements GetCarrierForEditingHandlerIn
             $carrier->max_depth,
             $carrier->max_weight,
             $carrier->getAssociatedGroupIds(),
-            $logoPath
+            $carrier->shipping_handling,
+            $carrier->is_free,
+            $carrier->shipping_method,
+            $carrier->getIdTaxRulesGroup(),
+            (int) $carrier->range_behavior,
+            $logoPath,
         );
     }
 }

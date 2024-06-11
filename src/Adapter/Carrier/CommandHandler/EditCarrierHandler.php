@@ -57,6 +57,8 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
     public function handle(EditCarrierCommand $command): CarrierId
     {
         $carrier = $this->carrierRepository->get($command->getCarrierId());
+
+        // General information
         if ($command->getName()) {
             $carrier->name = $command->getName();
         }
@@ -69,7 +71,7 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         if ($command->getPosition()) {
             $carrier->position = $command->getPosition();
         }
-        if ($command->getActive()) {
+        if (null !== $command->getActive()) {
             $carrier->active = $command->getActive();
         }
         if ($command->getLocalizedDelay()) {
@@ -88,6 +90,33 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
             $carrier->max_weight = $command->getMaxWeight();
         }
 
+        // Shipping information
+        if (null !== $command->hasAdditionalHandlingFee()) {
+            $carrier->shipping_handling = $command->hasAdditionalHandlingFee();
+        } else {
+            // If carrier is free, we should not have shipping handling
+            if ($command->isFree()) {
+                $carrier->shipping_handling = false;
+            }
+        }
+
+        if (null !== $command->isFree()) {
+            $carrier->is_free = $command->isFree();
+        } else {
+            // If carrier has additional handling fee, we should not have free shipping enabled
+            if ($command->hasAdditionalHandlingFee()) {
+                $carrier->is_free = false;
+            }
+        }
+
+        if ($command->getShippingMethod()) {
+            $carrier->shipping_method = $command->getShippingMethod()->getValue();
+        }
+
+        if (null !== $command->getRangeBehavior()) {
+            $carrier->range_behavior = (bool) $command->getRangeBehavior()->getValue();
+        }
+
         $this->carrierValidator->validate($carrier);
         if ($command->getAssociatedGroupIds()) {
             $this->carrierValidator->validateGroupsExist($command->getAssociatedGroupIds());
@@ -100,6 +129,10 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         if ($command->getAssociatedGroupIds()) {
             $newCarrier->setGroups($command->getAssociatedGroupIds());
         }
+        if (null !== $command->getTaxRuleGroupId()) {
+            $newCarrier->setTaxRulesGroup($command->getTaxRuleGroupId());
+        }
+
         if ($command->getLogoPathName() !== null) {
             $this->carrierLogoFileUploader->deleteOldFile($newCarrier->id);
 

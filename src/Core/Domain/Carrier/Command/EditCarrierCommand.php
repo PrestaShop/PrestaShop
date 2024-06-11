@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 
 /**
  * Command aim to edit carrier
@@ -48,6 +50,11 @@ class EditCarrierCommand
     private ?int $max_weight;
     private ?array $associatedGroupIds;
     private ?string $logoPathName;
+    private ?bool $hasAdditionalHandlingFee;
+    private ?bool $isFree;
+    private ?ShippingMethod $shippingMethod;
+    private ?int $idTaxRuleGroup;
+    private ?OutOfRangeBehavior $rangeBehavior;
 
     public function __construct(int $carrierId)
     {
@@ -205,6 +212,66 @@ class EditCarrierCommand
     public function setLogoPathName(?string $logoPathName): self
     {
         $this->logoPathName = $logoPathName;
+
+        return $this;
+    }
+
+    public function hasAdditionalHandlingFee(): ?bool
+    {
+        return $this->hasAdditionalHandlingFee ?? null;
+    }
+
+    public function setAdditionalHandlingFee(bool $hasAdditionalHandlingFee): self
+    {
+        $this->hasAdditionalHandlingFee = $hasAdditionalHandlingFee;
+
+        return $this;
+    }
+
+    public function isFree(): ?bool
+    {
+        return $this->isFree ?? null;
+    }
+
+    public function setIsFree(bool $isFree): self
+    {
+        $this->isFree = $isFree;
+
+        return $this;
+    }
+
+    public function getShippingMethod(): ?ShippingMethod
+    {
+        return $this->shippingMethod ?? null;
+    }
+
+    public function setShippingMethod(int $shippingMethod): self
+    {
+        $this->shippingMethod = new ShippingMethod($shippingMethod);
+
+        return $this;
+    }
+
+    public function getTaxRuleGroupId(): ?int
+    {
+        return $this->idTaxRuleGroup ?? null;
+    }
+
+    public function setIdTaxRuleGroup(int $idTaxRuleGroup): self
+    {
+        $this->idTaxRuleGroup = $idTaxRuleGroup;
+
+        return $this;
+    }
+
+    public function getRangeBehavior(): ?OutOfRangeBehavior
+    {
+        return $this->rangeBehavior ?? null;
+    }
+
+    public function setRangeBehavior(int $rangeBehavior): self
+    {
+        $this->rangeBehavior = new OutOfRangeBehavior($rangeBehavior);
 
         return $this;
     }
