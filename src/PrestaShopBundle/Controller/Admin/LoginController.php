@@ -68,6 +68,7 @@ class LoginController extends PrestaShopAdminController
      * @return Response
      */
     public function loginAction(
+        Request $request,
         Security $security,
         AuthenticationUtils $authenticationUtils,
         #[Autowire(service: 'prestashop.admin.login.form_handler')]
@@ -75,7 +76,7 @@ class LoginController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.admin.request_password_reset.form_handler')]
         FormHandlerInterface $requestResetPasswordFormHandler,
     ): Response {
-        $securityResponse = $this->checkRequiredActions();
+        $securityResponse = $this->checkRequiredActions($request);
         if ($securityResponse) {
             return $securityResponse;
         }
@@ -218,9 +219,10 @@ class LoginController extends PrestaShopAdminController
         ]);
     }
 
-    protected function checkRequiredActions(): ?Response
+    protected function checkRequiredActions(Request $request): ?Response
     {
         $requiredActions = [];
+        $warningActions = [];
 
         // If install folder is still present display a warning to remove it
         if (is_dir($this->projectDir . '/install')) {
@@ -237,12 +239,49 @@ class LoginController extends PrestaShopAdminController
             $requiredActions[] = $this->trans('renamed the /admin folder (e.g. %s)', [$randomName], 'Admin.Login.Notification');
         }
 
+        $sslEnabled = (bool) $this->getConfiguration()->get('PS_SSL_ENABLED');
+        if ($sslEnabled && !$request->isSecure()) {
+            $maintenanceIpConfiguration = $this->getConfiguration()->get('PS_MAINTENANCE_IP');
+            if (empty($maintenanceIpConfiguration)) {
+                $maintenanceIps = [];
+            } else {
+                $maintenanceIps = explode(',', $maintenanceIpConfiguration);
+            }
+
+            $maintenanceIps = array_merge(['127.0.0.1', '::1'], $maintenanceIps);
+            $isMaintainer = false;
+            foreach ($request->getClientIps() as $clientIp) {
+                if (in_array($clientIp, $maintenanceIps)) {
+                    $isMaintainer = true;
+                    break;
+                }
+            }
+
+            if (!$isMaintainer) {
+                $securedUrl = rtrim(str_replace('http://', 'https://', $this->shopContext->getBaseURL()), '/') . '/' . trim($this->generateUrl('admin_login'), '/');
+                $requiredActions[] = $this->trans(
+                    'SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]',
+                    ['[1]' => '<a href="' . $securedUrl . '">', '[/1]' => '</a>'],
+                    'Admin.Login.Notification'
+                );
+            } else {
+                $warningActions[] = $this->trans('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.', [], 'Admin.Login.Notification');
+            }
+        }
+
         if (!empty($requiredActions)) {
             return $this->render('@PrestaShop/Admin/Login/required_actions.html.twig', [
                 'requiredActions' => $requiredActions,
                 'imgDir' => $this->shopContext->getBaseURI() . 'img/',
                 'shopName' => $this->getConfiguration()->get('PS_SHOP_NAME'),
             ]);
+        }
+
+        // Warning actions are not blocking but should still be indicated to the user
+        if (!empty($warningActions)) {
+            foreach ($warningActions as $warningAction) {
+                $this->addFlash('warning', $warningAction);
+            }
         }
 
         return null;
