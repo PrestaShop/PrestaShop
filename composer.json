@@ -56,7 +56,7 @@
         "pelago/emogrifier": "^v7.0.0",
         "phpoffice/phpspreadsheet": "^1.19",
         "prestashop/autoload": "^v1.0.2",
-        "prestashop/blockreassurance": "^6",
+        "prestashop/blockreassurance": "^5",
         "prestashop/blockwishlist": "^3.0",
         "prestashop/circuit-breaker": "^4.0",
         "prestashop/classic": "dev-develop",
