@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Context\CountryContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Has the role of filling Smarty variables in the context.
@@ -50,6 +51,7 @@ class SmartyVariablesFiller
         private readonly CountryContext $countryContext,
         private readonly LegacyContext $legacyContext,
         private readonly Configuration $configuration,
+        private readonly RouterInterface $router,
     ) {
     }
 
@@ -94,8 +96,8 @@ class SmartyVariablesFiller
             'version' => $this->templateVariables->getVersion(),
             'link' => $this->legacyContext->getContext()->link,
             'controller_name' => $this->legacyControllerContext->controller_name,
-            'login_link' => $this->legacyContext->getAdminLink('AdminLogin'),
-            'logout_link' => $this->legacyContext->getAdminLink('AdminLogin', true, ['logout' => 1]),
+            'login_link' => $this->router->generate('admin_login'),
+            'logout_link' => $this->router->generate('admin_logout'),
             'round_mode' => $this->configuration->get('PS_PRICE_ROUND_MODE'),
             'help_box' => $this->configuration->get('PS_HELPBOX'),
             'url_post' => $this->legacyControllerContext->currentIndex . '&token=' . $this->legacyControllerContext->token,
