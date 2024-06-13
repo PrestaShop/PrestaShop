@@ -118,14 +118,12 @@ class LegacyContextLoader
      */
     public function loadCurrencyContext(?int $currencyId = null): self
     {
-        $useDefaultCurrency = false;
         if (null === $currencyId) {
-            $useDefaultCurrency = true;
-            $currencyId = Currency::getDefaultCurrencyId();
+            $currency = new Currency(Currency::getDefaultCurrencyId());
+            $currency->precision = Precision::DEFAULT_PRECISION;
+        } else {
+            $currency = new Currency($currencyId);
         }
-
-        $currency = new Currency($currencyId);
-        if ($useDefaultCurrency) {
             $currency->precision = Precision::DEFAULT_PRECISION;
         }
 
