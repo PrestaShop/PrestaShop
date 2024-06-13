@@ -108,6 +108,7 @@ class TranslatorLanguageLoader
                 ->files()
                 ->name('*.' . $locale . '.xlf')
                 ->notName($this->isAdminContext ? '^Shop*' : '^Admin*')
+                ->followLinks()
                 ->in($directory);
 
             foreach ($finder as $file) {
@@ -156,6 +157,7 @@ class TranslatorLanguageLoader
         $modulesCatalogueFinder = Finder::create()
             ->files()
             ->name($filenamePattern)
+            ->followLinks()
             ->in($translationDir);
 
         foreach ($modulesCatalogueFinder as $file) {
