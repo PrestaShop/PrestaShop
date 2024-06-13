@@ -124,8 +124,6 @@ class LegacyContextLoader
         } else {
             $currency = new Currency($currencyId);
         }
-            $currency->precision = Precision::DEFAULT_PRECISION;
-        }
 
         $this->context->currency = $currency;
 
