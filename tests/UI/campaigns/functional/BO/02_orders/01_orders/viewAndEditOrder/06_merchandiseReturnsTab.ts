@@ -1,6 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -29,6 +27,8 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -59,7 +59,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
   let returnID: string = '0';
 
   const merchandiseReturnsNumber: string = '#RE00000';
-  const today: string = date.getDateFormat('mm/dd/yyyy');
+  const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
   // New order by customer data
   const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
@@ -80,12 +80,12 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe(`Change the new order status to '${dataOrderStatuses.shipped.name}'`, async () => {

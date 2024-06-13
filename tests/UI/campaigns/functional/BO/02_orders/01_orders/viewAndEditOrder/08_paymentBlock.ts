@@ -1,7 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -24,6 +21,9 @@ import {
   dataProducts,
   FakerOrder,
   type OrderPayment,
+  utilsDate,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -52,8 +52,8 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   let filePath: string|null;
   let invoiceID: number = 0;
 
-  const today: string = date.getDateFormat('yyyy-mm-dd');
-  const todayToCheck: string = date.getDateFormat('mm/dd/yyyy');
+  const today: string = utilsDate.getDateFormat('yyyy-mm-dd');
+  const todayToCheck: string = utilsDate.getDateFormat('mm/dd/yyyy');
   const totalOrder: number = 22.94;
   // New order by customer data
   const orderByCustomerData: FakerOrder = new FakerOrder({
@@ -113,13 +113,13 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await files.deleteFile(filePath);
-    await helper.closeBrowserContext(browserContext);
+    await utilsFile.deleteFile(filePath);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // 1 - Go to view order page
@@ -498,13 +498,13 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       filePath = await orderPageTabListBlock.downloadInvoice(page, 3);
       expect(filePath).to.not.eq(null);
 
-      const exist = await files.doesFileExist(filePath);
+      const exist = await utilsFile.doesFileExist(filePath);
       expect(exist, 'File doesn\'t exist!').to.eq(true);
 
-      const paymentMethodExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.paymentMethod);
+      const paymentMethodExist = await utilsFile.isTextInPDF(filePath, paymentDataAmountEqualRest.paymentMethod);
       expect(paymentMethodExist, 'Payment method does not exist in invoice!').to.eq(true);
 
-      const amountExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount.toString());
+      const amountExist = await utilsFile.isTextInPDF(filePath, paymentDataAmountEqualRest.amount.toString());
       expect(amountExist, 'Payment amount does not exist in invoice!').to.eq(true);
     });
   });

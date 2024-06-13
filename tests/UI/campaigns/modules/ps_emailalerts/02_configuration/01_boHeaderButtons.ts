@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -13,7 +12,11 @@ import psEmailAlerts from '@pages/BO/modules/psEmailAlerts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage, dataModules} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_emailalerts_configuration_boHeaderButtons';
 
@@ -23,12 +26,12 @@ describe('Mail alerts module - BO Header Buttons', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('BO - Header Buttons', async () => {

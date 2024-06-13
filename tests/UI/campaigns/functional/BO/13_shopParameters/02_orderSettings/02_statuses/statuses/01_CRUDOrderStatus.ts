@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -16,6 +14,8 @@ import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import {
   boDashboardPage,
   FakerOrderStatus,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -40,23 +40,23 @@ describe('BO - Shop Parameters - Order Settings - Statuses : CRUD order status',
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create images
     await Promise.all([
-      files.generateImage(`${createOrderStatusData.name}.jpg`),
-      files.generateImage(`${editOrderStatusData.name}.jpg`),
+      utilsFile.generateImage(`${createOrderStatusData.name}.jpg`),
+      utilsFile.generateImage(`${editOrderStatusData.name}.jpg`),
     ]);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     /* Delete the generated images */
     await Promise.all([
-      files.deleteFile(`${createOrderStatusData.name}.jpg`),
-      files.deleteFile(`${editOrderStatusData.name}.jpg`),
+      utilsFile.deleteFile(`${createOrderStatusData.name}.jpg`),
+      utilsFile.deleteFile(`${editOrderStatusData.name}.jpg`),
     ]);
   });
 

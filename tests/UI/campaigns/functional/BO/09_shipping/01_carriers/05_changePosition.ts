@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -23,6 +22,7 @@ import {
   boDashboardPage,
   dataCarriers,
   dataCustomers,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shipping_carriers_changePosition';
@@ -33,12 +33,12 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Change carrier position', async () => {
@@ -93,7 +93,7 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
     it('should open the back office in new tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetCarriersFilters', baseContext);
 
-      page = await helper.newTab(browserContext);
+      page = await utilsPlaywright.newTab(browserContext);
       await checkoutPage.goToBO(page);
 
       await loginCommon.loginBO(this, page);

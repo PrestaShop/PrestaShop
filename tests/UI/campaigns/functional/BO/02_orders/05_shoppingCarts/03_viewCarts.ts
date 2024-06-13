@@ -1,6 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -23,6 +21,8 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -64,7 +64,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     email: customerData.email,
     country: 'France',
   });
-  const todayCartFormat: string = date.getDateFormat('mm/dd/yyyy');
+  const todayCartFormat: string = utilsDate.getDateFormat('mm/dd/yyyy');
 
   // Pre-condition: Create customer
   createCustomerTest(customerData, `${baseContext}_preTest_1`);
@@ -75,12 +75,12 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('View carts', async () => {

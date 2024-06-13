@@ -1,7 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
-import mailHelper from '@utils/mailHelper';
 import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
@@ -35,6 +32,9 @@ import {
   FakerOrder,
   type MailDev,
   type MailDevEmail,
+  utilsFile,
+  utilsMail,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -91,12 +91,12 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Start listening to maildev server
-    mailListener = mailHelper.createMailListener();
-    mailHelper.startListener(mailListener);
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
 
     // Handle every new email
     mailListener.on('new', (email: MailDevEmail) => {
@@ -105,11 +105,11 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   });
 
   after(async () => {
-    await files.deleteFile(filePath);
-    await helper.closeBrowserContext(browserContext);
+    await utilsFile.deleteFile(filePath);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     // Stop listening to maildev server
-    mailHelper.stopListener(mailListener);
+    utilsMail.stopListener(mailListener);
   });
 
   describe('Consult Credit slip list in FO', async () => {
@@ -309,7 +309,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         filePath = await creditSlipPage.downloadCreditSlip(page, 1);
 
-        const found = await files.doesFileExist(filePath);
+        const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'PDF file was not downloaded').to.eq(true);
       });
 
@@ -317,27 +317,27 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlip', baseContext);
 
         // Check Name in pdf
-        const isCreditSlip = await files.isTextInPDF(filePath, 'CREDIT SLIP');
+        const isCreditSlip = await utilsFile.isTextInPDF(filePath, 'CREDIT SLIP');
         expect(isCreditSlip, 'Name of the PDF \'CREDIT SLIP\' does not exist in credit slip')
           .to.eq(true);
 
         // Check Credit Slip ID in pdf
-        const creditSlipIDExist = await files.isTextInPDF(filePath, creditSlipID);
+        const creditSlipIDExist = await utilsFile.isTextInPDF(filePath, creditSlipID);
         expect(creditSlipIDExist, `Credit Slip ID ${creditSlipID}' does not exist in credit slip`)
           .to.eq(true);
 
         // Check DateIssued in pdf
-        const dateIssuedExist = await files.isTextInPDF(filePath, dateIssued);
+        const dateIssuedExist = await utilsFile.isTextInPDF(filePath, dateIssued);
         expect(dateIssuedExist, `Date Issued '${dateIssued}' does not exist in credit slip`)
           .to.eq(true);
 
         // Check Order Reference in pdf
-        const orderReferenceExist = await files.isTextInPDF(filePath, orderReference);
+        const orderReferenceExist = await utilsFile.isTextInPDF(filePath, orderReference);
         expect(orderReferenceExist, `Order Reference '${orderReference}' does not exist in credit slip`)
           .to.eq(true);
 
         // Check payment method in pdf
-        const paymentMethodExist = await files.isTextInPDF(filePath, dataPaymentMethods.wirePayment.displayName);
+        const paymentMethodExist = await utilsFile.isTextInPDF(filePath, dataPaymentMethods.wirePayment.displayName);
         expect(
           paymentMethodExist,
           `Payment Method '${dataPaymentMethods.wirePayment.displayName}' does not exist in credit slip`,

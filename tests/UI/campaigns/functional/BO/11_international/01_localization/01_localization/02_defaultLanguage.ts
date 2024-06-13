@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -16,6 +15,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataLanguages,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_localization_defaultLanguage';
@@ -33,12 +33,12 @@ describe('BO - International - Localization : Update default language', async ()
     describe(`Set default language to '${test.args.language}' and default language from browser to`
       + ` '${test.args.defaultBrowserLanguage}'`, async () => {
       before(async function () {
-        browserContext = await helper.createBrowserContext(this.browser);
-        page = await helper.newTab(browserContext);
+        browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+        page = await utilsPlaywright.newTab(browserContext);
       });
 
       after(async () => {
-        await helper.closeBrowserContext(browserContext);
+        await utilsPlaywright.closeBrowserContext(browserContext);
       });
 
       it('should login in BO', async function () {
@@ -75,12 +75,12 @@ describe('BO - International - Localization : Update default language', async ()
     if (index !== 2) {
       describe(`Check if the FO language is '${test.args.languageToCheck}'`, async () => {
         before(async function () {
-          browserContext = await helper.createBrowserContext(this.browser);
-          page = await helper.newTab(browserContext);
+          browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+          page = await utilsPlaywright.newTab(browserContext);
         });
 
         after(async () => {
-          await helper.closeBrowserContext(browserContext);
+          await utilsPlaywright.closeBrowserContext(browserContext);
         });
 
         it('should open the shop page', async function () {

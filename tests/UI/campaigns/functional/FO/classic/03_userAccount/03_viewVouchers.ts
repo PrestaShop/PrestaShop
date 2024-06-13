@@ -1,6 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -17,6 +15,8 @@ import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouche
 import {
   FakerCartRule,
   FakerCustomer,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -39,9 +39,9 @@ describe('FO - Account : View vouchers', async () => {
   let page: Page;
 
   // Data to create a date format
-  const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
-  const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
-  const expirationDate: string = date.getDateFormat('mm/dd/yyyy', 'future');
+  const pastDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'past');
+  const futureDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'future');
+  const expirationDate: string = utilsDate.getDateFormat('mm/dd/yyyy', 'future');
   const customerData: FakerCustomer = new FakerCustomer({});
   const firstCartRule: FakerCartRule = new FakerCartRule({
     code: 'promo20',
@@ -69,12 +69,12 @@ describe('FO - Account : View vouchers', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('View vouchers on FO', async () => {

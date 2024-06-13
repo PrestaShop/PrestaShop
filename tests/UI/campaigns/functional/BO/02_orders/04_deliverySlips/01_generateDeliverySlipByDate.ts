@@ -1,7 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import login steps
@@ -14,8 +11,10 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
-  // Import data
   dataOrderStatuses,
+  utilsDate,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -32,16 +31,16 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
   let browserContext: BrowserContext;
   let page: Page;
 
-  const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
+  const futureDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'future');
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -107,7 +106,7 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
       // Generate delivery slips
       const filePath = await deliverySlipsPage.generatePDFByDateAndDownload(page);
 
-      const exist = await files.doesFileExist(filePath);
+      const exist = await utilsFile.doesFileExist(filePath);
       expect(exist).to.eq(true);
     });
 

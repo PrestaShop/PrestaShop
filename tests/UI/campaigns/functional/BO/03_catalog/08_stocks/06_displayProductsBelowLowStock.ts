@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import basicHelper from '@utils/basicHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -11,7 +9,11 @@ import stocksPage from '@pages/BO/catalog/stocks';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  utilsCore,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_stocks_displayProductsBelowLowStock';
 
@@ -24,12 +26,12 @@ describe('BO - Catalog - Stocks : Display products below low stock level first',
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -137,7 +139,7 @@ describe('BO - Catalog - Stocks : Display products below low stock level first',
     const table = await stocksPage.getAllRowsColumnContent(page, 'product_id');
 
     const tableFloat: number[] = table.map((text: string): number => parseInt(text, 10));
-    const expectedResult: number[] = await basicHelper.sortArrayNumber(tableFloat);
+    const expectedResult: number[] = await utilsCore.sortArrayNumber(tableFloat);
     expect(tableFloat).to.deep.equal(expectedResult.reverse());
   });
 });

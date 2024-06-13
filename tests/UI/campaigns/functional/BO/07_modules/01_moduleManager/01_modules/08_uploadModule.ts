@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -14,6 +12,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataModules,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_modules_uploadModule';
@@ -24,13 +24,13 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('module.zip');
+    await utilsPlaywright.closeBrowserContext(browserContext);
+    await utilsFile.deleteFile('module.zip');
   });
 
   it('should login in BO', async function () {
@@ -40,9 +40,9 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
   it(`should download the zip of the module '${dataModules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'downloadModule', baseContext);
 
-    await files.downloadFile(dataModules.keycloak.releaseZip, 'module.zip');
+    await utilsFile.downloadFile(dataModules.keycloak.releaseZip, 'module.zip');
 
-    const found = await files.doesFileExist('module.zip');
+    const found = await utilsFile.doesFileExist('module.zip');
     expect(found).to.eq(true);
   });
 

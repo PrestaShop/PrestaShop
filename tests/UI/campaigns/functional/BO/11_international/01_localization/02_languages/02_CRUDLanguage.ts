@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -19,6 +17,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerLanguage,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_languages_CRUDLanguages';
@@ -40,25 +40,25 @@ describe('BO - International - Languages : CRUD language', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create images
     await Promise.all([
-      files.generateImage(createLanguageData.flag),
-      files.generateImage(createLanguageData.noPicture),
-      files.generateImage(editLanguageData.flag),
-      files.generateImage(editLanguageData.noPicture),
+      utilsFile.generateImage(createLanguageData.flag),
+      utilsFile.generateImage(createLanguageData.noPicture),
+      utilsFile.generateImage(editLanguageData.flag),
+      utilsFile.generateImage(editLanguageData.noPicture),
     ]);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
     await Promise.all([
-      files.deleteFile(createLanguageData.flag),
-      files.deleteFile(createLanguageData.noPicture),
-      files.deleteFile(editLanguageData.flag),
-      files.deleteFile(editLanguageData.noPicture),
+      utilsFile.deleteFile(createLanguageData.flag),
+      utilsFile.deleteFile(createLanguageData.noPicture),
+      utilsFile.deleteFile(editLanguageData.flag),
+      utilsFile.deleteFile(editLanguageData.noPicture),
     ]);
   });
 

@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -21,10 +19,11 @@ import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -49,12 +48,12 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -223,17 +222,17 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           filePath = await orderPageTabListBlock.downloadInvoice(page);
           expect(filePath).to.not.eq(null);
 
-          const exist = await files.doesFileExist(filePath);
+          const exist = await utilsFile.doesFileExist(filePath);
           expect(exist).to.eq(true);
         });
 
         it('should check the product images in the PDF File', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductImages${index}`, baseContext);
 
-          const imageNumber = await files.getImageNumberInPDF(filePath);
+          const imageNumber = await utilsFile.getImageNumberInPDF(filePath);
           expect(imageNumber).to.be.equal(test.args.imageNumber);
 
-          await files.deleteFile(filePath);
+          await utilsFile.deleteFile(filePath);
         });
       });
     });

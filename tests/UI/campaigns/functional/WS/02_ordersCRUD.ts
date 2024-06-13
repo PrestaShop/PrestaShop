@@ -1,8 +1,5 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import xml from '@utils/xml';
 
 // Import webservices
 import orderXml from '@webservices/order/orderXml';
@@ -32,6 +29,9 @@ import {
   dataCustomers,
   dataProducts,
   FakerOrder,
+  utilsDate,
+  utilsPlaywright,
+  utilsXML,
   type WebservicePermission,
 } from '@prestashop-core/ui-testing';
 
@@ -78,14 +78,14 @@ describe('WS - Orders : CRUD', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    apiContext = await helper.createAPIContext(global.FO.URL);
+    apiContext = await utilsPlaywright.createAPIContext(global.FO.URL);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Enable webservice
@@ -197,7 +197,7 @@ describe('WS - Orders : CRUD', async () => {
 
         xmlResponse = await apiResponse.text();
 
-        const isValidXML = xml.isValid(xmlResponse);
+        const isValidXML = utilsXML.isValid(xmlResponse);
         expect(isValidXML).to.eq(true);
       });
 
@@ -229,7 +229,7 @@ describe('WS - Orders : CRUD', async () => {
           expect(nodeAttributes.length).to.be.eq(0);
 
           // Empty value
-          const isEmptyNode: boolean = xml.isEmpty(node);
+          const isEmptyNode: boolean = utilsXML.isEmpty(node);
           expect(isEmptyNode, `The node ${node.nodeName} is not empty`).to.eq(true);
         }
       });
@@ -254,7 +254,7 @@ describe('WS - Orders : CRUD', async () => {
 
         xmlResponse = await apiResponse.text();
 
-        const isValidXML = xml.isValid(xmlResponse);
+        const isValidXML = utilsXML.isValid(xmlResponse);
         expect(isValidXML).to.eq(true);
       });
 
@@ -301,7 +301,7 @@ describe('WS - Orders : CRUD', async () => {
           }
 
           // Empty value
-          const isEmptyNode = xml.isEmpty(node);
+          const isEmptyNode = utilsXML.isEmpty(node);
           expect(isEmptyNode, `The node ${node.nodeName} is not empty`).to.eq(true);
         }
       });
@@ -646,7 +646,7 @@ describe('WS - Orders : CRUD', async () => {
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'invoice_date');
             const value = await orderPageTabListBlock.getDocumentDate(page, 1);
-            expect(value).to.be.equal(date.setDateFormat('mm/dd/yyyy', xmlValue as string, false));
+            expect(value).to.be.equal(utilsDate.setDateFormat('mm/dd/yyyy', xmlValue as string, false));
           });
 
           it('should display the Carriers Tabs', async function () {
@@ -986,7 +986,7 @@ describe('WS - Orders : CRUD', async () => {
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'invoice_date');
             const value = await orderPageTabListBlock.getDocumentDate(page, 1);
-            expect(value).to.be.equal(date.setDateFormat('mm/dd/yyyy', xmlValue as string, false));
+            expect(value).to.be.equal(utilsDate.setDateFormat('mm/dd/yyyy', xmlValue as string, false));
           });
 
           it('should display the Carriers Tabs', async function () {

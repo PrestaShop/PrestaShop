@@ -3,13 +3,15 @@ import loginCommon from '@commonTests/BO/loginBO';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
 import themeImportPage from '@pages/BO/design/themeAndLogo/themeAndLogo/import';
 
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import files from '@utils/files';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 function installHummingbird(baseContext: string = 'commonTests-installHummingbird'): void {
   describe('Install Hummingbird theme', async () => {
@@ -20,14 +22,14 @@ function installHummingbird(baseContext: string = 'commonTests-installHummingbir
 
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
-      if (await files.doesFileExist('../../admin-dev/hummingbird.zip')) {
-        await files.deleteFile('../../admin-dev/hummingbird.zip');
+      await utilsPlaywright.closeBrowserContext(browserContext);
+      if (await utilsFile.doesFileExist('../../admin-dev/hummingbird.zip')) {
+        await utilsFile.deleteFile('../../admin-dev/hummingbird.zip');
       }
     });
 
@@ -89,12 +91,12 @@ function uninstallHummingbird(baseContext: string = 'commonTests-uninstallHummin
 
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {

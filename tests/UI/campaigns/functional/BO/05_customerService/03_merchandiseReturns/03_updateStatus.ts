@@ -1,9 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
-import date from '@utils/date';
-import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -36,6 +32,10 @@ import {
   FakerOrder,
   type MailDev,
   type MailDevEmail,
+  utilsDate,
+  utilsFile,
+  utilsMail,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -66,7 +66,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
   let allEmails: MailDevEmail[];
   let numberOfEmails: number;
   let mailListener: MailDev;
-  const todayDate: string = date.getDateFormat('mm/dd/yyyy');
+  const todayDate: string = utilsDate.getDateFormat('mm/dd/yyyy');
   const orderData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
@@ -80,12 +80,12 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Start listening to maildev server
-    mailListener = mailHelper.createMailListener();
-    mailHelper.startListener(mailListener);
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
 
     // get all emails
     // @ts-ignore
@@ -95,10 +95,10 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     // Stop listening to maildev server
-    mailHelper.stopListener(mailListener);
+    utilsMail.stopListener(mailListener);
   });
 
   // Pre-condition: Enable merchandise returns
@@ -287,7 +287,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
 
             filePath = await editMerchandiseReturnsPage.downloadPDF(page);
 
-            const exist = await files.doesFileExist(filePath);
+            const exist = await utilsFile.doesFileExist(filePath);
             expect(exist, 'File does not exist').to.eq(true);
           });
 
@@ -306,14 +306,14 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
             if (returnID >= 10) {
               returnPrefix = '#RE0000';
             }
-            const isVisible = await files.isTextInPDF(filePath, `ORDER RETURN,,${todayDate},,${returnPrefix}${returnID}`);
+            const isVisible = await utilsFile.isTextInPDF(filePath, `ORDER RETURN,,${todayDate},,${returnPrefix}${returnID}`);
             expect(isVisible, 'The header of the PDF is not correct!').to.eq(true);
           });
 
           it('should check the billing address in the PDF', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress', baseContext);
 
-            const billingAddressExist = await files.isTextInPDF(
+            const billingAddressExist = await utilsFile.isTextInPDF(
               filePath,
               'Billing & Delivery Address,,'
               + `${dataAddresses.address_2.firstName} ${dataAddresses.address_2.lastName},`
@@ -336,7 +336,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
               returnPrefix = '0000';
             }
 
-            const isVisible = await files.isTextInPDF(
+            const isVisible = await utilsFile.isTextInPDF(
               filePath,
               'We have logged your return request.,Your package must be returned to us within 14 days of receiving your order.'
               + `,,Return Number, ,Date,,${returnPrefix}${returnID}, ,${todayDate}`);
@@ -346,7 +346,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
           it('should check the returned product details', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkReturnedProduct', baseContext);
 
-            const isVisible = await files.isTextInPDF(
+            const isVisible = await utilsFile.isTextInPDF(
               filePath,
               `Items to be returned, ,Reference, ,Qty,,${dataProducts.demo_1.name} (Size: S - Color: White), ,`
               + `${dataProducts.demo_1.reference}, ,1`);

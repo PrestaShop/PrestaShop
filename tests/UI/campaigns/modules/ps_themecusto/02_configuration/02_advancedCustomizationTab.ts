@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -13,7 +11,11 @@ import advancedCustomizationPage from '@pages/BO/design/themeAndLogo/advancedCus
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_themecusto_configuration_advancedCustomizationTab';
 
@@ -23,12 +25,12 @@ describe('Theme Customization module - Advanced Customization tab ', async () =>
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Advanced Customization tab', async () => {
@@ -64,10 +66,10 @@ describe('Theme Customization module - Advanced Customization tab ', async () =>
 
       const filePath = await advancedCustomizationPage.downloadTheme(page);
 
-      const exist = await files.doesFileExist(filePath);
+      const exist = await utilsFile.doesFileExist(filePath);
       expect(exist, 'Theme was not downloaded').to.eq(true);
 
-      const fileType = await files.getFileType(filePath as string);
+      const fileType = await utilsFile.getFileType(filePath as string);
       expect(fileType).to.be.equal('zip');
     });
 

@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import mailHelper from '@utils/mailHelper';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -21,6 +19,8 @@ import {
   dataModules,
   type MailDev,
   type MailDevEmail,
+  utilsMail,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_emailsubscription_configuration_checkVerificationEmail';
@@ -50,12 +50,12 @@ describe('Mail alerts module - Enable/Disable send a verification email after su
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Start listening to maildev server
-    mailListener = mailHelper.createMailListener();
-    mailHelper.startListener(mailListener);
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
 
     // get all emails
     // @ts-ignore
@@ -65,10 +65,10 @@ describe('Mail alerts module - Enable/Disable send a verification email after su
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     // Stop listening to maildev server
-    mailHelper.stopListener(mailListener);
+    utilsMail.stopListener(mailListener);
   });
 
   describe(`BO: case 1 - Enable 'Send verification email' in the module '${dataModules.psEmailSubscription.name}'`, async () => {

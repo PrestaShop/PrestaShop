@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -21,6 +19,8 @@ import {
   dataCustomers,
   dataOrders,
   FakerContactMessage,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -45,17 +45,17 @@ describe('FO - Account : Contact us on GDPR page', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    await files.createFile('.', `${contactUsData.fileName}.txt`, 'new filename');
+    await utilsFile.createFile('.', `${contactUsData.fileName}.txt`, 'new filename');
   });
 
   describe('Contact us on GDPR page', async () => {
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
 
-      await files.deleteFile(`${contactUsData.fileName}.txt`);
+      await utilsFile.deleteFile(`${contactUsData.fileName}.txt`);
     });
 
     it('should go to FO home page', async function () {

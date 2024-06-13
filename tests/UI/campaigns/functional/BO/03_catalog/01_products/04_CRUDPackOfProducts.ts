@@ -1,9 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import date from '@utils/date';
-import files from '@utils/files';
-import basicHelper from '@utils/basicHelper';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -23,6 +19,10 @@ import {
   dataProducts,
   FakerProduct,
   type ProductPackOptions,
+  utilsCore,
+  utilsDate,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_CRUDPackOfProducts';
@@ -30,7 +30,7 @@ const baseContext: string = 'functional_BO_catalog_products_CRUDPackOfProducts';
 describe('BO - Catalog - Products : CRUD pack of products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const todayDate: string = date.getDateFormat('yyyy-mm-dd');
+  const todayDate: string = utilsDate.getDateFormat('yyyy-mm-dd');
 
   // Data to create standard product
   const newProductData: FakerProduct = new FakerProduct({
@@ -80,23 +80,23 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
     if (newProductData.coverImage) {
-      await files.generateImage(newProductData.coverImage);
+      await utilsFile.generateImage(newProductData.coverImage);
     }
     if (newProductData.thumbImage) {
-      await files.generateImage(newProductData.thumbImage);
+      await utilsFile.generateImage(newProductData.thumbImage);
     }
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
     if (newProductData.coverImage) {
-      await files.deleteFile(newProductData.coverImage);
+      await utilsFile.deleteFile(newProductData.coverImage);
     }
     if (newProductData.thumbImage) {
-      await files.deleteFile(newProductData.thumbImage);
+      await utilsFile.deleteFile(newProductData.thumbImage);
     }
   });
 
@@ -352,7 +352,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
     it('should check the product header details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductHeaderDetails', baseContext);
 
-      const taxValue = await basicHelper.percentage(pricingData.priceTaxExcluded, 20);
+      const taxValue = await utilsCore.percentage(pricingData.priceTaxExcluded, 20);
 
       const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
       await Promise.all([
@@ -382,7 +382,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllProductInformation', baseContext);
 
-      const taxValue = await basicHelper.percentage(pricingData.priceTaxExcluded, 20);
+      const taxValue = await utilsCore.percentage(pricingData.priceTaxExcluded, 20);
 
       const result = await foProductPage.getProductInformation(page);
       await Promise.all([
@@ -450,7 +450,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const taxValue = await basicHelper.percentage(editProductData.priceTaxExcluded, 10);
+      const taxValue = await utilsCore.percentage(editProductData.priceTaxExcluded, 10);
 
       const result = await foProductPage.getProductInformation(page);
       await Promise.all([

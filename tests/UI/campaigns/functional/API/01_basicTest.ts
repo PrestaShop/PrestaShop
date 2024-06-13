@@ -1,9 +1,11 @@
 // Import utils
-import helpers from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
 import type {APIRequestContext} from 'playwright';
+import {
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_basicTest';
 
@@ -11,7 +13,7 @@ describe('API : Basic Test', async () => {
   let apiContext: APIRequestContext;
 
   before(async () => {
-    apiContext = await helpers.createAPIContext(global.API.URL);
+    apiContext = await utilsPlaywright.createAPIContext(global.API.URL);
   });
 
   describe('Basic Test', async () => {

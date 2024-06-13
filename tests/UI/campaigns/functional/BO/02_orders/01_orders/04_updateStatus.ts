@@ -1,8 +1,5 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -27,6 +24,9 @@ import {
   FakerOrder,
   type MailDev,
   type MailDevEmail,
+  utilsFile,
+  utilsMail,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -77,12 +77,12 @@ describe('BO - orders : Update order status', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Start listening to maildev server
-    mailListener = mailHelper.createMailListener();
-    mailHelper.startListener(mailListener);
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
 
     // get all emails
     // @ts-ignore
@@ -92,10 +92,10 @@ describe('BO - orders : Update order status', async () => {
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     // Stop listening to maildev server
-    mailHelper.stopListener(mailListener);
+    utilsMail.stopListener(mailListener);
   });
 
   describe('Go to \'Orders > Orders\' page', async () => {
@@ -163,7 +163,7 @@ describe('BO - orders : Update order status', async () => {
 
             filePath = await ordersPage.downloadInvoice(page, 1);
 
-            const doesFileExist = await files.doesFileExist(filePath, 5000);
+            const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
             expect(doesFileExist, 'The file is not existing!').to.eq(true);
           });
 
@@ -174,22 +174,22 @@ describe('BO - orders : Update order status', async () => {
             const orderInformation = await ordersPage.getOrderFromTable(page, 1);
 
             // Check Reference in pdf
-            const referenceExist = await files.isTextInPDF(filePath, orderInformation.reference);
+            const referenceExist = await utilsFile.isTextInPDF(filePath, orderInformation.reference);
             expect(referenceExist, `Reference '${orderInformation.reference}' does not exist in invoice`)
               .to.eq(true);
 
             // Check country name in delivery Address in pdf
-            const deliveryExist = await files.isTextInPDF(filePath, orderInformation.delivery);
+            const deliveryExist = await utilsFile.isTextInPDF(filePath, orderInformation.delivery);
             expect(deliveryExist, `Country name '${orderInformation.delivery}' does not exist in invoice`)
               .to.eq(true);
 
             // Check customer name in pdf
-            const customerExist = await files.isTextInPDF(filePath, orderInformation.customer.slice(3));
+            const customerExist = await utilsFile.isTextInPDF(filePath, orderInformation.customer.slice(3));
             expect(customerExist, `Customer name '${orderInformation.customer}' does not exist in invoice`)
               .to.eq(true);
 
             // Check total paid in pdf
-            const totalPaidExist = await files.isTextInPDF(filePath, orderInformation.totalPaid);
+            const totalPaidExist = await utilsFile.isTextInPDF(filePath, orderInformation.totalPaid);
             expect(totalPaidExist, `Total paid '${orderInformation.totalPaid}' does not exist in invoice`)
               .to.eq(true);
           });
@@ -201,7 +201,7 @@ describe('BO - orders : Update order status', async () => {
 
             filePath = await ordersPage.downloadDeliverySlip(page, 1);
 
-            const doesFileExist = await files.doesFileExist(filePath, 5000);
+            const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
             expect(doesFileExist).to.eq(true);
           });
 
@@ -212,23 +212,23 @@ describe('BO - orders : Update order status', async () => {
             const orderInformation = await ordersPage.getOrderFromTable(page, 1);
 
             // Check Reference in pdf
-            const referenceExist = await files.isTextInPDF(filePath, orderInformation.reference);
+            const referenceExist = await utilsFile.isTextInPDF(filePath, orderInformation.reference);
 
             expect(referenceExist, `Reference '${orderInformation.reference}' does not exist in delivery slip`)
               .to.eq(true);
 
             // Check country name in delivery Address in pdf
-            const deliveryExist = await files.isTextInPDF(filePath, orderInformation.delivery);
+            const deliveryExist = await utilsFile.isTextInPDF(filePath, orderInformation.delivery);
             expect(deliveryExist, `Country name '${orderInformation.delivery}' does not exist in delivery slip`)
               .to.eq(true);
 
             // Check customer name in pdf
-            const customerExist = await files.isTextInPDF(filePath, orderInformation.customer.slice(3));
+            const customerExist = await utilsFile.isTextInPDF(filePath, orderInformation.customer.slice(3));
             expect(customerExist, `Country name '${orderInformation.customer}' does not exist in delivery slip`)
               .to.eq(true);
 
             // Check total paid in pdf
-            const totalPaidExist = await files.isTextInPDF(filePath, orderInformation.totalPaid);
+            const totalPaidExist = await utilsFile.isTextInPDF(filePath, orderInformation.totalPaid);
             expect(totalPaidExist, `Total paid '${orderInformation.totalPaid}' does not exist in delivery slip`)
               .to.eq(true);
           });

@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -19,6 +17,8 @@ import {
   boDashboardPage,
   dataCategories,
   dataModules,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_facetedsearch_installation_uninstallAndDeleteModule';
@@ -29,13 +29,13 @@ describe('Faceted search module - Uninstall and delete module', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('module.zip');
+    await utilsPlaywright.closeBrowserContext(browserContext);
+    await utilsFile.deleteFile('module.zip');
   });
 
   it('should login in BO', async function () {
@@ -75,7 +75,7 @@ describe('Faceted search module - Uninstall and delete module', async () => {
     const isModalVisible = await moduleManagerPage.isModalActionVisible(page, dataModules.psFacetedSearch, 'uninstall');
     expect(isModalVisible).to.eq(false);
 
-    const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psFacetedSearch.tag}/`);
+    const dirExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/modules/${dataModules.psFacetedSearch.tag}/`);
     expect(dirExists).to.eq(true);
   });
 
@@ -86,7 +86,7 @@ describe('Faceted search module - Uninstall and delete module', async () => {
     expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.psFacetedSearch.tag));
 
     // Check the directory `modules/dataModules.psFacetedSearch.tag`
-    const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psFacetedSearch.tag}/`);
+    const dirExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/modules/${dataModules.psFacetedSearch.tag}/`);
     expect(dirExists).to.eq(false);
   });
 
@@ -129,9 +129,9 @@ describe('Faceted search module - Uninstall and delete module', async () => {
     it(`should download the zip of the module '${dataModules.psFacetedSearch.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadModule', baseContext);
 
-      await files.downloadFile(dataModules.psFacetedSearch.releaseZip, 'module.zip');
+      await utilsFile.downloadFile(dataModules.psFacetedSearch.releaseZip, 'module.zip');
 
-      const found = await files.doesFileExist('module.zip');
+      const found = await utilsFile.doesFileExist('module.zip');
       expect(found).to.eq(true);
     });
 

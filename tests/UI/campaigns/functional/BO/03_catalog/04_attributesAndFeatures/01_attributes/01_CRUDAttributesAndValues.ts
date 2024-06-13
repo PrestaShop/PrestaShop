@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -18,6 +16,8 @@ import {
   boDashboardPage,
   FakerAttribute,
   FakerAttributeValue,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_attributes_CRUDAttributesAndValues';
@@ -49,24 +49,24 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create needed files
     await Promise.all([
-      files.createFile('./', valuesToCreate[0].textureFileName, 'text'),
-      files.createFile('./', valuesToCreate[1].textureFileName, 'text'),
-      files.createFile('./', updateValueData.textureFileName, 'text'),
+      utilsFile.createFile('./', valuesToCreate[0].textureFileName, 'text'),
+      utilsFile.createFile('./', valuesToCreate[1].textureFileName, 'text'),
+      utilsFile.createFile('./', updateValueData.textureFileName, 'text'),
     ]);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     await Promise.all([
-      files.deleteFile(valuesToCreate[0].textureFileName),
-      files.deleteFile(valuesToCreate[1].textureFileName),
-      files.deleteFile(updateValueData.textureFileName),
+      utilsFile.deleteFile(valuesToCreate[0].textureFileName),
+      utilsFile.deleteFile(valuesToCreate[1].textureFileName),
+      utilsFile.deleteFile(updateValueData.textureFileName),
     ]);
   });
 

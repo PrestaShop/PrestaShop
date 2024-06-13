@@ -1,7 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -33,6 +30,9 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  utilsDate,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -60,7 +60,7 @@ describe('FO - Account : Check order return PDF', async () => {
   let filePath: string|null;
   let fileName: string = '#RE0000';
 
-  const today: string = date.getDateFormat('mm/dd/yyyy');
+  const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
   // New order by customer data
   const orderData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
@@ -81,12 +81,12 @@ describe('FO - Account : Check order return PDF', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe(`Change the created orders status to '${dataOrderStatuses.shipped.name}'`, async () => {
@@ -400,21 +400,21 @@ describe('FO - Account : Check order return PDF', async () => {
 
         filePath = await foMerchandiseReturnsPage.downloadReturnForm(page, 1);
 
-        const found = await files.doesFileExist(filePath);
+        const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'PDF file was not downloaded').to.eq(true);
       });
 
       it('should check the PDF Header ', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkReturnFileName', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, `ORDER RETURN,,${today},,${fileName},,`);
+        const isVisible = await utilsFile.isTextInPDF(filePath, `ORDER RETURN,,${today},,${fileName},,`);
         expect(isVisible, 'The order return file name is not correct!').to.eq(true);
       });
 
       it('should check the Billing & delivery address', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, `Billing & Delivery Address,,${dataCustomers.johnDoe.firstName}`
+        const isVisible = await utilsFile.isTextInPDF(filePath, `Billing & Delivery Address,,${dataCustomers.johnDoe.firstName}`
           + ` ${dataCustomers.johnDoe.lastName},${dataAddresses.address_2.company},${dataAddresses.address_2.address},`
           + `${dataAddresses.address_2.secondAddress},${dataAddresses.address_2.postalCode} ${dataAddresses.address_2.city}`
           + `,${dataAddresses.address_2.country},${dataAddresses.address_2.phone},,`);
@@ -425,7 +425,7 @@ describe('FO - Account : Check order return PDF', async () => {
       it('should check the number of returned days', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkReturnedDays', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'We have logged your return request.,Your package must '
+        const isVisible = await utilsFile.isTextInPDF(filePath, 'We have logged your return request.,Your package must '
           + 'be returned to us within 14 days of receiving your order.');
         expect(isVisible, 'returned days number is not correct!').to.eq(true);
       });
@@ -433,7 +433,7 @@ describe('FO - Account : Check order return PDF', async () => {
       it('should check the returned product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkReturnedProduct', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Items to be returned, ,Reference, ,Qty,,'
+        const isVisible = await utilsFile.isTextInPDF(filePath, 'Items to be returned, ,Reference, ,Qty,,'
           + `${dataProducts.demo_1.name} (Size: S - Color: White), ,${dataProducts.demo_1.reference}, ,1`);
 
         expect(isVisible, 'returned product list is not correct!').to.eq(true);

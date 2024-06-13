@@ -1,6 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -20,6 +18,8 @@ import {
   boDashboardPage,
   dataCarriers,
   dataCustomers,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -45,12 +45,12 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -188,7 +188,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
 
         if (test.args.sortBy === 'Price') {
           const sortedCarriers = await foCheckoutPage.getAllCarriersPrices(page);
-          const expectedResult = await basicHelper.sortArray(sortedCarriers);
+          const expectedResult = await utilsCore.sortArray(sortedCarriers);
 
           if (test.args.orderBy === 'Ascending') {
             expect(sortedCarriers).to.deep.equal(expectedResult);

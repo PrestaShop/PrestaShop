@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -11,7 +9,11 @@ import customersPage from '@pages/BO/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customers_customers_exportCustomers';
 
@@ -28,12 +30,12 @@ describe('BO - Customers - Customers : Export customers', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -65,7 +67,7 @@ describe('BO - Customers - Customers : Export customers', async () => {
 
     filePath = await customersPage.exportDataToCsv(page);
 
-    const doesFileExist = await files.doesFileExist(filePath, 5000);
+    const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
     expect(doesFileExist, 'Export of data has failed').to.eq(true);
   });
 
@@ -76,7 +78,7 @@ describe('BO - Customers - Customers : Export customers', async () => {
 
     for (let row: number = 1; row <= numberOfCustomers; row++) {
       const customerInCsvFormat = await customersPage.getCustomerInCsvFormat(page, row);
-      const textExist = await files.isTextInFile(filePath, customerInCsvFormat, true);
+      const textExist = await utilsFile.isTextInFile(filePath, customerInCsvFormat, true);
       expect(textExist, `${customerInCsvFormat} was not found in the file`).to.eq(true);
     }
   });

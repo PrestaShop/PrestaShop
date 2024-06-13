@@ -1,7 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -14,8 +11,10 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
-  // Import data
   dataOrderStatuses,
+  utilsDate,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -29,17 +28,17 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
   let page: Page;
   let filePath: string|null;
 
-  const todayDate: string = date.getDateFormat('yyyy-mm-dd');
-  const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
+  const todayDate: string = utilsDate.getDateFormat('yyyy-mm-dd');
+  const futureDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'future');
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -106,7 +105,7 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       // Generate PDF
       filePath = await invoicesPage.generatePDFByDateAndDownload(page, todayDate, todayDate);
 
-      const exist = await files.doesFileExist(filePath);
+      const exist = await utilsFile.doesFileExist(filePath);
       expect(exist, 'File does not exist').to.eq(true);
     });
 

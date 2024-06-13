@@ -2,8 +2,6 @@ import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 
 // Import utils
-import helper from '@utils/helpers';
-import basicHelper from '@utils/basicHelper';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -18,6 +16,8 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {
   boDashboardPage,
   FakerProduct,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_productsBO_CRUDVirtualProduct';
@@ -46,12 +46,12 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Create product', async () => {
@@ -173,7 +173,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
 
-      const taxValue = await basicHelper.percentage(editProductData.priceTaxExcluded, 10);
+      const taxValue = await utilsCore.percentage(editProductData.priceTaxExcluded, 10);
 
       const result = await foProductPage.getProductInformation(page);
       await Promise.all([

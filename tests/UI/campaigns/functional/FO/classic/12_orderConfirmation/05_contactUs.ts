@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -27,6 +25,8 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerContactMessage,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -60,22 +60,22 @@ describe('FO - Order confirmation : Contact us', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create a file for upload in the "contact us" form
     await Promise.all([
-      files.createFile('.', filename, `test ${filename}`),
+      utilsFile.createFile('.', filename, `test ${filename}`),
     ]);
   });
 
   after(async () => {
     // Delete created file
     await Promise.all([
-      files.deleteFile(filename),
+      utilsFile.deleteFile(filename),
     ]);
 
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Go to shop FO and make a order', async () => {

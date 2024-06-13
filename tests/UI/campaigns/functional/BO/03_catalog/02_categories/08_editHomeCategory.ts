@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -21,6 +19,8 @@ import {
   boDashboardPage,
   dataCategories,
   FakerCategory,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_categories_editHomeCategory';
@@ -35,16 +35,16 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create category image
-    await files.generateImage(`${editCategoryData.name}.jpg`);
+    await utilsFile.generateImage(`${editCategoryData.name}.jpg`);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
-    await files.deleteFile(`${editCategoryData.name}.jpg`);
+    await utilsPlaywright.closeBrowserContext(browserContext);
+    await utilsFile.deleteFile(`${editCategoryData.name}.jpg`);
   });
 
   it('should login in BO', async function () {

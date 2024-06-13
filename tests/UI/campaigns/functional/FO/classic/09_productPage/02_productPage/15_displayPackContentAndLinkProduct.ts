@@ -1,6 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
@@ -12,6 +10,8 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_displayPackContentAndLinkProduct';
@@ -22,12 +22,12 @@ describe('FO - Product Page : Display pack content and link to product', async (
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should go to FO home page', async function () {
@@ -70,7 +70,7 @@ describe('FO - Product Page : Display pack content and link to product', async (
     await Promise.all([
       expect(product1.name).to.equals(
         `${dataProducts.demo_7.name} `
-        + `${basicHelper.capitalize(dataProducts.demo_7.attributes[0].name)}-${dataProducts.demo_7.attributes[0].values[0]}`,
+        + `${utilsCore.capitalize(dataProducts.demo_7.attributes[0].name)}-${dataProducts.demo_7.attributes[0].values[0]}`,
       ),
       expect(product1.price).to.equals(`€${dataProducts.demo_7.price.toFixed(2)}`),
       expect(product1.quantity).to.equals(5),

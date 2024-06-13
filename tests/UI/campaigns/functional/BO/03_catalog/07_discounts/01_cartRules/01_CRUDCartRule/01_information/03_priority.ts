@@ -1,6 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -21,6 +19,8 @@ import {
   boDashboardPage,
   dataProducts,
   FakerCartRule,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_information_priority';
@@ -37,8 +37,8 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
   let browserContext: BrowserContext;
   let page: Page;
 
-  const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
-  const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
+  const pastDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'past');
+  const futureDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'future');
   const cartRulePriority2: FakerCartRule = new FakerCartRule({
     name: 'cartRulePriority2',
     priority: 2,
@@ -68,12 +68,12 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {

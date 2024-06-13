@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -17,6 +14,9 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerSupplier,
+  utilsCore,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_suppliers_paginationSortAndBulkActions';
@@ -35,12 +35,12 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -79,7 +79,7 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
     const creationTests: number[] = new Array(11).fill(0, 0, 11);
     creationTests.forEach((test: number, index: number) => {
       const createSupplierData: FakerSupplier = new FakerSupplier({name: `todelete${index}`});
-      before(() => files.generateImage(createSupplierData.logo));
+      before(() => utilsFile.generateImage(createSupplierData.logo));
 
       it('should go to add new supplier page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewSupplierPage${index}`, baseContext);
@@ -100,7 +100,7 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
         expect(numberOfSuppliersAfterCreation).to.be.equal(numberOfSuppliers + 1 + index);
       });
 
-      after(() => files.deleteFile(createSupplierData.logo));
+      after(() => utilsFile.deleteFile(createSupplierData.logo));
     });
   });
 
@@ -180,7 +180,7 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
             const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
             const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-            const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+            const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
             if (test.args.sortDirection === 'asc') {
               expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -188,7 +188,7 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
               expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
             }
           } else {
-            const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+            const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
             if (test.args.sortDirection === 'asc') {
               expect(sortedTable).to.deep.equal(expectedResult);

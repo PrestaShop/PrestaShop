@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -20,6 +17,9 @@ import {
   boDashboardPage,
   FakerCategory,
   FakerProduct,
+  utilsCore,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_imageGenerationOnCreation';
@@ -49,8 +49,8 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     await Promise.all([
       productData.coverImage,
@@ -59,13 +59,13 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
       categoryData.thumbnailImage,
     ].map(async (image: string|null) => {
       if (image) {
-        await files.generateImage(image);
+        await utilsFile.generateImage(image);
       }
     }));
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     await Promise.all([
       productData.coverImage,
@@ -74,7 +74,7 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
       categoryData.thumbnailImage,
     ].map(async (image: string|null) => {
       if (image) {
-        await files.deleteFile(image);
+        await utilsFile.deleteFile(image);
       }
     }));
   });
@@ -192,7 +192,7 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
     it('should check the product header details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductHeaderDetails', baseContext);
 
-      const taxValue = await basicHelper.percentage(productData.priceTaxExcluded, productData.tax);
+      const taxValue = await utilsCore.percentage(productData.priceTaxExcluded, productData.tax);
 
       const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
       await Promise.all([
@@ -225,17 +225,17 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
 
       const pathProductId: string = pathProductIdSplitted.join('/');
 
-      const fileJpegExists = await files.doesFileExist(`${files.getRootPath()}/img/p/${pathProductId}/${idProduct}.jpg`);
+      const fileJpegExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/img/p/${pathProductId}/${idProduct}.jpg`);
       expect(fileJpegExists, 'File doesn\'t exist!').to.eq(true);
 
       await Promise.all(imageTypeProducts.map(async (imageTypeName: string) => {
-        const fileJpegExists = await files.doesFileExist(
-          `${files.getRootPath()}/img/p/${pathProductId}/${idProduct}-${imageTypeName}.jpg`,
+        const fileJpegExists = await utilsFile.doesFileExist(
+          `${utilsFile.getRootPath()}/img/p/${pathProductId}/${idProduct}-${imageTypeName}.jpg`,
         );
         expect(fileJpegExists, 'File doesn\'t exist!').to.eq(true);
 
-        const fileWebpExists = await files.doesFileExist(
-          `${files.getRootPath()}/img/p/${pathProductId}/${idProduct}-${imageTypeName}.webp`,
+        const fileWebpExists = await utilsFile.doesFileExist(
+          `${utilsFile.getRootPath()}/img/p/${pathProductId}/${idProduct}-${imageTypeName}.webp`,
         );
         expect(fileWebpExists, 'File doesn\'t exist!').to.eq(true);
       }));
@@ -297,21 +297,21 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
       this.skip();
 
       // Category Image
-      const categoryImageExists = await files.doesFileExist(`${files.getRootPath()}/img/c/${idCategory}.jpg`);
+      const categoryImageExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/img/c/${idCategory}.jpg`);
       expect(categoryImageExists, `File ${idCategory}.jpg doesn't exist!`).to.eq(true);
 
       // Thumnbail Image
-      const thumbnailImageExists = await files.doesFileExist(`${files.getRootPath()}/img/c/${idCategory}_thumb.jpg`);
+      const thumbnailImageExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/img/c/${idCategory}_thumb.jpg`);
       expect(thumbnailImageExists, `File ${idCategory}.jpg doesn't exist!`).to.eq(true);
 
       await Promise.all(imageTypeCategories.map(async (imageTypeName: string) => {
-        const fileJpegExists = await files.doesFileExist(
-          `${files.getRootPath()}/img/c/${idCategory}-${imageTypeName}.jpg`,
+        const fileJpegExists = await utilsFile.doesFileExist(
+          `${utilsFile.getRootPath()}/img/c/${idCategory}-${imageTypeName}.jpg`,
         );
         expect(fileJpegExists, `File ${idCategory}-${imageTypeName}.jpg doesn't exist!`).to.eq(true);
 
-        const fileWebpExists = await files.doesFileExist(
-          `${files.getRootPath()}/img/c/${idCategory}-${imageTypeName}.webp`,
+        const fileWebpExists = await utilsFile.doesFileExist(
+          `${utilsFile.getRootPath()}/img/c/${idCategory}-${imageTypeName}.webp`,
         );
         expect(fileWebpExists, `File ${idCategory}-${imageTypeName}.webp doesn't exist!`).to.eq(true);
       }));

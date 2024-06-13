@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import {expect} from 'chai';
 import testContext from '@utils/testContext';
 
@@ -15,6 +12,9 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataEmployees,
+  utilsCore,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
@@ -32,16 +32,16 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfLogs: number = 0;
-  const today = date.getDateFormat('mm/dd/yyyy');
+  const today = utilsDate.getDateFormat('mm/dd/yyyy');
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -372,7 +372,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -380,7 +380,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);

@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import basicHelper from '@utils/basicHelper';
 
 // Import commonTests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
@@ -25,6 +23,8 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -59,12 +59,12 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('BO : Create cart rule', async () => {
@@ -195,7 +195,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
 
       const total = dataProducts.demo_8.finalPrice + dataProducts.demo_1.finalPrice + dataProducts.demo_3.finalPrice;
 
-      const discount = await basicHelper.percentage(total, newCartRuleData.discountPercent!);
+      const discount = await utilsCore.percentage(total, newCartRuleData.discountPercent!);
 
       const discountValue = await cartPage.getDiscountValue(page);
       expect(discountValue).to.eq(-discount.toFixed(2));
@@ -215,7 +215,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
 
       const total = dataProducts.demo_8.finalPrice + dataProducts.demo_3.finalPrice;
 
-      const discount = await basicHelper.percentage(total, newCartRuleData.discountPercent!);
+      const discount = await utilsCore.percentage(total, newCartRuleData.discountPercent!);
 
       const discountValue = await cartPage.getDiscountValue(page);
       expect(discountValue).to.eq(-discount.toFixed(2));

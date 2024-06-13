@@ -1,6 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -16,6 +14,8 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -64,12 +64,12 @@ describe('BO - Orders : Pagination of orders table', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Pagination next and previous', async () => {
@@ -139,7 +139,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
       sortedTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
       const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+      const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
       expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
     });
 
@@ -200,7 +200,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
       sortedTable = await ordersPage.getAllRowsColumnContent(page, 'id_order');
       const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+      const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
       expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
     });
 

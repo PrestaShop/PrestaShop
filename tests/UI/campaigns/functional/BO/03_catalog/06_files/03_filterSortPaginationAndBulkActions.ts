@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -16,6 +13,9 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerFile,
+  utilsCore,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_files_filterSortPaginationAndBulkActions';
@@ -34,12 +34,12 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -67,7 +67,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
     const creationTests: number[] = new Array(11).fill(0, 0, 11);
     creationTests.forEach((test: number, index: number) => {
       const createFileData: FakerFile = new FakerFile({name: `todelete${index}`});
-      before(() => files.createFile('.', createFileData.filename, `test ${createFileData.filename}`));
+      before(() => utilsFile.createFile('.', createFileData.filename, `test ${createFileData.filename}`));
 
       it('should go to new file page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewFilePage${index}`, baseContext);
@@ -88,7 +88,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
         expect(numberOfFilesAfterCreation).to.be.equal(numberOfFiles + 1 + index);
       });
 
-      after(() => files.deleteFile(createFileData.filename));
+      after(() => utilsFile.deleteFile(createFileData.filename));
     });
   });
   // 2 : Filter files table
@@ -214,7 +214,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
             const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
             const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-            const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+            const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
             if (test.args.sortDirection === 'asc') {
               expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -222,7 +222,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
               expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
             }
           } else {
-            const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+            const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
             if (test.args.sortDirection === 'asc') {
               expect(sortedTable).to.deep.equal(expectedResult);

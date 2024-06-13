@@ -1,7 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
-import mailHelper from '@utils/mailHelper';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -17,6 +14,9 @@ import {
   boDashboardPage,
   type MailDev,
   type MailDevEmail,
+  utilsFile,
+  utilsMail,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_import_importFile';
@@ -36,12 +36,12 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Start listening to maildev server
-    mailListener = mailHelper.createMailListener();
-    mailHelper.startListener(mailListener);
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
 
     // Handle every new email
     mailListener.on('new', (email: MailDevEmail) => {
@@ -50,13 +50,13 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
     // Delete downloaded csv files
-    await files.deleteFile(firstFile);
-    await files.deleteFile(secondFile);
+    await utilsFile.deleteFile(firstFile);
+    await utilsFile.deleteFile(secondFile);
 
     // Stop listening to maildev server
-    mailHelper.stopListener(mailListener);
+    utilsMail.stopListener(mailListener);
   });
 
   describe('Import : Import file', async () => {
@@ -84,14 +84,14 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
 
         filePath = await importPage.downloadSampleFile(page, 'alias_import');
 
-        const doesFileExist = await files.doesFileExist(filePath);
+        const doesFileExist = await utilsFile.doesFileExist(filePath);
         expect(doesFileExist, 'alias_import sample file was not downloaded').to.be.eq(true);
       });
 
       it('should upload the file', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
 
-        await files.renameFile(filePath, 'alias.csv');
+        await utilsFile.renameFile(filePath, 'alias.csv');
 
         const uploadSuccessText = await importPage.uploadImportFile(page, 'Alias', firstFile);
         expect(uploadSuccessText).to.contains(firstFile);
@@ -140,14 +140,14 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
 
         secondFilePath = await importPage.downloadSampleFile(page, 'suppliers_import');
 
-        const doesFileExist = await files.doesFileExist(secondFilePath);
+        const doesFileExist = await utilsFile.doesFileExist(secondFilePath);
         expect(doesFileExist, 'suppliers sample file was not downloaded').to.be.eq(true);
       });
 
       it('should upload the file', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'importFile2', baseContext);
 
-        await files.renameFile(secondFilePath, 'suppliers.csv');
+        await utilsFile.renameFile(secondFilePath, 'suppliers.csv');
 
         const uploadSuccessText = await importPage.uploadImportFile(page, 'Suppliers', secondFile);
         expect(uploadSuccessText).contain('suppliers.csv');

@@ -1,7 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
-import mailHelper from '@utils/mailHelper';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -29,6 +26,9 @@ import {
   FakerOrder,
   type MailDev,
   type MailDevEmail,
+  utilsDate,
+  utilsMail,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -65,7 +65,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   let newMail: MailDevEmail;
   let mailListener: MailDev;
 
-  const today: string = date.getDateFormat('mm/dd/yyyy');
+  const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
   const orderNote: string = 'Test order note';
   const addressData: FakerAddress = new FakerAddress({country: 'France'});
   const customerData: FakerCustomer = new FakerCustomer({password: ''});
@@ -113,12 +113,12 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Start listening to maildev server
-    mailListener = mailHelper.createMailListener();
-    mailHelper.startListener(mailListener);
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
 
     // Handle every new email
     mailListener.on('new', (email: MailDevEmail) => {
@@ -127,10 +127,10 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     // Stop listening to maildev server
-    mailHelper.stopListener(mailListener);
+    utilsMail.stopListener(mailListener);
   });
 
   // 1 - Go to view order page

@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -21,6 +18,9 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   type CategoryFilter,
+  utilsCore,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_monitoring_sortPaginationAndBulkDelete_emptyCategories';
@@ -50,16 +50,16 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
     // Create csv file with all data
-    await files.createCSVFile('.', fileName, ImportCategories);
+    await utilsFile.createCSVFile('.', fileName, ImportCategories);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
     // Delete file
-    await files.deleteFile(fileName);
+    await utilsFile.deleteFile(fileName);
   });
 
   // 1 - Sort list of empty categories
@@ -131,7 +131,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
             const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
             const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-            const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+            const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
             if (test.args.sortDirection === 'asc') {
               expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -139,7 +139,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
               expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
             }
           } else {
-            const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+            const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
             if (test.args.sortDirection === 'asc') {
               expect(sortedTable).to.deep.equal(expectedResult);

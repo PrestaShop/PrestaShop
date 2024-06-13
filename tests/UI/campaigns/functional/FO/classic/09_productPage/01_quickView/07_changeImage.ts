@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import common tests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
@@ -15,6 +13,8 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   FakerProduct,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_quickView_changeImage';
@@ -46,16 +46,16 @@ describe('FO - Product page - Quick view : Change image', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-    await files.generateImage(productWith2Images.coverImage!);
-    await files.generateImage(productWith2Images.thumbImage!);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
+    await utilsFile.generateImage(productWith2Images.coverImage!);
+    await utilsFile.generateImage(productWith2Images.thumbImage!);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
-    await files.deleteFile(productWith2Images.coverImage!);
-    await files.deleteFile(productWith2Images.thumbImage!);
+    await utilsPlaywright.closeBrowserContext(browserContext);
+    await utilsFile.deleteFile(productWith2Images.coverImage!);
+    await utilsFile.deleteFile(productWith2Images.thumbImage!);
   });
 
   describe('Change image', async () => {

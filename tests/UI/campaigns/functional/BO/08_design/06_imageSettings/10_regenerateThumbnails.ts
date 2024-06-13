@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -14,6 +12,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   type ImageTypeRegenerationSpecific,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_regenerateThumbnails';
@@ -68,22 +68,22 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
     products: [],
     stores: [],
   };
-  const supplierImage: string = `${files.getRootPath()}/img/su/1.jpg`;
+  const supplierImage: string = `${utilsFile.getRootPath()}/img/su/1.jpg`;
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create image
-    await files.generateImage(supplierImage);
+    await utilsFile.generateImage(supplierImage);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     // Delete image
-    await files.deleteFile(supplierImage);
+    await utilsFile.deleteFile(supplierImage);
   });
 
   describe('Regenerate thumbnail - BackOffice', async () => {
@@ -137,32 +137,32 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
       it('should delete all images excepted original', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${arg.type}DeleteAllImages`, baseContext);
 
-        await files.deleteFilePattern(`${files.getRootPath()}/img/${arg.directory}/`, /[0-9]+-[A-Za-z0-9_]+.jpg/);
-        await files.deleteFilePattern(`${files.getRootPath()}/img/${arg.directory}/`, /[0-9]+-[A-Za-z0-9_]+.webp/);
+        await utilsFile.deleteFilePattern(`${utilsFile.getRootPath()}/img/${arg.directory}/`, /[0-9]+-[A-Za-z0-9_]+.jpg/);
+        await utilsFile.deleteFilePattern(`${utilsFile.getRootPath()}/img/${arg.directory}/`, /[0-9]+-[A-Za-z0-9_]+.webp/);
 
-        const searchedFilesJpeg = await files.getFilesPattern(
-          `${files.getRootPath()}/img/${arg.directory}/`,
+        const searchedFilesJpeg = await utilsFile.getFilesPattern(
+          `${utilsFile.getRootPath()}/img/${arg.directory}/`,
           /[0-9]+-[A-Za-z0-9_]+.jpg/,
         );
         expect(searchedFilesJpeg.length).to.eq(0);
 
-        const searchedFilesWebp = await files.getFilesPattern(
-          `${files.getRootPath()}/img/${arg.directory}/`,
+        const searchedFilesWebp = await utilsFile.getFilesPattern(
+          `${utilsFile.getRootPath()}/img/${arg.directory}/`,
           /[0-9]+-[A-Za-z0-9_]+.webp/,
         );
         expect(searchedFilesWebp.length).to.eq(0);
 
         await Promise.all(formats[arg.type].map(async (format: string) => {
-          const formatFilesJpeg = await files.getFilesPattern(
-            `${files.getRootPath()}/img/${arg.directory}/`,
+          const formatFilesJpeg = await utilsFile.getFilesPattern(
+            `${utilsFile.getRootPath()}/img/${arg.directory}/`,
             new RegExp(`^[0-9]+-${format}\\.jpg$`),
           );
           expect(formatFilesJpeg.length).to.eq(
             0,
             `The number of files (${formatFilesJpeg.length}) for format ${format} is not equals to 0`,
           );
-          const formatFilesWebp = await files.getFilesPattern(
-            `${files.getRootPath()}/img/${arg.directory}/`,
+          const formatFilesWebp = await utilsFile.getFilesPattern(
+            `${utilsFile.getRootPath()}/img/${arg.directory}/`,
             new RegExp(`^[0-9]+-${format}\\.webp$`),
           );
           expect(formatFilesWebp.length).to.eq(
@@ -189,12 +189,15 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
       it('should check that images have been regenerated', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${arg.type}CheckImagesRegenerated`, baseContext);
 
-        const jpgOriginalFiles = await files.getFilesPattern(`${files.getRootPath()}/img/${arg.directory}/`, /^[0-9]+\.jpg$/);
+        const jpgOriginalFiles = await utilsFile.getFilesPattern(
+          `${utilsFile.getRootPath()}/img/${arg.directory}/`,
+          /^[0-9]+\.jpg$/,
+        );
         expect(jpgOriginalFiles.length).to.gt(0);
 
         await Promise.all(formats[arg.type].map(async (format: string) => {
-          const formatFilesJpeg = await files.getFilesPattern(
-            `${files.getRootPath()}/img/${arg.directory}/`,
+          const formatFilesJpeg = await utilsFile.getFilesPattern(
+            `${utilsFile.getRootPath()}/img/${arg.directory}/`,
             new RegExp(`^[0-9]+-${format}\\.jpg$`),
           );
           expect(formatFilesJpeg.length).to.eq(
@@ -202,8 +205,8 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
             `The number of files (${formatFilesJpeg.length}) for format ${format} is not equals to ${jpgOriginalFiles.length}`,
           );
 
-          const formatFilesWebp = await files.getFilesPattern(
-            `${files.getRootPath()}/img/${arg.directory}/`,
+          const formatFilesWebp = await utilsFile.getFilesPattern(
+            `${utilsFile.getRootPath()}/img/${arg.directory}/`,
             new RegExp(`^[0-9]+-${format}\\.webp$`),
           );
           expect(formatFilesWebp.length).to.eq(
@@ -220,24 +223,24 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'allDeleteAllImages', baseContext);
 
       await Promise.all(imageTypes.map(async (imageType: testImageType) => {
-        await files.deleteFilePattern(`${files.getRootPath()}/img/${imageType.directory}/`, /[0-9]+-[A-Za-z0-9_]+.jpg/);
-        await files.deleteFilePattern(`${files.getRootPath()}/img/${imageType.directory}/`, /[0-9]+-[A-Za-z0-9_]+.webp/);
+        await utilsFile.deleteFilePattern(`${utilsFile.getRootPath()}/img/${imageType.directory}/`, /[0-9]+-[A-Za-z0-9_]+.jpg/);
+        await utilsFile.deleteFilePattern(`${utilsFile.getRootPath()}/img/${imageType.directory}/`, /[0-9]+-[A-Za-z0-9_]+.webp/);
 
-        const searchedFilesJpeg = await files.getFilesPattern(
-          `${files.getRootPath()}/img/${imageType.directory}/`,
+        const searchedFilesJpeg = await utilsFile.getFilesPattern(
+          `${utilsFile.getRootPath()}/img/${imageType.directory}/`,
           /[0-9]+-[A-Za-z0-9_]+.jpg/,
         );
         expect(searchedFilesJpeg.length).to.eq(0);
 
-        const searchedFilesWebp = await files.getFilesPattern(
-          `${files.getRootPath()}/img/${imageType.directory}/`,
+        const searchedFilesWebp = await utilsFile.getFilesPattern(
+          `${utilsFile.getRootPath()}/img/${imageType.directory}/`,
           /[0-9]+-[A-Za-z0-9_]+.webp/,
         );
         expect(searchedFilesWebp.length).to.eq(0);
 
         await Promise.all(formats[imageType.type].map(async (format: string) => {
-          const formatFilesJpeg = await files.getFilesPattern(
-            `${files.getRootPath()}/img/${imageType.directory}/`,
+          const formatFilesJpeg = await utilsFile.getFilesPattern(
+            `${utilsFile.getRootPath()}/img/${imageType.directory}/`,
             new RegExp(`^[0-9]+-${format}\\.jpg$`),
           );
           expect(formatFilesJpeg.length).to.eq(
@@ -245,8 +248,8 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
             `The number of files (${formatFilesJpeg.length}) for format ${format} is not equals to 0`,
           );
 
-          const formatFilesWebp = await files.getFilesPattern(
-            `${files.getRootPath()}/img/${imageType.directory}/`,
+          const formatFilesWebp = await utilsFile.getFilesPattern(
+            `${utilsFile.getRootPath()}/img/${imageType.directory}/`,
             new RegExp(`^[0-9]+-${format}\\.webp$`),
           );
           expect(formatFilesWebp.length).to.eq(
@@ -275,15 +278,15 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'allCheckImagesRegenerated', baseContext);
 
       await Promise.all(imageTypes.map(async (imageType: testImageType) => {
-        const jpgOriginalFiles = await files.getFilesPattern(
-          `${files.getRootPath()}/img/${imageType.directory}/`,
+        const jpgOriginalFiles = await utilsFile.getFilesPattern(
+          `${utilsFile.getRootPath()}/img/${imageType.directory}/`,
           /^[0-9]+\.jpg$/,
         );
         expect(jpgOriginalFiles.length).to.gt(0);
 
         await Promise.all(formats[imageType.type].map(async (format: string) => {
-          const formatFilesJpeg = await files.getFilesPattern(
-            `${files.getRootPath()}/img/${imageType.directory}/`,
+          const formatFilesJpeg = await utilsFile.getFilesPattern(
+            `${utilsFile.getRootPath()}/img/${imageType.directory}/`,
             new RegExp(`^[0-9]+-${format}\\.jpg$`),
           );
           expect(formatFilesJpeg.length).to.eq(
@@ -291,8 +294,8 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
             `The number of files (${formatFilesJpeg.length}) for format ${format} is not equals to ${jpgOriginalFiles.length}`,
           );
 
-          const formatFilesWebp = await files.getFilesPattern(
-            `${files.getRootPath()}/img/${imageType.directory}/`,
+          const formatFilesWebp = await utilsFile.getFilesPattern(
+            `${utilsFile.getRootPath()}/img/${imageType.directory}/`,
             new RegExp(`^[0-9]+-${format}\\.jpg$`),
           );
           expect(formatFilesWebp.length).to.eq(
@@ -308,24 +311,24 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
     it('should delete all images excepted original', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'specificCategoryDeleteAllImages', baseContext);
 
-      await files.deleteFilePattern(`${files.getRootPath()}/img/c/`, /[0-9]+-[A-Za-z0-9_]+.jpg/);
-      await files.deleteFilePattern(`${files.getRootPath()}/img/c/`, /[0-9]+-[A-Za-z0-9_]+.webp/);
+      await utilsFile.deleteFilePattern(`${utilsFile.getRootPath()}/img/c/`, /[0-9]+-[A-Za-z0-9_]+.jpg/);
+      await utilsFile.deleteFilePattern(`${utilsFile.getRootPath()}/img/c/`, /[0-9]+-[A-Za-z0-9_]+.webp/);
 
-      const searchedFilesJpeg = await files.getFilesPattern(
-        `${files.getRootPath()}/img/c/`,
+      const searchedFilesJpeg = await utilsFile.getFilesPattern(
+        `${utilsFile.getRootPath()}/img/c/`,
         /[0-9]+-[A-Za-z0-9_]+.jpg/,
       );
       expect(searchedFilesJpeg.length).to.eq(0);
 
-      const searchedFilesWebp = await files.getFilesPattern(
-        `${files.getRootPath()}/img/c/`,
+      const searchedFilesWebp = await utilsFile.getFilesPattern(
+        `${utilsFile.getRootPath()}/img/c/`,
         /[0-9]+-[A-Za-z0-9_]+.webp/,
       );
       expect(searchedFilesWebp.length).to.eq(0);
 
       await Promise.all(formats.categories.map(async (format: string) => {
-        const formatFilesJpeg = await files.getFilesPattern(
-          `${files.getRootPath()}/img/c/`,
+        const formatFilesJpeg = await utilsFile.getFilesPattern(
+          `${utilsFile.getRootPath()}/img/c/`,
           new RegExp(`^[0-9]+-${format}\\.jpg$`),
         );
         expect(formatFilesJpeg.length).to.eq(
@@ -333,8 +336,8 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
           `The number of files (${formatFilesJpeg.length}) for format ${format} is not equals to 0`,
         );
 
-        const formatFilesWebp = await files.getFilesPattern(
-          `${files.getRootPath()}/img/c/`,
+        const formatFilesWebp = await utilsFile.getFilesPattern(
+          `${utilsFile.getRootPath()}/img/c/`,
           new RegExp(`^[0-9]+-${format}\\.webp$`),
         );
         expect(formatFilesWebp.length).to.eq(
@@ -361,15 +364,15 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
     it('should check that images have been regenerated', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'specificCategoryCheckImagesRegenerated', baseContext);
 
-      const jpgOriginalFiles = await files.getFilesPattern(
-        `${files.getRootPath()}/img/c`,
+      const jpgOriginalFiles = await utilsFile.getFilesPattern(
+        `${utilsFile.getRootPath()}/img/c`,
         /^[0-9]+\.jpg$/,
       );
       expect(jpgOriginalFiles.length).to.gt(0);
 
       await Promise.all(formats.categories.map(async (format: string, index: number) => {
-        const formatFilesJpeg = await files.getFilesPattern(
-          `${files.getRootPath()}/img/c/`,
+        const formatFilesJpeg = await utilsFile.getFilesPattern(
+          `${utilsFile.getRootPath()}/img/c/`,
           new RegExp(`^[0-9]+-${format}\\.jpg$`),
         );
         expect(formatFilesJpeg.length).to.eq(
@@ -377,8 +380,8 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
           `The number of files (${formatFilesJpeg.length}) for format ${format} is not equals to ${jpgOriginalFiles.length}`,
         );
 
-        const formatFilesWebp = await files.getFilesPattern(
-          `${files.getRootPath()}/img/c/`,
+        const formatFilesWebp = await utilsFile.getFilesPattern(
+          `${utilsFile.getRootPath()}/img/c/`,
           new RegExp(`^[0-9]+-${format}\\.webp$`),
         );
         expect(formatFilesWebp.length).to.eq(
@@ -407,15 +410,15 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
     it('should check that images have been regenerated', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'categoryWithEraseCheckImagesRegenerated', baseContext);
 
-      const jpgOriginalFiles = await files.getFilesPattern(
-        `${files.getRootPath()}/img/c`,
+      const jpgOriginalFiles = await utilsFile.getFilesPattern(
+        `${utilsFile.getRootPath()}/img/c`,
         /^[0-9]+\.jpg$/,
       );
       expect(jpgOriginalFiles.length).to.gt(0);
 
       await Promise.all(formats.categories.map(async (format: string) => {
-        const formatFilesJpeg = await files.getFilesPattern(
-          `${files.getRootPath()}/img/c/`,
+        const formatFilesJpeg = await utilsFile.getFilesPattern(
+          `${utilsFile.getRootPath()}/img/c/`,
           new RegExp(`^[0-9]+-${format}\\.jpg$`),
         );
         expect(formatFilesJpeg.length).to.eq(
@@ -423,8 +426,8 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
           `The number of files (${formatFilesJpeg.length}) for format ${format} is not equals to ${jpgOriginalFiles.length}`,
         );
 
-        const formatFilesWebp = await files.getFilesPattern(
-          `${files.getRootPath()}/img/c/`,
+        const formatFilesWebp = await utilsFile.getFilesPattern(
+          `${utilsFile.getRootPath()}/img/c/`,
           new RegExp(`^[0-9]+-${format}\\.webp$`),
         );
         expect(formatFilesWebp.length).to.eq(

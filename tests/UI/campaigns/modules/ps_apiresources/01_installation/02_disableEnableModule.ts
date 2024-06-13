@@ -1,6 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -17,6 +15,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataModules,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_apiresources_installation_disableEnableModule';
@@ -27,12 +27,12 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('BackOffice - Login', async () => {
@@ -51,7 +51,7 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
       action: 'enable',
     },
   ].forEach((test: {state: boolean, action: string}, index: number) => {
-    describe(`${basicHelper.capitalize(test.action)} the module`, async () => {
+    describe(`${utilsCore.capitalize(test.action)} the module`, async () => {
       it('should go to \'Modules > Module Manager\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToModuleManagerPage${index}`, baseContext);
 

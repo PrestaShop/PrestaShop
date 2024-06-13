@@ -1,7 +1,4 @@
 // Import utils
-import api from '@utils/api';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -25,6 +22,9 @@ import {
   FakerAPIClient,
   FakerProduct,
   type ProductImageInformation,
+  utilsAPI,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_endpoints_product_postProductIdImage';
@@ -52,18 +52,18 @@ describe('API : POST /product/{productId}/image', async () => {
 
   describe('POST /product/{productId}/image', async () => {
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
 
-      apiContext = await helper.createAPIContext(global.API.URL);
+      apiContext = await utilsPlaywright.createAPIContext(global.API.URL);
 
-      await files.generateImage(`${createProduct.name}.jpg`);
+      await utilsFile.generateImage(`${createProduct.name}.jpg`);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
 
-      await files.deleteFile(`${createProduct.name}.jpg`);
+      await utilsFile.deleteFile(`${createProduct.name}.jpg`);
     });
 
     describe('BackOffice : Fetch the access token', async () => {
@@ -131,8 +131,8 @@ describe('API : POST /product/{productId}/image', async () => {
           },
         });
         expect(apiResponse.status()).to.eq(200);
-        expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
-        expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
+        expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+        expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
         const jsonResponse = await apiResponse.json();
         expect(jsonResponse).to.have.property('access_token');
@@ -189,8 +189,8 @@ describe('API : POST /product/{productId}/image', async () => {
         });
 
         expect(apiResponse.status()).to.eq(201);
-        expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
-        expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
+        expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+        expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
         jsonResponse = await apiResponse.json();
       });

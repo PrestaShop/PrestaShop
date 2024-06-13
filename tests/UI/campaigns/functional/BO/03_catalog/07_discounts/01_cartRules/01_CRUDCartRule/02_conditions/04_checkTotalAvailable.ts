@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -23,11 +22,12 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCartRule,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import basicHelper from '@utils/basicHelper';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_checkTotalAvailable';
 
@@ -55,12 +55,12 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('BO : Create cart rule', async () => {
@@ -144,7 +144,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount', baseContext);
 
           const discountedPrice = dataProducts.demo_1.finalPrice
-            - await basicHelper.percentage(dataProducts.demo_1.finalPrice, cartRuleCode.discountPercent!);
+            - await utilsCore.percentage(dataProducts.demo_1.finalPrice, cartRuleCode.discountPercent!);
 
           const totalAfterDiscount = await cartPage.getATIPrice(page);
           expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));

@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -15,6 +14,7 @@ import {
   boDashboardPage,
   dataCurrencies,
   type FakerCurrency,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';
@@ -38,12 +38,12 @@ describe('CLDR : Search a currency by ISO code', async () => {
   ];
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {

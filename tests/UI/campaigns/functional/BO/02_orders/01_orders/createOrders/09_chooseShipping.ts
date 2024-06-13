@@ -1,6 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -22,6 +20,8 @@ import {
   dataPaymentMethods,
   dataProducts,
   type FakerOrderStatus,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -67,12 +67,12 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
   const giftMessage: string = 'Gift message to test';
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Pre-condition : configure gift options
@@ -229,7 +229,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
 
       await addOrderPage.setGift(page, true);
 
-      const tax = await basicHelper.percentage(giftOptions.price, 10);
+      const tax = await utilsCore.percentage(giftOptions.price, 10);
       const totalTaxExc = (dataProducts.demo_12.priceTaxExcluded + giftOptions.price).toFixed(2);
       const totalTaxInc = (dataProducts.demo_12.price + giftOptions.price + tax).toFixed(2);
 

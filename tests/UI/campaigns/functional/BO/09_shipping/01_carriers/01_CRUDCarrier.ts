@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -15,7 +13,6 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
-  // Import data
   dataCustomers,
   dataZones,
   FakerCarrier,
@@ -24,6 +21,8 @@ import {
   foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -121,23 +120,23 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create images
     await Promise.all([
-      files.generateImage(`${createCarrierData.name}.jpg`),
-      files.generateImage(`${editCarrierData.name}.jpg`),
+      utilsFile.generateImage(`${createCarrierData.name}.jpg`),
+      utilsFile.generateImage(`${editCarrierData.name}.jpg`),
     ]);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     /* Delete the generated images */
     await Promise.all([
-      files.deleteFile(`${createCarrierData.name}.jpg`),
-      files.deleteFile(`${editCarrierData.name}.jpg`),
+      utilsFile.deleteFile(`${createCarrierData.name}.jpg`),
+      utilsFile.deleteFile(`${editCarrierData.name}.jpg`),
     ]);
   });
 

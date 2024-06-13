@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -15,6 +13,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerCategory,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext = 'functional_BO_catalog_categories_categoriesBulkActions';
@@ -30,23 +30,23 @@ describe('BO - Catalog - Categories : Enable/Disable/Delete categories by Bulk A
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create categories images
     await Promise.all([
-      files.generateImage(`${firstCategoryData.name}.jpg`),
-      files.generateImage(`${secondCategoryData.name}.jpg`),
+      utilsFile.generateImage(`${firstCategoryData.name}.jpg`),
+      utilsFile.generateImage(`${secondCategoryData.name}.jpg`),
     ]);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     /* Delete the generated images */
     await Promise.all([
-      files.deleteFile(`${firstCategoryData.name}.jpg`),
-      files.deleteFile(`${secondCategoryData.name}.jpg`),
+      utilsFile.deleteFile(`${firstCategoryData.name}.jpg`),
+      utilsFile.deleteFile(`${secondCategoryData.name}.jpg`),
     ]);
   });
 

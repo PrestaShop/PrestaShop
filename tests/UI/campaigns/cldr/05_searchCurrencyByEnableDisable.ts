@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -14,6 +13,7 @@ import addCurrencyPage from '@pages/BO/international/currencies/add';
 import {
   boDashboardPage,
   dataCurrencies,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';
@@ -30,12 +30,12 @@ describe('CLDR : Search a currency by enable/disable', async () => {
   let numberOfCurrencies: number;
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {

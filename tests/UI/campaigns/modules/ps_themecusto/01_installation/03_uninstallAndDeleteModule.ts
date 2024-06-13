@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -16,6 +14,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataModules,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_themecusto_installation_uninstallAndDeleteModule';
@@ -26,13 +26,13 @@ describe('Theme Customization module - Uninstall and delete module', async () =>
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('module.zip');
+    await utilsPlaywright.closeBrowserContext(browserContext);
+    await utilsFile.deleteFile('module.zip');
   });
 
   it('should login in BO', async function () {
@@ -72,7 +72,7 @@ describe('Theme Customization module - Uninstall and delete module', async () =>
     const isModalVisible = await moduleManagerPage.isModalActionVisible(page, dataModules.psThemeCusto, 'uninstall');
     expect(isModalVisible).to.eq(false);
 
-    const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psThemeCusto.tag}/`);
+    const dirExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/modules/${dataModules.psThemeCusto.tag}/`);
     expect(dirExists).to.eq(true);
   });
 
@@ -83,7 +83,7 @@ describe('Theme Customization module - Uninstall and delete module', async () =>
     expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.psThemeCusto.tag));
 
     // Check the directory `modules/dataModules.psThemeCusto.tag`
-    const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psThemeCusto.tag}/`);
+    const dirExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/modules/${dataModules.psThemeCusto.tag}/`);
     expect(dirExists).to.eq(false);
   });
 
@@ -130,9 +130,9 @@ describe('Theme Customization module - Uninstall and delete module', async () =>
     it(`should download the zip of the module '${dataModules.psThemeCusto.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadModule', baseContext);
 
-      await files.downloadFile(dataModules.psThemeCusto.releaseZip, 'module.zip');
+      await utilsFile.downloadFile(dataModules.psThemeCusto.releaseZip, 'module.zip');
 
-      const found = await files.doesFileExist('module.zip');
+      const found = await utilsFile.doesFileExist('module.zip');
       expect(found).to.eq(true);
     });
 

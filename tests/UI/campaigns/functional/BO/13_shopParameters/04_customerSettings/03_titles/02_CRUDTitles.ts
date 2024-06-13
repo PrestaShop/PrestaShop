@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -14,6 +12,8 @@ import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
 import {
   boDashboardPage,
   FakerTitle,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -31,22 +31,22 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete t
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create images
     await Promise.all([
-      files.generateImage(createTitleData.imageName),
-      files.generateImage(editTitleData.imageName),
+      utilsFile.generateImage(createTitleData.imageName),
+      utilsFile.generateImage(editTitleData.imageName),
     ]);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     await Promise.all([
-      files.deleteFile(createTitleData.imageName),
-      files.deleteFile(editTitleData.imageName),
+      utilsFile.deleteFile(createTitleData.imageName),
+      utilsFile.deleteFile(editTitleData.imageName),
     ]);
   });
 

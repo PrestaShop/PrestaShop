@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -19,6 +17,8 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -64,12 +64,12 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Pre-condition: Update order status to payment accepted
@@ -148,7 +148,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
 
       filePath = await outstandingPage.viewInvoice(page, 'invoice', 1);
 
-      const doesFileExist = await files.doesFileExist(filePath, 5000);
+      const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
       expect(doesFileExist, 'The file is not existing!').to.eq(true);
     });
 
@@ -156,7 +156,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceReference', baseContext);
 
       // Check Reference in pdf
-      const referenceOrder = await files.isTextInPDF(filePath, orderReference);
+      const referenceOrder = await utilsFile.isTextInPDF(filePath, orderReference);
       expect(referenceOrder).to.eq(true);
     });
   });

@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -16,6 +14,8 @@ import {
   boDashboardPage,
   dataSqlTables,
   FakerSqlQuery,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_database_sqlManager_exportSqlQuery';
@@ -35,12 +35,12 @@ describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -95,7 +95,7 @@ describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
 
       filePath = await sqlManagerPage.exportSqlResultDataToCsv(page);
 
-      const doesFileExist = await files.doesFileExist(filePath, 5000);
+      const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
       expect(doesFileExist, 'Export of data has failed').to.eq(true);
     });
 
@@ -105,7 +105,7 @@ describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
       const numberOfQuery = await sqlManagerPage.getNumberOfElementInGrid(page);
 
       for (let row = 1; row <= numberOfQuery; row++) {
-        const textExist = await files.isTextInFile(filePath, fileContent, true, true);
+        const textExist = await utilsFile.isTextInFile(filePath, fileContent, true, true);
         expect(textExist, `${fileContent} was not found in the file`).to.eq(true);
       }
     });

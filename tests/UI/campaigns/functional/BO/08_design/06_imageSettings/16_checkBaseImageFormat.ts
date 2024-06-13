@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -18,6 +16,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_checkBaseImageFormat';
@@ -46,8 +46,8 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     await Promise.all([
       productDataPNGBaseFormatJPEG.coverImage,
@@ -55,13 +55,13 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
       productDataPNGBaseFormatPNG.coverImage,
     ].map(async (image: string|null) => {
       if (image) {
-        await files.generateImage(image);
+        await utilsFile.generateImage(image);
       }
     }));
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     await Promise.all([
       productDataPNGBaseFormatJPEG.coverImage,
@@ -69,7 +69,7 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
       productDataPNGBaseFormatPNG.coverImage,
     ].map(async (image: string|null) => {
       if (image) {
-        await files.deleteFile(image);
+        await utilsFile.deleteFile(image);
       }
     }));
   });
@@ -240,12 +240,12 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
           const pathProductId: string = pathProductIdSplitted.join('/');
 
           // Check the original file
-          const pathImageJPG: string = `${files.getRootPath()}/img/p/${pathProductId}/${idProductImage}-large_default.jpg`;
+          const pathImageJPG: string = `${utilsFile.getRootPath()}/img/p/${pathProductId}/${idProductImage}-large_default.jpg`;
 
-          const fileExistsJPG = await files.doesFileExist(pathImageJPG);
+          const fileExistsJPG = await utilsFile.doesFileExist(pathImageJPG);
           expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.eq(true);
 
-          const imageTypeJPG = await files.getFileType(pathImageJPG);
+          const imageTypeJPG = await utilsFile.getFileType(pathImageJPG);
           expect(imageTypeJPG).to.be.eq(arg.extGenerated);
         });
       });

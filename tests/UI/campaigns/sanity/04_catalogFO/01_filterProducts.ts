@@ -1,6 +1,5 @@
 // Import utils
 import testContext from '@utils/testContext';
-import helper from '@utils/helpers';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
@@ -10,6 +9,7 @@ import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
 import {
   dataCategories,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_catalogFO_filterProducts';
@@ -27,12 +27,12 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Catalog FO: Filter products from catalog', async () => {

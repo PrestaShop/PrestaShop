@@ -1,7 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -21,6 +18,9 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  utilsDate,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -41,8 +41,8 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
   let page: Page;
   let numberOfCreditSlips: number = 0;
 
-  const todayDate: string = date.getDateFormat('yyyy-mm-dd');
-  const todayDateToCheck: string = date.getDateFormat('mm/dd/yyyy');
+  const todayDate: string = utilsDate.getDateFormat('yyyy-mm-dd');
+  const todayDateToCheck: string = utilsDate.getDateFormat('mm/dd/yyyy');
   const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
@@ -59,12 +59,12 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Create 2 credit slips for the same order', async () => {
@@ -263,7 +263,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
 
         const filePath = await creditSlipsPage.downloadCreditSlip(page);
 
-        const exist = await files.doesFileExist(filePath);
+        const exist = await utilsFile.doesFileExist(filePath);
         expect(exist).to.eq(true);
       });
     });

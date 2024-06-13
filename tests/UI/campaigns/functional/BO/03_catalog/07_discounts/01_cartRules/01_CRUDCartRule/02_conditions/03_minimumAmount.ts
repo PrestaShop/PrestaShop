@@ -1,6 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -24,6 +22,8 @@ import {
   boDashboardPage,
   dataProducts,
   FakerCartRule,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_minimumAmount';
@@ -58,12 +58,12 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('BO : Create new cart rule', async () => {
@@ -155,7 +155,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
 
       await cartPage.addPromoCode(page, newCartRuleData.code);
 
-      const discount = await basicHelper.percentage(
+      const discount = await utilsCore.percentage(
         dataProducts.demo_6.combinations[0].price * 2,
         newCartRuleData.discountPercent!,
       );

@@ -1,4 +1,3 @@
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 import loginCommon from '@commonTests/BO/loginBO';
@@ -11,6 +10,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   type FakerAPIClient,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 /**
@@ -26,12 +26,12 @@ function createAPIClientTest(apiClient: FakerAPIClient, baseContext: string = 'c
   describe('PRE-TEST: Create an API Client', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
@@ -100,12 +100,12 @@ function deleteAPIClientTest(baseContext: string = 'commonTests-deleteAPIClientT
   describe('PRE-TEST: Delete an API Client', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {

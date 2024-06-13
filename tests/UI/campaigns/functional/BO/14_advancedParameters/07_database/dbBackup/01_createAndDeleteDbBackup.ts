@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -12,7 +10,11 @@ import dbBackupPage from '@pages/BO/advancedParameters/database/dbBackup';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_database_dbBackup_createAndDeleteDbBackup';
 
@@ -30,12 +32,12 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -92,7 +94,7 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
 
       filePath = await dbBackupPage.downloadDbBackup(page);
 
-      const found = await files.doesFileExist(filePath);
+      const found = await utilsFile.doesFileExist(filePath);
       expect(found, 'Download backup file failed').to.eq(true);
     });
   });

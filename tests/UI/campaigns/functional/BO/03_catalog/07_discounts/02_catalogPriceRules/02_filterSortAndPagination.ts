@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -17,6 +14,9 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerCatalogPriceRule,
+  utilsCore,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_catalogPriceRules_filterSortAndPagination';
@@ -35,18 +35,18 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
   let page: Page;
   let numberOfCatalogPriceRules: number = 0;
 
-  const today: string = date.getDateFormat('yyyy-mm-dd');
-  const dateToCheck: string = date.getDateFormat('mm/dd/yyyy');
+  const today: string = utilsDate.getDateFormat('yyyy-mm-dd');
+  const dateToCheck: string = utilsDate.getDateFormat('mm/dd/yyyy');
   const priceRuleData: FakerCatalogPriceRule = new FakerCatalogPriceRule({fromDate: today, toDate: today});
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -362,7 +362,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -370,7 +370,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else if (test.args.isDate) {
-          const expectedResult: string[] = await basicHelper.sortArrayDate(nonSortedTable);
+          const expectedResult: string[] = await utilsCore.sortArrayDate(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
             expect(sortedTable).to.deep.equal(expectedResult);
@@ -378,7 +378,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
             expect(sortedTable).to.deep.equal(expectedResult);

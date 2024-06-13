@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -16,6 +14,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerCategory,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_monitoring_deleteEmptyCategory';
@@ -35,18 +35,18 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create category image
-    await files.generateImage(`${createCategoryData.name}.jpg`);
+    await utilsFile.generateImage(`${createCategoryData.name}.jpg`);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     /* Delete the generated image */
-    await files.deleteFile(`${createCategoryData.name}.jpg`);
+    await utilsFile.deleteFile(`${createCategoryData.name}.jpg`);
   });
 
   it('should login in BO', async function () {
