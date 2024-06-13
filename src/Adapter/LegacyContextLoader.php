@@ -74,7 +74,6 @@ class LegacyContextLoader
         $this->loadEmployeeContext($employeeId);
         $this->loadControllerContext($controllerClassName);
 
-
         if (null !== $shopId) {
             $this->loadShopContext($shopId);
         }
