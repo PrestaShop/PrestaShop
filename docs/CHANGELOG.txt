@@ -24,6 +24,74 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.1.7 - (2024-06-14)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #36306: Open EntitySearchInput to public components in backoffice (by @thomasDelaporte)
+    - #35488: Add Export button missing on new Product Page V2 (by @ChronoBrake)
+    - #35434: Improve wording of pack quantities (by @Hlavtox)
+    - #35699: Correction of patch requests in PPV2 (by @M0rgan01)
+    - #35564: Update product SEO metadata length (by @M0rgan01)
+    - #35518: BO login screen - don't show PrestaShop version before Employee successful login (by @ShaiMagal)
+  - Bug fix:
+    - #36256: Fixed incorrect link to documentation (by @nicosomb)
+    - #36244: Product page fixes (by @jolelievre)
+    - #35775: Responsive visual issues new product page (by @mattgoud)
+    - #36122: Error 500 fix for Admin Categories If description null (backport from develop) (by @ShaiMagal)
+    - #34823: Sets the current date on the duplicate product (by @webeshop)
+    - #35861: Update HTMLTemplateOrderSlip.php to fix #35802 (by @rudolfkastl)
+  - Refactoring:
+    - #35824: Prevent errors on different address formats (by @Hlavtox)
+    - #35830: Fix notice on nulls (by @Hlavtox)
+    - #35827: Fix uasort in dead code (by @Hlavtox)
+    - #35698: Make changing order status more resilient to failed data (by @Hlavtox)
+- Front Office:
+  - Improvement:
+    - #35705: Fix strstr modifier (by @Hlavtox)
+    - #35735: Fix array_slice modifier (by @Hlavtox)
+    - #35571: Stop requesting core.js source map in production (by @SharakPL)
+  - Bug fix:
+    - #36342: Fix quantity check when there a customization in cart (Backport from #32312) (by @Progi1984)
+    - #35962: CartRule.php - performance bottleneck - duplicating query (by @ShaiMagal)
+    - #36074: Fix specific scenario when multiple carriers are used. (by @Hlavtox)
+    - #35565: Fix CCC error for path with version (by @ComonSoft)
+    - #35812: Fix unit price everywhere (by @Hlavtox)
+    - #35729: Remove deprecated jquery method (by @Hlavtox)
+    - #35584: Fix(merchandise-return): deprecation alert is displayed on the return form (by @TheoAlloin)
+  - Refactoring:
+    - #35822: Fix strpos modifier (by @Hlavtox)
+- Core:
+  - Improvement:
+    - #36341: Preliminary tasks for 8.1.7 release (by @jolelievre)
+    - #36284: Updated PrestaShop Packages (by @github-actions[bot])
+    - #36069: Upgraded productcomments (by @nicosomb)
+    - #35892: Updated PrestaShop Packages (by @github-actions[bot])
+    - #35871: Updated PrestaShop Packages (by @github-actions[bot])
+    - #35754: Updated PrestaShop Packages (by @github-actions[bot])
+  - Bug fix:
+    - #35902: Fix min qty in front ProductController (by @boherm)
+    - #36272: Fix compatibility error on ARM processors when installing via docker   (by @matthieu-rolland)
+    - #35621: Fix: Clear cache module multishop (by @pvujic)
+    - #35587: Fix $action variable in postProcess method (by @SharakPL)
+  - Refactoring:
+    - #35953: Fix cart calculator tax rounding issues (by @Hlavtox)
+    - #35834: Stabilize search indexation and check referrer (by @Hlavtox)
+    - #35826: Better inform about faulty hooks (by @Hlavtox)
+    - #35749: Unify text field database limits (by @Hlavtox)
+- Installer:
+  - Improvement:
+    - #36345: Update default catalog 8.1.x (by @ps-jarvis)
+    - #36340: Update default catalog 8.1.x (by @ps-jarvis)
+- Tests:
+  - Improvement:
+    - #35818: Functional Tests : Migration from Docker Compose v1 to v2 (8.1.x) (by @Progi1984)
+    - #35646: UI Tests : Allow to enable/disable make (by @Progi1984)
+  - Bug fix:
+    - #35906: Fix error install libnss3-tools (by @jolelievre)
+
+####################################
 #   v8.1.6 - (2024-05-13)
 ####################################
 

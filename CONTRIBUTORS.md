@@ -156,6 +156,7 @@ GitHub contributors:
 - Christophe Rouille
 - Christophe Zarebski
 - ChristopheBoucaut
+- ChronoBrake
 - CINS
 - cippest
 - cirykpopeye
@@ -165,6 +166,7 @@ GitHub contributors:
 - cocoweb
 - Code Utopia
 - Codencode
+- CodeOlympus
 - codvir
 - Comkwatt
 - ComonSoft
@@ -239,7 +241,7 @@ GitHub contributors:
 - doeselschnecke
 - DogSports
 - Dominic Taylor
-- Dominik Ulrich
+- Dominik Shaim Ulrich
 - Dragan Skrbic
 - DRC
 - Dream me up
@@ -562,6 +564,7 @@ GitHub contributors:
 - Mats Rynge
 - Matteo
 - Matteo Spreafico
+- Matthias Goudjil
 - Matthias Raigne
 - Matthieu Deroubaix
 - Matthieu Mota
@@ -688,6 +691,7 @@ GitHub contributors:
 - Petrov Sergey
 - Petyuska
 - Philip Iezzi
+- Philipp Vujic
 - PhpMadman
 - PICHAT Morgan
 - Pierre
@@ -783,6 +787,7 @@ GitHub contributors:
 - Roman Ondráček
 - Rúben Martins
 - Rudra Sarkar
+- Rudolf Kastl
 - runningz
 - s-duval
 - Sacha
@@ -875,6 +880,7 @@ GitHub contributors:
 - Teemu Mäntynen
 - The Gitter Badger
 - themella
+- theoalloin
 - theodiablo
 - therampagerado
 - Thibaud Chauviere
@@ -885,6 +891,7 @@ GitHub contributors:
 - Thomas
 - Thomas Baccelli
 - Thomas Blanc
+- Thomas Delaporte
 - Thomas Ferney
 - Thomas L'huillier
 - Thomas Leguillant
