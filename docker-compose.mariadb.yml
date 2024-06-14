@@ -4,15 +4,15 @@ volumes:
   db-data:
 
 services:
-  mysql:
-    image: mysql:8
+  mariadb:
+    image: mariadb:11.4
     ports:
       - "3306:3306"
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWD:-prestashop}
-      MYSQL_DATABASE: ${DB_NAME:-prestashop}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWD:-prestashop}
+      MARIADB_DATABASE: ${DB_NAME:-prestashop}
     restart: unless-stopped
     networks:
       - prestashop-network
@@ -33,7 +33,7 @@ services:
       PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
       DB_PASSWD: ${DB_PASSWD:-prestashop}
       DB_NAME: ${DB_NAME:-prestashop}
-      DB_SERVER: ${DB_SERVER:-mysql}
+      DB_SERVER: ${DB_SERVER:-mariadb}
       DB_PREFIX: ${DB_PREFIX:-ps_}
       PS_DOMAIN: ${PS_DOMAIN:-localhost:8001}
       PS_FOLDER_INSTALL: ${PS_FOLDER_INSTALL:-install-dev}
@@ -49,12 +49,12 @@ services:
       BLACKFIRE_ENABLE: ${BLACKFIRE_ENABLE:-0}
       BLACKFIRE_SERVER_ID: ${BLACKFIRE_SERVER_ID:-0}
       BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN:-0}
-    command: /tmp/wait-for-it.sh --timeout=60 --strict mysql:3306 -- /tmp/docker_run_git.sh
+    command: /tmp/wait-for-it.sh --timeout=60 --strict mariadb:3306 -- /tmp/docker_run_git.sh
     ports:
       - "8001:80"
       - "8002:443"
     depends_on:
-      - mysql
+      - mariadb
     volumes:
       - ./:/var/www/html:delegated
     networks:

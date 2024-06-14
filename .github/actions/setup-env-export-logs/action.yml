@@ -9,6 +9,10 @@ inputs:
     required: false
     description: Artifact exported name
     default: setup-logs
+  DB_SERVER:
+    required: false
+    description: Database Server for PrestaShop (mysql/mariadb)
+    default: mysql
 
 runs:
   using: 'composite'
@@ -21,7 +25,7 @@ runs:
     - name: Export docker logs
       run: |
         mkdir -p ./var/docker-logs
-        docker logs ${{ inputs.DOCKER_PREFIX }}-mysql-1 > ./var/docker-logs/mysql.log
+        docker logs ${{ inputs.DOCKER_PREFIX }}-${{ inputs.DB_SERVER }}-1 > ./var/docker-logs/${{ inputs.DB_SERVER }}.log
         docker logs ${{ inputs.DOCKER_PREFIX }}-prestashop-git-1 > ./var/docker-logs/prestashop.log
       shell: bash
 
