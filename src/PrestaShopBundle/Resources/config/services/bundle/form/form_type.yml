@@ -68,6 +68,7 @@ services:
       - '@PrestaShopBundle\Form\DataTransformer\ArabicToLatinDigitDataTransformer'
 
   PrestaShopBundle\Form\Admin\Type\EmailType:
+    autowire: true
     arguments:
       - '@prestashop.bundle.form.data_transformer.idn_converter'
 
