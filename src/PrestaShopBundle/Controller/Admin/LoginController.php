@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Security\Admin\EmployeeHomepageProvider;
 use PrestaShopBundle\Security\Admin\Exception\InvalidResetPasswordTokenException;
-use PrestaShopBundle\Security\Admin\Exception\PendingPasswordResetExistingException;
+use PrestaShopBundle\Security\Admin\Exception\PasswordResetTemporarilyBlockedException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
@@ -150,13 +150,13 @@ class LoginController extends PrestaShopAdminController
                         $this->trans('If this email address has been registered in our store, you will receive a link to reset your password.', [], 'Admin.Login.Notification')
                     ;
                 } catch (UserNotFoundException) {
-                    // If the email doesn't match a known employee we still display a generic error message to avoid any hacker using this
+                    // If the email doesn't match a known employee we still display a generic success message to avoid any hacker using this
                     // to find out the employee's emails via brute force.
                     $infoMessage = $this->trans('Please, check your mailbox.', [], 'Admin.Login.Notification') . '<br/>' .
                         $this->trans('If this email address has been registered in our store, you will receive a link to reset your password.', [], 'Admin.Login.Notification')
                     ;
-                } catch (PendingPasswordResetExistingException) {
-                    $validityDuration = (int) ($this->getConfiguration()->get('PS_PASSWD_RESET_VALIDITY') ?: 1440);
+                } catch (PasswordResetTemporarilyBlockedException) {
+                    $validityDuration = (int) ($this->getConfiguration()->get('PS_PASSWD_TIME_BACK') ?: 360);
                     $errorMessage = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', ['%interval%' => $validityDuration], 'Admin.Login.Notification');
                 } catch (Throwable) {
                     $errorMessage = $this->trans('An error occurred while attempting to reset your password.', [], 'Admin.Login.Notification');
