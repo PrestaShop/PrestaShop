@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Admin\Context;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Security\Admin\SessionEmployeeProvider;
@@ -49,7 +48,6 @@ class EmployeeContextListener implements EventSubscriberInterface
 
     public function __construct(
         private readonly EmployeeContextBuilder $employeeContextBuilder,
-        private readonly LegacyContext $legacyContext,
         private readonly Security $security,
         private readonly SessionEmployeeProvider $sessionEmployeeProvider,
     ) {
@@ -78,10 +76,6 @@ class EmployeeContextListener implements EventSubscriberInterface
         // Then fetch the employee ID from the session
         if (empty($employeeId)) {
             $employeeId = $this->sessionEmployeeProvider->getEmployeeFromSession($event->getRequest())?->getId();
-        }
-        // Last chance use the legacy employee
-        if (empty($employeeId) && !empty($this->legacyContext->getContext()->cookie->id_employee)) {
-            $employeeId = (int) $this->legacyContext->getContext()->cookie->id_employee;
         }
 
         if (!empty($employeeId)) {

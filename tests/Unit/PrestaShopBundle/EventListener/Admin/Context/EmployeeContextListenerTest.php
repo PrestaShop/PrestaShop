@@ -40,24 +40,6 @@ use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class EmployeeContextListenerTest extends ContextEventListenerTestCase
 {
-    public function testEmployeeFromLegacyContext(): void
-    {
-        $employeeBuilder = new EmployeeContextBuilder(
-            $this->createMock(EmployeeRepository::class),
-            $this->createMock(ContextStateManager::class),
-        );
-        $listener = new EmployeeContextListener(
-            $employeeBuilder,
-            $this->mockLegacyContext(['id_employee' => 42]),
-            $this->createMock(Security::class),
-            $this->createMock(SessionEmployeeProvider::class),
-        );
-
-        $event = $this->createRequestEvent(new Request());
-        $listener->onKernelRequest($event);
-        $this->assertEquals(42, $this->getPrivateField($employeeBuilder, 'employeeId'));
-    }
-
     public function testEmployeeNotFound(): void
     {
         $event = $this->createRequestEvent(new Request());
@@ -67,7 +49,6 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
         );
         $listener = new EmployeeContextListener(
             $employeeBuilder,
-            $this->mockLegacyContext(['id_employee' => null]),
             $this->createMock(Security::class),
             $this->createMock(SessionEmployeeProvider::class),
         );
@@ -87,7 +68,6 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
         $securityMock->method('getUser')->willReturn($employeeMock);
         $listener = new EmployeeContextListener(
             $employeeBuilder,
-            $this->mockLegacyContext(['id_employee' => null]),
             $securityMock,
             $this->createMock(SessionEmployeeProvider::class),
         );
@@ -111,7 +91,6 @@ class EmployeeContextListenerTest extends ContextEventListenerTestCase
 
         $listener = new EmployeeContextListener(
             $employeeBuilder,
-            $this->mockLegacyContext(['id_employee' => null]),
             $this->createMock(Security::class),
             $sessionEmployeeProvider,
         );
