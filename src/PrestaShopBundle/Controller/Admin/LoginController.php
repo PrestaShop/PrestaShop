@@ -146,11 +146,15 @@ class LoginController extends PrestaShopAdminController
                 $infoMessage = $errorMessage = null;
                 try {
                     $requestResetPasswordFormHandler->save($requestPasswordResetForm->getData());
-                    $infoMessage = $this->trans('Please, check your mailbox. A link to reset your password has been sent to you.', [], 'Admin.Login.Notification');
+                    $infoMessage = $this->trans('Please, check your mailbox.', [], 'Admin.Login.Notification') . '<br/>' .
+                        $this->trans('If this email address has been registered in our store, you will receive a link to reset your password.', [], 'Admin.Login.Notification')
+                    ;
                 } catch (UserNotFoundException) {
                     // If the email doesn't match a known employee we still display a generic error message to avoid any hacker using this
                     // to find out the employee's emails via brute force.
-                    $infoMessage = $this->trans('Please, check your mailbox. A link to reset your password has been sent to you.', [], 'Admin.Login.Notification');
+                    $infoMessage = $this->trans('Please, check your mailbox.', [], 'Admin.Login.Notification') . '<br/>' .
+                        $this->trans('If this email address has been registered in our store, you will receive a link to reset your password.', [], 'Admin.Login.Notification')
+                    ;
                 } catch (PendingPasswordResetExistingException) {
                     $validityDuration = (int) ($this->getConfiguration()->get('PS_PASSWD_RESET_VALIDITY') ?: 1440);
                     $errorMessage = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', ['%interval%' => $validityDuration], 'Admin.Login.Notification');
@@ -183,7 +187,6 @@ class LoginController extends PrestaShopAdminController
         $resetPasswordForm->handleRequest($request);
 
         if ($resetPasswordForm->isSubmitted() && $resetPasswordForm->isValid()) {
-            $newPassword = $resetPasswordForm->get('new_password')->getData();
             try {
                 $resetPasswordFormHandler->save(array_merge([
                     'resetToken' => $resetToken,
