@@ -67,6 +67,13 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class EmployeeController extends FrameworkBundleAdminController
 {
+    public static function getSubscribedServices(): array
+    {
+        return parent::getSubscribedServices() + [
+            TabDataProvider::class => TabDataProvider::class,
+        ];
+    }
+
     /**
      * Show employees list & options page.
      *
