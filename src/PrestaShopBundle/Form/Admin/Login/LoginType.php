@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Login;
 
-use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -44,7 +44,7 @@ class LoginType extends AbstractType
 {
     public function __construct(
         protected readonly TranslatorInterface $translator,
-        protected readonly ShopContext $shopContext,
+        protected readonly ConfigurationInterface $configuration,
     ) {
     }
 
@@ -83,7 +83,7 @@ class LoginType extends AbstractType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'label' => $this->shopContext->getName(),
+            'label' => $this->configuration->get('PS_SHOP_NAME'),
             'label_tag_name' => 'h4',
             'form_theme' => '@PrestaShop/Admin/Login/form_theme.html.twig',
             'attr' => [
