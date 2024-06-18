@@ -52,6 +52,9 @@ class CarrierType extends TranslatorAwareType
             ->add('general_settings', GeneralSettings::class, [
                 'label' => $this->trans('General settings', 'Admin.Shipping.Feature'),
             ])
+            ->add('size_weight_settings', SizeWeightSettings::class, [
+                'label' => $this->trans('Size and weight', 'Admin.Shipping.Feature'),
+            ])
         ;
     }
 

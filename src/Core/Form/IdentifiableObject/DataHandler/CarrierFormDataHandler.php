@@ -63,10 +63,10 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
             $data['shipping_settings']['shipping_method'],
             $data['shipping_settings']['id_tax_rule_group'],
             $data['shipping_settings']['range_behavior'],
-            $data['general_settings']['max_width'] ?? 0,
-            $data['general_settings']['max_height'] ?? 0,
-            $data['general_settings']['max_depth'] ?? 0,
-            $data['general_settings']['max_weight'] ?? 0,
+            $data['size_weight_settings']['max_width'] ?? 0,
+            $data['size_weight_settings']['max_height'] ?? 0,
+            $data['size_weight_settings']['max_depth'] ?? 0,
+            $data['size_weight_settings']['max_weight'] ?? 0,
             $logoPath,
         ));
 
@@ -82,10 +82,10 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
             ->setGrade($data['general_settings']['grade'])
             ->setActive((bool) $data['general_settings']['active'])
             ->setTrackingUrl($data['general_settings']['tracking_url'] ?? '')
-            ->setMaxWidth($data['general_settings']['max_width'] ?? null)
-            ->setMaxHeight($data['general_settings']['max_height'] ?? null)
-            ->setMaxDepth($data['general_settings']['max_depth'] ?? null)
-            ->setMaxWeight($data['general_settings']['max_weight'] ?? null)
+            ->setMaxWidth($data['size_weight_settings']['max_width'] ?? null)
+            ->setMaxHeight($data['size_weight_settings']['max_height'] ?? null)
+            ->setMaxDepth($data['size_weight_settings']['max_depth'] ?? null)
+            ->setMaxWeight($data['size_weight_settings']['max_weight'] ?? null)
             ->setAssociatedGroupIds($data['general_settings']['group_access'] ?? null)
         ;
         /** @var UploadedFile|null $logo */

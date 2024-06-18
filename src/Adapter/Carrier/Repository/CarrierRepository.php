@@ -102,16 +102,16 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         if ($carrier->delay) {
             $newCarrier->delay = $carrier->delay;
         }
-        if ($carrier->max_width) {
+        if (null !== $carrier->max_width) {
             $newCarrier->max_width = $carrier->max_width;
         }
-        if ($carrier->max_height) {
+        if (null !== $carrier->max_height) {
             $newCarrier->max_height = $carrier->max_height;
         }
-        if ($carrier->max_depth) {
+        if (null !== $carrier->max_depth) {
             $newCarrier->max_depth = $carrier->max_depth;
         }
-        if ($carrier->max_weight) {
+        if (null !== $carrier->max_weight) {
             $newCarrier->max_weight = $carrier->max_weight;
         }
         if (null !== $carrier->shipping_handling) {

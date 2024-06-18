@@ -77,16 +77,16 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         if ($command->getLocalizedDelay()) {
             $carrier->delay = $command->getLocalizedDelay();
         }
-        if ($command->getMaxWidth()) {
+        if (null !== $command->getMaxWidth()) {
             $carrier->max_width = $command->getMaxWidth();
         }
-        if ($command->getMaxHeight()) {
+        if (null !== $command->getMaxHeight()) {
             $carrier->max_height = $command->getMaxHeight();
         }
-        if ($command->getMaxDepth()) {
+        if (null !== $command->getMaxDepth()) {
             $carrier->max_depth = $command->getMaxDepth();
         }
-        if ($command->getMaxWeight()) {
+        if (null !== $command->getMaxWeight()) {
             $carrier->max_weight = $command->getMaxWeight();
         }
 
