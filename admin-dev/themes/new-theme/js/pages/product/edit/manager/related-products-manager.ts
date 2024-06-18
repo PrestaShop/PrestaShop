@@ -35,7 +35,7 @@ export default class RelatedProductsManager {
 
   constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
-    this.entitySearchInput = new EntitySearchInput($(ProductMap.relatedProducts.searchInput), {
+    this.entitySearchInput = new window.prestashop.component.EntitySearchInput($(ProductMap.relatedProducts.searchInput), {
       onRemovedContent: () => {
         this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
       },
