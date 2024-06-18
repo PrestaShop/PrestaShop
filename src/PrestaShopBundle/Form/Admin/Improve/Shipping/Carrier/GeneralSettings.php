@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
+use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -35,9 +37,19 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GeneralSettings extends TranslatorAwareType
 {
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        private readonly GroupByIdChoiceProvider $groupByIdChoiceProvider
+    ) {
+        parent::__construct($translator, $locales);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
@@ -84,6 +96,18 @@ class GeneralSettings extends TranslatorAwareType
                 'label' => $this->trans('Tracking URL', 'Admin.Shipping.Feature'),
                 'label_help_box' => $this->trans('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will be automatically replaced by the tracking number.', 'Admin.Shipping.Help'),
                 'help' => $this->trans('For example: \'http://example.com/track.php?num=@\' with \'@\' where the tracking number should appear.', 'Admin.Shipping.Help'),
+            ])
+            ->add('group_access', MaterialChoiceTableType::class, [
+                'label' => $this->trans('Group access', 'Admin.Shipping.Feature'),
+                'help' => $this->trans('Mark the groups that are allowed access to this carrier.', 'Admin.Shipping.Help'),
+                'empty_data' => [],
+                'choices' => $this->groupByIdChoiceProvider->getChoices(),
+                'display_total_items' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
+                    ]),
+                ],
             ])
         ;
     }
