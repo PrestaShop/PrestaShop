@@ -45,7 +45,7 @@ class EditableCarrier
         private int $max_width,
         private int $max_height,
         private int $max_depth,
-        private int $max_weight,
+        private float $max_weight,
         private array $associatedGroupIds,
         private bool $hasAdditionalHandlingFee,
         private bool $isFree,
@@ -114,7 +114,7 @@ class EditableCarrier
         return $this->max_depth;
     }
 
-    public function getMaxWeight(): int
+    public function getMaxWeight(): float
     {
         return $this->max_weight;
     }

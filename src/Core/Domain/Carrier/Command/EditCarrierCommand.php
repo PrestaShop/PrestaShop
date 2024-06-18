@@ -47,7 +47,7 @@ class EditCarrierCommand
     private ?int $max_width;
     private ?int $max_height;
     private ?int $max_depth;
-    private ?int $max_weight;
+    private ?float $max_weight;
     private ?array $associatedGroupIds;
     private ?string $logoPathName;
     private ?bool $hasAdditionalHandlingFee;
@@ -180,12 +180,12 @@ class EditCarrierCommand
         return $this;
     }
 
-    public function getMaxWeight(): ?int
+    public function getMaxWeight(): ?float
     {
         return $this->max_weight ?? null;
     }
 
-    public function setMaxWeight(?int $max_weight): self
+    public function setMaxWeight(?float $max_weight): self
     {
         $this->max_weight = $max_weight;
 
