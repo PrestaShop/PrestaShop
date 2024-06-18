@@ -41,6 +41,9 @@ class CarrierResetter
             'carrier_shop',
             'carrier_tax_rules_group_shop',
             'carrier_zone',
+            'range_price',
+            'range_weight',
+            'delivery',
         ]);
     }
 }
