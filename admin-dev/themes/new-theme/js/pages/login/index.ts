@@ -38,6 +38,10 @@ onReady(() => {
     event.stopImmediatePropagation();
     loginForm?.classList.add('d-none');
     forgotPasswordForm?.classList.remove('d-none');
+    // Hide all alert messages
+    document.querySelectorAll<HTMLElement>(LoginFormMap.alertMessages).forEach((alert) => {
+      alert.remove();
+    });
   });
 
   document.querySelector(LoginFormMap.cancelResetPasswordButton)?.addEventListener('click', (event) => {

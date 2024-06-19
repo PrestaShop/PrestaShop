@@ -35,4 +35,5 @@ export default {
   resetNewPassword: '#reset_password_new_password_first',
   resetNewPasswordConfirmation: '#reset_password_new_password_second',
   resetSubmitButton: '#reset_password_submit_login',
+  alertMessages: '.card-body .alert',
 };
