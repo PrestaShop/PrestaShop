@@ -129,9 +129,6 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         if ($command->getAssociatedGroupIds()) {
             $newCarrier->setGroups($command->getAssociatedGroupIds());
         }
-        if (null !== $command->getTaxRuleGroupId()) {
-            $newCarrier->setTaxRulesGroup($command->getTaxRuleGroupId());
-        }
 
         if ($command->getLogoPathName() !== null) {
             $this->carrierLogoFileUploader->deleteOldFile($newCarrier->id);

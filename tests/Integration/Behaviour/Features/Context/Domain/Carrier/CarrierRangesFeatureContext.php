@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Carrier;
 
 use Behat\Gherkin\Node\TableNode;
 use Carrier;
@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierRanges;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 
 class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
 {

@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Carrier;
 
 use Behat\Gherkin\Node\TableNode;
 use Carrier;
@@ -43,7 +43,10 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopException;
+use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Resources\DummyFileUploader;
 use Tests\Resources\Resetter\CarrierResetter;
 
@@ -103,8 +106,6 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $properties['logoPathName'] = DummyFileUploader::upload($properties['logoPathName']);
             }
 
-            $taxRulesGroupId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($properties['taxRuleGroup'])->id;
-
             $carrierId = $this->createCarrierUsingCommand(
                 $properties['name'],
                 $properties['delay'],
@@ -120,7 +121,6 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 filter_var($properties['shippingHandling'], FILTER_VALIDATE_BOOLEAN),
                 filter_var($properties['isFree'], FILTER_VALIDATE_BOOLEAN),
                 $properties['shippingMethod'],
-                $taxRulesGroupId,
                 $properties['rangeBehavior'],
                 $properties['logoPathName'] ?? null,
             );
@@ -199,11 +199,6 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
 
             if (isset($properties['shippingMethod'])) {
                 $command->setShippingMethod($this->convertShippingMethodToInt($properties['shippingMethod']));
-            }
-
-            if (isset($properties['taxRuleGroup'])) {
-                $taxRulesGroupId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($properties['taxRuleGroup'])->id;
-                $command->setIdTaxRuleGroup($taxRulesGroupId);
             }
 
             if (isset($properties['rangeBehavior'])) {
@@ -293,7 +288,11 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (isset($data['taxRuleGroup'])) {
-            $expectedId = TaxRulesGroupFeatureContext::getTaxRulesGroupByName($data['taxRuleGroup'])->id;
+            if (empty($data['taxRuleGroup'])) {
+                $expectedId = 0;
+            } else {
+                $expectedId = TaxRulesGroupFeatureContext::getTaxRulesGroupByName($data['taxRuleGroup'])->id;
+            }
             Assert::assertEquals($expectedId, $carrier->getIdTaxRuleGroup());
         }
 
@@ -349,7 +348,6 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         bool $hasAdditionalHandlingFee,
         bool $isFree,
         string $shippingMethod,
-        int $idTaxRuleGroup,
         string $rangeBehavior,
         ?string $logoPathName,
     ): CarrierId {
@@ -364,8 +362,8 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             $hasAdditionalHandlingFee,
             $isFree,
             $this->convertShippingMethodToInt($shippingMethod),
-            $idTaxRuleGroup,
             $this->convertOutOfRangeBehaviorToInt($rangeBehavior),
+            ShopConstraint::allShops(),
             $max_width,
             $max_height,
             $max_depth,
@@ -380,7 +378,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     {
         $id = $this->referenceToId($reference);
 
-        return $this->getCommandBus()->handle(new GetCarrierForEditing($id));
+        return $this->getCommandBus()->handle(new GetCarrierForEditing($id, ShopConstraint::allShops()));
     }
 
     private function fakeUploadLogo(string $filename, int $carrierId): void

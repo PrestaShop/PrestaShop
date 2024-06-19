@@ -32,7 +32,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
@@ -50,7 +49,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     Then carrier "carrier1" shouldn't have a logo
 
@@ -71,7 +69,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | name | Carrier 1 new |
@@ -91,7 +88,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     Then carrier "newCarrier1" should have the following properties:
       | name             | Carrier 1 new                      |
@@ -109,7 +105,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
 
   Scenario: Partially editing carrier with grade
@@ -129,7 +124,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | grade | 2 |
@@ -149,8 +143,7 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
-      | rangeBehavior    | disabled                             |
+      | rangeBehavior    | disabled                           |
     Then carrier "newCarrier1" should have the following properties:
       | name             | Carrier 1                          |
       | grade            | 2                                  |
@@ -167,7 +160,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
 
   Scenario: Partially editing carrier with tracking url
@@ -187,7 +179,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | trackingUrl | http://prestashop-project.org/track.php?num=@ |
@@ -207,7 +198,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     Then carrier "newCarrier1" should have the following properties:
       | name             | Carrier 1                                     |
@@ -225,7 +215,6 @@ Feature: Carrier management
       | shippingHandling | false                                         |
       | isFree           | true                                          |
       | shippingMethod   | weight                                        |
-      | taxRuleGroup     | US-AL Rate (4%)                               |
       | rangeBehavior    | disabled                                      |
 
   Scenario: Partially editing carrier with position
@@ -245,7 +234,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | position | 4 |
@@ -265,7 +253,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     Then carrier "newCarrier1" should have the following properties:
       | name             | Carrier 1                          |
@@ -282,8 +269,7 @@ Feature: Carrier management
       | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
-      | shippingMethod   | weight                            |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
+      | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
 
   Scenario: Partially editing carrier with active
@@ -303,7 +289,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | active | false |
@@ -323,7 +308,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     Then carrier "newCarrier1" should have the following properties:
       | name             | Carrier 1                          |
@@ -341,7 +325,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
 
   Scenario: Partially editing carrier with delay
@@ -361,7 +344,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | delay[en-US] | Shipping delay new         |
@@ -382,7 +364,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     Then carrier "newCarrier1" should have the following properties:
       | name             | Carrier 1                          |
@@ -400,7 +381,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
 
   Scenario: Partially editing carrier with width height depth weight
@@ -420,7 +400,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | max_width  | 3333 |
@@ -443,7 +422,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     Then carrier "newCarrier1" should have the following properties:
       | name             | Carrier 1                          |
@@ -461,7 +439,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
 
   Scenario: Partially editing carrier with group_access
@@ -481,7 +458,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | group_access | visitor |
@@ -501,7 +477,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     Then carrier "newCarrier1" should have the following properties:
       | name             | Carrier 1                          |
@@ -519,7 +494,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
 
   Scenario: Partially editing carrier with handling shipping
@@ -539,7 +513,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | shippingHandling | true                               |
@@ -567,7 +540,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | isFree | true                               |
@@ -595,7 +567,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | shippingMethod | price |
@@ -623,39 +594,10 @@ Feature: Carrier management
       | shippingHandling | true                               |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | shippingMethod   | invalid                            |
     Then carrier edit should throw an error with error code "INVALID_SHIPPING_METHOD"
-
-  Scenario: Partially editing carrier with tax rule group
-    When I create carrier "carrier1" with specified properties:
-      | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | delay[fr-FR]     | Délai de livraison                 |
-      | shippingHandling | false                              |
-      | isFree           | false                              |
-      | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
-      | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" called "newCarrier1" with specified properties:
-      | taxRuleGroup | US-AZ Rate (6.6%)              |
-    Then carrier "carrier1" should have the following properties:
-      | name         | Carrier 1                      |
-      | taxRuleGroup | US-AL Rate (4%)                |
-    Then carrier "newCarrier1" should have the following properties:
-      | name         | Carrier 1                       |
-      | taxRuleGroup | US-AZ Rate (6.6%)               |
 
   Scenario: Partially editing carrier with range behavior
     When I create carrier "carrier1" with specified properties:
@@ -674,7 +616,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | rangeBehavior  | highest_range |
@@ -702,7 +643,6 @@ Feature: Carrier management
       | shippingHandling | true                               |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | rangeBehavior    | invalid                            |
@@ -725,7 +665,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | shippingHandling  | true                              |
@@ -750,7 +689,6 @@ Feature: Carrier management
       | shippingHandling | true                               |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | isFree  | true                              |
@@ -775,7 +713,6 @@ Feature: Carrier management
       | shippingHandling | true                               |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
       | isFree            | true                              |
@@ -799,7 +736,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
       | logoPathName     | logo.jpg                           |
     Then carrier "carrier1" should have a logo
@@ -821,7 +757,6 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
       | logoPathName     | logo.jpg                           |
     Then carrier "carrier1" should have a logo

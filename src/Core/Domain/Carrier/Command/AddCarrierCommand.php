@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Command aim to add carrier
@@ -55,14 +56,15 @@ class AddCarrierCommand
         private bool $hasAdditionalHandlingFee,
         private bool $isFree,
         int $shippingMethod,
-        private int $idTaxRuleGroup,
         int $rangeBehavior,
+        private ShopConstraint $shopConstraint,
         private int $max_width = 0,
         private int $max_height = 0,
         private int $max_depth = 0,
         private float $max_weight = 0,
         private ?string $logoPathName = null
     ) {
+        $this->assertShopConstraint($this->shopConstraint);
         $this->shippingMethod = new ShippingMethod($shippingMethod);
         $this->rangeBehavior = new OutOfRangeBehavior($rangeBehavior);
     }
@@ -143,13 +145,23 @@ class AddCarrierCommand
         return $this->shippingMethod;
     }
 
-    public function getTaxRuleGroupId(): int
-    {
-        return $this->idTaxRuleGroup;
-    }
-
     public function getRangeBehavior(): OutOfRangeBehavior
     {
         return $this->rangeBehavior;
+    }
+
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
+    }
+
+    private function assertShopConstraint(ShopConstraint $shopConstraint): void
+    {
+        if (!$shopConstraint->forAllShops()) {
+            throw new CarrierConstraintException(
+                'Shop constraint isn\'t supported yet.',
+                CarrierConstraintException::INVALID_SHOP_CONSTRAINT
+            );
+        }
     }
 }

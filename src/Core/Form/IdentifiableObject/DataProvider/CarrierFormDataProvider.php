@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class CarrierFormDataProvider implements FormDataProviderInterface
 {
@@ -40,7 +41,7 @@ class CarrierFormDataProvider implements FormDataProviderInterface
     public function getData($id)
     {
         /** @var EditableCarrier $carrier */
-        $carrier = $this->queryBus->handle(new GetCarrierForEditing((int) $id));
+        $carrier = $this->queryBus->handle(new GetCarrierForEditing((int) $id, ShopConstraint::allShops()));
 
         return [
             'general_settings' => [

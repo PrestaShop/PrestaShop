@@ -32,11 +32,9 @@ use Carrier;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
-use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
@@ -53,7 +51,6 @@ class CarrierValidator extends AbstractObjectModelValidator
 
     public function __construct(
         private readonly GroupRepository $groupRepository,
-        private readonly TaxRulesGroupRepository $taxRulesGroupRepository
     ) {
     }
 
@@ -131,10 +128,6 @@ class CarrierValidator extends AbstractObjectModelValidator
                 'Carrier cannot be both shipping handling and free',
                 CarrierConstraintException::INVALID_HAS_ADDITIONAL_HANDLING_FEE_WITH_FREE_SHIPPING
             );
-        }
-
-        if ($carrier->getIdTaxRulesGroup()) {
-            $this->taxRulesGroupRepository->assertTaxRulesGroupExists(new TaxRulesGroupId($carrier->getIdTaxRulesGroup()));
         }
     }
 }

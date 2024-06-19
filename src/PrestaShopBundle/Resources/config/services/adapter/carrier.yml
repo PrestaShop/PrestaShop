@@ -5,6 +5,10 @@ services:
     autowire: true
 
   PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository:
+    autowire: true
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $prefix: '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRangeRepository:
     arguments:
@@ -39,6 +43,8 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\EditCarrierHandler:
 
+  PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\SetCarrierTaxRuleGroupHandler:
+
   PrestaShop\PrestaShop\Adapter\File\Uploader\CarrierLogoFileUploader:
 
   PrestaShop\PrestaShop\Adapter\Carrier\Validate\CarrierValidator:
@@ -46,5 +52,3 @@ services:
   PrestaShop\PrestaShop\Adapter\Carrier\QueryHandler\GetCarrierRangesHandler:
 
   PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\SetCarrierRangesHandler:
-
-  PrestaShop\PrestaShop\Adapter\Carrier\Validate\CarrierRangesValidator:

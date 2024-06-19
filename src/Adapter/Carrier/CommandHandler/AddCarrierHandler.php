@@ -85,9 +85,6 @@ class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHand
         $carrierId = $this->carrierRepository->add($carrier);
         $carrier->setGroups($command->getAssociatedGroupIds());
 
-        // Set tax rules group
-        $carrier->setTaxRulesGroup($command->getTaxRuleGroupId());
-
         if ($command->getLogoPathName() !== null) {
             $this->carrierValidator->validateLogoUpload(
                 $command->getLogoPathName()

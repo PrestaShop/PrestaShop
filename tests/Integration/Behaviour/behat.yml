@@ -503,7 +503,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttachmentFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\CarrierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Carrier\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CountryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
@@ -614,11 +614,12 @@ default:
             - "%paths.base%/Features/Scenario/Carrier"
           contexts:
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\CarrierFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\Carrier\CarrierFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\Carrier\CarrierRangesFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\Carrier\CarrierTaxRuleGroupFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
             - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
             - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\CarrierRangesFeatureContext
         employee:
           paths:
             - "%paths.base%/Features/Scenario/Employee"

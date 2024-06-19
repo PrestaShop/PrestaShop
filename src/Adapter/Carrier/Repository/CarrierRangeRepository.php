@@ -32,12 +32,15 @@ use Carrier;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierRangesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Provides access to carrier range data source
@@ -58,10 +61,10 @@ class CarrierRangeRepository
      *
      * @throws CarrierException
      * @throws Exception
-     * @throws \PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException
+     * @throws AttributeNotFoundException
      * @throws CarrierConstraintException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException
-     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
+     * @throws ZoneException
+     * @throws CoreException
      */
     public function get(CarrierId $carrierId, ShopConstraint $shopConstraint): array
     {
@@ -177,7 +180,7 @@ class CarrierRangeRepository
             $qb->delete($this->dbPrefix . $rangeTable)
                 ->where('id_carrier = :carrierId')
                 ->andWhere(
-                    'id_' . $rangeTable . ' NOT IN 
+                    'id_' . $rangeTable . ' NOT IN
                     (SELECT id_' . $rangeTable . ' FROM ' . $this->dbPrefix . 'delivery WHERE id_carrier = :carrierId)'
                 )
                 ->setParameter('carrierId', $carrierId->getValue())
