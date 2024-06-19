@@ -616,6 +616,7 @@ default:
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\CarrierFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
             - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\CarrierRangesFeatureContext
         employee:

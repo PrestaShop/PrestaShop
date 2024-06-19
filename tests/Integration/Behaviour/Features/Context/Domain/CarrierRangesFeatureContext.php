@@ -30,61 +30,79 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Carrier;
-use Exception;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRangeRepository;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\SetCarrierRangesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierRanges;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @Then /^I set ranges for carrier "(.+)" with specified properties for "(.+)" shops?:$/
+     * @Then I set ranges for carrier :reference called :newReference with specified properties for all shops:
      */
-    public function setCarrierRanges(string $reference, string $shop, TableNode $node): void
+    public function setCarrierRangesAllShops(string $reference, string $newReference, TableNode $node): void
     {
-        try {
-            $ranges = CarrierRangeRepository::formatRangesFromData($node);
-
-            $command = new SetCarrierRangesCommand(
-                $this->referenceToId($reference),
-                $ranges,
-                $this->getShopConstraint($shop),
-            );
-
-            $this->getCommandBus()->handle($command);
-        } catch (Exception $e) {
-            $this->setLastException($e);
-        }
+        $this->setCarrierRanges($reference, $newReference, ShopConstraint::allShops(), $node);
     }
 
     /**
-     * @Then /^carrier "(.+)" should have the following ranges for "(.+)" shops?:$/
+     * @Then I set ranges for carrier :reference called :newReference with specified properties for shop :shopReference:
      */
-    public function getCarrierRanges(string $reference, string $shop, TableNode $node): void
+    public function setCarrierRangesShop(string $reference, string $newReference, string $shopReference, TableNode $node): void
+    {
+        $this->setCarrierRanges($reference, $newReference, $this->getShopConstraint($shopReference), $node);
+    }
+
+    /**
+     * @Then carrier :reference should have the following ranges for all shops:
+     */
+    public function getCarrierRangesAllShops(string $reference, TableNode $node): void
+    {
+        $this->getCarrierRanges($reference, ShopConstraint::allShops(), $node);
+    }
+
+    /**
+     * @Then carrier :reference should have the following ranges for shop :shop:
+     */
+    public function getCarrierRangesShop(string $reference, string $shopReference, TableNode $node): void
+    {
+        $this->getCarrierRanges($reference, $this->getShopConstraint($shopReference), $node);
+    }
+
+    private function setCarrierRanges(string $reference, string $newReference, ShopConstraint $shopConstraint, TableNode $node): void
     {
         try {
-            $command = new GetCarrierRanges(
-                $this->referenceToId($reference),
-                $this->getShopConstraint($shop),
-            );
+            $carrierId = $this->referenceToId($reference);
 
-            $rangesDatabase = $this->getCommandBus()->handle($command);
-            $rangesExpected = CarrierRangeRepository::formatRangesFromData($node);
+            $command = new SetCarrierRangesCommand($carrierId, $node->getColumnsHash(), $shopConstraint);
 
-            Assert::assertEquals($rangesExpected, $rangesDatabase);
-        } catch (Exception $e) {
+            $carrierId = $this->getCommandBus()->handle($command);
+            $this->getSharedStorage()->set($newReference, $carrierId->getValue());
+        } catch (CarrierException $e) {
             $this->setLastException($e);
         }
     }
 
-    private function getShopConstraint(string $shop): ShopConstraint
+    private function getCarrierRanges(string $reference, ShopConstraint $shopConstraint, TableNode $node): void
     {
-        if ('all' === $shop) {
-            return ShopConstraint::allShops();
-        }
+        try {
+            $carrierId = $this->referenceToId($reference);
 
-        return ShopConstraint::shop((int) $shop);
+            $command = new GetCarrierRanges($carrierId, $shopConstraint);
+
+            $rangesDatabase = $this->getCommandBus()->handle($command);
+            $rangesExpected = new CarrierRangesCollection($node->getColumnsHash());
+
+            Assert::assertEquals($rangesExpected, $rangesDatabase);
+        } catch (CarrierException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    private function getShopConstraint(string $shopReference): ShopConstraint
+    {
+        return ShopConstraint::shop((int) $this->referenceToId($shopReference));
     }
 }

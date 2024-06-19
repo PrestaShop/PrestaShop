@@ -26,36 +26,41 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult;
+
+use PrestaShop\Decimal\DecimalNumber;
 
 /**
- * Carrier Range
+ * Price by Range and Zone for Carriers
  */
-class CarrierRange
+class CarrierRangePrice
 {
+    private DecimalNumber $from;
+    private DecimalNumber $to;
+    private DecimalNumber $price;
+
     public function __construct(
-        private float $from,
-        private float $to,
-        /** @var CarrierRangePrice[] $prices */
-        private array $prices,
+        string $from,
+        string $to,
+        string $price
     ) {
+        $this->from = new DecimalNumber($from);
+        $this->to = new DecimalNumber($to);
+        $this->price = new DecimalNumber($price);
     }
 
-    public function getFrom(): float
+    public function getFrom(): DecimalNumber
     {
         return $this->from;
     }
 
-    public function getTo(): float
+    public function getTo(): DecimalNumber
     {
         return $this->to;
     }
 
-    /**
-     * @return CarrierRangePrice[]
-     */
-    public function getPrices(): array
+    public function getPrice(): DecimalNumber
     {
-        return $this->prices;
+        return $this->price;
     }
 }

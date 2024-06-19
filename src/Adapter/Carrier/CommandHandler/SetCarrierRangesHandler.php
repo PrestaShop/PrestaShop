@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 
 use Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRangeRepository;
-use PrestaShop\PrestaShop\Adapter\Carrier\Validate\CarrierRangesValidator;
+use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\SetCarrierRangesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\SetCarrierRangesHandlerInterface;
@@ -41,8 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 final class SetCarrierRangesHandler implements SetCarrierRangesHandlerInterface
 {
     public function __construct(
+        private readonly CarrierRepository $carrierRepository,
         private readonly CarrierRangeRepository $carrierRangeRepository,
-        private readonly CarrierRangesValidator $rangesValidator,
     ) {
     }
 
@@ -51,14 +51,17 @@ final class SetCarrierRangesHandler implements SetCarrierRangesHandlerInterface
      */
     public function handle(SetCarrierRangesCommand $command): CarrierId
     {
-        $this->rangesValidator->validate($command->getRanges());
+        // Get new version of carrier
+        $newCarrier = $this->carrierRepository->updateInNewVersion($command->getCarrierId(), new Carrier());
+        $newCarrierId = new CarrierId($newCarrier->id);
 
+        // Set carrier ranges
         $this->carrierRangeRepository->set(
-            $command->getCarrierId(),
+            $newCarrierId,
             $command->getRanges(),
             $command->getShopConstraint()
         );
 
-        return $command->getCarrierId();
+        return $newCarrierId;
     }
 }

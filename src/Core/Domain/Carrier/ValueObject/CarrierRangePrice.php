@@ -28,42 +28,39 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+use PrestaShop\Decimal\DecimalNumber;
 
 /**
  * Price by Range and Zone for Carriers
  */
 class CarrierRangePrice
 {
+    private DecimalNumber $from;
+    private DecimalNumber $to;
+    private DecimalNumber $price;
+
     public function __construct(
-        private int $zoneId,
-        private float $price
+        string $from,
+        string $to,
+        string $price
     ) {
-        $this->assertIntegerIsGreaterThanZero($zoneId);
+        $this->from = new DecimalNumber($from);
+        $this->to = new DecimalNumber($to);
+        $this->price = new DecimalNumber($price);
     }
 
-    public function getZoneId(): int
+    public function getFrom(): DecimalNumber
     {
-        return $this->zoneId;
+        return $this->from;
     }
 
-    public function getPrice(): float
+    public function getTo(): DecimalNumber
+    {
+        return $this->to;
+    }
+
+    public function getPrice(): DecimalNumber
     {
         return $this->price;
-    }
-
-    /**
-     * @param int $zoneId
-     *
-     * @throws CarrierConstraintException
-     */
-    private function assertIntegerIsGreaterThanZero(int $zoneId)
-    {
-        if (0 >= $zoneId) {
-            throw new CarrierConstraintException(
-                sprintf('Invalid zone id %d supplied. Zone id must be a positive integer.', $zoneId),
-                CarrierConstraintException::INVALID_ZONE_ID
-            );
-        }
     }
 }

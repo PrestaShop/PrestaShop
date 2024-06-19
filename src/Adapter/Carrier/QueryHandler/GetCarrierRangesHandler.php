@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRangeRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierRanges;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryHandler\GetCarrierRangesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollection;
 
 /**
  * Handles query which gets carrier range
@@ -46,11 +47,15 @@ final class GetCarrierRangesHandler implements GetCarrierRangesHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(GetCarrierRanges $query): array
+    public function handle(GetCarrierRanges $query): CarrierRangesCollection
     {
-        return $this->carrierRangeRepository->get(
+        // Get carriers ranges
+        $results = $this->carrierRangeRepository->get(
             $query->getCarrierId(),
             $query->getShopConstraint()
         );
+
+        // Return formatted ranges
+        return new CarrierRangesCollection($results);
     }
 }

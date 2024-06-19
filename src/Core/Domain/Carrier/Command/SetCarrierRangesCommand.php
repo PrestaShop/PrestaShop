@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierRange;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierRangesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
@@ -38,14 +38,22 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 class SetCarrierRangesCommand
 {
     private CarrierId $carrierId;
+    private CarrierRangesCollection $ranges;
 
     public function __construct(
         int $carrierId,
-        /** @var CarrierRange[] $ranges */
-        private readonly array $ranges,
+        /* @var array{
+         *     id_zone: int,
+         *     range_from: float,
+         *     range_to: float,
+         *     range_price: string,
+         * }[] $ranges,
+         */
+        array $ranges,
         private readonly ShopConstraint $shopConstraint
     ) {
         $this->carrierId = new CarrierId($carrierId);
+        $this->ranges = new CarrierRangesCollection($ranges);
     }
 
     public function getCarrierId(): CarrierId
@@ -53,7 +61,7 @@ class SetCarrierRangesCommand
         return $this->carrierId;
     }
 
-    public function getRanges(): array
+    public function getRanges(): CarrierRangesCollection
     {
         return $this->ranges;
     }

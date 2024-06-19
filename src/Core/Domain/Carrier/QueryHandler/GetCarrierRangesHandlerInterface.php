@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierRanges;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierRange;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollection;
 
 /**
  * Describes get carrier ranges handler.
@@ -37,7 +37,7 @@ interface GetCarrierRangesHandlerInterface
     /**
      * @param GetCarrierRanges $query
      *
-     * @return CarrierRange[]
+     * @return CarrierRangesCollection
      */
-    public function handle(GetCarrierRanges $query): array;
+    public function handle(GetCarrierRanges $query): CarrierRangesCollection;
 }

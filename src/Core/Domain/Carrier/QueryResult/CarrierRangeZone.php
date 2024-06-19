@@ -26,34 +26,48 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Carrier\Validate;
-
-use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierRange;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult;
 
 /**
- * Validates carrier ranges properties
+ * Carrier Range Zone
  */
-class CarrierRangesValidator
+class CarrierRangeZone
 {
-    /**
-     * @param CarrierRange[] $ranges
-     *
-     * @throws CoreException
-     */
-    public function validate(array $ranges): void
-    {
-        // Check if ranges are valid (not overlapping)
-        $min = 0;
+    /** @var CarrierRangePrice[] */
+    private array $ranges;
+
+    public function __construct(
+        private int $zoneId,
+
+        /* @var array{
+         *     range_from: float,
+         *     range_to: float,
+         *     range_price: string,
+         * }[] $ranges,
+         */
+        array $ranges,
+    ) {
+        // Create CarrierRangePrice objects
+        $this->ranges = [];
         foreach ($ranges as $range) {
-            if ($min > $range->getFrom()) {
-                throw new CarrierConstraintException(
-                    'Carrier ranges are overlapping',
-                    CarrierConstraintException::INVALID_RANGES_OVERLAPPING
-                );
-            }
-            $min = $range->getTo();
+            $this->ranges[] = new CarrierRangePrice(
+                (string) $range['range_from'],
+                (string) $range['range_to'],
+                (string) $range['range_price']
+            );
         }
+    }
+
+    public function getZoneId(): int
+    {
+        return $this->zoneId;
+    }
+
+    /**
+     * @return CarrierRangePrice[]
+     */
+    public function getRanges(): array
+    {
+        return $this->ranges;
     }
 }
