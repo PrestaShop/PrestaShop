@@ -5,8 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-// Import BO pages
-import searchPage from '@pages/BO/shopParameters/search';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {searchResultsPage} from '@pages/FO/classic/searchResults';
@@ -15,6 +13,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boSearchPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -47,21 +46,21 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
       boDashboardPage.searchLink,
     );
 
-    const pageTitle = await searchPage.getPageTitle(page);
-    expect(pageTitle).to.contains(searchPage.pageTitle);
+    const pageTitle = await boSearchPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSearchPage.pageTitle);
   });
 
   it('should disable the Fuzzy Search', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableFuzzySearch', baseContext);
 
-    const textResult = await searchPage.setFuzzySearch(page, false);
-    expect(textResult).to.be.eq(searchPage.settingsUpdateMessage);
+    const textResult = await boSearchPage.setFuzzySearch(page, false);
+    expect(textResult).to.be.eq(boSearchPage.settingsUpdateMessage);
   });
 
   it('should go to the Front Office', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFoWoFuzzy', baseContext);
 
-    await searchPage.goToFo(page);
+    await boSearchPage.goToFo(page);
 
     const pageTitle = await homePage.getPageTitle(page);
     expect(pageTitle).to.be.eq(homePage.pageTitle);
@@ -110,21 +109,21 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
       boDashboardPage.searchLink,
     );
 
-    const pageTitle = await searchPage.getPageTitle(page);
-    expect(pageTitle).to.contains(searchPage.pageTitle);
+    const pageTitle = await boSearchPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSearchPage.pageTitle);
   });
 
   it('should disable the Fuzzy Search', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableFuzzySearch', baseContext);
 
-    const textResult = await searchPage.setFuzzySearch(page, true);
-    expect(textResult).to.be.eq(searchPage.settingsUpdateMessage);
+    const textResult = await boSearchPage.setFuzzySearch(page, true);
+    expect(textResult).to.be.eq(boSearchPage.settingsUpdateMessage);
   });
 
   it('should go to the Front Office', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFoWFuzzy', baseContext);
 
-    await searchPage.goToFo(page);
+    await boSearchPage.goToFo(page);
 
     const pageTitle = await homePage.getPageTitle(page);
     expect(pageTitle).to.be.eq(homePage.pageTitle);

@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import searchPage from '@pages/BO/shopParameters/search';
 import addSearchPage from '@pages/BO/shopParameters/search/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boSearchPage,
   FakerSearchAlias,
   utilsCore,
   utilsPlaywright,
@@ -56,14 +56,14 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
       boDashboardPage.searchLink,
     );
 
-    const pageTitle = await searchPage.getPageTitle(page);
-    expect(pageTitle).to.contains(searchPage.pageTitle);
+    const pageTitle = await boSearchPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSearchPage.pageTitle);
   });
 
   it('should reset all filters and get number of aliases in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfSearch = await searchPage.resetAndGetNumberOfLines(page);
+    numberOfSearch = await boSearchPage.resetAndGetNumberOfLines(page);
     expect(numberOfSearch).to.be.above(0);
   });
 
@@ -76,7 +76,7 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
       it('should go to add new search page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddAliasPage${index}`, baseContext);
 
-        await searchPage.goToAddNewAliasPage(page);
+        await boSearchPage.goToAddNewAliasPage(page);
 
         const pageTitle = await addSearchPage.getPageTitle(page);
         expect(pageTitle).to.contains(addSearchPage.pageTitleCreate);
@@ -86,9 +86,9 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
         await testContext.addContextItem(this, 'testIdentifier', `createAlias${index}`, baseContext);
 
         const textResult = await addSearchPage.setAlias(page, aliasData);
-        expect(textResult).to.contains(searchPage.successfulCreationMessage);
+        expect(textResult).to.contains(boSearchPage.successfulCreationMessage);
 
-        const numberOfElementAfterCreation = await searchPage.getNumberOfElementInGrid(page);
+        const numberOfElementAfterCreation = await boSearchPage.getNumberOfElementInGrid(page);
         expect(numberOfElementAfterCreation).to.be.equal(numberOfSearch + 1 + index);
       });
     });
@@ -99,28 +99,28 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await searchPage.selectPaginationLimit(page, 20);
+      const paginationNumber = await boSearchPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await searchPage.paginationNext(page);
+      const paginationNumber = await boSearchPage.paginationNext(page);
       expect(paginationNumber).to.equal('2');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await searchPage.paginationPrevious(page);
+      const paginationNumber = await boSearchPage.paginationPrevious(page);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await searchPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boSearchPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -161,18 +161,18 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await searchPage.filterTable(
+        await boSearchPage.filterTable(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfGroupsAfterFilter = await searchPage.getNumberOfElementInGrid(page);
+        const numberOfGroupsAfterFilter = await boSearchPage.getNumberOfElementInGrid(page);
         expect(numberOfGroupsAfterFilter).to.be.at.most(numberOfSearch);
 
         for (let row = 1; row <= numberOfGroupsAfterFilter; row++) {
-          const textColumn = await searchPage.getTextColumn(page, row, test.args.filterBy);
+          const textColumn = await boSearchPage.getTextColumn(page, row, test.args.filterBy);
           expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -180,7 +180,7 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfGroupsAfterReset = await searchPage.resetAndGetNumberOfLines(page);
+        const numberOfGroupsAfterReset = await boSearchPage.resetAndGetNumberOfLines(page);
         expect(numberOfGroupsAfterReset).to.equal(numberOfSearch + 19);
       });
     });
@@ -217,10 +217,10 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await searchPage.getAllRowsColumnContent(page, test.args.sortBy);
-        await searchPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const nonSortedTable = await boSearchPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await boSearchPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await searchPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boSearchPage.getAllRowsColumnContent(page, test.args.sortBy);
         const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
         if (test.args.sortDirection === 'asc') {
@@ -237,10 +237,10 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToEnableDisable', baseContext);
 
-      await searchPage.resetFilter(page);
-      await searchPage.filterTable(page, 'input', 'alias', 'todelete');
+      await boSearchPage.resetFilter(page);
+      await boSearchPage.filterTable(page, 'input', 'alias', 'todelete');
 
-      const textAlias = await searchPage.getTextColumn(page, 1, 'alias');
+      const textAlias = await boSearchPage.getTextColumn(page, 1, 'alias');
       expect(textAlias).to.contains('todelete');
     });
 
@@ -251,13 +251,13 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
       it(`should ${test.args.action} with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Status`, baseContext);
 
-        const textResult = await searchPage.bulkSetStatus(page, test.args.value);
-        expect(textResult).to.contains(searchPage.successfulUpdateStatusMessage);
+        const textResult = await boSearchPage.bulkSetStatus(page, test.args.value);
+        expect(textResult).to.contains(boSearchPage.successfulUpdateStatusMessage);
 
-        const numberOfElementInGrid = await searchPage.getNumberOfElementInGrid(page);
+        const numberOfElementInGrid = await boSearchPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfElementInGrid; i++) {
-          const textColumn = await searchPage.getStatus(page, i);
+          const textColumn = await boSearchPage.getStatus(page, i);
           expect(textColumn).to.equal(test.args.value);
         }
       });
@@ -269,20 +269,20 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await searchPage.resetFilter(page);
-      await searchPage.filterTable(page, 'input', 'alias', 'todelete');
+      await boSearchPage.resetFilter(page);
+      await boSearchPage.filterTable(page, 'input', 'alias', 'todelete');
 
-      const textAlias = await searchPage.getTextColumn(page, 1, 'alias');
+      const textAlias = await boSearchPage.getTextColumn(page, 1, 'alias');
       expect(textAlias).to.contains('todelete');
     });
 
     it('should delete aliases', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAliases', baseContext);
 
-      const textResult = await searchPage.bulkDeleteAliases(page);
-      expect(textResult).to.contains(searchPage.successfulMultiDeleteMessage);
+      const textResult = await boSearchPage.bulkDeleteAliases(page);
+      expect(textResult).to.contains(boSearchPage.successfulMultiDeleteMessage);
 
-      const numberOfSearchAfterDelete = await searchPage.resetAndGetNumberOfLines(page);
+      const numberOfSearchAfterDelete = await boSearchPage.resetAndGetNumberOfLines(page);
       expect(numberOfSearchAfterDelete).to.be.equal(numberOfSearch);
     });
   });

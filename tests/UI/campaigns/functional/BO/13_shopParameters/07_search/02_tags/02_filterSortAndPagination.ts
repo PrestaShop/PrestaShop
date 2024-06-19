@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import searchPage from '@pages/BO/shopParameters/search';
 import tagsPage from '@pages/BO/shopParameters/search/tags';
 import addTagPage from '@pages/BO/shopParameters/search/tags/add';
 
@@ -13,6 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boSearchPage,
   dataLanguages,
   FakerSearchTag,
   utilsCore,
@@ -56,14 +56,14 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
       boDashboardPage.searchLink,
     );
 
-    const pageTitle = await searchPage.getPageTitle(page);
-    expect(pageTitle).to.contains(searchPage.pageTitle);
+    const pageTitle = await boSearchPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSearchPage.pageTitle);
   });
 
   it('should go to \'Tags\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTagsPage', baseContext);
 
-    await searchPage.goToTagsPage(page);
+    await boSearchPage.goToTagsPage(page);
     numberOfTags = await tagsPage.getNumberOfElementInGrid(page);
 
     const pageTitle = await tagsPage.getPageTitle(page);
