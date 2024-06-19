@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -9,7 +8,11 @@ import hookModule from '@commonTests/BO/design/positions';
 // Import pages
 import positionsPage from '@pages/BO/design/positions';
 
-import {boDashboardPage, dataModules} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  dataModules,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
@@ -25,12 +28,12 @@ describe('BO - Design - Positions : Unhook module in list by Bulk actions', asyn
   describe('Unhook module in list by Bulk actions', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {

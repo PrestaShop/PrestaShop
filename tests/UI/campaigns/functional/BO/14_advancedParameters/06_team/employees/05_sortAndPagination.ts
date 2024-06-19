@@ -1,6 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -15,6 +13,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerEmployee,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_employees_sortAndPagination';
@@ -34,12 +34,12 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -131,7 +131,7 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
           const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -139,7 +139,7 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);

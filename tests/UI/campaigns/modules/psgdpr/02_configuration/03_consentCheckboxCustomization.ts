@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -36,6 +35,7 @@ import {
   FakerProduct,
   foClassicHomePage,
   foClassicLoginPage,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_psgdpr_configuration_consentCheckboxCustomization';
@@ -60,12 +60,12 @@ describe('GDPR : Consent checkbox customization', async () => {
   describe('Consent checkbox customization', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {

@@ -1,6 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -23,6 +21,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerCartRule,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_invalidDateTime';
@@ -41,7 +41,7 @@ describe('BO - Catalog - Cart rules : Invalid date time', async () => {
   let page: Page;
 
   // Data to create a date format
-  const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
+  const pastDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'past');
   const newCartRuleData: FakerCartRule = new FakerCartRule({
     name: 'Cart rule invalid date time',
     discountType: 'Percent',
@@ -52,12 +52,12 @@ describe('BO - Catalog - Cart rules : Invalid date time', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('BO : Create new cart rule', async () => {

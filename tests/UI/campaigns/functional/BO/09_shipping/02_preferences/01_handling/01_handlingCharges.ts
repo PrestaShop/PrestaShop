@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -23,10 +21,11 @@ import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataGroups,
   FakerCarrier,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -76,18 +75,18 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create image
-    await files.generateImage(`${createCarrierData.name}.jpg`);
+    await utilsFile.generateImage(`${createCarrierData.name}.jpg`);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     // Delete image
-    await files.deleteFile(`${createCarrierData.name}.jpg`);
+    await utilsFile.deleteFile(`${createCarrierData.name}.jpg`);
   });
 
   it('should login in BO', async function () {

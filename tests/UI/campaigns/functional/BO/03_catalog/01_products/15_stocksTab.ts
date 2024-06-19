@@ -1,6 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -22,6 +20,8 @@ import {
   boDashboardPage,
   dataEmployees,
   FakerProduct,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_stocksTab';
@@ -42,16 +42,16 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
   const productLowStockThreshold: number = 3;
   const productLabelWhenInStock: string = 'LABEL IN STOCK';
   const productLabelWhenOutOfStock: string = 'LABEL OUT OF STOCK';
-  const todayDate: string = date.getDateFormat('yyyy-mm-dd');
+  const todayDate: string = utilsDate.getDateFormat('yyyy-mm-dd');
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // 1 - Create product

@@ -1,8 +1,5 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import mailHelper from '@utils/mailHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -26,6 +23,9 @@ import {
   FakerContactMessage,
   type MailDev,
   type MailDevEmail,
+  utilsFile,
+  utilsMail,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -66,14 +66,14 @@ describe('FO - Contact us : Send message from contact us page with customer logg
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    await files.createFile('.', `${contactUsData.fileName}.txt`, 'new filename');
+    await utilsFile.createFile('.', `${contactUsData.fileName}.txt`, 'new filename');
 
     // Start listening to maildev server
-    mailListener = mailHelper.createMailListener();
-    mailHelper.startListener(mailListener);
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
 
     // Handle every new email
     mailListener.on('new', (email: MailDevEmail) => {
@@ -82,12 +82,12 @@ describe('FO - Contact us : Send message from contact us page with customer logg
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
-    await files.deleteFile(`${contactUsData.fileName}.txt`);
+    await utilsFile.deleteFile(`${contactUsData.fileName}.txt`);
 
     // Stop listening to maildev server
-    mailHelper.stopListener(mailListener);
+    utilsMail.stopListener(mailListener);
   });
 
   describe('PRE-TEST: Configure Contact form module', async () => {

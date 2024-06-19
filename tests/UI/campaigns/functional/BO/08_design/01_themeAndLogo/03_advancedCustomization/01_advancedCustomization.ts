@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import login steps
@@ -18,6 +16,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataModules,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_themeAndLogo_advancedCustomization_advancedCustomization';
@@ -45,12 +45,12 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -114,7 +114,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
 
       filePath = await advancedCustomizationPage.downloadTheme(page);
 
-      const exist = await files.doesFileExist(filePath);
+      const exist = await utilsFile.doesFileExist(filePath);
       expect(exist, 'Theme was not downloaded').to.eq(true);
     });
 
@@ -129,7 +129,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should upload child theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uploadChildTheme', baseContext);
 
-      await files.renameFile(filePath, renamedFilePath);
+      await utilsFile.renameFile(filePath, renamedFilePath);
 
       const uploadTheme = await advancedCustomizationPage.uploadTheme(page, renamedFilePath);
       expect(uploadTheme, 'Child theme is not uploaded')
@@ -148,10 +148,10 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
       await testContext
         .addContextItem(this, 'testIdentifier', 'removeZipFileChildThemeFromThemesFolder', baseContext);
 
-      const generatedFilePath = await files.getFilePathAutomaticallyGenerated(themesPath, renamedFilePath);
-      await files.deleteFile(generatedFilePath);
+      const generatedFilePath = await utilsFile.getFilePathAutomaticallyGenerated(themesPath, renamedFilePath);
+      await utilsFile.deleteFile(generatedFilePath);
 
-      const doesFileExist = await files.doesFileExist(generatedFilePath);
+      const doesFileExist = await utilsFile.doesFileExist(generatedFilePath);
       expect(doesFileExist).to.eq(false);
     });
 
@@ -159,9 +159,9 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
       await testContext
         .addContextItem(this, 'testIdentifier', 'removeChildThemeFromTemporaryPath', baseContext);
 
-      await files.deleteFile(renamedFilePath);
+      await utilsFile.deleteFile(renamedFilePath);
 
-      const doesFileExist = await files.doesFileExist(renamedFilePath);
+      const doesFileExist = await utilsFile.doesFileExist(renamedFilePath);
       expect(doesFileExist).to.eq(false);
     });
   });

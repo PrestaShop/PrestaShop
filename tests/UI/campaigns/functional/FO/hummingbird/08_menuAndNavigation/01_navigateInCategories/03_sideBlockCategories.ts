@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -14,6 +13,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataCategories,
   FakerCategory,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigateInCategories_sideBlockCategories';
@@ -27,12 +27,12 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Check Side block categories', async () => {

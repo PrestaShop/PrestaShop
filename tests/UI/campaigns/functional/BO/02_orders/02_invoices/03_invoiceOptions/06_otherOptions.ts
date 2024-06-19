@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import login steps
@@ -20,6 +18,8 @@ import {
   dataProducts,
   FakerOrder,
   FakerOrderInvoice,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -65,13 +65,13 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
     // Delete the invoice file
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -141,7 +141,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       expect(filePath).to.not.eq(null);
 
       if (filePath) {
-        const exist = await files.doesFileExist(filePath);
+        const exist = await utilsFile.doesFileExist(filePath);
         expect(exist).to.eq(true);
       }
     });
@@ -158,7 +158,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedLegalFreeText', baseContext);
 
       // Check the existence of the Legal free text
-      const exist = await files.isTextInPDF(filePath, invoiceData.legalFreeText);
+      const exist = await utilsFile.isTextInPDF(filePath, invoiceData.legalFreeText);
       expect(exist, `PDF does not contains this text : ${invoiceData.legalFreeText}`).to.eq(true);
     });
 
@@ -166,7 +166,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedFooterText', baseContext);
 
       // Check the existence of the Footer text
-      const exist = await files.isTextInPDF(filePath, invoiceData.footerText);
+      const exist = await utilsFile.isTextInPDF(filePath, invoiceData.footerText);
       expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.eq(true);
     });
   });

@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -20,6 +18,8 @@ import {
   dataCustomers,
   dataOrders,
   FakerContactMessage,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -50,18 +50,18 @@ describe('FO - Contact us : Add attachment', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    await files.createFile('.', `${contactUsData.fileName}.csv`, 'new filename');
-    await files.createFile('.', `${contactUsData.fileName}.png`, 'new filename');
+    await utilsFile.createFile('.', `${contactUsData.fileName}.csv`, 'new filename');
+    await utilsFile.createFile('.', `${contactUsData.fileName}.png`, 'new filename');
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
-    await files.deleteFile(`${contactUsData.fileName}.csv`);
-    await files.deleteFile(`${contactUsData.fileName}.png`);
+    await utilsFile.deleteFile(`${contactUsData.fileName}.csv`);
+    await utilsFile.deleteFile(`${contactUsData.fileName}.png`);
   });
 
   it('should open the shop page', async function () {

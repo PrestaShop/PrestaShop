@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -20,6 +18,8 @@ import {
   dataCustomers,
   dataEmployees,
   FakerContactMessage,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -44,16 +44,16 @@ describe('BO - Customer Service : Change status', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    await files.generateImage(`${contactUsData.fileName}.jpg`);
+    await utilsFile.generateImage(`${contactUsData.fileName}.jpg`);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
-    await files.deleteFile(`${contactUsData.fileName}.jpg`);
+    await utilsFile.deleteFile(`${contactUsData.fileName}.jpg`);
   });
 
   describe('FO : Send message to customer service', async () => {

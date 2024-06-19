@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import date from '@utils/date';
 
 // Import common tests
 import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
@@ -20,6 +18,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   FakerCartRule,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_checkout_displayOfHighlightedCartRules';
@@ -40,7 +40,7 @@ Post-condition:
 describe('FO - Checkout : Display of highlighted cart rule', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
+  const pastDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'past');
 
   // Data to create cart rule with code
   const cartRuleWithCodeData: FakerCartRule = new FakerCartRule({
@@ -66,12 +66,12 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
 
   describe('Display of highlighted promo code', async () => {
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should go to FO', async function () {

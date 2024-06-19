@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
@@ -20,6 +18,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_addFileCustomization';
@@ -49,16 +49,16 @@ describe('FO - Product page - Product page : Add a file customization', async ()
   describe('Create product with 2 customizations and check it in FO', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
-      await files.generateImage('file_1.jpg');
-      await files.generateImage('file_2.jpg');
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
+      await utilsFile.generateImage('file_1.jpg');
+      await utilsFile.generateImage('file_2.jpg');
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
-      await files.deleteFile('file_1.jpg');
-      await files.deleteFile('file_2.jpg');
+      await utilsPlaywright.closeBrowserContext(browserContext);
+      await utilsFile.deleteFile('file_1.jpg');
+      await utilsFile.deleteFile('file_2.jpg');
     });
 
     it('should login in BO', async function () {

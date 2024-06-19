@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -18,6 +17,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   FakerCartRule,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_cart_cart_addPromoCode';
@@ -45,12 +45,12 @@ describe('FO - cart : Add promo code', async () => {
   installHummingbird(`${baseContext}_preTest_2`);
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Check promo code block', async () => {

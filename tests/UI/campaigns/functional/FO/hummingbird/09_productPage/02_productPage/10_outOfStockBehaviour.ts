@@ -1,8 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
-import date from '@utils/date';
 
 // Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
@@ -24,6 +21,9 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  utilsDate,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_outOfStockBehaviour';
@@ -31,7 +31,7 @@ const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_o
 describe('FO - Product page - Product page : Out of stock behaviour', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const todayDate: string = date.getDateFormat('yyyy-mm-dd');
+  const todayDate: string = utilsDate.getDateFormat('yyyy-mm-dd');
 
   // Data to create new product
   const newProductData: FakerProduct = new FakerProduct({
@@ -47,25 +47,25 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     if (newProductData.coverImage) {
-      await files.generateImage(newProductData.coverImage);
+      await utilsFile.generateImage(newProductData.coverImage);
     }
     if (newProductData.thumbImage) {
-      await files.generateImage(newProductData.thumbImage);
+      await utilsFile.generateImage(newProductData.thumbImage);
     }
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     if (newProductData.coverImage) {
-      await files.deleteFile(newProductData.coverImage);
+      await utilsFile.deleteFile(newProductData.coverImage);
     }
     if (newProductData.thumbImage) {
-      await files.deleteFile(newProductData.thumbImage);
+      await utilsFile.deleteFile(newProductData.thumbImage);
     }
   });
 

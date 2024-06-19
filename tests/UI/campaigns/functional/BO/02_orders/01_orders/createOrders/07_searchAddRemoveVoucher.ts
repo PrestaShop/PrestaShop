@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -20,6 +17,9 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  utilsCore,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -50,7 +50,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
   let numberOfCartRules: number = 0;
   let addVoucherPage: Frame|null;
 
-  const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
+  const pastDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'past');
   // Data to create cart rule without code
   const cartRuleWithoutCodeData: FakerCartRule = new FakerCartRule({
     name: 'WithoutCode',
@@ -97,12 +97,12 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
   createCartRuleTest(cartRuleWithCodeData, `${baseContext}_preTest_2`);
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // 1 - Go to create order page
@@ -176,7 +176,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock1', baseContext);
 
-      const totalTaxes = await basicHelper.percentage(
+      const totalTaxes = await utilsCore.percentage(
         dataProducts.demo_12.priceTaxExcluded - cartRuleWithoutCodeData.discountAmount!.value,
         20,
       );
@@ -315,7 +315,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock2', baseContext);
 
-      const totalTaxes = await basicHelper.percentage(
+      const totalTaxes = await utilsCore.percentage(
         dataProducts.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount!.value,
         20,
       );

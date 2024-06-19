@@ -1,7 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
-import basicHelper from '@utils/basicHelper';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -35,6 +32,9 @@ import {
   FakerAddress,
   FakerContactMessage,
   FakerCustomer,
+  utilsCore,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -101,16 +101,16 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
     // Create file for contact us form
-    await files.createFile('.', `${contactUsData.fileName}.txt`, 'new filename');
+    await utilsFile.createFile('.', `${contactUsData.fileName}.txt`, 'new filename');
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
     // Delete the created file
-    await files.deleteFile(`${contactUsData.fileName}.txt`);
+    await utilsFile.deleteFile(`${contactUsData.fileName}.txt`);
   });
 
   describe('Check GDPR CSV file after create customer and first login', async () => {
@@ -167,7 +167,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
-        const found = await files.doesFileExist(filePath);
+        const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
@@ -240,9 +240,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check general info', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkGeneralInfo', baseContext);
 
-        const age = await basicHelper.age(customerData.birthDate);
+        const age = await utilsCore.age(customerData.birthDate);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           '"GENERALINFO"GenderName"Birthdate"AgeEmailLanguage"Creationaccountdata""Lastvisit"'
           + `SiretApeCompanyWebsite${customerData.socialTitle}"${customerData.firstName}${customerData.lastName}"`
@@ -258,7 +258,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check that Addresses table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatAddressesTableIsEmpty', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"Noaddresses"',
           true,
@@ -271,7 +271,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check that Orders table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatOrdersTableIsEmpty', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'RDERSReferencePayment"Orderstate""Totalpaid"Date"Noorders"',
           true,
@@ -284,7 +284,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatCartsTableIsEmpty1', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
           true,
@@ -297,7 +297,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check that Messages table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatMessagesTableIsEmpty', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'MESSAGESIPMessageDate"Nomessages""',
           true,
@@ -310,7 +310,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Last connections table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLastConnectionsTable1', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `LASTCONNECTIONS""Originrequest""Pageviewed""Timeonthepage""IPaddress"DateCountryDate0${ipAddress}`
           + `"${lastVisitDate}"`,
@@ -324,7 +324,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check that Newsletter subscription table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNewsletterSubscriptionTable', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           '"MODULE:NEWSLETTERSUBSCRIPTION""Newslettersubscription:noemailtoexport,thiscustomerhasnotregistered.""',
           true,
@@ -337,7 +337,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check that Module product comments is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkModuleProductComments', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           '""MODULE:PRODUCTCOMMENTS""MODULE:MAILALERTS"',
           true,
@@ -350,7 +350,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check that mail alerts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkModuleMailAlerts', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'MODULE:MAILALERTS""Mailalert:Unabletoexportcustomerusingemail."',
           true,
@@ -408,7 +408,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
-        const found = await files.doesFileExist(filePath);
+        const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
@@ -471,7 +471,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Carts table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatCartsTableIsEmpty2', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `CARTSId"Totalproducts"Date#${shoppingCartID}1`
           + `"${shoppingCartDate}""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity`
@@ -557,7 +557,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
-        const found = await files.doesFileExist(filePath);
+        const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
@@ -621,7 +621,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Addresses table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable1', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
           + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
@@ -635,7 +635,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable1', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
           + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
@@ -650,7 +650,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartsTable1', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
           true,
@@ -714,7 +714,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
-        const found = await files.doesFileExist(filePath);
+        const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
@@ -763,7 +763,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Addresses table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable2', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
           + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
@@ -777,7 +777,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable2', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
           + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
@@ -792,7 +792,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartsTable2', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
           true,
@@ -804,7 +804,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Messages table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkMessagesTable1', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `MESSAGESIPMessageDate${ipAddress}"${contactUsData.message.replace(/\s/g, '')}""${messageDate}`,
           true,
@@ -868,7 +868,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
-        const found = await files.doesFileExist(filePath);
+        const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
@@ -946,7 +946,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Addresses table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable3', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
           + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
@@ -960,7 +960,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable3', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
           + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
@@ -975,7 +975,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartsTable3', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
           true,
@@ -987,7 +987,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Messages table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkMessagesTable2', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `MESSAGESIPMessageDate${ipAddress}"${contactUsData.message.replace(/\s/g, '')}""${messageDate}`,
           true,
@@ -999,7 +999,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Last connections table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLastConnectionsTable2', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'LASTCONNECTIONS""Originrequest""Pageviewed""Timeonthepage""IPaddress"DateCountryDate'
           + `${connectionOrigin}0${ipAddress}"${secondLastVisitDate}"0${ipAddress}"${lastVisitDate}"`,

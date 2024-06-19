@@ -1,6 +1,5 @@
 import loginCommon from '@commonTests/BO/loginBO';
 
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
@@ -10,6 +9,7 @@ import {
   boDesignPositionsHookModulePage,
   boDesignPositionsPage,
   type FakerModule,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 function hookModule(
@@ -23,12 +23,12 @@ function hookModule(
 
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {

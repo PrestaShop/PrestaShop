@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -19,6 +17,8 @@ import {
   boDashboardPage,
   dataCurrencies,
   dataProducts,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -46,13 +46,13 @@ describe('FO - Header and Footer : Change currency', async () => {
   let exchangeRateValue: number = 0;
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await files.deleteFile(filePath);
-    await helper.closeBrowserContext(browserContext);
+    await utilsFile.deleteFile(filePath);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Pre-condition: Check the block currencies is not displayed in header of FO

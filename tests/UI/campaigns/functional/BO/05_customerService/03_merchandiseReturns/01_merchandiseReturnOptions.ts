@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -24,10 +23,10 @@ import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -53,12 +52,12 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('PRE-TEST: Create order in FO', async () => {

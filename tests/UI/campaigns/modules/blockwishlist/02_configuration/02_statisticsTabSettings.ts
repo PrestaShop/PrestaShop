@@ -1,24 +1,20 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
 import {
-  // Import BO pages
   boDashboardPage,
   boModuleManagerPage,
-  // Import FO pages
   foClassicCategoryPage,
   foClassicHomePage,
   foClassicLoginPage,
-  // Import modules
   modBlockwishlistBoMain,
   modBlockwishlistBoStatistics,
-  // Import data
   dataCustomers,
   dataModules,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -32,12 +28,12 @@ describe('Wishlist module - Statistics tab settings', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Check the Back Office', async () => {

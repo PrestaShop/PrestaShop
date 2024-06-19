@@ -1,9 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
-import date from '@utils/date';
 
 import type {Page} from 'playwright';
 import {
   type ShoppingCartDetails,
+  utilsDate,
 } from '@prestashop-core/ui-testing';
 
 /**
@@ -210,7 +210,7 @@ class ShoppingCarts extends BOBasePage {
   async getCartInCsvFormat(page: Page, row: number): Promise<string> {
     const cart = await this.getCartFromTable(page, row);
 
-    const cartDate = date.setDateFormat('yyyy-mm-dd', cart.date ?? '')
+    const cartDate = utilsDate.setDateFormat('yyyy-mm-dd', cart.date ?? '')
       .replace(' ', '');
     const lastName = cart.lastname !== '--' ? `"${cart.lastname?.replace(' ', '')}"` : '';
     const carrier = cart.carrier !== '--' ? `"${cart.carrier?.replace(' ', '')}"` : '';

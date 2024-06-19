@@ -1,6 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -29,6 +27,8 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -52,7 +52,7 @@ describe('BO - Customers - Customers : View information about customer', async (
   let page: Page;
   let numberOfCustomers: number = 0;
 
-  const today: string = date.getDateFormat('mm/dd/yyyy');
+  const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
   // Init data
   const createCustomerData: FakerCustomer = new FakerCustomer({defaultCustomerGroup: 'Customer'});
   const editCustomerData: FakerCustomer = new FakerCustomer({defaultCustomerGroup: 'Visitor'});
@@ -75,12 +75,12 @@ describe('BO - Customers - Customers : View information about customer', async (
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {

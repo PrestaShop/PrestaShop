@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -18,6 +16,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerContactMessage,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customerService_customerService_contactOptions';
@@ -35,16 +35,16 @@ describe('BO - Customer Service : Contact options', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    await files.generateImage(`${contactUsData.fileName}.jpg`);
+    await utilsFile.generateImage(`${contactUsData.fileName}.jpg`);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
-    await files.deleteFile(`${contactUsData.fileName}.jpg`);
+    await utilsFile.deleteFile(`${contactUsData.fileName}.jpg`);
   });
 
   describe('BO : Update default message', async () => {

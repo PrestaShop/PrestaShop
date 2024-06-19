@@ -1,6 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -16,6 +14,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerFeature,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_features_features_changePosition';
@@ -33,12 +33,12 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('PRE-TEST: Create new feature', async () => {
@@ -99,7 +99,7 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
       const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
       const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-      const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+      const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
       expect(sortedTableFloat).to.deep.equal(expectedResult);
     });
@@ -149,7 +149,7 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
       const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
       const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-      const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+      const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
       expect(sortedTableFloat).to.deep.equal(expectedResult);
     });

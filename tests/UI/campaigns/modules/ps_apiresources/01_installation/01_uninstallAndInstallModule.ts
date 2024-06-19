@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -17,6 +15,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataModules,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_apiresources_installation_uninstallAndInstallModule';
@@ -27,13 +27,13 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('module.zip');
+    await utilsPlaywright.closeBrowserContext(browserContext);
+    await utilsFile.deleteFile('module.zip');
   });
 
   describe('BackOffice - Login', async () => {
@@ -76,7 +76,7 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
       const isModalVisible = await moduleManagerPage.isModalActionVisible(page, dataModules.psApiResources, 'uninstall');
       expect(isModalVisible).to.eq(false);
 
-      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psApiResources.tag}/`);
+      const dirExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/modules/${dataModules.psApiResources.tag}/`);
       expect(dirExists).to.eq(true);
     });
 
@@ -87,7 +87,7 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
       expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.psApiResources.tag));
 
       // Check the directory `modules/dataModules.psApiResources.tag`
-      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psApiResources.tag}/`);
+      const dirExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/modules/${dataModules.psApiResources.tag}/`);
       expect(dirExists).to.eq(true);
     });
   });
@@ -166,7 +166,7 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
       expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(dataModules.psApiResources.tag));
 
       // Check the directory `modules/dataModules.psEmailAlerts.tag`
-      const dirExists = await files.doesFileExist(`${files.getRootPath()}/modules/${dataModules.psApiResources.tag}/`);
+      const dirExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/modules/${dataModules.psApiResources.tag}/`);
       expect(dirExists).to.eq(true);
     });
   });

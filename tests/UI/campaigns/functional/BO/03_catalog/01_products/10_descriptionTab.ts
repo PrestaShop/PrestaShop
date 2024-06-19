@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
@@ -17,6 +15,8 @@ import {expect} from 'chai';
 import {
   boDashboardPage,
   FakerProduct,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_descriptionTab';
@@ -38,21 +38,21 @@ describe('BO - Catalog - Products : Description tab', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-    await files.generateImage(productCoverImage);
-    await files.generateImage(replaceProductCoverImage);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
+    await utilsFile.generateImage(productCoverImage);
+    await utilsFile.generateImage(replaceProductCoverImage);
     if (productData.coverImage) {
-      await files.generateImage(productData.coverImage);
+      await utilsFile.generateImage(productData.coverImage);
     }
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
-    await files.deleteFile(productCoverImage);
-    await files.deleteFile(replaceProductCoverImage);
+    await utilsPlaywright.closeBrowserContext(browserContext);
+    await utilsFile.deleteFile(productCoverImage);
+    await utilsFile.deleteFile(replaceProductCoverImage);
     if (productData.coverImage) {
-      await files.deleteFile(productData.coverImage);
+      await utilsFile.deleteFile(productData.coverImage);
     }
   });
 

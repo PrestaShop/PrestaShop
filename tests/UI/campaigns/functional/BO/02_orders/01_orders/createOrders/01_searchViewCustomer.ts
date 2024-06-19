@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -13,9 +12,9 @@ import addOrderPage from '@pages/BO/orders/add';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   FakerCustomer,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -57,12 +56,12 @@ describe('BO - Orders - Create order : Search and view customer details from new
   createCustomerTest(newCustomer, `${baseContext}_preTest_2`);
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // 1 - Search for customers

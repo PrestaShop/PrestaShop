@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -14,6 +13,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   type FakerCartRule,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
@@ -29,12 +29,12 @@ function createCartRuleTest(cartRuleData: FakerCartRule, baseContext: string = '
   describe('PRE-TEST: Create cart rule', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
@@ -88,12 +88,12 @@ function deleteCartRuleTest(cartRuleName: string, baseContext : string = 'common
   describe('POST-TEST: Delete cart rule', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
@@ -144,12 +144,12 @@ function bulkDeleteCartRuleTest(baseContext: string = 'commonTests-bulkDeleteCar
   describe('POST-TEST: Bulk delete cart rule', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {

@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonSteps
@@ -31,6 +29,8 @@ import {
   FakerProduct,
   FakerTaxRule,
   FakerTaxRulesGroup,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -75,12 +75,12 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
   // before and after functions
   before(async function () {
     // Create new tab
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -334,7 +334,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         expect(firstInvoiceFileName).to.not.eq(null);
 
         // Check that file exist
-        const exist = await files.doesFileExist(firstInvoiceFileName);
+        const exist = await utilsFile.doesFileExist(firstInvoiceFileName);
         expect(exist).to.eq(true);
       });
 
@@ -342,11 +342,11 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkTaxBreakdownInFile', baseContext);
 
         // Check the existence of the first tax
-        let exist = await files.isTextInPDF(firstInvoiceFileName, '10.000 %');
+        let exist = await utilsFile.isTextInPDF(firstInvoiceFileName, '10.000 %');
         expect(exist).to.eq(true);
 
         // Check the existence of the second tax
-        exist = await files.isTextInPDF(firstInvoiceFileName, '20.000 %');
+        exist = await utilsFile.isTextInPDF(firstInvoiceFileName, '20.000 %');
         expect(exist).to.eq(true);
       });
     });
@@ -407,7 +407,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         secondInvoiceFileName = await orderPageTabListBlock.downloadInvoice(page);
         expect(secondInvoiceFileName).to.not.eq(null);
 
-        const exist = await files.doesFileExist(secondInvoiceFileName);
+        const exist = await utilsFile.doesFileExist(secondInvoiceFileName);
         expect(exist).to.eq(true);
       });
 
@@ -415,13 +415,13 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNoTaxBreakdownInFile', baseContext);
 
         // Check that there is only one tax line 30.000 %
-        let exist = await files.isTextInPDF(secondInvoiceFileName, '10.000 %');
+        let exist = await utilsFile.isTextInPDF(secondInvoiceFileName, '10.000 %');
         expect(exist).to.eq(false);
 
-        exist = await files.isTextInPDF(secondInvoiceFileName, '20.000 %');
+        exist = await utilsFile.isTextInPDF(secondInvoiceFileName, '20.000 %');
         expect(exist).to.eq(false);
 
-        exist = await files.isTextInPDF(secondInvoiceFileName, '30.000 %');
+        exist = await utilsFile.isTextInPDF(secondInvoiceFileName, '30.000 %');
         expect(exist).to.eq(true);
       });
     });

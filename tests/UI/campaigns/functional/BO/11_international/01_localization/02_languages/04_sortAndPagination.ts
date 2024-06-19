@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -17,6 +14,9 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataLanguages,
+  utilsCore,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_localization_languages_sortAndPagination';
@@ -28,22 +28,22 @@ describe('BO - International - Languages : Sort and pagination', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create images
     await Promise.all([
-      files.generateImage(dataLanguages.croatian.flag),
-      files.generateImage(dataLanguages.croatian.noPicture),
+      utilsFile.generateImage(dataLanguages.croatian.flag),
+      utilsFile.generateImage(dataLanguages.croatian.noPicture),
     ]);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     await Promise.all([
-      files.deleteFile(dataLanguages.croatian.flag),
-      files.deleteFile(dataLanguages.croatian.noPicture),
+      utilsFile.deleteFile(dataLanguages.croatian.flag),
+      utilsFile.deleteFile(dataLanguages.croatian.noPicture),
     ]);
   });
 
@@ -119,7 +119,7 @@ describe('BO - International - Languages : Sort and pagination', async () => {
           const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -127,7 +127,7 @@ describe('BO - International - Languages : Sort and pagination', async () => {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);

@@ -1,9 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
-import date from '@utils/date';
-import basicHelper from '@utils/basicHelper';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -24,6 +20,10 @@ import {
   type ProductAttributes,
   type ProductCombinationBulk,
   type ProductCombinationOptions,
+  utilsCore,
+  utilsDate,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_CRUDProductWithCombinations';
@@ -31,7 +31,7 @@ const baseContext: string = 'functional_BO_catalog_products_CRUDProductWithCombi
 describe('BO - Catalog - Products : CRUD product with combinations', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const todayDate: string = date.getDateFormat('yyyy-mm-dd');
+  const todayDate: string = utilsDate.getDateFormat('yyyy-mm-dd');
 
   // Data to create product with combinations
   const newProductData: FakerProduct = new FakerProduct({
@@ -134,23 +134,23 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
     if (newProductData.coverImage) {
-      await files.generateImage(newProductData.coverImage);
+      await utilsFile.generateImage(newProductData.coverImage);
     }
     if (newProductData.thumbImage) {
-      await files.generateImage(newProductData.thumbImage);
+      await utilsFile.generateImage(newProductData.thumbImage);
     }
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
     if (newProductData.coverImage) {
-      await files.deleteFile(newProductData.coverImage);
+      await utilsFile.deleteFile(newProductData.coverImage);
     }
     if (newProductData.thumbImage) {
-      await files.deleteFile(newProductData.thumbImage);
+      await utilsFile.deleteFile(newProductData.thumbImage);
     }
   });
 
@@ -398,7 +398,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
         const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
         const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-        const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+        const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
         if (test.args.sortDirection === 'asc') {
           expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -528,7 +528,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should check the product header details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductHeaderDetails', baseContext);
 
-      const taxValue = await basicHelper.percentage(pricingData.priceTaxExcluded, 20);
+      const taxValue = await utilsCore.percentage(pricingData.priceTaxExcluded, 20);
 
       const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
       await Promise.all([
@@ -557,7 +557,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const taxValue = await basicHelper.percentage(pricingData.priceTaxExcluded + secondCombinationData.impactOnPriceTExc, 20);
+      const taxValue = await utilsCore.percentage(pricingData.priceTaxExcluded + secondCombinationData.impactOnPriceTExc, 20);
 
       const result = await foProductPage.getProductInformation(page);
       await Promise.all([

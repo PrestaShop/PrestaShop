@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import login steps
@@ -13,8 +11,9 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
-  // Import data
   dataOrderStatuses,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -30,12 +29,12 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -125,7 +124,7 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
 
       // Check that file exist
       if (filePath) {
-        const exist = await files.doesFileExist(filePath);
+        const exist = await utilsFile.doesFileExist(filePath);
         expect(exist).to.eq(true);
       }
     });
@@ -142,7 +141,7 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
 
       // Check that file exist
       if (filePath) {
-        const exist = await files.doesFileExist(filePath);
+        const exist = await utilsFile.doesFileExist(filePath);
         expect(exist).to.eq(true);
       }
     });

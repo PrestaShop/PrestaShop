@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -21,6 +19,8 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -60,12 +60,12 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // 1 - Disable invoices
@@ -282,7 +282,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       filePath = await orderPageTabListBlock.downloadInvoice(page, 1);
       expect(filePath).to.not.eq(null);
 
-      const doesFileExist = await files.doesFileExist(filePath, 5000);
+      const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
       expect(doesFileExist).to.eq(true);
     });
 
@@ -364,7 +364,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       filePath = await orderPageTabListBlock.downloadInvoice(page, 3);
       expect(filePath).to.not.eq(null);
 
-      const doesFileExist = await files.doesFileExist(filePath, 5000);
+      const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
       expect(doesFileExist).to.eq(true);
     });
 
@@ -391,7 +391,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       filePath = await orderPageTabListBlock.downloadInvoice(page, 4);
       expect(filePath).to.not.eq(null);
 
-      const doesFileExist = await files.doesFileExist(filePath, 5000);
+      const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
       expect(doesFileExist).to.eq(true);
     });
   });

@@ -1,6 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -15,6 +13,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerWebservice,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_webservice_filterSortPagination';
@@ -34,12 +34,12 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -212,7 +212,7 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
         await webservicePage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
         const sortedTable = await webservicePage.getAllRowsColumnContent(page, test.args.sortBy);
-        const expectedResult = await basicHelper.sortArray(nonSortedTable);
+        const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
         if (test.args.sortDirection === 'asc') {
           expect(sortedTable).to.deep.equal(expectedResult);

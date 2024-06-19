@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -22,6 +20,8 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -62,12 +62,12 @@ describe('FO - Account - Order history : download invoice', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Change the first order status to \'Delivered\'', async () => {
@@ -172,7 +172,7 @@ describe('FO - Account - Order history : download invoice', async () => {
 
       const downloadFilePath: string|null = await orderHistoryPage.downloadInvoice(page);
 
-      const exist: boolean = await files.isTextInPDF(downloadFilePath, fileName);
+      const exist: boolean = await utilsFile.isTextInPDF(downloadFilePath, fileName);
       expect(exist).to.eq(true);
     });
 

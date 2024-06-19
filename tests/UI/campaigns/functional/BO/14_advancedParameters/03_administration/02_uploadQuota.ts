@@ -1,6 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
-import files from '@utils/files';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -21,6 +19,8 @@ import {
   boDashboardPage,
   FakerFile,
   FakerProduct,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_administration_uploadQuota';
@@ -61,23 +61,23 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create image with size > 2MB
-    await files.generateImage(firstFileData.filename, 1000, 1500, 92);
+    await utilsFile.generateImage(firstFileData.filename, 1000, 1500, 92);
     // Create image with size < 2MB
-    await files.generateImage(secondFileData.filename, 1000, 1500, 70);
+    await utilsFile.generateImage(secondFileData.filename, 1000, 1500, 70);
     // Create image with size < 1MB
-    await files.generateImage(thirdFileData.filename, 100, 200);
+    await utilsFile.generateImage(thirdFileData.filename, 100, 200);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
-    await files.deleteFile(firstFileData.filename);
-    await files.deleteFile(secondFileData.filename);
-    await files.deleteFile(thirdFileData.filename);
+    await utilsFile.deleteFile(firstFileData.filename);
+    await utilsFile.deleteFile(secondFileData.filename);
+    await utilsFile.deleteFile(thirdFileData.filename);
   });
 
   describe('Check \'Maximum size for attached files\'', async () => {

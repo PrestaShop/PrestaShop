@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
@@ -22,6 +20,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_changeImage';
@@ -52,20 +52,20 @@ describe('FO - Product page - Quick view : Change image', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-    await files.generateImage(newProductData.coverImage!);
-    await files.generateImage(newProductData.thumbImage!);
-    await files.generateImage('secondThumbImage.jpg');
-    await files.generateImage('thirdThumbImage.jpg');
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
+    await utilsFile.generateImage(newProductData.coverImage!);
+    await utilsFile.generateImage(newProductData.thumbImage!);
+    await utilsFile.generateImage('secondThumbImage.jpg');
+    await utilsFile.generateImage('thirdThumbImage.jpg');
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
-    await files.deleteFile(newProductData.coverImage!);
-    await files.deleteFile(newProductData.thumbImage!);
-    await files.deleteFile('secondThumbImage.jpg');
-    await files.deleteFile('thirdThumbImage.jpg');
+    await utilsPlaywright.closeBrowserContext(browserContext);
+    await utilsFile.deleteFile(newProductData.coverImage!);
+    await utilsFile.deleteFile(newProductData.thumbImage!);
+    await utilsFile.deleteFile('secondThumbImage.jpg');
+    await utilsFile.deleteFile('thirdThumbImage.jpg');
   });
 
   describe(`PRE-TEST: Create new product '${newProductData.name}' with 4 images`, async () => {

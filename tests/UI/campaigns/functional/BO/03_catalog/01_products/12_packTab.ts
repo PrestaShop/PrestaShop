@@ -1,6 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -27,6 +25,8 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerProduct,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
@@ -50,12 +50,12 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('BO - Create the product', async () => {
@@ -179,8 +179,8 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await Promise.all([
         expect(result.name).to.equal(
           `${dataProducts.demo_1.name}: `
-          + `${basicHelper.capitalize(dataProducts.demo_1.attributes[0].name)} - ${dataProducts.demo_1.attributes[0].values[0]}, `
-          + `${basicHelper.capitalize(dataProducts.demo_1.attributes[1].name)} - ${dataProducts.demo_1.attributes[1].values[0]}`,
+          + `${utilsCore.capitalize(dataProducts.demo_1.attributes[0].name)} - ${dataProducts.demo_1.attributes[0].values[0]}, `
+          + `${utilsCore.capitalize(dataProducts.demo_1.attributes[1].name)} - ${dataProducts.demo_1.attributes[1].values[0]}`,
         ),
         expect(result.reference).to.equal(`Ref: ${dataProducts.demo_1.reference}`),
         expect(result.quantity).to.equal(1),
@@ -221,8 +221,8 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await Promise.all([
         expect(result.name).to.equal(
           `${dataProducts.demo_1.name}: `
-          + `${basicHelper.capitalize(dataProducts.demo_1.attributes[0].name)} - ${dataProducts.demo_1.attributes[0].values[0]}, `
-          + `${basicHelper.capitalize(dataProducts.demo_1.attributes[1].name)} - ${dataProducts.demo_1.attributes[1].values[0]}`,
+          + `${utilsCore.capitalize(dataProducts.demo_1.attributes[0].name)} - ${dataProducts.demo_1.attributes[0].values[0]}, `
+          + `${utilsCore.capitalize(dataProducts.demo_1.attributes[1].name)} - ${dataProducts.demo_1.attributes[1].values[0]}`,
         ),
         expect(result.reference).to.equal(`Ref: ${dataProducts.demo_1.reference}`),
         expect(result.quantity).to.equal(productQuantity),
@@ -256,7 +256,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await Promise.all([
         expect(result.name).to.equal(
           `${dataProducts.demo_9.name}: `
-          + `${basicHelper.capitalize(dataProducts.demo_9.attributes[0].name)} - ${dataProducts.demo_9.attributes[0].values[0]}`,
+          + `${utilsCore.capitalize(dataProducts.demo_9.attributes[0].name)} - ${dataProducts.demo_9.attributes[0].values[0]}`,
         ),
         expect(result.reference).to.equal(`Ref: ${dataProducts.demo_9.reference}`),
         expect(result.quantity).to.equal(1),
@@ -292,7 +292,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
       expect(productHeaderSummary.priceTaxExc).to.equals(`€${productRetailPrice.toFixed(2)} tax excl.`);
 
-      const taxValue = await basicHelper.percentage(productRetailPrice, mostUsedTaxValue);
+      const taxValue = await utilsCore.percentage(productRetailPrice, mostUsedTaxValue);
       expect(productHeaderSummary.priceTaxIncl).to.equal(
         `€${(productRetailPrice + taxValue).toFixed(2)} tax incl. (tax rule: ${mostUsedTaxValue}%)`,
       );
@@ -312,7 +312,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
       const productInformation = await foProductPage.getProductInformation(page);
-      const taxValue = await basicHelper.percentage(productRetailPrice, mostUsedTaxValue);
+      const taxValue = await utilsCore.percentage(productRetailPrice, mostUsedTaxValue);
       expect(productRetailPrice + taxValue).to.eq(productInformation.price);
 
       const productsPrice = await foProductPage.getPackProductsPrice(page);
@@ -329,8 +329,8 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await Promise.all([
         expect(product1.name).to.equals(
           `${dataProducts.demo_1.name} `
-          + `${basicHelper.capitalize(dataProducts.demo_1.attributes[0].name)}-${dataProducts.demo_1.attributes[0].values[0]} `
-          + `${basicHelper.capitalize(dataProducts.demo_1.attributes[1].name)}-${dataProducts.demo_1.attributes[1].values[0]}`,
+          + `${utilsCore.capitalize(dataProducts.demo_1.attributes[0].name)}-${dataProducts.demo_1.attributes[0].values[0]} `
+          + `${utilsCore.capitalize(dataProducts.demo_1.attributes[1].name)}-${dataProducts.demo_1.attributes[1].values[0]}`,
         ),
         expect(product1.price).to.equals(`€${dataProducts.demo_1.finalPrice.toFixed(2)}`),
         expect(product1.quantity).to.equals(productQuantity),
@@ -340,7 +340,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await Promise.all([
         expect(product2.name).to.equals(
           `${dataProducts.demo_9.name} `
-          + `${basicHelper.capitalize(dataProducts.demo_9.attributes[0].name)}-${dataProducts.demo_9.attributes[0].values[0]}`,
+          + `${utilsCore.capitalize(dataProducts.demo_9.attributes[0].name)}-${dataProducts.demo_9.attributes[0].values[0]}`,
         ),
         expect(product2.price).to.equals(`€${dataProducts.demo_9.finalPrice.toFixed(2)}`),
         expect(product2.quantity).to.equals(1),

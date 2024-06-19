@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -21,10 +19,11 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
-  // Import data
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -49,12 +48,12 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -235,14 +234,14 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
 
           filePath = await orderPageTabListBlock.downloadDeliverySlip(page);
 
-          const exist = await files.doesFileExist(filePath);
+          const exist = await utilsFile.doesFileExist(filePath);
           expect(exist).to.eq(true);
         });
 
         it(`should check that there is ${test.args.isProductImageDisplayed} in the PDF File`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductImage${index}`, baseContext);
 
-          const imageNumber = await files.getImageNumberInPDF(filePath);
+          const imageNumber = await utilsFile.getImageNumberInPDF(filePath);
           expect(imageNumber).to.be.equal(test.args.imageNumber);
         });
       });

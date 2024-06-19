@@ -1,5 +1,3 @@
-import api from '@utils/api';
-import helpers from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 import loginCommon from '@commonTests/BO/loginBO';
@@ -16,6 +14,8 @@ import {
 import {
   boDashboardPage,
   dataModules,
+  utilsAPI,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_externalAuthServer_resourceEndpoint';
@@ -35,13 +35,14 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
   ];
 
   before(async function () {
-    browserContext = await helpers.createBrowserContext(this.browser);
-    page = await helpers.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    apiContext = await helpers.createAPIContext(global.API.URL);
+    apiContext = await utilsPlaywright.createAPIContext(global.API.URL);
 
     if (!global.GENERATE_FAILED_STEPS) {
-      const apiContextKeycloak: APIRequestContext = await helpers.createAPIContext(global.keycloakConfig.keycloakExternalUrl);
+      const apiContextKeycloak: APIRequestContext = await utilsPlaywright
+        .createAPIContext(global.keycloakConfig.keycloakExternalUrl);
       const apiResponse: APIResponse = await apiContextKeycloak.post('realms/prestashop/protocol/openid-connect/token', {
         form: {
           client_id: global.keycloakConfig.keycloakClientId,
@@ -63,7 +64,7 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       expect(jsonResponse.scope).to.be.eq('api_client_read profile email');
 
       accessTokenKeycloak = jsonResponse.access_token;
-      accessTokenExpiredKeycloak = api.setAccessTokenAsExpired(accessTokenKeycloak);
+      accessTokenExpiredKeycloak = utilsAPI.setAccessTokenAsExpired(accessTokenKeycloak);
     }
   });
 
@@ -118,8 +119,8 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithoutAccessToken', baseContext);
       const apiResponse = await apiContext.get('api-clients');
       expect(apiResponse.status()).to.eq(401);
-      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
-      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
+      expect(utilsAPI.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
+      expect(utilsAPI.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
     it('should request the endpoint /api-clients with invalid access token', async function () {
@@ -130,8 +131,8 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
         },
       });
       expect(apiResponse.status()).to.eq(401);
-      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
-      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
+      expect(utilsAPI.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
+      expect(utilsAPI.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
     it('should request the endpoint /api-clients with expired access token', async function () {
@@ -143,8 +144,8 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       });
 
       expect(apiResponse.status()).to.eq(401);
-      expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
-      expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
+      expect(utilsAPI.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.eq(true);
+      expect(utilsAPI.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
     it('should request the endpoint /api-clients with valid access token', async function () {
@@ -159,8 +160,8 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       });
 
       expect(apiResponse.status(), await apiResponse.text()).to.eq(200);
-      expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
-      expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
+      expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+      expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
       const jsonResponse = await apiResponse.json();
       expect(jsonResponse).to.have.property('totalItems');
@@ -201,8 +202,8 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       });
 
       expect(apiResponse.status(), await apiResponse.text()).to.eq(200);
-      expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
-      expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
+      expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+      expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
       const jsonResponse = await apiResponse.json();
       expect(jsonResponse).to.have.property('apiClientId');

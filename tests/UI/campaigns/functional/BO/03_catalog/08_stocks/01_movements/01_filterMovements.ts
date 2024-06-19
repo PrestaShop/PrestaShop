@@ -1,6 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -34,6 +32,8 @@ import {
   dataProducts,
   FakerEmployee,
   type ProductCombinationBulk,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -68,21 +68,21 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       referenceToEnable: false,
     },
   };
-  const dateYesterday: string = date.getDateFormat('yyyy-mm-dd', 'yesterday');
-  const dateToday: string = date.getDateFormat('yyyy-mm-dd');
-  const dateTomorrow: string = date.getDateFormat('yyyy-mm-dd', 'tomorrow');
+  const dateYesterday: string = utilsDate.getDateFormat('yyyy-mm-dd', 'yesterday');
+  const dateToday: string = utilsDate.getDateFormat('yyyy-mm-dd');
+  const dateTomorrow: string = utilsDate.getDateFormat('yyyy-mm-dd', 'tomorrow');
 
   // Pre-condition: Create new employee
   createEmployeeTest(employeeData, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Check all filters', async () => {

@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import xml from '@utils/xml';
 
 // Import webservices
 import productXml from '@webservices/product/productXml';
@@ -33,6 +31,8 @@ import type {
 } from 'playwright';
 import {
   boDashboardPage,
+  utilsPlaywright,
+  utilsXML,
   type WebservicePermission,
 } from '@prestashop-core/ui-testing';
 
@@ -57,14 +57,14 @@ describe('WS - Products : CRUD', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    apiContext = await helper.createAPIContext(global.FO.URL);
+    apiContext = await utilsPlaywright.createAPIContext(global.FO.URL);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Enable webservice
@@ -136,7 +136,7 @@ describe('WS - Products : CRUD', async () => {
 
         xmlResponse = await apiResponse.text();
 
-        const isValidXML = xml.isValid(xmlResponse);
+        const isValidXML = utilsXML.isValid(xmlResponse);
         expect(isValidXML).to.eq(true);
       });
 
@@ -168,7 +168,7 @@ describe('WS - Products : CRUD', async () => {
           expect(nodeAttributes.length).to.eq(0);
 
           // Empty value
-          const isEmptyNode: boolean = xml.isEmpty(node);
+          const isEmptyNode: boolean = utilsXML.isEmpty(node);
           expect(isEmptyNode, `The node ${node.nodeName} is not empty`).to.eq(true);
         }
       });
@@ -193,7 +193,7 @@ describe('WS - Products : CRUD', async () => {
 
         xmlResponse = await apiResponse.text();
 
-        const isValidXML = xml.isValid(xmlResponse);
+        const isValidXML = utilsXML.isValid(xmlResponse);
         expect(isValidXML).to.eq(true);
       });
 
@@ -244,7 +244,7 @@ describe('WS - Products : CRUD', async () => {
           }
 
           // Empty value
-          const isEmptyNode = xml.isEmpty(node);
+          const isEmptyNode = utilsXML.isEmpty(node);
           expect(isEmptyNode, `The node ${node.nodeName} is not empty`).to.eq(true);
         }
       });

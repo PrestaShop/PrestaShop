@@ -1,8 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
-import files from '@utils/files';
 import testContext from '@utils/testContext';
-import date from '@utils/date';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -28,6 +25,9 @@ import {
   dataCustomers,
   dataPaymentMethods,
   FakerProduct,
+  utilsDate,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import type {BrowserContext, Page} from 'playwright';
@@ -38,7 +38,7 @@ const baseContext: string = 'functional_BO_catalog_products_virtualTab';
 describe('BO - Catalog - Products : Virtual tab', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
+  const futureDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'future');
 
   // Data to create standard product
   const newProductData: FakerProduct = new FakerProduct({
@@ -56,16 +56,16 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    await files.generateImage(newProductData.fileName);
+    await utilsFile.generateImage(newProductData.fileName);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
-    await files.deleteFile(newProductData.fileName);
+    await utilsFile.deleteFile(newProductData.fileName);
   });
 
   // 1 - Create product
@@ -198,7 +198,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
 
       await orderDetailsPage.clickOnDownloadLink(page);
 
-      const doesFileExist = await files.doesFileExist(newProductData.fileName, 5000);
+      const doesFileExist = await utilsFile.doesFileExist(newProductData.fileName, 5000);
       expect(doesFileExist, 'File is not downloaded!').eq(true);
     });
 

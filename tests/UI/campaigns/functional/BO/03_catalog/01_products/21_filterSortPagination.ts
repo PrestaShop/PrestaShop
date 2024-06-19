@@ -1,6 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -17,6 +15,8 @@ import {
   boDashboardPage,
   dataCategories,
   type ProductFilterMinMax,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_filterSortPagination';
@@ -29,12 +29,12 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Filter products table by : ID, Name, Reference, Category, Price, Quantity and Status', async () => {
@@ -396,7 +396,7 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
         const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
         const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-        const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+        const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
         if (test.sortDirection === 'asc') {
           expect(sortedTableFloat).to.deep.equal(expectedResult);

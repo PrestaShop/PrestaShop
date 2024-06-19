@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -22,6 +20,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_checkProductImageFormat';
@@ -50,8 +50,8 @@ describe('BO - Design - Image Settings - Check product image format', async () =
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     await Promise.all([
       productDataJPG.coverImage,
@@ -59,13 +59,13 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       productDataWEBP.coverImage,
     ].map(async (image: string|null) => {
       if (image) {
-        await files.generateImage(image);
+        await utilsFile.generateImage(image);
       }
     }));
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     await Promise.all([
       productDataJPG.coverImage,
@@ -73,7 +73,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       productDataWEBP.coverImage,
     ].map(async (image: string|null) => {
       if (image) {
-        await files.deleteFile(image);
+        await utilsFile.deleteFile(image);
       }
     }));
   });
@@ -237,30 +237,30 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         const pathProductId: string = pathProductIdSplitted.join('/');
 
         // Check the original file
-        const pathImageOriginal: string = `${files.getRootPath()}/img/p/${pathProductId}/${idProductImage}.jpg`;
+        const pathImageOriginal: string = `${utilsFile.getRootPath()}/img/p/${pathProductId}/${idProductImage}.jpg`;
 
-        const fileExistsOriginal = await files.doesFileExist(pathImageOriginal);
+        const fileExistsOriginal = await utilsFile.doesFileExist(pathImageOriginal);
         expect(fileExistsOriginal, `The file ${pathImageOriginal} doesn't exist!`).to.eq(true);
 
-        const imageTypeOriginal = await files.getFileType(pathImageOriginal);
+        const imageTypeOriginal = await utilsFile.getFileType(pathImageOriginal);
         expect(imageTypeOriginal).to.be.eq(arg.extImageType);
 
         // Check the Jpg file
-        const pathImageJPG: string = `${files.getRootPath()}/img/p/${pathProductId}/${idProductImage}-large_default.jpg`;
+        const pathImageJPG: string = `${utilsFile.getRootPath()}/img/p/${pathProductId}/${idProductImage}-large_default.jpg`;
 
-        const fileExistsJPG = await files.doesFileExist(pathImageJPG);
+        const fileExistsJPG = await utilsFile.doesFileExist(pathImageJPG);
         expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.eq(true);
 
-        const imageTypeJPG = await files.getFileType(pathImageJPG);
+        const imageTypeJPG = await utilsFile.getFileType(pathImageJPG);
         expect(imageTypeJPG).to.be.eq(arg.extImageType);
 
         // Check the WebP file
-        const pathImageWEBP: string = `${files.getRootPath()}/img/p/${pathProductId}/${idProductImage}-large_default.webp`;
+        const pathImageWEBP: string = `${utilsFile.getRootPath()}/img/p/${pathProductId}/${idProductImage}-large_default.webp`;
 
-        const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
+        const fileExistsWEBP = await utilsFile.doesFileExist(pathImageWEBP);
         expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
 
-        const imageTypeWEBP = await files.getFileType(pathImageWEBP);
+        const imageTypeWEBP = await utilsFile.getFileType(pathImageWEBP);
         expect(imageTypeWEBP).to.be.eq('webp');
       });
 
@@ -303,12 +303,12 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         const quickViewImageMain = await quickViewModal.getQuickViewImageMain(page);
         expect(quickViewImageMain).to.not.eq(null);
 
-        await files.downloadFile(quickViewImageMain as string, 'image.img');
+        await utilsFile.downloadFile(quickViewImageMain as string, 'image.img');
 
-        const quickViewImageMainType = await files.getFileType('image.img');
+        const quickViewImageMainType = await utilsFile.getFileType('image.img');
         expect(quickViewImageMainType).to.be.eq('webp');
 
-        await files.deleteFile('image.img');
+        await utilsFile.deleteFile('image.img');
       });
     });
   });

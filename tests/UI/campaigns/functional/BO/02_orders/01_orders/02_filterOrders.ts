@@ -1,6 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
-import date from '@utils/date';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -14,6 +12,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataOrders,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_orders_filterOrders';
@@ -27,16 +27,16 @@ describe('BO - Orders : Filter the Orders table', async () => {
   let page: Page;
   let numberOfOrders: number;
 
-  const today: string = date.getDateFormat('yyyy-mm-dd');
-  const dateToCheck: string = date.getDateFormat('mm/dd/yyyy');
+  const today: string = utilsDate.getDateFormat('yyyy-mm-dd');
+  const dateToCheck: string = utilsDate.getDateFormat('mm/dd/yyyy');
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {

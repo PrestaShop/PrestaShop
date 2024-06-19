@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -27,6 +24,9 @@ import {
   dataProducts,
   FakerCartRule,
   FakerProduct,
+  utilsCore,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -88,7 +88,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   let createProductMessage: string|null = '';
   let updateProductMessage: string|null = '';
 
-  const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
+  const pastDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'past');
   // Constant used to add a prefix to created products
   const prefixNewProduct: string = 'TOTEST';
   // Data to create pack of products with minimum quantity = 2
@@ -198,12 +198,12 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   createCurrencyTest(dataCurrencies.mad, `${baseContext}_preTest_2`);
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Pre-condition: Create 6 products
@@ -459,7 +459,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addStandardCombinationsProduct', baseContext);
 
       await addOrderPage.addProductToCart(page, dataProducts.demo_1, dataProducts.demo_1.name);
-      const discountValue = await basicHelper.percentage(dataProducts.demo_1.price, dataProducts.demo_1.specificPrice.discount);
+      const discountValue = await utilsCore.percentage(dataProducts.demo_1.price, dataProducts.demo_1.specificPrice.discount);
 
       const result = await addOrderPage.getProductDetailsFromTable(page, 2);
       await Promise.all([

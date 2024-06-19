@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import xml from '@utils/xml';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -15,6 +13,8 @@ import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerWebservice,
+  utilsPlaywright,
+  utilsXML,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_webservice_configuration';
@@ -38,14 +38,14 @@ describe('BO - Advanced Parameters - Webservice : Configuration', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    apiContext = await helper.createAPIContext(global.BO.URL);
+    apiContext = await utilsPlaywright.createAPIContext(global.BO.URL);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -111,10 +111,10 @@ describe('BO - Advanced Parameters - Webservice : Configuration', async () => {
     expect(apiResponse.status()).to.eq(200);
     const xmlResponse = await apiResponse.text();
 
-    const isValidXML = xml.isValid(xmlResponse);
+    const isValidXML = utilsXML.isValid(xmlResponse);
     expect(isValidXML).to.eq(true);
 
-    expect(xml.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
+    expect(utilsXML.getRootNodeName(xmlResponse)).to.be.eq('prestashop');
   });
 
   it('should disable the webservice', async function () {
@@ -136,10 +136,10 @@ describe('BO - Advanced Parameters - Webservice : Configuration', async () => {
     expect(apiResponse.status()).to.eq(503);
     const xmlResponse = await apiResponse.text();
 
-    const isValidXML = xml.isValid(xmlResponse);
+    const isValidXML = utilsXML.isValid(xmlResponse);
     expect(isValidXML).to.eq(true);
 
-    expect(xml.getNodeValue(xmlResponse, '/prestashop/errors/error/message'))
+    expect(utilsXML.getNodeValue(xmlResponse, '/prestashop/errors/error/message'))
       .to.equals('The PrestaShop webservice is disabled. Please activate it in the PrestaShop Back Office');
   });
 

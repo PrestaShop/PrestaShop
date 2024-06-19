@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -23,6 +21,8 @@ import {
   FakerOrder,
   FakerOrderShipping,
   FakerProduct,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -98,12 +98,12 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -240,14 +240,14 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       filePath = await orderPageTabListBlock.downloadInvoice(page, 1);
       expect(filePath).to.not.eq(null);
 
-      const doesFileExist = await files.doesFileExist(filePath, 5000);
+      const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
       expect(doesFileExist).to.eq(true);
     });
 
     it('should check that the \'Product reference, Product name\' are correct', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductReference', baseContext);
 
-      const productReferenceExist = await files.isTextInPDF(
+      const productReferenceExist = await utilsFile.isTextInPDF(
         filePath,
         `${firstProduct.reference}, ,${firstProduct.name}`,
       );
@@ -258,7 +258,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       + 'are correct', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUnitPrice', baseContext);
 
-      const priceVisible = await files.isTextInPDF(
+      const priceVisible = await utilsFile.isTextInPDF(
         filePath,
         `${firstProduct.name}, ,`
         + `€${newProductPrice.toFixed(2)}, ,`
@@ -299,7 +299,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       filePath = await orderPageProductsBlock.viewInvoice(page);
       expect(filePath).to.not.eq(null);
 
-      const doesFileExist = await files.doesFileExist(filePath, 5000);
+      const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
       expect(doesFileExist, 'File is not downloaded!').to.eq(true);
     });
 
@@ -307,7 +307,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       + 'are correct on the first invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPriceOnFirstInvoice', baseContext);
 
-      const priceVisible = await files.isTextInPDF(
+      const priceVisible = await utilsFile.isTextInPDF(
         filePath,
         `${firstProduct.name}, ,`
         + `€${secondNewProductPrice.toFixed(2)}, ,`
@@ -324,7 +324,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       + 'are correct on the second invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPriceOnSecondInvoice', baseContext);
 
-      const priceVisible = await files.isTextInPDF(
+      const priceVisible = await utilsFile.isTextInPDF(
         filePath,
         `${firstProduct.name}, ,`
         + `€${(secondNewProductPrice).toFixed(2)}, ,`
@@ -431,14 +431,14 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       filePath = await orderPageTabListBlock.downloadInvoice(page, 5);
       expect(filePath).to.not.eq(null);
 
-      const doesFileExist = await files.doesFileExist(filePath, 5000);
+      const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
       expect(doesFileExist).to.eq(true);
     });
 
     it('should check that the \'Product reference, Product name\' are correct', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductReference2', baseContext);
 
-      const productReferenceExist = await files.isTextInPDF(
+      const productReferenceExist = await utilsFile.isTextInPDF(
         filePath,
         `${secondProduct.reference}, ,${secondProduct.name}`,
       );
@@ -449,7 +449,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       + 'are correct', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPriceForThirdInvoice', baseContext);
 
-      const priceVisible = await files.isTextInPDF(
+      const priceVisible = await utilsFile.isTextInPDF(
         filePath,
         `${secondProduct.name}, ,`
         + `€${secondProduct.price.toFixed(2)}, ,`
@@ -467,7 +467,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkFreeShippingForThirdInvoice', baseContext);
 
         // Total Products, Shipping Costs, Total (Tax excl.), Total
-        const isShippingCostVisible = await files.isTextInPDF(
+        const isShippingCostVisible = await utilsFile.isTextInPDF(
           filePath,
           `Total Products, ,€${secondProduct.price.toFixed(2)},`
           + 'Shipping Costs, ,Free Shipping,,'

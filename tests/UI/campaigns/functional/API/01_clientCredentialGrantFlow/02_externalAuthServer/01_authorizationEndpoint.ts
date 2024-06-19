@@ -1,9 +1,11 @@
-import api from '@utils/api';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
 import {APIRequestContext} from 'playwright';
+import {
+  utilsAPI,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_externalAuthServer_authorizationEndpoint';
 
@@ -11,7 +13,7 @@ describe('API : External Auth Server - Authorization Endpoint', async () => {
   let apiContextKeycloak: APIRequestContext;
 
   before(async () => {
-    apiContextKeycloak = await helper.createAPIContext(global.keycloakConfig.keycloakExternalUrl);
+    apiContextKeycloak = await utilsPlaywright.createAPIContext(global.keycloakConfig.keycloakExternalUrl);
   });
 
   describe('Authorization Endpoint', async () => {
@@ -29,8 +31,8 @@ describe('API : External Auth Server - Authorization Endpoint', async () => {
         });
 
         expect(apiResponse.status(), await apiResponse.text()).to.eq(200);
-        expect(api.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
-        expect(api.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
+        expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+        expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
         const jsonResponse = await apiResponse.json();
         expect(jsonResponse).to.have.property('access_token');

@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Common commonTests
@@ -14,6 +12,8 @@ import addOrderStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/
 import {
   boDashboardPage,
   FakerOrderStatus,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -34,16 +34,16 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Bulk actions in ord
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     /* Delete the generated images */
     for (let i = 0; i <= 2; i++) {
-      await files.deleteFile(`todelete${i}.jpg`);
+      await utilsFile.deleteFile(`todelete${i}.jpg`);
     }
   });
 
@@ -90,7 +90,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Bulk actions in ord
   // 1 - Create 2 order statuses
   [1, 2].forEach((test: number, index: number) => {
     describe(`Create order status n°${index + 1} in BO`, async () => {
-      before(() => files.generateImage(`todelete${index}.jpg`));
+      before(() => utilsFile.generateImage(`todelete${index}.jpg`));
 
       const orderStatusData: FakerOrderStatus = new FakerOrderStatus({name: `todelete${index}`});
 
@@ -113,7 +113,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Bulk actions in ord
         expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderStatuses + index + 1);
       });
 
-      after(() => files.deleteFile(`todelete${index}.jpg`));
+      after(() => utilsFile.deleteFile(`todelete${index}.jpg`));
     });
   });
 

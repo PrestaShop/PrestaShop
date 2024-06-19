@@ -1,6 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
-import basicHelper from '@utils/basicHelper';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -15,6 +13,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerSearchAlias,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_search_search_filterSortPaginationAndBulkActions';
@@ -35,12 +35,12 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -221,7 +221,7 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
         await searchPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
         const sortedTable = await searchPage.getAllRowsColumnContent(page, test.args.sortBy);
-        const expectedResult = await basicHelper.sortArray(nonSortedTable);
+        const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
         if (test.args.sortDirection === 'asc') {
           expect(sortedTable).to.deep.equal(expectedResult);

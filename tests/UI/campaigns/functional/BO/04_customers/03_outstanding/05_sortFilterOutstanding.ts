@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -23,6 +20,9 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  utilsCore,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -58,20 +58,20 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
   const customersData: FakerCustomer[] = [createCustomerData1, createCustomerData2, createCustomerData3];
 
   // Const used to get today date format
-  const today: string = date.getDateFormat('yyyy-mm-dd');
-  const dateToCheck: string = date.getDateFormat('mm/dd/yyyy');
+  const today: string = utilsDate.getDateFormat('yyyy-mm-dd');
+  const dateToCheck: string = utilsDate.getDateFormat('mm/dd/yyyy');
 
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('PRE-TEST: Create outstanding', async () => {
@@ -302,7 +302,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -310,7 +310,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);
@@ -369,7 +369,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -377,7 +377,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);

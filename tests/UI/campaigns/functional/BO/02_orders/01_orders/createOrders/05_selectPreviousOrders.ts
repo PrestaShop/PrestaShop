@@ -1,6 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -26,6 +24,8 @@ import {
   FakerCustomer,
   FakerOrder,
   type FakerOrderStatus,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -54,7 +54,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
   let customerID: number = 0;
   let orderIframe: Frame|null;
 
-  const today: string = date.getDateFormat('yyyy-mm-dd');
+  const today: string = utilsDate.getDateFormat('yyyy-mm-dd');
   const newCustomer: FakerCustomer = new FakerCustomer();
   const newAddress: FakerAddress = new FakerAddress({
     email: newCustomer.email,
@@ -83,12 +83,12 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_3`);
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Pre-condition: Get customer ID

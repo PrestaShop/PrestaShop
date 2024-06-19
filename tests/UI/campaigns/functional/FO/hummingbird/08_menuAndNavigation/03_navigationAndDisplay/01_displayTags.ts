@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -26,6 +24,8 @@ import {
   boDashboardPage,
   dataProducts,
   FakerProduct,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigationAndDisplay_displayTags';
@@ -99,16 +99,16 @@ describe('FO - Navigation and display : Display tags', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    await files.generateImage('image.jpg');
+    await utilsFile.generateImage('image.jpg');
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
-    await files.deleteFile('image.jpg');
+    await utilsFile.deleteFile('image.jpg');
   });
 
   describe('FO - Check the new tag', async () => {

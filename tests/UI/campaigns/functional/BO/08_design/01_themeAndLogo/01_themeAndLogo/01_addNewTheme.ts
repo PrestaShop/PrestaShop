@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -12,7 +10,11 @@ import themeImportPage from '@pages/BO/design/themeAndLogo/themeAndLogo/import';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_themeAndLogo_themeAndLogo_addNewTheme';
 
@@ -24,17 +26,17 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     await Promise.all([
-      files.deleteFile('theme.zip'),
-      files.deleteFile('../../themes/theme.zip'),
-      files.deleteFile('../../admin-dev/hummingbird.zip'),
+      utilsFile.deleteFile('theme.zip'),
+      utilsFile.deleteFile('../../themes/theme.zip'),
+      utilsFile.deleteFile('../../admin-dev/hummingbird.zip'),
     ]);
   });
 
@@ -69,9 +71,9 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
     it('should download theme from the web', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadTheme', baseContext);
 
-      await files.downloadFile(urlTheme, 'theme.zip');
+      await utilsFile.downloadFile(urlTheme, 'theme.zip');
 
-      const found = await files.doesFileExist('theme.zip');
+      const found = await utilsFile.doesFileExist('theme.zip');
       expect(found).to.eq(true);
     });
 
@@ -135,7 +137,7 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
     it('should go to \'Add new theme\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewTheme3', baseContext);
 
-      await files.downloadFile(urlTheme, '../../themes/theme.zip');
+      await utilsFile.downloadFile(urlTheme, '../../themes/theme.zip');
 
       await themeAndLogoPage.goToNewThemePage(page);
 

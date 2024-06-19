@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import date from '@utils/date';
 
 // Import common tests
 import {createAddressTest} from '@commonTests/BO/customers/address';
@@ -26,6 +24,8 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -69,7 +69,7 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
     ],
     paymentMethod: dataPaymentMethods.wirePayment,
   });
-  const today: string = date.getDateFormat('mm/dd/yyyy');
+  const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
 
   // Pre-condition : Install Hummingbird
   installHummingbird(`${baseContext}_preTest_1`);
@@ -82,12 +82,12 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Check that no order has been placed in order history', async () => {

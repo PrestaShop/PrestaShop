@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import basicHelper from '@utils/basicHelper';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -15,6 +13,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataProducts,
+  utilsCore,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_stocks_movements_sortAndPagination';
@@ -25,12 +25,12 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -112,7 +112,7 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseInt(text, 10));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseInt(text, 10));
 
-          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -120,7 +120,7 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);

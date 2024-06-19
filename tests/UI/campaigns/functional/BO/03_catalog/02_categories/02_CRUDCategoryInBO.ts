@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -22,6 +20,8 @@ import {
   type CategoryRedirection,
   dataCategories,
   FakerCategory,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_categories_CRUDCategoryInBO';
@@ -50,24 +50,24 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    apiContext = await helper.createAPIContext(global.API.URL);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    apiContext = await utilsPlaywright.createAPIContext(global.API.URL);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Create categories images
     await Promise.all([
-      files.generateImage(`${createCategoryData.name}.jpg`),
-      files.generateImage(`${createSubCategoryData.name}.jpg`),
+      utilsFile.generateImage(`${createCategoryData.name}.jpg`),
+      utilsFile.generateImage(`${createSubCategoryData.name}.jpg`),
     ]);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     /* Delete the generated images */
     await Promise.all([
-      files.deleteFile(`${createCategoryData.name}.jpg`),
-      files.deleteFile(`${createSubCategoryData.name}.jpg`),
+      utilsFile.deleteFile(`${createCategoryData.name}.jpg`),
+      utilsFile.deleteFile(`${createSubCategoryData.name}.jpg`),
     ]);
   });
 

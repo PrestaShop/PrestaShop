@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -15,6 +12,9 @@ import {
   boDashboardPage,
   dataCarriers,
   FakerCarrier,
+  utilsCore,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -31,12 +31,12 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -207,7 +207,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
           const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -215,7 +215,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
             expect(sortedTable).to.deep.equal(expectedResult);
@@ -231,7 +231,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
   describe('Create 16 carriers in BO', async () => {
     const creationTests: number[] = new Array(17).fill(0, 0, 17);
     creationTests.forEach((test: number, index: number) => {
-      before(() => files.generateImage(`todelete${index}.jpg`));
+      before(() => utilsFile.generateImage(`todelete${index}.jpg`));
 
       const carrierData: FakerCarrier = new FakerCarrier({name: `todelete${index}`});
 
@@ -253,7 +253,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
         expect(numberOfCarriersAfterCreation).to.be.equal(numberOfCarriers + 1 + index);
       });
 
-      after(() => files.deleteFile(`todelete${index}.jpg`));
+      after(() => utilsFile.deleteFile(`todelete${index}.jpg`));
     });
   });
 

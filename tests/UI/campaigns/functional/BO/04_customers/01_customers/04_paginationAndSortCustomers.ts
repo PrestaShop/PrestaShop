@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -17,7 +14,12 @@ import ImportCustomers from '@data/import/customers';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  utilsCore,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customers_customers_paginationAndSortCustomers';
 
@@ -43,16 +45,16 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
     // Create csv file with all customers data
-    await files.createCSVFile('.', fileName, ImportCustomers);
+    await utilsFile.createCSVFile('.', fileName, ImportCustomers);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
     // Delete created csv file
-    await files.deleteFile(fileName);
+    await utilsFile.deleteFile(fileName);
   });
 
   // 1 : Go to customers page
@@ -171,7 +173,7 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseInt(text, 10));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseInt(text, 10));
 
-          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -179,7 +181,7 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else if (test.args.isDate) {
-          const expectedResult: string[] = await basicHelper.sortArrayDate(nonSortedTable);
+          const expectedResult: string[] = await utilsCore.sortArrayDate(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);
@@ -187,7 +189,7 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);

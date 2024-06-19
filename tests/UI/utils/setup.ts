@@ -1,5 +1,7 @@
-import helper from '@utils/helpers';
-import files from '@utils/files';
+import {
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 let screenshotNumber: number = 1;
 
@@ -13,7 +15,7 @@ let screenshotNumber: number = 1;
  * @description Create unique browser for all mocha run
  */
 before(async function () {
-  this.browser = await helper.createBrowser();
+  this.browser = await utilsPlaywright.createBrowser();
 
   // Create object for browser errors
   if (global.BROWSER.interceptErrors) {
@@ -30,7 +32,7 @@ before(async function () {
  * @description Close browser after finish the run
  */
 after(async function () {
-  await helper.closeBrowser(this.browser);
+  await utilsPlaywright.closeBrowser(this.browser);
 
   if (global.BROWSER.interceptErrors) {
     // Delete duplicated errors and create json report
@@ -40,8 +42,8 @@ after(async function () {
       console: [...new Set(global.browserErrors.console)],
     };
 
-    const reportName = await files.generateReportFilename();
-    await files.createFile('.', `${reportName}.json`, JSON.stringify(browserErrors));
+    const reportName = await utilsFile.generateReportFilename();
+    await utilsFile.createFile('.', `${reportName}.json`, JSON.stringify(browserErrors));
   }
 });
 
@@ -52,7 +54,7 @@ after(async function () {
 afterEach(async function () {
   // Take screenshot if demanded after failed step
   if (global.SCREENSHOT.AFTER_FAIL && this.currentTest?.state === 'failed') {
-    const currentTab = await helper.getLastOpenedTab(this.browser);
+    const currentTab = await utilsPlaywright.getLastOpenedTab(this.browser);
 
     // Take a screenshot
     if (currentTab !== null) {

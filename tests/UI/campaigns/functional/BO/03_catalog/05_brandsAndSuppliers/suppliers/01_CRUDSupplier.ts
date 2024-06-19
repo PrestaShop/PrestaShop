@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -17,6 +15,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerSupplier,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_suppliers_CRUDSupplier';
@@ -31,22 +31,22 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Generate logos
     await Promise.all([
-      files.generateImage(createSupplierData.logo),
-      files.generateImage(editSupplierData.logo),
+      utilsFile.generateImage(createSupplierData.logo),
+      utilsFile.generateImage(editSupplierData.logo),
     ]);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     await Promise.all([
-      files.deleteFile(createSupplierData.logo),
-      files.deleteFile(editSupplierData.logo),
+      utilsFile.deleteFile(createSupplierData.logo),
+      utilsFile.deleteFile(editSupplierData.logo),
     ]);
   });
 

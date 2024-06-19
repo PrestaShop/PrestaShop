@@ -1,6 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -14,6 +12,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataShoppingCarts,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_shoppingCarts_filterShoppingCarts';
@@ -28,16 +28,16 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
   let page: Page;
   let numberOfShoppingCarts: number;
 
-  const todayDate: string = date.getDateFormat('mm/dd/yyyy');
+  const todayDate: string = utilsDate.getDateFormat('mm/dd/yyyy');
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {

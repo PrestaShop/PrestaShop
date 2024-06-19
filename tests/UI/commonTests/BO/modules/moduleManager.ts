@@ -1,5 +1,3 @@
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 import loginCommon from '@commonTests/BO/loginBO';
@@ -8,8 +6,9 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 
 import {
   boDashboardPage,
-  // Import data
   type FakerModule,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -22,13 +21,13 @@ function installModule(module: FakerModule, baseContext: string = 'commonTests-i
 
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
-      await files.deleteFile('module.zip');
+      await utilsPlaywright.closeBrowserContext(browserContext);
+      await utilsFile.deleteFile('module.zip');
     });
 
     it('should login in BO', async function () {
@@ -38,9 +37,9 @@ function installModule(module: FakerModule, baseContext: string = 'commonTests-i
     it(`should download the zip of the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadModule', baseContext);
 
-      await files.downloadFile(module.releaseZip, 'module.zip');
+      await utilsFile.downloadFile(module.releaseZip, 'module.zip');
 
-      const found = await files.doesFileExist('module.zip');
+      const found = await utilsFile.doesFileExist('module.zip');
       expect(found).to.eq(true);
     });
 
@@ -88,12 +87,12 @@ function uninstallModule(module: FakerModule, baseContext: string = 'commonTests
 
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
@@ -137,12 +136,12 @@ function resetModule(module: FakerModule, baseContext: string = 'commonTests-res
 
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {

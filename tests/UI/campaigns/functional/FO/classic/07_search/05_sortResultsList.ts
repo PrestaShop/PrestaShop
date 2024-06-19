@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import basicHelper from '@utils/basicHelper';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
@@ -9,6 +7,10 @@ import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  utilsCore,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_search_sortResultsList';
 
@@ -27,12 +29,12 @@ describe('FO - Search Page : Sort results list', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should go to FO', async function () {
@@ -113,7 +115,7 @@ describe('FO - Search Page : Sort results list', async () => {
       await searchResultsPage.sortProductsList(page, test.args.sortBy);
       const sortedTable = await searchResultsPage.getAllProductsAttribute(page, test.args.attribute);
 
-      const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+      const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
       if (test.args.sortDirection === 'asc') {
         expect(sortedTable).to.deep.equal(expectedResult);

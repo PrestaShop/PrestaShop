@@ -1,15 +1,17 @@
-// Import utils
-import helper from '@utils/helpers';
 import loginCommon from '@commonTests/BO/loginBO';
-import type {BrowserContext, Page} from 'playwright';
-import {expect} from 'chai';
 
 // Import test context
 import testContext from '@utils/testContext';
 
 // Import pages
 import searchResultsPage from '@pages/BO/searchResults';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+
+import type {BrowserContext, Page} from 'playwright';
+import {expect} from 'chai';
+import {
+  boDashboardPage,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_header_searchBar';
 
@@ -19,12 +21,12 @@ describe('BO - Header : Search bar', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {

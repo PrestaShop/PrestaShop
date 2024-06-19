@@ -1,6 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -24,6 +22,8 @@ import {
   boDashboardPage,
   dataCustomers,
   FakerCartRule,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -47,9 +47,9 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
   let page: Page;
 
   // Data to create a date format
-  const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
-  const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
-  const expirationDate: string = date.getDateFormat('mm/dd/yyyy', 'future');
+  const pastDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'past');
+  const futureDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'future');
+  const expirationDate: string = utilsDate.getDateFormat('mm/dd/yyyy', 'future');
   const newCartRuleData: FakerCartRule = new FakerCartRule({
     name: 'Cart rule limit to single customer',
     customer: dataCustomers.johnDoe,
@@ -61,12 +61,12 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('BO : Create new cart rule', async () => {

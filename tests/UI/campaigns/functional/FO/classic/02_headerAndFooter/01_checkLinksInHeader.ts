@@ -1,5 +1,4 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
@@ -12,8 +11,8 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import {
-  // Import data
   dataCustomers,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -37,12 +36,12 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should go to FO home page', async function () {

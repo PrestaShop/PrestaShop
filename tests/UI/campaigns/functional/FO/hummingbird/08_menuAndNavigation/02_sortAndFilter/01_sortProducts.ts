@@ -1,7 +1,5 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import basicHelper from '@utils/basicHelper';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -17,7 +15,11 @@ import homePage from '@pages/FO/hummingbird/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  utilsCore,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_sortAndFilter_sortProducts';
 
@@ -44,12 +46,12 @@ describe('FO - Menu and navigation : Sort products', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Pre-condition: Get the number of products
@@ -183,7 +185,7 @@ describe('FO - Menu and navigation : Sort products', async () => {
         await categoryPage.sortProductsList(page, test.args.sortBy);
         const sortedTable = await categoryPage.getAllProductsAttribute(page, test.args.attribute);
 
-        const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+        const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
         if (test.args.sortDirection === 'asc') {
           expect(sortedTable).to.deep.equal(expectedResult);

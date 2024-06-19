@@ -1,6 +1,5 @@
 // Import utils
 import testContext from '@utils/testContext';
-import helper from '@utils/helpers';
 
 // Import common tests
 import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
@@ -13,10 +12,10 @@ import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 
 import {
-  // Import data
   dataPaymentMethods,
   FakerAddress,
   FakerCustomer,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -49,12 +48,12 @@ describe('FO - Checkout - Personal information : Order as a guest', async () => 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Order as a guest', async () => {

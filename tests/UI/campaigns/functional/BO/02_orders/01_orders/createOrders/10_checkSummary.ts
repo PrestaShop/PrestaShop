@@ -1,7 +1,4 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
-import mailHelper from '@utils/mailHelper';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -26,6 +23,9 @@ import {
   FakerCartRule,
   type MailDev,
   type MailDevEmail,
+  utilsCore,
+  utilsMail,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -72,12 +72,12 @@ describe('BO - Orders - Create order : Check summary', async () => {
   setupSmtpConfigTest(`${baseContext}_preTest_2`);
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Start listening to maildev server
-    mailListener = mailHelper.createMailListener();
-    mailHelper.startListener(mailListener);
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
 
     // Handle every new email
     mailListener.on('new', (email: MailDevEmail) => {
@@ -86,10 +86,10 @@ describe('BO - Orders - Create order : Check summary', async () => {
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     // Stop listening to maildev server
-    mailHelper.stopListener(mailListener);
+    utilsMail.stopListener(mailListener);
   });
 
   // 1 - Go to create order page and add product to cart
@@ -166,7 +166,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
       it('should check summary block', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock1', baseContext);
 
-        const totalTaxes = await basicHelper.percentage(dataProducts.demo_12.priceTaxExcluded, dataProducts.demo_12.tax);
+        const totalTaxes = await utilsCore.percentage(dataProducts.demo_12.priceTaxExcluded, dataProducts.demo_12.tax);
 
         const result = await addOrderPage.getSummaryDetails(page);
         await Promise.all([
@@ -195,7 +195,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
       it('should check summary block', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock2', baseContext);
 
-        const totalTaxes = await basicHelper.percentage(
+        const totalTaxes = await utilsCore.percentage(
           dataProducts.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount!.value,
           20,
         );
@@ -225,7 +225,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
       it('should check summary block', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock3', baseContext);
 
-        const totalTaxes = await basicHelper.percentage(dataProducts.demo_12.priceTaxExcluded, dataProducts.demo_12.tax);
+        const totalTaxes = await utilsCore.percentage(dataProducts.demo_12.priceTaxExcluded, dataProducts.demo_12.tax);
 
         const result = await addOrderPage.getSummaryDetails(page);
         await Promise.all([

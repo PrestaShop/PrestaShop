@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -11,7 +9,11 @@ import brandsPage from '@pages/BO/catalog/brands';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {boDashboardPage} from '@prestashop-core/ui-testing';
+import {
+  boDashboardPage,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_brands_brands_exportBrands';
 
@@ -30,12 +32,12 @@ describe('BO - Catalog - Brands & Suppliers : Export brands', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -68,7 +70,7 @@ describe('BO - Catalog - Brands & Suppliers : Export brands', async () => {
 
     filePath = await brandsPage.exportBrandsDataToCsv(page);
 
-    const doesFileExist = await files.doesFileExist(filePath, 5000);
+    const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
     expect(doesFileExist, 'Export of data has failed').to.eq(true);
   });
 
@@ -80,7 +82,7 @@ describe('BO - Catalog - Brands & Suppliers : Export brands', async () => {
     for (let row = 1; row <= numberOfCategories; row++) {
       const brandInCsvFormat = await brandsPage.getBrandInCsvFormat(page, row);
 
-      const textExist = await files.isTextInFile(filePath, brandInCsvFormat, true, true);
+      const textExist = await utilsFile.isTextInFile(filePath, brandInCsvFormat, true, true);
       expect(textExist, `${brandInCsvFormat} was not found in the file`).to.eq(true);
     }
   });

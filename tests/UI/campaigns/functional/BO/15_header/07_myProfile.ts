@@ -1,6 +1,3 @@
-// Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
@@ -23,6 +20,8 @@ import {
   boLoginPage,
   type EmployeePermission,
   FakerEmployee,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_header_myProfile';
@@ -59,12 +58,12 @@ describe('BO - Header : My profile', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Go to employee page', async () => {
@@ -148,7 +147,7 @@ describe('BO - Header : My profile', async () => {
 
     it('should upload an invalid format image and check error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvalidFormatImage', baseContext);
-      await files.createSVGFile('.', 'image.svg');
+      await utilsFile.createSVGFile('.', 'image.svg');
 
       employeeData.avatarFile = 'image.svg';
 
@@ -158,12 +157,12 @@ describe('BO - Header : My profile', async () => {
       expect(textResult).to.contains(myProfilePage.errorInvalidFormatImageMessage);
 
       // Delete created file
-      await files.deleteFile('image.svg');
+      await utilsFile.deleteFile('image.svg');
     });
 
     it('should upload a valid format image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkValidFormatImage', baseContext);
-      await files.generateImage('image.jpg');
+      await utilsFile.generateImage('image.jpg');
 
       employeeData.avatarFile = 'image.jpg';
 
@@ -173,7 +172,7 @@ describe('BO - Header : My profile', async () => {
       expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
 
       // Delete created file
-      await files.deleteFile('image.jpg');
+      await utilsFile.deleteFile('image.jpg');
       // Reset value
       employeeData.avatarFile = null;
     });

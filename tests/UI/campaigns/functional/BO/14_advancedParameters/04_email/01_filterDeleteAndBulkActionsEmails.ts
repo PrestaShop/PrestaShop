@@ -1,6 +1,4 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -22,6 +20,8 @@ import {
   dataCustomers,
   dataLanguages,
   dataPaymentMethods,
+  utilsDate,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -36,7 +36,7 @@ Delete email log
 Delete email logs by bulk action
  */
 describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emails', async () => {
-  const today:string = date.getDateFormat('yyyy-mm-dd');
+  const today:string = utilsDate.getDateFormat('yyyy-mm-dd');
 
   let browserContext: BrowserContext;
   let page: Page;
@@ -44,12 +44,12 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {

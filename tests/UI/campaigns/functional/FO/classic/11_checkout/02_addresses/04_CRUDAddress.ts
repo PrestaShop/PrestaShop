@@ -1,6 +1,5 @@
 // Import utils
 import testContext from '@utils/testContext';
-import helper from '@utils/helpers';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
@@ -16,6 +15,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -66,12 +66,12 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Create new address in checkout page', async () => {

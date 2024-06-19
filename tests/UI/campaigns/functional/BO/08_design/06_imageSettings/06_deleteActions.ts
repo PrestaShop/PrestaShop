@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -16,6 +14,8 @@ import {
   boDashboardPage,
   dataProducts,
   FakerImageType,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_deleteActions';
@@ -34,12 +34,12 @@ describe('BO - Design - Image Settings : Delete Actions', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -103,12 +103,12 @@ describe('BO - Design - Image Settings : Delete Actions', async () => {
       it(`should check thumbnails for the image type n°${index} are regenerated`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProductsThumbnails${index}`, baseContext);
 
-        const imagePath = await files.getFilePathAutomaticallyGenerated(
+        const imagePath = await utilsFile.getFilePathAutomaticallyGenerated(
           `img/p/${dataProducts.demo_1.id}/`,
           `${dataProducts.demo_1.id}-todelete${index}.jpg`,
         );
 
-        const exist = await files.doesFileExist(imagePath);
+        const exist = await utilsFile.doesFileExist(imagePath);
         expect(exist, 'File doesn\'t exist!').to.eq(true);
       });
     });
@@ -143,12 +143,12 @@ describe('BO - Design - Image Settings : Delete Actions', async () => {
       it('should check that images relative to image type are not removed', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkImagesRelativeImageType${index}`, baseContext);
 
-        const imagePath = await files.getFilePathAutomaticallyGenerated(
+        const imagePath = await utilsFile.getFilePathAutomaticallyGenerated(
           `img/p/${dataProducts.demo_1.id}/`,
           `${dataProducts.demo_1.id}-todelete${index}.jpg`,
         );
 
-        const exist = await files.doesFileExist(imagePath);
+        const exist = await utilsFile.doesFileExist(imagePath);
         expect(exist, 'File doesn\'t exist!').to.be.eq(!value);
       });
     });

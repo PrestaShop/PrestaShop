@@ -1,6 +1,4 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -15,6 +13,8 @@ import {
   boDashboardPage,
   dataLanguages,
   dataModules,
+  utilsFile,
+  utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_translations_exportLanguage';
@@ -25,12 +25,12 @@ describe('BO - International - Translation : Export languages', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -81,7 +81,7 @@ describe('BO - International - Translation : Export languages', async () => {
 
         const filePath = await translationsPage.exportPrestashopTranslations(page, test.args.language, test.args.types);
 
-        const doesFileExist = await files.doesFileExist(filePath);
+        const doesFileExist = await utilsFile.doesFileExist(filePath);
         expect(doesFileExist, `File '${filePath}' was not downloaded`).to.eq(true);
       });
 
@@ -98,7 +98,7 @@ describe('BO - International - Translation : Export languages', async () => {
 
           const filePath = await translationsPage.exportInstalledModuleTranslations(page, test.args.language, test.args.module!);
 
-          const doesFileExist = await files.doesFileExist(filePath);
+          const doesFileExist = await utilsFile.doesFileExist(filePath);
           expect(doesFileExist, `File '${filePath}' was not downloaded`).to.eq(true);
         });
     }
