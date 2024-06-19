@@ -89,13 +89,12 @@ label {
 
   a.login-back {
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 1rem;
+    left: 1rem;
     z-index: 100;
     display: flex;
     align-items: center;
-    width: 100%;
-    padding: 1rem;
+    width: fit-content;
     font-size: 1rem;
     font-weight: 400;
     color: inherit;
