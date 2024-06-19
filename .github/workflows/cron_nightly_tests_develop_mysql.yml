@@ -1,6 +1,6 @@
 # This workflow aim to run all UI tests on active branches
 # and upload the report on Google cloud platform storage
-name: Nightly tests and report - develop
+name: Nightly tests and report - develop (mysql)
 
 on:
   workflow_run:
@@ -10,15 +10,12 @@ on:
 
 jobs:
   test_develop:
-    strategy:
-      matrix:
-        database: [ 'mysql', 'mariadb' ]
     uses: ./.github/workflows/cron_nightly_tests_reusable.yml
     with:
       BRANCH: develop
       PHP_VERSION: '8.2'
       NODE_VERSION: '16'
-      DB_SERVER: ${{ matrix.database }}
+      DB_SERVER: 'mysql'
     secrets:
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
       GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}

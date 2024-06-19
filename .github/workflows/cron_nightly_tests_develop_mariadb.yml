@@ -1,0 +1,21 @@
+# This workflow aim to run all UI tests on active branches
+# and upload the report on Google cloud platform storage
+name: Nightly tests and report - develop (mariadb)
+
+on:
+  workflow_run:
+    workflows: [ 'Nightly Build' ]
+    types:
+      - requested
+
+jobs:
+  test_develop:
+    uses: ./.github/workflows/cron_nightly_tests_reusable.yml
+    with:
+      BRANCH: develop
+      PHP_VERSION: '8.2'
+      NODE_VERSION: '16'
+      DB_SERVER: 'mariadb'
+    secrets:
+      GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
+      GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
