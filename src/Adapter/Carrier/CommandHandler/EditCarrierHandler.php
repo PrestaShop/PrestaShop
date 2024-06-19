@@ -59,34 +59,34 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         $carrier = $this->carrierRepository->get($command->getCarrierId());
 
         // General information
-        if ($command->getName()) {
+        if (null !== $command->getName()) {
             $carrier->name = $command->getName();
         }
-        if ($command->getGrade()) {
+        if (null !== $command->getGrade()) {
             $carrier->grade = $command->getGrade();
         }
-        if ($command->getTrackingUrl()) {
+        if (null !== $command->getTrackingUrl()) {
             $carrier->url = $command->getTrackingUrl();
         }
-        if ($command->getPosition()) {
+        if (null !== $command->getPosition()) {
             $carrier->position = $command->getPosition();
         }
         if (null !== $command->getActive()) {
             $carrier->active = $command->getActive();
         }
-        if ($command->getLocalizedDelay()) {
+        if (null !== $command->getLocalizedDelay()) {
             $carrier->delay = $command->getLocalizedDelay();
         }
-        if ($command->getMaxWidth()) {
+        if (null !== $command->getMaxWidth()) {
             $carrier->max_width = $command->getMaxWidth();
         }
-        if ($command->getMaxHeight()) {
+        if (null !== $command->getMaxHeight()) {
             $carrier->max_height = $command->getMaxHeight();
         }
-        if ($command->getMaxDepth()) {
+        if (null !== $command->getMaxDepth()) {
             $carrier->max_depth = $command->getMaxDepth();
         }
-        if ($command->getMaxWeight()) {
+        if (null !== $command->getMaxWeight()) {
             $carrier->max_weight = $command->getMaxWeight();
         }
 

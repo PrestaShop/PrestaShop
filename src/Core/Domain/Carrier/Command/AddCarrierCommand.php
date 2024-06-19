@@ -60,7 +60,7 @@ class AddCarrierCommand
         private int $max_width = 0,
         private int $max_height = 0,
         private int $max_depth = 0,
-        private int $max_weight = 0,
+        private float $max_weight = 0,
         private ?string $logoPathName = null
     ) {
         $this->shippingMethod = new ShippingMethod($shippingMethod);
@@ -113,7 +113,7 @@ class AddCarrierCommand
         return $this->max_depth;
     }
 
-    public function getMaxWeight(): int
+    public function getMaxWeight(): float
     {
         return $this->max_weight;
     }

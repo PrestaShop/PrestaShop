@@ -84,34 +84,34 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
 
         // Then create a new carrier with a new id reference
         /* @var Carrier $newCarrier */
-        if ($carrier->name) {
+        if (null !== $carrier->name) {
             $newCarrier->name = $carrier->name;
         }
-        if ($carrier->grade) {
+        if (null !== $carrier->grade) {
             $newCarrier->grade = $carrier->grade;
         }
-        if ($carrier->url) {
+        if (null !== $carrier->url) {
             $newCarrier->url = $carrier->url;
         }
-        if ($carrier->position) {
+        if (null !== $carrier->position) {
             $newCarrier->position = $carrier->position;
         }
         if (null !== $carrier->active) {
             $newCarrier->active = $carrier->active;
         }
-        if ($carrier->delay) {
+        if (null !== $carrier->delay) {
             $newCarrier->delay = $carrier->delay;
         }
-        if ($carrier->max_width) {
+        if (null !== $carrier->max_width) {
             $newCarrier->max_width = $carrier->max_width;
         }
-        if ($carrier->max_height) {
+        if (null !== $carrier->max_height) {
             $newCarrier->max_height = $carrier->max_height;
         }
-        if ($carrier->max_depth) {
+        if (null !== $carrier->max_depth) {
             $newCarrier->max_depth = $carrier->max_depth;
         }
-        if ($carrier->max_weight) {
+        if (null !== $carrier->max_weight) {
             $newCarrier->max_weight = $carrier->max_weight;
         }
         if (null !== $carrier->shipping_handling) {

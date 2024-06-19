@@ -48,10 +48,6 @@ class CarrierFormDataProvider implements FormDataProviderInterface
                 'localized_delay' => $carrier->getLocalizedDelay(),
                 'active' => $carrier->isActive(),
                 'grade' => $carrier->getGrade(),
-                'max_width' => $carrier->getMaxWidth(),
-                'max_height' => $carrier->getMaxHeight(),
-                'max_depth' => $carrier->getMaxDepth(),
-                'max_weight' => $carrier->getMaxWeight(),
                 'group_access' => $carrier->getAssociatedGroupIds(),
                 'logo_preview' => $carrier->getLogoPath(),
                 'tracking_url' => $carrier->getTrackingUrl(),
@@ -62,6 +58,12 @@ class CarrierFormDataProvider implements FormDataProviderInterface
                 'shipping_method' => $carrier->getShippingMethod(),
                 'id_tax_rule_group' => $carrier->getIdTaxRuleGroup(),
                 'range_behavior' => $carrier->getRangeBehavior(),
+            ],
+            'size_weight_settings' => [
+                'max_width' => $carrier->getMaxWidth(),
+                'max_height' => $carrier->getMaxHeight(),
+                'max_depth' => $carrier->getMaxDepth(),
+                'max_weight' => $carrier->getMaxWeight(),
             ],
         ];
     }

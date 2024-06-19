@@ -77,10 +77,6 @@ class CarrierFormDataProviderTest extends TestCase
                 ],
                 'active' => true,
                 'grade' => 5,
-                'max_width' => 1234,
-                'max_height' => 1123,
-                'max_depth' => 3421,
-                'max_weight' => 1657,
                 'group_access' => [1, 2, 3],
                 'logo_preview' => '/img/c/45.jkg',
                 'tracking_url' => 'http://track.to',
@@ -91,6 +87,12 @@ class CarrierFormDataProviderTest extends TestCase
                 'shipping_method' => 1,
                 'id_tax_rule_group' => 1,
                 'range_behavior' => OutOfRangeBehavior::USE_HIGHEST_RANGE,
+            ],
+            'size_weight_settings' => [
+                'max_width' => 1234,
+                'max_height' => 1123,
+                'max_depth' => 3421,
+                'max_weight' => 1657,
             ],
         ], $formData);
     }
