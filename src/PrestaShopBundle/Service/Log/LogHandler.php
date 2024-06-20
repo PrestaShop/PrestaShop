@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Service\Log;
 
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -53,7 +54,7 @@ class LogHandler extends AbstractProcessingHandler
      *
      * @phpstan-param FormattedRecord $record
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         /** @var LegacyLogger $logger */
         $logger = $this->container->get('prestashop.adapter.legacy.logger');
