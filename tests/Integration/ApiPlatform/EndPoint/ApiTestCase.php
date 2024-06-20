@@ -32,6 +32,7 @@ use AdminAPIKernel;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase as ApiPlatformTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use Configuration;
+use EmptyIterator;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\AddApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
@@ -61,6 +62,52 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         ApiClientResetter::resetApiClient();
         self::updateConfiguration('PS_ADMIN_API_FORCE_DEBUG_SECURED', 1);
         self::$clientSecret = null;
+    }
+
+    /**
+     * @dataProvider getProtectedEndpoints
+     *
+     * @param string $method
+     * @param string $uri
+     * @param string $contentType
+     * @param bool $scopeNeeded
+     */
+    public function testProtectedEndpoints(string $method, string $uri, string $contentType = 'application/json', bool $scopeNeeded = true): void
+    {
+        $options['headers']['content-type'] = $contentType;
+        // Check that endpoints are not accessible without a proper Bearer token
+        $response = static::createClient([], $options)->request($method, $uri);
+        self::assertResponseStatusCodeSame(401);
+
+        $content = $response->getContent(false);
+        $this->assertNotEmpty($content);
+        $this->assertEquals('"No Authorization header provided"', $content);
+
+        // Test same endpoint with a token but without scopes
+        if ($scopeNeeded) {
+            $emptyBearerToken = $this->getBearerToken();
+            static::createClient([], $options)->request($method, $uri, ['auth_bearer' => $emptyBearerToken]);
+            self::assertResponseStatusCodeSame(403);
+        }
+    }
+
+    /**
+     * You must provide a list of protected endpoints that will be automatically checked,
+     * the test will check that the endpoints are not accessible when no token is specified
+     * AND that they are not accessible when the no particular scope is specified.
+     *
+     * You should use yield return like this:
+     *
+     *  yield 'get endpoint' => [
+     *      'GET',
+     *      '/product/1',
+     *  ];
+     *
+     * @return iterable
+     */
+    public function getProtectedEndpoints(): iterable
+    {
+        return new EmptyIterator();
     }
 
     /**

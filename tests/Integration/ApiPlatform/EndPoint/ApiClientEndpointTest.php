@@ -37,27 +37,14 @@ class ApiClientEndpointTest extends ApiTestCase
         self::createApiClient();
     }
 
-    /**
-     * @dataProvider getProtectedEndpoints
-     *
-     * @param string $method
-     * @param string $uri
-     */
-    public function testProtectedEndpoints(string $method, string $uri): void
-    {
-        $response = static::createClient()->request($method, $uri);
-        self::assertResponseStatusCodeSame(401);
-
-        $content = $response->getContent(false);
-        $this->assertNotEmpty($content);
-        $this->assertEquals('"No Authorization header provided"', $content);
-    }
-
     public function getProtectedEndpoints(): iterable
     {
         yield 'get endpoint' => [
             'GET',
             '/api-client/infos',
+            'application/json',
+            // The endpoint is protected when you have no token, however it doesn't require any particular scope
+            false,
         ];
     }
 
