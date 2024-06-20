@@ -359,8 +359,9 @@ class OrderController extends FrameworkBundleAdminController
         $orderGrid = $this->get('prestashop.core.grid.factory.order')->getGrid($filters);
 
         $headers = [];
-        
+
         foreach ($orderGrid->getDefinition()->getColumns()->toArray() as $columns) {
+
             if($columns['id'] != 'orders_bulk' && $columns['id'] != 'actions') {
                 $headers[$columns['id']] = $columns['name'];
             }
