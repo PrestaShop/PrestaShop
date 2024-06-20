@@ -543,7 +543,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function initUpgradeModule($module)
     {
-        if (((int) $module->installed == 1) & (empty($module->database_version) === true)) {
+        if ($module->installed && empty($module->database_version)) {
             Module::upgradeModuleVersion($module->name, $module->version);
             $module->database_version = $module->version;
         }
