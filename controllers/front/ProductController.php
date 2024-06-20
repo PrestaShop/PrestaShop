@@ -525,6 +525,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product = $this->getTemplateVarProduct();
         $minimalProductQuantity = $this->getProductMinimalQuantity($product);
 
+        // If the product is already in the cart, we can set the minimal quantity to 1
+        if ($product['cart_quantity'] >= $minimalProductQuantity) {
+            $minimalProductQuantity = 1;
+        }
+
         ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxRender(json_encode([
@@ -1223,6 +1228,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
+        $product['cart_quantity'] = $this->context->cart->getProductQuantity($product['id_product'], $product['id_product_attribute'])['quantity'];
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(['product' => $this->product])->present();
         $product['ecotax_tax_inc'] = $this->product->getEcotax(null, true, true);
@@ -1342,6 +1348,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $requiredQuantity = (int) Tools::getValue('quantity_wanted', $this->getProductMinimalQuantity($product));
         if ($requiredQuantity < $product['minimal_quantity']) {
             $requiredQuantity = $product['minimal_quantity'];
+        }
+
+        if ($product['cart_quantity'] >= $requiredQuantity) {
+            return 0;
         }
 
         return $requiredQuantity;
