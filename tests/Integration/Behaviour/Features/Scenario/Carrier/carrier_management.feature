@@ -11,6 +11,9 @@ Feature: Carrier management
   Background:
     Given group "visitor" named "Visitor" exists
     Given group "guest" named "Guest" exists
+    And language "en" with locale "en-US" exists
+    And language "fr" with locale "fr-FR" exists
+    And language with iso code "en" is the default one
 
   Scenario: Adding new Carrier
     When I create carrier "carrier1" with specified properties:
@@ -25,6 +28,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -42,6 +46,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -62,6 +67,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -81,6 +87,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -98,6 +105,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -117,6 +125,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -136,6 +145,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -153,6 +163,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -172,6 +183,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -191,6 +203,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -208,6 +221,7 @@ Feature: Carrier management
       | max_weight       | 3864                                          |
       | group_access     | visitor, guest                                |
       | delay[en-US]     | Shipping delay                                |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                                         |
       | isFree           | true                                          |
       | shippingMethod   | weight                                        |
@@ -227,6 +241,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -246,6 +261,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -263,6 +279,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                            |
@@ -282,6 +299,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -301,6 +319,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -318,6 +337,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -337,13 +357,15 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | taxRuleGroup     | US-AL Rate (4%)                    |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" called "newCarrier1" with specified properties:
-      | delay[en-US] | Shipping delay new |
+      | delay[en-US] | Shipping delay new         |
+      | delay[fr-FR] | Délai de livraison nouveau |
     Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
       | grade            | 1                                  |
@@ -356,6 +378,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -373,6 +396,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay new                 |
+      | delay[fr-FR]     | Délai de livraison nouveau         |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -392,6 +416,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -414,6 +439,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -431,6 +457,7 @@ Feature: Carrier management
       | max_weight       | 6666                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -450,6 +477,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -469,6 +497,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -486,6 +515,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor                            |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -505,6 +535,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -532,6 +563,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -559,6 +591,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -586,6 +619,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | true                               |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -608,6 +642,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -635,6 +670,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -662,6 +698,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | true                               |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -684,6 +721,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -708,6 +746,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | true                               |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -732,6 +771,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | true                               |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -755,6 +795,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -776,6 +817,7 @@ Feature: Carrier management
       | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
