@@ -361,13 +361,13 @@ class OrderController extends FrameworkBundleAdminController
         $headers = [];
 
         foreach ($orderGrid->getDefinition()->getColumns()->toArray() as $columns) {
-
-            if($columns['id'] != 'orders_bulk' && $columns['id'] != 'actions') {
+            if ($columns['id'] != 'orders_bulk' && $columns['id'] != 'actions') {
                 $headers[$columns['id']] = $columns['name'];
             }
         }
 
         $data = [];
+        $item = [];
 
         foreach ($orderGrid->getData()->getRecords()->all() as $record) {
             foreach ($headers as $key => $columns) {
