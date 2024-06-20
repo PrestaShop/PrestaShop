@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {homePage} from '@pages/FO/classic/home';
 // Import BO pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-import psNewProducts from '@pages/BO/modules/psNewProducts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataModules,
+  modPsNewProductsBoMain,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -67,10 +67,10 @@ describe('New products block module - Configure settings of "Number of days for 
 
       await moduleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
 
-      const pageTitle = await psNewProducts.getPageSubtitle(page);
-      expect(pageTitle).to.eq(psNewProducts.pageSubTitle);
+      const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);
 
-      defaultValue = await psNewProducts.getNumDaysConsideredAsNew(page);
+      defaultValue = await modPsNewProductsBoMain.getNumDaysConsideredAsNew(page);
     });
 
     [
@@ -111,14 +111,14 @@ describe('New products block module - Configure settings of "Number of days for 
       it(`should change the configuration (${arg.setting}) in the module`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `changeConfiguration${index}`, baseContext);
 
-        const textResult = await psNewProducts.setNumDaysConsideredAsNew(page, arg.setting);
-        expect(textResult).to.contains(psNewProducts.updateSettingsSuccessMessage);
+        const textResult = await modPsNewProductsBoMain.setNumDaysConsideredAsNew(page, arg.setting);
+        expect(textResult).to.contains(modPsNewProductsBoMain.updateSettingsSuccessMessage);
       });
 
       it('should go to the front office', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToTheFo${index}`, baseContext);
 
-        page = await psNewProducts.viewMyShop(page);
+        page = await modPsNewProductsBoMain.viewMyShop(page);
         await homePage.changeLanguage(page, 'en');
 
         const isHomePage = await homePage.isHomePage(page);
@@ -137,15 +137,15 @@ describe('New products block module - Configure settings of "Number of days for 
 
         page = await homePage.closePage(browserContext, page, 0);
 
-        const pageTitle = await psNewProducts.getPageSubtitle(page);
-        expect(pageTitle).to.eq(psNewProducts.pageSubTitle);
+        const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
+        expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);
       });
     });
 
     it('should reset the configuration in the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setDefaultValue', baseContext);
 
-      const textResult = await psNewProducts.setNumDaysConsideredAsNew(page, defaultValue);
-      expect(textResult).to.contains(psNewProducts.updateSettingsSuccessMessage);
+      const textResult = await modPsNewProductsBoMain.setNumDaysConsideredAsNew(page, defaultValue);
+      expect(textResult).to.contains(modPsNewProductsBoMain.updateSettingsSuccessMessage);
     });
   });

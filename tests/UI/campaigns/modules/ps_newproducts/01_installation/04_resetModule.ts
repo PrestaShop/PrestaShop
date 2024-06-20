@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {homePage} from '@pages/FO/classic/home';
 // Import BO pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-import psNewProducts from '@pages/BO/modules/psNewProducts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataModules,
+  modPsNewProductsBoMain,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -80,24 +80,24 @@ describe('New products block module - Reset module', async () => {
 
     await moduleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
 
-    const pageTitle = await psNewProducts.getPageSubtitle(page);
-    expect(pageTitle).to.eq(psNewProducts.pageSubTitle);
+    const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
+    expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);
 
-    defaultValue = parseInt(await psNewProducts.getNumProductsToDisplay(page), 10);
+    defaultValue = parseInt(await modPsNewProductsBoMain.getNumProductsToDisplay(page), 10);
     expect(defaultValue).to.be.gt(0);
   });
 
   it('should change the configuration in the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'changeConfiguration', baseContext);
 
-    const textResult = await psNewProducts.setNumProductsToDisplay(page, numProducts);
-    expect(textResult).to.contains(psNewProducts.updateSettingsSuccessMessage);
+    const textResult = await modPsNewProductsBoMain.setNumProductsToDisplay(page, numProducts);
+    expect(textResult).to.contains(modPsNewProductsBoMain.updateSettingsSuccessMessage);
   });
 
   it('should go to the front office', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTheFo', baseContext);
 
-    page = await psNewProducts.viewMyShop(page);
+    page = await modPsNewProductsBoMain.viewMyShop(page);
     await homePage.changeLanguage(page, 'en');
 
     const isHomePage = await homePage.isHomePage(page);
@@ -116,8 +116,8 @@ describe('New products block module - Reset module', async () => {
 
     page = await homePage.closePage(browserContext, page, 0);
 
-    const pageTitle = await psNewProducts.getPageSubtitle(page);
-    expect(pageTitle).to.eq(psNewProducts.pageSubTitle);
+    const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
+    expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);
   });
 
   it('should return to \'Modules > Module Manager\' page', async function () {
@@ -153,21 +153,21 @@ describe('New products block module - Reset module', async () => {
 
     await moduleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
 
-    const pageTitle = await psNewProducts.getPageSubtitle(page);
-    expect(pageTitle).to.eq(psNewProducts.pageSubTitle);
+    const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
+    expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);
   });
 
   it('should check the configuration is reset', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'changeConfigurationReset', baseContext);
 
-    const numProductsValue = await psNewProducts.getNumProductsToDisplay(page);
+    const numProductsValue = await modPsNewProductsBoMain.getNumProductsToDisplay(page);
     expect(numProductsValue).to.be.equal(defaultValue.toString());
   });
 
   it('should go to the front office', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTheFoAfterReset', baseContext);
 
-    page = await psNewProducts.viewMyShop(page);
+    page = await modPsNewProductsBoMain.viewMyShop(page);
     await homePage.changeLanguage(page, 'en');
 
     const isHomePage = await homePage.isHomePage(page);
