@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import searchPage from '@pages/BO/shopParameters/search';
 import addSearchPage from '@pages/BO/shopParameters/search/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boSearchPage,
   FakerSearchAlias,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -54,14 +54,14 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
       boDashboardPage.searchLink,
     );
 
-    const pageTitle = await searchPage.getPageTitle(page);
-    expect(pageTitle).to.contains(searchPage.pageTitle);
+    const pageTitle = await boSearchPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSearchPage.pageTitle);
   });
 
   it('should reset all filters and get number of alias in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfSearch = await searchPage.resetAndGetNumberOfLines(page);
+    numberOfSearch = await boSearchPage.resetAndGetNumberOfLines(page);
     expect(numberOfSearch).to.be.above(0);
   });
 
@@ -70,7 +70,7 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
     it('should go to add new search page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddAliasPage', baseContext);
 
-      await searchPage.goToAddNewAliasPage(page);
+      await boSearchPage.goToAddNewAliasPage(page);
 
       const pageTitle = await addSearchPage.getPageTitle(page);
       expect(pageTitle).to.contains(addSearchPage.pageTitleCreate);
@@ -80,9 +80,9 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
       await testContext.addContextItem(this, 'testIdentifier', 'createAlias', baseContext);
 
       const textResult = await addSearchPage.setAlias(page, createAliasData);
-      expect(textResult).to.contains(searchPage.successfulCreationMessage);
+      expect(textResult).to.contains(boSearchPage.successfulCreationMessage);
 
-      const numberOfElementAfterCreation = await searchPage.getNumberOfElementInGrid(page);
+      const numberOfElementAfterCreation = await boSearchPage.getNumberOfElementInGrid(page);
       expect(numberOfElementAfterCreation).to.be.equal(numberOfSearch + 1);
     });
   });
@@ -92,17 +92,17 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
-      await searchPage.resetFilter(page);
-      await searchPage.filterTable(page, 'input', 'alias', createAliasData.alias);
+      await boSearchPage.resetFilter(page);
+      await boSearchPage.filterTable(page, 'input', 'alias', createAliasData.alias);
 
-      const textEmail = await searchPage.getTextColumn(page, 1, 'alias');
+      const textEmail = await boSearchPage.getTextColumn(page, 1, 'alias');
       expect(textEmail).to.contains(createAliasData.alias);
     });
 
     it('should go to edit alias page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditAliasPage', baseContext);
 
-      await searchPage.gotoEditAliasPage(page, 1);
+      await boSearchPage.gotoEditAliasPage(page, 1);
 
       const pageTitle = await addSearchPage.getPageTitle(page);
       expect(pageTitle).to.contains(addSearchPage.pageTitleEdit);
@@ -112,9 +112,9 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
       await testContext.addContextItem(this, 'testIdentifier', 'updateAlias', baseContext);
 
       const textResult = await addSearchPage.setAlias(page, editSearchData);
-      expect(textResult).to.contains(searchPage.successfulUpdateMessage);
+      expect(textResult).to.contains(boSearchPage.successfulUpdateMessage);
 
-      const numberOfSearchAfterUpdate = await searchPage.resetAndGetNumberOfLines(page);
+      const numberOfSearchAfterUpdate = await boSearchPage.resetAndGetNumberOfLines(page);
       expect(numberOfSearchAfterUpdate).to.be.equal(numberOfSearch + 1);
     });
   });
@@ -124,20 +124,20 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
-      await searchPage.resetFilter(page);
-      await searchPage.filterTable(page, 'input', 'alias', createAliasData.alias);
+      await boSearchPage.resetFilter(page);
+      await boSearchPage.filterTable(page, 'input', 'alias', createAliasData.alias);
 
-      const textEmail = await searchPage.getTextColumn(page, 1, 'alias');
+      const textEmail = await boSearchPage.getTextColumn(page, 1, 'alias');
       expect(textEmail).to.contains(createAliasData.alias);
     });
 
     it('should delete alias', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAlias', baseContext);
 
-      const textResult = await searchPage.deleteAlias(page, 1);
-      expect(textResult).to.contains(searchPage.successfulDeleteMessage);
+      const textResult = await boSearchPage.deleteAlias(page, 1);
+      expect(textResult).to.contains(boSearchPage.successfulDeleteMessage);
 
-      const numberOfSearchAfterDelete = await searchPage.resetAndGetNumberOfLines(page);
+      const numberOfSearchAfterDelete = await boSearchPage.resetAndGetNumberOfLines(page);
       expect(numberOfSearchAfterDelete).to.be.equal(numberOfSearch);
     });
   });
