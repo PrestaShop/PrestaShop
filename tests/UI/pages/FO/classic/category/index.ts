@@ -76,13 +76,13 @@ class CategoryPage extends FOBasePage {
 
   protected searchFilters: string;
 
-  private readonly searchFilter: (facetType: string) => string;
+  private readonly searchFilter: (facetType: string, facetLabel: string) => string;
 
-  protected searchFiltersCheckbox: (facetType: string) => string;
+  protected searchFiltersCheckbox: (facetType: string, facetLabel: string) => string;
 
-  private readonly searchFiltersRadio: (facetType: string) => string;
+  private readonly searchFiltersRadio: (facetType: string, facetLabel: string) => string;
 
-  private readonly searchFiltersDropdown: (facetType: string) => string;
+  private readonly searchFiltersDropdown: (facetType: string, facetLabel: string) => string;
 
   protected closeOneFilter: (row: number) => string;
 
@@ -155,11 +155,14 @@ class CategoryPage extends FOBasePage {
 
     // Filter
     this.searchFilters = '#search_filters';
-    this.searchFilter = (facetType: string) => `${this.searchFilters} section[data-type="${facetType}"] ul[id^="facet"]`;
-    this.searchFiltersCheckbox = (facetType: string) => `${this.searchFilter(facetType)} label.facet-label `
-      + 'input[type="checkbox"]';
-    this.searchFiltersRadio = (facetType: string) => `${this.searchFilter(facetType)} label.facet-label input[type="radio"]`;
-    this.searchFiltersDropdown = (facetType: string) => `${this.searchFilter(facetType)} .facet-dropdown`;
+    this.searchFilter = (facetType: string, facetLabel: string) => `${this.searchFilters} section[data-type="${facetType}"]`
+      + `${facetLabel === '' ? '' : `[data-name="${facetLabel}"]`} ul[id^="facet"]`;
+    this.searchFiltersCheckbox = (facetType: string, facetLabel: string) => `${this.searchFilter(facetType, facetLabel)} `
+      + 'label.facet-label input[type="checkbox"]';
+    this.searchFiltersRadio = (facetType: string, facetLabel: string) => `${this.searchFilter(facetType, facetLabel)} `
+      + 'label.facet-label input[type="radio"]';
+    this.searchFiltersDropdown = (facetType: string, facetLabel: string) => `${this.searchFilter(facetType, facetLabel)
+    } .facet-dropdown`;
     this.searchFiltersSlider = '.ui-slider-horizontal';
     this.searchFilterPriceValues = '[id*=facet_label]';
     this.clearAllFiltersLink = '#_desktop_search_filters_clear_all button.js-search-filters-clear-all';
@@ -461,10 +464,22 @@ class CategoryPage extends FOBasePage {
    * Return if search filters use checkbox button
    * @param page {Page} Browser tab
    * @param facetType {string} Facet type
+   * @param facetLabel {string} Facet label
    * @return {Promise<boolean>}
    */
-  async isSearchFiltersCheckbox(page: Page, facetType: string): Promise<boolean> {
-    return (await page.locator(this.searchFiltersCheckbox(facetType)).count()) !== 0;
+  async isSearchFiltersCheckbox(page: Page, facetType: string, facetLabel: string = ''): Promise<boolean> {
+    return (await this.getNumSearchFiltersCheckbox(page, facetType, facetLabel)) !== 0;
+  }
+
+  /**
+   * Return the search filters which use checkbox button
+   * @param page {Page} Browser tab
+   * @param facetType {string} Facet type
+   * @param facetLabel {string} Facet label
+   * @return {Promise<boolean>}
+   */
+  async getNumSearchFiltersCheckbox(page: Page, facetType: string, facetLabel: string = ''): Promise<number> {
+    return page.locator(this.searchFiltersCheckbox(facetType, facetLabel)).count();
   }
 
   /**
@@ -478,7 +493,7 @@ class CategoryPage extends FOBasePage {
   async filterByCheckbox(page: Page, facetType: string, checkboxName: string, toEnable: boolean): Promise<void> {
     await this.setChecked(
       page,
-      `${this.searchFiltersCheckbox(facetType)}[data-search-url*=${checkboxName}]`,
+      `${this.searchFiltersCheckbox(facetType, '')}[data-search-url*=${checkboxName}]`,
       toEnable,
       true,
     );
@@ -594,20 +609,22 @@ class CategoryPage extends FOBasePage {
    * Return if search filters use radio button
    * @param page {Page} Browser tab
    * @param facetType {string} Facet type
+   * @param facetLabel {string} Facet label
    * @return {Promise<boolean>}
    */
-  async isSearchFilterRadio(page: Page, facetType: string): Promise<boolean> {
-    return (await page.locator(this.searchFiltersRadio(facetType)).count()) !== 0;
+  async isSearchFilterRadio(page: Page, facetType: string, facetLabel: string = ''): Promise<boolean> {
+    return (await page.locator(this.searchFiltersRadio(facetType, facetLabel)).count()) !== 0;
   }
 
   /**
    * Return if search filters use radio button
    * @param page {Page} Browser tab
    * @param facetType {string} Facet type
+   * @param facetLabel {string} Facet label
    * @return {Promise<boolean>}
    */
-  async isSearchFilterDropdown(page: Page, facetType: string): Promise<boolean> {
-    return (await page.locator(this.searchFiltersDropdown(facetType)).count()) !== 0;
+  async isSearchFilterDropdown(page: Page, facetType: string, facetLabel: string = ''): Promise<boolean> {
+    return (await page.locator(this.searchFiltersDropdown(facetType, facetLabel)).count()) !== 0;
   }
 
   /**

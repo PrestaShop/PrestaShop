@@ -7,8 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-import psFacetedSearch from '@pages/BO/modules/psFacetedSearch';
-import psFacetedSearchFilterTemplate from '@pages/BO/modules/psFacetedSearch/filterTemplate';
 // Import FO pages
 import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
@@ -18,6 +16,8 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataModules,
+  modPsFacetedsearchBoFilterTemplate,
+  modPsFacetedsearchBoMain,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -69,8 +69,8 @@ describe('Faceted search module - Edit template - Product stock filter', async (
 
     await moduleManagerPage.goToConfigurationPage(page, dataModules.psFacetedSearch.tag);
 
-    const pageTitle = await psFacetedSearch.getPageSubtitle(page);
-    expect(pageTitle).to.eq(psFacetedSearch.pageSubTitle);
+    const pageTitle = await modPsFacetedsearchBoMain.getPageSubtitle(page);
+    expect(pageTitle).to.eq(modPsFacetedsearchBoMain.pageSubTitle);
   });
 
   [
@@ -117,10 +117,10 @@ describe('Faceted search module - Edit template - Product stock filter', async (
     it('should edit the filter template', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `editFilterTemplate_${index}`, baseContext);
 
-      await psFacetedSearch.editFilterTemplate(page, 1);
+      await modPsFacetedsearchBoMain.editFilterTemplate(page, 1);
 
-      const pageTitle = await psFacetedSearchFilterTemplate.getPanelTitle(page);
-      expect(pageTitle).to.eq(psFacetedSearchFilterTemplate.title);
+      const pageTitle = await modPsFacetedsearchBoFilterTemplate.getPanelTitle(page);
+      expect(pageTitle).to.eq(modPsFacetedsearchBoFilterTemplate.title);
     });
 
     it(
@@ -129,21 +129,21 @@ describe('Faceted search module - Edit template - Product stock filter', async (
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setProductStockFilter_${index}`, baseContext);
 
-        await psFacetedSearchFilterTemplate.setTemplateFilterForm(
+        await modPsFacetedsearchBoFilterTemplate.setTemplateFilterForm(
           page,
           'Product stock filter',
           test.filterStatus,
           test.filterType,
         );
 
-        const textResult = await psFacetedSearchFilterTemplate.saveTemplate(page);
+        const textResult = await modPsFacetedsearchBoFilterTemplate.saveTemplate(page);
         expect(textResult).to.match(/× Your filter "[-A-Za-z0-9\s]+" was updated successfully./);
       });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop_${index}`, baseContext);
 
-      page = await psFacetedSearch.viewMyShop(page);
+      page = await modPsFacetedsearchBoMain.viewMyShop(page);
 
       const isHomePage = await homePage.isHomePage(page);
       expect(isHomePage).to.be.eq(true);
@@ -175,8 +175,8 @@ describe('Faceted search module - Edit template - Product stock filter', async (
 
       page = await categoryPageFO.closePage(browserContext, page, 0);
 
-      const pageTitle = await psFacetedSearch.getPageSubtitle(page);
-      expect(pageTitle).to.eq(psFacetedSearch.pageSubTitle);
+      const pageTitle = await modPsFacetedsearchBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.eq(modPsFacetedsearchBoMain.pageSubTitle);
     });
   });
 });

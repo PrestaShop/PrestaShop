@@ -7,14 +7,14 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-import psFacetedSearch from '@pages/BO/modules/psFacetedSearch';
-import psFacetedSearchFilterTemplate from '@pages/BO/modules/psFacetedSearch/filterTemplate';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataModules,
+  modPsFacetedsearchBoFilterTemplate,
+  modPsFacetedsearchBoMain,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -68,39 +68,39 @@ describe('Faceted search module - Add new template', async () => {
 
     await moduleManagerPage.goToConfigurationPage(page, dataModules.psFacetedSearch.tag);
 
-    const pageTitle = await psFacetedSearch.getPageSubtitle(page);
-    expect(pageTitle).to.eq(psFacetedSearch.pageSubTitle);
+    const pageTitle = await modPsFacetedsearchBoMain.getPageSubtitle(page);
+    expect(pageTitle).to.eq(modPsFacetedsearchBoMain.pageSubTitle);
   });
 
   it('should go to the "Add new template" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewTemplatePage', baseContext);
 
-    await psFacetedSearch.goToAddNewTemplate(page);
+    await modPsFacetedsearchBoMain.goToAddNewTemplate(page);
 
-    const pageTitle = await psFacetedSearchFilterTemplate.getPanelTitle(page);
-    expect(pageTitle).to.eq(psFacetedSearchFilterTemplate.title);
+    const pageTitle = await modPsFacetedsearchBoFilterTemplate.getPanelTitle(page);
+    expect(pageTitle).to.eq(modPsFacetedsearchBoFilterTemplate.title);
   });
 
   it('should add a new template', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addNewTemplate', baseContext);
 
-    await psFacetedSearchFilterTemplate.setTemplateName(page, templateName);
-    await psFacetedSearchFilterTemplate.setTemplatePages(page, ['manufacturer']);
-    await psFacetedSearchFilterTemplate.setTemplateFilterForm(
+    await modPsFacetedsearchBoFilterTemplate.setTemplateName(page, templateName);
+    await modPsFacetedsearchBoFilterTemplate.setTemplatePages(page, ['manufacturer']);
+    await modPsFacetedsearchBoFilterTemplate.setTemplateFilterForm(
       page,
       'Product stock filter',
       true,
       '',
     );
 
-    const textResult = await psFacetedSearchFilterTemplate.saveTemplate(page);
-    expect(textResult).to.contains(psFacetedSearch.msgSuccessfulCreation(templateName));
+    const textResult = await modPsFacetedsearchBoFilterTemplate.saveTemplate(page);
+    expect(textResult).to.contains(modPsFacetedsearchBoMain.msgSuccessfulCreation(templateName));
   });
 
   it('should delete the template', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteTemplate', baseContext);
 
-    const textResult = await psFacetedSearch.deleteFilterTemplate(page, 1);
-    expect(textResult).to.contains(psFacetedSearch.msgSuccessfulDelete);
+    const textResult = await modPsFacetedsearchBoMain.deleteFilterTemplate(page, 1);
+    expect(textResult).to.contains(modPsFacetedsearchBoMain.msgSuccessfulDelete);
   });
 });
