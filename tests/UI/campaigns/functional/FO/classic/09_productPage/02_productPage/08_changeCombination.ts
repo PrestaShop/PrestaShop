@@ -17,7 +17,6 @@ import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -26,6 +25,7 @@ import {
   FakerAttribute,
   FakerAttributeValue,
   FakerProduct,
+  foClassicSearchResultsPage,
   type ProductAttribute,
   utilsFile,
   utilsPlaywright,
@@ -258,14 +258,14 @@ describe('FO - Product page - Product page : Change combination', async () => {
 
       await homePage.searchProduct(page, newProductData.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await searchResultsPage.goToProductPage(page, 1);
+      await foClassicSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);

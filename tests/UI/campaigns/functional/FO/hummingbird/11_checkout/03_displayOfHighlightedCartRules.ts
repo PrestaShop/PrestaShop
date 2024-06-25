@@ -10,7 +10,6 @@ import cartPage from '@pages/FO/hummingbird/cart';
 import homePage from '@pages/FO/hummingbird/home';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import foLoginPage from '@pages/FO/hummingbird/login';
 
 import {expect} from 'chai';
@@ -18,6 +17,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   FakerCartRule,
+  foHummingbirdSearchResultsPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -98,14 +98,14 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_6.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
     });
 
     it('should add the product to cart by quick view', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await searchResultsPage.quickViewProduct(page, 1);
+      await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
       await quickViewModal.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);

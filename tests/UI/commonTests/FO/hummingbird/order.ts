@@ -6,7 +6,6 @@ import cartPage from '@pages/FO/hummingbird/cart';
 import homePage from '@pages/FO/hummingbird/home';
 import loginPage from '@pages/FO/hummingbird/login';
 import productPage from '@pages/FO/hummingbird/product';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 
@@ -14,6 +13,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   FakerOrder,
+  foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -167,14 +167,14 @@ function createOrderSpecificProductTest(
 
       await homePage.searchProduct(page, orderData.products[0].product.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
     });
 
     it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await searchResultsPage.goToProductPage(page, 1);
+      await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
       // Add the product to the cart
       await productPage.addProductToTheCart(page, orderData.products[0].quantity);
 

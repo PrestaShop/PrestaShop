@@ -12,7 +12,6 @@ import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import {homePage} from '@pages/FO/classic/home';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -21,6 +20,7 @@ import {
   boDashboardPage,
   dataProducts,
   FakerProduct,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -111,14 +111,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_6.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageDemo6', baseContext);
 
-      await searchResultsPage.goToProductPage(page, 1);
+      await foClassicSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_6.name);
@@ -173,14 +173,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_6.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageDemo6_2', baseContext);
 
-      await searchResultsPage.goToProductPage(page, 1);
+      await foClassicSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_6.name);

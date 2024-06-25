@@ -15,13 +15,13 @@ import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {
   boDashboardPage,
   dataCustomers,
   dataPaymentMethods,
   FakerProduct,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -205,7 +205,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
 
           // search for the created pack and add go to product page
           await foHomePage.searchProduct(page, productPackData.name);
-          await searchResultsPage.goToProductPage(page, 1);
+          await foClassicSearchResultsPage.goToProductPage(page, 1);
 
           const pageTitle = await foProductPage.getPageTitle(page);
           expect(pageTitle.toUpperCase()).to.contains(productPackData.name.toUpperCase());

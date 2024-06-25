@@ -6,11 +6,11 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foHummingbirdSearchResultsPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -62,21 +62,21 @@ describe('FO - Search Page : Sort results list', async () => {
 
       await homePage.searchProduct(page, 'mug');
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
     });
 
     it('should check the search result page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'countResult', baseContext);
 
-      const countResults = await searchResultsPage.getSearchResultsNumber(page);
+      const countResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
       expect(countResults).to.equal(5);
     });
 
     it('should check that the products as sorted by relevance', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDefaultSort', baseContext);
 
-      const isSortingLinkVisible = await searchResultsPage.getSortByValue(page);
+      const isSortingLinkVisible = await foHummingbirdSearchResultsPage.getSortByValue(page);
       expect(isSortingLinkVisible).to.contain('Relevance');
     });
 
@@ -122,9 +122,9 @@ describe('FO - Search Page : Sort results list', async () => {
       it(`should sort by '${test.args.sortName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await searchResultsPage.getAllProductsAttribute(page, test.args.attribute);
-        await searchResultsPage.sortProductsList(page, test.args.sortBy);
-        const sortedTable = await searchResultsPage.getAllProductsAttribute(page, test.args.attribute);
+        const nonSortedTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, test.args.attribute);
+        await foHummingbirdSearchResultsPage.sortProductsList(page, test.args.sortBy);
+        const sortedTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, test.args.attribute);
 
         const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 

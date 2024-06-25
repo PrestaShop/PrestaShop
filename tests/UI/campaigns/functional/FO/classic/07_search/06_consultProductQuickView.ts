@@ -3,13 +3,13 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -52,21 +52,21 @@ describe('FO - Search Page : Consult product quick view', async () => {
 
     await homePage.searchProduct(page, 'mug');
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
   });
 
   it('should check the search result page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'countResult', baseContext);
 
-    const countResults = await searchResultsPage.getSearchResultsNumber(page);
+    const countResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
     expect(countResults).to.equal(5);
   });
 
   it('should quick view the first product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct1', baseContext);
 
-    await searchResultsPage.quickViewProduct(page, 1);
+    await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
     const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
     expect(isModalVisible).to.eq(true);

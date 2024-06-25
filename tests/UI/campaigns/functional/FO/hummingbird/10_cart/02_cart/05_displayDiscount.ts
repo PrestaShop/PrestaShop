@@ -6,7 +6,6 @@ import cartPage from '@pages/FO/hummingbird/cart';
 import homePage from '@pages/FO/hummingbird/home';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 
 // Import commonTests
@@ -19,6 +18,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   FakerCartRule,
+  foHummingbirdSearchResultsPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -90,14 +90,14 @@ describe('FO - cart : Display discount', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_8.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
     });
 
     it(`should quick view the product '${dataProducts.demo_8.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct', baseContext);
 
-      await searchResultsPage.quickViewProduct(page, 1);
+      await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
@@ -117,14 +117,14 @@ describe('FO - cart : Display discount', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_9.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
     });
 
     it(`should quick view the product '${dataProducts.demo_9.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct2', baseContext);
 
-      await searchResultsPage.quickViewProduct(page, 1);
+      await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);

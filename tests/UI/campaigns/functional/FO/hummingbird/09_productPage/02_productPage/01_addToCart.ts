@@ -10,12 +10,12 @@ import cartPage from '@pages/FO/hummingbird/cart';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import productPage from '@pages/FO/hummingbird/product';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -57,14 +57,14 @@ describe('FO - Product page - Product page : Add to cart', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_12.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageDemo12', baseContext);
 
-      await searchResultsPage.goToProductPage(page, 1);
+      await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_12.name);

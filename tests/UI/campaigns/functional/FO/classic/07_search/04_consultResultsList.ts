@@ -4,12 +4,12 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -56,21 +56,21 @@ describe('FO - Search Page : Consult results list', async () => {
 
     await homePage.searchProduct(page, 'mug');
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
   });
 
   it('should check the search result page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'countResult', baseContext);
 
-    const countResults = await searchResultsPage.getSearchResultsNumber(page);
+    const countResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
     expect(countResults).to.equal(5);
   });
 
   it('should go to the second product in the list and check the product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSecondProductInList', baseContext);
 
-    await searchResultsPage.goToProductPage(page, 2);
+    await foClassicSearchResultsPage.goToProductPage(page, 2);
 
     const pageTitle = await productPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_11.name);
@@ -81,30 +81,30 @@ describe('FO - Search Page : Consult results list', async () => {
 
     await page.goBack();
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
   });
 
   it('should put \'Fox\' in the search input and check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchProduct2', baseContext);
 
-    await searchResultsPage.searchProduct(page, 'fox');
+    await foClassicSearchResultsPage.searchProduct(page, 'fox');
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
   });
 
   it('should check the search result page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'countResult2', baseContext);
 
-    const countResults = await searchResultsPage.getSearchResultsNumber(page);
+    const countResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
     expect(countResults).to.equal(7);
   });
 
   it('should go to the first product in the list and check the product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductInList', baseContext);
 
-    await searchResultsPage.goToProductPage(page, 1);
+    await foClassicSearchResultsPage.goToProductPage(page, 1);
 
     const pageTitle = await productPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_15.name);
@@ -115,8 +115,8 @@ describe('FO - Search Page : Consult results list', async () => {
 
     await page.goBack();
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
   });
 
   it('should remove the searched value and press enter', async function () {
@@ -124,10 +124,10 @@ describe('FO - Search Page : Consult results list', async () => {
 
     await homePage.searchProduct(page, '');
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-    const hasResults = await searchResultsPage.hasResults(page);
+    const hasResults = await foClassicSearchResultsPage.hasResults(page);
     expect(hasResults, 'There are results!').to.equal(false);
   });
 });

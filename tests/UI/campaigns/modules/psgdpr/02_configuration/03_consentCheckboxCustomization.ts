@@ -15,7 +15,6 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 // Import BO pages
 import boDesignPositionsPage from '@pages/BO/design/positions';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
@@ -35,6 +34,7 @@ import {
   FakerProduct,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -506,10 +506,10 @@ describe('GDPR : Consent checkbox customization', async () => {
       page = await psGdprTabDataConsent.changePage(browserContext, 1);
       await contactUsPage.searchProduct(page, productOutOfStock.name);
 
-      const pageTitleSearchResults = await searchResultsPage.getPageTitle(page);
-      expect(pageTitleSearchResults).to.equal(searchResultsPage.pageTitle);
+      const pageTitleSearchResults = await foClassicSearchResultsPage.getPageTitle(page);
+      expect(pageTitleSearchResults).to.equal(foClassicSearchResultsPage.pageTitle);
 
-      await searchResultsPage.goToProductPage(page, 1);
+      await foClassicSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitleFoProduct = await foProductPage.getPageTitle(page);
       expect(pageTitleFoProduct).to.contains(productOutOfStock.name);

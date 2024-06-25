@@ -4,12 +4,12 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -82,10 +82,10 @@ describe('FO - Search Page : Search a product and validate', async () => {
 
     await homePage.searchProduct(page, dataProducts.demo_8.name);
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-    const inputValue = await searchResultsPage.getSearchValue(page);
+    const inputValue = await foClassicSearchResultsPage.getSearchValue(page);
     expect(inputValue).is.equal(dataProducts.demo_8.name);
   });
 });

@@ -7,12 +7,12 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
 import foProductPage from '@pages/FO/hummingbird/product';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdSearchResultsPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -51,20 +51,20 @@ describe('FO - Product Page : Display pack content and link to product', async (
 
       await homePage.searchProduct(page, 'pack');
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
 
-      const hasResults = await searchResultsPage.hasResults(page);
+      const hasResults = await foHummingbirdSearchResultsPage.hasResults(page);
       expect(hasResults).to.eq(true);
 
-      const numResults = await searchResultsPage.getSearchResultsNumber(page);
+      const numResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
       expect(numResults).to.eq(1);
     });
 
     it('should click on the first result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickFirstProduct', baseContext);
 
-      await searchResultsPage.goToProductPage(page, 1);
+      await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_21.name);

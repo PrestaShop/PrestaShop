@@ -12,12 +12,12 @@ import currenciesPage from '@pages/BO/international/currencies';
 import localizationPage from '@pages/BO/international/localization';
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
 import {
   boDashboardPage,
   dataCurrencies,
   dataProducts,
+  foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -144,8 +144,8 @@ describe('FO - Header and Footer : Change currency', async () => {
 
         await homePage.searchProduct(page, dataProducts.demo_11.name);
 
-        const pageTitle = await searchResultsPage.getPageTitle(page);
-        expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+        const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
       });
 
       it('should check the product price', async function () {
@@ -153,7 +153,7 @@ describe('FO - Header and Footer : Change currency', async () => {
 
         const newExchangeRateValue = (exchangeRateValue * dataProducts.demo_11.finalPrice).toFixed(dataCurrencies.mad.decimals);
 
-        const productPrice = await searchResultsPage.getProductPrice(page);
+        const productPrice = await foHummingbirdSearchResultsPage.getProductPrice(page);
         expect(productPrice).to.contains(`${dataCurrencies.mad.symbol}${newExchangeRateValue}`);
       });
 
@@ -177,7 +177,7 @@ describe('FO - Header and Footer : Change currency', async () => {
 
         const exchangeRate = Math.round(dataCurrencies.euro.exchangeRate * dataProducts.demo_11.finalPrice);
 
-        const productPrice = await searchResultsPage.getProductPrice(page);
+        const productPrice = await foHummingbirdSearchResultsPage.getProductPrice(page);
         expect(productPrice).to.contains(`${dataCurrencies.euro.symbol}${exchangeRate}`);
       });
     });

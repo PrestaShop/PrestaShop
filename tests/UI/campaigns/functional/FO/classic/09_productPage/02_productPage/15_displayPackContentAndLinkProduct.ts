@@ -4,12 +4,12 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicSearchResultsPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -44,20 +44,20 @@ describe('FO - Product Page : Display pack content and link to product', async (
 
     await homePage.searchProduct(page, 'pack');
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-    const hasResults = await searchResultsPage.hasResults(page);
+    const hasResults = await foClassicSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(true);
 
-    const numResults = await searchResultsPage.getSearchResultsNumber(page);
+    const numResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
     expect(numResults).to.eq(1);
   });
 
   it('should click on the first result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickFirstProduct', baseContext);
 
-    await searchResultsPage.goToProductPage(page, 1);
+    await foClassicSearchResultsPage.goToProductPage(page, 1);
 
     const pageTitle = await foProductPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_21.name);

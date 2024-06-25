@@ -12,13 +12,13 @@ import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -129,7 +129,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
           await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockVisible${index}`, baseContext);
 
           await foHomePage.searchProduct(page, productData.name);
-          await searchResultsPage.goToProductPage(page, 1);
+          await foClassicSearchResultsPage.goToProductPage(page, 1);
 
           const isDeliveryTimeBlockVisible = await foProductPage.isDeliveryInformationVisible(page);
           expect(isDeliveryTimeBlockVisible).to.equal(test.args.enable);

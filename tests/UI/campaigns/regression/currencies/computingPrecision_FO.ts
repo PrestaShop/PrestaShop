@@ -22,7 +22,6 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {
   boDashboardPage,
@@ -33,6 +32,7 @@ import {
   FakerCartRule,
   FakerOrder,
   FakerSqlQuery,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -249,7 +249,7 @@ describe(
         await foLoginPage.goToHomePage(page);
         // Go to product page after searching its name
         await homePage.searchProduct(page, orderToMake.products[0].product.name);
-        await searchResultsPage.goToProductPage(page, 1);
+        await foClassicSearchResultsPage.goToProductPage(page, 1);
         // Add the created product to the cart
         await productPage.addProductToTheCart(page, orderToMake.products[0].quantity);
 

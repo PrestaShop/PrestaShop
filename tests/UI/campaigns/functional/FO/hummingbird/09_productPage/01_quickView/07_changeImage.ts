@@ -8,12 +8,12 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   FakerProduct,
+  foHummingbirdSearchResultsPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -78,14 +78,14 @@ describe('FO - Product page - Quick view : Change image', async () => {
 
       await homePage.searchProduct(page, productWith2Images.name);
 
-      const productsNumber = await searchResultsPage.getSearchResultsNumber(page);
+      const productsNumber = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
       expect(productsNumber).to.equal(1);
     });
 
     it('should quick view the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickView', baseContext);
 
-      await searchResultsPage.quickViewProduct(page, 1);
+      await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);

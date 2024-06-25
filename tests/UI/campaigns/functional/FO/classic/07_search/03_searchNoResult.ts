@@ -3,11 +3,11 @@ import testContext from '@utils/testContext';
 
 // Import pages
 import {homePage} from '@pages/FO/classic/home';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -49,13 +49,13 @@ describe('FO - Search Page : Search product', async () => {
 
     await homePage.searchProduct(page, 'te');
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-    const hasResults = await searchResultsPage.hasResults(page);
+    const hasResults = await foClassicSearchResultsPage.hasResults(page);
     expect(hasResults, 'There are results!').to.eq(false);
 
-    const searchInputValue = await searchResultsPage.getSearchValue(page);
+    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
     expect(searchInputValue, 'A search value exists').to.be.equal('te');
   });
 
@@ -64,13 +64,13 @@ describe('FO - Search Page : Search product', async () => {
 
     await homePage.searchProduct(page, '');
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-    const hasResults = await searchResultsPage.hasResults(page);
+    const hasResults = await foClassicSearchResultsPage.hasResults(page);
     expect(hasResults, 'There are results!').to.eq(false);
 
-    const searchInputValue = await searchResultsPage.getSearchValue(page);
+    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
     expect(searchInputValue, 'A search value exists').to.be.equal('');
   });
 });

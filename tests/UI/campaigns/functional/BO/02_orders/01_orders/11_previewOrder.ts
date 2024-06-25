@@ -17,7 +17,6 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {
   boDashboardPage,
@@ -27,6 +26,7 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrderShipping,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -101,14 +101,14 @@ describe('BO - Orders : Preview order', async () => {
 
         await homePage.searchProduct(page, test.args.productName);
 
-        const pageTitle = await searchResultsPage.getPageTitle(page);
-        expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+        const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
       });
 
       it('should add the product to cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
-        await searchResultsPage.goToProductPage(page, 1);
+        await foClassicSearchResultsPage.goToProductPage(page, 1);
         // Add the product to the cart
         await productPage.addProductToTheCart(page, 1, [], false);
 

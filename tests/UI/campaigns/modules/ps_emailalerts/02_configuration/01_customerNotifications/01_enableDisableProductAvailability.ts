@@ -22,7 +22,6 @@ import stocksPage from '@pages/BO/catalog/stocks';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -34,6 +33,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   FakerProduct,
+  foClassicSearchResultsPage,
   type MailDev,
   type MailDevEmail,
   utilsFile,
@@ -158,14 +158,14 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       await homePage.searchProduct(page, productData.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await searchResultsPage.goToProductPage(page, 1);
+      await foClassicSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(productData.name);
@@ -418,7 +418,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       await orderConfirmationPage.goToHomePage(page);
 
       await homePage.searchProduct(page, productData.name);
-      await searchResultsPage.goToProductPage(page, 1);
+      await foClassicSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(productData.name);

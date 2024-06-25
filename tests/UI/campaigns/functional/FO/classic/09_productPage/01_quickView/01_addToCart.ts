@@ -4,13 +4,13 @@ import testContext from '@utils/testContext';
 // Import pages
 import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   type CartProductDetails,
   dataProducts,
+  foClassicSearchResultsPage,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -153,14 +153,14 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
 
     await homePage.searchProduct(page, dataProducts.demo_14.name);
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
   });
 
   it('should quick view the product and check that Add to cart button is disabled', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton', baseContext);
 
-    await searchResultsPage.quickViewProduct(page, 1);
+    await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
     const isDisabled = await quickViewModal.isAddToCartButtonDisabled(page);
     expect(isDisabled).to.eq(true);

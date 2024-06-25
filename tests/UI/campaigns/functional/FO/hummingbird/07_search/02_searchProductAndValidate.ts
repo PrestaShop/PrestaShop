@@ -7,12 +7,12 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdSearchResultsPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -96,21 +96,21 @@ describe('FO - Search Page : Search product and validate', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_8.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
     });
 
     it('should check that the searched value in the search input is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSearchedValue', baseContext);
 
-      const inputContent = await searchResultsPage.getSearchInput(page);
+      const inputContent = await foHummingbirdSearchResultsPage.getSearchInput(page);
       expect(inputContent).to.equal(dataProducts.demo_8.name);
     });
 
     it('should check the search result page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSearchResultPage', baseContext);
 
-      const countResults = await searchResultsPage.getSearchResultsNumber(page);
+      const countResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
       expect(countResults).to.equal(3);
     });
   });
