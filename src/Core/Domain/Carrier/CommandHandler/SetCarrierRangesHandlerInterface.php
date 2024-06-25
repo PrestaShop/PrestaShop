@@ -26,24 +26,18 @@
 
 declare(strict_types=1);
 
-namespace Tests\Resources\Resetter;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler;
 
-use Tests\Resources\DatabaseDump;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\SetCarrierRangesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 
-class CarrierResetter
+/**
+ * Defines contract for SetCarrierRangesHandler
+ */
+interface SetCarrierRangesHandlerInterface
 {
-    public static function resetCarrier(): void
-    {
-        DatabaseDump::restoreTables([
-            'carrier',
-            'carrier_group',
-            'carrier_lang',
-            'carrier_shop',
-            'carrier_tax_rules_group_shop',
-            'carrier_zone',
-            'range_price',
-            'range_weight',
-            'delivery',
-        ]);
-    }
+    /**
+     * @param SetCarrierRangesCommand $command
+     */
+    public function handle(SetCarrierRangesCommand $command): CarrierId;
 }

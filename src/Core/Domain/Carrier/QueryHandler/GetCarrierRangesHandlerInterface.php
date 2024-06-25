@@ -24,26 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\QueryHandler;
 
-namespace Tests\Resources\Resetter;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierRanges;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollection;
 
-use Tests\Resources\DatabaseDump;
-
-class CarrierResetter
+/**
+ * Describes get carrier ranges handler.
+ */
+interface GetCarrierRangesHandlerInterface
 {
-    public static function resetCarrier(): void
-    {
-        DatabaseDump::restoreTables([
-            'carrier',
-            'carrier_group',
-            'carrier_lang',
-            'carrier_shop',
-            'carrier_tax_rules_group_shop',
-            'carrier_zone',
-            'range_price',
-            'range_weight',
-            'delivery',
-        ]);
-    }
+    /**
+     * @param GetCarrierRanges $query
+     *
+     * @return CarrierRangesCollection
+     */
+    public function handle(GetCarrierRanges $query): CarrierRangesCollection;
 }

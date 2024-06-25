@@ -26,24 +26,41 @@
 
 declare(strict_types=1);
 
-namespace Tests\Resources\Resetter;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult;
 
-use Tests\Resources\DatabaseDump;
+use PrestaShop\Decimal\DecimalNumber;
 
-class CarrierResetter
+/**
+ * Price by Range and Zone for Carriers
+ */
+class CarrierRangePrice
 {
-    public static function resetCarrier(): void
+    private DecimalNumber $from;
+    private DecimalNumber $to;
+    private DecimalNumber $price;
+
+    public function __construct(
+        string $from,
+        string $to,
+        string $price
+    ) {
+        $this->from = new DecimalNumber($from);
+        $this->to = new DecimalNumber($to);
+        $this->price = new DecimalNumber($price);
+    }
+
+    public function getFrom(): DecimalNumber
     {
-        DatabaseDump::restoreTables([
-            'carrier',
-            'carrier_group',
-            'carrier_lang',
-            'carrier_shop',
-            'carrier_tax_rules_group_shop',
-            'carrier_zone',
-            'range_price',
-            'range_weight',
-            'delivery',
-        ]);
+        return $this->from;
+    }
+
+    public function getTo(): DecimalNumber
+    {
+        return $this->to;
+    }
+
+    public function getPrice(): DecimalNumber
+    {
+        return $this->price;
     }
 }

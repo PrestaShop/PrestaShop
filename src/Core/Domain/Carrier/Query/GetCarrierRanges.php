@@ -26,24 +26,38 @@
 
 declare(strict_types=1);
 
-namespace Tests\Resources\Resetter;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Query;
 
-use Tests\Resources\DatabaseDump;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class CarrierResetter
+/**
+ * Retrieves carrier ranges data
+ */
+class GetCarrierRanges
 {
-    public static function resetCarrier(): void
+    private CarrierId $carrierId;
+
+    /**
+     * @param int $carrierId
+     */
+    public function __construct(
+        int $carrierId,
+        private readonly ShopConstraint $shopConstraint
+    ) {
+        $this->carrierId = new CarrierId($carrierId);
+    }
+
+    /**
+     * @return CarrierId
+     */
+    public function getCarrierId(): CarrierId
     {
-        DatabaseDump::restoreTables([
-            'carrier',
-            'carrier_group',
-            'carrier_lang',
-            'carrier_shop',
-            'carrier_tax_rules_group_shop',
-            'carrier_zone',
-            'range_price',
-            'range_weight',
-            'delivery',
-        ]);
+        return $this->carrierId;
+    }
+
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }

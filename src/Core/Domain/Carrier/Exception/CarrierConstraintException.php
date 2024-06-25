@@ -122,4 +122,19 @@ class CarrierConstraintException extends CarrierException
      * Thrown when carrier shipping handling is set with free shipping
      */
     public const INVALID_HAS_ADDITIONAL_HANDLING_FEE_WITH_FREE_SHIPPING = 170;
+
+    /**
+     * Thrown when carrier ranges are overlapping
+     */
+    public const INVALID_RANGES_OVERLAPPING = 180;
+
+    /**
+     * Thrown when zone id in Carrier range are not valid
+     */
+    public const INVALID_ZONE_ID = 190;
+
+    /**
+     * Thrown when shop constraint isn't valid
+     */
+    public const INVALID_SHOP_CONSTRAINT = 200;
 }

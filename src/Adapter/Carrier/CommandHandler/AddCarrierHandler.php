@@ -47,7 +47,7 @@ class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHand
     public function __construct(
         private readonly CarrierRepository $carrierRepository,
         private readonly CarrierLogoFileUploader $carrierLogoFileUploader,
-        private readonly CarrierValidator $carrierValidator,
+        private readonly CarrierValidator $carrierValidator
     ) {
     }
 
@@ -73,10 +73,14 @@ class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHand
         $carrier->shipping_handling = $command->hasAdditionalHandlingFee();
         $carrier->is_free = $command->isFree();
         $carrier->shipping_method = $command->getShippingMethod()->getValue();
-        $carrier->range_behavior = (bool) $command->getRangeBehavior()->getValue();
+        $carrier->range_behavior = (bool) $command
+            ->getRangeBehavior()
+            ->getValue();
 
         $this->carrierValidator->validate($carrier);
-        $this->carrierValidator->validateGroupsExist($command->getAssociatedGroupIds());
+        $this->carrierValidator->validateGroupsExist(
+            $command->getAssociatedGroupIds()
+        );
 
         $carrierId = $this->carrierRepository->add($carrier);
         $carrier->setGroups($command->getAssociatedGroupIds());
@@ -85,8 +89,13 @@ class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHand
         $carrier->setTaxRulesGroup($command->getTaxRuleGroupId());
 
         if ($command->getLogoPathName() !== null) {
-            $this->carrierValidator->validateLogoUpload($command->getLogoPathName());
-            $this->carrierLogoFileUploader->upload($command->getLogoPathName(), $carrierId->getValue());
+            $this->carrierValidator->validateLogoUpload(
+                $command->getLogoPathName()
+            );
+            $this->carrierLogoFileUploader->upload(
+                $command->getLogoPathName(),
+                $carrierId->getValue()
+            );
         }
 
         return $carrierId;

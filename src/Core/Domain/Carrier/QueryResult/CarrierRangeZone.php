@@ -26,24 +26,48 @@
 
 declare(strict_types=1);
 
-namespace Tests\Resources\Resetter;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult;
 
-use Tests\Resources\DatabaseDump;
-
-class CarrierResetter
+/**
+ * Carrier Range Zone
+ */
+class CarrierRangeZone
 {
-    public static function resetCarrier(): void
+    /** @var CarrierRangePrice[] */
+    private array $ranges;
+
+    public function __construct(
+        private int $zoneId,
+
+        /* @var array{
+         *     range_from: float,
+         *     range_to: float,
+         *     range_price: string,
+         * }[] $ranges,
+         */
+        array $ranges,
+    ) {
+        // Create CarrierRangePrice objects
+        $this->ranges = [];
+        foreach ($ranges as $range) {
+            $this->ranges[] = new CarrierRangePrice(
+                (string) $range['range_from'],
+                (string) $range['range_to'],
+                (string) $range['range_price']
+            );
+        }
+    }
+
+    public function getZoneId(): int
     {
-        DatabaseDump::restoreTables([
-            'carrier',
-            'carrier_group',
-            'carrier_lang',
-            'carrier_shop',
-            'carrier_tax_rules_group_shop',
-            'carrier_zone',
-            'range_price',
-            'range_weight',
-            'delivery',
-        ]);
+        return $this->zoneId;
+    }
+
+    /**
+     * @return CarrierRangePrice[]
+     */
+    public function getRanges(): array
+    {
+        return $this->ranges;
     }
 }
