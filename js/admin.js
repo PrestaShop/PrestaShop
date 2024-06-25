@@ -368,20 +368,6 @@ function gencode(size)
   }
 }
 
-var tpl_viewing_window = null;
-function viewTemplates(id_select, lang, ext)
-{
-  var loc = $(id_select).val();
-  if (loc != 0)
-  {
-    if (tpl_viewing_window != null && !tpl_viewing_window.closed)
-      tpl_viewing_window.close();
-    var url_preview = $("option[value="+loc+"]", id_select).data('preview');
-    tpl_viewing_window = window.open(url_preview + lang + loc + ext, 'tpl_viewing', 'toolbar=0,location=0,directories=0,statfr=no,menubar=0,scrollbars=yes,resizable=yes,width=520,height=400,top=50,left=300');
-    tpl_viewing_window.focus();
-  }
-}
-
 function orderDeleteProduct(txtConfirm, txtExplain)
 {
   ret = true;
