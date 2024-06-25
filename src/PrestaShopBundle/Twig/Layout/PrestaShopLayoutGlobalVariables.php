@@ -99,7 +99,7 @@ class PrestaShopLayoutGlobalVariables
         return $this->templateVariables->getVersion();
     }
 
-    public function getDefaultTabLink(): string
+    public function getDefaultTabLink(): ?string
     {
         return $this->templateVariables->getDefaultTabLink();
     }

@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% extends '@PrestaShop/base.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block stylesheets %}
   {{ parent() }}
@@ -33,7 +33,7 @@
   {{ 'You do not have permission to do this'|trans({},'Admin.Notifications.Error' ) }}
 {% endblock %}
 
-{% block body %}
+{% block content %}
   <div class="container">
     <div class="mt-5">
       <div class="card">

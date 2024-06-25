@@ -39,6 +39,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class CountryContextListener implements EventSubscriberInterface
 {
+    /**
+     * Priority higher than Symfony router listener (which is 32)
+     */
+    public const BEFORE_ROUTER_PRIORITY = 33;
+
     public function __construct(
         private readonly CountryContextBuilder $countryContextBuilder,
         private readonly ConfigurationInterface $configuration,
@@ -48,7 +53,9 @@ class CountryContextListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => ['onKernelRequest'],
+            KernelEvents::REQUEST => [
+                ['onKernelRequest', self::BEFORE_ROUTER_PRIORITY],
+            ],
         ];
     }
 

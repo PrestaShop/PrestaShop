@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Security\Hashing;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -63,8 +62,6 @@ class QuickAccessGenerator
         protected readonly TabRepository $tabRepository,
         protected readonly CsrfTokenManagerInterface $tokenManager,
         protected readonly EmployeeContext $employeeContext,
-        private readonly Hashing $hashing,
-        private readonly string $cookieKey,
         private readonly Security $security,
     ) {
     }
@@ -145,21 +142,8 @@ class QuickAccessGenerator
         $separator = strpos($baseUrl, '?') ? '&' : '?';
 
         $userIdentifier = $this->security->getUser()?->getUserIdentifier();
-        if (!str_contains('_token', $baseUrl)) {
+        if (!empty($userIdentifier) && !str_contains('_token', $baseUrl)) {
             $baseUrl .= $separator . '_token=' . $this->tokenManager->getToken($userIdentifier)->getValue();
-        } else {
-            preg_match('/controller=(\w*)/', $baseUrl, $adminTab);
-
-            // If legacy link
-            if (isset($adminTab[1]) && !str_contains('token', $baseUrl)) {
-                $tokenSeed = $adminTab[1] . $this->tabRepository->findOneIdByClassName($adminTab[1]) . $this->employeeContext->getEmployee()?->getId();
-                $baseUrl .= $separator . 'token=' . $this->hashing->hash($tokenSeed, $this->cookieKey);
-            }
-
-            // If symfony link
-            if (!isset($adminTab[1]) && !str_contains('_token', $baseUrl)) {
-                $baseUrl .= $separator . '_token=' . $this->tokenManager->getToken($userIdentifier)->getValue();
-            }
         }
 
         return $baseUrl;

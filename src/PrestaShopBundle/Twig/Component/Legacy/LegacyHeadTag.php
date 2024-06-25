@@ -28,13 +28,53 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component\Legacy;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Context\CountryContext;
+use PrestaShop\PrestaShop\Core\Context\CurrencyContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Twig\Component\HeadTag;
+use PrestaShopBundle\Twig\Layout\MenuBuilder;
+use PrestaShopBundle\Twig\Layout\TemplateVariables;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/LegacyLayout/head_tag.html.twig')]
 class LegacyHeadTag extends HeadTag
 {
     use LegacyControllerTrait;
+
+    public function __construct(
+        Configuration $configuration,
+        MenuBuilder $menuBuilder,
+        TranslatorInterface $translator,
+        HookDispatcherInterface $hookDispatcher,
+        TemplateVariables $templateVariables,
+        CountryContext $countryContext,
+        ShopContext $shopContext,
+        LanguageContext $languageContext,
+        LanguageContext $defaultLanguageContext,
+        CurrencyContext $currencyContext,
+        LegacyControllerContext $legacyControllerContext,
+        protected readonly LegacyContext $context,
+    ) {
+        parent::__construct(
+            $configuration,
+            $menuBuilder,
+            $translator,
+            $hookDispatcher,
+            $templateVariables,
+            $countryContext,
+            $shopContext,
+            $languageContext,
+            $defaultLanguageContext,
+            $currencyContext,
+            $legacyControllerContext
+        );
+    }
 
     public function mount(string $metaTitle = ''): void
     {
