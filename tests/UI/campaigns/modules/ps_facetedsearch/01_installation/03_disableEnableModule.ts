@@ -10,7 +10,6 @@ import {homePage} from '@pages/FO/classic/home';
 import {categoryPage} from '@pages/FO/classic/category';
 // Import BO pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-import psFacetedSearch from '@pages/BO/modules/psFacetedSearch';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -18,6 +17,7 @@ import {
   boDashboardPage,
   dataCategories,
   dataModules,
+  modPsFacetedsearchBoMain,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -82,7 +82,7 @@ describe('Faceted search module - Disable/Enable module', async () => {
     it('should go to the front office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOAfterDisable', baseContext);
 
-      page = await psFacetedSearch.viewMyShop(page);
+      page = await modPsFacetedsearchBoMain.viewMyShop(page);
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
@@ -131,7 +131,7 @@ describe('Faceted search module - Disable/Enable module', async () => {
     it('should go to the front office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOAfterEnable', baseContext);
 
-      page = await psFacetedSearch.viewMyShop(page);
+      page = await modPsFacetedsearchBoMain.viewMyShop(page);
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);

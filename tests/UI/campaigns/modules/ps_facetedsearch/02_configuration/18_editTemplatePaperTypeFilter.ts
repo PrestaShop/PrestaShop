@@ -22,9 +22,9 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'modules_ps_facetedsearch_configuration_editTemplateProductBrandFilter';
+const baseContext: string = 'modules_ps_facetedsearch_configuration_editTemplatePaperTypeFilter';
 
-describe('Faceted search module - Edit template - Product brand filter', async () => {
+describe('Faceted search module - Edit template - Paper type filter', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -77,42 +77,72 @@ describe('Faceted search module - Edit template - Product brand filter', async (
     {
       filterStatus: false,
       filterType: '',
+      filterLimit: '',
       expectedHasSearchFilters: true,
       expectedIsSearchFilterRadio: false,
       expectedIsSearchFilterDropdown: false,
       expectedIsSearchFilterCheckbox: false,
+      expectedNumSearchFilterCheckbox: null,
     },
     {
       filterStatus: true,
       filterType: 'radio',
+      filterLimit: '',
       expectedHasSearchFilters: true,
       expectedIsSearchFilterRadio: true,
       expectedIsSearchFilterDropdown: false,
       expectedIsSearchFilterCheckbox: false,
+      expectedNumSearchFilterCheckbox: null,
     },
     {
       filterStatus: true,
       filterType: 'dropdown',
+      filterLimit: '',
       expectedHasSearchFilters: true,
       expectedIsSearchFilterRadio: false,
       expectedIsSearchFilterDropdown: true,
       expectedIsSearchFilterCheckbox: false,
+      expectedNumSearchFilterCheckbox: null,
     },
     {
       filterStatus: true,
       filterType: 'checkbox',
+      filterLimit: '',
       expectedHasSearchFilters: true,
       expectedIsSearchFilterRadio: false,
       expectedIsSearchFilterDropdown: false,
       expectedIsSearchFilterCheckbox: true,
+      expectedNumSearchFilterCheckbox: null,
+    },
+    {
+      filterStatus: true,
+      filterType: 'checkbox',
+      filterLimit: '2',
+      expectedHasSearchFilters: true,
+      expectedIsSearchFilterRadio: false,
+      expectedIsSearchFilterDropdown: false,
+      expectedIsSearchFilterCheckbox: true,
+      expectedNumSearchFilterCheckbox: 2,
+    },
+    {
+      filterStatus: true,
+      filterType: 'checkbox',
+      filterLimit: '0',
+      expectedHasSearchFilters: true,
+      expectedIsSearchFilterRadio: false,
+      expectedIsSearchFilterDropdown: false,
+      expectedIsSearchFilterCheckbox: true,
+      expectedNumSearchFilterCheckbox: null,
     },
   ].forEach((test: {
     filterStatus: boolean,
     filterType: string,
+    filterLimit: string,
     expectedHasSearchFilters: boolean,
     expectedIsSearchFilterRadio: boolean,
     expectedIsSearchFilterDropdown: boolean,
     expectedIsSearchFilterCheckbox: boolean,
+    expectedNumSearchFilterCheckbox: number|null,
   }, index: number) => {
     it('should edit the filter template', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `editFilterTemplate_${index}`, baseContext);
@@ -125,15 +155,17 @@ describe('Faceted search module - Edit template - Product brand filter', async (
 
     it(
       `should ${test.filterStatus ? 'enable' : 'disable'} the filter "Product brand filter" `
-      + `${test.filterType ? `with filter mode "${test.filterType}"` : ''}`,
+      + `${test.filterType ? `with filter mode "${test.filterType}"` : ''}`
+      + `${test.filterLimit ? `with filter limit "${test.filterLimit}"` : ''}`,
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setProductBrandFilter_${index}`, baseContext);
 
         await modPsFacetedsearchBoFilterTemplate.setTemplateFilterForm(
           page,
-          'Product brand filter',
+          'Attribute group: Paper Type',
           test.filterStatus,
           test.filterType,
+          test.filterLimit,
         );
 
         const textResult = await modPsFacetedsearchBoFilterTemplate.saveTemplate(page);
@@ -160,14 +192,24 @@ describe('Faceted search module - Edit template - Product brand filter', async (
       const hasSearchFilters = await categoryPageFO.hasSearchFilters(page);
       expect(hasSearchFilters).to.be.eq(test.expectedHasSearchFilters);
 
-      const isSearchFilterRadio = await categoryPageFO.isSearchFilterRadio(page, 'manufacturer');
+      const isSearchFilterRadio = await categoryPageFO.isSearchFilterRadio(page, 'attribute_group', 'Paper Type');
       expect(isSearchFilterRadio).to.be.eq(test.expectedIsSearchFilterRadio);
 
-      const isSearchFilterDropdown = await categoryPageFO.isSearchFilterDropdown(page, 'manufacturer');
+      const isSearchFilterDropdown = await categoryPageFO.isSearchFilterDropdown(page, 'attribute_group', 'Paper Type');
       expect(isSearchFilterDropdown).to.be.eq(test.expectedIsSearchFilterDropdown);
 
-      const isSearchFiltersCheckbox = await categoryPageFO.isSearchFiltersCheckbox(page, 'manufacturer');
+      const isSearchFiltersCheckbox = await categoryPageFO.isSearchFiltersCheckbox(page, 'attribute_group', 'Paper Type');
       expect(isSearchFiltersCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
+
+      if (test.filterLimit !== '') {
+        const numSearchFiltersCheckbox = await categoryPageFO.getNumSearchFiltersCheckbox(page, 'attribute_group', 'Paper Type');
+
+        if (test.expectedNumSearchFilterCheckbox === null) {
+          expect(numSearchFiltersCheckbox).to.be.gt(0);
+        } else {
+          expect(numSearchFiltersCheckbox).to.be.eq(test.expectedNumSearchFilterCheckbox);
+        }
+      }
     });
 
     it('should close the page and return to the backOffice', async function () {
