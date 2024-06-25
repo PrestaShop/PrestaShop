@@ -557,6 +557,10 @@ class EmployeeController extends FrameworkBundleAdminController
                     'The password doesn\'t meet the password policy requirements.',
                     'Admin.Notifications.Error'
                 ),
+                EmployeeConstraintException::INVALID_HOMEPAGE => $this->trans(
+                    'The selected default page is not accessible by the selected profile.',
+                    'Admin.Notifications.Error'
+                ),
             ],
         ];
     }

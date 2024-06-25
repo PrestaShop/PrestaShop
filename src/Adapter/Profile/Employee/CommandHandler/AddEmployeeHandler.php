@@ -91,6 +91,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
         }
 
         $this->assertEmailIsNotAlreadyUsed($command->getEmail()->getValue());
+        $this->assertHomepageIsAccessible($command->getDefaultPageId(), $command->getProfileId());
 
         $employee = $this->createLegacyEmployeeObjectFromCommand($command);
 

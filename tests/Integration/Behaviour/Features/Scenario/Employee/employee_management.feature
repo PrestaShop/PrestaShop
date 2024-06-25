@@ -66,7 +66,7 @@ Feature: Employee management
       | Last name          | Newton                      |
       | Email address      | isaac.newton@prestashop.com |
       | Password           | secretpassword              |
-      | Default page       | Dashboard                   |
+      | Default page       | Products                    |
       | Language           | English (English)           |
       | Active             | true                        |
       | Permission profile | Logistician                 |
@@ -75,7 +75,7 @@ Feature: Employee management
       | Last name          | Tesla                        |
       | Email address      | nicolas.tesla@prestashop.com |
       | Password           | secretpassword               |
-      | Default page       | Dashboard                    |
+      | Default page       | Products                     |
       | Language           | English (English)            |
       | Active             | false                        |
       | Permission profile | Salesman                     |
@@ -123,7 +123,7 @@ Feature: Employee management
       | Last name          | Alzheimer                      |
       | Email address      | alois.alzheimer@prestashop.com |
       | Password           | secretpassword                 |
-      | Default page       | Dashboard                      |
+      | Default page       | Products                       |
       | Language           | English (English)              |
       | Active             | true                           |
       | Permission profile | Logistician                    |
@@ -135,3 +135,53 @@ Feature: Employee management
     And employee sleepy_head should have the following details:
       | Email address | alois.alzheimer@prestashop.com |
       | Password      | newsecretpassword              |
+
+  Scenario: I cannot assign a default page to a profile that cannot access it
+    Given I Add new employee cheater_employee to shop "shop1" with the following details:
+      | First name         | Cheater                      |
+      | Last name          | Faker                        |
+      | Email address      | cheater.faker@prestashop.com |
+      | Password           | secretpassword               |
+      | Default page       | Dashboard                    |
+      | Language           | English (English)            |
+      | Active             | true                         |
+      | Permission profile | Logistician                  |
+    Then I should get an error indicating that employee field homepage is invalid
+    # Now use a valid homepage and then try to edit to an invalid one
+    Given I Add new employee cheater_employee to shop "shop1" with the following details:
+      | First name         | Cheater                      |
+      | Last name          | Faker                        |
+      | Email address      | cheater.faker@prestashop.com |
+      | Password           | secretpassword               |
+      | Default page       | Products                     |
+      | Language           | English (English)            |
+      | Active             | true                         |
+      | Permission profile | Logistician                  |
+    Then employee cheater_employee should have the following details:
+      | First name         | Cheater                      |
+      | Last name          | Faker                        |
+      | Email address      | cheater.faker@prestashop.com |
+      | Password           | secretpassword               |
+      | Default page       | Products                     |
+      | Language           | English (English)            |
+      | Active             | true                         |
+      | Permission profile | Logistician                  |
+    Given I edit employee cheater_employee with the following details:
+      | First name         | Cheater                      |
+      | Last name          | Faker                        |
+      | Email address      | cheater.faker@prestashop.com |
+      | Password           | secretpassword               |
+      | Default page       | Dashboard                    |
+      | Language           | English (English)            |
+      | Active             | true                         |
+      | Permission profile | Logistician                  |
+    Then I should get an error indicating that employee field homepage is invalid
+    And employee cheater_employee should have the following details:
+      | First name         | Cheater                      |
+      | Last name          | Faker                        |
+      | Email address      | cheater.faker@prestashop.com |
+      | Password           | secretpassword               |
+      | Default page       | Products                     |
+      | Language           | English (English)            |
+      | Active             | true                         |
+      | Permission profile | Logistician                  |
