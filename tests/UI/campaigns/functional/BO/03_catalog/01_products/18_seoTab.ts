@@ -11,7 +11,6 @@ import productsPage from '@pages/BO/catalog/products';
 
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
-import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -19,6 +18,7 @@ import {
   boDashboardPage,
   dataProducts,
   FakerProduct,
+  foClassicCategoryPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -246,7 +246,7 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
       await expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-      const numberOfProducts = await categoryPageFO.getNumberOfProducts(page);
+      const numberOfProducts = await foClassicCategoryPage.getNumberOfProducts(page);
       expect(numberOfProducts).to.eql(1);
     });
 

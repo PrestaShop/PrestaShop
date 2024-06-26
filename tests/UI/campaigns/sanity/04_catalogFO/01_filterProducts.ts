@@ -3,12 +3,12 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {categoryPage} from '@pages/FO/classic/category';
 
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
 import {
   dataCategories,
+  foClassicCategoryPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -51,29 +51,29 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
 
       await homePage.goToAllProductsPage(page);
 
-      allProductsNumber = await categoryPage.getProductsNumber(page);
+      allProductsNumber = await foClassicCategoryPage.getProductsNumber(page);
       expect(allProductsNumber).to.be.above(0);
     });
 
     it('should filter products by the category \'Accessories\' and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'FilterProductByCategory', baseContext);
 
-      await categoryPage.goToCategory(page, dataCategories.accessories.id);
+      await foClassicCategoryPage.goToCategory(page, dataCategories.accessories.id);
 
-      const pageTitle = await categoryPage.getPageTitle(page);
+      const pageTitle = await foClassicCategoryPage.getPageTitle(page);
       expect(pageTitle).to.equal(dataCategories.accessories.name);
 
-      const numberOfProducts = await categoryPage.getProductsNumber(page);
+      const numberOfProducts = await foClassicCategoryPage.getProductsNumber(page);
       expect(numberOfProducts).to.be.below(allProductsNumber);
     });
 
     it('should filter products by the subcategory \'Stationery\' and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'FilterProductBySubCategory', baseContext);
 
-      await categoryPage.reloadPage(page);
-      await categoryPage.goToSubCategory(page, dataCategories.accessories.id, dataCategories.stationery.id);
+      await foClassicCategoryPage.reloadPage(page);
+      await foClassicCategoryPage.goToSubCategory(page, dataCategories.accessories.id, dataCategories.stationery.id);
 
-      const numberOfProducts = await categoryPage.getProductsNumber(page);
+      const numberOfProducts = await foClassicCategoryPage.getProductsNumber(page);
       expect(numberOfProducts).to.be.below(allProductsNumber);
     });
   });

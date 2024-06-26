@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 // Import FO pages
-import {categoryPage} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
@@ -17,6 +16,7 @@ import {
   boDashboardPage,
   dataCategories,
   dataModules,
+  foClassicCategoryPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -112,7 +112,7 @@ describe('Faceted search module - Uninstall and delete module', async () => {
   it(`should check that ${dataModules.psFacetedSearch.name} is not present`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkModuleNotPresent', baseContext);
 
-    const hasFilters = await categoryPage.hasSearchFilters(page);
+    const hasFilters = await foClassicCategoryPage.hasSearchFilters(page);
     expect(hasFilters).to.eq(false);
   });
 
@@ -120,7 +120,7 @@ describe('Faceted search module - Uninstall and delete module', async () => {
     it('should go back to Back Office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToBo', baseContext);
 
-      page = await categoryPage.closePage(browserContext, page, 0);
+      page = await foClassicCategoryPage.closePage(browserContext, page, 0);
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);

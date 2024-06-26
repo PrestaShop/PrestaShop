@@ -9,13 +9,13 @@ import productsPage from '@pages/BO/catalog/products';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 // Import FO pages
-import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicCategoryPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -94,43 +94,43 @@ describe('FO - Menu and navigation : Clear one filter', async () => {
       await homePage.changeLanguage(page, 'en');
       await homePage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
+      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should filter products by composition \'Ceramic - Cotton - Recycled cardboard\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByComposition', baseContext);
 
-      await categoryPageFO.filterByCheckbox(page, 'feature', 'Composition-Ceramic', true);
+      await foClassicCategoryPage.filterByCheckbox(page, 'feature', 'Composition-Ceramic', true);
     });
 
     it('should check the active filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters1', baseContext);
 
-      const activeFilters = await categoryPageFO.getActiveFilters(page);
+      const activeFilters = await foClassicCategoryPage.getActiveFilters(page);
       expect(activeFilters).to.contains('Composition: Ceramic');
     });
 
     it('should get the number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts4', baseContext);
 
-      productsNumber = await categoryPageFO.getNumberOfProducts(page);
+      productsNumber = await foClassicCategoryPage.getNumberOfProducts(page);
       expect(productsNumber).to.be.above(1);
     });
 
     it('should close the active filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeActiveFilter', baseContext);
 
-      await categoryPageFO.closeFilter(page, 1);
+      await foClassicCategoryPage.closeFilter(page, 1);
 
-      const isNotVisible = await categoryPageFO.isActiveFilterNotVisible(page);
+      const isNotVisible = await foClassicCategoryPage.isActiveFilterNotVisible(page);
       expect(isNotVisible).to.eq(true);
     });
 
     it('should check the number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts1', baseContext);
 
-      const productsNumberAfterClearFilter = await categoryPageFO.getNumberOfProducts(page);
+      const productsNumberAfterClearFilter = await foClassicCategoryPage.getNumberOfProducts(page);
       expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
     });
   });
@@ -139,29 +139,29 @@ describe('FO - Menu and navigation : Clear one filter', async () => {
     it('should filter products by availability \'In Stock\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByAvailability', baseContext);
 
-      await categoryPageFO.filterByCheckbox(page, 'availability', '\'Availability-In+stock\'', true);
+      await foClassicCategoryPage.filterByCheckbox(page, 'availability', '\'Availability-In+stock\'', true);
     });
 
     it('should check the active filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters2', baseContext);
 
-      const activeFilters = await categoryPageFO.getActiveFilters(page);
+      const activeFilters = await foClassicCategoryPage.getActiveFilters(page);
       expect(activeFilters).to.contains('Availability: In stock');
     });
 
     it('should close the active filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeActiveFilter2', baseContext);
 
-      await categoryPageFO.closeFilter(page, 1);
+      await foClassicCategoryPage.closeFilter(page, 1);
 
-      const isNotVisible = await categoryPageFO.isActiveFilterNotVisible(page);
+      const isNotVisible = await foClassicCategoryPage.isActiveFilterNotVisible(page);
       expect(isNotVisible).to.eq(true);
     });
 
     it('should check the number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts2', baseContext);
 
-      const productsNumberAfterClearFilter = await categoryPageFO.getNumberOfProducts(page);
+      const productsNumberAfterClearFilter = await foClassicCategoryPage.getNumberOfProducts(page);
       expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
     });
   });

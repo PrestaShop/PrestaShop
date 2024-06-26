@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import categoryPage from '@pages/FO/hummingbird/category';
 import homePage from '@pages/FO/hummingbird/home';
 
 import {expect} from 'chai';
@@ -13,6 +12,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataCategories,
   FakerCategory,
+  foHummingbirdCategoryPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -70,10 +70,10 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
       it(`should check category block '${arg.parent.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkCategory${index}`, baseContext);
 
-        const hasBlockCategories = await categoryPage.hasBlockCategories(page);
+        const hasBlockCategories = await foHummingbirdCategoryPage.hasBlockCategories(page);
         expect(hasBlockCategories).to.equal(true);
 
-        const numBlockCategories = await categoryPage.getNumBlockCategories(page);
+        const numBlockCategories = await foHummingbirdCategoryPage.getNumBlockCategories(page);
         expect(numBlockCategories).to.equal(arg.parent.children.length);
       });
 
@@ -81,7 +81,7 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
         it(`should click on category '${arg.child.name}' in sideBlock`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToSideBlock${index}`, baseContext);
 
-          await categoryPage.clickBlockCategory(page, arg.child!.name);
+          await foHummingbirdCategoryPage.clickBlockCategory(page, arg.child!.name);
 
           const pageTitle = await homePage.getPageTitle(page);
           expect(pageTitle).to.equal(arg.child!.name);
@@ -90,10 +90,10 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
         it(`should check category block '${arg.child.name}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkSubCategory${index}`, baseContext);
 
-          const hasBlockCategories = await categoryPage.hasBlockCategories(page);
+          const hasBlockCategories = await foHummingbirdCategoryPage.hasBlockCategories(page);
           expect(hasBlockCategories).to.equal(true);
 
-          const numBlockCategories = await categoryPage.getNumBlockCategories(page);
+          const numBlockCategories = await foHummingbirdCategoryPage.getNumBlockCategories(page);
           expect(numBlockCategories).to.equal(0);
         });
       }

@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import productsPage from '@pages/BO/catalog/products';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 // Import FO pages
-import {categoryPage} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   dataModules,
   FakerProduct,
+  foClassicCategoryPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -151,23 +151,23 @@ describe('Mail alerts module - Uninstall and install module', async () => {
 
       await homePage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
+      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should go the the second page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToSecondPage', baseContext);
 
-      await categoryPage.goToNextPage(page);
+      await foClassicCategoryPage.goToNextPage(page);
 
-      nthProduct = await categoryPage.getNThChildFromIDProduct(page, idProduct);
+      nthProduct = await foClassicCategoryPage.getNThChildFromIDProduct(page, idProduct);
       expect(nthProduct).to.not.eq(null);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await categoryPage.goToProductPage(page, nthProduct!);
+      await foClassicCategoryPage.goToProductPage(page, nthProduct!);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(productOutOfStockNotAllowed.name.toUpperCase());
@@ -219,15 +219,15 @@ describe('Mail alerts module - Uninstall and install module', async () => {
 
       await homePage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
+      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageWithMailAlert', baseContext);
 
-      await categoryPage.goToNextPage(page);
-      await categoryPage.goToProductPage(page, nthProduct!);
+      await foClassicCategoryPage.goToNextPage(page);
+      await foClassicCategoryPage.goToProductPage(page, nthProduct!);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(productOutOfStockNotAllowed.name.toUpperCase());

@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 // Import FO pages
-import {categoryPage} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
@@ -18,6 +17,7 @@ import {
   boDashboardPage,
   dataCategories,
   dataModules,
+  foClassicCategoryPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -116,7 +116,7 @@ describe('Faceted search module - Uninstall and install module', async () => {
     it(`should check that ${dataModules.psFacetedSearch.name} is not present`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModuleNotPresent', baseContext);
 
-      const hasFilters = await categoryPage.hasSearchFilters(page);
+      const hasFilters = await foClassicCategoryPage.hasSearchFilters(page);
       expect(hasFilters).to.eq(false);
     });
   });
@@ -167,7 +167,7 @@ describe('Faceted search module - Uninstall and install module', async () => {
     it(`should check that ${dataModules.psFacetedSearch.name} is not present`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModulePresent', baseContext);
 
-      const hasFilters = await categoryPage.hasSearchFilters(page);
+      const hasFilters = await foClassicCategoryPage.hasSearchFilters(page);
       expect(hasFilters).to.eq(true);
     });
   });

@@ -11,13 +11,13 @@ import addCategoryPage from '@pages/BO/catalog/categories/add';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {categoryPage} from '@pages/FO/classic/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerCategory,
+  foClassicCategoryPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -149,8 +149,8 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           it('should go to BO', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `goToBoProducts${argExtension}`, baseContext);
 
-            page = await categoryPage.closePage(browserContext, page, 0);
-            await categoryPage.goToBO(page);
+            page = await foClassicCategoryPage.closePage(browserContext, page, 0);
+            await foClassicCategoryPage.goToBO(page);
 
             const pageTitle = await boDashboardPage.getPageTitle(page);
             expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -277,14 +277,14 @@ describe('BO - Design - Image Settings - Check category image format', async () 
 
           await homePage.goToAllProductsPage(page);
 
-          const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
+          const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
           expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
         });
 
         it('should check that the main image of the quick view is a WebP', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkMainImageQuickView${argExtension}`, baseContext);
 
-          const categoryImage = await categoryPage.getCategoryImageMain(page, arg.category.name);
+          const categoryImage = await foClassicCategoryPage.getCategoryImageMain(page, arg.category.name);
           expect(categoryImage).to.not.eq(null);
 
           await utilsFile.downloadFile(categoryImage as string, 'image.img');

@@ -8,13 +8,13 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-import {categoryPage} from '@pages/FO/classic/category';
 
 import {
   dataCarriers,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  foClassicCategoryPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -190,7 +190,7 @@ describe('FO - Order confirmation : Popular product', async () => {
 
     await orderConfirmationPage.goToAllProductsPage(page);
 
-    const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
+    const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
     expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
   });
 });

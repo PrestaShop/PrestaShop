@@ -7,7 +7,6 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import categoryPage from '@pages/FO/hummingbird/category';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
@@ -16,6 +15,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   FakerProduct,
+  foHummingbirdCategoryPage,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -200,15 +200,15 @@ describe('FO - Home Page : Product quick view', async () => {
 
       await homePage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
+      const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);
     });
 
     it(`should go to the second page and quick view the product '${dataProducts.demo_14.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewCustomizedProduct', baseContext);
 
-      await categoryPage.goToNextPage(page);
-      await categoryPage.quickViewProduct(page, 7);
+      await foHummingbirdCategoryPage.goToNextPage(page);
+      await foHummingbirdCategoryPage.quickViewProduct(page, 7);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
@@ -247,7 +247,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it(`should quick view the product '${productOutOfStockNotAllowed.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProductOutOfStock', baseContext);
 
-      await categoryPage.quickViewProduct(page, 8);
+      await foHummingbirdCategoryPage.quickViewProduct(page, 8);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);

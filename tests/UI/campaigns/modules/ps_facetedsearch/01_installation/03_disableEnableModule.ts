@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {categoryPage} from '@pages/FO/classic/category';
 // Import BO pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
@@ -17,6 +16,7 @@ import {
   boDashboardPage,
   dataCategories,
   dataModules,
+  foClassicCategoryPage,
   modPsFacetedsearchBoMain,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -101,14 +101,14 @@ describe('Faceted search module - Disable/Enable module', async () => {
     it(`should check that ${dataModules.psFacetedSearch.name} is not present`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModuleNotPresent', baseContext);
 
-      const hasFilters = await categoryPage.hasSearchFilters(page);
+      const hasFilters = await foClassicCategoryPage.hasSearchFilters(page);
       expect(hasFilters).to.eq(false);
     });
 
     it('should return to the back office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnBO', baseContext);
 
-      page = await categoryPage.closePage(browserContext, page, 0);
+      page = await foClassicCategoryPage.closePage(browserContext, page, 0);
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);
       expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
@@ -150,7 +150,7 @@ describe('Faceted search module - Disable/Enable module', async () => {
     it(`should check that ${dataModules.psFacetedSearch.name} is present`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModulePresent', baseContext);
 
-      const hasFilters = await categoryPage.hasSearchFilters(page);
+      const hasFilters = await foClassicCategoryPage.hasSearchFilters(page);
       expect(hasFilters).to.eq(true);
     });
   });

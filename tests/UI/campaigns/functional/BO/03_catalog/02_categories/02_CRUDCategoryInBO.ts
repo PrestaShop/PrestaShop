@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
 // Import FO pages
-import {categoryPage} from '@pages/FO/classic/category';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
@@ -20,6 +19,7 @@ import {
   type CategoryRedirection,
   dataCategories,
   FakerCategory,
+  foClassicCategoryPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -171,11 +171,11 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         await siteMapPage.viewCreatedCategory(page, categoryID);
 
         // Check category name
-        const pageTitle = await categoryPage.getHeaderPageName(page);
+        const pageTitle = await foClassicCategoryPage.getHeaderPageName(page);
         expect(pageTitle).to.contains(createCategoryData.name.toUpperCase());
 
         // Check category description
-        const categoryDescription = await categoryPage.getCategoryDescription(page);
+        const categoryDescription = await foClassicCategoryPage.getCategoryDescription(page);
         expect(categoryDescription).to.equal(createCategoryData.description);
       });
 
@@ -183,7 +183,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
 
         // Close tab and init other page objects with new current tab
-        page = await categoryPage.closePage(browserContext, page, 0);
+        page = await foClassicCategoryPage.closePage(browserContext, page, 0);
 
         const pageTitle = await categoriesPage.getPageTitle(page);
         expect(pageTitle).to.contains(categoriesPage.pageTitle);
@@ -256,11 +256,11 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         await siteMapPage.viewCreatedCategory(page, subcategoryID);
 
         // Check subcategory name
-        const pageTitle = await categoryPage.getHeaderPageName(page);
+        const pageTitle = await foClassicCategoryPage.getHeaderPageName(page);
         expect(pageTitle).to.contains(createSubCategoryData.name.toUpperCase());
 
         // Check subcategory description
-        const subcategoryDescription = await categoryPage.getCategoryDescription(page);
+        const subcategoryDescription = await foClassicCategoryPage.getCategoryDescription(page);
         expect(subcategoryDescription).to.equal(createSubCategoryData.description);
       });
 
@@ -268,7 +268,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
 
         // Close tab and init other page objects with new current tab
-        page = await categoryPage.closePage(browserContext, page, 0);
+        page = await foClassicCategoryPage.closePage(browserContext, page, 0);
 
         const pageTitle = await categoriesPage.getPageTitle(page);
         expect(pageTitle).to.contains(createCategoryData.name);
@@ -420,7 +420,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         const idCategory: number = arg.type === 'category' ? categoryID : subcategoryID;
 
         // Check if it is an error page
-        const response = await categoryPage.goTo(page, `${global.FO.URL}en/${idCategory}-${categoryFriendlyURL}`);
+        const response = await foClassicCategoryPage.goTo(page, `${global.FO.URL}en/${idCategory}-${categoryFriendlyURL}`);
         expect(response).to.be.not.equal(null);
         const requestRedirectFrom = response!.request().redirectedFrom();
         expect(requestRedirectFrom).to.be.not.equal(null);
@@ -429,7 +429,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         expect(responseBeforeRedirection!.status()).to.be.equal(parseInt(arg.category.redirectionWhenNotDisplayed, 10));
 
         // Check if it is redirected to the category
-        const categoryName = await categoryPage.getHeaderPageName(page);
+        const categoryName = await foClassicCategoryPage.getHeaderPageName(page);
         expect(categoryName).to.contains(arg.category.redirectedCategory!.name.toUpperCase());
       });
 
