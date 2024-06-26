@@ -37,8 +37,10 @@ use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\EditCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\EditCarrierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotUpdateCarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Edit Carrier
@@ -59,68 +61,71 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
      */
     public function handle(EditCarrierCommand $command): CarrierId
     {
+        // Get new version of carrier if needed
         $carrier = $this->carrierRepository->get($command->getCarrierId());
+        $newCarrier = $this->carrierRepository->createNewVersion($carrier);
+        $newCarrierId = new CarrierId($newCarrier->id);
 
         // General information
         if (null !== $command->getName()) {
-            $carrier->name = $command->getName();
+            $newCarrier->name = $command->getName();
         }
         if (null !== $command->getGrade()) {
-            $carrier->grade = $command->getGrade();
+            $newCarrier->grade = $command->getGrade();
         }
         if (null !== $command->getTrackingUrl()) {
-            $carrier->url = $command->getTrackingUrl();
+            $newCarrier->url = $command->getTrackingUrl();
         }
         if (null !== $command->getPosition()) {
-            $carrier->position = $command->getPosition();
+            $newCarrier->position = $command->getPosition();
         }
         if (null !== $command->getActive()) {
-            $carrier->active = $command->getActive();
+            $newCarrier->active = $command->getActive();
         }
         if (null !== $command->getLocalizedDelay()) {
-            $carrier->delay = $command->getLocalizedDelay();
+            $newCarrier->delay = $command->getLocalizedDelay();
         }
         if (null !== $command->getMaxWidth()) {
-            $carrier->max_width = $command->getMaxWidth();
+            $newCarrier->max_width = $command->getMaxWidth();
         }
         if (null !== $command->getMaxHeight()) {
-            $carrier->max_height = $command->getMaxHeight();
+            $newCarrier->max_height = $command->getMaxHeight();
         }
         if (null !== $command->getMaxDepth()) {
-            $carrier->max_depth = $command->getMaxDepth();
+            $newCarrier->max_depth = $command->getMaxDepth();
         }
         if (null !== $command->getMaxWeight()) {
-            $carrier->max_weight = $command->getMaxWeight();
+            $newCarrier->max_weight = $command->getMaxWeight();
         }
 
         // Shipping information
         if (null !== $command->hasAdditionalHandlingFee()) {
-            $carrier->shipping_handling = $command->hasAdditionalHandlingFee();
+            $newCarrier->shipping_handling = $command->hasAdditionalHandlingFee();
         } else {
             // If carrier is free, we should not have shipping handling
             if ($command->isFree()) {
-                $carrier->shipping_handling = false;
+                $newCarrier->shipping_handling = false;
             }
         }
 
         if (null !== $command->isFree()) {
-            $carrier->is_free = $command->isFree();
+            $newCarrier->is_free = $command->isFree();
         } else {
             // If carrier has additional handling fee, we should not have free shipping enabled
             if ($command->hasAdditionalHandlingFee()) {
-                $carrier->is_free = false;
+                $newCarrier->is_free = false;
             }
         }
 
         if ($command->getShippingMethod()) {
-            $carrier->shipping_method = $command->getShippingMethod()->getValue();
+            $newCarrier->shipping_method = $command->getShippingMethod()->getValue();
         }
 
         if (null !== $command->getRangeBehavior()) {
-            $carrier->range_behavior = (bool) $command->getRangeBehavior()->getValue();
+            $newCarrier->range_behavior = (bool) $command->getRangeBehavior()->getValue();
         }
 
-        $this->carrierValidator->validate($carrier);
+        $this->carrierValidator->validate($newCarrier);
         if ($command->getAssociatedGroupIds()) {
             $this->carrierValidator->validateGroupsExist($command->getAssociatedGroupIds());
         }
@@ -133,11 +138,16 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
             }
         }
 
-        $newCarrier = $this->carrierRepository->updateInNewVersion($command->getCarrierId(), $carrier);
-        $newCarrierId = new CarrierId($newCarrier->id);
         if ($command->getAssociatedGroupIds()) {
             $newCarrier->setGroups($command->getAssociatedGroupIds());
         }
+
+        $this->carrierRepository->update(
+            $newCarrier,
+            ShopConstraint::allShops(),
+            CannotUpdateCarrierException::FAILED_UPDATE_CARRIER
+        );
+
         if (null !== $command->getAssociatedShopIds()) {
             $this->carrierRepository->updateAssociatedShops($newCarrierId, array_map(fn (ShopId $shopId) => $shopId->getValue(), $command->getAssociatedShopIds()));
         }

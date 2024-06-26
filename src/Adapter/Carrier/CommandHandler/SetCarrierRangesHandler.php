@@ -51,8 +51,10 @@ final class SetCarrierRangesHandler implements SetCarrierRangesHandlerInterface
      */
     public function handle(SetCarrierRangesCommand $command): CarrierId
     {
-        // Get new version of carrier
-        $newCarrier = $this->carrierRepository->updateInNewVersion($command->getCarrierId(), new Carrier());
+        // Get new version of carrier if needed
+        $carrier = $this->carrierRepository->get($command->getCarrierId());
+        $newCarrier = $this->carrierRepository->createNewVersion($carrier);
+
         $newCarrierId = new CarrierId($newCarrier->id);
 
         // Set carrier ranges
