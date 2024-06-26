@@ -33,7 +33,14 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ShopUrl
  *
- * @ORM\Table()
+ * @ORM\Table(
+ *     indexes={@ORM\Index(name="id_shop", columns={"id_shop", "main"})},
+ *     uniqueConstraints={
+ *
+ *         @ORM\UniqueConstraint(name="full_shop_url", columns={"domain", "physical_uri", "virtual_uri"}),
+ *         @ORM\UniqueConstraint(name="full_shop_url_ssl", columns={"domain_ssl", "physical_uri", "virtual_uri"}),
+ *     }
+ * )
  *
  * @ORM\Entity
  */
@@ -42,7 +49,7 @@ class ShopUrl
     /**
      * @ORM\Id
      *
-     * @ORM\Column(name="id_shop_url", type="integer")
+     * @ORM\Column(name="id_shop_url", type="integer", options={"unsigned": true})
      *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -51,7 +58,7 @@ class ShopUrl
     /**
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Shop", inversedBy="shopUrls")
      *
-     * @ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", nullable=false)
+     * @ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", nullable=false, options={"unsigned": true})
      */
     private Shop $shop;
 

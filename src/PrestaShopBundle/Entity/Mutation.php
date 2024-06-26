@@ -70,12 +70,12 @@ class Mutation
     private int $mutationRowId;
 
     /**
-     * @ORM\Column(name="mutation_action", enumType="PrestaShopBundle\Entity\MutationAction", columnDefinition="ENUM('create', 'update', 'delete')"))
+     * @ORM\Column(name="mutation_action", enumType="PrestaShopBundle\Entity\MutationAction", columnDefinition="ENUM('create', 'update', 'delete')"), options={"default": "create"}, nullable=false)
      */
     private MutationAction $action;
 
     /**
-     * @ORM\Column(name="mutator_type", enumType="PrestaShopBundle\Entity\MutatorType", columnDefinition="ENUM('employee', 'api_client', 'module')")
+     * @ORM\Column(name="mutator_type", enumType="PrestaShopBundle\Entity\MutatorType", columnDefinition="ENUM('employee', 'api_client', 'module')", nullable=false)
      */
     private MutatorType $mutatorType;
 

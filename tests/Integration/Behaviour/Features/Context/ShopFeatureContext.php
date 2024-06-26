@@ -326,8 +326,8 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         $shopUrl->main = true;
         $shopUrl->domain = 'localhost';
         $shopUrl->domain_ssl = 'localhost';
-        $shopUrl->physical_uri = '/prestatest/';
-        $shopUrl->virtual_uri = '/prestatest/';
+        $shopUrl->physical_uri = "/prestatest-$shopReference/";
+        $shopUrl->virtual_uri = "/prestatest-$shopReference/";
         if (!$shopUrl->add()) {
             throw new RuntimeException(sprintf('Could not create shop url: %s', Db::getInstance()->getMsgError()));
         }

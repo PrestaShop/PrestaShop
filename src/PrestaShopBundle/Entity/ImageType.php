@@ -34,7 +34,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ImageTypeRepository")
  *
- * @ORM\Table()
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="image_type_name", columns={"name"})})
  *
  * @UniqueEntity("name")
  */
@@ -43,7 +43,7 @@ class ImageType
     /**
      * @ORM\Id
      *
-     * @ORM\Column(name="id_image_type", type="integer")
+     * @ORM\Column(name="id_image_type", type="integer", options={"unsigned": true})
      *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -55,37 +55,37 @@ class ImageType
     private string $name;
 
     /**
-     * @ORM\Column(name="width", type="integer")
+     * @ORM\Column(name="width", type="integer", options={"unsigned": true})
      */
     private int $width;
 
     /**
-     * @ORM\Column(name="height", type="integer")
+     * @ORM\Column(name="height", type="integer", options={"unsigned": true})
      */
     private int $height;
 
     /**
-     * @ORM\Column(name="products", type="boolean")
+     * @ORM\Column(name="products", type="boolean", options={"default": 1})
      */
     private bool $products;
 
     /**
-     * @ORM\Column(name="categories", type="boolean")
+     * @ORM\Column(name="categories", type="boolean", options={"default": 1})
      */
     private bool $categories;
 
     /**
-     * @ORM\Column(name="manufacturers", type="boolean")
+     * @ORM\Column(name="manufacturers", type="boolean", options={"default": 1})
      */
     private bool $manufacturers;
 
     /**
-     * @ORM\Column(name="suppliers", type="boolean")
+     * @ORM\Column(name="suppliers", type="boolean", options={"default": 1})
      */
     private bool $suppliers;
 
     /**
-     * @ORM\Column(name="stores", type="boolean")
+     * @ORM\Column(name="stores", type="boolean", options={"default": 1})
      */
     private bool $stores;
 

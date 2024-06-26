@@ -59,7 +59,7 @@ class Translation
     private Lang $lang;
 
     /**
-     * @ORM\Column(name="`key`", type="text", length=8000, options={"collation":"utf8_bin"})
+     * @ORM\Column(name="`key`", type="text", length=8000)
      */
     private string $key;
 

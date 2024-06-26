@@ -22,13 +22,6 @@ services:
     tags:
       - { name: kernel.cache_warmer }
 
-  prestashop.cache.refresh:
-    class: PrestaShopBundle\Service\Cache\Refresh
-    arguments:
-      - "@kernel"
-    calls:
-      - [ addCacheClear, [ ] ]
-
   PrestaShopBundle\Cache\TranslationCacheClearer:
     autowire: true
     autoconfigure: true

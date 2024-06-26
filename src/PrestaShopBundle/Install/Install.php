@@ -62,7 +62,6 @@ use PrestaShop\PrestaShop\Core\Module\ConfigReader as ModuleConfigReader;
 use PrestaShop\PrestaShop\Core\Theme\ConfigReader as ThemeConfigReader;
 use PrestaShop\PrestaShop\Core\Version;
 use PrestaShopBundle\Cache\LocalizationWarmer;
-use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 use PrestaShopException;
 use PrestashopInstallerException;
 use PrestaShopLoggerInterface;
@@ -332,35 +331,6 @@ class Install extends AbstractInstall
             foreach ($errors as $error) {
                 $this->setError($this->translator->trans('SQL error on query <i>%query%</i>', ['%query%' => $error['error']], 'Install'));
             }
-
-            return false;
-        }
-
-        return $this->updateSchema();
-    }
-
-    /**
-     * cache:clear
-     * assetic:dump
-     * doctrine:schema:update.
-     *
-     * @return bool
-     */
-    public function updateSchema()
-    {
-        $schemaUpgrade = new UpgradeDatabase();
-        $schemaUpgrade->addDoctrineSchemaUpdate();
-        $output = $schemaUpgrade->execute();
-        $schemaUpdateOutput = $output['prestashop:schema:update-without-foreign']['output'];
-        if ($this->isDebug && substr($schemaUpdateOutput, 2, 9) === '[WARNING]') {
-            preg_match('/\[WARNING]([\s\S]*?)Updating database schema/', $schemaUpdateOutput, $match);
-            $this->setError(explode("\n", $match[1]));
-
-            return false;
-        }
-
-        if (0 !== $output['prestashop:schema:update-without-foreign']['exitCode']) {
-            $this->setError(explode("\n", $schemaUpdateOutput));
 
             return false;
         }
