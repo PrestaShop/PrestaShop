@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
+use RuntimeException;
 
 /**
  * Provides access to carrier data source
@@ -74,10 +75,11 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         return $carrier;
     }
 
-    public function add(Carrier $carrier): CarrierId
+    public function add(Carrier $carrier, array $shopIds): CarrierId
     {
-        $carrierId = $this->addObjectModel(
+        $carrierId = $this->addObjectModelToShops(
             $carrier,
+            $shopIds,
             CannotAddCarrierException::class
         );
 
@@ -138,6 +140,9 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         if (null !== $carrier->range_behavior) {
             $newCarrier->range_behavior = $carrier->range_behavior;
         }
+        if (null !== $carrier->id_shop_list) {
+            $newCarrier->id_shop_list = $carrier->id_shop_list;
+        }
 
         $newCarrier->deleted = false; // just to be sure...
 
@@ -149,6 +154,21 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         $newCarrier->setGroups($oldCarrier->getAssociatedGroupIds());
 
         return $newCarrier;
+    }
+
+    /**
+     * @param CarrierId $carrierId
+     * @param int[] $shopIds
+     *
+     * @return void
+     */
+    public function updateAssociatedShops(CarrierId $carrierId, array $shopIds): void
+    {
+        $this->updateObjectModelShopAssociations(
+            $carrierId->getValue(),
+            Carrier::class,
+            $shopIds
+        );
     }
 
     public function getTaxRulesGroup(CarrierId $carrierId, ShopConstraint $shopConstraint): int
@@ -178,11 +198,18 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
 
     public function setTaxRulesGroup(CarrierId $carrierId, TaxRulesGroupId $taxRulesGroupId, ShopConstraint $shopConstraint): void
     {
-        $shopIds = $this->shopRepository->getAssociatedShopIds($shopConstraint);
-        $this->deleteTaxRulesGroup($carrierId, $shopIds);
+        if ($shopConstraint->getShopId()) {
+            $shopIdsToClean = $shopIdsToUpdate = [$shopConstraint->getShopId()->getValue()];
+        } elseif ($shopConstraint->forAllShops()) {
+            $shopIdsToUpdate = $this->getObjectModelAssociatedShopIds($carrierId->getValue(), Carrier::class);
+            $shopIdsToClean = $this->shopRepository->getAssociatedShopIds($shopConstraint);
+        } else {
+            throw new RuntimeException('Cannot handle this shop constraint');
+        }
+        $this->deleteTaxRulesGroup($carrierId, $shopIdsToClean);
 
         // Doctrine doesn't handle bulk insert so e must insert each ro one by one
-        foreach ($shopIds as $shopId) {
+        foreach ($shopIdsToUpdate as $shopId) {
             $this->connection->insert(
                 $this->prefix . 'carrier_tax_rules_group_shop',
                 [
@@ -194,6 +221,12 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         }
     }
 
+    /**
+     * @param CarrierId $carrierId
+     * @param int[] $shopIds
+     *
+     * @return void
+     */
     private function deleteTaxRulesGroup(CarrierId $carrierId, array $shopIds): void
     {
         $qb = $this->connection->createQueryBuilder();

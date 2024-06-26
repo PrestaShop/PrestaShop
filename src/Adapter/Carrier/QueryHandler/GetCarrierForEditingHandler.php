@@ -74,6 +74,7 @@ final class GetCarrierForEditingHandler implements GetCarrierForEditingHandlerIn
             $carrier->shipping_method,
             $this->carrierRepository->getTaxRulesGroup($query->getCarrierId(), $query->getShopConstraint()),
             (int) $carrier->range_behavior,
+            $carrier->getAssociatedShops(),
             $logoPath,
         );
     }

@@ -106,6 +106,12 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $properties['logoPathName'] = DummyFileUploader::upload($properties['logoPathName']);
             }
 
+            if (isset($properties['associatedShops'])) {
+                $associatedShops = $this->referencesToIds($properties['associatedShops']);
+            } else {
+                $associatedShops = [$this->getDefaultShopId()];
+            }
+
             $carrierId = $this->createCarrierUsingCommand(
                 $properties['name'],
                 $properties['delay'],
@@ -123,6 +129,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $properties['shippingMethod'],
                 $properties['rangeBehavior'],
                 $properties['logoPathName'] ?? null,
+                $associatedShops,
             );
 
             if (isset($tmpLogo)) {
@@ -179,6 +186,9 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             }
             if (isset($properties['group_access'])) {
                 $command->setAssociatedGroupIds($this->referencesToIds($properties['group_access']));
+            }
+            if (isset($properties['associatedShops'])) {
+                $command->setAssociatedShopIds($this->referencesToIds($properties['associatedShops']));
             }
 
             if (isset($properties['logoPathName']) && 'null' !== $properties['logoPathName']) {
@@ -302,6 +312,13 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $carrier->getRangeBehavior()
             );
         }
+
+        if (isset($data['associatedShops'])) {
+            Assert::assertEquals(
+                $this->referencesToIds($data['associatedShops']),
+                $carrier->getAssociatedShopIds(),
+            );
+        }
     }
 
     /**
@@ -350,6 +367,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         string $shippingMethod,
         string $rangeBehavior,
         ?string $logoPathName,
+        array $associatedShops,
     ): CarrierId {
         $command = new AddCarrierCommand(
             $name,
@@ -363,7 +381,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             $isFree,
             $this->convertShippingMethodToInt($shippingMethod),
             $this->convertOutOfRangeBehaviorToInt($rangeBehavior),
-            ShopConstraint::allShops(),
+            $associatedShops,
             $max_width,
             $max_height,
             $max_depth,

@@ -86,9 +86,7 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
     {
         // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
         // this way we can control exactly which shop is updated
-        $objectModel->id_shop_list = array_map(function (ShopId $shopId): int {
-            return $shopId->getValue();
-        }, $shopIds);
+        $objectModel->id_shop_list = array_map(fn (ShopId $shopId): int => $shopId->getValue(), $shopIds);
 
         return $this->addObjectModel($objectModel, $exceptionClass, $errorCode);
     }

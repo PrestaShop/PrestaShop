@@ -33,10 +33,12 @@ use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
 use PrestaShop\PrestaShop\Adapter\Carrier\Validate\CarrierValidator;
 use PrestaShop\PrestaShop\Adapter\File\Uploader\CarrierLogoFileUploader;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\EditCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\EditCarrierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Edit Carrier
@@ -48,6 +50,7 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         private readonly CarrierRepository $carrierRepository,
         private readonly CarrierLogoFileUploader $carrierLogoFileUploader,
         private readonly CarrierValidator $carrierValidator,
+        private readonly ShopRepository $shopRepository,
     ) {
     }
 
@@ -124,10 +127,19 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
         if ($command->getLogoPathName() !== null && $command->getLogoPathName() !== '') {
             $this->carrierValidator->validateLogoUpload($command->getLogoPathName());
         }
+        if (!empty($command->getAssociatedShopIds())) {
+            foreach ($command->getAssociatedShopIds() as $shopId) {
+                $this->shopRepository->assertShopExists($shopId);
+            }
+        }
 
         $newCarrier = $this->carrierRepository->updateInNewVersion($command->getCarrierId(), $carrier);
+        $newCarrierId = new CarrierId($newCarrier->id);
         if ($command->getAssociatedGroupIds()) {
             $newCarrier->setGroups($command->getAssociatedGroupIds());
+        }
+        if (null !== $command->getAssociatedShopIds()) {
+            $this->carrierRepository->updateAssociatedShops($newCarrierId, array_map(fn (ShopId $shopId) => $shopId->getValue(), $command->getAssociatedShopIds()));
         }
 
         if ($command->getLogoPathName() !== null) {
@@ -138,6 +150,6 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
             }
         }
 
-        return new CarrierId($newCarrier->id);
+        return $newCarrierId;
     }
 }

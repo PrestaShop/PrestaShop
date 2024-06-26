@@ -52,6 +52,7 @@ class EditableCarrier
         private int $shippingMethod,
         private int $idTaxRuleGroup,
         private int $rangeBehavior,
+        private array $associatedShopIds,
         private ?string $logoPath = null,
     ) {
     }
@@ -147,5 +148,13 @@ class EditableCarrier
     public function getRangeBehavior(): int
     {
         return $this->rangeBehavior;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAssociatedShopIds(): array
+    {
+        return $this->associatedShopIds;
     }
 }
