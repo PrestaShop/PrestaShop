@@ -31,7 +31,6 @@ namespace Tests\Unit\Core\Context;
 use Doctrine\ORM\NoResultException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Context\Employee;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder;
@@ -58,7 +57,6 @@ class LegacyControllerContextBuilderTest extends TestCase
     {
         $builder = new LegacyControllerContextBuilder(
             $this->mockEmployeeContext(),
-            $this->createMock(ContextStateManager::class),
             ['AdminCarts'],
             $this->mockTabRepository(),
             $this->createMock(ContainerInterface::class),
@@ -192,7 +190,6 @@ class LegacyControllerContextBuilderTest extends TestCase
         ;
         $builder = new LegacyControllerContextBuilder(
             $this->mockEmployeeContext(),
-            $this->createMock(ContextStateManager::class),
             ['AdminCarts'],
             $tabRepository,
             $this->createMock(ContainerInterface::class),

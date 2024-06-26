@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\EventListener\Admin\Context;
 
-use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder;
 use PrestaShopBundle\Entity\Repository\TabRepository;
@@ -89,7 +88,6 @@ class LegacyControllerContextListenerTest extends ContextEventListenerTestCase
     {
         return new LegacyControllerContextBuilder(
             $this->createMock(EmployeeContext::class),
-            $this->createMock(ContextStateManager::class),
             ['AdminCarts'],
             $this->createMock(TabRepository::class),
             $this->createMock(ContainerInterface::class)
