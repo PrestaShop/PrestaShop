@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
 use Cache;
 use Cart;
+use Configuration;
 use Context;
 use Exception;
 use Hook;
@@ -36,6 +37,8 @@ use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
+use ProductAssembler;
+use TaxConfiguration;
 
 class CartPresenter implements PresenterInterface
 {
@@ -54,10 +57,21 @@ class CartPresenter implements PresenterInterface
      */
     protected $settings;
 
+    /**
+     * @var TaxConfiguration
+     */
+    private $taxConfiguration;
+
+    /**
+     * @var ProductAssembler
+     */
+    protected $productAssembler;
+
     public function __construct()
     {
         $this->link = Context::getContext()->link;
         $this->imageRetriever = new ImageRetriever($this->link);
+        $this->taxConfiguration = new TaxConfiguration();
     }
 
     /**
@@ -202,5 +216,62 @@ class CartPresenter implements PresenterInterface
         Cache::store($cache_id, $cartLazyArray);
 
         return $cartLazyArray;
+    }
+
+    /**
+     * Receives a string containing a list of attributes affected to the product and returns them as an array.
+     *
+     * @param string $attributes
+     *
+     * @return array Converted attributes in an array
+     */
+    public function getAttributesArrayFromString($attributes)
+    {
+        $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
+        $pattern = '/(?>(?P<attribute>[^:]+:[^:]+)' . $separator . '+(?!' . $separator . '([^:' . $separator . '])+:))/';
+        $attributesArray = [];
+        $matches = [];
+        if (!preg_match_all($pattern, $attributes . $separator, $matches)) {
+            return $attributesArray;
+        }
+
+        foreach ($matches['attribute'] as $attribute) {
+            [$key, $value] = explode(':', $attribute);
+            $attributesArray[trim($key)] = ltrim($value);
+        }
+
+        return $attributesArray;
+    }
+
+    public function getSettings(): ProductPresentationSettings
+    {
+        if ($this->settings === null) {
+            $this->settings = new ProductPresentationSettings();
+
+            $this->settings->catalog_mode = Configuration::isCatalogMode();
+            $this->settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
+            $this->settings->include_taxes = $this->includeTaxes();
+            $this->settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
+            $this->settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
+            $this->settings->showPrices = Configuration::showPrices();
+            $this->settings->showLabelOOSListingPages = (bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
+            $this->settings->lastRemainingItems = (int) Configuration::get('PS_LAST_QTIES');
+        }
+
+        return $this->settings;
+    }
+
+    public function getProductAssembler(): ProductAssembler
+    {
+        if ($this->productAssembler === null) {
+            $this->productAssembler = new ProductAssembler(Context::getContext());
+        }
+
+        return $this->productAssembler;
+    }
+
+    public function includeTaxes(): bool
+    {
+        return $this->taxConfiguration->includeTaxes();
     }
 }

@@ -16,10 +16,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
-use ProductAssembler;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use TaxConfiguration;
 use Tools;
 
 class CartLazyArray extends AbstractLazyArray
@@ -31,8 +28,6 @@ class CartLazyArray extends AbstractLazyArray
     private Cart $cart;
 
     private TranslatorInterface $translator;
-
-    private TaxConfiguration $taxConfiguration;
 
     private PriceFormatter $priceFormatter;
 
@@ -62,13 +57,9 @@ class CartLazyArray extends AbstractLazyArray
 
     private array $discounts;
 
-    private ProductAssembler $productAssembler;
-
     private Link $link;
 
     private ImageRetriever $imageRetriever;
-
-    private $settings;
 
     public function __construct(Cart $cart, CartPresenter $cartPresenter, bool $shouldSeparateGifts = false)
     {
@@ -79,9 +70,7 @@ class CartLazyArray extends AbstractLazyArray
         $this->translator = $context->getTranslator();
         $this->link = $context->link;
         $this->imageRetriever = new ImageRetriever($this->link);
-        $this->taxConfiguration = new TaxConfiguration();
         $this->priceFormatter = new PriceFormatter();
-        $this->productAssembler = new ProductAssembler($context);
         parent::__construct();
     }
 
@@ -114,9 +103,9 @@ class CartLazyArray extends AbstractLazyArray
             'total' => [
                 'type' => 'total',
                 'label' => $this->translator->trans('Total', [], 'Shop.Theme.Checkout'),
-                'amount' => $this->includeTaxes() ? $total_including_tax : $total_excluding_tax,
+                'amount' => $this->cartPresenter->includeTaxes() ? $total_including_tax : $total_excluding_tax,
                 'value' => $this->priceFormatter->format(
-                    $this->includeTaxes() ? $total_including_tax : $total_excluding_tax
+                    $this->cartPresenter->includeTaxes() ? $total_including_tax : $total_excluding_tax
                 ),
             ],
             'total_including_tax' => [
@@ -142,8 +131,8 @@ class CartLazyArray extends AbstractLazyArray
     public function getSubtotals(): array
     {
         $subtotals = [];
-        $totalCartAmount = $this->cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
-        $total_discount = $this->cart->getDiscountSubtotalWithoutGifts($this->includeTaxes());
+        $totalCartAmount = $this->cart->getOrderTotal($this->cartPresenter->includeTaxes(), Cart::ONLY_PRODUCTS);
+        $total_discount = $this->cart->getDiscountSubtotalWithoutGifts($this->cartPresenter->includeTaxes());
         $subtotals['products'] = [
             'type' => 'products',
             'label' => $this->translator->trans('Subtotal', [], 'Shop.Theme.Checkout'),
@@ -161,8 +150,8 @@ class CartLazyArray extends AbstractLazyArray
             $subtotals['discounts'] = null;
         }
         if ($this->cart->gift) {
-            $giftWrappingPrice = ($this->cart->getGiftWrappingPrice($this->includeTaxes()) != 0)
-                ? $this->cart->getGiftWrappingPrice($this->includeTaxes())
+            $giftWrappingPrice = ($this->cart->getGiftWrappingPrice($this->cartPresenter->includeTaxes()) != 0)
+                ? $this->cart->getGiftWrappingPrice($this->cartPresenter->includeTaxes())
                 : 0;
 
             $subtotals['gift_wrapping'] = [
@@ -175,7 +164,7 @@ class CartLazyArray extends AbstractLazyArray
             ];
         }
         if (!$this->cart->isVirtualCart()) {
-            $shippingCost = $this->cart->getTotalShippingCost(null, $this->includeTaxes());
+            $shippingCost = $this->cart->getTotalShippingCost(null, $this->cartPresenter->includeTaxes());
         } else {
             $shippingCost = 0;
         }
@@ -192,7 +181,7 @@ class CartLazyArray extends AbstractLazyArray
             $taxAmount = $total_including_tax - $total_excluding_tax;
             $subtotals['tax'] = [
                 'type' => 'tax',
-                'label' => ($this->includeTaxes())
+                'label' => ($this->cartPresenter->includeTaxes())
                     ? $this->translator->trans('Included taxes', [], 'Shop.Theme.Checkout')
                     : $this->translator->trans('Taxes', [], 'Shop.Theme.Checkout'),
                 'amount' => $taxAmount,
@@ -245,10 +234,10 @@ class CartLazyArray extends AbstractLazyArray
     public function getLabels(): array
     {
         $this->labels = [
-            'tax_short' => ($this->includeTaxes())
+            'tax_short' => ($this->cartPresenter->includeTaxes())
                 ? $this->translator->trans('(tax incl.)', [], 'Shop.Theme.Global')
                 : $this->translator->trans('(tax excl.)', [], 'Shop.Theme.Global'),
-            'tax_long' => ($this->includeTaxes())
+            'tax_long' => ($this->cartPresenter->includeTaxes())
                 ? $this->translator->trans('(tax included)', [], 'Shop.Theme.Global')
                 : $this->translator->trans('(tax excluded)', [], 'Shop.Theme.Global'),
         ];
@@ -410,11 +399,6 @@ class CartLazyArray extends AbstractLazyArray
         return $shippingDisplayValue;
     }
 
-    private function includeTaxes(): bool
-    {
-        return $this->taxConfiguration->includeTaxes();
-    }
-
     private function getTemplateVarVouchers(): array
     {
         $cartVouchers = $this->cart->getCartRules();
@@ -455,7 +439,7 @@ class CartLazyArray extends AbstractLazyArray
                 }
             } else {
                 $freeShippingOnly = false;
-                $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
+                $totalCartVoucherReduction = $this->cartPresenter->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
             }
 
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
@@ -517,11 +501,11 @@ class CartLazyArray extends AbstractLazyArray
      */
     private function presentProduct(array $rawProduct)
     {
-        $assembledProduct = $this->getProductAssembler()->assembleProduct($rawProduct);
+        $assembledProduct = $this->cartPresenter->getProductAssembler()->assembleProduct($rawProduct);
         $rawProduct = array_merge($assembledProduct, $rawProduct);
 
         if (isset($rawProduct['attributes']) && is_string($rawProduct['attributes'])) {
-            $rawProduct['attributes'] = $this->getAttributesArrayFromString($rawProduct['attributes']);
+            $rawProduct['attributes'] = $this->cartPresenter->getAttributesArrayFromString($rawProduct['attributes']);
         }
         $rawProduct['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
             $rawProduct['id_product'],
@@ -563,7 +547,7 @@ class CartLazyArray extends AbstractLazyArray
         $rawProduct['price'] = Tools::ps_round($rawProduct['price'], Context::getContext()->getComputingPrecision());
         $rawProduct['price_wt'] = Tools::ps_round($rawProduct['price_wt'], Context::getContext()->getComputingPrecision());
 
-        if ($this->includeTaxes()) {
+        if ($this->cartPresenter->includeTaxes()) {
             $rawProduct['price_amount'] = $rawProduct['price'] = $rawProduct['price_wt'];
             $rawProduct['unit_price'] = $rawProduct['unit_price_tax_included'];
         } else {
@@ -572,7 +556,7 @@ class CartLazyArray extends AbstractLazyArray
         }
 
         $rawProduct['total'] = $this->priceFormatter->format(
-            $this->includeTaxes() ?
+            $this->cartPresenter->includeTaxes() ?
                 $rawProduct['total_wt'] :
                 $rawProduct['total']
         );
@@ -588,59 +572,9 @@ class CartLazyArray extends AbstractLazyArray
         );
 
         return $presenter->present(
-            $this->getSettings(),
+            $this->cartPresenter->getSettings(),
             $rawProduct,
             Context::getContext()->language
         );
-    }
-
-    private function getProductAssembler(): ProductAssembler
-    {
-        $this->productAssembler = new ProductAssembler(Context::getContext());
-
-        return $this->productAssembler;
-    }
-
-    /**
-     * Receives a string containing a list of attributes affected to the product and returns them as an array.
-     *
-     * @param string $attributes
-     *
-     * @return array Converted attributes in an array
-     */
-    private function getAttributesArrayFromString($attributes)
-    {
-        $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
-        $pattern = '/(?>(?P<attribute>[^:]+:[^:]+)' . $separator . '+(?!' . $separator . '([^:' . $separator . '])+:))/';
-        $attributesArray = [];
-        $matches = [];
-        if (!preg_match_all($pattern, $attributes . $separator, $matches)) {
-            return $attributesArray;
-        }
-
-        foreach ($matches['attribute'] as $attribute) {
-            [$key, $value] = explode(':', $attribute);
-            $attributesArray[trim($key)] = ltrim($value);
-        }
-
-        return $attributesArray;
-    }
-
-    private function getSettings(): ProductPresentationSettings
-    {
-        if ($this->settings === null) {
-            $this->settings = new ProductPresentationSettings();
-
-            $this->settings->catalog_mode = Configuration::isCatalogMode();
-            $this->settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
-            $this->settings->include_taxes = $this->includeTaxes();
-            $this->settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
-            $this->settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
-            $this->settings->showPrices = Configuration::showPrices();
-            $this->settings->showLabelOOSListingPages = (bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
-            $this->settings->lastRemainingItems = (int) Configuration::get('PS_LAST_QTIES');
-        }
-
-        return $this->settings;
     }
 }
